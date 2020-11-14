@@ -1,11 +1,10 @@
 # Test Combat Plan
 
 Turn 1:
-	character1.useSkill(1).useSkill(4)
-	character3.useSkill(1)
-	character4.useSkill(2).useSkill(1)
+	character1.useSkill(4).useSkill(2)
+	character4.useSkill(2)
 end
 
 Turn 3:
-	character2.useSkill(1)
+	character2.useSkill(2)
 end
