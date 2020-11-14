@@ -18,6 +18,26 @@ By downloading this program, you forfeit your account's safety during the use of
 4. Alert for when anti-bot CAPTCHA pops up. (WIP)
 5. Support for Quest (WIP), COOP (WIP), Raid (WIP), and Guild Wars (WIP).
 
+# TODO (in order from greatest priority to least) (WIP)
+
+- [ ] Add support for Summons in combat scripts.
+
+- [ ] Create a launchable GUI that users can start and stop the bot, select which combat script to use, which mission/raid to do, and view logs.
+
+- [ ] Setup the Twitter scrapper for raid codes.
+
+- [ ] Add support for popular Quest farming spots for materials.
+
+- [ ] Add support for Raids.
+
+- [ ] Add support for Guild Wars and Rise of the Beasts.
+
+- [ ] Add support for Coop.
+
+- [ ] Add support for Events.
+
+- [ ] Setup an alert for when the bot detects anti-bot CAPTCHA.
+
 # Requirements (WIP)
 
 1. Python 3.8+ [Get it here](https://www.python.org/downloads/)
