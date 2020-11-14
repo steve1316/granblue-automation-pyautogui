@@ -58,6 +58,7 @@ class Debug:
     def locate(self, imageName, customTries=3):
         location = None
         tries = customTries
+        sleepTime = 3
 
         while (location == None):
             if(self.windowLeft != None or self.windowTop != None or self.windowWidth != None or self.windowHeight != None):
@@ -77,10 +78,9 @@ class Debug:
 
                 if(self.debugMode):
                     print(
-                        f"[DEBUG] Locating {imageName.upper()} Button failed. Trying again in 5 seconds...")
+                        f"[DEBUG] Locating {imageName.upper()} Button failed. Trying again in {sleepTime} seconds...")
 
-                # Sleep for 5 seconds and try again.
-                self.accountForPing(5)
+                self.accountForPing(sleepTime)
 
         # Center the location and returns a tuple.
         centerLocation = pyautogui.center(location)
@@ -100,6 +100,7 @@ class Debug:
         # self.accountForPing(1)
         location = None
         tries = customTries
+        sleepTime = 3
 
         # Recalibrate the game window if any of the dimensions are not defined.
         if(self.windowLeft == None or self.windowTop == None or self.windowWidth == None or self.windowHeight == None):
@@ -118,10 +119,9 @@ class Debug:
 
                 if(self.debugMode):
                     print(
-                        f"[DEBUG] Bot's current location is not at {locationName.upper()}. Trying again in 5 seconds...")
+                        f"[DEBUG] Bot's current location is not at {locationName.upper()}. Trying again in {sleepTime} seconds...")
 
-                # Sleep for 5 seconds and try again.
-                self.accountForPing(5)
+                self.accountForPing(sleepTime)
 
         if(self.debugMode and location != None):
             print(
@@ -466,22 +466,26 @@ class Debug:
 
         if(characterNumber == 1):
             # Click the portrait of Character 1.
-            #self.moveToAndClickPoint(self.attackButtonX - 317, self.attackButtonY + 123, mouseSpeed=self.mouseSpeed)
+            self.clickPointInstantly(
+                self.attackButtonX - 317, self.attackButtonY + 123)
             self.clickPointInstantly(
                 self.attackButtonX - 317, self.attackButtonY + 123)
         elif(characterNumber == 2):
             # Click the portrait of Character 2.
-            #self.moveToAndClickPoint(self.attackButtonX - 240, self.attackButtonY + 123, mouseSpeed=self.mouseSpeed)
+            self.clickPointInstantly(
+                self.attackButtonX - 240, self.attackButtonY + 123)
             self.clickPointInstantly(
                 self.attackButtonX - 240, self.attackButtonY + 123)
         elif(characterNumber == 3):
             # Click the portrait of Character 3.
-            #self.moveToAndClickPoint(self.attackButtonX - 158, self.attackButtonY + 123, mouseSpeed=self.mouseSpeed)
+            self.clickPointInstantly(
+                self.attackButtonX - 158, self.attackButtonY + 123)
             self.clickPointInstantly(
                 self.attackButtonX - 158, self.attackButtonY + 123)
         elif(characterNumber == 4):
             # Click the portrait of Character 4.
-            #self.moveToAndClickPoint(self.attackButtonX - 76, self.attackButtonY + 123, mouseSpeed=self.mouseSpeed)
+            self.clickPointInstantly(
+                self.attackButtonX - 76, self.attackButtonY + 123)
             self.clickPointInstantly(
                 self.attackButtonX - 76, self.attackButtonY + 123)
 
@@ -489,29 +493,29 @@ class Debug:
     def useCharacterSkills(self, x, y, characterSelected, skill):
         if("useSkill(1)" in skill):
             print(f"[COMBAT] Character {characterSelected} uses Skill 1")
-            #self.moveToAndClickPoint(x - 213, y + 171, mouseSpeed=self.mouseSpeed)
             self.clickPointInstantly(x - 213, y + 171)
         elif("useSkill(2)" in skill):
             print(f"[COMBAT] Character {characterSelected} uses Skill 2")
-            #self.moveToAndClickPoint(x - 132, y + 171, mouseSpeed=self.mouseSpeed)
             self.clickPointInstantly(x - 132, y + 171)
         elif("useSkill(3)" in skill):
             print(f"[COMBAT] Character {characterSelected} uses Skill 3")
-            #self.moveToAndClickPoint(x - 51, y + 171, mouseSpeed=self.mouseSpeed)
             self.clickPointInstantly(x - 51, y + 171)
         elif("useSkill(4)" in skill):
             print(f"[COMBAT] Character {characterSelected} uses Skill 4")
-            #self.moveToAndClickPoint(x + 39, y + 171, mouseSpeed=self.mouseSpeed)
             self.clickPointInstantly(x + 39, y + 171)
+        self.accountForPing(1)
 
-    # Attempt to find the specified dialog window (usually from Lyria or Vyrn).
+    # Attempt to find the specified dialog window during battle (usually from Lyria or Vyrn).
     def findDialog(self, dialogName, customTries=3):
         location = None
         tries = customTries
 
+        if (self.attackButtonX == None or self.attackButtonY == None):
+            self.locate("attack", customTries=1)
+
         while (location == None):
             location = pyautogui.locateOnScreen(f"images/dialogs/{dialogName.lower()}.png", confidence=self.confidence, region=(
-                self.windowLeft, self.windowTop, self.windowWidth, self.windowHeight))
+                self.attackButtonX - 350, self.attackButtonY + 28, self.attackButtonX - 264, self.attackButtonY + 50))
 
             if (location == None):
                 tries -= 1
@@ -539,7 +543,7 @@ class Debug:
         # Recalibrate the game window.
         self.calibrateGameWindow()
 
-        # Open the text file and read all of the lines.
+        # Open the script text file and read all of the lines.
         try:
             script = open(f"scripts/{scriptName}.txt", "r")
             if(self.debugMode):
@@ -561,6 +565,8 @@ class Debug:
                 if(line[0] != "#" and line[0] != "/" and line.strip() != ""):
                     if(self.debugMode):
                         print(f"[DEBUG] Line {lineNumber}: {line.strip()}")
+                else:
+                    lineNumber += 1
 
                 # Check if there are dialog boxes from either Lyria or Vyrn and click them away.
                 if(self.findDialog("lyriaDialog", customTries=1) != None):
@@ -580,87 +586,144 @@ class Debug:
                 if ("turn" in line.lower() and int(line[5]) != turnNumber):
                     if(self.debugMode):
                         print(
-                            f"[DEBUG] Current Turn Number {turnNumber} does not match expected Turn Number {line[5]}. Pressing Attack Button until they do.")
+                            f"\n[DEBUG] Current Turn Number {turnNumber} does not match expected Turn Number {line[5]}. Pressing Attack Button until they do.")
+
                     while (int(line[5]) != turnNumber):
                         attackLocation = self.locate("attack", customTries=1)
-                        self.clickPointInstantly(
-                            self.attackButtonX, self.attackButtonY, delay=False)
-                        self.accountForPing(7)
+                        if(attackLocation != None):
+                            numberOfChargeAttacks = 0
 
-                        # Try to find the "Next" Button only once per turn.
-                        nextLocation = self.locate("next", customTries=1)
-                        if(nextLocation != None):
-                            if(self.debugMode):
+                            # Check if any character has 100% Charge Bar. If so, add 1 second per match.
+                            listOfOugis = pyautogui.locateAllOnScreen("images/fullCharge.png", region=(
+                                self.attackButtonX - 356, self.attackButtonY + 67, self.attackButtonX - 40, self.attackButtonY + 214))
+
+                            for ougi in listOfOugis:
+                                numberOfChargeAttacks += 1
+
+                            print(
+                                f"[COMBAT] Number of Characters ready to ougi: {numberOfChargeAttacks}")
+
+                            if (self.debugMode):
                                 print(
-                                    f"[DEBUG] Detected the Next Button. Clicking it now...")
-                            nextX, nextY = nextLocation
-                            self.clickPointInstantly(nextX, nextY, delay=False)
-                            self.accountForPing(5)
+                                    f"[DEBUG] Clicking Attack Button to end the current turn and waiting several seconds.")
+                            self.clickPointInstantly(
+                                self.attackButtonX, self.attackButtonY, delay=False)
+                            self.accountForPing(4 + numberOfChargeAttacks)
 
-                        # Increment the turn number by 1.
-                        turnNumber += 1
+                            # Increment the turn number by 1.
+                            turnNumber += 1
+                        elif(attackLocation == None):
+                            # Try to find the "Next" Button only once per turn.
+                            nextLocation = self.locate("next", customTries=1)
+                            if(nextLocation != None):
+                                if(self.debugMode):
+                                    print(
+                                        f"[DEBUG] Detected the Next Button. Clicking it now...")
+                                nextX, nextY = nextLocation
+                                self.clickPointInstantly(
+                                    nextX, nextY, delay=False)
+                                self.accountForPing(5)
+                        else:
+                            self.accountForPing(1)
 
                 # If it is the start of the Turn and it is the correct turn currently, grab the next line for execution by incrementing the list index.
                 if("turn" in line.lower() and int(line[5]) == turnNumber):
                     print(f"\n[COMBAT] Beginning Turn {line[5]}.\n")
                     i += 1
 
-                    # Strip any leading and trailing whitespaces.
-                    line = lines[i].strip()
+                    # Loop while searching for the "Attack" Button signaling to the bot that the game is ready for input. Meanwhile, look out for dialogs from Lyria and Vyrn.
+                    while (True):
+                        if(self.locate("attack", customTries=1) != None):
+                            break
+                        # Check if there are dialog boxes from either Lyria or Vyrn and click them away.
+                        if(self.findDialog("lyriaDialog", customTries=1) != None):
+                            print(
+                                "[DEBUG] Detected Lyria dialog. Closing it now...")
+                            lyriaDialogX, lyriaDialogY = self.findDialog(
+                                "lyriaDialog", customTries=1)
+                            self.clickPointInstantly(
+                                lyriaDialogX + 180, lyriaDialogY - 51, delay=False)
+                        elif(self.findDialog("vyrnDialog", customTries=1) != None):
+                            print(
+                                "[DEBUG] Detected Vyrn dialog. Closing it now...")
+                            vyrnDialogX, vyrnDialogY = self.findDialog(
+                                "vyrnDialog", customTries=1)
+                            self.clickPointInstantly(
+                                vyrnDialogX + 180, vyrnDialogY - 51, delay=False)
+                        else:
+                            self.accountForPing(1)
 
-                    # Determine which character will perform the action.
-                    characterSelected = 0
-                    if("character1" in line):
-                        characterSelected = 1
-                    elif("character2" in line):
-                        characterSelected = 2
-                    elif("character3" in line):
-                        characterSelected = 3
-                    elif("character4" in line):
-                        characterSelected = 4
+                    # Continue reading each line inside the Turn block until you reach the "end".
+                    while(True):
+                        # Strip any leading and trailing whitespaces.
+                        line = lines[i].strip()
+                        # Print each line read if debug mode is active.
+                        if(line[0] != "#" and line[0] != "/" and line.strip() != ""):
+                            if(self.debugMode):
+                                print(
+                                    f"[DEBUG] Line {lineNumber}: {line.strip()}")
+                        if ("end" in line):
+                            break
 
-                    # Now perform the skill specified in the read string.
-                    # TODO: Handle enemy targeting here as well.
-                    if(characterSelected != 0):
-                        # Select the character specified and return the tuple of the (x,y) coordinates of the "Attack" Button.
-                        print(f"Character {characterSelected} acts.")
-                        self.selectCharacter(characterSelected)
+                        # Determine which character will perform the action.
+                        characterSelected = 0
+                        if("character1" in line):
+                            characterSelected = 1
+                        elif("character2" in line):
+                            characterSelected = 2
+                        elif("character3" in line):
+                            characterSelected = 3
+                        elif("character4" in line):
+                            characterSelected = 4
 
-                        # Get all occurrences of "useSkill" and then click the skills specified in order from left to right. Then remove the first element as that is usually the character substring.
-                        skills = line.split(".")
-                        skills.pop(0)
+                        # Now perform the skill specified in the read string.
+                        # TODO: Handle enemy targeting here as well.
+                        if(characterSelected != 0):
+                            # Select the character specified and return the tuple of the (x,y) coordinates of the "Attack" Button.
+                            print(
+                                f"[COMBAT] Character {characterSelected} acts.")
+                            self.selectCharacter(characterSelected)
 
-                        # Loop through all occurrences and use the specified skills.
-                        for skill in skills:
-                            self.useCharacterSkills(
-                                self.attackButtonX, self.attackButtonY, characterSelected, skill)
+                            # Get all occurrences of "useSkill" and then click the skills specified in order from left to right. Then remove the first element as that is usually the character substring.
+                            skills = line.split(".")
+                            skills.pop(0)
 
-                        # Now click the Back button and wait 1 second.
-                        self.clickPointInstantly(
-                            self.attackButtonX - 322, self.attackButtonY, delay=False)
-                        self.accountForPing(1)
-                elif("end" in line):
+                            # Loop through all occurrences and use the specified skills.
+                            for skill in skills:
+                                self.useCharacterSkills(
+                                    self.attackButtonX, self.attackButtonY, characterSelected, skill)
+
+                            # Now click the Back button.
+                            self.clickPointInstantly(
+                                self.attackButtonX - 322, self.attackButtonY, delay=False)
+                            self.accountForPing(1)
+
+                            lineNumber += 1
+                            i += 1
+
+                if("end" in line):
                     # Increment by 1 to move to the next line for execution. After that, hit the "Attack" Button to end the turn.
                     # Note: The execution at this point will increment by 2 because of the incrementation after this elif statement so it is imperative that scripts have a space in between "end" and "Turn #:".
                     turnNumber += 1
                     i += 1
                     numberOfChargeAttacks = 0
 
-                    # Check if any character has 100% Charge Bar. If so, add 0.5 seconds per each match.
+                    # Check if any character has 100% Charge Bar. If so, add 1 second per match.
                     listOfOugis = pyautogui.locateAllOnScreen("images/fullCharge.png", region=(
                         self.attackButtonX - 356, self.attackButtonY + 67, self.attackButtonX - 40, self.attackButtonY + 214))
 
-                    for pos in listOfOugis:
-                        numberOfChargeAttacks += 0.5
+                    for ougi in listOfOugis:
+                        numberOfChargeAttacks += 1
+
+                    print(
+                        f"[COMBAT] Number of Characters ready to ougi: {numberOfChargeAttacks}")
 
                     if (self.debugMode):
                         print(
-                            f"[DEBUG] Number of Characters ready to ougi: {numberOfChargeAttacks}")
-                        print(
-                            f"[DEBUG] Clicking Attack Button now and waiting 7 seconds.")
+                            f"[DEBUG] Clicking Attack Button to end the current turn and waiting several seconds.")
                     self.clickPointInstantly(
                         self.attackButtonX, self.attackButtonY, delay=False)
-                    self.accountForPing(7 + numberOfChargeAttacks)
+                    self.accountForPing(4 + numberOfChargeAttacks)
 
                     # Try to find the "Next" Button only once per turn.
                     nextLocation = self.locate("next", customTries=1)
@@ -686,26 +749,50 @@ class Debug:
                 if(i >= len(lines)):
                     break
 
-            # Keep pressing the location of the "Attack"/"Next" Button until the bot reaches the Quest Results Screen.
+            # Keep pressing the location of the "Attack" / "Next" Button until the bot reaches the Quest Results Screen.
             print(
                 "\n[COMBAT] Bot has reached end of script. Pressing Attack until battle ends.")
             while (self.confirmLocation("expGained", customTries=1) == False):
+                # Check if there are dialog boxes from either Lyria or Vyrn and click them away.
+                if(self.findDialog("lyriaDialog", customTries=1) != None):
+                    print("[DEBUG] Detected Lyria dialog. Closing it now...")
+                    lyriaDialogX, lyriaDialogY = self.findDialog(
+                        "lyriaDialog", customTries=1)
+                    self.clickPointInstantly(
+                        lyriaDialogX + 180, lyriaDialogY - 51, delay=False)
+                elif(self.findDialog("vyrnDialog", customTries=1) != None):
+                    print("[DEBUG] Detected Vyrn dialog. Closing it now...")
+                    vyrnDialogX, vyrnDialogY = self.findDialog(
+                        "vyrnDialog", customTries=1)
+                    self.clickPointInstantly(
+                        vyrnDialogX + 180, vyrnDialogY - 51, delay=False)
+
                 attackLocation = self.locate("attack", customTries=1)
-                nextLocation = self.locate("next", customTries=1)
-                if(attackLocation != None):
+                if (attackLocation != None):
+                    # Check if any character has 100% Charge Bar. If so, add 1 second per match.
+                    numberOfChargeAttacks = 0
+                    listOfOugis = pyautogui.locateAllOnScreen("images/fullCharge.png", region=(
+                        self.attackButtonX - 356, self.attackButtonY + 67, self.attackButtonX - 40, self.attackButtonY + 214))
+
+                    for ougi in listOfOugis:
+                        numberOfChargeAttacks += 1
+
+                    print(
+                        f"[COMBAT] Number of Characters ready to ougi: {numberOfChargeAttacks}")
+
                     self.clickPointInstantly(
                         self.attackButtonX, self.attackButtonY, delay=False)
-                elif(nextLocation != None):
-                    self.clickPointInstantly(
-                        self.attackButtonX + 50, self.attackButtonY, delay=False)
-                self.accountForPing(2)
+                    self.accountForPing(7 + numberOfChargeAttacks)
+                else:
+                    nextLocation = self.locate("next", customTries=1)
+                    if(nextLocation != None):
+                        self.clickPointInstantly(
+                            self.attackButtonX + 50, self.attackButtonY, delay=False)
+                        self.accountForPing(5)
 
             # Try to click any detected "OK" Buttons several times.
             print("[INFO] Bot has reached the Quest Results Screen.")
             while (True):
-                if (self.confirmLocation("lootCollected", customTries=1)):
-                    break
-
                 # Check if there are dialog boxes from either Lyria or Vyrn and click them away.
                 if(self.findDialog("lyriaDialog", customTries=1) != None):
                     print("[DEBUG] Detected Lyria dialog. Closing it now...")
@@ -721,7 +808,9 @@ class Debug:
                         vyrnDialogX + 180, vyrnDialogY - 51, delay=False)
 
                 self.findButton("questResultsOK", customTries=3)
-                self.accountForPing(1)
+
+                if (self.confirmLocation("lootCollected", customTries=1)):
+                    break
 
             print(
                 f"\n[COMBAT] Combat is over.")

@@ -1,10 +1,10 @@
-# Test Combat Plan
+# Test Script Combat Plan
 
 Turn 1:
 	character1.useSkill(4).useSkill(2)
 	character4.useSkill(2)
 end
 
-Turn 3:
+Turn 4:
 	character2.useSkill(2)
 end
