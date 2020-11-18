@@ -1,9 +1,9 @@
-import debug
+from game import Game
 
 
 def main():
-    myDebug = debug.Debug(0.3, 0.9, True)
-    myDebug.startCombatMode("test")
+    myGame = Game(custom_mouse_speed=0.3, debug_mode=True)
+    myGame.test_combat_mode()
 
 
 if __name__ == "__main__":
