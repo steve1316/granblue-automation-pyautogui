@@ -14,10 +14,8 @@ class Game:
         self.image_tools = image_utils.ImageUtils(debug_mode=self.debug_mode)
         self.mouse_tools = mouse_utils.MouseUtils(
             mouse_speed=custom_mouse_speed, debug_mode=self.debug_mode)
-        self.home_button_x = None
-        self.home_button_y = None
-        self.attack_button_x = None
-        self.attack_button_y = None
+        self.home_button_location = None
+        self.attack_button_location = None
         self.calibrate_game_window()
 
     def wait_for_ping(self, seconds: int = 3):
@@ -42,12 +40,12 @@ class Game:
             print(
                 "\n[DEBUG] Recalibrating the dimensions of the game window...")
 
-        self.home_button_x, self.home_button_y = self.image_tools.find_button(
+        self.home_button_location = self.image_tools.find_button(
             "home", sleep_time=1)
 
         # TODO: Recalibrate based on "News" Button together with "Home" Button potentially for smaller sized screens. Need to get to Home Screen first.
-        self.image_tools.window_left = self.home_button_x - 439
-        self.image_tools.window_top = self.home_button_y - 890
+        self.image_tools.window_left = self.home_button_location[0] - 439
+        self.image_tools.window_top = self.home_button_location[1] - 890
         self.image_tools.window_width = self.image_tools.window_left + 480
         self.image_tools.window_height = self.image_tools.window_top + 917
 
@@ -73,7 +71,7 @@ class Game:
 
         self.calibrate_game_window()
         self.mouse_tools.move_and_click_point(
-            self.home_button_x, self.home_button_y)
+            self.home_button_location[0], self.home_button_location[1])
         if(confirm_location_check):
             self.image_tools.confirm_location("home")
         return None
@@ -121,8 +119,8 @@ class Game:
             print(
                 f"[DEBUG] Locating {summon_element_name.upper()} Summon Element tab was successful. Clicking it now...")
 
-        x, y = summon_element_location
-        self.mouse_tools.move_and_click_point(x, y)
+        self.mouse_tools.move_and_click_point(
+            summon_element_location[0], summon_element_location[1])
         return True
 
     def find_summon(self, summon_name: str):
@@ -140,10 +138,10 @@ class Game:
         tries = 3
         while(True):
             summon_location = self.image_tools.find_summon(
-                summon_name, self.home_button_x, self.home_button_y)
+                summon_name, self.home_button_location[0], self.home_button_location[1])
             if (summon_location != None):
-                x, y = summon_location
-                self.mouse_tools.move_and_click_point(x, y)
+                self.mouse_tools.move_and_click_point(
+                    summon_location[0], summon_location[1])
                 return True
             else:
                 # If a Summon is not found, start a Trial Battle to refresh Summons.
@@ -161,7 +159,7 @@ class Game:
         """
         self.go_back_home()
         self.mouse_tools.scroll_screen(
-            self.home_button_x, self.home_button_y - 50, -600)
+            self.home_button_location[0], self.home_button_location[1] - 50, -600)
 
         list_of_steps_in_order = ["gameplayExtras", "trialBattles",
                                   "trialBattles_oldLignoid", "trialBattles_play",
@@ -171,11 +169,13 @@ class Game:
         # Go through each step in order from left to right.
         while (len(list_of_steps_in_order) > 0):
             image_name = list_of_steps_in_order.pop(0)
-            x, y = self.image_tools.find_button(image_name)
-            self.mouse_tools.move_and_click_point(x, y)
+            temp_location = self.image_tools.find_button(image_name)
+            self.mouse_tools.move_and_click_point(
+                temp_location[0], temp_location[1])
             if(image_name == "wind"):
                 self.find_summon_element(image_name)
-                self.mouse_tools.move_and_click_point(x, y + 140)
+                self.mouse_tools.move_and_click_point(
+                    temp_location[0], temp_location[1] + 140)
                 self.wait_for_ping(5)
             elif (image_name == "retreat_confirmation"):
                 self.wait_for_ping(3)
@@ -199,10 +199,10 @@ class Game:
         if(group_number < 8):
             if(self.debug_mode):
                 print(
-                    f"\n[DEBUG] Now attempting to find Set A, Group {group_number}...")
+                    f"\n[DEBUG] Now attempting to find Set A...")
 
             while (set_location == None):
-                set_location = pyautogui.locateOnScreen(f"images/buttons/partySetA.png", confidence=self.image_tools.confidence, region=(
+                set_location = pyautogui.locateCenterOnScreen(f"images/buttons/partySetA.png", confidence=self.image_tools.confidence, region=(
                     self.image_tools.window_left, self.image_tools.window_top, self.image_tools.window_width, self.image_tools.window_height))
                 if (set_location == None):
                     if(self.debug_mode):
@@ -215,17 +215,17 @@ class Game:
                             f"[ERROR] Could not find Set A after several tries. Exiting Program...")
 
                     # See if the user had Set B active instead of Set A if matching failed.
-                    set_location = pyautogui.locateOnScreen(f"images/buttons/partySetB.png", confidence=self.image_tools.confidence, region=(
+                    set_location = pyautogui.locateCenterOnScreen(f"images/buttons/partySetB.png", confidence=self.image_tools.confidence, region=(
                         self.image_tools.window_left, self.image_tools.window_top, self.image_tools.window_width, self.image_tools.window_height))
 
                     self.wait_for_ping(sleep_time)
         else:
             if(self.debug_mode):
                 print(
-                    f"\n[DEBUG] Now attempting to find Set B, Group {group_number}...")
+                    f"\n[DEBUG] Now attempting to find Set B...")
 
             while (set_location == None):
-                set_location = pyautogui.locateOnScreen(f"images/buttons/partySetB.png", confidence=self.image_tools.confidence, region=(
+                set_location = pyautogui.locateCenterOnScreen(f"images/buttons/partySetB.png", confidence=self.image_tools.confidence, region=(
                     self.image_tools.window_left, self.image_tools.window_top, self.image_tools.window_width, self.image_tools.window_height))
                 if (set_location == None):
                     if(self.debug_mode):
@@ -238,7 +238,7 @@ class Game:
                             f"[ERROR] Could not find Set B after several tries. Exiting Program...")
 
                     # See if the user had Set A active instead of Set B if matching failed.
-                    set_location = pyautogui.locateOnScreen(f"images/buttons/partySetA.png", confidence=self.image_tools.confidence, region=(
+                    set_location = pyautogui.locateCenterOnScreen(f"images/buttons/partySetA.png", confidence=self.image_tools.confidence, region=(
                         self.image_tools.window_left, self.image_tools.window_top, self.image_tools.window_width, self.image_tools.window_height))
 
                     self.wait_for_ping(sleep_time)
@@ -248,45 +248,50 @@ class Game:
                 f"[DEBUG] Successfully found the correct Set. Now selecting Group {group_number}...")
 
         # Center the mouse on the Set A / Set B Button and then click the correct Group Number Tab.
-        x, y = pyautogui.center(set_location)
         if(group_number == 1):
             self.mouse_tools.click_point_instantly(
-                x - 350, y + 50)
+                set_location[0] - 350, set_location[1] + 50)
         elif(group_number == 2):
             self.mouse_tools.click_point_instantly(
-                x - 290, y + 50)
+                set_location[0] - 290, set_location[1] + 50)
         elif(group_number == 3):
             self.mouse_tools.click_point_instantly(
-                x - 230, y + 50)
+                set_location[0] - 230, set_location[1] + 50)
         elif(group_number == 4):
             self.mouse_tools.click_point_instantly(
-                x - 170, y + 50)
+                set_location[0] - 170, set_location[1] + 50)
         elif(group_number == 5):
             self.mouse_tools.click_point_instantly(
-                x - 110, y + 50)
+                set_location[0] - 110, set_location[1] + 50)
         elif(group_number == 6):
             self.mouse_tools.click_point_instantly(
-                x - 50, y + 50)
+                set_location[0] - 50, set_location[1] + 50)
         else:
             self.mouse_tools.click_point_instantly(
-                x + 10, y + 50)
+                set_location[0] + 10, set_location[1] + 50)
 
         # Now select the correct Party.
         if(self.debug_mode):
             print(
                 f"[DEBUG] Successfully found Group {group_number}. Now selecting Party {party_number}...")
         if(party_number == 1):
-            self.mouse_tools.click_point_instantly(x - 309, y + 325)
+            self.mouse_tools.click_point_instantly(
+                set_location[0] - 309, set_location[1] + 325)
         elif(party_number == 2):
-            self.mouse_tools.click_point_instantly(x - 252, y + 325)
+            self.mouse_tools.click_point_instantly(
+                set_location[0] - 252, set_location[1] + 325)
         elif(party_number == 3):
-            self.mouse_tools.click_point_instantly(x - 195, y + 325)
+            self.mouse_tools.click_point_instantly(
+                set_location[0] - 195, set_location[1] + 325)
         elif(party_number == 4):
-            self.mouse_tools.click_point_instantly(x - 138, y + 325)
+            self.mouse_tools.click_point_instantly(
+                set_location[0] - 138, set_location[1] + 325)
         elif(party_number == 5):
-            self.mouse_tools.click_point_instantly(x - 81, y + 325)
+            self.mouse_tools.click_point_instantly(
+                set_location[0] - 81, set_location[1] + 325)
         elif(party_number == 6):
-            self.mouse_tools.click_point_instantly(x - 24, y + 325)
+            self.mouse_tools.click_point_instantly(
+                set_location[0] - 24, set_location[1] + 325)
 
         if(self.debug_mode):
             print(
@@ -338,24 +343,19 @@ class Game:
         Returns:
             None
         """
-
-        if(self.debug_mode):
-            print(
-                f"[DEBUG] Attack Button location: ({self.attack_button_x}, {self.attack_button_y})")
-
         # Click the portrait of the specified character.
         if(character_number == 1):
             self.mouse_tools.click_point_instantly(
-                self.attack_button_x - 317, self.attack_button_y + 123)
+                self.attack_button_location[0] - 317, self.attack_button_location[1] + 123)
         elif(character_number == 2):
             self.mouse_tools.click_point_instantly(
-                self.attack_button_x - 240, self.attack_button_y + 123)
+                self.attack_button_location[0] - 240, self.attack_button_location[1] + 123)
         elif(character_number == 3):
             self.mouse_tools.click_point_instantly(
-                self.attack_button_x - 158, self.attack_button_y + 123)
+                self.attack_button_location[0] - 158, self.attack_button_location[1] + 123)
         elif(character_number == 4):
             self.mouse_tools.click_point_instantly(
-                self.attack_button_x - 76, self.attack_button_y + 123)
+                self.attack_button_location[0] - 76, self.attack_button_location[1] + 123)
 
         self.wait_for_ping(2)
 
@@ -375,19 +375,19 @@ class Game:
         if("useSkill(1)" in skill):
             print(f"[COMBAT] Character {character_selected} uses Skill 1")
             self.mouse_tools.click_point_instantly(
-                self.attack_button_x - 213, self.attack_button_y + 171)
+                self.attack_button_location[0] - 213, self.attack_button_location[1] + 171)
         elif("useSkill(2)" in skill):
             print(f"[COMBAT] Character {character_selected} uses Skill 2")
             self.mouse_tools.click_point_instantly(
-                self.attack_button_x - 132, self.attack_button_y + 171)
+                self.attack_button_location[0] - 132, self.attack_button_location[1] + 171)
         elif("useSkill(3)" in skill):
             print(f"[COMBAT] Character {character_selected} uses Skill 3")
             self.mouse_tools.click_point_instantly(
-                self.attack_button_x - 51, self.attack_button_y + 171)
+                self.attack_button_location[0] - 51, self.attack_button_location[1] + 171)
         elif("useSkill(4)" in skill):
             print(f"[COMBAT] Character {character_selected} uses Skill 4")
             self.mouse_tools.click_point_instantly(
-                self.attack_button_x + 39, self.attack_button_y + 171)
+                self.attack_button_location[0] + 39, self.attack_button_location[1] + 171)
 
         self.wait_for_ping(2)
         return None
@@ -401,7 +401,7 @@ class Game:
         # Check if any character has 100% Charge Bar. If so, add 1 second per match.
         number_of_charge_attacks = 0
         list_of_charge_attacks = list(pyautogui.locateAllOnScreen("images/fullCharge.png", region=(
-            self.attack_button_x - 356, self.attack_button_y + 67, self.attack_button_x - 40, self.attack_button_y + 214)))
+            self.attack_button_location[0] - 356, self.attack_button_location[1] + 67, self.attack_button_location[0] - 40, self.attack_button_location[1] + 214)))
 
         number_of_charge_attacks = len(list_of_charge_attacks)
         return number_of_charge_attacks
@@ -416,16 +416,15 @@ class Game:
             None
         """
         dialog_location = self.image_tools.find_dialog(
-            dialog_file_name, self.attack_button_x, self.attack_button_y, tries=1)
+            dialog_file_name, self.attack_button_location[0], self.attack_button_location[1], tries=1)
 
         if (dialog_location != None):
             if(self.debug_mode):
                 print(
-                    "[DEBUG] Detected dialog window from Lyria/Vyrn on Combat Screen. Closing it now...")
+                    "[DEBUG] Detected dialog window from Lyria/Vyrn on Combat Screen. Closing it now...\n")
 
-            dialog_x, dialog_y = dialog_location
             self.mouse_tools.click_point_instantly(
-                dialog_x + 180, dialog_y - 51)
+                dialog_location[0] + 180, dialog_location[1] - 51)
 
         return None
 
@@ -456,14 +455,13 @@ class Game:
                 if(line[0] != "#" and line[0] != "/" and line.strip() != ""):
                     if(self.debug_mode):
                         print(f"[DEBUG] Line {line_number}: {line.strip()}")
-                # else:
-                #     line_number += 1
+
+                line_number += 1
 
                 # Save the position of the center of the "Attack" Button. If already found, don't call this again.
-                if(self.attack_button_x == None or self.attack_button_y == None):
-                    attack_button_location = self.image_tools.find_button(
+                if(self.attack_button_location == None):
+                    self.attack_button_location = self.image_tools.find_button(
                         "attack")
-                    self.attack_button_x, self.attack_button_y = attack_button_location
 
                 # Check if there are any dialog windows are open.
                 self.find_dialog_in_combat("lyriaDialog")
@@ -476,9 +474,7 @@ class Game:
                             f"\n[DEBUG] Current Turn Number {turn_number} does not match expected Turn Number {line[5]}. Pressing Attack Button until they do.")
 
                     while (int(line[5]) != turn_number):
-                        attack_button_location = self.image_tools.find_button(
-                            "attack", tries=1)
-                        if (attack_button_location != None):
+                        if (self.image_tools.find_button("attack", tries=1) != None):
                             number_of_charge_attacks = self.find_charge_attacks()
                             print(
                                 f"[COMBAT] Number of Characters ready to ougi: {number_of_charge_attacks}")
@@ -488,9 +484,9 @@ class Game:
                                     f"[DEBUG] Clicking Attack Button to end the current turn and waiting several seconds.")
 
                             self.mouse_tools.click_point_instantly(
-                                self.attack_button_x, self.attack_button_y)
+                                self.attack_button_location[0], self.attack_button_location[1])
 
-                            self.wait_for_ping(5 + number_of_charge_attacks)
+                            self.wait_for_ping(6 + number_of_charge_attacks)
                             turn_number += 1
                         elif(attack_button_location == None):
                             # Try to find the "Next" Button only once per turn.
@@ -501,25 +497,22 @@ class Game:
                                     print(
                                         f"[DEBUG] Detected the Next Button. Clicking it now...")
 
-                                next_button_x, next_button_y = next_button_location
                                 self.mouse_tools.click_point_instantly(
-                                    next_button_x, next_button_y)
+                                    next_button_location[0], next_button_location[1])
 
-                                self.wait_for_ping(5)
+                                self.wait_for_ping(6)
                         else:
                             self.wait_for_ping(1)
 
                 # If it is the start of the Turn and it is currently the correct turn, grab the next line for execution.
-                if("turn" in line.lower() and int(line[5]) == turn_number):
-                    print(f"\n[COMBAT] Beginning Turn {line[5]}.\n")
+                if ("turn" in line.lower() and int(line[5]) == turn_number):
+                    print(
+                        "\n======================================================================")
+                    print(f"[COMBAT] Beginning Turn {line[5]}.")
+                    print(
+                        "======================================================================\n")
                     i += 1
                     line_number += 1
-
-                    # Loop while searching for the "Attack" Button signaling to the bot that the game is ready for input. Meanwhile, look out for dialog windows from Lyria and Vyrn.
-                    # while (self.image_tools.find_button("attack", tries=1) == None):
-                    #     # Check if there are any dialog windows are open.
-                    #     self.find_dialog_in_combat("lyriaDialog")
-                    #     self.find_dialog_in_combat("vyrnDialog")
 
                     self.find_dialog_in_combat("lyriaDialog")
                     self.find_dialog_in_combat("vyrnDialog")
@@ -533,7 +526,7 @@ class Game:
                         if(line[0] != "#" and line[0] != "/" and line.strip() != ""):
                             if(self.debug_mode):
                                 print(
-                                    f"[DEBUG] Line {line_number}: {line.strip()}")
+                                    f"\n[DEBUG] Line {line_number}: {line.strip()}")
 
                         # Determine which character will perform the action.
                         character_selected = 0
@@ -551,7 +544,7 @@ class Game:
                         if(character_selected != 0):
                             # Select the character specified.
                             print(
-                                f"[COMBAT] Character {character_selected} acts.")
+                                f"\n[COMBAT] Character {character_selected} acts.")
                             self.select_character(character_selected)
 
                             # Get all occurrences of "useSkill" and then remove the first element as that is usually the "character#" substr. Then execute each skill from left to right.
@@ -563,7 +556,7 @@ class Game:
 
                             # Now click the Back button.
                             self.mouse_tools.click_point_instantly(
-                                self.attack_button_x - 322, self.attack_button_y)
+                                self.attack_button_location[0] - 322, self.attack_button_location[1])
 
                             # Increment the following by 1 and continue to the next line for execution.
                             line_number += 1
@@ -587,7 +580,7 @@ class Game:
                             f"[DEBUG] Clicking Attack Button to end the current turn and waiting several seconds.")
 
                     self.mouse_tools.click_point_instantly(
-                        self.attack_button_x, self.attack_button_y)
+                        self.attack_button_location[0], self.attack_button_location[1])
                     self.wait_for_ping(5 + number_of_charge_attacks)
 
                     # Try to find the "Next" Button only once per turn.
@@ -598,9 +591,8 @@ class Game:
                             print(
                                 f"[DEBUG] Detected Next Button. Clicking it now...")
 
-                        next_button_x, next_button_y = next_button_location
                         self.mouse_tools.click_point_instantly(
-                            next_button_x, next_button_y)
+                            next_button_location[0], next_button_location[1])
 
                         self.wait_for_ping(5)
 
@@ -627,14 +619,14 @@ class Game:
                         f"[COMBAT] Number of Characters ready to ougi: {number_of_charge_attacks}")
 
                     self.mouse_tools.click_point_instantly(
-                        self.attack_button_x, self.attack_button_y)
+                        self.attack_button_location[0], self.attack_button_location[1])
                     self.wait_for_ping(7 + number_of_charge_attacks)
                 else:
                     next_button_location = self.image_tools.find_button(
                         "next", tries=1)
                     if(next_button_location != None):
                         self.mouse_tools.click_point_instantly(
-                            self.attack_button_x + 50, self.attack_button_y)
+                            self.attack_button_location[0] + 50, self.attack_button_location[1])
                         self.wait_for_ping(5)
 
             # Try to click any detected "OK" Buttons several times.
@@ -681,7 +673,7 @@ class Game:
             print("\n[TEST] Finding all Special Select Buttons...")
             self.image_tools.confirm_location("special")
             self.mouse_tools.scroll_screen(
-                self.home_button_x, self.home_button_y - 50, -300)
+                self.home_button_location[0], self.home_button_location[1] - 50, -300)
             self.wait_for_ping(1)
             list_of_select_button_locations = list(pyautogui.locateAllOnScreen("images/buttons/select.png",
                                                                                region=(self.image_tools.window_left, self.image_tools.window_top, self.image_tools.window_width, self.image_tools.window_height)))
