@@ -43,7 +43,7 @@ class ImageUtils:
         self.debug_mode = debug_mode
         self.mouse_tools = mouse_utils.MouseUtils(debug_mode=self.debug_mode)
 
-    def find_button(self, button_name: str, confirm_location_check: bool = False, tries: int = 3, sleep_time: int = 2):
+    def find_button(self, button_name: str, confirm_location_check: bool = False, tries: int = 5, sleep_time: int = 2):
         """Find the location of the specified button.
 
         Args:
@@ -76,7 +76,7 @@ class ImageUtils:
                 tries -= 1
                 if (tries <= 0):
                     print(
-                        f"[ERROR] Failed to find the {button_name.upper()} Button after several tries.")
+                        f"\n[ERROR] Failed to find the {button_name.upper()} Button after several tries.")
                     return None
 
                 if(self.debug_mode):
@@ -94,12 +94,12 @@ class ImageUtils:
 
         return location
 
-    def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, tries: int = 5, sleep_time: int = 2):
+    def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, tries: int = 4, sleep_time: int = 2):
         """Find the location of the specified summon. Will attempt to scroll the screen down to see more Summons if the initial screen position yielded no matches.
 
         Args:
             summon_name (str): Name of the summon image file in the images/summons/ folder.
-            tries (int, optional): Number of tries before failing. Defaults to 5.
+            tries (int, optional): Number of tries before failing. Defaults to 4.
             home_button_x (int): X coordinate of where the center of the Home Button is.
             home_button_y (int): Y coordinate of where the center of the Home Button is.
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 2.
@@ -126,7 +126,7 @@ class ImageUtils:
                 tries -= 1
                 if (tries == 0):
                     print(
-                        f"[ERROR] Could not find {summon_name.upper()} Summon after several tries.")
+                        f"\n[ERROR] Could not find {summon_name.upper()} Summon after several tries.")
                     return None
 
                 # If matching failed, scroll the screen down to see more Summons.
@@ -211,7 +211,8 @@ class ImageUtils:
                 tries -= 1
                 if (tries == 0):
                     print(
-                        f"[ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen after several tries.")
+                        f"\n[ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen after several tries.")
+                    time.sleep(2)
                     return False
 
                 if(self.debug_mode):
@@ -224,4 +225,5 @@ class ImageUtils:
             print(
                 f"[DEBUG] Bot's location is at {location_name.upper()} Screen.")
 
+        time.sleep(2)
         return True

@@ -135,21 +135,16 @@ class Game:
         Returns:
             (bool): True if the Summon was found and clicked. Otherwise, return False.
         """
-        tries = 3
-        while(True):
-            summon_location = self.image_tools.find_summon(
-                summon_name, self.home_button_location[0], self.home_button_location[1])
-            if (summon_location != None):
-                self.mouse_tools.move_and_click_point(
-                    summon_location[0], summon_location[1])
-                return True
-            else:
-                # If a Summon is not found, start a Trial Battle to refresh Summons.
-                self.reset_summons()
-                tries -= 1
-                if (tries == 0):
-                    break
-        return False
+        summon_location = self.image_tools.find_summon(
+            summon_name, self.home_button_location[0], self.home_button_location[1])
+        if (summon_location != None):
+            self.mouse_tools.move_and_click_point(
+                summon_location[0], summon_location[1])
+            return True
+        else:
+            # If a Summon is not found, start a Trial Battle to refresh Summons.
+            self.reset_summons()
+            return False
 
     def reset_summons(self):
         """Reset the Summons available by starting and then retreating from a Trial Battle.
@@ -157,9 +152,14 @@ class Game:
         Returns:
             None
         """
-        self.go_back_home()
-        self.mouse_tools.scroll_screen(
-            self.home_button_location[0], self.home_button_location[1] - 50, -600)
+        self.go_back_home(confirm_location_check=True)
+
+        # Could not use MouseUtil's implementation to scroll the screen for some reason so had to do this manually.
+        # self.mouse_tools.scroll_screen(self.home_button_location[0], self.home_button_location[1] - 50, -400)
+        pyautogui.moveTo(
+            self.home_button_location[0], self.home_button_location[1] - 50)
+        pyautogui.scroll(-400)
+        self.wait_for_ping(1)
 
         list_of_steps_in_order = ["gameplayExtras", "trialBattles",
                                   "trialBattles_oldLignoid", "trialBattles_play",
@@ -169,16 +169,17 @@ class Game:
         # Go through each step in order from left to right.
         while (len(list_of_steps_in_order) > 0):
             image_name = list_of_steps_in_order.pop(0)
-            temp_location = self.image_tools.find_button(image_name)
-            self.mouse_tools.move_and_click_point(
-                temp_location[0], temp_location[1])
             if(image_name == "wind"):
                 self.find_summon_element(image_name)
                 self.mouse_tools.move_and_click_point(
                     temp_location[0], temp_location[1] + 140)
-                self.wait_for_ping(5)
-            elif (image_name == "retreat_confirmation"):
-                self.wait_for_ping(3)
+                self.wait_for_ping(1)
+            else:
+                self.wait_for_ping(1)
+                temp_location = self.image_tools.find_button(image_name)
+                self.mouse_tools.move_and_click_point(
+                    temp_location[0], temp_location[1])
+
         return None
 
     def find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 3, sleep_time: int = 3):
@@ -661,9 +662,10 @@ class Game:
             "\n[TEST] Testing Combat Mode on Normal Difficulty Angel Halo mission now...")
 
         summon_check = False
+        tries = 3
         while(summon_check == False):
             # First go to the Home Screen and calibrate the dimensions of the game window. Then navigation will be as follows: Home Screen -> Quest Screen -> Special Screen.
-            self.go_back_home()
+            self.go_back_home(confirm_location_check=True)
             list_of_button_names = ["quest", "special"]
             for button_name in list_of_button_names:
                 x, y = self.image_tools.find_button(button_name)
@@ -701,7 +703,12 @@ class Game:
             # Locate Dark summons and click on the first ULB Bahamut.
             print("\n[TEST] Selecting the first found ULB Bahamut Summon...")
             self.find_summon_element("dark")
-            summon_check = self.find_summon("bahamutULB")
+            summon_check = self.find_summon("kaguyaFLB")
+            if (summon_check == False):
+                tries -= 1
+                if (tries <= 0):
+                    sys.exit(
+                        "[ERROR] Could not find summon after multiple refreshes. Exiting application...")
 
         # Select first Group, second Party.
         print("\n[TEST] Selecting First Group, Second Party...")

@@ -41,8 +41,9 @@ class MouseUtils:
             None
         """
         if(self.debug_mode):
-            print(f"\n[DEBUG] Now scrolling the screen from ({x}, {y})...")
-        pyautogui.scroll(scroll_clicks, x, y)
+            print(
+                f"\n[DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
+        pyautogui.scroll(scroll_clicks, x=x, y=y)
         return None
 
     def move_and_click_point(self, x: int, y: int, mouse_speed: float = 0.0, mouse_clicks=1):
