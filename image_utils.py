@@ -76,7 +76,7 @@ class ImageUtils:
                 tries -= 1
                 if (tries <= 0):
                     print(
-                        f"\n[ERROR] Failed to find the {button_name.upper()} Button after several tries.")
+                        f"[ERROR] Failed to find the {button_name.upper()} Button after several tries.")
                     return None
 
                 if(self.debug_mode):
@@ -128,7 +128,7 @@ class ImageUtils:
                 tries -= 1
                 if (tries == 0):
                     print(
-                        f"\n[ERROR] Could not find {summon_name.upper()} Summon after several tries.")
+                        f"[ERROR] Could not find {summon_name.upper()} Summon after several tries.")
                     return None
 
                 # If matching failed, scroll the screen down to see more Summons.
@@ -173,7 +173,7 @@ class ImageUtils:
 
                 if(self.debug_mode):
                     print(
-                        f"[DEBUG] Locating {dialog_name.upper()} Dialog failed. Trying again in 5 seconds...")
+                        f"[DEBUG] Locating {dialog_name.upper()} Dialog failed. Trying again in {sleep_time} seconds...")
 
                 time.sleep(sleep_time)
 
@@ -217,7 +217,7 @@ class ImageUtils:
                 tries -= 1
                 if (tries == 0):
                     print(
-                        f"\n[ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen after several tries.")
+                        f"[ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen after several tries.")
                     time.sleep(2)
                     return False
 
@@ -252,10 +252,6 @@ class ImageUtils:
             for file in files:
                 file_name = os.path.splitext(str(file))[0]
                 if (file_name.lower() == image_name.lower()):
-                    if(self.debug_mode):
-                        print(
-                            f"\n[DEBUG] Image file named \"{image_name}\" exists in \"{root}\"! Proceeding to search all occurences of image on screen...")
-
                     if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None and custom_region == None):
                         locations = list(pyautogui.locateAllOnScreen(
                             f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
@@ -274,6 +270,6 @@ class ImageUtils:
                     return locations
 
         print(
-            f"\n[ERROR] Given file name does not exist in /images/ folder.")
+            f"[ERROR] Given file name does not exist in /images/ folder.")
 
         return None
