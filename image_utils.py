@@ -1,6 +1,7 @@
 import pyautogui
 import cv2  # Needed for confidence argument. Comes from opencv-python package.
 import time
+import os
 
 import mouse_utils
 
@@ -19,8 +20,6 @@ class ImageUtils:
 
     window_height (int, optional): The bottom right corner of the region for image matching. Defaults to None.
 
-    custom_confidence (float, optional): The accuracy threshold for image matching. Defaults to 0.9
-
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to True.
 
     Methods
@@ -32,22 +31,23 @@ class ImageUtils:
         Confirm the bot's position by searching for the header image.
     """
 
-    def __init__(self, window_left: int = None, window_top: int = None, window_width: int = None, window_height: int = None, custom_confidence: float = 0.9, debug_mode: bool = False):
+    def __init__(self, window_left: int = None, window_top: int = None, window_width: int = None, window_height: int = None, debug_mode: bool = False):
         super().__init__()
 
         self.window_left = window_left
         self.window_top = window_top
         self.window_width = window_width
         self.window_height = window_height
-        self.confidence = custom_confidence
         self.debug_mode = debug_mode
         self.mouse_tools = mouse_utils.MouseUtils(debug_mode=self.debug_mode)
 
-    def find_button(self, button_name: str, confirm_location_check: bool = False, tries: int = 5, sleep_time: int = 2):
+    def find_button(self, button_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, confirm_location_check: bool = False, tries: int = 5, sleep_time: int = 2):
         """Find the location of the specified button.
 
         Args:
             button_name (str): Name of the button image file in the images/buttons/ folder.
+            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
+            grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
             confirm_location_check (bool, optional): Check to see if the location is correct. Defaults to False.
             tries (int, optional): Number of tries before failing. Defaults to 5.
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 2.
@@ -66,11 +66,11 @@ class ImageUtils:
         # Loop until location is found or return None if image matching failed.
         while (location == None):
             if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence=self.confidence, region=(
+                location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
                     self.window_left, self.window_top, self.window_width, self.window_height))
             else:
                 location = pyautogui.locateCenterOnScreen(
-                    f"images/buttons/{button_name.lower()}.png", confidence=self.confidence)
+                    f"images/buttons/{button_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check)
 
             if (location == None):
                 tries -= 1
@@ -94,14 +94,16 @@ class ImageUtils:
 
         return location
 
-    def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, tries: int = 4, sleep_time: int = 2):
+    def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 4, sleep_time: int = 2):
         """Find the location of the specified summon. Will attempt to scroll the screen down to see more Summons if the initial screen position yielded no matches.
 
         Args:
             summon_name (str): Name of the summon image file in the images/summons/ folder.
-            tries (int, optional): Number of tries before failing. Defaults to 4.
             home_button_x (int): X coordinate of where the center of the Home Button is.
             home_button_y (int): Y coordinate of where the center of the Home Button is.
+            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
+            grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
+            tries (int, optional): Number of tries before failing. Defaults to 4.
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 2.
 
         Returns:
@@ -116,7 +118,7 @@ class ImageUtils:
         time.sleep(1)
 
         while (summon_location == None):
-            summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_name.lower()}.png", confidence=self.confidence, region=(
+            summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
                 self.window_left, self.window_top, self.window_width, self.window_height))
             if (summon_location == None):
                 if(self.debug_mode):
@@ -141,13 +143,15 @@ class ImageUtils:
 
         return summon_location
 
-    def find_dialog(self, dialog_name: str, attack_button_x: int, attack_button_y: int, tries: int = 5, sleep_time: int = 2):
+    def find_dialog(self, dialog_name: str, attack_button_x: int, attack_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 2):
         """Attempt to find the specified dialog window.
 
         Args:
             dialog_name (str): The name of the image file's name of the dialog window.
             attack_button_x (int): X coordinate of where the center of the Attack Button is.
             attack_button_y (int): Y coordinate of where the center of the Attack Button is.
+            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
+            grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
             tries (int, optional): Number of tries before failing. Defaults to 5.
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 2.
 
@@ -159,7 +163,7 @@ class ImageUtils:
         time.sleep(1)
 
         while (dialog_location == None):
-            dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/{dialog_name.lower()}.png", confidence=self.confidence, region=(
+            dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/{dialog_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
                 attack_button_x - 350, attack_button_y + 28, attack_button_x - 264, attack_button_y + 50))
 
             if (dialog_location == None):
@@ -179,11 +183,13 @@ class ImageUtils:
 
         return dialog_location
 
-    def confirm_location(self, location_name: str, tries: int = 5, sleep_time: int = 2):
+    def confirm_location(self, location_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 2):
         """Confirm the bot's position by searching for the header image.
 
         Args:
             location_name (str): Name of the header image file in the images/headers/ folder.
+            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
+            grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
             tries (int, optional): Number of tries before failing. Defaults to 5.
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 2.
 
@@ -201,11 +207,11 @@ class ImageUtils:
         # Loop until location is found or return False if image matching failed.
         while (location == None):
             if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name}Header.png", confidence=self.confidence, region=(
+                location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name}Header.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
                     self.window_left, self.window_top, self.window_width, self.window_height))
             else:
                 location = pyautogui.locateCenterOnScreen(
-                    f"images/headers/{location_name}Header.png", confidence=self.confidence)
+                    f"images/headers/{location_name}Header.png", confidence=custom_confidence, grayscale=grayscale_check)
 
             if (location == None):
                 tries -= 1
@@ -227,3 +233,39 @@ class ImageUtils:
 
         time.sleep(2)
         return True
+
+    def find_all(self, image_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False):
+        """Find the specified image file by searching through all subfolders and locating all occurrences on the screen.
+
+        Args:
+            image_name (str): Name of the image file in the /images/ folder.
+            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
+            grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
+
+        Returns:
+            locations (list[Box]): List of Boxes where each occurrence is found on the screen. If no occurrence was found, return a empty list. Or if the file does not exist, return None.
+        """
+        # Find file by searching subfolders.
+        dir_path = os.path.dirname(os.path.realpath(__file__))
+        for root, dirs, files in os.walk(f"{dir_path}/images/"):
+            for file in files:
+                file_name = os.path.splitext(str(file))[0]
+                if (file_name.lower() == image_name.lower()):
+                    if(self.debug_mode):
+                        print(
+                            f"\n[DEBUG] Image file named \"{image_name}\" exists in \"{root}\"! Proceeding to search all occurences of image on screen...")
+
+                    if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
+                        locations = list(pyautogui.locateAllOnScreen(
+                            f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
+                                self.window_left, self.window_top, self.window_width, self.window_height)))
+                    else:
+                        locations = list(pyautogui.locateAllOnScreen(
+                            f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check))
+
+                    return locations
+
+        print(
+            f"\n[ERROR] Given file name does not exist in /images/ folder.")
+
+        return None
