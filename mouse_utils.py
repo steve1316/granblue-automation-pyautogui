@@ -42,7 +42,7 @@ class MouseUtils:
         """
         if(self.debug_mode):
             print(
-                f"\n[DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
+                f"[DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
         pyautogui.scroll(scroll_clicks, x=x, y=y)
         return None
 

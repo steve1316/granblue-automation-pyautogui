@@ -30,8 +30,11 @@ class Game:
         time.sleep(seconds)
         return None
 
-    def calibrate_game_window(self):
+    def calibrate_game_window(self, display_info_check: bool = False):
         """Recalibrate the dimensions of the game window for fast and accurate image matching.
+
+        Args:
+            display_info_check (bool, optional): Display display size of screen and game window size. Defaults to False.
 
         Returns:
             None
@@ -51,17 +54,23 @@ class Game:
 
         if(self.debug_mode):
             print(
-                f"\n[DEBUG] Screen size: {pyautogui.size()}.")
+                "\n[SUCCESS] Dimensions of the game window has been successfully recalibrated.")
+
+        if(display_info_check):
+            print("\n############################################################")
+            print(f"[INFO] Screen size: {pyautogui.size()}.")
             print(
-                f"[DEBUG] Game window size: Region({self.image_tools.window_left}, {self.image_tools.window_top}, {self.image_tools.window_width}, {self.image_tools.window_height}).")
+                f"[INFO] Game window size: Region({self.image_tools.window_left}, {self.image_tools.window_top}, {self.image_tools.window_width}, {self.image_tools.window_height}).")
+            print("############################################################")
 
         return None
 
-    def go_back_home(self, confirm_location_check: bool = False):
+    def go_back_home(self, confirm_location_check: bool = False, display_info_check: bool = False):
         """Go back to the Home Screen to reset the bot's position. Also recalibrates the region dimensions of the game window.
 
         Args:
             confirm_location_check (bool, optional): Check to see if the location is correct. Defaults to False.
+            display_info_check (bool, optional): Display display size of screen and game window size. Defaults to False.
 
         Returns:
             None
@@ -69,11 +78,17 @@ class Game:
         if(self.debug_mode):
             print("\n[DEBUG] Moving back to the Home Screen...")
 
-        self.calibrate_game_window()
+        if (display_info_check):
+            self.calibrate_game_window(display_info_check=True)
+        else:
+            self.calibrate_game_window()
+
         self.mouse_tools.move_and_click_point(
             self.home_button_location[0], self.home_button_location[1])
+
         if(confirm_location_check):
             self.image_tools.confirm_location("home")
+
         return None
 
     def find_summon_element(self, summon_element_name: str, tries: int = 3):
@@ -117,7 +132,7 @@ class Game:
 
         if(self.debug_mode):
             print(
-                f"[DEBUG] Locating {summon_element_name.upper()} Summon Element tab was successful. Clicking it now...")
+                f"[SUCCESS] Locating {summon_element_name.upper()} Summon Element tab was successful. Clicking it now...")
 
         self.mouse_tools.move_and_click_point(
             summon_element_location[0], summon_element_location[1])
@@ -401,8 +416,10 @@ class Game:
         """
         # Check if any character has 100% Charge Bar. If so, add 1 second per match.
         number_of_charge_attacks = 0
-        list_of_charge_attacks = list(pyautogui.locateAllOnScreen("images/fullCharge.png", region=(
-            self.attack_button_location[0] - 356, self.attack_button_location[1] + 67, self.attack_button_location[0] - 40, self.attack_button_location[1] + 214)))
+        list_of_charge_attacks = self.image_tools.find_all("fullCharge", custom_region=(
+            self.attack_button_location[0] - 356, self.attack_button_location[1] + 67, self.attack_button_location[0] - 40, self.attack_button_location[1] + 214))
+        # list_of_charge_attacks = list(pyautogui.locateAllOnScreen("images/fullCharge.png", region=(
+        #     self.attack_button_location[0] - 356, self.attack_button_location[1] + 67, self.attack_button_location[0] - 40, self.attack_button_location[1] + 214)))
 
         number_of_charge_attacks = len(list_of_charge_attacks)
         return number_of_charge_attacks
@@ -658,52 +675,64 @@ class Game:
         Returns:
             None
         """
+        print("\n############################################################")
         print(
-            "\n[TEST] Testing Combat Mode on Normal Difficulty Angel Halo mission now...")
+            "[TEST] Testing Combat Mode on Normal Difficulty Angel Halo mission now...")
+        print("############################################################")
 
         summon_check = False
-        tries = 3
+        tries = 2
         while(summon_check == False):
             # First go to the Home Screen and calibrate the dimensions of the game window. Then navigation will be as follows: Home Screen -> Quest Screen -> Special Screen.
-            self.go_back_home(confirm_location_check=True)
+            self.go_back_home(confirm_location_check=True,
+                              display_info_check=True)
             list_of_button_names = ["quest", "special"]
             for button_name in list_of_button_names:
                 x, y = self.image_tools.find_button(button_name)
                 self.mouse_tools.move_and_click_point(x, y)
 
             # Attempt to fit all the "Select" buttons into the current view and then find all "Select" Buttons.
-            print("\n[TEST] Finding all Special Select Buttons...")
+            print("\n############################################################")
+            print("[TEST] Finding all Special Select Buttons...")
+            print("############################################################")
             self.image_tools.confirm_location("special")
             self.mouse_tools.scroll_screen(
                 self.home_button_location[0], self.home_button_location[1] - 50, -300)
-            self.wait_for_ping(1)
-            list_of_select_button_locations = list(pyautogui.locateAllOnScreen("images/buttons/select.png",
-                                                                               region=(self.image_tools.window_left, self.image_tools.window_top, self.image_tools.window_width, self.image_tools.window_height)))
 
-            # Select the Angel Halo mission.
-            print("\n[TEST] Now selecting Angel Halo mission...")
+            self.wait_for_ping(1)
+
+            list_of_select_button_locations = self.image_tools.find_all("select", custom_region=(
+                self.image_tools.window_left, self.image_tools.window_top, self.image_tools.window_width, self.image_tools.window_height))
+
+            print("\n############################################################")
+            print("[TEST] Now selecting and moving to Normal Difficulty Angel Halo...")
+            print("############################################################")
+            # Bring up the Difficulty Screen for Angel Halo.
             angel_halo_mission = pyautogui.center(
                 list_of_select_button_locations.pop())
-            print("Here:", angel_halo_mission)
             self.mouse_tools.move_and_click_point(
                 angel_halo_mission[0], angel_halo_mission[1])
-            self.wait_for_ping(2)
 
-            # Click on Play and head to the Summon Selection Screen.
-            print("\n[TEST] Moving to Normal Difficulty Angel Halo...")
+            self.wait_for_ping(2)
             self.image_tools.confirm_location("angelHalo")
-            list_of_special_play_button_locations = list(pyautogui.locateAllOnScreen("images/buttons/specialPlay.png",
-                                                                                     region=(self.image_tools.window_left, self.image_tools.window_top, self.image_tools.window_width, self.image_tools.window_height)))
+
+            # Select the center of the first "Play" Button which would be the Normal Difficulty Angel Halo mission.
+            list_of_special_play_button_locations = self.image_tools.find_all("specialPlay", custom_region=(
+                self.image_tools.window_left, self.image_tools.window_top, self.image_tools.window_width, self.image_tools.window_height))
             normal_difficulty_mission = pyautogui.center(list_of_special_play_button_locations.pop(
                 0))
+
+            # Then click the mission and confirm the location for the Summon Selection Screen.
             self.mouse_tools.move_and_click_point(
                 normal_difficulty_mission[0], normal_difficulty_mission[1])
             self.image_tools.confirm_location("selectSummon")
 
             # Locate Dark summons and click on the first ULB Bahamut.
-            print("\n[TEST] Selecting the first found ULB Bahamut Summon...")
+            print("\n############################################################")
+            print("[TEST] Selecting the first found ULB Bahamut Summon...")
+            print("############################################################")
             self.find_summon_element("dark")
-            summon_check = self.find_summon("kaguyaFLB")
+            summon_check = self.find_summon("bahamutULB")
             if (summon_check == False):
                 tries -= 1
                 if (tries <= 0):
@@ -711,7 +740,9 @@ class Game:
                         "[ERROR] Could not find summon after multiple refreshes. Exiting application...")
 
         # Select first Group, second Party.
-        print("\n[TEST] Selecting First Group, Second Party...")
+        print("\n############################################################")
+        print("[TEST] Selecting First Group, Second Party...")
+        print("############################################################")
         self.find_party_and_start_mission(1, 2)
 
         # Start the Combat Mode.
