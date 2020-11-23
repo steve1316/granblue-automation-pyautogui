@@ -87,7 +87,7 @@ class ImageUtils:
 
         if(self.debug_mode):
             print(
-                f"[DEBUG] Found the {button_name.upper()} Button at {location}.")
+                f"[SUCCESS] Found the {button_name.upper()} Button at {location}.")
 
         if (confirm_location_check):
             self.confirm_location(button_name)
@@ -139,7 +139,7 @@ class ImageUtils:
 
         if(self.debug_mode):
             print(
-                f"[DEBUG] Found the {summon_name.upper()} Summon at {summon_location}.")
+                f"[SUCCESS] Found the {summon_name.upper()} Summon at {summon_location}.")
 
         return summon_location
 
@@ -179,7 +179,7 @@ class ImageUtils:
 
         if(self.debug_mode):
             print(
-                f"[DEBUG] Found the {dialog_name.upper()} Dialog at {dialog_location}.")
+                f"[SUCCESS] Found the {dialog_name.upper()} Dialog at {dialog_location}.")
 
         return dialog_location
 
@@ -229,16 +229,17 @@ class ImageUtils:
 
         if(self.debug_mode):
             print(
-                f"[DEBUG] Bot's location is at {location_name.upper()} Screen.")
+                f"[SUCCESS] Bot's location is at {location_name.upper()} Screen.")
 
         time.sleep(2)
         return True
 
-    def find_all(self, image_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False):
+    def find_all(self, image_name: str, custom_region: tuple[int, int, int, int] = None, custom_confidence: float = 0.9, grayscale_check: bool = False):
         """Find the specified image file by searching through all subfolders and locating all occurrences on the screen.
 
         Args:
             image_name (str): Name of the image file in the /images/ folder.
+            custom_region (tuple[int, int, int, int]): Region tuple of integers to look for a occurrence in. Defaults to None.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
 
@@ -255,13 +256,20 @@ class ImageUtils:
                         print(
                             f"\n[DEBUG] Image file named \"{image_name}\" exists in \"{root}\"! Proceeding to search all occurences of image on screen...")
 
-                    if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
+                    if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None and custom_region == None):
                         locations = list(pyautogui.locateAllOnScreen(
                             f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
                                 self.window_left, self.window_top, self.window_width, self.window_height)))
+                    elif(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None and custom_region != None):
+                        locations = list(pyautogui.locateAllOnScreen(
+                            f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check, region=custom_region))
                     else:
                         locations = list(pyautogui.locateAllOnScreen(
                             f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check))
+
+                    if (self.debug_mode and len(locations) != 0):
+                        for location in locations:
+                            print("[INFO] Occurrence found at: ", location)
 
                     return locations
 
