@@ -41,7 +41,10 @@ class ImageUtils:
         self.debug_mode = debug_mode
         self.mouse_tools = mouse_utils.MouseUtils(debug_mode=self.debug_mode)
 
-    def find_button(self, button_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, confirm_location_check: bool = False, tries: int = 5, sleep_time: int = 2):
+        # The amount of time to pause after each call to pyautogui.
+        pyautogui.PAUSE = 1.0
+
+    def find_button(self, button_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, confirm_location_check: bool = False, tries: int = 10, sleep_time: int = 1):
         """Find the location of the specified button.
 
         Args:
@@ -49,8 +52,8 @@ class ImageUtils:
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
             confirm_location_check (bool, optional): Check to see if the location is correct. Defaults to False.
-            tries (int, optional): Number of tries before failing. Defaults to 5.
-            sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 2.
+            tries (int, optional): Number of tries before failing. Defaults to 10.
+            sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
 
         Returns:
             location (int, int): Tuple of coordinates of where the center of the button is located if image matching was successful. Otherwise, return None.
@@ -60,8 +63,6 @@ class ImageUtils:
                 f"\n[DEBUG] Now attempting to find the {button_name.upper()} Button from current position...")
 
         location = None
-
-        time.sleep(1)
 
         # Loop until location is found or return None if image matching failed.
         while (location == None):
@@ -76,7 +77,7 @@ class ImageUtils:
                 tries -= 1
                 if (tries <= 0):
                     print(
-                        f"[ERROR] Failed to find the {button_name.upper()} Button after several tries.")
+                        f"[ERROR] Failed to find the {button_name.upper()} Button.")
                     return None
 
                 if(self.debug_mode):
@@ -94,7 +95,7 @@ class ImageUtils:
 
         return location
 
-    def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 4, sleep_time: int = 2):
+    def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 3, sleep_time: int = 1):
         """Find the location of the specified summon. Will attempt to scroll the screen down to see more Summons if the initial screen position yielded no matches.
 
         Args:
@@ -103,8 +104,8 @@ class ImageUtils:
             home_button_y (int): Y coordinate of where the center of the Home Button is.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
-            tries (int, optional): Number of tries before failing. Defaults to 4.
-            sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 2.
+            tries (int, optional): Number of tries before failing. Defaults to 3.
+            sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
 
         Returns:
             summon_location (int, int): Tuple of coordinates of where the center of the summon is located if image matching was successful. Otherwise, return None.
@@ -114,8 +115,6 @@ class ImageUtils:
                 f"\n[DEBUG] Now attempting to find {summon_name.upper()} Summon...")
 
         summon_location = None
-
-        time.sleep(1)
 
         while (summon_location == None):
             summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
@@ -128,7 +127,7 @@ class ImageUtils:
                 tries -= 1
                 if (tries == 0):
                     print(
-                        f"[ERROR] Could not find {summon_name.upper()} Summon after several tries.")
+                        f"[ERROR] Could not find {summon_name.upper()} Summon.")
                     return None
 
                 # If matching failed, scroll the screen down to see more Summons.
@@ -143,7 +142,7 @@ class ImageUtils:
 
         return summon_location
 
-    def find_dialog(self, dialog_name: str, attack_button_x: int, attack_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 2):
+    def find_dialog(self, dialog_name: str, attack_button_x: int, attack_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 10, sleep_time: int = 1):
         """Attempt to find the specified dialog window.
 
         Args:
@@ -152,15 +151,13 @@ class ImageUtils:
             attack_button_y (int): Y coordinate of where the center of the Attack Button is.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
-            tries (int, optional): Number of tries before failing. Defaults to 5.
-            sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 2.
+            tries (int, optional): Number of tries before failing. Defaults to 10.
+            sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
 
         Returns:
             dialog_location (int, int): Tuple of coordinates on the screen for where the match's center was found. Otherwise, return None.
         """
         dialog_location = None
-
-        time.sleep(1)
 
         while (dialog_location == None):
             dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/{dialog_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
@@ -183,15 +180,15 @@ class ImageUtils:
 
         return dialog_location
 
-    def confirm_location(self, location_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 2):
+    def confirm_location(self, location_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 10, sleep_time: int = 1):
         """Confirm the bot's position by searching for the header image.
 
         Args:
             location_name (str): Name of the header image file in the images/headers/ folder.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
-            tries (int, optional): Number of tries before failing. Defaults to 5.
-            sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 2.
+            tries (int, optional): Number of tries before failing. Defaults to 10.
+            sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
 
         Returns:
             (bool): True if current location is confirmed. Otherwise, False.
@@ -201,8 +198,6 @@ class ImageUtils:
                 f"\n[DEBUG] Now attempting to confirm the bot's location at the {location_name.upper()} Screen...")
 
         location = None
-
-        time.sleep(1)
 
         # Loop until location is found or return False if image matching failed.
         while (location == None):
@@ -217,8 +212,7 @@ class ImageUtils:
                 tries -= 1
                 if (tries == 0):
                     print(
-                        f"[ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen after several tries.")
-                    time.sleep(2)
+                        f"[ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen.")
                     return False
 
                 if(self.debug_mode):
@@ -231,7 +225,6 @@ class ImageUtils:
             print(
                 f"[SUCCESS] Bot's location is at {location_name.upper()} Screen.")
 
-        time.sleep(2)
         return True
 
     def find_all(self, image_name: str, custom_region: tuple[int, int, int, int] = None, custom_confidence: float = 0.9, grayscale_check: bool = False):
