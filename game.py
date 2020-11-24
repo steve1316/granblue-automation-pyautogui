@@ -2,35 +2,34 @@ import pyautogui
 import time
 import sys
 
-import image_utils
-import mouse_utils
+from image_utils import ImageUtils
+from mouse_utils import MouseUtils
 
 
 class Game:
+    """
+    Main driver for bot activity and navigation for the web game, Granblue Fantasy.
+
+    Attributes
+    ----------
+    custom_mouse_speed (float, optional): The speed at which the mouse moves at. Defaults to 0.5.
+
+    debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to True.
+
+    """
+
     def __init__(self, custom_mouse_speed: float = 0.5, debug_mode: bool = False):
         super().__init__()
 
         self.debug_mode = debug_mode
-        self.image_tools = image_utils.ImageUtils(debug_mode=self.debug_mode)
-        self.mouse_tools = mouse_utils.MouseUtils(
+        self.image_tools = ImageUtils(debug_mode=self.debug_mode)
+        self.mouse_tools = MouseUtils(
             mouse_speed=custom_mouse_speed, debug_mode=self.debug_mode)
         self.home_button_location = None
         self.attack_button_location = None
 
         # Calibrate the dimensions of the game window on bot launch.
         self.calibrate_game_window()
-
-    def wait_for_ping(self, seconds: int = 3):
-        """Wait the specified seconds to account for ping or loading.
-
-        Args:
-            seconds (int, optional): Number of seconds for the execution to wait for. Defaults to 3.
-
-        Returns:
-            None
-        """
-        time.sleep(seconds)
-        return None
 
     def calibrate_game_window(self, display_info_check: bool = False):
         """Recalibrate the dimensions of the game window for fast and accurate image matching.
@@ -91,6 +90,18 @@ class Game:
         if(confirm_location_check):
             self.image_tools.confirm_location("home")
 
+        return None
+
+    def wait_for_ping(self, seconds: int = 3):
+        """Wait the specified seconds to account for ping or loading.
+
+        Args:
+            seconds (int, optional): Number of seconds for the execution to wait for. Defaults to 3.
+
+        Returns:
+            None
+        """
+        time.sleep(seconds)
         return None
 
     def find_summon_element(self, summon_element_name: str, tries: int = 3):
@@ -312,33 +323,42 @@ class Game:
 
         return None
 
-    # TODO: Find a suitable OCR framework that can detect the HP % of the enemies. Until then, this bot will not handle if statements.
-    # TODO: Maybe have it be in-line? Example: if(enemy1.hp < 70): character1.useSkill(3),character2.useSkill(1).useSkill(4),character4.useSkill(1),end
-    # def executeConditionalStatement(self, i, target, line, lines):
-    #     whiteSpaceIndex = line.index(" ")
-    #     operator = ""
-    #     # Perform conditional matching to find what operator is being used. Account for the whitespaces before and after the operator.
-    #     if(line[whiteSpaceIndex:(whiteSpaceIndex + 3)] == " < "):
-    #         operator = "<"
-    #         print("[DEBUG] Operator is <")
-    #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 3)] == " > "):
-    #         operator = ">"
-    #         print("[DEBUG] Operator is >")
-    #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 4)] == " <= "):
-    #         operator = "<="
-    #         print("[DEBUG] Operator is <=")
-    #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 4)] == " >= "):
-    #         operator = ">="
-    #         print("[DEBUG] Operator is >=")
-    #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 4)] == " == "):
-    #         operator = "=="
-    #         print("[DEBUG] Operator is ==")
+    def find_charge_attacks(self):
+        """Find total number of characters ready to Charge Attack.
 
-    #     # Determine whether or not the conditional is met. If not, return the index right after the end for the if statement.
+        Returns:
+            number_of_charge_attacks (int): Total number of image matches found for charge attacks.
+        """
+        # Check if any character has 100% Charge Bar. If so, add 1 second per match.
+        number_of_charge_attacks = 0
+        list_of_charge_attacks = self.image_tools.find_all("fullCharge", custom_region=(
+            self.attack_button_location[0] - 356, self.attack_button_location[1] + 67, self.attack_button_location[0] - 40, self.attack_button_location[1] + 214))
 
-    #     # If conditional is met, execute each line until you hit end for the if statement.
+        number_of_charge_attacks = len(list_of_charge_attacks)
 
-    #     return i
+        return number_of_charge_attacks
+
+    def find_dialog_in_combat(self, dialog_file_name: str):
+        """Check if there are dialog boxes from either Lyria or Vyrn and click them away.
+
+        Args:
+            dialog_file_name (str): Image file name of the dialog window. Usually its "lyriaDialog" or "vyrnDialog" for the Combat Screen.
+
+        Returns:
+            None
+        """
+        dialog_location = self.image_tools.find_dialog(
+            dialog_file_name, self.attack_button_location[0], self.attack_button_location[1], tries=1)
+
+        if (dialog_location != None):
+            if(self.debug_mode):
+                print(
+                    "[DEBUG] Detected dialog window from Lyria/Vyrn on Combat Screen. Closing it now...")
+
+            self.mouse_tools.click_point_instantly(
+                dialog_location[0] + 180, dialog_location[1] - 51)
+
+        return None
 
     def select_character(self, character_number: int):
         """Selects the portrait of the character specified on the screen.
@@ -397,43 +417,6 @@ class Game:
 
         return None
 
-    def find_charge_attacks(self):
-        """Find total number of characters ready to Charge Attack.
-
-        Returns:
-            number_of_charge_attacks (int): Total number of image matches found for charge attacks.
-        """
-        # Check if any character has 100% Charge Bar. If so, add 1 second per match.
-        number_of_charge_attacks = 0
-        list_of_charge_attacks = self.image_tools.find_all("fullCharge", custom_region=(
-            self.attack_button_location[0] - 356, self.attack_button_location[1] + 67, self.attack_button_location[0] - 40, self.attack_button_location[1] + 214))
-
-        number_of_charge_attacks = len(list_of_charge_attacks)
-
-        return number_of_charge_attacks
-
-    def find_dialog_in_combat(self, dialog_file_name: str):
-        """Check if there are dialog boxes from either Lyria or Vyrn and click them away.
-
-        Args:
-            dialog_file_name (str): Image file name of the dialog window. Usually its "lyriaDialog" or "vyrnDialog" for the Combat Screen.
-
-        Returns:
-            None
-        """
-        dialog_location = self.image_tools.find_dialog(
-            dialog_file_name, self.attack_button_location[0], self.attack_button_location[1], tries=1)
-
-        if (dialog_location != None):
-            if(self.debug_mode):
-                print(
-                    "[DEBUG] Detected dialog window from Lyria/Vyrn on Combat Screen. Closing it now...")
-
-            self.mouse_tools.click_point_instantly(
-                dialog_location[0] + 180, dialog_location[1] - 51)
-
-        return None
-
     def start_combat_mode(self, script_name: str):
         """Start the Combat Mode with the given script file name. Start reading through the text file line by line and have the bot proceed accordingly.
 
@@ -485,7 +468,7 @@ class Game:
                     print(
                         "\n############################################################")
                     print(
-                        f"[COMBAT] Current Turn Number {turn_number} does not match expected Turn Number {line[5]}. Pressing Attack Button until they do.")
+                        f"[COMBAT] Current Turn {turn_number} does not match expected Turn {line[5]}. Pressing Attack Button until they do.")
                     print(
                         "############################################################")
 
@@ -499,7 +482,7 @@ class Game:
                         if (attack_button_location != None):
                             number_of_charge_attacks = self.find_charge_attacks()
                             print(
-                                f"\n[COMBAT] Number of Characters ready to ougi: {number_of_charge_attacks}.")
+                                f"\n[COMBAT] Number of Characters ready to ougi: {number_of_charge_attacks}. Attacking now...")
 
                             if (self.debug_mode):
                                 print(
@@ -510,7 +493,7 @@ class Game:
 
                             self.wait_for_ping(6 + number_of_charge_attacks)
                             turn_number += 1
-                        # else:
+
                             # Try to find the "Next" Button only once per turn.
                             next_button_location = self.image_tools.find_button(
                                 "next", tries=1)
@@ -528,7 +511,7 @@ class Game:
                 if ("turn" in line.lower() and int(line[5]) == turn_number):
                     print(
                         "\n============================================================")
-                    print(f"[COMBAT] Beginning Turn {line[5]}.")
+                    print(f"[COMBAT] Starting Turn {line[5]}.")
                     print(
                         "============================================================")
                     i += 1
@@ -584,7 +567,7 @@ class Game:
                     # Check if any character has 100% Charge Bar. If so, add 1 second per match.
                     number_of_charge_attacks = self.find_charge_attacks()
                     print(
-                        f"\n[COMBAT] Number of Characters ready to ougi: {number_of_charge_attacks}.")
+                        f"\n[COMBAT] Number of Characters ready to ougi: {number_of_charge_attacks}. Attacking now...")
 
                     if (self.debug_mode):
                         print(
@@ -606,6 +589,8 @@ class Game:
                             next_button_location[0], next_button_location[1])
 
                         self.wait_for_ping(6)
+
+                        turn_number += 1
 
                 # Increment by 1 to move to the next line for execution.
                 line_number += 1
@@ -634,7 +619,7 @@ class Game:
                     number_of_charge_attacks = self.find_charge_attacks()
 
                     print(
-                        f"\n[COMBAT] Number of Characters ready to ougi: {number_of_charge_attacks}.")
+                        f"\n[COMBAT] Number of Characters ready to ougi: {number_of_charge_attacks}. Attacking now...")
 
                     self.mouse_tools.click_point_instantly(
                         self.attack_button_location[0], self.attack_button_location[1])
@@ -651,6 +636,9 @@ class Game:
             while (self.image_tools.confirm_location("lootCollected", tries=1) == False):
                 ok_button_location = self.image_tools.find_button(
                     "questResultsOK", tries=1)
+
+                # TODO: Look for "Close" Buttons here as well in case of reaching uncap.
+
                 if(ok_button_location != None):
                     self.mouse_tools.move_and_click_point(
                         ok_button_location[0], ok_button_location[1])
@@ -667,83 +655,30 @@ class Game:
 
         return None
 
-    def test_combat_mode(self):
-        """Tests almost all of the bot's functionality by starting the Combat Mode by starting the Normal difficulty Angel Halo Special Battle and completing it. This assumes that Angel Halo is at the very bottom of the Special missions list. 
+    # TODO: Find a suitable OCR framework that can detect the HP % of the enemies. Until then, this bot will not handle if statements.
+    # TODO: Maybe have it be in-line? Example: if(enemy1.hp < 70): character1.useSkill(3),character2.useSkill(1).useSkill(4),character4.useSkill(1),end
+    # def executeConditionalStatement(self, i, target, line, lines):
+    #     whiteSpaceIndex = line.index(" ")
+    #     operator = ""
+    #     # Perform conditional matching to find what operator is being used. Account for the whitespaces before and after the operator.
+    #     if(line[whiteSpaceIndex:(whiteSpaceIndex + 3)] == " < "):
+    #         operator = "<"
+    #         print("[DEBUG] Operator is <")
+    #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 3)] == " > "):
+    #         operator = ">"
+    #         print("[DEBUG] Operator is >")
+    #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 4)] == " <= "):
+    #         operator = "<="
+    #         print("[DEBUG] Operator is <=")
+    #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 4)] == " >= "):
+    #         operator = ">="
+    #         print("[DEBUG] Operator is >=")
+    #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 4)] == " == "):
+    #         operator = "=="
+    #         print("[DEBUG] Operator is ==")
 
-        Returns:
-            None
-        """
-        print("\n############################################################")
-        print(
-            "[TEST] Testing Combat Mode on Normal Difficulty Angel Halo mission now...")
-        print("############################################################")
+    #     # Determine whether or not the conditional is met. If not, return the index right after the end for the if statement.
 
-        summon_check = False
-        tries = 2
-        while(summon_check == False):
-            # First go to the Home Screen and calibrate the dimensions of the game window. Then navigation will be as follows: Home Screen -> Quest Screen -> Special Screen.
-            self.go_back_home(confirm_location_check=True,
-                              display_info_check=True)
-            list_of_button_names = ["quest", "special"]
-            for button_name in list_of_button_names:
-                x, y = self.image_tools.find_button(button_name)
-                self.mouse_tools.move_and_click_point(x, y)
+    #     # If conditional is met, execute each line until you hit end for the if statement.
 
-            # Attempt to fit all the "Select" buttons into the current view and then find all "Select" Buttons.
-            print("\n############################################################")
-            print("[TEST] Finding all Special Select Buttons...")
-            print("############################################################")
-            self.image_tools.confirm_location("special")
-            self.mouse_tools.scroll_screen(
-                self.home_button_location[0], self.home_button_location[1] - 50, -300)
-
-            self.wait_for_ping(1)
-
-            list_of_select_button_locations = self.image_tools.find_all("select", custom_region=(
-                self.image_tools.window_left, self.image_tools.window_top, self.image_tools.window_width, self.image_tools.window_height))
-
-            print("\n############################################################")
-            print("[TEST] Now selecting and moving to Normal Difficulty Angel Halo...")
-            print("############################################################")
-            # Bring up the Difficulty Screen for Angel Halo.
-            angel_halo_mission = pyautogui.center(
-                list_of_select_button_locations.pop())
-            self.mouse_tools.move_and_click_point(
-                angel_halo_mission[0], angel_halo_mission[1])
-
-            self.wait_for_ping(1)
-            self.image_tools.confirm_location("angelHalo")
-
-            # Select the center of the first "Play" Button which would be the Normal Difficulty Angel Halo mission.
-            list_of_special_play_button_locations = self.image_tools.find_all("specialPlay", custom_region=(
-                self.image_tools.window_left, self.image_tools.window_top, self.image_tools.window_width, self.image_tools.window_height))
-            normal_difficulty_mission = pyautogui.center(list_of_special_play_button_locations.pop(
-                0))
-
-            # Then click the mission and confirm the location for the Summon Selection Screen.
-            self.mouse_tools.move_and_click_point(
-                normal_difficulty_mission[0], normal_difficulty_mission[1])
-            self.image_tools.confirm_location("selectSummon")
-
-            # Locate Dark summons and click on the specified Summon.
-            print("\n############################################################")
-            print("[TEST] Selecting the first found FLB Hades Summon...")
-            print("############################################################")
-            self.find_summon_element("dark")
-            summon_check = self.find_summon("hadesFLB")
-            if (summon_check == False):
-                tries -= 1
-                if (tries <= 0):
-                    sys.exit(
-                        "[ERROR] Could not find summon after multiple refreshes. Exiting application...")
-
-        # Select first Group, second Party.
-        print("\n############################################################")
-        print("[TEST] Selecting First Group, Second Party...")
-        print("############################################################")
-        self.find_party_and_start_mission(1, 2)
-
-        # Start the Combat Mode.
-        self.start_combat_mode("test_combat_mode")
-
-        return None
+    #     return i

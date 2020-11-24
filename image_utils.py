@@ -8,7 +8,7 @@ import mouse_utils
 
 class ImageUtils:
     """
-    Provides the utility functions needed to perform mouse-related actions.
+    Provides the utility functions needed to perform image-related actions.
 
     Attributes
     ----------
@@ -22,13 +22,6 @@ class ImageUtils:
 
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to True.
 
-    Methods
-    -------
-    find_button(button_name, confirm_location_check, tries, sleep_time):
-        Find the location of the specified button.
-
-    confirm_location(location_name, tries, sleep_time):
-        Confirm the bot's position by searching for the header image.
     """
 
     def __init__(self, window_left: int = None, window_top: int = None, window_width: int = None, window_height: int = None, debug_mode: bool = False):
@@ -94,6 +87,54 @@ class ImageUtils:
             self.confirm_location(button_name)
 
         return location
+
+    def confirm_location(self, location_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 10, sleep_time: int = 1):
+        """Confirm the bot's position by searching for the header image.
+
+        Args:
+            location_name (str): Name of the header image file in the images/headers/ folder.
+            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
+            grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
+            tries (int, optional): Number of tries before failing. Defaults to 10.
+            sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
+
+        Returns:
+            (bool): True if current location is confirmed. Otherwise, False.
+        """
+        if(self.debug_mode):
+            print(
+                f"\n[DEBUG] Now attempting to confirm the bot's location at the {location_name.upper()} Screen...")
+
+        location = None
+
+        # Loop until location is found or return False if image matching failed.
+        while (location == None):
+            if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
+                location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name}Header.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
+                    self.window_left, self.window_top, self.window_width, self.window_height))
+            else:
+                location = pyautogui.locateCenterOnScreen(
+                    f"images/headers/{location_name}Header.png", confidence=custom_confidence, grayscale=grayscale_check)
+
+            if (location == None):
+                tries -= 1
+                if (tries == 0):
+                    if(self.debug_mode):
+                        print(
+                            f"[ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen.")
+                    return False
+
+                if(self.debug_mode):
+                    print(
+                        f"[DEBUG] Could not confirm the bot's location at the {location_name.upper()} Screen. Trying again in {sleep_time} seconds...")
+
+                time.sleep(sleep_time)
+
+        if(self.debug_mode):
+            print(
+                f"[SUCCESS] Bot's location is at {location_name.upper()} Screen.")
+
+        return True
 
     def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 3, sleep_time: int = 1):
         """Find the location of the specified summon. Will attempt to scroll the screen down to see more Summons if the initial screen position yielded no matches.
@@ -179,53 +220,6 @@ class ImageUtils:
                 f"[SUCCESS] Found the {dialog_name.upper()} Dialog at {dialog_location}.")
 
         return dialog_location
-
-    def confirm_location(self, location_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 10, sleep_time: int = 1):
-        """Confirm the bot's position by searching for the header image.
-
-        Args:
-            location_name (str): Name of the header image file in the images/headers/ folder.
-            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
-            grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
-            tries (int, optional): Number of tries before failing. Defaults to 10.
-            sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
-
-        Returns:
-            (bool): True if current location is confirmed. Otherwise, False.
-        """
-        if(self.debug_mode):
-            print(
-                f"\n[DEBUG] Now attempting to confirm the bot's location at the {location_name.upper()} Screen...")
-
-        location = None
-
-        # Loop until location is found or return False if image matching failed.
-        while (location == None):
-            if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name}Header.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
-                    self.window_left, self.window_top, self.window_width, self.window_height))
-            else:
-                location = pyautogui.locateCenterOnScreen(
-                    f"images/headers/{location_name}Header.png", confidence=custom_confidence, grayscale=grayscale_check)
-
-            if (location == None):
-                tries -= 1
-                if (tries == 0):
-                    print(
-                        f"[ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen.")
-                    return False
-
-                if(self.debug_mode):
-                    print(
-                        f"[DEBUG] Could not confirm the bot's location at the {location_name.upper()} Screen. Trying again in {sleep_time} seconds...")
-
-                time.sleep(sleep_time)
-
-        if(self.debug_mode):
-            print(
-                f"[SUCCESS] Bot's location is at {location_name.upper()} Screen.")
-
-        return True
 
     def find_all(self, image_name: str, custom_region: tuple[int, int, int, int] = None, custom_confidence: float = 0.9, grayscale_check: bool = False):
         """Find the specified image file by searching through all subfolders and locating all occurrences on the screen.
