@@ -20,7 +20,7 @@ By downloading this program, you forfeit your account's safety during the use of
 
 # TODO (in order from greatest priority to least) (WIP)
 
-- [ ] Add support for Summons in combat scripts.
+- [x] Add support for Summons in combat scripts.
 
 - [ ] Create a launchable GUI that users can start and stop the bot, select which combat script to use, which mission/raid to do, and view logs.
 
