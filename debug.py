@@ -1,5 +1,9 @@
 from game import Game
 import pyautogui
+import sys
+
+from guibot.guibot import GuiBot
+from guibot.fileresolver import FileResolver
 
 
 class Debug:
@@ -16,6 +20,43 @@ class Debug:
         super().__init__()
 
         self.game = my_game
+
+    def test_find_summon_element_tabs(self):
+        """Tests finding each summon element tab on the Summon Selection Screen by navigating to the Fire Old Lignoid trial battle.
+
+        Returns:
+            None
+        """
+        print("\n############################################################")
+        print(
+            "[TEST] Testing finding all summon element tabs on the Summon Selection screen...")
+        print("############################################################")
+
+        # Head to the Trial Battles and use GuiBot to navigate to the Fire Old Lignoid prep screen.
+        self.guibot = GuiBot()
+        self.fileresolver = FileResolver()
+        self.fileresolver.add_path("images/buttons/")
+
+        self.game.go_back_home()
+        self.game.mouse_tools.move_and_click_point(
+            self.game.home_button_location[0], self.game.home_button_location[1] - 50, mouse_clicks=0)
+        self.game.mouse_tools.scroll_screen(
+            self.game.home_button_location[0], self.game.home_button_location[1] - 50, -400)
+
+        self.guibot.click("gameplayExtras").idle(1)
+        self.guibot.click("trialBattles").idle(2)
+        self.guibot.click("trialBattles_oldLignoid").idle(1)
+        self.guibot.click("trialBattles_play").idle(2)
+
+        if(self.game.image_tools.confirm_location("selectSummon")):
+            if(self.game.find_summon_element("fire") and self.game.find_summon_element("water") and self.game.find_summon_element("earth") and self.game.find_summon_element("wind") and self.game.find_summon_element("light") and self.game.find_summon_element("dark") and self.game.find_summon_element("misc")):
+                print(
+                    "\n[TEST_SUCCESS] Finding all summon element tabs was successful.")
+            else:
+                print(
+                    "\n[TEST_ERROR] Failed to find one or more summon element tabs.")
+        else:
+            print("\n[TEST_ERROR] Bot is not at the Summon Selection Screen.")
 
     def test_combat_mode(self):
         """Tests almost all of the bot's functionality by starting the Normal difficulty Angel Halo Special Battle and completing it. This assumes that Angel Halo is at the very bottom of the Special missions list.
@@ -85,7 +126,7 @@ class Debug:
                 tries -= 1
                 if (tries <= 0):
                     sys.exit(
-                        "[ERROR] Could not find summon after multiple refreshes. Exiting application...")
+                        "[TEST_ERROR] Could not find summon after multiple refreshes. Exiting application...")
 
         # Select first Group, second Party.
         print("\n############################################################")
@@ -95,5 +136,7 @@ class Debug:
 
         # Start the Combat Mode.
         self.game.start_combat_mode("test_combat_mode")
+
+        print("\n[TEST_SUCCESS] Finding all summon element tabs was successful.")
 
         return None
