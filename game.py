@@ -185,29 +185,27 @@ class Game:
         """
         self.go_back_home(confirm_location_check=True)
 
-        # Could not use MouseUtil's implementation to scroll the screen for some reason so had to do this manually.
-        # self.mouse_tools.scroll_screen(self.home_button_location[0], self.home_button_location[1] - 50, -400)
-        pyautogui.moveTo(
-            self.home_button_location[0], self.home_button_location[1] - 50)
-
-        pyautogui.scroll(-400)
+        self.mouse_tools.scroll_screen(
+            self.home_button_location[0], self.home_button_location[1] - 50, -500)
 
         list_of_steps_in_order = ["gameplayExtras", "trialBattles",
                                   "trialBattles_oldLignoid", "trialBattles_play",
                                   "wind", "partySelectionOK", "trialBattles_close",
                                   "menu", "retreat", "retreat_confirmation", "next"]
 
+        temp_location = None
+
         # Go through each step in order from left to right.
         while (len(list_of_steps_in_order) > 0):
             image_name = list_of_steps_in_order.pop(0)
-            if(image_name == "wind"):
-                self.find_summon_element(image_name)
-                self.mouse_tools.move_and_click_point(
-                    temp_location[0], temp_location[1] + 140)
-            else:
+            if(image_name != "wind"):
                 temp_location = self.image_tools.find_button(image_name)
                 self.mouse_tools.move_and_click_point(
                     temp_location[0], temp_location[1])
+            else:
+                self.find_summon_element(image_name)
+                self.mouse_tools.move_and_click_point(
+                    temp_location[0], temp_location[1] + 140)
 
         return None
 
@@ -370,6 +368,7 @@ class Game:
             None
         """
         # Click the portrait of the specified character.
+        x = None
         y = self.attack_button_location[1] + 123
         if(character_number == 1):
             x = self.attack_button_location[0] - 317
@@ -397,6 +396,7 @@ class Game:
             None
         """
         # Matches the str occurence to which skill the bot needs to select.
+        x = None
         y = self.attack_button_location[1] + 171
         if("useSkill(1)" in skill):
             print(f"[COMBAT] Character {character_selected} uses Skill 1.")
