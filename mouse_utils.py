@@ -19,20 +19,51 @@ class MouseUtils:
         self.mouse_speed = mouse_speed
         self.debug_mode = debug_mode
 
-    def move_and_click_point(self, x: int, y: int, mouse_speed: float = 0.0, mouse_clicks=1):
+    def move_to(self, x: int, y: int, custom_mouse_speed: float = 0.0):
+        """Move the cursor to the coordinates on the screen.
+
+        Args:
+            x (int): X coordinate on the screen.
+            y (int): Y coordinate on the screen.
+            custom_mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.
+
+        Returns:
+            None
+        """
+        if (custom_mouse_speed <= 0.0):
+            custom_mouse_speed = self.mouse_speed
+
+        pyautogui.moveTo(x, y, custom_mouse_speed)
+        return None
+
+    def move_to_instantly(self, x: int, y: int):
+        """Move the cursor instantly to the coordinates on the screen.
+
+        Args:
+            x (int): X coordinate on the screen.
+            y (int): Y coordinate on the screen.
+
+        Returns:
+            None
+        """
+        pyautogui.moveTo(x, y)
+        return None
+
+    def move_and_click_point(self, x: int, y: int, custom_mouse_speed: float = 0.0, mouse_clicks=1):
         """Move the cursor to the specified point on the screen and clicks it.
 
         Args:
             x (int): X coordinate on the screen.
             y (int): Y coordinate on the screen.
-            mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.
+            custom_mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.
 
         Returns:
             None
         """
-        if (mouse_speed <= 0.0):
-            mouse_speed = self.mouse_speed
-        pyautogui.moveTo(x, y, mouse_speed)
+        if (custom_mouse_speed <= 0.0):
+            custom_mouse_speed = 0.0
+
+        pyautogui.moveTo(x, y, custom_mouse_speed)
         pyautogui.click(clicks=mouse_clicks)
         return None
 
@@ -63,5 +94,7 @@ class MouseUtils:
         if(self.debug_mode):
             print(
                 f"[DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
+
+        self.move_to(x, y)
         pyautogui.scroll(scroll_clicks, x=x, y=y)
         return None
