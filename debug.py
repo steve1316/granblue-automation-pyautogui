@@ -44,12 +44,12 @@ class Debug:
         self.game.mouse_tools.scroll_screen(
             self.game.home_button_location[0], self.game.home_button_location[1] - 50, -400)
 
-        self.guibot.click("gameplayExtras").idle(1)
-        self.guibot.click("trialBattles").idle(2)
-        self.guibot.click("trialBattles_oldLignoid").idle(1)
-        self.guibot.click("trialBattles_play").idle(2)
+        self.guibot.click("gameplay_extras").idle(1)
+        self.guibot.click("trial_battles").idle(2)
+        self.guibot.click("trial_battles_old_lignoid").idle(1)
+        self.guibot.click("trial_battles_play").idle(2)
 
-        if(self.game.image_tools.confirm_location("selectSummon")):
+        if(self.game.image_tools.confirm_location("select_summon")):
             if(self.game.find_summon_element("fire") and self.game.find_summon_element("water") and self.game.find_summon_element("earth") and self.game.find_summon_element("wind") and self.game.find_summon_element("light") and self.game.find_summon_element("dark") and self.game.find_summon_element("misc")):
                 print(
                     "\n[TEST_SUCCESS] Finding all summon element tabs was successful.")
@@ -60,14 +60,14 @@ class Debug:
             print("\n[TEST_ERROR] Bot is not at the Summon Selection Screen.")
 
     def test_combat_mode(self):
-        """Tests almost all of the bot's functionality by starting the Normal difficulty Angel Halo Special Battle and completing it. This assumes that Angel Halo is at the very bottom of the Special missions list.
+        """Tests almost all of the bot's functionality by starting the Very Hard difficulty Angel Halo Special Battle and completing it. This assumes that Angel Halo is at the very bottom of the Special missions list.
 
         Returns:
             None
         """
         print("\n############################################################")
         print(
-            "[TEST] Testing Combat Mode on Normal Difficulty Angel Halo mission now...")
+            "[TEST] Testing Combat Mode on Very Hard Difficulty Angel Halo mission now...")
         print("############################################################")
 
         summon_check = False
@@ -76,7 +76,9 @@ class Debug:
             # First go to the Home Screen and calibrate the dimensions of the game window. Then navigation will be as follows: Home Screen -> Quest Screen -> Special Screen.
             self.game.go_back_home(confirm_location_check=True,
                                    display_info_check=True)
+
             list_of_button_names = ["quest", "special"]
+
             for button_name in list_of_button_names:
                 x, y = self.game.image_tools.find_button(button_name)
                 self.game.mouse_tools.move_and_click_point(x, y)
@@ -86,43 +88,49 @@ class Debug:
             print("[TEST] Finding all Special Select Buttons...")
             print("############################################################")
             self.game.image_tools.confirm_location("special")
+
             self.game.mouse_tools.scroll_screen(
                 self.game.home_button_location[0], self.game.home_button_location[1] - 50, -300)
 
             self.game.wait_for_ping(1)
 
-            list_of_select_button_locations = self.game.image_tools.find_all("select", custom_region=(
+            special_quests = self.game.image_tools.find_all("select", custom_region=(
                 self.game.image_tools.window_left, self.game.image_tools.window_top, self.game.image_tools.window_width, self.game.image_tools.window_height))
 
             print("\n############################################################")
-            print("[TEST] Now selecting and moving to Normal Difficulty Angel Halo...")
+            print(
+                "[TEST] Now selecting and moving to Very Hard Difficulty Angel Halo...")
             print("############################################################")
             # Bring up the Difficulty Screen for Angel Halo.
-            angel_halo_mission = pyautogui.center(
-                list_of_select_button_locations.pop())
+            angel_halo_special_quest = pyautogui.center(
+                special_quests.pop())
+
             self.game.mouse_tools.move_and_click_point(
-                angel_halo_mission[0], angel_halo_mission[1])
+                angel_halo_special_quest[0], angel_halo_special_quest[1])
 
             self.game.wait_for_ping(1)
-            self.game.image_tools.confirm_location("angelHalo")
+            self.game.image_tools.confirm_location("angel_halo")
 
-            # Select the center of the first "Play" Button which would be the Normal Difficulty Angel Halo mission.
-            list_of_special_play_button_locations = self.game.image_tools.find_all("specialPlay", custom_region=(
+            # Select the center of the last "Play" Button which would be the Very Hard Difficulty Angel Halo mission.
+            list_of_special_play_button_locations = self.game.image_tools.find_all("special_play", custom_region=(
                 self.game.image_tools.window_left, self.game.image_tools.window_top, self.game.image_tools.window_width, self.game.image_tools.window_height))
-            normal_difficulty_mission = pyautogui.center(list_of_special_play_button_locations.pop(
-                0))
+
+            angel_halo_VH = pyautogui.center(
+                list_of_special_play_button_locations.pop())
 
             # Then click the mission and confirm the location for the Summon Selection Screen.
             self.game.mouse_tools.move_and_click_point(
-                normal_difficulty_mission[0], normal_difficulty_mission[1])
-            self.game.image_tools.confirm_location("selectSummon")
+                angel_halo_VH[0], angel_halo_VH[1])
+
+            self.game.image_tools.confirm_location("select_summon")
 
             # Locate Dark summons and click on the specified Summon.
             print("\n############################################################")
             print("[TEST] Selecting the first found FLB Hades Summon...")
             print("############################################################")
             self.game.find_summon_element("dark")
-            summon_check = self.game.find_summon("hadesFLB")
+            summon_check = self.game.find_summon("hades_flb")
+
             if (summon_check == False):
                 tries -= 1
                 if (tries <= 0):
