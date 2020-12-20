@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.14.0, 2020-12-19T22:43:55. -->
+<!-- Written by QtCreator 4.14.0, 2020-12-19T23:54:01. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -169,16 +169,16 @@
     <valuelist type="QVariantList" key="CustomOutputParsers"/>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">main</value>
-    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/steve1316/Documents/GitHub/GranblueAutomation_GUI/main.py</value>
-    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/steve1316/Documents/GitHub/GranblueAutomation_GUI/main.py</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">main2</value>
+    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">PythonEditor.RunConfiguration.C:/Users/steve1316/Documents/GitHub/granblue-automation-pyautogui/gui/main.py</value>
+    <value type="QString" key="ProjectExplorer.RunConfiguration.BuildKey">C:/Users/steve1316/Documents/GitHub/granblue-automation-pyautogui/gui/main.py</value>
     <value type="QString" key="PythonEditor.RunConfiguation.Interpreter">{90603311-560f-4add-9b79-0c990d0e902f}</value>
-    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\steve1316\Documents\GitHub\GranblueAutomation_GUI\main.py</value>
+    <value type="QString" key="PythonEditor.RunConfiguation.Script">C:\Users\steve1316\Documents\GitHub\granblue-automation-pyautogui\gui\main.py</value>
     <value type="bool" key="RunConfiguration.UseCppDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseCppDebuggerAuto">true</value>
     <value type="bool" key="RunConfiguration.UseQmlDebugger">false</value>
     <value type="bool" key="RunConfiguration.UseQmlDebuggerAuto">true</value>
-    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/steve1316/Documents/GitHub/GranblueAutomation_GUI</value>
+    <value type="QString" key="RunConfiguration.WorkingDirectory.default">C:/Users/steve1316/Documents/GitHub/granblue-automation-pyautogui/gui</value>
    </valuemap>
    <value type="int" key="ProjectExplorer.Target.RunConfigurationCount">1</value>
   </valuemap>
