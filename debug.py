@@ -33,31 +33,75 @@ class Debug:
             "[TEST] Testing finding all summon element tabs on the Summon Selection screen...")
         print("############################################################")
 
-        # Head to the Trial Battles and use GuiBot to navigate to the Fire Old Lignoid prep screen.
         self.guibot = GuiBot()
         self.fileresolver = FileResolver()
         self.fileresolver.add_path("images/buttons/")
 
-        self.game.go_back_home()
-        self.game.mouse_tools.move_and_click_point(
-            self.game.home_button_location[0], self.game.home_button_location[1] - 50, mouse_clicks=0)
+        # Reset the bot's current position by heading back to the Home Screen.
+        self.game.go_back_home(
+            confirm_location_check=True, display_info_check=True)
+
+        # Scroll the Home Screen down and find and click the Gameplay Extras button.
+        print("\n############################################################")
+        print("[TEST] Finding and selecting the Gameplay Extras Button...")
+        print("############################################################")
+        self.game.mouse_tools.move_to(
+            self.game.home_button_location[0], self.game.home_button_location[1] - 50)
         self.game.mouse_tools.scroll_screen(
             self.game.home_button_location[0], self.game.home_button_location[1] - 50, -400)
 
-        self.guibot.click("gameplay_extras").idle(1)
-        self.guibot.click("trial_battles").idle(2)
-        self.guibot.click("trial_battles_old_lignoid").idle(1)
-        self.guibot.click("trial_battles_play").idle(2)
+        location = self.game.image_tools.find_button("gameplay_extras")
+        self.game.mouse_tools.move_and_click_point(location[0], location[1])
 
+        # Now attempt to find the Trial Battles Button in a loop. It will scroll the screen down to show more if there are too many in-game event banners clogging up the screen.
+        print("\n############################################################")
+        print("[TEST] Finding and selecting the Trial Battles Button...")
+        print("############################################################")
+        tries = 3
+        while(True):
+            location = self.game.image_tools.find_button(
+                "trial_battles", tries=1)
+            if(location == None):
+                self.game.mouse_tools.move_to(
+                    self.game.home_button_location[0], self.game.home_button_location[1] - 50)
+                self.game.mouse_tools.scroll_screen(
+                    self.game.home_button_location[0], self.game.home_button_location[1] - 50, -400)
+            else:
+                self.game.mouse_tools.move_and_click_point(
+                    location[0], location[1])
+                break
+
+            tries -= 1
+            if(tries <= 0):
+                sys.exit(
+                    "[TEST_FAILED] Failed to find the Trial Battles button inside the Gameplay Extras dropdown menu. Exiting application...")
+
+        # Next, start up the Old Lignoid Trial Battle.
+        print("\n############################################################")
+        print("[TEST] Starting the Old Lignoid Trial Battle...")
+        print("############################################################")
+        location = self.game.image_tools.find_button(
+            "trial_battles_old_lignoid")
+        self.game.mouse_tools.move_and_click_point(location[0], location[1])
+
+        location = self.game.image_tools.find_button("trial_battles_play")
+        self.game.mouse_tools.move_and_click_point(location[0], location[1])
+
+        # Test Successful if the bot is able to find all 7 summon element tabs on the Summon Selection Screen. Otherwise, the test fails.
+        print("\n############################################################")
+        print(
+            "[TEST] Now finding all 7 summon element tabs on the Summon Selection Screen...")
+        print("############################################################")
         if(self.game.image_tools.confirm_location("select_summon")):
             if(self.game.find_summon_element("fire") and self.game.find_summon_element("water") and self.game.find_summon_element("earth") and self.game.find_summon_element("wind") and self.game.find_summon_element("light") and self.game.find_summon_element("dark") and self.game.find_summon_element("misc")):
                 print(
                     "\n[TEST_SUCCESS] Finding all summon element tabs was successful.")
             else:
-                print(
-                    "\n[TEST_ERROR] Failed to find one or more summon element tabs.")
+                sys.exit(
+                    "\n[TEST_FAILED] Failed to find one or more summon element tabs. Exiting application...")
         else:
-            print("\n[TEST_ERROR] Bot is not at the Summon Selection Screen.")
+            sys.exit(
+                "\n[TEST_FAILED] Bot is not at the Summon Selection Screen. Exiting application...")
 
     def test_combat_mode(self):
         """Tests almost all of the bot's functionality by starting the Very Hard difficulty Angel Halo Special Battle and completing it. This assumes that Angel Halo is at the very bottom of the Special missions list.
@@ -135,7 +179,7 @@ class Debug:
                 tries -= 1
                 if (tries <= 0):
                     sys.exit(
-                        "[TEST_ERROR] Could not find summon after multiple refreshes. Exiting application...")
+                        "[TEST_FAILED] Could not find summon after multiple refreshes. Exiting application...")
 
         # Select first Group, second Party.
         print("\n############################################################")
