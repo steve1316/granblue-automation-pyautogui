@@ -108,7 +108,7 @@ class Game:
     def find_summon_element(self, summon_element_name: str, tries: int = 3):
         """Select the specified element tab for summons. Search selected tabs first, then unselected tabs.
 
-        # Todo: ALL images need to be segmented into Lite, Regular, and High to account for different Graphics Settings. Have not tested if confidence helps or not.
+        # Todo: ALL images need to be segmented into Lite, Regular, and High to account for different Graphics Settings. Have not tested if confidence helps or not. Might not be needed anymore with GuiBot fallback.
 
         Args:
             summon_element_name (str): Name of the summon element image file in the images/buttons/ folder.
@@ -119,30 +119,20 @@ class Game:
         """
         if(self.debug_mode):
             print(
-                f"\n[DEBUG] Now attempting to find selected {summon_element_name.upper()} Summon Element tab...")
+                f"\n[DEBUG] Now attempting to find {summon_element_name.upper()} Summon Element tab...")
 
         summon_element_location = None
 
         while (summon_element_location == None):
-            # See if the specified Element Summon tab is already selected.
             summon_element_location = self.image_tools.find_button(
-                f"summon{summon_element_name}Selected", tries=1)
+                f"summon{summon_element_name}", tries=1)
 
-            # If searching for selected tabs did not work, search for unselected tabs.
             if (summon_element_location == None):
-                if(self.debug_mode):
+                tries -= 1
+                if (tries == 0):
                     print(
-                        f"[DEBUG] Could not locate the selected {summon_element_name.upper()} Summon Element tab. Trying again for unselected tab...")
-
-                summon_element_location = self.image_tools.find_button(
-                    f"summon{summon_element_name}", tries=1)
-
-                if (summon_element_location == None):
-                    tries -= 1
-                    if (tries == 0):
-                        print(
-                            f"[ERROR] Failed to find {summon_element_name.upper()} Summon Element tab.")
-                        return False
+                        f"[ERROR] Failed to find {summon_element_name.upper()} Summon Element tab.")
+                    return False
 
         if(self.debug_mode):
             print(
@@ -189,9 +179,9 @@ class Game:
         self.mouse_tools.scroll_screen(
             self.home_button_location[0], self.home_button_location[1] - 50, -500)
 
-        list_of_steps_in_order = ["gameplayExtras", "trialBattles",
-                                  "trialBattles_oldLignoid", "trialBattles_play",
-                                  "wind", "partySelectionOK", "trialBattles_close",
+        list_of_steps_in_order = ["gameplay_extras", "trial_battles",
+                                  "trial_battles_old_lignoid", "trial_battles_play",
+                                  "wind", "party_selection_ok", "trial_battles_close",
                                   "menu", "retreat", "retreat_confirmation", "next"]
 
         temp_location = None
@@ -205,6 +195,8 @@ class Game:
                     temp_location[0], temp_location[1])
             else:
                 self.find_summon_element(image_name)
+
+                # This will use the temp_location coordinates of the last location which was the Play button for the Trial Battle.
                 self.mouse_tools.move_and_click_point(
                     temp_location[0], temp_location[1] + 140)
 
@@ -231,7 +223,7 @@ class Game:
                     f"\n[DEBUG] Now attempting to find Set A...")
 
             while (set_location == None):
-                set_location = self.image_tools.find_button("partySetA")
+                set_location = self.image_tools.find_button("party_set_a")
                 if (set_location == None):
                     if(self.debug_mode):
                         print(
@@ -243,14 +235,14 @@ class Game:
                             f"[ERROR] Could not find Set A. Exiting Bot...")
 
                     # See if the user had Set B active instead of Set A if matching failed.
-                    set_location = self.image_tools.find_button("partySetB")
+                    set_location = self.image_tools.find_button("party_set_b")
         else:
             if(self.debug_mode):
                 print(
                     f"\n[DEBUG] Now attempting to find Set B...")
 
             while (set_location == None):
-                set_location = self.image_tools.find_button("partySetB")
+                set_location = self.image_tools.find_button("party_set_b")
                 if (set_location == None):
                     if(self.debug_mode):
                         print(
@@ -262,7 +254,7 @@ class Game:
                             f"[ERROR] Could not find Set B. Exiting Bot...")
 
                     # See if the user had Set A active instead of Set B if matching failed.
-                    set_location = self.image_tools.find_button("partySetA")
+                    set_location = self.image_tools.find_button("party_set_a")
 
         if(self.debug_mode):
             print(
@@ -314,7 +306,7 @@ class Game:
 
         # Find the "OK" Button to start the mission.
         self.wait_for_ping(1)
-        ok_button_location = self.image_tools.find_button("partySelectionOK")
+        ok_button_location = self.image_tools.find_button("party_selection_ok")
         self.mouse_tools.move_and_click_point(
             ok_button_location[0], ok_button_location[1])
 
@@ -330,7 +322,7 @@ class Game:
         """
         # Check if any character has 100% Charge Bar. If so, add 1 second per match.
         number_of_charge_attacks = 0
-        list_of_charge_attacks = self.image_tools.find_all("fullCharge", custom_region=(
+        list_of_charge_attacks = self.image_tools.find_all("full_charge", custom_region=(
             self.attack_button_location[0] - 356, self.attack_button_location[1] + 67, self.attack_button_location[0] - 40, self.attack_button_location[1] + 214))
 
         number_of_charge_attacks = len(list_of_charge_attacks)
@@ -341,7 +333,7 @@ class Game:
         """Check if there are dialog boxes from either Lyria or Vyrn and click them away.
 
         Args:
-            dialog_file_name (str): Image file name of the dialog window. Usually its "lyriaDialog" or "vyrnDialog" for the Combat Screen.
+            dialog_file_name (str): Image file name of the dialog window. Usually its "dialog_lyria" or "vyrnDialog" for the Combat Screen.
 
         Returns:
             None
@@ -460,10 +452,6 @@ class Game:
                     self.attack_button_location = self.image_tools.find_button(
                         "attack")
 
-                # Check if there are any dialog windows are open.
-                # self.find_dialog_in_combat("lyriaDialog")
-                # self.find_dialog_in_combat("vyrnDialog")
-
                 # If the execution reached the next turn block and it is currently not the correct turn, keep pressing the "Attack" Button until the turn number matches.
                 if ("turn" in line.lower() and int(line[5]) != turn_number):
                     print(
@@ -474,8 +462,8 @@ class Game:
                         "############################################################")
 
                     while (int(line[5]) != turn_number):
-                        self.find_dialog_in_combat("lyriaDialog")
-                        self.find_dialog_in_combat("vyrnDialog")
+                        self.find_dialog_in_combat("lyria")
+                        self.find_dialog_in_combat("vyrn")
 
                         attack_button_location = self.image_tools.find_button(
                             "attack", tries=1)
@@ -518,8 +506,8 @@ class Game:
                     i += 1
                     line_number += 1
 
-                    self.find_dialog_in_combat("lyriaDialog")
-                    self.find_dialog_in_combat("vyrnDialog")
+                    self.find_dialog_in_combat("lyria")
+                    self.find_dialog_in_combat("vyrn")
 
                     # Continue reading each line inside the Turn block until you reach the "end" occurrence.
                     while("end" not in line):
@@ -597,7 +585,7 @@ class Game:
                 line_number += 1
                 i += 1
 
-                if (self.image_tools.confirm_location("expGained", tries=1) == True):
+                if (self.image_tools.confirm_location("exp_gained", tries=1) == True):
                     break
 
             print("\n############################################################")
@@ -606,10 +594,10 @@ class Game:
             print("############################################################")
 
             # Keep pressing the location of the "Attack" / "Next" Button until the bot reaches the Quest Results Screen.
-            while (self.image_tools.confirm_location("expGained", tries=1) == False):
+            while (self.image_tools.confirm_location("exp_gained", tries=1) == False):
                 # Check if there are any dialog windows are open.
-                self.find_dialog_in_combat("lyriaDialog")
-                self.find_dialog_in_combat("vyrnDialog")
+                self.find_dialog_in_combat("lyria")
+                self.find_dialog_in_combat("vyrn")
 
                 attack_button_location = self.image_tools.find_button(
                     "attack", tries=1)
@@ -634,9 +622,9 @@ class Game:
             print("\n############################################################")
             print("[INFO] Bot has reached the Quest Results Screen.")
             print("############################################################")
-            while (self.image_tools.confirm_location("lootCollected", tries=1) == False):
+            while (self.image_tools.confirm_location("loot_collected", tries=1) == False):
                 ok_button_location = self.image_tools.find_button(
-                    "questResultsOK", tries=1)
+                    "quest_results_ok", tries=1)
 
                 # TODO: Look for "Close" Buttons here as well in case of reaching uncap.
 

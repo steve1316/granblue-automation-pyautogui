@@ -251,18 +251,20 @@ class ImageUtils:
 
         while (dialog_location == None):
             if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/{dialog_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
+                dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_{dialog_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
                     attack_button_x - 350, attack_button_y + 28, attack_button_x - 264, attack_button_y + 50))
             else:
                 dialog_location = pyautogui.locateCenterOnScreen(
-                    f"images/dialogs/{dialog_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check)
+                    f"images/dialogs/dialog_{dialog_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check)
 
             if (dialog_location == None):
                 if(self.debug_mode):
                     print(
                         f"[DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
+
                 self.file_resolver.add_path("images/dialogs/")
-                dialog_location = self.guibot.exists(f"{dialog_name.lower()}")
+                dialog_location = self.guibot.exists(
+                    f"dialog_{dialog_name.lower()}")
 
                 if (dialog_location == None):
                     tries -= 1
