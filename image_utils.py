@@ -42,9 +42,6 @@ class ImageUtils:
         self.guibot = GuiBot()
         self.file_resolver = FileResolver()
 
-        # The amount of time to pause after each call to pyautogui.
-        pyautogui.PAUSE = 1.0
-
     def find_button(self, button_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, confirm_location_check: bool = False, tries: int = 10, sleep_time: int = 1):
         """Find the location of the specified button.
 
@@ -132,18 +129,19 @@ class ImageUtils:
         # Loop until location is found or return False if image matching failed.
         while (location == None):
             if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}Header.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
+                location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
                     self.window_left, self.window_top, self.window_width, self.window_height))
             else:
                 location = pyautogui.locateCenterOnScreen(
-                    f"images/headers/{location_name.lower()}Header.png", confidence=custom_confidence, grayscale=grayscale_check)
+                    f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check)
 
             if (location == None):
                 if(self.debug_mode):
                     print(
                         f"[DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
                 self.file_resolver.add_path("images/headers/")
-                location = self.guibot.exists(f"{location_name.lower()}Header")
+                location = self.guibot.exists(
+                    f"{location_name.lower()}_header")
 
                 if(location == None):
                     tries -= 1

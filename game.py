@@ -29,6 +29,9 @@ class Game:
         self.home_button_location = None
         self.attack_button_location = None
 
+        # The amount of time to pause after each call to pyautogui. This applies to calls inside mouse_utils and image_utils.
+        pyautogui.PAUSE = 1.0
+
         # Calibrate the dimensions of the game window on bot launch.
         self.calibrate_game_window()
 
@@ -125,7 +128,7 @@ class Game:
 
         while (summon_element_location == None):
             summon_element_location = self.image_tools.find_button(
-                f"summon{summon_element_name}", tries=1)
+                f"summon_{summon_element_name}", tries=1)
 
             if (summon_element_location == None):
                 tries -= 1
@@ -174,6 +177,7 @@ class Game:
         Returns:
             None
         """
+        print("\n[INFO] Now refreshing summons...")
         self.go_back_home(confirm_location_check=True)
 
         self.mouse_tools.scroll_screen(
@@ -200,6 +204,7 @@ class Game:
                 self.mouse_tools.move_and_click_point(
                     temp_location[0], temp_location[1] + 140)
 
+        print("\n[INFO] Summons have now been refreshed.")
         return None
 
     def find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 3, sleep_time: int = 3):
