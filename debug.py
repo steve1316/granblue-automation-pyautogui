@@ -34,8 +34,8 @@ class Debug:
         print("############################################################")
 
         self.guibot = GuiBot()
-        self.fileresolver = FileResolver()
-        self.fileresolver.add_path("images/buttons/")
+        self.file_resolver = FileResolver()
+        self.file_resolver.add_path("images/buttons/")
 
         # Reset the bot's current position by heading back to the Home Screen.
         self.game.go_back_home(
