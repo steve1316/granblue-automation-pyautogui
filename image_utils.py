@@ -1,11 +1,11 @@
-from typing import Iterable, Tuple
-import pyautogui
-import cv2  # Needed for confidence argument. Comes from opencv-python package.
-import time
 import os
+import time
+from typing import Iterable, Tuple
 
-from guibot.guibot import GuiBot
+import cv2  # Needed for confidence argument for PyAutoGui.
+import pyautogui
 from guibot.fileresolver import FileResolver
+from guibot.guibot import GuiBot
 
 import mouse_utils
 

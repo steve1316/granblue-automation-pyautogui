@@ -1,9 +1,10 @@
-from game import Game
-import pyautogui
 import sys
 
-from guibot.guibot import GuiBot
+import pyautogui
 from guibot.fileresolver import FileResolver
+from guibot.guibot import GuiBot
+
+from game import Game
 
 
 class Debug:

@@ -1,6 +1,7 @@
-import pyautogui
-import time
 import sys
+import time
+
+import pyautogui
 
 from image_utils import ImageUtils
 from mouse_utils import MouseUtils
