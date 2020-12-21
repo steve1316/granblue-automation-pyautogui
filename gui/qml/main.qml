@@ -311,6 +311,7 @@ Window {
                     anchors.left: parent.left
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
+                    clip: true
                     anchors.topMargin: 0
                     anchors.bottomMargin: 0
                     anchors.leftMargin: 0
@@ -343,19 +344,37 @@ Window {
                         anchors.topMargin: 0
 
                         LeftMenu {
-                            id: button
+                            id: homeButton
                             width: left_menu.width
                             text: qsTr("Home")
                             buttonColorMouseOver: "#323741"
                             isActiveMenu: true
+
+                            onClicked: {
+                                if(homeButton.isActiveMenu == false){
+                                    homeButton.isActiveMenu = true
+                                    settingsButton.isActiveMenu = false
+
+                                    stackView.push(Qt.resolvedUrl("pages/HomePage.qml"))
+                                }
+                            }
                         }
 
                         LeftMenu {
-                            id: button1
+                            id: settingsButton
                             width: left_menu.width
                             text: qsTr("Settings")
                             buttonColorMouseOver: "#323741"
                             buttonIconSource: "../images/svg_images/settings_icon.svg"
+
+                            onClicked: {
+                                if(settingsButton.isActiveMenu == false){
+                                    homeButton.isActiveMenu = false
+                                    settingsButton.isActiveMenu = true
+
+                                    stackView.push(Qt.resolvedUrl("pages/SettingsPage.qml"))
+                                }
+                            }
                         }
                     }
 
@@ -408,10 +427,18 @@ Window {
                     anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
+                    clip: true
                     anchors.rightMargin: 0
                     anchors.leftMargin: 0
                     anchors.bottomMargin: 25
                     anchors.topMargin: 0
+
+                    StackView {
+                        id: stackView
+                        anchors.fill: parent
+
+                        initialItem: Qt.resolvedUrl("pages/HomePage.qml")
+                    }
                 }
 
                 Rectangle {
@@ -594,6 +621,6 @@ Window {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.75}D{i:17}D{i:18}D{i:26}D{i:28}D{i:43}
+    D{i:0;formeditorZoom:1.25}D{i:17}D{i:18}D{i:26}D{i:28}D{i:31}D{i:44}
 }
 ##^##*/
