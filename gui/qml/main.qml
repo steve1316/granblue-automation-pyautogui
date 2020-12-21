@@ -8,6 +8,10 @@ Window {
     id: main_window
     width: 1000
     height: 580
+
+    minimumWidth: 800
+    minimumHeight: 500
+
     visible: true
     color: "#00000000"
     title: qsTr("Granblue Automation")
@@ -23,18 +27,22 @@ Window {
     QtObject{
         id: internal
 
-        // Removes or adds back in the window margins when maximizing or restoring.
+        // Removes or adds back in the window margins when maximizing or restoring. Also change the visibility of all the resizes to false.
         function maximizeRestore(){
             if(windowStatus == 0){
                 main_window.showMaximized()
                 windowStatus = 1
                 windowMargin = 0
 
+                internal.hideResizeArea()
+
                 buttonMaximize.buttonIconSource = "../images/svg_images/restore_icon.svg"
             }else{
                 main_window.showNormal()
                 windowStatus = 0
                 windowMargin = 10
+
+                internal.showResizeArea()
 
                 buttonMaximize.buttonIconSource = "../images/svg_images/maximize_icon.svg"
             }
@@ -47,6 +55,8 @@ Window {
                 windowStatus = 0
                 windowMargin = 10
 
+                internal.showResizeArea()
+
                 buttonMaximize.buttonIconSource = "../images/svg_images/maximize_icon.svg"
             }
         }
@@ -56,7 +66,25 @@ Window {
             windowStatus = 0
             windowMargin = 10
 
+            internal.showResizeArea()
+
             buttonMaximize.buttonIconSource = "../images/svg_images/maximize_icon.svg"
+        }
+
+        // Hides the resizing arrows when the window is maximized.
+        function hideResizeArea(){
+            resize_window_bottomright.visible = false
+            resize_left.visible = false
+            resize_right.visible = false
+            resize_bottom.visible = false
+        }
+
+        // Restores the resizing arrows when the window is normal.
+        function showResizeArea(){
+            resize_window_bottomright.visible = true
+            resize_left.visible = true
+            resize_right.visible = true
+            resize_bottom.visible = true
         }
     }
 
@@ -228,6 +256,43 @@ Window {
                         onClicked: main_window.close()
                     }
                 }
+
+                MouseArea {
+                    id: resize_top_bar_doubleclick
+                    x: 75
+                    y: 0
+                    anchors.left: parent.left
+                    anchors.right: row_buttons.left
+                    anchors.top: parent.top
+                    anchors.bottom: top_bar_description.top
+                    anchors.rightMargin: 0
+                    anchors.leftMargin: 70
+                    anchors.bottomMargin: 0
+                    anchors.topMargin: 0
+
+                    onDoubleClicked: internal.maximizeRestore()
+                }
+
+                MouseArea {
+                    id: resize_window_topright
+                    x: 963
+                    y: -10
+                    width: 10
+                    height: 10
+                    anchors.right: parent.right
+                    anchors.top: parent.top
+                    anchors.rightMargin: -5
+                    anchors.topMargin: -5
+
+                    cursorShape: Qt.SizeBDiagCursor
+
+                    DragHandler {
+                        target: null
+                        onActiveChanged: if(active){
+                                             main_window.startSystemResize(Qt.RightEdge | Qt.TopEdge)
+                                         }
+                    }
+                }
             }
 
             Rectangle {
@@ -293,6 +358,47 @@ Window {
                             buttonIconSource: "../images/svg_images/settings_icon.svg"
                         }
                     }
+
+                    MouseArea {
+                        id: resize_window_bottomleft
+                        x: 65
+                        y: 493
+                        width: 10
+                        height: 10
+                        anchors.left: parent.left
+                        anchors.bottom: parent.bottom
+                        anchors.bottomMargin: -5
+                        anchors.leftMargin: -5
+
+                        cursorShape: Qt.SizeBDiagCursor
+
+                        DragHandler {
+                            target: null
+                            onActiveChanged: if(active){
+                                                 main_window.startSystemResize(Qt.LeftEdge | Qt.BottomEdge)
+                                             }
+                        }
+                    }
+
+                    MouseArea {
+                        id: resize_window_topleft
+                        x: 62
+                        width: 15
+                        height: 15
+                        anchors.left: parent.left
+                        anchors.top: parent.top
+                        anchors.topMargin: -68
+                        anchors.leftMargin: -7
+
+                        cursorShape: Qt.SizeFDiagCursor
+
+                        DragHandler {
+                            target: null
+                            onActiveChanged: if(active){
+                                                 main_window.startSystemResize(Qt.LeftEdge | Qt.TopEdge)
+                                             }
+                        }
+                    }
                 }
 
                 Rectangle {
@@ -336,6 +442,47 @@ Window {
                         anchors.leftMargin: 10
                         anchors.bottomMargin: 0
                     }
+
+                    MouseArea {
+                        id: resize_window_bottomright
+                        x: 894
+                        y: 8
+                        width: 10
+                        height: 10
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        anchors.rightMargin: -5
+                        anchors.bottomMargin: -5
+
+                        cursorShape: Qt.SizeFDiagCursor
+
+                        DragHandler{
+                            target: null
+                            onActiveChanged: if(active){
+                                                 main_window.startSystemResize(Qt.RightEdge | Qt.BottomEdge)
+                                             }
+                        }
+
+                    }
+
+                    Image {
+                        id: resize_image
+                        x: 891
+                        y: 8
+                        width: 25
+                        height: 25
+                        opacity: 0.5
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        source: "../images/svg_images/resize_icon.svg"
+                        anchors.rightMargin: 0
+                        anchors.bottomMargin: 0
+                        sourceSize.height: 300
+                        sourceSize.width: 300
+                        fillMode: Image.PreserveAspectFit
+
+                        antialiasing: false
+                    }
                 }
             }
         }
@@ -352,7 +499,92 @@ Window {
         source: background
         z: 0
     }
+
+    MouseArea {
+        id: resize_left
+        width: 10
+        anchors.left: parent.left
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 10
+        anchors.leftMargin: 0
+        anchors.topMargin: 10
+
+        cursorShape: Qt.SizeHorCursor
+
+        DragHandler{
+            target: null
+            onActiveChanged: if(active){
+                                 main_window.startSystemResize(Qt.LeftEdge)
+                             }
+        }
+    }
+
+    MouseArea {
+        id: resize_right
+        width: 10
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 10
+        anchors.topMargin: 10
+        anchors.rightMargin: 0
+
+        cursorShape: Qt.SizeHorCursor
+
+        DragHandler{
+            target: null
+            onActiveChanged: if(active){
+                                 main_window.startSystemResize(Qt.RightEdge)
+                             }
+        }
+    }
+
+    MouseArea {
+        id: resize_bottom
+        height: 10
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.rightMargin: 10
+        anchors.leftMargin: 10
+        anchors.bottomMargin: 0
+
+        cursorShape: Qt.SizeVerCursor
+
+        DragHandler{
+            target: null
+            onActiveChanged: if(active){
+                                 main_window.startSystemResize(Qt.BottomEdge)
+                             }
+        }
+    }
+
+    MouseArea {
+        id: resize_top
+        height: 10
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: parent.top
+        anchors.topMargin: 0
+        anchors.rightMargin: 10
+        anchors.leftMargin: 10
+
+        cursorShape: Qt.SizeVerCursor
+
+        DragHandler{
+            target: null
+            onActiveChanged: if(active){
+                                 main_window.startSystemResize(Qt.TopEdge)
+                             }
+        }
+    }
+
 }
+
+
+
+
 
 
 
@@ -362,6 +594,6 @@ Window {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:2}
+    D{i:0;formeditorZoom:1.75}D{i:17}D{i:18}D{i:26}D{i:28}D{i:43}
 }
 ##^##*/
