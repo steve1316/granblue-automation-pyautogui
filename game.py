@@ -15,17 +15,22 @@ class Game:
 
     Attributes
     ----------
+    queue (multiprocessing.queues.Queue): Queue from multiprocessing to keep track of logging messages to share between backend and frontend.
+    
     custom_mouse_speed (float, optional): The speed at which the mouse moves at. Defaults to 0.5.
 
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to True.
 
     """
 
-    def __init__(self, custom_mouse_speed: float = 0.5, debug_mode: bool = False):
+    def __init__(self, queue, custom_mouse_speed: float = 0.5, debug_mode: bool = False):
         super().__init__()
 
         # Start a timer signaling bot start in order to keep track of elapsed time in logging messages.
         self.starting_time = timer()
+
+        # Queue to keep share logging messages between backend and frontend.
+        self.queue = queue
 
         # Set a debug flag to determine whether or not to print debugging messages.
         self.debug_mode = debug_mode
@@ -50,6 +55,15 @@ class Game:
             str: A formatted string that displays the elapsed time since the bot started.
         """
         return str(datetime.timedelta(seconds=(timer() - self.starting_time))).split('.')[0]
+    
+    def print_and_save(self, message: str):
+        """Saves the logging message into the Queue to be shared with the frontend and then prints it to console.
+
+        Args:
+            message (str): A logging message containing various information.
+        """
+        self.queue.put(message)
+        print(message)
 
     def calibrate_game_window(self, display_info_check: bool = False):
         """Recalibrate the dimensions of the game window for fast and accurate image matching.
@@ -74,10 +88,12 @@ class Game:
             print(f"\n{self.printtime()} [SUCCESS] Dimensions of the game window has been successfully recalibrated.")
 
         if(display_info_check):
-            print("\n\n********************************************************************************")
-            print(f"{self.printtime()} [INFO] Screen size: {pyautogui.size()}.")
-            print(f"{self.printtime()} [INFO] Game window size: Region({self.image_tools.window_left}, {self.image_tools.window_top}, {self.image_tools.window_width}, {self.image_tools.window_height}).")
-            print("********************************************************************************\n")
+            self.print_and_save("\n\n********************************************************************************")
+            self.print_and_save(f"{self.printtime()} [INFO] Screen size: {pyautogui.size()}.")
+            self.print_and_save(f"{self.printtime()} [INFO] Game window size: Region({self.image_tools.window_left}, {self.image_tools.window_top}, {self.image_tools.window_width}, {self.image_tools.window_height}).")
+            self.print_and_save("********************************************************************************\n")
+            
+            
 
         return None
 

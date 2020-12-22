@@ -1,7 +1,7 @@
 import datetime
 import os
 import sys
-from multiprocessing import Process
+import multiprocessing
 from timeit import default_timer as timer
 
 from PySide2.QtCore import QObject, Signal, Slot
@@ -20,15 +20,15 @@ class Tester:
         self.my_game = None
         self.my_debug = None
         
-    def run_bot(self):
-        self.my_game = Game(custom_mouse_speed=0.3, debug_mode=DEBUG)
+    def run_bot(self, queue):
+        self.my_game = Game(queue=queue, custom_mouse_speed=0.3, debug_mode=DEBUG)
         self.my_debug = Debug(self.my_game)
 
         # Test finding all summon element tabs in Summon Selection Screen.
-        #my_debug.test_find_summon_element_tabs()
+        self.my_debug.test_find_summon_element_tabs()
 
         # Test Combat Mode.
-        self.my_debug.test_combat_mode()
+        # self.my_debug.test_combat_mode()
         
     def logger(self):
         pass
@@ -36,32 +36,32 @@ class Tester:
 class MainWindow(QObject):
     def __init__(self):
         QObject.__init__(self)
-
-        self.myLine = "\nHELLO"
+        
+        self.queue = multiprocessing.Queue()
         
         self.bot_object = Tester()
         self.bot_process = None
-        
-        self.log_reader = None
-        self.log_list = []
 
-    # Signal connection connecting the backend function update_console_log() to the onUpdateConsoleLog function in the frontend.
-    updateConsoleLog = Signal()
+    # Signal connections connecting the following backend functions to the respective functions in the frontend.
+    updateConsoleLog = Signal(str)
 
-    # Function to interact with the scrolling view's text log.
-    @Slot()
-    def update_console_log(self):
-        self.updateConsoleLog.emit(self.myLine)
+    @Slot(str)
+    def update_console_log(self, line):
+        while not self.queue.empty():
+            message = self.queue.get()
+            self.updateConsoleLog.emit("\n" + message)
 
     # Start the bot.
     @Slot()
     def start_bot(self):
-        self.bot_process = Process(target=self.bot_object.run_bot)
+        print("\nStarting bot.")
+        self.bot_process = multiprocessing.Process(target=self.bot_object.run_bot, args=(self.queue,))
         self.bot_process.start()
     
     # Stop the bot.
     @Slot()
     def stop_bot(self):
+        print("\nStopping bot.")
         self.bot_process.terminate()
 
 
