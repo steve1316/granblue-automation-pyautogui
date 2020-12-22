@@ -14,6 +14,7 @@ Item{
             property bool isBotRunning: false
 
             function startLogParsing(){
+                console_log_text.text = "" // Reset the log when starting it up.
                 timerFunction.running = true
                 console.log("Parsing bot logs now...")
             }
@@ -22,79 +23,27 @@ Item{
                 timerFunction.running = false
                 console.log("Now stopping parsing bot logs.")
             }
-        }
 
-        Rectangle {
-            id: scrollViewContainer
-            y: 38
-            color: "#2f2f2f"
-            radius: 10
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            clip: false
-            anchors.leftMargin: 290
-            anchors.rightMargin: 50
-            anchors.bottomMargin: 50
-            anchors.topMargin: 50
+            function startBot(){
+                console.log("STARTING BOT!")
+                backend.start_bot()
+            }
 
-            ScrollView {
-                id: scrollView
-                x: -10
-                y: 0
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: parent.top
-                anchors.bottom: parent.bottom
-
-                contentHeight: console_log_text.contentHeight + 50 // Update the scrollView's content height to always have room for the console log text.
-                contentWidth: 280
-
-                clip: true
-                wheelEnabled: true
-                anchors.rightMargin: 10
-                anchors.leftMargin: 10
-                anchors.bottomMargin: 10
-                anchors.topMargin: 10
-
-                Text{
-                    id: console_log_text
-
-                    color: "#ffffff"
-                    text: ""
-                    elide: Text.ElideNone
-                    anchors.left: parent.left
-                    anchors.right: parent.right
-                    anchors.top: parent.top
-                    anchors.bottom: parent.bottom
-                    font.pixelSize: 12
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignTop
-                    wrapMode: Text.WordWrap
-                    anchors.rightMargin: 10
-                    anchors.leftMargin: 10
-                    anchors.bottomMargin: 10
-                    anchors.topMargin: 10
-                    clip: false
-                    maximumLineCount: 10000
-                    textFormat: Text.PlainText
-                }
+            function stopBot(){
+                console.log("STOPPING BOT!")
+                backend.stop_bot()
             }
         }
 
         Button {
             id: startButton
+            x: 300
+            y: 208
             width: 40
             text: qsTr("Start")
-            anchors.left: parent.left
-            anchors.right: scrollViewContainer.left
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
             anchors.rightMargin: 70
-            anchors.leftMargin: 88
-            anchors.bottomMargin: 220
-            anchors.topMargin: 220
 
             onClicked: {
                 if(internal.isBotRunning == false){
@@ -102,14 +51,16 @@ Item{
                     internal.isBotRunning = true
 
                     startButton.text = qsTr("Stop")
+
+                    internal.startBot()
                 }else{
                     internal.stopLogParsing()
                     internal.isBotRunning = false
 
                     startButton.text = qsTr("Start")
-                }
 
-                // backend.start_bot()
+                    internal.stopBot()
+                }
             }
         }
 
@@ -118,12 +69,13 @@ Item{
             interval: 1000
             running: false
             repeat: true
-            onTriggered: backend.update_console_log("he123456")
+            onTriggered: backend.update_console_log // Call update_console_log() in the backend.
         }
 
         Connections{
             target: backend
 
+            // Retrieve the string returned from update_console_log from the backend and update the log text in the window.
             function onUpdateConsoleLog(line){
                 console_log_text.text += line
             }
