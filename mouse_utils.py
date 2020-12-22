@@ -1,3 +1,6 @@
+import datetime
+from timeit import default_timer as timer
+
 import pyautogui
 
 
@@ -7,17 +10,29 @@ class MouseUtils:
 
     Attributes
     ----------
-    mouse_speed (float): Time in seconds it takes for the mouse to move to the specified point.
+    starting_time (float): Used to keep track of the program's elapsed time for logging purposes.
+
+    mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.5.
 
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to True.
 
     """
 
-    def __init__(self, mouse_speed: float = 0.5, debug_mode: bool = False):
+    def __init__(self, starting_time: float, mouse_speed: float = 0.5, debug_mode: bool = False):
         super().__init__()
+
+        self.starting_time = starting_time
 
         self.mouse_speed = mouse_speed
         self.debug_mode = debug_mode
+
+    def printtime(self):
+        """Formats the time since the bot started into a readable, printable HH:MM:SS format using timedelta.
+
+        Returns:
+            str: A formatted string that displays the elapsed time since the bot started.
+        """
+        return str(datetime.timedelta(seconds=(timer() - self.starting_time))).split('.')[0]
 
     def move_to(self, x: int, y: int, custom_mouse_speed: float = 0.0):
         """Move the cursor to the coordinates on the screen.
@@ -93,7 +108,7 @@ class MouseUtils:
         """
         if(self.debug_mode):
             print(
-                f"[DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
+                f"{self.printtime()} [DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
 
         self.move_to(x, y)
         pyautogui.scroll(scroll_clicks, x=x, y=y)

@@ -1,5 +1,7 @@
+import datetime
 import os
 import time
+from timeit import default_timer as timer
 from typing import Iterable, Tuple
 
 import cv2  # Needed for confidence argument for PyAutoGui.
@@ -7,7 +9,7 @@ import pyautogui
 from guibot.fileresolver import FileResolver
 from guibot.guibot import GuiBot
 
-import mouse_utils
+from mouse_utils import MouseUtils
 
 
 class ImageUtils:
@@ -16,6 +18,8 @@ class ImageUtils:
 
     Attributes
     ----------
+    starting_time (float): Used to keep track of the program's elapsed time for logging purposes.
+
     window_left (int, optional): The top left corner of the region for image matching. Defaults to None.
 
     window_top (int, optional): The top right corner of the region for image matching. Defaults to None.
@@ -28,21 +32,32 @@ class ImageUtils:
 
     """
 
-    def __init__(self, window_left: int = None, window_top: int = None, window_width: int = None, window_height: int = None, debug_mode: bool = False):
+    def __init__(self, starting_time: float, window_left: int = None, window_top: int = None, window_width: int = None, window_height: int = None, debug_mode: bool = False):
         super().__init__()
+
+        self.starting_time = starting_time
 
         self.window_left = window_left
         self.window_top = window_top
         self.window_width = window_width
         self.window_height = window_height
         self.debug_mode = debug_mode
-        self.mouse_tools = mouse_utils.MouseUtils(debug_mode=self.debug_mode)
+        self.mouse_tools = MouseUtils(
+            starting_time=self.starting_time, debug_mode=self.debug_mode)
 
         # Initialize GuiBot object for image matching.
         self.guibot = GuiBot()
         self.file_resolver = FileResolver()
 
-    def find_button(self, button_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, confirm_location_check: bool = False, tries: int = 10, sleep_time: int = 1):
+    def printtime(self):
+        """Formats the time since the bot started into a readable, printable HH:MM:SS format using timedelta.
+
+        Returns:
+            str: A formatted string that displays the elapsed time since the bot started.
+        """
+        return str(datetime.timedelta(seconds=(timer() - self.starting_time))).split('.')[0]
+
+    def find_button(self, button_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, confirm_location_check: bool = False, tries: int = 10, sleep_time: int = 1, suppress_error: bool = False):
         """Find the location of the specified button.
 
         Args:
@@ -52,13 +67,14 @@ class ImageUtils:
             confirm_location_check (bool, optional): Check to see if the location is correct. Defaults to False.
             tries (int, optional): Number of tries before failing. Defaults to 10.
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
+            suppress_error (bool, optional): Suppresses template matching error depending on boolean. Defaults to False.
 
         Returns:
             location (int, int): Tuple of coordinates of where the center of the button is located if image matching was successful. Otherwise, return None.
         """
         if(self.debug_mode):
             print(
-                f"\n[DEBUG] Now attempting to find the {button_name.upper()} Button from current position...")
+                f"\n{self.printtime()} [DEBUG] Now attempting to find the {button_name.upper()} Button from current position...")
 
         location = None
         guibot_check = False
@@ -75,20 +91,21 @@ class ImageUtils:
             if (location == None):
                 if(self.debug_mode):
                     print(
-                        f"[DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
+                        f"{self.printtime()} [DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
                 self.file_resolver.add_path("images/buttons/")
                 location = self.guibot.exists(f"{button_name.lower()}")
 
                 if(location == None):
                     tries -= 1
                     if (tries <= 0):
-                        print(
-                            f"[ERROR] Failed to find the {button_name.upper()} Button.")
+                        if(suppress_error != True):
+                            print(
+                                f"{self.printtime()} [ERROR] Failed to find the {button_name.upper()} Button.")
                         return None
 
                     if(self.debug_mode):
                         print(
-                            f"[DEBUG] Could not locate the {button_name.upper()} Button. Trying again in {sleep_time} seconds...")
+                            f"{self.printtime()} [DEBUG] Could not locate the {button_name.upper()} Button. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
                 else:
@@ -100,7 +117,7 @@ class ImageUtils:
 
         if(self.debug_mode):
             print(
-                f"[SUCCESS] Found the {button_name.upper()} Button at {location}.")
+                f"{self.printtime()} [SUCCESS] Found the {button_name.upper()} Button at {location}.")
 
         if (confirm_location_check):
             self.confirm_location(button_name)
@@ -122,7 +139,7 @@ class ImageUtils:
         """
         if(self.debug_mode):
             print(
-                f"\n[DEBUG] Now attempting to confirm the bot's location at the {location_name.upper()} Screen...")
+                f"\n{self.printtime()} [DEBUG] Now attempting to confirm the bot's location at the {location_name.upper()} Screen...")
 
         location = None
 
@@ -138,7 +155,7 @@ class ImageUtils:
             if (location == None):
                 if(self.debug_mode):
                     print(
-                        f"[DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
+                        f"{self.printtime()} [DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
                 self.file_resolver.add_path("images/headers/")
                 location = self.guibot.exists(
                     f"{location_name.lower()}_header")
@@ -148,18 +165,18 @@ class ImageUtils:
                     if (tries == 0):
                         if(self.debug_mode):
                             print(
-                                f"[ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen.")
+                                f"{self.printtime()} [ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen.")
                         return False
 
                     if(self.debug_mode):
                         print(
-                            f"[DEBUG] Could not confirm the bot's location at the {location_name.upper()} Screen. Trying again in {sleep_time} seconds...")
+                            f"{self.printtime()} [DEBUG] Could not confirm the bot's location at the {location_name.upper()} Screen. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
 
         if(self.debug_mode):
             print(
-                f"[SUCCESS] Bot's location is at {location_name.upper()} Screen.")
+                f"{self.printtime()} [SUCCESS] Bot's location is at {location_name.upper()} Screen.")
 
         return True
 
@@ -196,19 +213,19 @@ class ImageUtils:
             if (summon_location == None):
                 if(self.debug_mode):
                     print(
-                        f"[DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
+                        f"{self.printtime()} [DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
                 self.file_resolver.add_path("images/summons/")
                 summon_location = self.guibot.exists(f"{summon_name.lower()}")
 
                 if(summon_location == None):
                     if(self.debug_mode):
                         print(
-                            f"[DEBUG] Could not locate the {summon_name.upper()} Summon. Trying again in {sleep_time} seconds...")
+                            f"{self.printtime()} [DEBUG] Could not locate the {summon_name.upper()} Summon. Trying again in {sleep_time} seconds...")
 
                     tries -= 1
                     if (tries == 0):
                         print(
-                            f"[ERROR] Could not find {summon_name.upper()} Summon.")
+                            f"{self.printtime()} [ERROR] Could not find {summon_name.upper()} Summon.")
                         return None
 
                     # If matching failed, scroll the screen down to see more Summons.
@@ -225,7 +242,7 @@ class ImageUtils:
 
         if(self.debug_mode):
             print(
-                f"[SUCCESS] Found the {summon_name.upper()} Summon at {summon_location}.")
+                f"{self.printtime()} [SUCCESS] Found the {summon_name.upper()} Summon at {summon_location}.")
 
         return summon_location
 
@@ -258,7 +275,7 @@ class ImageUtils:
             if (dialog_location == None):
                 if(self.debug_mode):
                     print(
-                        f"[DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
+                        f"{self.printtime()} [DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
 
                 self.file_resolver.add_path("images/dialogs/")
                 dialog_location = self.guibot.exists(
@@ -271,7 +288,7 @@ class ImageUtils:
 
                     if(self.debug_mode):
                         print(
-                            f"[DEBUG] Locating {dialog_name.upper()} Dialog failed. Trying again in {sleep_time} seconds...")
+                            f"{self.printtime()} [DEBUG] Locating {dialog_name.upper()} Dialog failed. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
                 else:
@@ -283,7 +300,7 @@ class ImageUtils:
 
         if(self.debug_mode):
             print(
-                f"[SUCCESS] Found the {dialog_name.upper()} Dialog at {dialog_location}.")
+                f"{self.printtime()} [SUCCESS] Found the {dialog_name.upper()} Dialog at {dialog_location}.")
 
         return dialog_location
 
@@ -318,11 +335,12 @@ class ImageUtils:
 
                     if (self.debug_mode and len(locations) != 0):
                         for location in locations:
-                            print("[INFO] Occurrence found at: ", location)
+                            print(
+                                "{self.printtime()} [INFO] Occurrence found at: ", location)
 
                     return locations
 
         print(
-            f"[ERROR] Given file name does not exist in /images/ folder.")
+            f"{self.printtime()} [ERROR] Given file name does not exist in /images/ folder.")
 
         return None
