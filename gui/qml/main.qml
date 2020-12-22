@@ -446,9 +446,9 @@ Window {
                         anchors.right: page_home.left
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
+                        anchors.rightMargin: 20
                         clip: false
                         anchors.leftMargin: 20
-                        anchors.rightMargin: 50
                         anchors.bottomMargin: 20
                         anchors.topMargin: 20
 
@@ -484,7 +484,7 @@ Window {
                                 font.pixelSize: 12
                                 horizontalAlignment: Text.AlignLeft
                                 verticalAlignment: Text.AlignTop
-                                wrapMode: Text.WordWrap
+                                wrapMode: Text.NoWrap
                                 anchors.rightMargin: 10
                                 anchors.leftMargin: 10
                                 anchors.bottomMargin: 10
@@ -512,13 +512,12 @@ Window {
 
                     Loader{
                         id: page_home
-                        anchors.left: parent.left
+                        width: 300
                         anchors.right: parent.right
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.topMargin: 20
                         anchors.bottomMargin: 20
-                        anchors.leftMargin: 500
                         anchors.rightMargin: 20
 
                         source: Qt.resolvedUrl("pages/HomePage.qml")
@@ -528,13 +527,12 @@ Window {
 
                     Loader{
                         id: page_settings
-                        anchors.left: parent.left
+                        width: 300
                         anchors.right: parent.right
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.topMargin: 20
                         anchors.bottomMargin: 20
-                        anchors.leftMargin: 500
                         anchors.rightMargin: 20
 
                         source: Qt.resolvedUrl("pages/SettingsPage.qml")
@@ -725,6 +723,6 @@ Window {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.25}
+    D{i:0;formeditorZoom:0.75}D{i:31}
 }
 ##^##*/
