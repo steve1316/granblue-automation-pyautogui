@@ -4,7 +4,7 @@ import time
 from timeit import default_timer as timer
 from typing import Iterable, Tuple
 
-import cv2  # Needed for confidence argument for PyAutoGui.
+import cv2  # Needed for confidence argument for PyAutoGUI.
 import pyautogui
 from guibot.fileresolver import FileResolver
 from guibot.guibot import GuiBot
@@ -14,7 +14,7 @@ from mouse_utils import MouseUtils
 
 class ImageUtils:
     """
-    Provides the utility functions needed to perform image-related actions. This utility will alternate between PyAutoGui and GuiBot to find the template image.
+    Provides the utility functions needed to perform image-related actions. This utility will alternate between PyAutoGUI and GuiBot to find the template image.
 
     Attributes
     ----------
@@ -42,8 +42,7 @@ class ImageUtils:
         self.window_width = window_width
         self.window_height = window_height
         self.debug_mode = debug_mode
-        self.mouse_tools = MouseUtils(
-            starting_time=self.starting_time, debug_mode=self.debug_mode)
+        self.mouse_tools = MouseUtils(starting_time=self.starting_time, debug_mode=self.debug_mode)
 
         # Initialize GuiBot object for image matching.
         self.guibot = GuiBot()
@@ -57,7 +56,7 @@ class ImageUtils:
         """
         return str(datetime.timedelta(seconds=(timer() - self.starting_time))).split('.')[0]
 
-    def find_button(self, button_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, confirm_location_check: bool = False, tries: int = 10, sleep_time: int = 1, suppress_error: bool = False):
+    def find_button(self, button_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, confirm_location_check: bool = False, tries: int = 5, sleep_time: int = 1, suppress_error: bool = False):
         """Find the location of the specified button.
 
         Args:
@@ -65,7 +64,7 @@ class ImageUtils:
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
             confirm_location_check (bool, optional): Check to see if the location is correct. Defaults to False.
-            tries (int, optional): Number of tries before failing. Defaults to 10.
+            tries (int, optional): Number of tries before failing. Defaults to 5.
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
             suppress_error (bool, optional): Suppresses template matching error depending on boolean. Defaults to False.
 
@@ -73,8 +72,7 @@ class ImageUtils:
             location (int, int): Tuple of coordinates of where the center of the button is located if image matching was successful. Otherwise, return None.
         """
         if(self.debug_mode):
-            print(
-                f"\n{self.printtime()} [DEBUG] Now attempting to find the {button_name.upper()} Button from current position...")
+            print(f"{self.printtime()} [DEBUG] Now attempting to find the {button_name.upper()} Button from current position...")
 
         location = None
         guibot_check = False
@@ -82,30 +80,29 @@ class ImageUtils:
         # Loop until location is found or return None if image matching failed.
         while (location == None):
             if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
-                    self.window_left, self.window_top, self.window_width, self.window_height))
+                location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                                                          region=(self.window_left, self.window_top, self.window_width, self.window_height))
             else:
-                location = pyautogui.locateCenterOnScreen(
-                    f"images/buttons/{button_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check)
+                location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check)
 
             if (location == None):
                 if(self.debug_mode):
-                    print(
-                        f"{self.printtime()} [DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
+                    print(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
+                
+                # Use GuiBot to template match if PyAutoGUI failed.    
                 self.file_resolver.add_path("images/buttons/")
                 location = self.guibot.exists(f"{button_name.lower()}")
 
                 if(location == None):
                     tries -= 1
+                    
                     if (tries <= 0):
                         if(suppress_error != True):
-                            print(
-                                f"{self.printtime()} [ERROR] Failed to find the {button_name.upper()} Button.")
+                            print(f"{self.printtime()} [ERROR] Failed to find the {button_name.upper()} Button.")
                         return None
 
                     if(self.debug_mode):
-                        print(
-                            f"{self.printtime()} [DEBUG] Could not locate the {button_name.upper()} Button. Trying again in {sleep_time} seconds...")
+                        print(f"{self.printtime()} [DEBUG] Could not locate the {button_name.upper()} Button. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
                 else:
@@ -116,67 +113,62 @@ class ImageUtils:
             location = (location.target.x, location.target.y)
 
         if(self.debug_mode):
-            print(
-                f"{self.printtime()} [SUCCESS] Found the {button_name.upper()} Button at {location}.")
+            print(f"{self.printtime()} [SUCCESS] Found the {button_name.upper()} Button at {location}.")
 
         if (confirm_location_check):
             self.confirm_location(button_name)
 
         return location
 
-    def confirm_location(self, location_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 10, sleep_time: int = 1):
+    def confirm_location(self, location_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 1):
         """Confirm the bot's position by searching for the header image.
 
         Args:
             location_name (str): Name of the header image file in the images/headers/ folder.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
-            tries (int, optional): Number of tries before failing. Defaults to 10.
+            tries (int, optional): Number of tries before failing. Defaults to 5.
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
 
         Returns:
             (bool): True if current location is confirmed. Otherwise, False.
         """
         if(self.debug_mode):
-            print(
-                f"\n{self.printtime()} [DEBUG] Now attempting to confirm the bot's location at the {location_name.upper()} Screen...")
+            print(f"{self.printtime()} [DEBUG] Now attempting to confirm the bot's location at the {location_name.upper()} Screen...")
 
         location = None
 
         # Loop until location is found or return False if image matching failed.
         while (location == None):
             if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
-                    self.window_left, self.window_top, self.window_width, self.window_height))
+                location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                                                          region=(self.window_left, self.window_top, self.window_width, self.window_height))
             else:
-                location = pyautogui.locateCenterOnScreen(
-                    f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check)
+                location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check)
 
             if (location == None):
                 if(self.debug_mode):
-                    print(
-                        f"{self.printtime()} [DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
+                    print(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
+                
+                # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/headers/")
-                location = self.guibot.exists(
-                    f"{location_name.lower()}_header")
+                location = self.guibot.exists(f"{location_name.lower()}_header")
 
                 if(location == None):
                     tries -= 1
-                    if (tries == 0):
+                    
+                    if (tries <= 0):
                         if(self.debug_mode):
-                            print(
-                                f"{self.printtime()} [ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen.")
+                            print(f"{self.printtime()} [ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen.")
                         return False
 
                     if(self.debug_mode):
-                        print(
-                            f"{self.printtime()} [DEBUG] Could not confirm the bot's location at the {location_name.upper()} Screen. Trying again in {sleep_time} seconds...")
+                        print(f"{self.printtime()} [DEBUG] Could not confirm the bot's location at the {location_name.upper()} Screen. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
 
         if(self.debug_mode):
-            print(
-                f"{self.printtime()} [SUCCESS] Bot's location is at {location_name.upper()} Screen.")
+            print(f"{self.printtime()} [SUCCESS] Bot's location is at {location_name.upper()} Screen.")
 
         return True
 
@@ -196,41 +188,38 @@ class ImageUtils:
             summon_location (int, int): Tuple of coordinates of where the center of the summon is located if image matching was successful. Otherwise, return None.
         """
         if(self.debug_mode):
-            print(
-                f"\n[DEBUG] Now attempting to find {summon_name.upper()} Summon...")
+            print(f"[DEBUG] Now attempting to find {summon_name.upper()} Summon...")
 
         summon_location = None
         guibot_check = False
 
         while (summon_location == None):
             if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_name}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
-                    self.window_left, self.window_top, self.window_width, self.window_height))
+                summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_name}.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                                                                 region=(self.window_left, self.window_top, self.window_width, self.window_height))
             else:
-                summon_location = pyautogui.locateCenterOnScreen(
-                    f"images/summons/{summon_name}.png", confidence=custom_confidence, grayscale=grayscale_check)
+                summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_name}.png", confidence=custom_confidence, grayscale=grayscale_check)
 
             if (summon_location == None):
                 if(self.debug_mode):
-                    print(
-                        f"{self.printtime()} [DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
+                    print(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
+                
+                # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/summons/")
                 summon_location = self.guibot.exists(f"{summon_name.lower()}")
 
                 if(summon_location == None):
-                    if(self.debug_mode):
-                        print(
-                            f"{self.printtime()} [DEBUG] Could not locate the {summon_name.upper()} Summon. Trying again in {sleep_time} seconds...")
-
                     tries -= 1
-                    if (tries == 0):
-                        print(
-                            f"{self.printtime()} [ERROR] Could not find {summon_name.upper()} Summon.")
+                        
+                    if (tries <= 0):
+                        print(f"{self.printtime()} [ERROR] Could not find {summon_name.upper()} Summon.")
                         return None
+                
+                    if(self.debug_mode):
+                        print(f"{self.printtime()} [DEBUG] Could not locate the {summon_name.upper()} Summon. Trying again in {sleep_time} seconds...")
 
                     # If matching failed, scroll the screen down to see more Summons.
-                    self.mouse_tools.scroll_screen(
-                        home_button_x, home_button_y - 50, -400)
+                    self.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -400)
 
                     time.sleep(sleep_time)
                 else:
@@ -241,12 +230,11 @@ class ImageUtils:
             summon_location = summon_location.target
 
         if(self.debug_mode):
-            print(
-                f"{self.printtime()} [SUCCESS] Found the {summon_name.upper()} Summon at {summon_location}.")
+            print(f"{self.printtime()} [SUCCESS] Found the {summon_name.upper()} Summon at {summon_location}.")
 
         return summon_location
 
-    def find_dialog(self, dialog_name: str, attack_button_x: int, attack_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 10, sleep_time: int = 1):
+    def find_dialog(self, dialog_name: str, attack_button_x: int, attack_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 1):
         """Attempt to find the specified dialog window.
 
         Args:
@@ -255,7 +243,7 @@ class ImageUtils:
             attack_button_y (int): Y coordinate of where the center of the Attack Button is.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
-            tries (int, optional): Number of tries before failing. Defaults to 10.
+            tries (int, optional): Number of tries before failing. Defaults to 5.
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
 
         Returns:
@@ -266,29 +254,29 @@ class ImageUtils:
 
         while (dialog_location == None):
             if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_{dialog_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
-                    attack_button_x - 350, attack_button_y + 28, attack_button_x - 264, attack_button_y + 50))
+                dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_{dialog_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                                                                 region=(attack_button_x - 350, attack_button_y + 28, attack_button_x - 264, attack_button_y + 50))
             else:
-                dialog_location = pyautogui.locateCenterOnScreen(
-                    f"images/dialogs/dialog_{dialog_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check)
+                dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_{dialog_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check)
 
             if (dialog_location == None):
                 if(self.debug_mode):
-                    print(
-                        f"{self.printtime()} [DEBUG] Failed matching using PyAutoGui. Now matching with GuiBot...")
+                    print(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
 
+                # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/dialogs/")
-                dialog_location = self.guibot.exists(
-                    f"dialog_{dialog_name.lower()}")
+                dialog_location = self.guibot.exists(f"dialog_{dialog_name.lower()}")
 
                 if (dialog_location == None):
                     tries -= 1
+                    
                     if (tries <= 0):
+                        if(self.debug_mode):
+                            print(f"{self.printtime()} [DEBUG] There are no {dialog_name.upper()} Dialog detected on the screen. Continuing with bot execution...")
                         return None
 
                     if(self.debug_mode):
-                        print(
-                            f"{self.printtime()} [DEBUG] Locating {dialog_name.upper()} Dialog failed. Trying again in {sleep_time} seconds...")
+                        print(f"{self.printtime()} [DEBUG] Locating {dialog_name.upper()} Dialog failed. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
                 else:
@@ -299,8 +287,7 @@ class ImageUtils:
             dialog_location = dialog_location.target
 
         if(self.debug_mode):
-            print(
-                f"{self.printtime()} [SUCCESS] Found the {dialog_name.upper()} Dialog at {dialog_location}.")
+            print(f"{self.printtime()} [SUCCESS] Found the {dialog_name.upper()} Dialog at {dialog_location}.")
 
         return dialog_location
 
@@ -316,31 +303,31 @@ class ImageUtils:
         Returns:
             locations (list[Box]): List of Boxes where each occurrence is found on the screen. If no occurrence was found, return a empty list. Or if the file does not exist, return None.
         """
-        # Find file by searching subfolders.
         dir_path = os.path.dirname(os.path.realpath(__file__))
+        
+        # Find specified image file by searching subfolders in the images folder.
         for root, dirs, files in os.walk(f"{dir_path}/images/"):
             for file in files:
                 file_name = os.path.splitext(str(file))[0]
+                
                 if (file_name.lower() == image_name.lower()):
                     if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None and custom_region == None):
-                        locations = list(pyautogui.locateAllOnScreen(
-                            f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check, region=(
-                                self.window_left, self.window_top, self.window_width, self.window_height)))
+                        locations = list(pyautogui.locateAllOnScreen(f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                                                                     region=(self.window_left, self.window_top, self.window_width, self.window_height)))
+                    
                     elif(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None and custom_region != None):
-                        locations = list(pyautogui.locateAllOnScreen(
-                            f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check, region=custom_region))
+                        locations = list(pyautogui.locateAllOnScreen(f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                                                                     region=custom_region))
+                    
                     else:
-                        locations = list(pyautogui.locateAllOnScreen(
-                            f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check))
+                        locations = list(pyautogui.locateAllOnScreen(f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check))
 
                     if (self.debug_mode and len(locations) != 0):
                         for location in locations:
-                            print(
-                                "{self.printtime()} [INFO] Occurrence found at: ", location)
+                            print(f"{self.printtime()} [INFO] Occurrence found at: ", location)
 
                     return locations
 
-        print(
-            f"{self.printtime()} [ERROR] Given file name does not exist in /images/ folder.")
+        print(f"{self.printtime()} [ERROR] Specified file does not exist inside the /images/ folder or its subfolders.")
 
         return None
