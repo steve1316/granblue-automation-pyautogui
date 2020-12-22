@@ -355,7 +355,9 @@ Window {
                                     homeButton.isActiveMenu = true
                                     settingsButton.isActiveMenu = false
 
-                                    stackView.push(Qt.resolvedUrl("pages/HomePage.qml"))
+                                    //stackView.push(Qt.resolvedUrl("pages/HomePage.qml"))
+                                    page_home.visible = true
+                                    page_settings.visible = false
                                 }
                             }
                         }
@@ -372,7 +374,9 @@ Window {
                                     homeButton.isActiveMenu = false
                                     settingsButton.isActiveMenu = true
 
-                                    stackView.push(Qt.resolvedUrl("pages/SettingsPage.qml"))
+                                    //stackView.push(Qt.resolvedUrl("pages/SettingsPage.qml"))
+                                    page_home.visible = false
+                                    page_settings.visible = true
                                 }
                             }
                         }
@@ -433,11 +437,109 @@ Window {
                     anchors.bottomMargin: 25
                     anchors.topMargin: 0
 
-                    StackView {
-                        id: stackView
-                        anchors.fill: parent
+                    Rectangle {
+                        id: scrollViewContainer
+                        y: 38
+                        color: "#2f2f2f"
+                        radius: 10
+                        anchors.left: parent.left
+                        anchors.right: page_home.left
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        clip: false
+                        anchors.leftMargin: 20
+                        anchors.rightMargin: 50
+                        anchors.bottomMargin: 20
+                        anchors.topMargin: 20
 
-                        initialItem: Qt.resolvedUrl("pages/HomePage.qml")
+                        ScrollView {
+                            id: scrollView
+                            x: -10
+                            y: 0
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.top: parent.top
+                            anchors.bottom: parent.bottom
+
+                            contentHeight: console_log_text.contentHeight + 50 // Update the scrollView's content height to always have room for the console log text.
+                            contentWidth: 280
+
+                            clip: true
+                            wheelEnabled: true
+                            anchors.rightMargin: 10
+                            anchors.leftMargin: 10
+                            anchors.bottomMargin: 10
+                            anchors.topMargin: 10
+
+                            Text{
+                                id: console_log_text
+
+                                color: "#ffffff"
+                                text: "Hello there!"
+                                elide: Text.ElideNone
+                                anchors.left: parent.left
+                                anchors.right: parent.right
+                                anchors.top: parent.top
+                                anchors.bottom: parent.bottom
+                                font.pixelSize: 12
+                                horizontalAlignment: Text.AlignLeft
+                                verticalAlignment: Text.AlignTop
+                                wrapMode: Text.WordWrap
+                                anchors.rightMargin: 10
+                                anchors.leftMargin: 10
+                                anchors.bottomMargin: 10
+                                anchors.topMargin: 10
+                                clip: false
+                                maximumLineCount: 10000
+                                textFormat: Text.PlainText
+                            }
+                        }
+                    }
+
+//                    StackView {
+//                        id: stackView
+//                        anchors.left: parent.left
+//                        anchors.right: parent.right
+//                        anchors.top: parent.top
+//                        anchors.bottom: parent.bottom
+//                        anchors.topMargin: 20
+//                        anchors.bottomMargin: 20
+//                        anchors.leftMargin: 500
+//                        anchors.rightMargin: 20
+
+//                        initialItem: Qt.resolvedUrl("pages/HomePage.qml")
+//                    }
+
+                    Loader{
+                        id: page_home
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.topMargin: 20
+                        anchors.bottomMargin: 20
+                        anchors.leftMargin: 500
+                        anchors.rightMargin: 20
+
+                        source: Qt.resolvedUrl("pages/HomePage.qml")
+
+                        visible: true
+                    }
+
+                    Loader{
+                        id: page_settings
+                        anchors.left: parent.left
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.topMargin: 20
+                        anchors.bottomMargin: 20
+                        anchors.leftMargin: 500
+                        anchors.rightMargin: 20
+
+                        source: Qt.resolvedUrl("pages/SettingsPage.qml")
+
+                        visible: false
                     }
                 }
 
@@ -619,8 +721,10 @@ Window {
 
 
 
+
+
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.25}D{i:17}D{i:18}D{i:26}D{i:28}D{i:31}D{i:44}
+    D{i:0;formeditorZoom:1.25}
 }
 ##^##*/
