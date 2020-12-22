@@ -14,7 +14,7 @@ Item{
             property bool isBotRunning: false
 
             function startLogParsing(){
-                console_log_text.text = "" // Reset the log when starting it up.
+                //console_log_text.text = "" // Reset the log when starting it up.
                 timerFunction.running = true
                 console.log("Parsing bot logs now...")
             }
@@ -25,12 +25,10 @@ Item{
             }
 
             function startBot(){
-                console.log("STARTING BOT!")
                 backend.start_bot()
             }
 
             function stopBot(){
-                console.log("STOPPING BOT!")
                 backend.stop_bot()
             }
         }
@@ -69,7 +67,7 @@ Item{
             interval: 1000
             running: false
             repeat: true
-            onTriggered: backend.update_console_log // Call update_console_log() in the backend.
+            onTriggered: backend.update_console_log("") // Call update_console_log() in the backend.
         }
 
         Connections{
