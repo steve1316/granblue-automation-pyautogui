@@ -1,41 +1,79 @@
-from game import Game
-
+import game
 class MapSelection:
-    def  __init__(self, debug_mode: bool = False):
+    def  __init__(self, game: game.Game, debug_mode: bool = False):
         super().__init__()
         
-        # Dictionary of supported farmable materials.
+        # Dictionary of supported farmable materials. Maps selected from recommendations in the GBF wiki website.
         self.farmable_materials = {
             "quest": {
-                "Satin Feather": "Scattered Cargo",
-                "Zephyr Feather": "Scattered Cargo",
-                "Flying Sprout": "Scattered Cargo",
-                "Fine Sand Bottle": "Lucky Charm Hunt",
-                "Untamed Flame": "Special Op's Request",
-                "Blistering Ore": ["Lucky Charm Hunt", "Special Op's Request"],
-                "Fresh Water Jug": "Threat to the Fisheries",
-                "Soothing Splash": "Threat to the Fisheries",
-                "Glowing Coral": "Threat to the Fisheries",
-                "Rough Stone": "The Fruit of Lumacie",
-                "Coarse Alluvium": "Whiff of Danger",
-                "Swirling Amber": "The Fruit of Lumacie",
-                "Falcon Feather": "I Challenge You!",
-                "Spring Water Jug": "I Challenge You!",
-                "Vermilion Stone": "I Challenge You!",
-                "Slimy Shroom": "For Whom the Bell Tolls",
-                "Lacrimosa": "For Whom the Bell Tolls",
-                "Wheat Stalk": "Golonzo's Battle of Old",
-                "Iron Cluster": "Golonzo's Battle of Old",
+                "map1": {
+                    # Port Breeze Archipelago
+                    "Satin Feather": "Scattered Cargo",
+                    "Zephyr Feather": "Scattered Cargo",
+                    "Flying Sprout": "Scattered Cargo",
+                },
+                "map2": {
+                    # Valtz Duchy
+                    "Fine Sand Bottle": "Lucky Charm Hunt",
+                    "Untamed Flame": "Special Op's Request",
+                    "Blistering Ore": ["Lucky Charm Hunt", "Special Op's Request"],
+                },
+                "map3": {
+                    # Auguste Isles
+                    "Fresh Water Jug": "Threat to the Fisheries",
+                    "Soothing Splash": "Threat to the Fisheries",
+                    "Glowing Coral": "Threat to the Fisheries",
+                },
+                "map4": {
+                    # Lumacie Archipelago
+                    "Rough Stone": "The Fruit of Lumacie",
+                    "Coarse Alluvium": "Whiff of Danger",
+                    "Swirling Amber": "The Fruit of Lumacie",
+                },
+                "map5": {
+                    # Albion Citadel
+                    "Falcon Feather": "I Challenge You!",
+                    "Spring Water Jug": "I Challenge You!",
+                    "Vermilion Stone": "I Challenge You!",
+                },
+                "map6": {
+                    # Mist-Shrouded Isle
+                    "Slimy Shroom": "For Whom the Bell Tolls",
+                    "Hollow Soul": "For Whom the Bell Tolls",
+                    "Lacrimosa": "For Whom the Bell Tolls",
+                },
+                "map7": {
+                    # Golonzo Island
+                    "Wheat Stalk": "Golonzo's Battle of Old",
+                    "Iron Cluster": "Golonzo's Battle of Old",
+                    "Olea Plant": "Golonzo's Battle of Old", 
                 "Olea Plant": "Golonzo's Battle of Old",
-                "Indigo Fruit": "The Dungeon Diet",
-                "Foreboding Clover": "The Dungeon Diet",
-                "Blood Amber": "The Dungeon Diet",
-                "Sand Brick": "Trust Busting Dustup",
-                "Native Reed": "Trust Busting Dustup",
-                "Antique Cloth": ["Trust Busting Dustup", "Erste Kingdom Episode 4"],
-                "Prosperity Flame": "Imperial Wanderer's Soul",
-                "Explosive Material": "Imperial Wanderer's Soul",
-                "Steel Liquid": "Imperial Wanderer's Soul"
+                    "Olea Plant": "Golonzo's Battle of Old", 
+                "Olea Plant": "Golonzo's Battle of Old",
+                    "Olea Plant": "Golonzo's Battle of Old", 
+                "Olea Plant": "Golonzo's Battle of Old",
+                    "Olea Plant": "Golonzo's Battle of Old", 
+                "Olea Plant": "Golonzo's Battle of Old",
+                    "Olea Plant": "Golonzo's Battle of Old", 
+                },
+                "map8": {
+                    # Amalthea Island
+                    "Indigo Fruit": "The Dungeon Diet",
+                    "Foreboding Clover": "The Dungeon Diet",
+                    "Blood Amber": "The Dungeon Diet",
+                },
+                "map9": {
+                    # Former Capital Mephorash
+                    "Sand Brick": "Trust Busting Dustup",
+                    "Native Reed": "Trust Busting Dustup",
+                    "Antique Cloth": ["Trust Busting Dustup", "Erste Kingdom Episode 4"],
+                },
+                "map10": {
+                    # Agastia
+                    "Prosperity Flame": "Imperial Wanderer's Soul",
+                    "Explosive Material": "Imperial Wanderer's Soul",
+                    "Steel Liquid": "Imperial Wanderer's Soul"
+                }
             },
             "coop": {
                 "Infernal Garnet": "EX2-3",
@@ -116,7 +154,7 @@ class MapSelection:
             }
         }
         
-        self.my_game = Game()
+        self.game = game
         
         self.debug_mode = debug_mode
         
