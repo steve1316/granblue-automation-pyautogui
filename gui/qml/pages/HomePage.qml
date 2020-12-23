@@ -75,7 +75,7 @@ Item{
 
             // Retrieve the string returned from update_console_log from the backend and update the log text in the window.
             function onUpdateConsoleLog(line){
-                console_log_text.text += line
+                console_log_text.append(line)
             }
         }
     }

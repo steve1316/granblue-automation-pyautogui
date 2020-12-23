@@ -6,10 +6,10 @@ import "controls"
 
 Window {
     id: main_window
-    width: 1000
+    width: 1200
     height: 600
 
-    minimumWidth: 800
+    minimumWidth: 1000
     minimumHeight: 400
 
     visible: true
@@ -452,7 +452,7 @@ Window {
                         anchors.bottomMargin: 20
                         anchors.topMargin: 20
 
-                        ScrollView {
+                        Flickable {
                             id: scrollView
                             x: -10
                             y: 0
@@ -464,19 +464,25 @@ Window {
                             contentHeight: console_log_text.contentHeight + 50 // Update the scrollView's content height to always have room for the console log text.
                             contentWidth: 280
 
+                            ScrollBar.vertical: ScrollBar {
+                                id: scrollBar
+                                 policy: ScrollBar.AlwaysOn // Always display the scrollbar.
+                            }
+
+
                             clip: true
-                            wheelEnabled: true
                             anchors.rightMargin: 10
                             anchors.leftMargin: 10
                             anchors.bottomMargin: 10
                             anchors.topMargin: 10
 
-                            Text{
+                            TextArea.flickable: TextArea {
                                 id: console_log_text
+
+                                textMargin: 10
 
                                 color: "#ffffff"
                                 text: "Hello there!"
-                                elide: Text.ElideNone
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.top: parent.top
@@ -490,8 +496,10 @@ Window {
                                 anchors.bottomMargin: 10
                                 anchors.topMargin: 10
                                 clip: false
-                                maximumLineCount: 10000
                                 textFormat: Text.PlainText
+
+                                readOnly: true
+                                selectByMouse: true
                             }
                         }
                     }
@@ -723,6 +731,6 @@ Window {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.75}D{i:31}
+    D{i:0;formeditorZoom:0.9}
 }
 ##^##*/
