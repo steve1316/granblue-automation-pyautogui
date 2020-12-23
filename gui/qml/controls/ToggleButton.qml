@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.15
 
 Button{
-    id: toggle_button
+    id: toggleButton
 
     // Custom Properties
     property url buttonIconSource: "../../images/svg_images/menu_icon.svg"
@@ -15,10 +15,10 @@ Button{
         id: internal
 
         // This will control the color of the button when hovering over it and clicking it.
-        property var dynamicColor: if(toggle_button.down){
-                                       toggle_button.down ? buttonColorClicked : buttonColorDefault
+        property var dynamicColor: if(toggleButton.down){
+                                       toggleButton.down ? buttonColorClicked : buttonColorDefault
                                    }else{
-                                       toggle_button.hovered ? buttonColorMouseOver : buttonColorDefault
+                                       toggleButton.hovered ? buttonColorMouseOver : buttonColorDefault
                                    }
     }
 
@@ -26,11 +26,13 @@ Button{
     implicitHeight: 60
 
     background: Rectangle{
-        id: button_background
+        id: buttonBackground
+        
         color: internal.dynamicColor
 
         Image{
-            id: button_icon
+            id: buttonIcon
+
             source: buttonIconSource
 
             anchors.verticalCenter: parent.verticalCenter
@@ -45,8 +47,8 @@ Button{
         }
 
         ColorOverlay{
-            anchors.fill: button_icon
-            source: button_icon
+            anchors.fill: buttonIcon
+            source: buttonIcon
 
             color: "#ffffff"
 

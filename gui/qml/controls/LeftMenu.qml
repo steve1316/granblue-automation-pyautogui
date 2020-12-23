@@ -3,7 +3,8 @@ import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.15
 
 Button{
-    id: left_menu_button
+    id: leftMenuButton
+
     text: qsTr("Left Menu Text")
 
     // Custom Properties
@@ -21,10 +22,10 @@ Button{
         id: internal
 
         // This will control the color of the button when hovering over it and clicking it.
-        property var dynamicColor: if(left_menu_button.down){
-                                       left_menu_button.down ? buttonColorClicked : buttonColorDefault
+        property var dynamicColor: if(leftMenuButton.down){
+                                       leftMenuButton.down ? buttonColorClicked : buttonColorDefault
                                    }else{
-                                       left_menu_button.hovered ? buttonColorMouseOver : buttonColorDefault
+                                       leftMenuButton.hovered ? buttonColorMouseOver : buttonColorDefault
                                    }
     }
 
@@ -32,7 +33,8 @@ Button{
     implicitHeight: 60
 
     background: Rectangle{
-        id: button_background
+        id: buttonBackground
+
         color: internal.dynamicColor
 
         Rectangle{
@@ -44,6 +46,7 @@ Button{
 
             color: activeMenuColor
             width: 3
+
             visible: isActiveMenu
         }
 
@@ -56,15 +59,16 @@ Button{
 
             color: activeMenuColorRight
             width: 5
+
             visible: isActiveMenu
         }
     }
 
     contentItem: Item{
-        id: content
+        id: contentItem
 
         Image{
-            id: button_icon
+            id: buttonIcon
             source: buttonIconSource
             anchors.leftMargin: 26
 
@@ -83,8 +87,8 @@ Button{
         }
 
         ColorOverlay{
-            anchors.fill: button_icon
-            source: button_icon
+            anchors.fill: buttonIcon
+            source: buttonIcon
 
             color: "#ffffff"
 
@@ -98,8 +102,9 @@ Button{
 
         Text{
             color: "#ffffff"
-            text: left_menu_button.text
-            font: left_menu_button.font
+            text: leftMenuButton.text
+            font: leftMenuButton.font
+            
             anchors.verticalCenter: parent.verticalCenter
             anchors.left: parent.left
             anchors.leftMargin: 75

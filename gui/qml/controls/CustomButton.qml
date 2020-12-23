@@ -3,7 +3,7 @@ import QtQuick.Controls 2.15
 import QtGraphicalEffects 1.15
 
 Button {
-    id: button
+    id: customButton
 
     // Custom Properties
     property int customRadius: 10
@@ -14,20 +14,20 @@ Button {
     QtObject{
         id: internal
 
-        property var dynamicColor: if(button.down){
-                                       button.down ? colorPressed : colorDefault
+        property var dynamicColor: if(customButton.down){
+                                       customButton.down ? colorPressed : colorDefault
                                    }else{
-                                       button.hovered ? colorMouseOver : colorDefault
+                                       customButton.hovered ? colorMouseOver : colorDefault
                                    }
     }
 
-    text: qsTr("Placeholder")
+    text: qsTr("Placeholder text")
 
     contentItem: Item{
         Text {
-            id: buttonText
-            text: button.text
-            font: button.font
+            id: customButtonText
+            text: customButton.text
+            font: customButton.font
             color: "#ffffff"
             anchors.verticalCenter: parent.verticalCenter
             anchors.horizontalCenter: parent.horizontalCenter

@@ -5,7 +5,8 @@ import QtGraphicalEffects 1.15
 import "controls"
 
 Window {
-    id: main_window
+    id: mainWindow
+
     width: 1200
     height: 600
 
@@ -13,6 +14,7 @@ Window {
     minimumHeight: 400
 
     visible: true
+
     color: "#00000000"
     title: qsTr("Granblue Automation")
 
@@ -30,7 +32,7 @@ Window {
         // Removes or adds back in the window margins when maximizing or restoring. Also change the visibility of all the resizes to false.
         function maximizeRestore(){
             if(windowStatus == 0){
-                main_window.showMaximized()
+                mainWindow.showMaximized()
                 windowStatus = 1
                 windowMargin = 0
 
@@ -38,7 +40,7 @@ Window {
 
                 buttonMaximize.buttonIconSource = "../images/svg_images/restore_icon.svg"
             }else{
-                main_window.showNormal()
+                mainWindow.showNormal()
                 windowStatus = 0
                 windowMargin = 10
 
@@ -51,7 +53,7 @@ Window {
         // Reset the window back to normal when dragging the title bar around.
         function restoreWindowStatus(){
             if(windowStatus == 1){
-                main_window.showNormal()
+                mainWindow.showNormal()
                 windowStatus = 0
                 windowMargin = 10
 
@@ -74,25 +76,27 @@ Window {
         // Hides the resizing arrows when the window is maximized.
         function hideResizeArea(){
             resize_window_bottomright.visible = false
-            resize_left.visible = false
-            resize_right.visible = false
-            resize_bottom.visible = false
+            resizeWindowLeft.visible = false
+            resizeWindowRight.visible = false
+            resizeWindowBottom.visible = false
         }
 
         // Restores the resizing arrows when the window is normal.
         function showResizeArea(){
             resize_window_bottomright.visible = true
-            resize_left.visible = true
-            resize_right.visible = true
-            resize_bottom.visible = true
+            resizeWindowLeft.visible = true
+            resizeWindowRight.visible = true
+            resizeWindowBottom.visible = true
         }
     }
 
     Rectangle {
         id: background
+
         color: "#40405f"
         border.color: "#49496b"
         border.width: 1
+
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
@@ -101,11 +105,14 @@ Window {
         anchors.leftMargin: windowMargin
         anchors.bottomMargin: windowMargin
         anchors.topMargin: windowMargin
+
         z: 1
 
         Rectangle {
             id: container
+
             color: "#00000000"
+
             anchors.fill: parent
             anchors.rightMargin: 1
             anchors.leftMargin: 1
@@ -113,9 +120,11 @@ Window {
             anchors.topMargin: 1
 
             Rectangle {
-                id: top_bar
+                id: topBar
+
                 height: 60
                 color: "#242424"
+
                 anchors.left: parent.left
                 anchors.right: parent.right
                 anchors.top: parent.top
@@ -129,10 +138,12 @@ Window {
                 }
 
                 Rectangle {
-                    id: top_bar_description
+                    id: topBarDescriptionContainer
+
                     y: 32
                     height: 25
                     color: "#272741"
+
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.bottom: parent.bottom
@@ -141,14 +152,17 @@ Window {
                     anchors.bottomMargin: 0
 
                     Label {
-                        id: label_left_info
+                        id: topBarLeftLabel
+
                         color: "#d9d9d9"
                         text: qsTr("Bot Status: Not Running")
+
+                        verticalAlignment: Text.AlignVCenter
+
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        verticalAlignment: Text.AlignVCenter
                         anchors.rightMargin: 300
                         anchors.leftMargin: 10
                         anchors.bottomMargin: 0
@@ -156,15 +170,18 @@ Window {
                     }
 
                     Label {
-                        id: label_right_info
+                        id: topBarRightLabel
+
                         color: "#d9d9d9"
                         text: qsTr("| HOME")
-                        anchors.left: label_left_info.right
+
+                        horizontalAlignment: Text.AlignRight
+                        verticalAlignment: Text.AlignVCenter
+
+                        anchors.left: topBarLeftLabel.right
                         anchors.right: parent.right
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        horizontalAlignment: Text.AlignRight
-                        verticalAlignment: Text.AlignVCenter
                         anchors.rightMargin: 10
                         anchors.leftMargin: 0
                         anchors.bottomMargin: 0
@@ -173,9 +190,11 @@ Window {
                 }
 
                 Rectangle {
-                    id: title_bar
+                    id: titleBar
+
                     height: 35
                     color: "#00000000"
+
                     anchors.left: parent.left
                     anchors.right: parent.right
                     anchors.top: parent.top
@@ -186,99 +205,116 @@ Window {
                     // This DragHandler will handle moving the window around as removing the default title bar disabled it.
                     DragHandler{
                         onActiveChanged: if(active){
-                                             main_window.startSystemMove()
+                                             mainWindow.startSystemMove()
 
                                              internal.restoreWindowStatus()
                                          }
                     }
 
                     Image {
-                        id: app_icon
+                        id: appIcon
+
                         width: 22
                         height: 22
+
                         anchors.left: parent.left
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        source: "../images/svg_images/icon_app_top.svg"
                         anchors.leftMargin: 5
                         anchors.bottomMargin: 0
                         anchors.topMargin: 0
+
+                        source: "../images/svg_images/icon_app_top.svg"
                         fillMode: Image.PreserveAspectFit
                     }
 
                     Label {
-                        id: label_app_name
+                        id: appNameLabel
+
                         color: "#ffffff"
                         text: qsTr("Granblue Automation")
-                        anchors.left: app_icon.right
+                        font.pointSize: 10
+
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment: Text.AlignVCenter
+                        
+                        anchors.left: appIcon.right
                         anchors.right: parent.right
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        horizontalAlignment: Text.AlignLeft
-                        verticalAlignment: Text.AlignVCenter
-                        font.pointSize: 10
                         anchors.leftMargin: 5
                     }
                 }
 
                 Row {
-                    id: row_buttons
+                    id: windowButtonsRow
+
                     x: 764
                     width: 105
                     height: 35
+
                     anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.rightMargin: 0
                     anchors.topMargin: 0
 
-                    // The following 3 buttons allow for minimizing, maximizing, and closing the window.
+                    // This button minimizes the window.
                     TopBarButton{
                         id: buttonMinimize
 
                         onClicked: {
-                            main_window.showMinimized()
+                            mainWindow.showMinimized()
                             internal.restoreWindowMargin()
                         }
                     }
 
+                    // This button maximizes or restores the window.
                     TopBarButton {
                         id: buttonMaximize
+                        
                         buttonIconSource: "../images/svg_images/maximize_icon.svg"
 
                         onClicked: internal.maximizeRestore()
                     }
 
+                    // This button exits the application.
                     TopBarButton {
                         id: buttonClose
+                        
                         buttonColorClicked: "#cc0000"
                         buttonIconSource: "../images/svg_images/close_icon.svg"
 
-                        onClicked: main_window.close()
+                        onClicked: mainWindow.close()
                     }
                 }
 
                 MouseArea {
-                    id: resize_top_bar_doubleclick
+                    id: topBarMouseAreaForMaximizeRestore
+
                     x: 75
                     y: 0
+
                     anchors.left: parent.left
-                    anchors.right: row_buttons.left
+                    anchors.right: windowButtonsRow.left
                     anchors.top: parent.top
-                    anchors.bottom: top_bar_description.top
+                    anchors.bottom: topBarDescriptionContainer.top
                     anchors.rightMargin: 0
                     anchors.leftMargin: 70
                     anchors.bottomMargin: 0
                     anchors.topMargin: 0
 
+                    // Double clicking this area will maximize or restore the window.
                     onDoubleClicked: internal.maximizeRestore()
                 }
 
                 MouseArea {
-                    id: resize_window_topright
+                    id: resizeWindowTopRight
+
                     x: 963
                     y: -10
                     width: 10
                     height: 10
+
                     anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.rightMargin: -5
@@ -286,32 +322,38 @@ Window {
 
                     cursorShape: Qt.SizeBDiagCursor
 
+                    // Resize the window by dragging the top right corner.
                     DragHandler {
                         target: null
                         onActiveChanged: if(active){
-                                             main_window.startSystemResize(Qt.RightEdge | Qt.TopEdge)
+                                             mainWindow.startSystemResize(Qt.RightEdge | Qt.TopEdge)
                                          }
                     }
                 }
             }
 
             Rectangle {
-                id: content_container
+                id: contentContainer
+
                 color: "#00000000"
+
                 anchors.left: parent.left
                 anchors.right: parent.right
-                anchors.top: top_bar.bottom
+                anchors.top: topBar.bottom
                 anchors.bottom: parent.bottom
                 anchors.topMargin: 0
 
                 Rectangle {
-                    id: left_menu
+                    id: leftMenu
+
                     width: 70
                     color: "#242424"
+
+                    clip: true
+
                     anchors.left: parent.left
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
-                    clip: true
                     anchors.topMargin: 0
                     anchors.bottomMargin: 0
                     anchors.leftMargin: 0
@@ -319,9 +361,10 @@ Window {
                     // PropertyAnimation will handle the LeftMenu's width when expanding and retracting.
                     PropertyAnimation{
                         id: animationMenu
-                        target: left_menu
+                        target: leftMenu
+
                         property: "width"
-                        to: if(left_menu.width == 70){
+                        to: if(leftMenu.width == 70){
                                 return 200;
                             }else{
                                 return 70;
@@ -332,8 +375,10 @@ Window {
                     }
 
                     Column {
-                        id: column
+                        id: leftMenuColumn
+
                         width: 70
+
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.top: parent.top
@@ -345,53 +390,63 @@ Window {
 
                         LeftMenu {
                             id: homeButton
-                            width: left_menu.width
+
+                            width: leftMenu.width
+
                             text: qsTr("Home")
+
                             buttonColorMouseOver: "#323741"
                             isActiveMenu: true
 
+                            // Clicking this will set the Home Page as visible and hides the Settings Page.
                             onClicked: {
                                 if(homeButton.isActiveMenu == false){
                                     homeButton.isActiveMenu = true
                                     settingsButton.isActiveMenu = false
 
                                     //stackView.push(Qt.resolvedUrl("pages/HomePage.qml"))
-                                    page_home.visible = true
-                                    page_settings.visible = false
+                                    pageHomeLoader.visible = true
+                                    pageSettingsLoader.visible = false
 
-                                    label_right_info.text = qsTr("| HOME")
+                                    topBarRightLabel.text = qsTr("| HOME")
                                 }
                             }
                         }
 
                         LeftMenu {
                             id: settingsButton
-                            width: left_menu.width
+
+                            width: leftMenu.width
+
                             text: qsTr("Settings")
+
                             buttonColorMouseOver: "#323741"
                             buttonIconSource: "../images/svg_images/settings_icon.svg"
 
+                            // Clicking this will set the Settings Page as visible and hides the Home Page.
                             onClicked: {
                                 if(settingsButton.isActiveMenu == false){
                                     homeButton.isActiveMenu = false
                                     settingsButton.isActiveMenu = true
 
                                     //stackView.push(Qt.resolvedUrl("pages/SettingsPage.qml"))
-                                    page_home.visible = false
-                                    page_settings.visible = true
+                                    pageHomeLoader.visible = false
+                                    pageSettingsLoader.visible = true
 
-                                    label_right_info.text = qsTr("| SETTINGS")
+                                    topBarRightLabel.text = qsTr("| SETTINGS")
                                 }
                             }
                         }
                     }
 
                     MouseArea {
-                        id: resize_window_bottomleft
+                        id: resizeWindowBottomLeft
+
                         x: 65
                         y: 493
                         width: 10
                         height: 10
+
                         anchors.left: parent.left
                         anchors.bottom: parent.bottom
                         anchors.bottomMargin: -5
@@ -399,19 +454,22 @@ Window {
 
                         cursorShape: Qt.SizeBDiagCursor
 
+                        // Resize the window by dragging the bottom left corner.
                         DragHandler {
                             target: null
                             onActiveChanged: if(active){
-                                                 main_window.startSystemResize(Qt.LeftEdge | Qt.BottomEdge)
+                                                 mainWindow.startSystemResize(Qt.LeftEdge | Qt.BottomEdge)
                                              }
                         }
                     }
 
                     MouseArea {
-                        id: resize_window_topleft
+                        id: resizeWindowTopLeft
+
                         x: 62
                         width: 15
                         height: 15
+
                         anchors.left: parent.left
                         anchors.top: parent.top
                         anchors.topMargin: -68
@@ -419,91 +477,105 @@ Window {
 
                         cursorShape: Qt.SizeFDiagCursor
 
+                        // Resize the window by dragging the top left corner.
                         DragHandler {
                             target: null
                             onActiveChanged: if(active){
-                                                 main_window.startSystemResize(Qt.LeftEdge | Qt.TopEdge)
+                                                 mainWindow.startSystemResize(Qt.LeftEdge | Qt.TopEdge)
                                              }
                         }
                     }
                 }
 
                 Rectangle {
-                    id: content_area
+                    id: contentAreaContainer
+
                     color: "#2e2e4d"
-                    anchors.left: left_menu.right
+
+                    clip: true
+
+                    anchors.left: leftMenu.right
                     anchors.right: parent.right
                     anchors.top: parent.top
                     anchors.bottom: parent.bottom
-                    clip: true
                     anchors.rightMargin: 0
                     anchors.leftMargin: 0
                     anchors.bottomMargin: 25
                     anchors.topMargin: 0
 
                     Rectangle {
-                        id: scrollViewContainer
+                        id: scrollingViewContainer
+
                         y: 38
                         color: "#2f2f2f"
                         radius: 10
+
+                        clip: false
+
                         anchors.left: parent.left
-                        anchors.right: page_home.left
+                        anchors.right: pageHomeLoader.left
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.rightMargin: 20
-                        clip: false
                         anchors.leftMargin: 20
                         anchors.bottomMargin: 20
                         anchors.topMargin: 20
 
                         Flickable {
-                            id: scrollView
+                            id: scrollingView
+
                             x: -10
                             y: 0
+
+                            clip: true
+
                             anchors.left: parent.left
                             anchors.right: parent.right
                             anchors.top: parent.top
                             anchors.bottom: parent.bottom
-
-                            contentHeight: console_log_text.contentHeight + 50 // Update the scrollView's content height to always have room for the console log text.
-                            contentWidth: 280
-
-                            ScrollBar.vertical: ScrollBar {
-                                id: scrollBar
-                                 policy: ScrollBar.AlwaysOn // Always display the scrollbar.
-                            }
-
-
-                            clip: true
                             anchors.rightMargin: 10
                             anchors.leftMargin: 10
                             anchors.bottomMargin: 10
                             anchors.topMargin: 10
 
-                            TextArea.flickable: TextArea {
-                                id: console_log_text
+                            contentHeight: logTextArea.contentHeight + 50 // Update the scrollingView's content height to always have room for the console log text.
+                            contentWidth: 280
 
-                                textMargin: 10
+                            // Create a ScrollBar for this Flickable component.
+                            ScrollBar.vertical: ScrollBar {
+                                id: scrollBar
+                                 policy: ScrollBar.AlwaysOn // Always display the scrollbar.
+                            }
+
+                            TextArea.flickable: TextArea {
+                                id: logTextArea
 
                                 color: "#ffffff"
+
                                 text: "Hello there!"
+                                font.pixelSize: 12
+                                textMargin: 5
+                                textFormat: Text.PlainText
+
+                                horizontalAlignment: Text.AlignLeft
+                                verticalAlignment: Text.AlignTop
+                                wrapMode: Text.NoWrap
+
+                                clip: false
+                                
+                                readOnly: true
+                                selectByMouse: true
+
+                                bottomPadding: 10 // This is necessary to prevent any newly appended messages from getting partially cut off at the bottom.
+                        
                                 anchors.left: parent.left
                                 anchors.right: parent.right
                                 anchors.top: parent.top
                                 anchors.bottom: parent.bottom
-                                font.pixelSize: 12
-                                horizontalAlignment: Text.AlignLeft
-                                verticalAlignment: Text.AlignTop
-                                wrapMode: Text.NoWrap
                                 anchors.rightMargin: 10
                                 anchors.leftMargin: 10
                                 anchors.bottomMargin: 10
                                 anchors.topMargin: 10
-                                clip: false
-                                textFormat: Text.PlainText
-
-                                readOnly: true
-                                selectByMouse: true
                             }
                         }
                     }
@@ -523,42 +595,48 @@ Window {
 //                    }
 
                     Loader{
-                        id: page_home
+                        id: pageHomeLoader
+
                         width: 300
-                        anchors.right: parent.right
-                        anchors.top: parent.top
-                        anchors.bottom: parent.bottom
-                        anchors.topMargin: 20
-                        anchors.bottomMargin: 20
-                        anchors.rightMargin: 20
 
                         source: Qt.resolvedUrl("pages/HomePage.qml")
 
                         visible: true
-                    }
 
-                    Loader{
-                        id: page_settings
-                        width: 300
                         anchors.right: parent.right
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
                         anchors.topMargin: 20
                         anchors.bottomMargin: 20
                         anchors.rightMargin: 20
+                    }
+
+                    Loader{
+                        id: pageSettingsLoader
+
+                        width: 300
 
                         source: Qt.resolvedUrl("pages/SettingsPage.qml")
 
                         visible: false
+
+                        anchors.right: parent.right
+                        anchors.top: parent.top
+                        anchors.bottom: parent.bottom
+                        anchors.topMargin: 20
+                        anchors.bottomMargin: 20
+                        anchors.rightMargin: 20
                     }
                 }
 
                 Rectangle {
-                    id: bottom_bar
+                    id: bottomBar
+
                     color: "#272741"
-                    anchors.left: left_menu.right
+
+                    anchors.left: leftMenu.right
                     anchors.right: parent.right
-                    anchors.top: content_area.bottom
+                    anchors.top: contentAreaContainer.bottom
                     anchors.bottom: parent.bottom
                     anchors.rightMargin: 0
                     anchors.leftMargin: 0
@@ -566,16 +644,21 @@ Window {
                     anchors.topMargin: 0
 
                     Label {
-                        id: label_bottom_info
+                        id: bottomInfoLabel
+
                         x: 10
                         y: -2
+
                         color: "#d9d9d9"
+
                         text: qsTr("Application description")
+
+                        verticalAlignment: Text.AlignVCenter
+                        
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.top: parent.top
                         anchors.bottom: parent.bottom
-                        verticalAlignment: Text.AlignVCenter
                         anchors.topMargin: 0
                         anchors.rightMargin: 310
                         anchors.leftMargin: 10
@@ -583,11 +666,14 @@ Window {
                     }
 
                     MouseArea {
-                        id: resize_window_bottomright
+                        id: resizeWindowBottomRight
+
                         x: 894
                         y: 8
+
                         width: 10
                         height: 10
+
                         anchors.right: parent.right
                         anchors.bottom: parent.bottom
                         anchors.rightMargin: -5
@@ -595,53 +681,64 @@ Window {
 
                         cursorShape: Qt.SizeFDiagCursor
 
+                        // Resize the window by dragging the bottom right corner.
                         DragHandler{
                             target: null
                             onActiveChanged: if(active){
-                                                 main_window.startSystemResize(Qt.RightEdge | Qt.BottomEdge)
+                                                 mainWindow.startSystemResize(Qt.RightEdge | Qt.BottomEdge)
                                              }
                         }
 
                     }
 
                     Image {
-                        id: resize_image
+                        id: resizeCornerImage
+
                         x: 891
                         y: 8
+
                         width: 25
                         height: 25
-                        opacity: 0.5
-                        anchors.right: parent.right
-                        anchors.bottom: parent.bottom
+
                         source: "../images/svg_images/resize_icon.svg"
-                        anchors.rightMargin: 0
-                        anchors.bottomMargin: 0
                         sourceSize.height: 300
                         sourceSize.width: 300
                         fillMode: Image.PreserveAspectFit
 
                         antialiasing: false
+                        opacity: 0.5
+
+                        anchors.right: parent.right
+                        anchors.bottom: parent.bottom
+                        anchors.rightMargin: 0
+                        anchors.bottomMargin: 0
                     }
                 }
             }
         }
     }
 
-    // This drop shadow effect will go below the bg Rectangle.
+    // This drop shadow effect will appear below the window.
     DropShadow{
         anchors.fill: background
+
+        color: "#80000000"
+
         horizontalOffset: 0
         verticalOffset: 0
+
         radius: 12
         samples: 16
-        color: "#80000000"
+        
         source: background
-        z: 0
+        z: 0 // The background container has its z set to 1.
     }
 
     MouseArea {
-        id: resize_left
+        id: resizeWindowLeft
+
         width: 10
+
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -651,17 +748,20 @@ Window {
 
         cursorShape: Qt.SizeHorCursor
 
+        // Resize the window by dragging the left side of the window.
         DragHandler{
             target: null
             onActiveChanged: if(active){
-                                 main_window.startSystemResize(Qt.LeftEdge)
+                                 mainWindow.startSystemResize(Qt.LeftEdge)
                              }
         }
     }
 
     MouseArea {
-        id: resize_right
+        id: resizeWindowRight
+
         width: 10
+
         anchors.right: parent.right
         anchors.top: parent.top
         anchors.bottom: parent.bottom
@@ -671,17 +771,20 @@ Window {
 
         cursorShape: Qt.SizeHorCursor
 
+        // Resize the window by dragging the right side of the window.
         DragHandler{
             target: null
             onActiveChanged: if(active){
-                                 main_window.startSystemResize(Qt.RightEdge)
+                                 mainWindow.startSystemResize(Qt.RightEdge)
                              }
         }
     }
 
     MouseArea {
-        id: resize_bottom
+        id: resizeWindowBottom
+
         height: 10
+
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.bottom: parent.bottom
@@ -691,17 +794,20 @@ Window {
 
         cursorShape: Qt.SizeVerCursor
 
+        // Resize the window by dragging the bottom side of the window.
         DragHandler{
             target: null
             onActiveChanged: if(active){
-                                 main_window.startSystemResize(Qt.BottomEdge)
+                                 mainWindow.startSystemResize(Qt.BottomEdge)
                              }
         }
     }
 
     MouseArea {
-        id: resize_top
+        id: resizeWindowTop
+
         height: 10
+
         anchors.left: parent.left
         anchors.right: parent.right
         anchors.top: parent.top
@@ -711,14 +817,14 @@ Window {
 
         cursorShape: Qt.SizeVerCursor
 
+        // Resize the window by dragging the top side of the window.
         DragHandler{
             target: null
             onActiveChanged: if(active){
-                                 main_window.startSystemResize(Qt.TopEdge)
+                                 mainWindow.startSystemResize(Qt.TopEdge)
                              }
         }
     }
-
 }
 
 
