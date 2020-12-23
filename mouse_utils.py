@@ -54,7 +54,7 @@ class MouseUtils:
         if (custom_mouse_speed <= 0.0):
             custom_mouse_speed = self.mouse_speed
 
-        pyautogui.moveTo(x, y, custom_mouse_speed)
+        pyautogui.moveTo(x, y, custom_mouse_speed, pyautogui.easeInOutQuad)
         return None
 
     def move_to_instantly(self, x: int, y: int):
@@ -82,9 +82,9 @@ class MouseUtils:
             None
         """
         if (custom_mouse_speed <= 0.0):
-            custom_mouse_speed = 0.0
+            custom_mouse_speed = self.mouse_speed
 
-        pyautogui.moveTo(x, y, custom_mouse_speed)
+        pyautogui.moveTo(x, y, custom_mouse_speed, pyautogui.easeInOutQuad)
         pyautogui.click(clicks=mouse_clicks)
         return None
 
