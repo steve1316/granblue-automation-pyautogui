@@ -9,7 +9,6 @@ import pyautogui
 from guibot.fileresolver import FileResolver
 from guibot.guibot import GuiBot
 
-from mouse_utils import MouseUtils
 import game
 
 
@@ -19,6 +18,8 @@ class ImageUtils:
 
     Attributes
     ----------
+    game (game.Game): The Game object.
+    
     starting_time (float): Used to keep track of the program's elapsed time for logging purposes.
 
     window_left (int, optional): The top left corner of the region for image matching. Defaults to None.
@@ -33,17 +34,18 @@ class ImageUtils:
 
     """
 
-    def __init__(self, starting_time: float, window_left: int = None, window_top: int = None, window_width: int = None, window_height: int = None, debug_mode: bool = False):
+    def __init__(self, game, starting_time: float, window_left: int = None, window_top: int = None, window_width: int = None, window_height: int = None, debug_mode: bool = False):
         super().__init__()
 
         self.starting_time = starting_time
+        
+        self.game = game
 
         self.window_left = window_left
         self.window_top = window_top
         self.window_width = window_width
         self.window_height = window_height
         self.debug_mode = debug_mode
-        self.mouse_tools = MouseUtils(starting_time=self.starting_time, debug_mode=self.debug_mode)
 
         # Initialize GuiBot object for image matching.
         self.guibot = GuiBot()
@@ -73,7 +75,7 @@ class ImageUtils:
             location (int, int): Tuple of coordinates of where the center of the button is located if image matching was successful. Otherwise, return None.
         """
         if(self.debug_mode):
-            game.Game.print_and_save(f"{self.printtime()} [DEBUG] Now attempting to find the {button_name.upper()} Button from current position...")
+            self.game.print_and_save(f"{self.printtime()} [DEBUG] Now attempting to find the {button_name.upper()} Button from current position...")
 
         location = None
         guibot_check = False
@@ -88,7 +90,7 @@ class ImageUtils:
 
             if (location == None):
                 if(self.debug_mode):
-                    game.Game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
+                    self.game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
                 
                 # Use GuiBot to template match if PyAutoGUI failed.    
                 self.file_resolver.add_path("images/buttons/")
@@ -99,11 +101,11 @@ class ImageUtils:
                     
                     if (tries <= 0):
                         if(suppress_error != True):
-                            game.Game.print_and_save(f"{self.printtime()} [ERROR] Failed to find the {button_name.upper()} Button.")
+                            self.game.print_and_save(f"{self.printtime()} [ERROR] Failed to find the {button_name.upper()} Button.")
                         return None
 
                     if(self.debug_mode):
-                        game.Game.print_and_save(f"{self.printtime()} [DEBUG] Could not locate the {button_name.upper()} Button. Trying again in {sleep_time} seconds...")
+                        self.game.print_and_save(f"{self.printtime()} [DEBUG] Could not locate the {button_name.upper()} Button. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
                 else:
@@ -114,7 +116,7 @@ class ImageUtils:
             location = (location.target.x, location.target.y)
 
         if(self.debug_mode):
-            game.Game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {button_name.upper()} Button at {location}.")
+            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {button_name.upper()} Button at {location}.")
 
         if (confirm_location_check):
             self.confirm_location(button_name)
@@ -135,7 +137,7 @@ class ImageUtils:
             (bool): True if current location is confirmed. Otherwise, False.
         """
         if(self.debug_mode):
-            game.Game.print_and_save(f"{self.printtime()} [DEBUG] Now attempting to confirm the bot's location at the {location_name.upper()} Screen...")
+            self.game.print_and_save(f"{self.printtime()} [DEBUG] Now attempting to confirm the bot's location at the {location_name.upper()} Screen...")
 
         location = None
 
@@ -149,7 +151,7 @@ class ImageUtils:
 
             if (location == None):
                 if(self.debug_mode):
-                    game.Game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
+                    self.game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
                 
                 # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/headers/")
@@ -160,16 +162,16 @@ class ImageUtils:
                     
                     if (tries <= 0):
                         if(self.debug_mode):
-                            game.Game.print_and_save(f"{self.printtime()} [ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen.")
+                            self.game.print_and_save(f"{self.printtime()} [ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen.")
                         return False
 
                     if(self.debug_mode):
-                        game.Game.print_and_save(f"{self.printtime()} [DEBUG] Could not confirm the bot's location at the {location_name.upper()} Screen. Trying again in {sleep_time} seconds...")
+                        self.game.print_and_save(f"{self.printtime()} [DEBUG] Could not confirm the bot's location at the {location_name.upper()} Screen. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
 
         if(self.debug_mode):
-            game.Game.print_and_save(f"{self.printtime()} [SUCCESS] Bot's location is at {location_name.upper()} Screen.")
+            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Bot's location is at {location_name.upper()} Screen.")
 
         return True
 
@@ -189,7 +191,7 @@ class ImageUtils:
             summon_location (int, int): Tuple of coordinates of where the center of the summon is located if image matching was successful. Otherwise, return None.
         """
         if(self.debug_mode):
-            game.Game.print_and_save(f"[DEBUG] Now attempting to find {summon_name.upper()} Summon...")
+            self.game.print_and_save(f"[DEBUG] Now attempting to find {summon_name.upper()} Summon...")
 
         summon_location = None
         guibot_check = False
@@ -203,7 +205,7 @@ class ImageUtils:
 
             if (summon_location == None):
                 if(self.debug_mode):
-                    game.Game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
+                    self.game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
                 
                 # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/summons/")
@@ -213,14 +215,15 @@ class ImageUtils:
                     tries -= 1
                         
                     if (tries <= 0):
-                        game.Game.print_and_save(f"{self.printtime()} [ERROR] Could not find {summon_name.upper()} Summon.")
+                        self.game.print_and_save(f"{self.printtime()} [ERROR] Could not find {summon_name.upper()} Summon.")
                         return None
                 
                     if(self.debug_mode):
-                        game.Game.print_and_save(f"{self.printtime()} [DEBUG] Could not locate the {summon_name.upper()} Summon. Trying again in {sleep_time} seconds...")
+                        self.game.print_and_save(f"{self.printtime()} [DEBUG] Could not locate the {summon_name.upper()} Summon. Trying again in {sleep_time} seconds...")
 
                     # If matching failed, scroll the screen down to see more Summons.
-                    self.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -400)
+                    self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -400)
+                    
 
                     time.sleep(sleep_time)
                 else:
@@ -231,7 +234,7 @@ class ImageUtils:
             summon_location = summon_location.target
 
         if(self.debug_mode):
-            game.Game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {summon_name.upper()} Summon at {summon_location}.")
+            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {summon_name.upper()} Summon at {summon_location}.")
 
         return summon_location
 
@@ -262,7 +265,7 @@ class ImageUtils:
 
             if (dialog_location == None):
                 if(self.debug_mode):
-                    game.Game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
+                    self.game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
 
                 # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/dialogs/")
@@ -273,11 +276,11 @@ class ImageUtils:
                     
                     if (tries <= 0):
                         if(self.debug_mode):
-                            game.Game.print_and_save(f"{self.printtime()} [DEBUG] There are no {dialog_name.upper()} Dialog detected on the screen. Continuing with bot execution...")
+                            self.game.print_and_save(f"{self.printtime()} [DEBUG] There are no {dialog_name.upper()} Dialog detected on the screen. Continuing with bot execution...")
                         return None
 
                     if(self.debug_mode):
-                        game.Game.print_and_save(f"{self.printtime()} [DEBUG] Locating {dialog_name.upper()} Dialog failed. Trying again in {sleep_time} seconds...")
+                        self.game.print_and_save(f"{self.printtime()} [DEBUG] Locating {dialog_name.upper()} Dialog failed. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
                 else:
@@ -288,7 +291,7 @@ class ImageUtils:
             dialog_location = dialog_location.target
 
         if(self.debug_mode):
-            game.Game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {dialog_name.upper()} Dialog at {dialog_location}.")
+            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {dialog_name.upper()} Dialog at {dialog_location}.")
 
         return dialog_location
 
@@ -325,10 +328,10 @@ class ImageUtils:
 
                     if (self.debug_mode and len(locations) != 0):
                         for location in locations:
-                            game.Game.print_and_save(f"{self.printtime()} [INFO] Occurrence found at: ", location)
+                            self.game.print_and_save(f"{self.printtime()} [INFO] Occurrence found at: " + str(location))
 
                     return locations
 
-        game.Game.print_and_save(f"{self.printtime()} [ERROR] Specified file does not exist inside the /images/ folder or its subfolders.")
+        self.game.print_and_save(f"{self.printtime()} [ERROR] Specified file does not exist inside the /images/ folder or its subfolders.")
 
         return None

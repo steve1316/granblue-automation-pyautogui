@@ -1,4 +1,5 @@
 import datetime
+import multiprocessing
 import sys
 import time
 from timeit import default_timer as timer
@@ -15,7 +16,7 @@ class Game:
 
     Attributes
     ----------
-    queue (multiprocessing.queues.Queue): Queue from multiprocessing to keep track of logging messages to share between backend and frontend.
+    queue (multiprocessing.Queue): Queue to keep track of logging messages to share between backend and frontend.
     
     custom_mouse_speed (float, optional): The speed at which the mouse moves at. Defaults to 0.5.
 
@@ -23,7 +24,7 @@ class Game:
 
     """
 
-    def __init__(self, queue, custom_mouse_speed: float = 0.5, debug_mode: bool = False):
+    def __init__(self, queue: multiprocessing.Queue, custom_mouse_speed: float = 0.5, debug_mode: bool = False):
         super().__init__()
 
         # Start a timer signaling bot start in order to keep track of elapsed time in logging messages.
@@ -35,8 +36,8 @@ class Game:
         # Set a debug flag to determine whether or not to print debugging messages.
         self.debug_mode = debug_mode
         
-        self.image_tools = ImageUtils(starting_time=self.starting_time, debug_mode=self.debug_mode)
-        self.mouse_tools = MouseUtils(starting_time=self.starting_time, mouse_speed=custom_mouse_speed, debug_mode=self.debug_mode)
+        self.image_tools = ImageUtils(game=self, starting_time=self.starting_time, debug_mode=self.debug_mode)
+        self.mouse_tools = MouseUtils(game=self, starting_time=self.starting_time, mouse_speed=custom_mouse_speed, debug_mode=self.debug_mode)
         
         # Save the locations of the "Home" and "Attack" buttons for use in other classes.
         self.home_button_location = None

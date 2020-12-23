@@ -12,6 +12,8 @@ class MouseUtils:
 
     Attributes
     ----------
+    game (game.Game): The Game object.
+    
     starting_time (float): Used to keep track of the program's elapsed time for logging purposes.
 
     mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.5.
@@ -20,10 +22,12 @@ class MouseUtils:
 
     """
 
-    def __init__(self, starting_time: float, mouse_speed: float = 0.5, debug_mode: bool = False):
+    def __init__(self, game, starting_time: float, mouse_speed: float = 0.5, debug_mode: bool = False):
         super().__init__()
 
         self.starting_time = starting_time
+        
+        self.game = game
 
         self.mouse_speed = mouse_speed
         self.debug_mode = debug_mode
@@ -109,7 +113,7 @@ class MouseUtils:
             None
         """
         if(self.debug_mode):
-            game.Game.print_and_save(f"{self.printtime()} [DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
+            self.game.print_and_save(f"{self.printtime()} [DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
 
         self.move_to(x, y)
         pyautogui.scroll(scroll_clicks, x=x, y=y)

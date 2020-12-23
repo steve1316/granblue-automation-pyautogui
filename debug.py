@@ -4,22 +4,20 @@ import pyautogui
 from guibot.fileresolver import FileResolver
 from guibot.guibot import GuiBot
 
-import game
-
 class Debug:
     """
     Test driver for most bot functionality.
 
     Attributes
     ----------
-    my_game (Game): The Game object to test with.
+    game (game.Game): The Game object to test with.
 
     """
 
-    def __init__(self, my_game: game.Game):
+    def __init__(self, game):
         super().__init__()
 
-        self.game = my_game
+        self.game = game
 
     def test_find_summon_element_tabs(self):
         """Tests finding each summon element tab on the Summon Selection Screen by navigating to the Fire Old Lignoid trial battle.
