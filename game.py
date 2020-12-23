@@ -75,7 +75,7 @@ class Game:
             None
         """
         if(self.debug_mode):
-            print(f"\n{self.printtime()} [DEBUG] Recalibrating the dimensions of the game window...")
+            self.print_and_save(f"\n{self.printtime()} [DEBUG] Recalibrating the dimensions of the game window...")
 
         self.home_button_location = self.image_tools.find_button("home", sleep_time=1)
 
@@ -85,7 +85,7 @@ class Game:
         self.image_tools.window_height = self.image_tools.window_top + 917
 
         if(self.debug_mode):
-            print(f"\n{self.printtime()} [SUCCESS] Dimensions of the game window has been successfully recalibrated.")
+            self.print_and_save(f"\n{self.printtime()} [SUCCESS] Dimensions of the game window has been successfully recalibrated.")
 
         if(display_info_check):
             self.print_and_save("\n\n********************************************************************************")
@@ -108,7 +108,7 @@ class Game:
             None
         """
         if(self.debug_mode):
-            print(f"\n{self.printtime()} [DEBUG] Moving back to the Home Screen...")
+            self.print_and_save(f"\n{self.printtime()} [DEBUG] Moving back to the Home Screen...")
 
         if (display_info_check):
             self.calibrate_game_window(display_info_check=True)
@@ -148,7 +148,7 @@ class Game:
             (bool): True if successfully found and clicked the summon element tab. Otherwise, return False.
         """
         if(self.debug_mode):
-            print(f"\n{self.printtime()} [DEBUG] Now attempting to find {summon_element_name.upper()} Summon Element tab...")
+            self.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find {summon_element_name.upper()} Summon Element tab...")
 
         summon_element_location = None
 
@@ -159,10 +159,10 @@ class Game:
                 tries -= 1
                 
                 if (tries == 0):
-                    print(f"{self.printtime()} [FAILED] Failed to find {summon_element_name.upper()} Summon Element tab.")
+                    self.print_and_save(f"{self.printtime()} [FAILED] Failed to find {summon_element_name.upper()} Summon Element tab.")
                     return False
 
-        print(f"{self.printtime()} [SUCCESS] Found {summon_element_name.upper()} Summon Element tab.")
+        self.print_and_save(f"{self.printtime()} [SUCCESS] Found {summon_element_name.upper()} Summon Element tab.")
 
         self.mouse_tools.move_and_click_point(summon_element_location[0], summon_element_location[1])
 
@@ -197,7 +197,7 @@ class Game:
         Returns:
             None
         """
-        print(f"\n{self.printtime()} [INFO] Now refreshing summons...")
+        self.print_and_save(f"\n{self.printtime()} [INFO] Now refreshing summons...")
         
         self.go_back_home(confirm_location_check=True)
         self.mouse_tools.scroll_screen(self.home_button_location[0], self.home_button_location[1] - 50, -500)
@@ -222,7 +222,7 @@ class Game:
                 # This will use the temp_location coordinates of the last location which was the Play button for the Trial Battle.
                 self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1] + 140)
 
-        print(f"\n{self.printtime()} [INFO] Summons have now been refreshed.")
+        self.print_and_save(f"\n{self.printtime()} [INFO] Summons have now been refreshed.")
         return None
 
     def find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 3, sleep_time: int = 3):
@@ -243,7 +243,7 @@ class Game:
         # alternate searching for Set A / Set B until found or tries are depleted.
         if(group_number < 8):
             if(self.debug_mode):
-                print(f"\n{self.printtime()} [DEBUG] Now attempting to find Set A...")
+                self.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find Set A...")
 
             while (set_location == None):
                 set_location = self.image_tools.find_button("party_set_a")
@@ -252,7 +252,7 @@ class Game:
                     tries -= 1
                     
                     if(self.debug_mode):
-                        print(f"{self.printtime()} [DEBUG] Locating Set A failed. Trying again for Set B...")
+                        self.print_and_save(f"{self.printtime()} [DEBUG] Locating Set A failed. Trying again for Set B...")
 
                     if (tries <= 0):
                         sys.exit(f"\n[ERROR] Could not find Set A. Exiting Bot...")
@@ -261,7 +261,7 @@ class Game:
                     set_location = self.image_tools.find_button("party_set_b")
         else:
             if(self.debug_mode):
-                print(f"\n{self.printtime()} [DEBUG] Now attempting to find Set B...")
+                self.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find Set B...")
 
             while (set_location == None):
                 set_location = self.image_tools.find_button("party_set_b")
@@ -270,7 +270,7 @@ class Game:
                     tries -= 1
                     
                     if(self.debug_mode):
-                        print(f"{self.printtime()} [DEBUG] Locating Set B failed. Trying again for Set A...")
+                        self.print_and_save(f"{self.printtime()} [DEBUG] Locating Set B failed. Trying again for Set A...")
 
                     if (tries <= 0):
                         sys.exit(f"\n{self.printtime()} [ERROR] Could not find Set B. Exiting Bot...")
@@ -279,7 +279,7 @@ class Game:
                     set_location = self.image_tools.find_button("party_set_a")
 
         if(self.debug_mode):
-            print(f"\n{self.printtime()} [SUCCESS] Successfully selected the correct Set. Now selecting Group {group_number}...")
+            self.print_and_save(f"\n{self.printtime()} [SUCCESS] Successfully selected the correct Set. Now selecting Group {group_number}...")
 
         # Center the mouse on the Set A / Set B Button and then click the correct Group Number Tab.
         x = None
@@ -304,7 +304,7 @@ class Game:
 
         # Now select the correct Party.
         if(self.debug_mode):
-            print(f"\n{self.printtime()} [SUCCESS] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
+            self.print_and_save(f"\n{self.printtime()} [SUCCESS] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
 
         y = set_location[1] + 325
         
@@ -324,7 +324,7 @@ class Game:
         self.mouse_tools.click_point_instantly(x, y)
 
         if(self.debug_mode):
-            print(f"\n{self.printtime()} [SUCCESS] Successfully selected Party {party_number}. Now starting the mission.")
+            self.print_and_save(f"\n{self.printtime()} [SUCCESS] Successfully selected Party {party_number}. Now starting the mission.")
 
         # Find and click the "OK" Button to start the mission.
         self.wait_for_ping(1)
@@ -362,7 +362,7 @@ class Game:
 
         if (dialog_location != None):
             if(self.debug_mode):
-                print(f"{self.printtime()} [DEBUG] Detected dialog window from Lyria/Vyrn on Combat Screen. Closing it now...")
+                self.print_and_save(f"{self.printtime()} [DEBUG] Detected dialog window from Lyria/Vyrn on Combat Screen. Closing it now...")
 
             self.mouse_tools.click_point_instantly(dialog_location[0] + 180, dialog_location[1] - 51)
 
@@ -410,16 +410,16 @@ class Game:
         y = self.attack_button_location[1] + 171
         
         if("useSkill(1)" in skill):
-            print(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 1.")
+            self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 1.")
             x = self.attack_button_location[0] - 213
         elif("useSkill(2)" in skill):
-            print(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 2.")
+            self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 2.")
             x = self.attack_button_location[0] - 132
         elif("useSkill(3)" in skill):
-            print(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 3.")
+            self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 3.")
             x = self.attack_button_location[0] - 51
         elif("useSkill(4)" in skill):
-            print(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 4.")
+            self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 4.")
             x = self.attack_button_location[0] + 39
 
         self.mouse_tools.click_point_instantly(x, y)
@@ -443,13 +443,13 @@ class Game:
         try:
             script = open(f"scripts/{script_name}.txt", "r")
             if(self.debug_mode):
-                print(f"\n{self.printtime()} [DEBUG] Now loading up {script_name} Combat Plan.")
+                self.print_and_save(f"\n{self.printtime()} [DEBUG] Now loading up {script_name} Combat Plan.")
             
             lines = script.readlines()
 
-            print("\n\n################################################################################")
-            print(f"{self.printtime()} [COMBAT] Starting Combat Mode.")
-            print("################################################################################\n")
+            self.print_and_save("\n\n################################################################################")
+            self.print_and_save(f"{self.printtime()} [COMBAT] Starting Combat Mode.")
+            self.print_and_save("################################################################################\n")
 
             i = 0  # Index for the list of read lines from the script.
             line_number = 1  # Tells what line number the bot is reading.
@@ -465,7 +465,7 @@ class Game:
                 # Print each line read if debug mode is active.
                 if(line[0] != "#" and line[0] != "/" and line.strip() != ""):
                     if(self.debug_mode):
-                        print(f"\n{self.printtime()} [DEBUG] Reading Line {line_number}: \"{line.strip()}\"")
+                        self.print_and_save(f"\n{self.printtime()} [DEBUG] Reading Line {line_number}: \"{line.strip()}\"")
 
                 # Save the position of the center of the "Attack" Button. If already found, don't call this again.
                 if(self.attack_button_location == None):
@@ -474,7 +474,7 @@ class Game:
                 # If the execution reached the next turn block and it is currently not the correct turn, keep pressing the "Attack" Button until the turn number matches.
                 if ("turn" in line.lower() and int(line[5]) != turn_number):
                     while (int(line[5]) != turn_number):
-                        print(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
+                        self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
 
                         self.find_dialog_in_combat("lyria")
                         self.find_dialog_in_combat("vyrn")
@@ -484,7 +484,7 @@ class Game:
                         if (attack_button_location != None):
                             number_of_charge_attacks = self.find_charge_attacks()
                             
-                            print(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
+                            self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
 
                             self.mouse_tools.click_point_instantly(self.attack_button_location[0], self.attack_button_location[1])
                             self.wait_for_ping(6 + number_of_charge_attacks)
@@ -495,14 +495,14 @@ class Game:
                             next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=suppress_error)
                             if(next_button_location != None):
                                 if(self.debug_mode):
-                                    print(f"{self.printtime()} [DEBUG] Detected the Next Button. Clicking it now...")
+                                    self.print_and_save(f"{self.printtime()} [DEBUG] Detected the Next Button. Clicking it now...")
 
                                 self.mouse_tools.click_point_instantly(next_button_location[0], next_button_location[1])
                                 self.wait_for_ping(6)
 
                 # If it is the start of the Turn and it is currently the correct turn, grab the next line for execution.
                 if ("turn" in line.lower() and int(line[5]) == turn_number):
-                    print(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}. Reading script now...")
+                    self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}. Reading script now...")
                     
                     i += 1
                     line_number += 1
@@ -517,7 +517,7 @@ class Game:
                         # Print each line read if debug mode is active.
                         if(line[0] != "#" and line[0] != "/" and line.strip() != ""):
                             if(self.debug_mode):
-                                print(f"\n{self.printtime()} [DEBUG] Reading Line {line_number}: \"{line.strip()}\"")
+                                self.print_and_save(f"\n{self.printtime()} [DEBUG] Reading Line {line_number}: \"{line.strip()}\"")
 
                         # Determine which character will perform the action.
                         character_selected = 0
@@ -553,7 +553,7 @@ class Game:
                     # Check if any character has 100% Charge Bar. If so, add 1 second per match.
                     number_of_charge_attacks = self.find_charge_attacks()
                     
-                    print(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
+                    self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
 
                     self.mouse_tools.click_point_instantly(self.attack_button_location[0], self.attack_button_location[1])
                     self.wait_for_ping(6 + number_of_charge_attacks)
@@ -564,7 +564,7 @@ class Game:
                     next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=suppress_error)
                     if(next_button_location != None):
                         if(self.debug_mode):
-                            print(f"{self.printtime()} [DEBUG] Detected Next Button. Clicking it now...")
+                            self.print_and_save(f"{self.printtime()} [DEBUG] Detected Next Button. Clicking it now...")
 
                         self.mouse_tools.click_point_instantly(next_button_location[0], next_button_location[1])
                         self.wait_for_ping(6)
@@ -576,7 +576,7 @@ class Game:
                 if (self.image_tools.confirm_location("exp_gained", tries=1) == True):
                     break
 
-            print(f"\n{self.printtime()} [COMBAT] Bot has reached end of script. Auto-attacking until battle ends...")
+            self.print_and_save(f"\n{self.printtime()} [COMBAT] Bot has reached end of script. Auto-attacking until battle ends...")
 
             # Keep pressing the location of the "Attack" / "Next" Button until the bot reaches the Quest Results Screen.
             while (self.image_tools.confirm_location("exp_gained", tries=1) == False):
@@ -587,12 +587,12 @@ class Game:
                 next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=suppress_error)
 
                 if (attack_button_location != None):
-                    print(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
+                    self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
 
                     # Check if any character has 100% Charge Bar. If so, add 1 second per match.
                     number_of_charge_attacks = self.find_charge_attacks()
 
-                    print(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
+                    self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
 
                     self.mouse_tools.click_point_instantly(self.attack_button_location[0], self.attack_button_location[1])
                     self.wait_for_ping(6 + number_of_charge_attacks)
@@ -604,7 +604,7 @@ class Game:
                     self.wait_for_ping(6)
 
             # Try to click any detected "OK" Buttons several times.
-            print(f"\n{self.printtime()} [INFO] Bot has reached the Quest Results Screen.")
+            self.print_and_save(f"\n{self.printtime()} [INFO] Bot has reached the Quest Results Screen.")
             while (self.image_tools.confirm_location("loot_collected", tries=1) == False):
                 ok_button_location = self.image_tools.find_button("quest_results_ok", tries=1)
 
@@ -614,9 +614,9 @@ class Game:
                     self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
                     self.wait_for_ping(1)
 
-            print("\n################################################################################")
-            print(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
-            print("################################################################################")
+            self.print_and_save("\n################################################################################")
+            self.print_and_save(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
+            self.print_and_save("################################################################################")
         except FileNotFoundError:
             sys.exit(f"\n{self.printtime()} [ERROR] Cannot find \"{script_name}.txt\" inside the /scripts folder. Exiting application now...")
 
@@ -630,19 +630,19 @@ class Game:
     #     # Perform conditional matching to find what operator is being used. Account for the whitespaces before and after the operator.
     #     if(line[whiteSpaceIndex:(whiteSpaceIndex + 3)] == " < "):
     #         operator = "<"
-    #         print("[DEBUG] Operator is <")
+    #         self.print_and_save("[DEBUG] Operator is <")
     #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 3)] == " > "):
     #         operator = ">"
-    #         print("[DEBUG] Operator is >")
+    #         self.print_and_save("[DEBUG] Operator is >")
     #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 4)] == " <= "):
     #         operator = "<="
-    #         print("[DEBUG] Operator is <=")
+    #         self.print_and_save("[DEBUG] Operator is <=")
     #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 4)] == " >= "):
     #         operator = ">="
-    #         print("[DEBUG] Operator is >=")
+    #         self.print_and_save("[DEBUG] Operator is >=")
     #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 4)] == " == "):
     #         operator = "=="
-    #         print("[DEBUG] Operator is ==")
+    #         self.print_and_save("[DEBUG] Operator is ==")
 
     #     # Determine whether or not the conditional is met. If not, return the index right after the end for the if statement.
 
