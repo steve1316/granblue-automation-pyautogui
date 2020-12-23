@@ -17,6 +17,8 @@ class Game:
     Attributes
     ----------
     queue (multiprocessing.Queue): Queue to keep track of logging messages to share between backend and frontend.
+
+    isBotRunning (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
     
     custom_mouse_speed (float, optional): The speed at which the mouse moves at. Defaults to 0.5.
 
@@ -24,7 +26,7 @@ class Game:
 
     """
 
-    def __init__(self, queue: multiprocessing.Queue, custom_mouse_speed: float = 0.5, debug_mode: bool = False):
+    def __init__(self, queue: multiprocessing.Queue, isBotRunning: int, custom_mouse_speed: float = 0.5, debug_mode: bool = False):
         super().__init__()
 
         # Start a timer signaling bot start in order to keep track of elapsed time in logging messages.
@@ -32,6 +34,7 @@ class Game:
 
         # Queue to keep share logging messages between backend and frontend.
         self.queue = queue
+        self.isBotRunning = isBotRunning
 
         # Set a debug flag to determine whether or not to print debugging messages.
         self.debug_mode = debug_mode
@@ -621,6 +624,7 @@ class Game:
         except FileNotFoundError:
             sys.exit(f"\n{self.printtime()} [ERROR] Cannot find \"{script_name}.txt\" inside the /scripts folder. Exiting application now...")
 
+        self.isBotRunning.value = 1
         return None
 
     # TODO: Find a suitable OCR framework that can detect the HP % of the enemies. Until then, this bot will not handle if statements.

@@ -11,13 +11,16 @@ class Debug:
     Attributes
     ----------
     game (game.Game): The Game object to test with.
+    
+    isBotRunning (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
 
     """
 
-    def __init__(self, game):
+    def __init__(self, game, isBotRunning: int):
         super().__init__()
 
         self.game = game
+        self.isBotRunning = isBotRunning
 
     def test_find_summon_element_tabs(self):
         """Tests finding each summon element tab on the Summon Selection Screen by navigating to the Fire Old Lignoid trial battle.
@@ -73,9 +76,12 @@ class Debug:
         if(self.game.image_tools.confirm_location("select_summon")):
             if(self.game.find_summon_element("fire") and self.game.find_summon_element("water") and self.game.find_summon_element("earth") and self.game.find_summon_element("wind") and self.game.find_summon_element("light") and self.game.find_summon_element("dark") and self.game.find_summon_element("misc")):
                 self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Finding all summon element tabs was successful.")
+                self.isBotRunning.value = 1
             else:
+                self.isBotRunning.value = 1
                 sys.exit(f"\n{self.game.printtime()} [TEST_FAILED] Failed to find one or more summon element tabs. Stopping bot...")
         else:
+            self.isBotRunning.value = 1
             sys.exit(f"\n{self.game.printtime()} [TEST_FAILED] Bot is not at the Summon Selection Screen. Stopping bot...")
 
     def test_combat_mode(self):
@@ -142,5 +148,7 @@ class Debug:
         self.game.start_combat_mode("test_combat_mode")
 
         self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Combat Mode was successful.")
+        
+        self.isBotRunning.value = 1
 
         return None
