@@ -7,10 +7,10 @@ import "controls"
 Window {
     id: main_window
     width: 1000
-    height: 580
+    height: 600
 
     minimumWidth: 800
-    minimumHeight: 500
+    minimumHeight: 400
 
     visible: true
     color: "#00000000"

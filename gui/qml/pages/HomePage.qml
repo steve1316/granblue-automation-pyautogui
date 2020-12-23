@@ -14,7 +14,7 @@ Item{
             property bool isBotRunning: false
 
             function startLogParsing(){
-                //console_log_text.text = "" // Reset the log when starting it up.
+                console_log_text.text = "" // Reset the log when starting it up.
                 timerFunction.running = true
                 console.log("Parsing bot logs now...")
             }
