@@ -14,27 +14,41 @@ Item{
 
             property bool isBotRunning: false
 
-            function startLogParsing(){
-                logTextArea.text = "" // Reset the log when starting it up.
-                timerFunction.running = true
-                console.log("Parsing bot logs now...")
-            }
-
-            function stopLogParsing(){
-                timerFunction.running = false
-                console.log("Now stopping parsing bot logs.")
-            }
-
+            // Function that handles starting the bot by interacting with the backend and frontend.
             function startBot(){
+                internal.isBotRunning = true
+
+                // Start logging.
+                logTextArea.text = "" // Reset the log when starting it up.
+                updateLogTimerFunction.running = true
+                checkBotStatusTimerFunction.running = true
+                console.log("Parsing bot logs now...")
+
+                // Start the backend process.
                 backend.start_bot()
 
+                // Update the GUI.
+                startStopButton.text = qsTr("Stop")
                 topBarLeftLabel.text = qsTr("Bot Status: Running")
+                startStopButton.colorDefault = "#aa0000"
             }
 
+            // Function that handles stopping the bot by interacting with the backend and frontend.
             function stopBot(){
+                internal.isBotRunning = false
+
+                // Stop logging.
+                updateLogTimerFunction.running = false
+                checkBotStatusTimerFunction.running = false
+                console.log("Now stopping parsing bot logs.")
+
+                // Stop the backend process.
                 backend.stop_bot()
 
+                // Update the GUI.
+                startStopButton.text = qsTr("Start")
                 topBarLeftLabel.text = qsTr("Bot Status: Not Running")
+                startStopButton.colorDefault = "#4891d9"
             }
         }
 
@@ -58,35 +72,31 @@ Item{
             // Starts or stops the bot depending on whether it was already running or not.
             onClicked: {
                 if(internal.isBotRunning == false){
-                    internal.startLogParsing()
-                    internal.isBotRunning = true
-
-                    startStopButton.text = qsTr("Stop")
-
                     internal.startBot()
-
-                    startStopButton.colorDefault = "#aa0000"
                 }else{
-                    internal.stopLogParsing()
-                    internal.isBotRunning = false
-
-                    startStopButton.text = qsTr("Start")
-
                     internal.stopBot()
-
-                    startStopButton.colorDefault = "#4891d9"
                 }
             }
         }
 
         Timer{
-            id: timerFunction
+            id: updateLogTimerFunction
 
             interval: 1000
             running: false
             repeat: true
 
-            onTriggered: backend.update_console_log("") // Call update_console_log() in the backend.
+            onTriggered: backend.update_console_log() // Call update_console_log() in the backend.
+        }
+
+        Timer{
+            id: checkBotStatusTimerFunction
+
+            interval: 2000
+            running: false
+            repeat: true
+
+            onTriggered: backend.check_bot_status()
         }
 
         Connections{
@@ -95,6 +105,13 @@ Item{
             // Retrieve the string returned from update_console_log from the backend and update the log text in the window.
             function onUpdateConsoleLog(line){
                 logTextArea.append(line)
+            }
+
+            // Stop the bot when the backend signals the frontend that it has ended.
+            function onCheckBotStatus(check){
+                if(check){
+                    internal.stopBot()
+                }
             }
         }
     }
