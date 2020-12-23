@@ -143,7 +143,7 @@ Window {
                     Label {
                         id: label_left_info
                         color: "#d9d9d9"
-                        text: qsTr("Application description")
+                        text: qsTr("Bot Status: Not Running")
                         anchors.left: parent.left
                         anchors.right: parent.right
                         anchors.top: parent.top
@@ -358,6 +358,8 @@ Window {
                                     //stackView.push(Qt.resolvedUrl("pages/HomePage.qml"))
                                     page_home.visible = true
                                     page_settings.visible = false
+
+                                    label_right_info.text = qsTr("| HOME")
                                 }
                             }
                         }
@@ -377,6 +379,8 @@ Window {
                                     //stackView.push(Qt.resolvedUrl("pages/SettingsPage.qml"))
                                     page_home.visible = false
                                     page_settings.visible = true
+
+                                    label_right_info.text = qsTr("| SETTINGS")
                                 }
                             }
                         }
@@ -731,6 +735,6 @@ Window {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.9}
+    D{i:0;formeditorZoom:1.33}
 }
 ##^##*/

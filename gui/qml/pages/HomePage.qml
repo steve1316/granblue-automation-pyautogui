@@ -26,22 +26,30 @@ Item{
 
             function startBot(){
                 backend.start_bot()
+
+                label_left_info.text = qsTr("Bot Status: Running")
             }
 
             function stopBot(){
                 backend.stop_bot()
+
+                label_left_info.text = qsTr("Bot Status: Not Running")
             }
         }
 
-        Button {
+        CustomButton {
             id: startButton
             x: 300
             y: 208
-            width: 40
+            width: 100
+            height: 50
             text: qsTr("Start")
             anchors.verticalCenter: parent.verticalCenter
+            colorDefault: "#4891d9"
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.rightMargin: 70
+
+            customRadius: 20
 
             onClicked: {
                 if(internal.isBotRunning == false){
@@ -51,6 +59,8 @@ Item{
                     startButton.text = qsTr("Stop")
 
                     internal.startBot()
+
+                    startButton.colorDefault = "#aa0000"
                 }else{
                     internal.stopLogParsing()
                     internal.isBotRunning = false
@@ -58,6 +68,8 @@ Item{
                     startButton.text = qsTr("Start")
 
                     internal.stopBot()
+
+                    startButton.colorDefault = "#4891d9"
                 }
             }
         }
@@ -85,8 +97,10 @@ Item{
 
 
 
+
+
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:1.33;height:480;width:640}
+    D{i:0;autoSize:true;formeditorZoom:1.1;height:480;width:640}
 }
 ##^##*/
