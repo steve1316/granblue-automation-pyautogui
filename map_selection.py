@@ -1,75 +1,59 @@
 import game
+
+
 class MapSelection:
-    def  __init__(self, game: game.Game, debug_mode: bool = False):
+    def  __init__(self, game: game.Game, isBotRunning: int, debug_mode: bool = False):
         super().__init__()
         
         # Dictionary of supported farmable materials. Maps selected from recommendations in the GBF wiki website.
         self.farmable_materials = {
             "quest": {
-                "map1": {
-                    # Port Breeze Archipelago
+                "Port Breeze Archipelago": {
                     "Satin Feather": "Scattered Cargo",
                     "Zephyr Feather": "Scattered Cargo",
                     "Flying Sprout": "Scattered Cargo",
                 },
-                "map2": {
-                    # Valtz Duchy
+                "Valtz Duchy": {
                     "Fine Sand Bottle": "Lucky Charm Hunt",
                     "Untamed Flame": "Special Op's Request",
                     "Blistering Ore": ["Lucky Charm Hunt", "Special Op's Request"],
                 },
-                "map3": {
-                    # Auguste Isles
+                "Auguste Isles": {
                     "Fresh Water Jug": "Threat to the Fisheries",
                     "Soothing Splash": "Threat to the Fisheries",
                     "Glowing Coral": "Threat to the Fisheries",
                 },
-                "map4": {
-                    # Lumacie Archipelago
+                "Lumacie Archipelago": {
                     "Rough Stone": "The Fruit of Lumacie",
                     "Coarse Alluvium": "Whiff of Danger",
                     "Swirling Amber": "The Fruit of Lumacie",
                 },
-                "map5": {
-                    # Albion Citadel
+                "Albion Citadel": {
                     "Falcon Feather": "I Challenge You!",
                     "Spring Water Jug": "I Challenge You!",
                     "Vermilion Stone": "I Challenge You!",
                 },
-                "map6": {
-                    # Mist-Shrouded Isle
+                "Mist-Shrouded Isle": {
                     "Slimy Shroom": "For Whom the Bell Tolls",
                     "Hollow Soul": "For Whom the Bell Tolls",
                     "Lacrimosa": "For Whom the Bell Tolls",
                 },
-                "map7": {
-                    # Golonzo Island
+                "Golonzo Island": {
                     "Wheat Stalk": "Golonzo's Battle of Old",
                     "Iron Cluster": "Golonzo's Battle of Old",
                     "Olea Plant": "Golonzo's Battle of Old", 
-                "Olea Plant": "Golonzo's Battle of Old",
-                    "Olea Plant": "Golonzo's Battle of Old", 
-                "Olea Plant": "Golonzo's Battle of Old",
-                    "Olea Plant": "Golonzo's Battle of Old", 
-                "Olea Plant": "Golonzo's Battle of Old",
-                    "Olea Plant": "Golonzo's Battle of Old", 
-                "Olea Plant": "Golonzo's Battle of Old",
-                    "Olea Plant": "Golonzo's Battle of Old", 
                 },
-                "map8": {
-                    # Amalthea Island
+                "Amalthea Island": {
                     "Indigo Fruit": "The Dungeon Diet",
                     "Foreboding Clover": "The Dungeon Diet",
                     "Blood Amber": "The Dungeon Diet",
                 },
-                "map9": {
-                    # Former Capital Mephorash
+                "Former Capital Mephorash": {
                     "Sand Brick": "Trust Busting Dustup",
                     "Native Reed": "Trust Busting Dustup",
                     "Antique Cloth": ["Trust Busting Dustup", "Erste Kingdom Episode 4"],
                 },
-                "map10": {
-                    # Agastia
+                "Agastia": {
                     "Prosperity Flame": "Imperial Wanderer's Soul",
                     "Explosive Material": "Imperial Wanderer's Soul",
                     "Steel Liquid": "Imperial Wanderer's Soul"
@@ -153,33 +137,134 @@ class MapSelection:
                 "Black Dragon Scale": ["Six Dragon Trial", "Oblivion Trial"]
             }
         }
-        
+
         self.game = game
+        self.game.calibrate_game_window(display_info_check=True)
+        
+        # TODO: Keep track of attempts desired or item amount desired.
+        
+        # print(f"Home Button Coordinates: {self.game.home_button_location[0]}, {self.game.home_button_location[1]}")
+        
+        self.isBotRunning = isBotRunning
         
         self.debug_mode = debug_mode
         
-    def select_map(self, map_mode: str, map_name: str):
-        if(self.farmable_materials[map_mode] == "quest"):
-            # Go to the Quest Screen.
-            self.my_game.go_back_home()
-            quest_button_location = self.my_game.image_tools.find_button("quest")
-            self.my_game.mouse_tools.move_and_click_point(quest_button_location[0], quest_button_location[1])
-            self.my_game.image_tools.confirm_location("quest")
+    def select_map(self, map_mode: str, map_name: str, item_name: str, mission_name: str):
+        try:
+            check_location = False
             
-        elif(self.farmable_materials[map_mode] == "coop"):
-            # Go to the Coop Screen.
-            self.my_game.go_back_home()
-            
-        elif(self.farmable_materials[map_mode] == "special"):
-            # Go to the Special Quest Screen.
-            self.my_game.go_back_home()
-            quest_button_location = self.my_game.image_tools.find_button("quest")
-            self.my_game.mouse_tools.move_and_click_point(quest_button_location[0], quest_button_location[1])
-            self.my_game.image_tools.confirm_location("quest")
-            special_button_location = self.my_game.image_tools.find_button("special")
-            self.my_game.mouse_tools.move_and_click_point(special_button_location[0], special_button_location[1])
-            self.my_game.image_tools.confirm_location("special")
+            # Prepare the map name string to be used to look for the correct image file.
+            temp_map_name = map_name.replace(" ", "_")
     
+            # Example: map_mode = "quest", map_name: "map1", item_name: "Satin Feather", mission_name: "Scattered Cargo"
+            if(map_mode.lower() == "quest"):
+                self.game.print_and_save("\n********************************************************************************")
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Mode: Quest")
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Map: {map_name}")
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Material to farm: {item_name}")
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Mission: {mission_name}")
+                self.game.print_and_save("********************************************************************************\n")
+                
+                # Go to the Home Screen and check if the bot is already at the correct island or not.
+                self.game.go_back_home()
+                if(self.game.image_tools.confirm_location(temp_map_name, tries=2)):
+                    check_location = True
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot is currently on the correct island.")
+                else:
+                    check_location = False
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot is currently not on the correct island.")
+                
+                # Go to the Quest Screen.
+                self.game.mouse_tools.move_and_click_point(self.game.home_button_location[0] - 37, self.game.home_button_location[1] - 758)
+                
+                # If the bot is currently not at the correct island, move to it.
+                if(check_location == False):
+                    location = self.game.image_tools.find_button("world")
+                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                    
+                    # TODO: Check for correct Skydom here before proceeding.
+                    
+                    # On the World Screen, click the specified coordinates on the window to move to the island.
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to {map_name}...")
+                    if(map_name == "Port Breeze Archipelago"):
+                        location = (self.game.home_button_location[0] - 293, self.game.home_button_location[1] - 1044)
+                        self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                    elif(map_name == "Valtz Duchy"):
+                        location = (self.game.home_button_location[0] - 121, self.game.home_button_location[1] - 973)
+                        self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                    elif(map_name == "Auguste Isles"):
+                        location = (self.game.home_button_location[0] - 345, self.game.home_button_location[1] - 893)
+                        self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                    elif(map_name == "Lumacie Archipelago"):
+                        location = (self.game.home_button_location[0] - 55, self.game.home_button_location[1] - 841)
+                        self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                        
+                    location = self.game.image_tools.find_button("go")
+                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                    self.game.image_tools.confirm_location("quest")
+
+                # Now that the bot is on the correct island and is on the Quest Screen, click the correct chapter node.
+                if(mission_name == "Scattered Cargo"):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 1 (115) node...")
+                    location = (self.game.home_button_location[0] - 280, self.game.home_button_location[1] - 1001)
+                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                elif(mission_name == "Lucky Charm Hunt"):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 6 (122) node...")
+                    location = (self.game.home_button_location[0] - 41, self.game.home_button_location[1] - 1076)
+                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                elif(mission_name == "Special Op's Request"):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 8 node...")
+                    location = (self.game.home_button_location[0] - 118, self.game.home_button_location[1] - 940)
+                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                elif(mission_name == "Threat to the Fisheries"):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 9 node...")
+                    location = (self.game.home_button_location[0] - 158, self.game.home_button_location[1] - 980)
+                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                elif(mission_name == "The Fruit of Lumacie" or mission_name == "Whiff of Danger"):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 13 (39/52) node...")
+                    location = (self.game.home_button_location[0] - 296, self.game.home_button_location[1] - 1003)
+                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                elif(mission_name == "I Challenge You!"):
+                    pass
+                elif(mission_name == "For Whom the Bell Tolls"):
+                    pass
+                elif(mission_name == "Golonzo's Battle of Old"):
+                    pass
+                elif(mission_name == "The Dungeon Diet"):
+                    pass
+                elif(mission_name == "Trust Busting Dustup"):
+                    pass
+                elif(mission_name == "Erste Kingdom Episode 4"):
+                    pass
+                elif(mission_name == "Imperial Wanderer's Soul"):
+                    pass
+                
+                # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
+                self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now bringing up Summon Selection Screen for \"{mission_name}\"...")
+                self.game.mouse_tools.scroll_screen(self.game.home_button_location[0], self.game.home_button_location[1] - 50, -1000)
+                temp_mission_name = mission_name.replace(" ", "_")
+                location = self.game.image_tools.find_button(temp_mission_name)
+                self.game.mouse_tools.move_and_click_point(location[0], location[1])  
+            # elif(self.farmable_materials[map_mode] == "coop"):
+            #     # Go to the Coop Screen.
+            #     self.game.go_back_home()
+                
+            # elif(self.farmable_materials[map_mode] == "special"):
+            #     # Go to the Special Quest Screen.
+            #     self.game.go_back_home()
+            #     quest_button_location = self.game.image_tools.find_button("quest")
+            #     self.game.mouse_tools.move_and_click_point(quest_button_location[0], quest_button_location[1])
+            #     self.game.image_tools.confirm_location("quest")
+            #     special_button_location = self.game.image_tools.find_button("special")
+            #     self.game.mouse_tools.move_and_click_point(special_button_location[0], special_button_location[1])
+            #     self.game.image_tools.confirm_location("special")
+            
+            # TODO: Start Summon and Party selection and then start Combat Mode.
+        
+            self.game.image_tools.confirm_location("select_summon")
+        except Exception as e:
+            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception on MapSelection select_map(): \n{e}")
+        
         return None
     
     
