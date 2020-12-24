@@ -541,11 +541,39 @@ Window {
                             contentHeight: logTextArea.contentHeight + 50 // Update the scrollingView's content height to always have room for the console log text.
                             contentWidth: 280
 
-                            // Create a ScrollBar for this Flickable component.
+                            // Create a vertical ScrollBar for this Flickable component.
                             ScrollBar.vertical: ScrollBar {
-                                id: scrollBar
-                                 policy: ScrollBar.AlwaysOn // Always display the scrollbar.
+                                id: verticalScrollBar
+                                 policy: ScrollBar.AlwaysOn // Always display the vertical scrollbar.
                             }
+
+                            // Create a horizontal ScrollBar for this Flickable component.
+                            ScrollBar.horizontal: ScrollBar {
+                                id: horizontalScrollBar
+                                 policy: ScrollBar.AsNeeded // Only display the horizontal scrollbar when needed.
+                            }
+
+                            // Adjust the scroll bars depending on arrow keys pressed.
+                            Keys.onUpPressed: verticalScrollBar.decrease()
+                            Keys.onDownPressed: verticalScrollBar.increase()
+
+                            Keys.onLeftPressed: horizontalScrollBar.decrease()
+                            Keys.onRightPressed: horizontalScrollBar.increase()
+
+                            // Adjust the vertical and horizontal scroll bars when using the mouse wheel.
+                            MouseArea{
+                                anchors.fill: parent
+
+                                onWheel: {
+                                    if(wheel.angleDelta.y > 0){
+                                        verticalScrollBar.decrease()
+                                    }
+                                    else if(wheel.angleDelta.y < 0){
+                                        verticalScrollBar.increase()
+                                    }
+                                }
+                            }
+                            
 
                             TextArea.flickable: TextArea {
                                 id: logTextArea
@@ -841,6 +869,6 @@ Window {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.33}
+    D{i:0;formeditorZoom:0.75}
 }
 ##^##*/
