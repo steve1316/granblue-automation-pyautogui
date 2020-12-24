@@ -10,6 +10,7 @@ from PySide2.QtQml import QQmlApplicationEngine
 
 from debug import Debug
 from game import Game
+from map_selection import MapSelection
 
 DEBUG = False
 
@@ -17,18 +18,24 @@ class Tester:
     def __init__(self):
         super().__init__()
         
-        self.my_game = None
-        self.my_debug = None
+        self.game = None
+        self.debug = None
         
     def run_bot(self, queue, isBotRunning):
-        self.my_game = Game(queue=queue, isBotRunning=isBotRunning, custom_mouse_speed=0.3, debug_mode=DEBUG)
-        self.my_debug = Debug(self.my_game, isBotRunning=isBotRunning)
+        self.game = Game(queue=queue, isBotRunning=isBotRunning, custom_mouse_speed=0.3, debug_mode=DEBUG)
+        
+        self.map_selection = MapSelection(self.game, isBotRunning=isBotRunning)
+
+        self.debug = Debug(self.game, self.map_selection, isBotRunning=isBotRunning)
+        
+        # Test navigating to all maps supported by MapSelection.
+        self.debug.test_map_selection()
 
         # Test finding all summon element tabs in Summon Selection Screen.
-        self.my_debug.test_find_summon_element_tabs()
+        # self.debug.test_find_summon_element_tabs()
 
         # Test Combat Mode.
-        # self.my_debug.test_combat_mode()
+        # self.debug.test_combat_mode()
 
 class MainWindow(QObject):
     def __init__(self):
@@ -77,8 +84,6 @@ class MainWindow(QObject):
 
 
 if __name__ == "__main__":
-    # run_bot()
-
     app = QGuiApplication(sys.argv)
     engine = QQmlApplicationEngine()
 
