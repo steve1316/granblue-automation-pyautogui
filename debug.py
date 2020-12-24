@@ -16,11 +16,36 @@ class Debug:
 
     """
 
-    def __init__(self, game, isBotRunning: int):
+    def __init__(self, game, map_selection, isBotRunning: int):
         super().__init__()
 
         self.game = game
+        self.map_selection = map_selection
         self.isBotRunning = isBotRunning
+        
+    def test_map_selection(self):
+        """Tests navigating to each map that is supported by MapSelection.
+        
+        Returns:
+            None
+        """
+        self.game.print_and_save("\n################################################################################")
+        self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing navigating to all maps supported by MapSelection...")
+        self.game.print_and_save("################################################################################")
+        
+        self.map_selection.select_map(map_mode="quest", map_name="Port Breeze Archipelago", item_name="Satin Feather", mission_name="Scattered Cargo")
+        
+        self.map_selection.select_map(map_mode="quest", map_name="Valtz Duchy", item_name="Fine Sand Bottle", mission_name="Lucky Charm Hunt")
+        self.map_selection.select_map(map_mode="quest", map_name="Valtz Duchy", item_name="Untamed Flame", mission_name="Special Op's Request")
+        
+        self.map_selection.select_map(map_mode="quest", map_name="Auguste Isles", item_name="Fresh Water Jug", mission_name="Threat to the Fisheries")
+        
+        self.map_selection.select_map(map_mode="quest", map_name="Lumacie Archipelago", item_name="Rough Stone", mission_name="The Fruit of Lumacie")
+        self.map_selection.select_map(map_mode="quest", map_name="Lumacie Archipelago", item_name="Coarse Alluvium", mission_name="Whiff of Danger")
+        
+        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Map Selection was successful.")
+        self.isBotRunning.value = 1
+        
 
     def test_find_summon_element_tabs(self):
         """Tests finding each summon element tab on the Summon Selection Screen by navigating to the Fire Old Lignoid trial battle.
@@ -102,8 +127,11 @@ class Debug:
 
             list_of_button_names = ["quest", "special"]
             for button_name in list_of_button_names:
-                x, y = self.game.image_tools.find_button(button_name)
-                self.game.mouse_tools.move_and_click_point(x, y)
+                if(button_name == "quest"):
+                    self.game.mouse_tools.move_and_click_point(self.game.home_button_location[0] - 37, self.game.home_button_location[1] - 758)
+                else:
+                    x, y = self.game.image_tools.find_button(button_name)
+                    self.game.mouse_tools.move_and_click_point(x, y)
 
             # Attempt to fit all the "Select" buttons into the current view and then find all "Select" Buttons.
             self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Finding all Special Select Buttons...")
