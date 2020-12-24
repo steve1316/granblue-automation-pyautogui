@@ -3,8 +3,6 @@ from timeit import default_timer as timer
 
 import pyautogui
 
-import game
-
 
 class MouseUtils:
     """
