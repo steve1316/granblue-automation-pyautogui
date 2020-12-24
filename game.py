@@ -624,7 +624,6 @@ class Game:
         except FileNotFoundError:
             sys.exit(f"\n{self.printtime()} [ERROR] Cannot find \"{script_name}.txt\" inside the /scripts folder. Exiting application now...")
 
-        self.isBotRunning.value = 1
         return None
 
     # TODO: Find a suitable OCR framework that can detect the HP % of the enemies. Until then, this bot will not handle if statements.
