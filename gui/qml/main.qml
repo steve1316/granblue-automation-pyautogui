@@ -75,7 +75,7 @@ Window {
 
         // Hides the resizing arrows when the window is maximized.
         function hideResizeArea(){
-            resize_window_bottomright.visible = false
+            resizeWindowBottomRight.visible = false
             resizeWindowLeft.visible = false
             resizeWindowRight.visible = false
             resizeWindowBottom.visible = false
@@ -83,7 +83,7 @@ Window {
 
         // Restores the resizing arrows when the window is normal.
         function showResizeArea(){
-            resize_window_bottomright.visible = true
+            resizeWindowBottomRight.visible = true
             resizeWindowLeft.visible = true
             resizeWindowRight.visible = true
             resizeWindowBottom.visible = true
