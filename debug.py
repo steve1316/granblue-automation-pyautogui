@@ -1,8 +1,11 @@
+import os
 import sys
 
+import easyocr
 import pyautogui
 from guibot.fileresolver import FileResolver
 from guibot.guibot import GuiBot
+
 
 class Debug:
     """
@@ -22,6 +25,42 @@ class Debug:
         self.game = game
         self.map_selection = map_selection
         self.isBotRunning = isBotRunning
+    
+    def tester(self):
+        self.guibot = GuiBot()
+        self.file_resolver = FileResolver()
+        self.file_resolver.add_path("images/")
+        
+        print("Initializing EasyOCR reader...")
+        reader = easyocr.Reader(["en"], gpu=True)
+        print("EasyOCR reader initialized.")
+        
+        location = self.guibot.exists("3")
+        location = (location.target.x, location.target.y)
+        
+        print(location)
+        
+        left = location[0] + 20
+        top = location[1] - 5
+        width = 15
+        height = 25
+        
+        print(f"New region: ({left}, {top}, {width}, {height})")
+        
+        current_dir = os.getcwd()
+        temp_dir = os.path.join(current_dir, r"images/temp")
+        if not os.path.exists(temp_dir):
+            os.makedirs(temp_dir)
+        
+        newImage = pyautogui.screenshot("images/temp/test.png" ,region=(left, top, width, height))
+        print(newImage.size)
+        
+        newImage.show()
+        
+        result = reader.readtext("images/temp/test.png", detail=0)
+        print("Text: ", result)
+        
+        self.isBotRunning.value = 1
         
     def test_map_selection(self):
         """Tests navigating to each map that is supported by MapSelection.
@@ -56,10 +95,6 @@ class Debug:
         self.game.print_and_save("\n################################################################################")
         self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing finding all Summon Element tabs on the Summon Selection screen...")
         self.game.print_and_save("################################################################################")
-
-        self.guibot = GuiBot()
-        self.file_resolver = FileResolver()
-        self.file_resolver.add_path("images/buttons/")
 
         # Reset the bot's current position by heading back to the Home Screen.
         self.game.go_back_home(confirm_location_check=True, display_info_check=True)
