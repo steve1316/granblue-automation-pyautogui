@@ -1,6 +1,8 @@
-import multiprocessing
+import datetime
 import os
 import sys
+import multiprocessing
+from timeit import default_timer as timer
 
 from PySide2.QtCore import QObject, Signal, Slot
 from PySide2.QtGui import QGuiApplication
@@ -8,6 +10,7 @@ from PySide2.QtQml import QQmlApplicationEngine
 
 from debug import Debug
 from game import Game
+from map_selection import MapSelection
 
 DEBUG = False
 
@@ -20,22 +23,19 @@ class Tester:
         
     def run_bot(self, queue, isBotRunning):
         self.game = Game(queue=queue, isBotRunning=isBotRunning, custom_mouse_speed=0.3, debug_mode=DEBUG)
-
-        self.debug = Debug(self.game, isBotRunning=isBotRunning)
         
-        # Test the Farming Mode.
-        self.game.start_farming_mode("Wind", "tiamat_omega_ulb", 1, 3, "test_empty", "quest", "Lumacie Archipelago", "Coarse Alluvium", 10, "Whiff of Danger")
+        self.map_selection = MapSelection(self.game, isBotRunning=isBotRunning)
+
+        self.debug = Debug(self.game, self.map_selection, isBotRunning=isBotRunning)
         
         # Test navigating to all maps supported by MapSelection.
-        # self.debug.test_map_selection()
+        self.debug.test_map_selection()
 
         # Test finding all summon element tabs in Summon Selection Screen.
         # self.debug.test_find_summon_element_tabs()
 
         # Test Combat Mode.
         # self.debug.test_combat_mode()
-        
-        isBotRunning.value = 1
 
 class MainWindow(QObject):
     def __init__(self):
