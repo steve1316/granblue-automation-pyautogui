@@ -22,20 +22,26 @@ class Tester:
         self.debug = None
         
     def run_bot(self, queue, isBotRunning):
-        self.game = Game(queue=queue, isBotRunning=isBotRunning, custom_mouse_speed=0.3, debug_mode=DEBUG)
+        self.game = Game(queue=queue, isBotRunning=isBotRunning, custom_mouse_speed=0.5, debug_mode=DEBUG)
+        self.map_selection = MapSelection(self.game)
+        self.debug = Debug(self.game, isBotRunning=isBotRunning)
         
-        self.map_selection = MapSelection(self.game, isBotRunning=isBotRunning)
+        # Test finding amounts of all items on the screen.
+        self.debug.test_item_detection(4)
 
-        self.debug = Debug(self.game, self.map_selection, isBotRunning=isBotRunning)
+        # Test the Farming Mode.
+        # self.debug.test_farming_mode()
         
         # Test navigating to all maps supported by MapSelection.
-        self.debug.test_map_selection()
+        # self.debug.test_map_selection()
 
         # Test finding all summon element tabs in Summon Selection Screen.
         # self.debug.test_find_summon_element_tabs()
 
         # Test Combat Mode.
         # self.debug.test_combat_mode()
+        
+        isBotRunning.value = 1
 
 class MainWindow(QObject):
     def __init__(self):
