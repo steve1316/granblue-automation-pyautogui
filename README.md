@@ -16,8 +16,8 @@ By downloading this program, you consent to your account potentially getting fla
 
 - [x] Customize what skills to use during each turn in a user-created plan. Users can select which plan to use when starting the bot.
 - [ ] A launchable GUI to keep track of logs and selecting what combat script to use.
-- [x] Farm certain amounts of specified materials.
-- [ ] A settable timer to stop the bot.
+- [x] Farm user-defined amounts of specified materials from Quest, Coop, Raid, Event, etc.
+- [ ] A user-defined timer for how long the bot should run for.
 - [x] Support for Quest navigation.
 - [ ] Support for Coop navigation.
 - [ ] Support for Raid navigation.
@@ -26,26 +26,32 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
 - [ ] Alert for when anti-bot CAPTCHA pops up.
 
-# TODO (in order from greatest priority to least)
-
-- [x] Add support for Summons in combat scripts.
-
-- [ ] [IN-PROGRESS] Create a launchable GUI that users can start and stop the bot, select which combat script to use, which mission/raid to do, and view logs.
-
-- [ ] Setup the Twitter scrapper for raid codes.
-
-- [x] Add support for popular Quest farming spots for materials.
-
-- [ ] Add support for Raids.
-
-- [ ] Add support for Guild Wars and Rise of the Beasts.
-
-- [ ] Add support for Coop.
-
-- [ ] Add support for Events.
-
-- [ ] Setup an alert for when the bot detects anti-bot CAPTCHA.
-
+# TODO List
+## Backend
+- [ ] Save each message in the Queue to a list in memory. When frontend requests for a saved log file, save the list in memory to a new log file.
+- [ ] Clean up Combat Mode by having all absolute coordinates in variables at the top.
+- [ ] Consolidate all finding button and clicking it logic into one function.
+- [ ] Implement detection if party wiped during Combat Mode.
+- [ ] Implement selection from list of Summons in order of most preferred to least. If none after several tries, pick the very first Summon randomly.
+- [ ] (LOW PRIORITY) Remove all sys.exit() code.
+- [ ] (LOW PRIORITY) Implement Special Quests navigation/items.
+- [ ] (LOW PRIORITY) Implement Coop Quests navigation/items.
+- [ ] (LOW PRIORITY) Implement Raid navigation/items.
+	- [ ] (LOW PRIORITY) Implement Twitter room code scraper/parser.
+	- [ ] (LOW PRIORITY) Implement Captcha detection.
+- [ ] (LOW PRIORITY) Implement Event navigation/items.
+- [ ] (LOW PRIORITY) Implement Guild Wars/Rise of the Beasts navigation/items.
+- [ ] (LOW PRIORITY) Implement if-else logic in scripts.
+- [ ] (LOW PRIORITY) Deal with any left-over TODOs.
+## Frontend
+- [ ] Add a Save Logs button.
+- [ ] Add a Group/Party selector.
+- [ ] Add a Summons selector. (Maybe with pictures?)
+- [ ] Add a selector for the amount of the specified item to be farmed.
+- [ ] (LOW PRIORITY) Implement a user-defined timer for how long the bot can run for.
+- [ ] (LOW PRIORITY) Add Special Quest items.
+- [ ] (LOW PRIORITY) Add Coop items.
+- [ ] (LOW PRIORITY) Add Raid items.
 # Requirements
 
 1. Python 3.8+ [Get it here](https://www.python.org/downloads/)
