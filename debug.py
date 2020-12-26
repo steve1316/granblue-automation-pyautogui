@@ -1,10 +1,6 @@
-import os
 import sys
 
-import easyocr
 import pyautogui
-from guibot.fileresolver import FileResolver
-from guibot.guibot import GuiBot
 
 
 class Debug:

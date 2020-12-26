@@ -1,8 +1,6 @@
-import datetime
+import multiprocessing
 import os
 import sys
-import multiprocessing
-from timeit import default_timer as timer
 
 from PySide2.QtCore import QObject, Signal, Slot
 from PySide2.QtGui import QGuiApplication
