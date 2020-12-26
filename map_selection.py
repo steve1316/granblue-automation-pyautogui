@@ -141,6 +141,17 @@ class MapSelection:
         self.debug_mode = debug_mode
         
     def select_map(self, map_mode: str, map_name: str, item_name: str, mission_name: str):
+        """[summary]
+
+        Args:
+            map_mode (str): Mode to look for the specified item and map in.
+            map_name (str): Name of the map to look for the specified mission in.
+            item_name (str): Name of the item to farm.
+            mission_name (str): Name of the mission to farm the item in.
+
+        Returns:
+            (bool): Return True if the bot reached the Summon Selection Screen. Otherwise, return False.
+        """
         try:
             check_location = False
             
@@ -236,7 +247,11 @@ class MapSelection:
                 self.game.mouse_tools.scroll_screen(self.game.home_button_location[0], self.game.home_button_location[1] - 50, -1000)
                 temp_mission_name = mission_name.replace(" ", "_")
                 location = self.game.image_tools.find_button(temp_mission_name)
-                self.game.mouse_tools.move_and_click_point(location[0], location[1])  
+                self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                
+                # Check for available AP.
+                self.game.check_for_ap(use_full_elixirs=False)
+                
             # elif(self.farmable_materials[map_mode] == "coop"):
             #     # Go to the Coop Screen.
             #     self.game.go_back_home()
