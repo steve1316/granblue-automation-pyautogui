@@ -4,12 +4,10 @@ import time
 from timeit import default_timer as timer
 from typing import Iterable, Tuple
 
-import cv2  # Needed for confidence argument for PyAutoGUI.
+import easyocr
 import pyautogui
 from guibot.fileresolver import FileResolver
 from guibot.guibot import GuiBot
-
-import game
 
 
 class ImageUtils:
@@ -22,13 +20,13 @@ class ImageUtils:
     
     starting_time (float): Used to keep track of the program's elapsed time for logging purposes.
 
-    window_left (int, optional): The top left corner of the region for image matching. Defaults to None.
+    window_left (int, optional): The x-coordinate of the top left corner of the region for image matching. Defaults to None.
 
-    window_top (int, optional): The top right corner of the region for image matching. Defaults to None.
+    window_top (int, optional): The y-coordinate of the top right corner of the region for image matching. Defaults to None.
 
-    window_width (int, optional): The bottom left corner of the region for image matching. Defaults to None.
+    window_width (int, optional): The x-coordinate of the bottom right corner minus the x-coordinate of the bottom left corner of the region for image matching. Defaults to None.
 
-    window_height (int, optional): The bottom right corner of the region for image matching. Defaults to None.
+    window_height (int, optional): The y-coordinate of the bottom right corner minus the y-coordinate of the top right corner of the region for image matching. Defaults to None.
 
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to True.
 
@@ -50,6 +48,11 @@ class ImageUtils:
         # Initialize GuiBot object for image matching.
         self.guibot = GuiBot()
         self.file_resolver = FileResolver()
+        
+        # Initialize EasyOCR for text detection.
+        self.game.print_and_save("\nInitializing EasyOCR reader...")
+        self.reader = easyocr.Reader(["en"], gpu=True)
+        self.game.print_and_save("EasyOCR reader initialized.")
 
     def printtime(self):
         """Formats the time since the bot started into a readable, printable HH:MM:SS format using timedelta.
@@ -231,7 +234,7 @@ class ImageUtils:
 
         # If the location was successfully found using GuiBot, convert the Match object to a Location object.
         if(guibot_check):
-            summon_location = summon_location.target
+            summon_location = (summon_location.target.x, summon_location.target.y)
 
         if(self.debug_mode):
             self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {summon_name.upper()} Summon at {summon_location}.")
@@ -335,3 +338,63 @@ class ImageUtils:
         self.game.print_and_save(f"{self.printtime()} [ERROR] Specified file does not exist inside the /images/ folder or its subfolders.")
 
         return None
+
+    def find_farmed_items(self, item_list: Iterable[str]):
+        """Detect amounts of items gained according to the desired items specified.
+
+        Args:
+            item_list (Iterable[str]): List of items desired to farm from this mission.
+
+        Returns:
+            amounts_farmed (Iterable[int]): List of amounts gained for items in order according to the given item_list.
+        """
+        self.file_resolver.add_path("images/items/")
+        
+        # Save the amount gained of items in order according to the item_list.
+        amounts_farmed = []
+        
+        for item in item_list:
+            self.game.print_and_save(f"\nLooking for {item}...")
+            total_amount_farmed = 0
+            
+            # Detect amounts gained from each item on the Loot Collected Screen.
+            locations = self.guibot.find_all(item, allow_zero=True)
+            for location in locations:
+                location = (location.target.x, location.target.y)
+                
+                # Adjust the width and height variables if EasyOCR cannot detect the numbers correctly.
+                left = location[0] + 20
+                top = location[1] - 5
+                width = 17
+                height = 25
+
+                # Create the /temp folder in the /images/ folder to house the taken screenshots.
+                current_dir = os.getcwd()
+                temp_dir = os.path.join(current_dir, r"images/temp")
+                if not os.path.exists(temp_dir):
+                    os.makedirs(temp_dir)
+                
+                # Create a screenshot in the region specified named "test" and save it in the test folder. Then use EasyOCR to extract text from it into a list.
+                test_image = pyautogui.screenshot("images/temp/test.png" ,region=(left, top, width, height))
+                # test_image.show() # Uncomment this line of code to see what the bot captured for the region of the detected text.
+                result = self.reader.readtext("images/temp/test.png", detail=0)
+                
+                # Split any unnecessary characters in the extracted text until only the number remains.
+                result_cleaned = 0
+                if(len(result) != 0):
+                    result_split = [char for char in result[0]]
+                    for char in result_split:
+                        try:
+                            if(int(char)):
+                                result_cleaned = int(char)
+                        except ValueError:
+                            continue
+                else:
+                    result_cleaned = 1
+                    
+                total_amount_farmed += result_cleaned
+
+            amounts_farmed.append(total_amount_farmed)
+            
+        
+        return amounts_farmed
