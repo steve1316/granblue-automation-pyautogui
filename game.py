@@ -212,7 +212,7 @@ class Game:
 
         list_of_steps_in_order = ["gameplay_extras", "trial_battles",
                                   "trial_battles_old_lignoid", "trial_battles_play",
-                                  "wind", "party_selection_ok", "trial_battles_close",
+                                  "wind", "ok", "trial_battles_close",
                                   "menu", "retreat", "retreat_confirmation", "next"]
 
         temp_location = None
@@ -335,7 +335,7 @@ class Game:
 
         # Find and click the "OK" Button to start the mission.
         self.wait_for_ping(1)
-        ok_button_location = self.image_tools.find_button("party_selection_ok")
+        ok_button_location = self.image_tools.find_button("ok")
         
         self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
         self.wait_for_ping(5)
@@ -373,6 +373,34 @@ class Game:
 
             self.mouse_tools.click_point_instantly(dialog_location[0] + 180, dialog_location[1] - 51)
 
+        return None
+    
+        
+    def check_for_ap(self, use_full_elixirs: bool = False):
+        """Check if the user encountered the 'Not Enough AP' popup and it will refill using either Half or Full Elixir.
+
+        Args:
+            use_full_elixirs (bool, optional): Will use Full Elixir instead of Half Elixir based on this. Defaults to False.
+
+        Returns:
+            None
+        """
+        if(self.image_tools.confirm_location("not_enough_ap", tries=1)):
+            # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full.
+            # TODO: Implement check for when the user ran out of both of them, or one of them.
+            if(use_full_elixirs == False):
+                self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Half Elixir...")
+                location = self.image_tools.find_button("refill_half_ap")
+                self.mouse_tools.move_and_click_point(location[0], location[1] + 166)
+            else:
+                self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Full Elixir...")
+                location = self.image_tools.find_button("refill_half_ap")
+                self.mouse_tools.move_and_click_point(location[0], location[1] + 166)
+            
+            # Press the OK button to move to the Summon Selection Screen.
+            location = self.image_tools.find_button("ok")
+            self.mouse_tools.move_and_click_point(location[0], location[1])
+        
         return None
 
     def select_character(self, character_number: int):
@@ -508,11 +536,11 @@ class Game:
                             self.wait_for_ping(4)
                             
                         # Check for battle end.
-                        if(self.image_tools.confirm_location("exp_gained", tries=1) == False):
+                        if(self.image_tools.confirm_location("exp_gained", tries=1) == True):
                             break
                             
                 # Check for battle end.
-                if(self.image_tools.confirm_location("exp_gained", tries=1) == False):
+                if(self.image_tools.confirm_location("exp_gained", tries=1) == True):
                     break
 
                 # If it is the start of the Turn and it is currently the correct turn, grab the next line for execution.
@@ -565,8 +593,40 @@ class Game:
                             i += 1
                             
                             # Check for battle end.
-                            if(self.image_tools.confirm_location("exp_gained", tries=1) == False):
+                            if(self.image_tools.confirm_location("exp_gained", tries=1) == True):
                                 break
+                        
+                        for j in range(1,7):
+                            if(f"summon({j})" in line):
+                                # Click the Summon Button to bring up the available summons.
+                                location = self.image_tools.find_button("summon")
+                                self.mouse_tools.move_and_click_point(location[0], location[1])
+                                
+                                # Click on the specified summon.
+                                if(j == 1):
+                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 317, self.attack_button_location[1] + 138)
+                                elif(j == 2):
+                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 243, self.attack_button_location[1] + 138)
+                                elif(j == 3):
+                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 165, self.attack_button_location[1] + 138)
+                                elif(j == 4):
+                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 89, self.attack_button_location[1] + 138)
+                                elif(j == 5):
+                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 12, self.attack_button_location[1] + 138)
+                                else:
+                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] + 63, self.attack_button_location[1] + 138)
+                                    
+                                # Check if it is summonable. Click OK if so. If not, then click Cancel and move on.
+                                if(self.image_tools.confirm_location("summon_details", tries=2)):
+                                    location = self.image_tools.find_button("ok", tries=1)
+                                    if(location != None):
+                                        self.mouse_tools.move_and_click_point(location[0], location[1])
+                                    else:
+                                        location = self.image_tools.find_button("summon_cancel")
+                                        self.mouse_tools.move_and_click_point(location[0], location[1])
+                                        
+                                        # Now click the Back button.
+                                        self.mouse_tools.click_point_instantly(self.attack_button_location[0] - 322, self.attack_button_location[1])
 
                 if("end" in line):
                     # Check if any character has 100% Charge Bar. If so, add 1 second per match.
@@ -625,7 +685,7 @@ class Game:
             # Try to click any detected "OK" Buttons several times.
             self.print_and_save(f"\n{self.printtime()} [INFO] Bot has reached the Quest Results Screen.")
             while (self.image_tools.confirm_location("loot_collected", tries=2) == False):
-                ok_button_location = self.image_tools.find_button("quest_results_ok", tries=1)
+                ok_button_location = self.image_tools.find_button("ok", tries=1)
 
                 # TODO: Look for "Close" Buttons here as well in case of reaching uncap.
 
@@ -642,7 +702,25 @@ class Game:
         return True
     
     def start_farming_mode(self, summon_element_name: str, summon_name: str, group_number: int, party_number: int, script_name: str, map_mode: str, map_name: str, 
-                           item_name: str, item_amount_to_farm: int, mission_name: str):
+                           item_name: str, item_amount_to_farm: int, mission_name: str, use_full_elixirs: bool = False):
+        """Start the Farming Mode using the given parameters.
+
+        Args:
+            summon_element_name (str): Name of the summon element image file in the images/buttons/ folder.
+            summon_name (str): Exact name of the Summon image's file name in images/summons folder.
+            group_number (int): The group that the specified party in in.
+            party_number (int): The specified party to start the mission with.
+            script_name (str): Name of the combat script text file in the /scripts/ folder.
+            map_mode (str): Mode to look for the specified item and map in.
+            map_name (str): Name of the map to look for the specified mission in.
+            item_name (str): Name of the item to farm.
+            item_amount_to_farm (int): Amount of the item to farm.
+            mission_name (str): Name of the mission to farm the item in.
+            use_full_elixirs (bool, optional): Will use Full Elixir instead of Half Elixir based on this. Defaults to False.
+        
+        Returns:
+            None
+        """
         self.print_and_save("\n\n################################################################################")
         self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode.")
         self.print_and_save(f"{self.printtime()} [FARM] Farming {item_amount_to_farm}x {item_name}")
@@ -658,7 +736,7 @@ class Game:
                 self.find_party_and_start_mission(group_number, party_number)
                 
                 if(self.image_tools.confirm_location("items_picked_up", tries=3)):
-                    location = self.image_tools.find_button("items_picked_up_ok")
+                    location = self.image_tools.find_button("ok")
                     self.mouse_tools.move_and_click_point(location[0], location[1])
                 
                 if(self.start_combat_mode(script_name)):
@@ -676,11 +754,12 @@ class Game:
                         location = self.image_tools.find_button("play_again")
                         self.mouse_tools.move_and_click_point(location[0], location[1])
                         
-                        # TODO: Add check for not enough AP.
-                        
                         if(self.image_tools.confirm_location("friend_request")):
                             location = self.image_tools.find_button("friend_request_cancel")
                             self.mouse_tools.move_and_click_point(location[0], location[1])
+                        
+                        # Check for available AP.
+                        self.check_for_ap(use_full_elixirs=use_full_elixirs)
                             
         else:
             self.print_and_save("\nSomething went wrong with navigating to the map.")
@@ -690,6 +769,8 @@ class Game:
         self.print_and_save("################################################################################\n")
         
         self.isBotRunning.value = 1
+        
+        return None
 
     # TODO: Find a suitable OCR framework that can detect the HP % of the enemies. Until then, this bot will not handle if statements.
     # TODO: Maybe have it be in-line? Example: if(enemy1.hp < 70): character1.useSkill(3),character2.useSkill(1).useSkill(4),character4.useSkill(1),end
