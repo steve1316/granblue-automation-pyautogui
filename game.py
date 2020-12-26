@@ -7,6 +7,7 @@ from timeit import default_timer as timer
 import pyautogui
 
 from image_utils import ImageUtils
+from map_selection import MapSelection
 from mouse_utils import MouseUtils
 
 
@@ -35,6 +36,9 @@ class Game:
         # Queue to keep share logging messages between backend and frontend.
         self.queue = queue
         self.isBotRunning = isBotRunning
+        
+        # Initialize the Map Selection class.
+        self.map_selection = MapSelection(self)
 
         # Set a debug flag to determine whether or not to print debugging messages.
         self.debug_mode = debug_mode
@@ -96,8 +100,6 @@ class Game:
             self.print_and_save(f"{self.printtime()} [INFO] Screen size: {pyautogui.size()}.")
             self.print_and_save(f"{self.printtime()} [INFO] Game window size: Region({self.image_tools.window_left}, {self.image_tools.window_top}, {self.image_tools.window_width}, {self.image_tools.window_height}).")
             self.print_and_save("********************************************************************************\n")
-            
-            
 
         return None
 
@@ -140,7 +142,7 @@ class Game:
         return None
 
     def find_summon_element(self, summon_element_name: str, tries: int = 3):
-        """Select the specified element tab for summons. Search selected tabs first, then unselected tabs.
+        """Select the specified element tab for summons.
 
         # Todo: ALL images need to be segmented into Lite, Regular, and High to account for different Graphics Settings. Have not tested if confidence helps or not. Might not be needed anymore with GuiBot fallback.
 
@@ -157,7 +159,7 @@ class Game:
         summon_element_location = None
 
         while (summon_element_location == None):
-            summon_element_location = self.image_tools.find_button(f"summon_{summon_element_name}", tries=1)
+            summon_element_location = self.image_tools.find_button(f"summon_{summon_element_name.lower()}", tries=1)
 
             if (summon_element_location == None):
                 tries -= 1
@@ -179,7 +181,7 @@ class Game:
         # TODO: If not found after a certain number of times, select very first Summon. Maybe have it as an option?
 
         Args:
-            summon_name (str): Name of the Summon image's file name in images/summons folder.
+            summon_name (str): Exact name of the Summon image's file name in images/summons folder.
 
         Returns:
             (bool): True if the Summon was found and clicked. Otherwise, return False.
@@ -187,6 +189,8 @@ class Game:
         summon_location = self.image_tools.find_summon(summon_name, self.home_button_location[0], self.home_button_location[1])
         if (summon_location != None):
             self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1])
+            
+            # TODO: Inform user that bot has found summon.
 
             return True
         else:
@@ -229,14 +233,13 @@ class Game:
         self.print_and_save(f"\n{self.printtime()} [INFO] Summons have now been refreshed.")
         return None
 
-    def find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 3, sleep_time: int = 3):
+    def find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 3):
         """Select the specified group and party. It will then start the mission.
 
         Args:
             group_number (int): The group that the specified party in in.
             party_number (int): The specified party to start the mission with.
             tries (int, optional): Number of tries before failing. Defaults to 3.
-            sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 3.
 
         Returns:
             None
@@ -438,7 +441,7 @@ class Game:
             script_name (str): Name of the combat script text file in the /scripts/ folder.
 
         Returns:
-            None
+            (bool): Return True if Combat Mode was successful. #TODO: Return False if the party wiped.
         """
         # Recalibrate the game window.
         self.calibrate_game_window()
@@ -624,7 +627,45 @@ class Game:
         except FileNotFoundError:
             sys.exit(f"\n{self.printtime()} [ERROR] Cannot find \"{script_name}.txt\" inside the /scripts folder. Exiting application now...")
 
-        return None
+        return True
+    
+    def start_farming_mode(self, summon_element_name: str, summon_name: str, group_number: int, party_number: int, script_name: str, map_mode: str, map_name: str, item_name: str, item_amount_to_farm: int, mission_name: str):
+        if(self.map_selection.select_map(map_mode, map_name, item_name, mission_name)):
+            amount_of_runs_finished = 0
+            item_amount_farmed = 0
+            while(item_amount_farmed < item_amount_to_farm):
+                self.find_summon_element(summon_element_name)
+                self.find_summon(summon_name)
+                
+                self.find_party_and_start_mission(group_number, party_number)
+                
+                if(self.image_tools.confirm_location("items_picked_up", tries=3)):
+                    location = self.image_tools.find_button("items_picked_up_ok")
+                    self.mouse_tools.move_and_click_point(location[0], location[1])
+                
+                if(self.start_combat_mode(script_name)):
+                    temp_amount = self.image_tools.find_farmed_items([item_name])[0]
+                    item_amount_farmed += temp_amount
+                    
+                    self.print_and_save(f"\nAmount gained this run: {temp_amount}")
+                    self.print_and_save(f"Amount gained in total: {item_amount_farmed}")
+                    
+                    if(item_amount_farmed < item_amount_to_farm):
+                        location = self.image_tools.find_button("play_again")
+                        self.mouse_tools.move_and_click_point(location[0], location[1])
+                        
+                        # TODO: Add check for not enough AP.
+                        
+                        if(self.image_tools.confirm_location("friend_request")):
+                            location = self.image_tools.find_button("friend_request_cancel")
+                            self.mouse_tools.move_and_click_point(location[0], location[1])
+
+                amount_of_runs_finished += 1
+                self.print_and_save(f"\nAmount of runs completed: {amount_of_runs_finished}")
+        else:
+            self.print_and_save("\nSomething went wrong with navigating to the map.")
+            
+        self.isBotRunning.value = 1
 
     # TODO: Find a suitable OCR framework that can detect the HP % of the enemies. Until then, this bot will not handle if statements.
     # TODO: Maybe have it be in-line? Example: if(enemy1.hp < 70): character1.useSkill(3),character2.useSkill(1).useSkill(4),character4.useSkill(1),end
