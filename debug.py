@@ -19,48 +19,11 @@ class Debug:
 
     """
 
-    def __init__(self, game, map_selection, isBotRunning: int):
+    def __init__(self, game, isBotRunning: int):
         super().__init__()
 
         self.game = game
-        self.map_selection = map_selection
         self.isBotRunning = isBotRunning
-    
-    def tester(self):
-        self.guibot = GuiBot()
-        self.file_resolver = FileResolver()
-        self.file_resolver.add_path("images/")
-        
-        print("Initializing EasyOCR reader...")
-        reader = easyocr.Reader(["en"], gpu=True)
-        print("EasyOCR reader initialized.")
-        
-        location = self.guibot.exists("3")
-        location = (location.target.x, location.target.y)
-        
-        print(location)
-        
-        left = location[0] + 20
-        top = location[1] - 5
-        width = 15
-        height = 25
-        
-        print(f"New region: ({left}, {top}, {width}, {height})")
-        
-        current_dir = os.getcwd()
-        temp_dir = os.path.join(current_dir, r"images/temp")
-        if not os.path.exists(temp_dir):
-            os.makedirs(temp_dir)
-        
-        newImage = pyautogui.screenshot("images/temp/test.png" ,region=(left, top, width, height))
-        print(newImage.size)
-        
-        newImage.show()
-        
-        result = reader.readtext("images/temp/test.png", detail=0)
-        print("Text: ", result)
-        
-        self.isBotRunning.value = 1
         
     def test_map_selection(self):
         """Tests navigating to each map that is supported by MapSelection.
@@ -72,15 +35,15 @@ class Debug:
         self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing navigating to all maps supported by MapSelection...")
         self.game.print_and_save("################################################################################")
         
-        self.map_selection.select_map(map_mode="quest", map_name="Port Breeze Archipelago", item_name="Satin Feather", mission_name="Scattered Cargo")
+        self.game.map_selection.select_map(map_mode="quest", map_name="Port Breeze Archipelago", item_name="Satin Feather", mission_name="Scattered Cargo")
         
-        self.map_selection.select_map(map_mode="quest", map_name="Valtz Duchy", item_name="Fine Sand Bottle", mission_name="Lucky Charm Hunt")
-        self.map_selection.select_map(map_mode="quest", map_name="Valtz Duchy", item_name="Untamed Flame", mission_name="Special Op's Request")
+        self.game.map_selection.select_map(map_mode="quest", map_name="Valtz Duchy", item_name="Fine Sand Bottle", mission_name="Lucky Charm Hunt")
+        self.game.map_selection.select_map(map_mode="quest", map_name="Valtz Duchy", item_name="Untamed Flame", mission_name="Special Op's Request")
         
-        self.map_selection.select_map(map_mode="quest", map_name="Auguste Isles", item_name="Fresh Water Jug", mission_name="Threat to the Fisheries")
+        self.game.map_selection.select_map(map_mode="quest", map_name="Auguste Isles", item_name="Fresh Water Jug", mission_name="Threat to the Fisheries")
         
-        self.map_selection.select_map(map_mode="quest", map_name="Lumacie Archipelago", item_name="Rough Stone", mission_name="The Fruit of Lumacie")
-        self.map_selection.select_map(map_mode="quest", map_name="Lumacie Archipelago", item_name="Coarse Alluvium", mission_name="Whiff of Danger")
+        self.game.map_selection.select_map(map_mode="quest", map_name="Lumacie Archipelago", item_name="Rough Stone", mission_name="The Fruit of Lumacie")
+        self.game.map_selection.select_map(map_mode="quest", map_name="Lumacie Archipelago", item_name="Coarse Alluvium", mission_name="Whiff of Danger")
         
         self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Map Selection was successful.")
         self.isBotRunning.value = 1
