@@ -498,14 +498,22 @@ class Game:
                             
                             turn_number += 1
 
-                            # Try to find the "Next" Button only once per turn.
-                            next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=suppress_error)
-                            if(next_button_location != None):
-                                if(self.debug_mode):
-                                    self.print_and_save(f"{self.printtime()} [DEBUG] Detected the Next Button. Clicking it now...")
+                        # Try to find the "Next" Button only once per turn.
+                        next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=suppress_error)
+                        if(next_button_location != None):
+                            if(self.debug_mode):
+                                self.print_and_save(f"{self.printtime()} [DEBUG] Detected the Next Button. Clicking it now...")
 
-                                self.mouse_tools.click_point_instantly(next_button_location[0], next_button_location[1])
-                                self.wait_for_ping(6)
+                            self.mouse_tools.click_point_instantly(next_button_location[0], next_button_location[1])
+                            self.wait_for_ping(4)
+                            
+                        # Check for battle end.
+                        if(self.image_tools.confirm_location("exp_gained", tries=1) == False):
+                            break
+                            
+                # Check for battle end.
+                if(self.image_tools.confirm_location("exp_gained", tries=1) == False):
+                    break
 
                 # If it is the start of the Turn and it is currently the correct turn, grab the next line for execution.
                 if ("turn" in line.lower() and int(line[5]) == turn_number):
@@ -555,6 +563,10 @@ class Game:
                             # Continue to the next line for execution.
                             line_number += 1
                             i += 1
+                            
+                            # Check for battle end.
+                            if(self.image_tools.confirm_location("exp_gained", tries=1) == False):
+                                break
 
                 if("end" in line):
                     # Check if any character has 100% Charge Bar. If so, add 1 second per match.
@@ -574,7 +586,7 @@ class Game:
                             self.print_and_save(f"{self.printtime()} [DEBUG] Detected Next Button. Clicking it now...")
 
                         self.mouse_tools.click_point_instantly(next_button_location[0], next_button_location[1])
-                        self.wait_for_ping(6)
+                        self.wait_for_ping(4)
 
                 # Continue to the next line for execution.
                 line_number += 1
@@ -608,11 +620,11 @@ class Game:
 
                 elif(next_button_location != None):
                     self.mouse_tools.click_point_instantly(self.attack_button_location[0] + 50, self.attack_button_location[1])
-                    self.wait_for_ping(6)
+                    self.wait_for_ping(4)
 
             # Try to click any detected "OK" Buttons several times.
             self.print_and_save(f"\n{self.printtime()} [INFO] Bot has reached the Quest Results Screen.")
-            while (self.image_tools.confirm_location("loot_collected", tries=1) == False):
+            while (self.image_tools.confirm_location("loot_collected", tries=2) == False):
                 ok_button_location = self.image_tools.find_button("quest_results_ok", tries=1)
 
                 # TODO: Look for "Close" Buttons here as well in case of reaching uncap.
@@ -629,7 +641,13 @@ class Game:
 
         return True
     
-    def start_farming_mode(self, summon_element_name: str, summon_name: str, group_number: int, party_number: int, script_name: str, map_mode: str, map_name: str, item_name: str, item_amount_to_farm: int, mission_name: str):
+    def start_farming_mode(self, summon_element_name: str, summon_name: str, group_number: int, party_number: int, script_name: str, map_mode: str, map_name: str, 
+                           item_name: str, item_amount_to_farm: int, mission_name: str):
+        self.print_and_save("\n\n################################################################################")
+        self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode.")
+        self.print_and_save(f"{self.printtime()} [FARM] Farming {item_amount_to_farm}x {item_name}")
+        self.print_and_save("################################################################################\n")
+        
         if(self.map_selection.select_map(map_mode, map_name, item_name, mission_name)):
             amount_of_runs_finished = 0
             item_amount_farmed = 0
@@ -646,9 +664,13 @@ class Game:
                 if(self.start_combat_mode(script_name)):
                     temp_amount = self.image_tools.find_farmed_items([item_name])[0]
                     item_amount_farmed += temp_amount
+                    amount_of_runs_finished += 1
                     
-                    self.print_and_save(f"\nAmount gained this run: {temp_amount}")
-                    self.print_and_save(f"Amount gained in total: {item_amount_farmed}")
+                    self.print_and_save("\n\n********************************************************************************")
+                    self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained this run: {temp_amount}")
+                    self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained in total: {item_amount_farmed}")
+                    self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {amount_of_runs_finished}")
+                    self.print_and_save("********************************************************************************\n")
                     
                     if(item_amount_farmed < item_amount_to_farm):
                         location = self.image_tools.find_button("play_again")
@@ -659,12 +681,14 @@ class Game:
                         if(self.image_tools.confirm_location("friend_request")):
                             location = self.image_tools.find_button("friend_request_cancel")
                             self.mouse_tools.move_and_click_point(location[0], location[1])
-
-                amount_of_runs_finished += 1
-                self.print_and_save(f"\nAmount of runs completed: {amount_of_runs_finished}")
+                            
         else:
             self.print_and_save("\nSomething went wrong with navigating to the map.")
             
+        self.print_and_save("\n\n################################################################################")
+        self.print_and_save(f"{self.printtime()} [FARM] Ending Farming Mode.")
+        self.print_and_save("################################################################################\n")
+        
         self.isBotRunning.value = 1
 
     # TODO: Find a suitable OCR framework that can detect the HP % of the enemies. Until then, this bot will not handle if statements.
