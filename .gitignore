@@ -131,3 +131,6 @@ dmypy.json
 # GuiBot logs
 imglog/
 gui/main.pyproject.user
+
+# Temp folder
+images/temp/
