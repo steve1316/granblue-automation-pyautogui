@@ -2,6 +2,7 @@
 
 Turn 1:
 	character1.useSkill(4).useSkill(2)
+	summon(6)
 end
 
 Turn 3:
