@@ -291,7 +291,7 @@ class ImageUtils:
 
         # If the location was successfully found using GuiBot, convert the Match object to a Location object.
         if(guibot_check):
-            dialog_location = dialog_location.target
+            dialog_location = (dialog_location.target.x, dialog_location.target.y)
 
         if(self.debug_mode):
             self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {dialog_name.upper()} Dialog at {dialog_location}.")
@@ -363,9 +363,9 @@ class ImageUtils:
                 location = (location.target.x, location.target.y)
                 
                 # Adjust the width and height variables if EasyOCR cannot detect the numbers correctly.
-                left = location[0] + 20
+                left = location[0] + 10
                 top = location[1] - 5
-                width = 17
+                width = 30
                 height = 25
 
                 # Create the /temp folder in the /images/ folder to house the taken screenshots.
@@ -396,5 +396,4 @@ class ImageUtils:
 
             amounts_farmed.append(total_amount_farmed)
             
-        
         return amounts_farmed
