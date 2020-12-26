@@ -16,9 +16,9 @@ By downloading this program, you consent to your account potentially getting fla
 
 - [x] Customize what skills to use during each turn in a user-created plan. Users can select which plan to use when starting the bot.
 - [ ] A launchable GUI to keep track of logs and selecting what combat script to use.
-- [ ] Farm certain amounts of specified materials.
+- [x] Farm certain amounts of specified materials.
 - [ ] A settable timer to stop the bot.
-- [ ] Support for Quest navigation.
+- [x] Support for Quest navigation.
 - [ ] Support for Coop navigation.
 - [ ] Support for Raid navigation.
 - [ ] Support for Event(s) navigation.
@@ -34,7 +34,7 @@ By downloading this program, you consent to your account potentially getting fla
 
 - [ ] Setup the Twitter scrapper for raid codes.
 
-- [ ] Add support for popular Quest farming spots for materials.
+- [x] Add support for popular Quest farming spots for materials.
 
 - [ ] Add support for Raids.
 
