@@ -25,6 +25,51 @@ class Debug:
         self.game = game
         self.isBotRunning = isBotRunning
         
+    def test_farming_mode(self):
+        """Tests the Farming Mode by navigating to the Special Op's Request and farm 10 Fine Sand Bottles with the specified party and summon.
+        
+        Args:
+            None
+            
+        Return:
+            None
+        """
+        self.game.print_and_save("\n################################################################################")
+        self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing Farming Mode for 10x Fine Sand Bottles from Special Op's Request on Valtz Duchy...")
+        self.game.print_and_save("################################################################################")
+        
+        self.game.start_farming_mode(summon_element_name="water", summon_name="leviathan_omega_ulb", group_number=1, party_number=3, 
+                                     script_name="test_farming_mode", map_mode="quest", map_name="Valtz Duchy", 
+                                     item_name="Fine Sand Bottle", item_amount_to_farm=10, mission_name="Special Op's Request")
+        
+        self.isBotRunning.value = 1
+        
+    def test_item_detection(self, items_to_test: int):
+        """Test finding amounts of all items on the screen.
+
+        Args:
+            items_to_test (int): The island number that the items belong to. Refer to MapSelection's farmable_materials dictionary 
+            for each island's position as a key to their respective item values.
+            
+        Return:
+            None
+        """
+        self.game.print_and_save("\n################################################################################")
+        self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing finding amounts of all items on screen...")
+        self.game.print_and_save("################################################################################")
+        
+        item_list = {1: ["Satin Feather", "Zephyr Feather", "Flying Sprout"],
+                     2: ["Fine Sand Bottle", "Untamed Flame", "Blistering Ore"],
+                     3: ["Fresh Water Jug", "Soothing Splash", "Glowing Coral"],
+                     4: ["Rough Stone", "Coarse Alluvium", "Swirling Amber"]
+                     }
+        
+        for item in item_list[items_to_test]:
+            result = self.game.image_tools.find_farmed_items([item])
+            self.game.print_and_save(f"\n{self.game.printtime()} [TEST] {item} farmed: {result}")
+            
+        self.isBotRunning.value = 1
+        
     def test_map_selection(self):
         """Tests navigating to each map that is supported by MapSelection.
         
