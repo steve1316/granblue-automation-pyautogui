@@ -1,8 +1,6 @@
-import game
-
 
 class MapSelection:
-    def  __init__(self, game: game.Game, isBotRunning: int, debug_mode: bool = False):
+    def  __init__(self, game, debug_mode: bool = False):
         super().__init__()
         
         # Dictionary of supported farmable materials. Maps selected from recommendations in the GBF wiki website.
@@ -139,13 +137,6 @@ class MapSelection:
         }
 
         self.game = game
-        self.game.calibrate_game_window(display_info_check=True)
-        
-        # TODO: Keep track of attempts desired or item amount desired.
-        
-        # print(f"Home Button Coordinates: {self.game.home_button_location[0]}, {self.game.home_button_location[1]}")
-        
-        self.isBotRunning = isBotRunning
         
         self.debug_mode = debug_mode
         
@@ -185,6 +176,7 @@ class MapSelection:
                     # TODO: Check for correct Skydom here before proceeding.
                     
                     # On the World Screen, click the specified coordinates on the window to move to the island.
+                    # TODO: Eventually fill this out with every island. Same thing with the farmable missions below.
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to {map_name}...")
                     if(map_name == "Port Breeze Archipelago"):
                         location = (self.game.home_button_location[0] - 293, self.game.home_button_location[1] - 1044)
@@ -258,14 +250,8 @@ class MapSelection:
             #     special_button_location = self.game.image_tools.find_button("special")
             #     self.game.mouse_tools.move_and_click_point(special_button_location[0], special_button_location[1])
             #     self.game.image_tools.confirm_location("special")
-            
-            # TODO: Start Summon and Party selection and then start Combat Mode.
-        
-            self.game.image_tools.confirm_location("select_summon")
+
+            return self.game.image_tools.confirm_location("select_summon")
         except Exception as e:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception on MapSelection select_map(): \n{e}")
-        
-        return None
-    
-    
     
