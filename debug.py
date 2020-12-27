@@ -105,22 +105,19 @@ class Debug:
 
         # Scroll the Home Screen down and find and click the Gameplay Extras button.
         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Finding and selecting the Gameplay Extras Button...")
-        self.game.mouse_tools.move_to(self.game.home_button_location[0], self.game.home_button_location[1] - 50)
-        self.game.mouse_tools.scroll_screen(self.game.home_button_location[0], self.game.home_button_location[1] - 50, -400)
+        self.game.mouse_tools.scroll_screen_from_home_button(-400)
 
-        location = self.game.image_tools.find_button("gameplay_extras")
-        self.game.mouse_tools.move_and_click_point(location[0], location[1])
+        self.game.find_and_click_button("gameplay_extras")
 
         # Now attempt to find the Trial Battles Button in a loop. It will scroll the screen down to show more if there are too many in-game event banners clogging up the screen.
         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Finding and selecting the Trial Battles Button...")
         tries = 3
         while(True):
-            location = self.game.image_tools.find_button("trial_battles", tries=1)
-            if(location == None):
-                self.game.mouse_tools.move_to(self.game.home_button_location[0], self.game.home_button_location[1] - 50)
-                self.game.mouse_tools.scroll_screen(self.game.home_button_location[0], self.game.home_button_location[1] - 50, -400)
+            trial_battles_location = self.game.image_tools.find_button("trial_battles", tries=1)
+            if(trial_battles_location == None):
+                self.game.mouse_tools.scroll_screen_from_home_button(-400)
             else:
-                self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                self.game.mouse_tools.move_and_click_point(trial_battles_location[0], trial_battles_location[1])
                 break
 
             tries -= 1
@@ -129,11 +126,9 @@ class Debug:
 
         # Next, start up the Old Lignoid Trial Battle.
         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Starting the Old Lignoid Trial Battle...")
-        location = self.game.image_tools.find_button("trial_battles_old_lignoid")
-        self.game.mouse_tools.move_and_click_point(location[0], location[1])
-
-        location = self.game.image_tools.find_button("trial_battles_play")
-        self.game.mouse_tools.move_and_click_point(location[0], location[1])
+        
+        self.game.find_and_click_button("trial_battles_old_lignoid")
+        self.game.find_and_click_button("trial_battles_play")
 
         # Test Successful if the bot is able to find all 7 summon element tabs on the Summon Selection Screen. Otherwise, the test fails.
         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now finding all 7 summon element tabs on the Summon Selection Screen...")
@@ -169,13 +164,12 @@ class Debug:
                 if(button_name == "quest"):
                     self.game.mouse_tools.move_and_click_point(self.game.home_button_location[0] - 37, self.game.home_button_location[1] - 758)
                 else:
-                    x, y = self.game.image_tools.find_button(button_name)
-                    self.game.mouse_tools.move_and_click_point(x, y)
+                    self.game.find_and_click_button(button_name)
 
             # Attempt to fit all the "Select" buttons into the current view and then find all "Select" Buttons.
             self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Finding all Special Select Buttons...")
             self.game.image_tools.confirm_location("special")
-            self.game.mouse_tools.scroll_screen(self.game.home_button_location[0], self.game.home_button_location[1] - 50, -300)
+            self.game.mouse_tools.scroll_screen_from_home_button(-400)
             self.game.wait_for_ping(1)
 
             special_quests = self.game.image_tools.find_all("select", custom_region=(self.game.image_tools.window_left, self.game.image_tools.window_top, 
