@@ -80,26 +80,26 @@ class ImageUtils:
         if(self.debug_mode):
             self.game.print_and_save(f"{self.printtime()} [DEBUG] Now attempting to find the {button_name.upper()} Button from current position...")
 
-        location = None
+        button_location = None
         guibot_check = False
 
         # Loop until location is found or return None if image matching failed.
-        while (location == None):
+        while (button_location == None):
             if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                button_location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, 
                                                           region=(self.window_left, self.window_top, self.window_width, self.window_height))
             else:
-                location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check)
+                button_location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check)
 
-            if (location == None):
+            if (button_location == None):
                 if(self.debug_mode):
                     self.game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
                 
                 # Use GuiBot to template match if PyAutoGUI failed.    
                 self.file_resolver.add_path("images/buttons/")
-                location = self.guibot.exists(f"{button_name.lower()}")
+                button_location = self.guibot.exists(f"{button_name.lower()}")
 
-                if(location == None):
+                if(button_location == None):
                     tries -= 1
                     
                     if (tries <= 0):
@@ -116,15 +116,15 @@ class ImageUtils:
 
         # If the location was successfully found using GuiBot, convert the Match object to a Location object.
         if(guibot_check):
-            location = (location.target.x, location.target.y)
+            button_location = (button_location.target.x, button_location.target.y)
 
         if(self.debug_mode):
-            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {button_name.upper()} Button at {location}.")
+            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {button_name.upper()} Button at {button_location}.")
 
         if (confirm_location_check):
             self.confirm_location(button_name)
 
-        return location
+        return button_location
 
     def confirm_location(self, location_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 1):
         """Confirm the bot's position by searching for the header image.
@@ -142,25 +142,25 @@ class ImageUtils:
         if(self.debug_mode):
             self.game.print_and_save(f"{self.printtime()} [DEBUG] Now attempting to confirm the bot's location at the {location_name.upper()} Screen...")
 
-        location = None
+        header_location = None
 
         # Loop until location is found or return False if image matching failed.
-        while (location == None):
+        while (header_location == None):
             if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                header_location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check, 
                                                           region=(self.window_left, self.window_top, self.window_width, self.window_height))
             else:
-                location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check)
+                header_location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check)
 
-            if (location == None):
+            if (header_location == None):
                 if(self.debug_mode):
                     self.game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
                 
                 # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/headers/")
-                location = self.guibot.exists(f"{location_name.lower()}_header")
+                header_location = self.guibot.exists(f"{location_name.lower()}_header")
 
-                if(location == None):
+                if(header_location == None):
                     tries -= 1
                     
                     if (tries <= 0):
