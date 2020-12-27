@@ -116,3 +116,22 @@ class MouseUtils:
         self.move_to(x, y)
         pyautogui.scroll(scroll_clicks, x=x, y=y)
         return None
+    
+    def scroll_screen_from_home_button(self, scroll_clicks: int):
+        """Attempt to scroll the screen using the Home button coordinates to reveal more UI elements.
+
+        Args:
+            scroll_clicks (int): How much to scroll the screen. Positive for scrolling up and negative for scrolling down.
+
+        Returns:
+            None
+        """
+        x = self.game.home_button_location[0]
+        y = self.game.home_button_location[1] - 50
+        
+        if(self.debug_mode):
+            self.game.print_and_save(f"{self.printtime()} [DEBUG] Now scrolling the screen from the Home button's coordinates at ({x}, {y}) by {scroll_clicks} clicks...")
+
+        self.move_to(x, y)
+        pyautogui.scroll(scroll_clicks, x=x, y=y)
+        return None
