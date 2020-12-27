@@ -28,9 +28,9 @@ By downloading this program, you consent to your account potentially getting fla
 
 # TODO List
 ## Backend
-- [ ] Save each message in the Queue to a list in memory. When frontend requests for a saved log file, save the list in memory to a new log file.
-- [ ] Clean up Combat Mode by having all absolute coordinates in variables at the top.
-- [ ] Consolidate all finding button and clicking it logic into one function.
+- [x] Save each message in the Queue to a list in memory. When frontend requests for a saved log file, save the list in memory to a new log file.
+- [x] Clean up Combat Mode by having all absolute coordinates in variables at the top.
+- [x] Consolidate all finding button and clicking it logic into one function.
 - [ ] Implement detection if party wiped during Combat Mode.
 - [ ] Implement selection from list of Summons in order of most preferred to least. If none after several tries, pick the very first Summon randomly.
 - [ ] (LOW PRIORITY) Remove all sys.exit() code.
@@ -43,6 +43,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] (LOW PRIORITY) Implement Guild Wars/Rise of the Beasts navigation/items.
 - [ ] (LOW PRIORITY) Implement if-else logic in scripts.
 - [ ] (LOW PRIORITY) Deal with any left-over TODOs.
+- [ ] (LOW PRIORITY) Eventually remove dependence on Game class from ImageUtils and MouseUtils and move any relevant functionality over to the Game class.
 ## Frontend
 - [ ] Add a Save Logs button.
 - [ ] Add a Group/Party selector.
