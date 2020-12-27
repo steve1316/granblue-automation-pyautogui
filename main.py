@@ -48,6 +48,9 @@ class MainWindow(QObject):
         # Create the Queue for storing logging messages and the flag for the bot status.
         self.queue = multiprocessing.Queue()
         self.isBotRunning = None
+        
+        # Create a list in memory to hold all messages in case the frontend wants to save all those messages into a text file.
+        self.text_log = []
                 
         self.bot_object = Tester()
         self.bot_process = None
@@ -70,6 +73,7 @@ class MainWindow(QObject):
     def update_console_log(self):
         while not self.queue.empty():
             message = self.queue.get()
+            self.text_log.append(message)
             self.updateConsoleLog.emit(message)
 
     # Start the bot.
