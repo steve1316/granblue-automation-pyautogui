@@ -46,9 +46,10 @@ class Game:
         self.image_tools = ImageUtils(game=self, starting_time=self.starting_time, debug_mode=self.debug_mode)
         self.mouse_tools = MouseUtils(game=self, starting_time=self.starting_time, mouse_speed=custom_mouse_speed, debug_mode=self.debug_mode)
         
-        # Save the locations of the "Home" and "Attack" buttons for use in other classes.
+        # Save the locations of the "Home", "Attack", and "Back" buttons for use in other classes.
         self.home_button_location = None
         self.attack_button_location = None
+        self.back_button_location = None
 
         # The amount of time to pause after each call to pyautogui. This applies to calls inside mouse_utils and image_utils.
         pyautogui.PAUSE = 1.0
@@ -140,6 +141,19 @@ class Game:
         """
         time.sleep(seconds)
         return None
+    
+    def find_and_click_button(self, button_name: str):
+        """Find the center point of a button image and click it.
+
+        Args:
+            button_name (str): Name of the button image file in the images/buttons/ folder.
+
+        Returns:
+            None
+        """
+        temp_location = self.image_tools.find_button(button_name)
+        self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1])
+        return None
 
     def find_summon_element(self, summon_element_name: str, tries: int = 3):
         """Select the specified element tab for summons.
@@ -208,7 +222,7 @@ class Game:
         self.print_and_save(f"\n{self.printtime()} [INFO] Now refreshing summons...")
         
         self.go_back_home(confirm_location_check=True)
-        self.mouse_tools.scroll_screen(self.home_button_location[0], self.home_button_location[1] - 50, -500)
+        self.mouse_tools.scroll_screen_from_home_button(-600)
 
         list_of_steps_in_order = ["gameplay_extras", "trial_battles",
                                   "trial_battles_old_lignoid", "trial_battles_play",
@@ -335,9 +349,7 @@ class Game:
 
         # Find and click the "OK" Button to start the mission.
         self.wait_for_ping(1)
-        ok_button_location = self.image_tools.find_button("ok")
-        
-        self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
+        self.find_and_click_button("ok")
         self.wait_for_ping(5)
 
         return None
@@ -390,16 +402,13 @@ class Game:
             # TODO: Implement check for when the user ran out of both of them, or one of them.
             if(use_full_elixirs == False):
                 self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Half Elixir...")
-                location = self.image_tools.find_button("refill_half_ap")
-                self.mouse_tools.move_and_click_point(location[0], location[1] + 166)
+                self.find_and_click_button("refill_half_ap")
             else:
                 self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Full Elixir...")
-                location = self.image_tools.find_button("refill_half_ap")
-                self.mouse_tools.move_and_click_point(location[0], location[1] + 166)
+                self.find_and_click_button("refill_full_ap")
             
             # Press the OK button to move to the Summon Selection Screen.
-            location = self.image_tools.find_button("ok")
-            self.mouse_tools.move_and_click_point(location[0], location[1])
+            self.find_and_click_button("ok")
         
         return None
 
@@ -502,9 +511,10 @@ class Game:
                     if(self.debug_mode):
                         self.print_and_save(f"\n{self.printtime()} [DEBUG] Reading Line {line_number}: \"{line.strip()}\"")
 
-                # Save the position of the center of the "Attack" Button. If already found, don't call this again.
-                if(self.attack_button_location == None):
+                # Save the position of the center of the "Attack" and "Back" Button. If already found, don't call this again.
+                if(self.attack_button_location == None or self.back_button_location == None):
                     self.attack_button_location = self.image_tools.find_button("attack", suppress_error=suppress_error)
+                    self.back_button_location = (self.attack_button_location[0] - 322, self.attack_button_location[1])
 
                 # If the execution reached the next turn block and it is currently not the correct turn, keep pressing the "Attack" Button until the turn number matches.
                 if ("turn" in line.lower() and int(line[5]) != turn_number):
@@ -586,7 +596,7 @@ class Game:
                                 self.use_character_skill(character_selected, skill)
 
                             # Now click the Back button.
-                            self.mouse_tools.click_point_instantly(self.attack_button_location[0] - 322, self.attack_button_location[1])
+                            self.mouse_tools.click_point_instantly(self.back_button_location[0], self.back_button_location[1])
 
                             # Continue to the next line for execution.
                             line_number += 1
@@ -596,11 +606,12 @@ class Game:
                             if(self.image_tools.confirm_location("exp_gained", tries=1) == True):
                                 break
                         
+                        # TODO: Allow for Summon chaining. For now, summoning multiple summons requires individual lines.
                         for j in range(1,7):
                             if(f"summon({j})" in line):
                                 # Click the Summon Button to bring up the available summons.
-                                location = self.image_tools.find_button("summon")
-                                self.mouse_tools.move_and_click_point(location[0], location[1])
+                                self.print_and_save(f"{self.printtime()} [COMBAT] Invoking Summon #{j}...")
+                                self.find_and_click_button("summon")
                                 
                                 # Click on the specified summon.
                                 if(j == 1):
@@ -618,12 +629,12 @@ class Game:
                                     
                                 # Check if it is summonable. Click OK if so. If not, then click Cancel and move on.
                                 if(self.image_tools.confirm_location("summon_details", tries=2)):
-                                    location = self.image_tools.find_button("ok", tries=1)
-                                    if(location != None):
-                                        self.mouse_tools.move_and_click_point(location[0], location[1])
+                                    ok_button_location = self.image_tools.find_button("ok", tries=1)
+                                    if(ok_button_location != None):
+                                        self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
                                     else:
-                                        location = self.image_tools.find_button("summon_cancel")
-                                        self.mouse_tools.move_and_click_point(location[0], location[1])
+                                        self.print_and_save(f"{self.printtime()} [COMBAT] Summon #{j} cannot be invoked due to current restrictions.")
+                                        self.find_and_click_button("summon_cancel")
                                         
                                         # Now click the Back button.
                                         self.mouse_tools.click_point_instantly(self.attack_button_location[0] - 322, self.attack_button_location[1])
@@ -679,7 +690,7 @@ class Game:
                     turn_number += 1
 
                 elif(next_button_location != None):
-                    self.mouse_tools.click_point_instantly(self.attack_button_location[0] + 50, self.attack_button_location[1])
+                    self.mouse_tools.click_point_instantly(next_button_location[0], next_button_location[1])
                     self.wait_for_ping(4)
 
             # Try to click any detected "OK" Buttons several times.
@@ -729,17 +740,22 @@ class Game:
         if(self.map_selection.select_map(map_mode, map_name, item_name, mission_name)):
             amount_of_runs_finished = 0
             item_amount_farmed = 0
+            
+            # Keep playing the mission until the bot gains enough of the item specified.
             while(item_amount_farmed < item_amount_to_farm):
+                # Select the specified Summon.
                 self.find_summon_element(summon_element_name)
                 self.find_summon(summon_name)
                 
+                # Select the Party specified and then start the mission.
                 self.find_party_and_start_mission(group_number, party_number)
                 
+                # Check for the Items Picked Up popup that appears after starting a Quest mission.
                 if(self.image_tools.confirm_location("items_picked_up", tries=3)):
-                    location = self.image_tools.find_button("ok")
-                    self.mouse_tools.move_and_click_point(location[0], location[1])
+                    self.find_and_click_button("ok")
                 
                 if(self.start_combat_mode(script_name)):
+                    # After Combat Mode has finished, count the number of the specified item that has dropped.
                     temp_amount = self.image_tools.find_farmed_items([item_name])[0]
                     item_amount_farmed += temp_amount
                     amount_of_runs_finished += 1
@@ -751,12 +767,12 @@ class Game:
                     self.print_and_save("********************************************************************************\n")
                     
                     if(item_amount_farmed < item_amount_to_farm):
-                        location = self.image_tools.find_button("play_again")
-                        self.mouse_tools.move_and_click_point(location[0], location[1])
+                        # Click the Play Again button.
+                        self.find_and_click_button("play_again")
                         
+                        # Cancel any friend request popup.
                         if(self.image_tools.confirm_location("friend_request")):
-                            location = self.image_tools.find_button("friend_request_cancel")
-                            self.mouse_tools.move_and_click_point(location[0], location[1])
+                            self.find_and_click_button("friend_request_cancel")
                         
                         # Check for available AP.
                         self.check_for_ap(use_full_elixirs=use_full_elixirs)
