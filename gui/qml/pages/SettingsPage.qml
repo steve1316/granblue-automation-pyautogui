@@ -1,5 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Dialogs 1.3
+
+import "../controls"
 
 Item{
     Rectangle {
@@ -7,13 +10,18 @@ Item{
 
         color: "#323741"
         anchors.fill: parent
+        anchors.rightMargin: 0
+        anchors.bottomMargin: 0
+        anchors.leftMargin: 0
+        anchors.topMargin: 0
 
         ComboBox {
             id: comboBox
 
             x: 80
-            y: 32
+            y: 89
             width: 200
+            anchors.horizontalCenterOffset: 0
 
             anchors.horizontalCenter: parent.horizontalCenter
             displayText: qsTr("Please select a item to farm.")
@@ -104,25 +112,71 @@ Item{
             }
         }
 
-        Label {
-            id: settingsPageLabel
+        CustomButton{
+            id: buttonOpenFile
 
-            x: 305
-            y: 176
+            text: qsTr("Open Script")
+            anchors.left: textField.right
+            anchors.leftMargin: 16
 
-            color: "#ffffff"
+            y: 29
+            width: 95
+            height: 28
 
-            text: qsTr("Settings Screen")
-            font.pointSize: 16
+            onPressed: {
+                fileOpen.open()
+            }
 
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
+            FileDialog{
+                id: fileOpen
+
+                title: "Please choose a combat script file"
+
+                folder: shortcuts.home
+                selectMultiple: false
+                nameFilters: ["Text File (*.txt)"]
+
+                onAccepted: {
+                    backend.openFile(fileOpen.fileUrl)
+                }
+            }
+
         }
+
+        CheckBox {
+            id: checkBox
+
+            text: qsTr("Check Box")
+
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.rightMargin: 273
+            anchors.leftMargin: 273
+            anchors.bottomMargin: 284
+            anchors.topMargin: 156
+        }
+
+        TextField {
+            id: textField
+            y: 23
+            anchors.left: parent.left
+            anchors.leftMargin: 121
+
+            readOnly: true
+
+            placeholderText: qsTr("No combat script selected.")
+        }
+    }
+
+    Connections{
+        target: backend
     }
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;height:480;width:640}
+    D{i:0;autoSize:true;formeditorZoom:1.25;height:480;width:640}D{i:4}D{i:6}D{i:7}
 }
 ##^##*/
