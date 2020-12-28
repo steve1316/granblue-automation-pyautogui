@@ -27,7 +27,7 @@ class Game:
 
     """
 
-    def __init__(self, queue: multiprocessing.Queue, isBotRunning: int, custom_mouse_speed: float = 0.5, debug_mode: bool = False):
+    def __init__(self, queue: multiprocessing.Queue, isBotRunning: int, combat_script: str = "", custom_mouse_speed: float = 0.5, debug_mode: bool = False):
         super().__init__()
 
         # Start a timer signaling bot start in order to keep track of elapsed time in logging messages.
@@ -36,6 +36,8 @@ class Game:
         # Queue to keep share logging messages between backend and frontend.
         self.queue = queue
         self.isBotRunning = isBotRunning
+        
+        self.combat_script = combat_script
         
         # Initialize the Map Selection class.
         self.map_selection = MapSelection(self)
@@ -226,7 +228,7 @@ class Game:
 
         list_of_steps_in_order = ["gameplay_extras", "trial_battles",
                                   "trial_battles_old_lignoid", "trial_battles_play",
-                                  "wind", "ok", "trial_battles_close",
+                                  "wind", "party_selection_ok", "trial_battles_close",
                                   "menu", "retreat", "retreat_confirmation", "next"]
 
         temp_location = None
@@ -349,7 +351,7 @@ class Game:
 
         # Find and click the "OK" Button to start the mission.
         self.wait_for_ping(1)
-        self.find_and_click_button("ok")
+        self.find_and_click_button("party_selection_ok")
         self.wait_for_ping(5)
 
         return None
@@ -471,11 +473,11 @@ class Game:
 
         return None
 
-    def start_combat_mode(self, script_name: str):
+    def start_combat_mode(self, script_file_path: str = ""):
         """Start the Combat Mode with the given script file name. Start reading through the text file line by line and have the bot proceed accordingly.
 
         Args:
-            script_name (str): Name of the combat script text file in the /scripts/ folder.
+            script_file_path (str, optional): Path to the combat script text file. Defaults to "".
 
         Returns:
             (bool): Return True if Combat Mode was successful. #TODO: Return False if the party wiped.
@@ -485,9 +487,12 @@ class Game:
 
         # Open the script text file and process all read lines.
         try:
-            script = open(f"scripts/{script_name}.txt", "r")
-            if(self.debug_mode):
-                self.print_and_save(f"\n{self.printtime()} [DEBUG] Now loading up {script_name} Combat Plan.")
+            if(script_file_path == ""):
+                self.print_and_save(f"\n{self.printtime()} [INFO] No script file was given. Using default semi-attack script...")
+                script = open(f"scripts/test_empty.txt", "r")
+            else:
+                self.print_and_save(f"\n{self.printtime()} [INFO] Now loading up combat script at {script_file_path}...")
+                script = open(script_file_path, "r")
             
             lines = script.readlines()
 
@@ -638,6 +643,10 @@ class Game:
                                         
                                         # Now click the Back button.
                                         self.mouse_tools.click_point_instantly(self.attack_button_location[0] - 322, self.attack_button_location[1])
+                                
+                                # Continue to the next line for execution.
+                                line_number += 1
+                                i += 1
 
                 if("end" in line):
                     # Check if any character has 100% Charge Bar. If so, add 1 second per match.
@@ -708,11 +717,11 @@ class Game:
             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
             self.print_and_save("################################################################################")
         except FileNotFoundError:
-            sys.exit(f"\n{self.printtime()} [ERROR] Cannot find \"{script_name}.txt\" inside the /scripts folder. Exiting application now...")
+            sys.exit(f"\n{self.printtime()} [ERROR] Cannot find \"{script_file_path}.txt\" inside the /scripts folder. Exiting application now...")
 
         return True
     
-    def start_farming_mode(self, summon_element_name: str, summon_name: str, group_number: int, party_number: int, script_name: str, map_mode: str, map_name: str, 
+    def start_farming_mode(self, summon_element_name: str, summon_name: str, group_number: int, party_number: int, map_mode: str, map_name: str, 
                            item_name: str, item_amount_to_farm: int, mission_name: str, use_full_elixirs: bool = False):
         """Start the Farming Mode using the given parameters.
 
@@ -721,7 +730,6 @@ class Game:
             summon_name (str): Exact name of the Summon image's file name in images/summons folder.
             group_number (int): The group that the specified party in in.
             party_number (int): The specified party to start the mission with.
-            script_name (str): Name of the combat script text file in the /scripts/ folder.
             map_mode (str): Mode to look for the specified item and map in.
             map_name (str): Name of the map to look for the specified mission in.
             item_name (str): Name of the item to farm.
@@ -754,7 +762,7 @@ class Game:
                 if(self.image_tools.confirm_location("items_picked_up", tries=3)):
                     self.find_and_click_button("ok")
                 
-                if(self.start_combat_mode(script_name)):
+                if(self.start_combat_mode(self.combat_script)):
                     # After Combat Mode has finished, count the number of the specified item that has dropped.
                     temp_amount = self.image_tools.find_farmed_items([item_name])[0]
                     item_amount_farmed += temp_amount
