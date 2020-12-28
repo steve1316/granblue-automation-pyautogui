@@ -15,11 +15,12 @@ class Debug:
 
     """
 
-    def __init__(self, game, isBotRunning: int):
+    def __init__(self, game, isBotRunning: int, combat_script: str = ""):
         super().__init__()
 
         self.game = game
         self.isBotRunning = isBotRunning
+        self.combat_script = combat_script
         
     def test_farming_mode(self):
         """Tests the Farming Mode by navigating to the Special Op's Request and farm 10 Fine Sand Bottles with the specified party and summon.
@@ -35,8 +36,8 @@ class Debug:
         self.game.print_and_save("################################################################################")
         
         self.game.start_farming_mode(summon_element_name="water", summon_name="leviathan_omega_ulb", group_number=1, party_number=3, 
-                                     script_name="test_farming_mode", map_mode="quest", map_name="Valtz Duchy", 
-                                     item_name="Fine Sand Bottle", item_amount_to_farm=10, mission_name="Special Op's Request")
+                                     map_mode="quest", map_name="Valtz Duchy", item_name="Fine Sand Bottle", item_amount_to_farm=10, 
+                                     mission_name="Special Op's Request")
         
         self.isBotRunning.value = 1
         
@@ -143,6 +144,34 @@ class Debug:
             self.isBotRunning.value = 1
             sys.exit(f"\n{self.game.printtime()} [TEST_FAILED] Bot is not at the Summon Selection Screen. Stopping bot...")
 
+    def test_combat_mode2(self):
+        self.game.print_and_save("\n################################################################################")
+        self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing Combat Mode on the Old Lignoid trial battle mission now...")
+        self.game.print_and_save("################################################################################")
+        
+        list_of_steps_in_order = ["gameplay_extras", "trial_battles",
+                                  "trial_battles_old_lignoid", "trial_battles_play",
+                                  "wind", "party_selection_ok", "trial_battles_close"]
+        
+        temp_location = None
+
+        # Go through each step in order from left to right.
+        while (len(list_of_steps_in_order) > 0):
+            image_name = list_of_steps_in_order.pop(0)
+            
+            if(image_name != "wind"):
+                temp_location = self.game.image_tools.find_button(image_name)
+                self.game.mouse_tools.move_and_click_point(temp_location[0], temp_location[1])
+            else:
+                self.game.find_summon_element(image_name)
+
+                # This will use the temp_location coordinates of the last location which was the Play button for the Trial Battle.
+                self.game.mouse_tools.move_and_click_point(temp_location[0], temp_location[1] + 140)
+        
+        self.game.start_combat_mode(self.combat_script)
+        
+        self.isBotRunning.value = 1
+    
     def test_combat_mode(self):
         """Tests almost all of the bot's functionality by starting the Very Hard difficulty Angel Halo Special Battle and completing it. This assumes that Angel Halo is at the very bottom of the Special missions list.
 
@@ -206,7 +235,7 @@ class Debug:
         # Select first Group, second Party and then start the Combat Mode.
         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Selecting First Group, Second Party...")
         self.game.find_party_and_start_mission(1, 2)
-        self.game.start_combat_mode("test_combat_mode")
+        self.game.start_combat_mode(self.combat_script)
 
         self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Combat Mode was successful.")
         
