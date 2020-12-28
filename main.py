@@ -2,7 +2,7 @@ import multiprocessing
 import os
 import sys
 
-from PySide2.QtCore import QObject, Signal, Slot
+from PySide2.QtCore import QObject, Signal, Slot, QUrl
 from PySide2.QtGui import QGuiApplication
 from PySide2.QtQml import QQmlApplicationEngine
 
@@ -19,13 +19,13 @@ class Tester:
         self.game = None
         self.debug = None
         
-    def run_bot(self, queue, isBotRunning):
-        self.game = Game(queue=queue, isBotRunning=isBotRunning, custom_mouse_speed=0.5, debug_mode=DEBUG)
+    def run_bot(self, queue, isBotRunning, combat_script):
+        self.game = Game(queue=queue, isBotRunning=isBotRunning, combat_script=combat_script, custom_mouse_speed=0.5, debug_mode=DEBUG)
         self.map_selection = MapSelection(self.game)
-        self.debug = Debug(self.game, isBotRunning=isBotRunning)
+        self.debug = Debug(self.game, isBotRunning=isBotRunning, combat_script=combat_script)
         
         # Test finding amounts of all items on the screen.
-        self.debug.test_item_detection(4)
+        # self.debug.test_item_detection(4)
 
         # Test the Farming Mode.
         # self.debug.test_farming_mode()
@@ -38,6 +38,7 @@ class Tester:
 
         # Test Combat Mode.
         # self.debug.test_combat_mode()
+        self.debug.test_combat_mode2()
         
         isBotRunning.value = 1
 
@@ -51,6 +52,8 @@ class MainWindow(QObject):
         
         # Create a list in memory to hold all messages in case the frontend wants to save all those messages into a text file.
         self.text_log = []
+        
+        self.real_file_path = None
                 
         self.bot_object = Tester()
         self.bot_process = None
@@ -59,6 +62,11 @@ class MainWindow(QObject):
     # The data type inside the Signal indicates the return type from backend to frontend.
     updateConsoleLog = Signal(str)
     checkBotStatus = Signal(bool)
+    
+    # Obtain the file path to the combat script that the user selected.
+    @Slot(str)
+    def openFile(self, file_path):
+        self.real_file_path = QUrl(file_path).toLocalFile()
     
     # The data type inside the Slot indicates the return type from frontend to backend. 
     # In this case, this function expects nothing from the frontend.
@@ -81,7 +89,7 @@ class MainWindow(QObject):
     def start_bot(self):
         print("\nStarting bot.")
         self.isBotRunning = multiprocessing.Value("i", 0)
-        self.bot_process = multiprocessing.Process(target=self.bot_object.run_bot, args=(self.queue, self.isBotRunning,))
+        self.bot_process = multiprocessing.Process(target=self.bot_object.run_bot, args=(self.queue, self.isBotRunning, self.real_file_path,))
         self.bot_process.start()
     
     # Stop the bot.
@@ -93,6 +101,8 @@ class MainWindow(QObject):
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
+    app.setOrganizationName("somename");
+    app.setOrganizationDomain("somename");
     engine = QQmlApplicationEngine()
 
     # Get the Context.
