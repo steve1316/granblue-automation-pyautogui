@@ -539,7 +539,7 @@ Window {
                             anchors.topMargin: 10
 
                             contentHeight: logTextArea.contentHeight + 50 // Update the scrollingView's content height to always have room for the console log text.
-                            contentWidth: 280
+                            //contentWidth: 280
 
                             // Create a vertical ScrollBar for this Flickable component.
                             ScrollBar.vertical: ScrollBar {
@@ -548,10 +548,10 @@ Window {
                             }
 
                             // Create a horizontal ScrollBar for this Flickable component.
-                            ScrollBar.horizontal: ScrollBar {
-                                id: horizontalScrollBar
-                                 policy: ScrollBar.AsNeeded // Only display the horizontal scrollbar when needed.
-                            }
+//                            ScrollBar.horizontal: ScrollBar {
+//                                id: horizontalScrollBar
+//                                 policy: ScrollBar.AsNeeded // Only display the horizontal scrollbar when needed.
+//                            }
 
                             // Adjust the scroll bars depending on arrow keys pressed.
                             Keys.onUpPressed: verticalScrollBar.decrease()
@@ -560,7 +560,7 @@ Window {
                             Keys.onLeftPressed: horizontalScrollBar.decrease()
                             Keys.onRightPressed: horizontalScrollBar.increase()
 
-                            // Adjust the vertical and horizontal scroll bars when using the mouse wheel.
+                            // Adjust the vertical scroll bar when using the mouse wheel.
                             MouseArea{
                                 anchors.fill: parent
 
@@ -583,7 +583,7 @@ Window {
                                 text: "Hello there!"
                                 font.pixelSize: 12
                                 textMargin: 5
-                                textFormat: Text.PlainText
+                                textFormat: Text.AutoText
 
                                 horizontalAlignment: Text.AlignLeft
                                 verticalAlignment: Text.AlignTop
@@ -593,6 +593,8 @@ Window {
                                 
                                 readOnly: true
                                 selectByMouse: true
+                                selectedTextColor: "#ffffffff"
+                                selectionColor: "#ff007f"
 
                                 bottomPadding: 10 // This is necessary to prevent any newly appended messages from getting partially cut off at the bottom.
                         
@@ -869,6 +871,6 @@ Window {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.75}
+    D{i:0;formeditorZoom:0.9}
 }
 ##^##*/
