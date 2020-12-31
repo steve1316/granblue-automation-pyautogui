@@ -141,7 +141,7 @@ class MapSelection:
         self.debug_mode = debug_mode
         
     def select_map(self, map_mode: str, map_name: str, item_name: str, mission_name: str):
-        """[summary]
+        """Navigates the bot to the specified map and preps the bot for Summon/Party selection.
 
         Args:
             map_mode (str): Mode to look for the specified item and map in.
@@ -168,7 +168,7 @@ class MapSelection:
                 self.game.print_and_save("********************************************************************************\n")
                 
                 # Go to the Home Screen and check if the bot is already at the correct island or not.
-                self.game.go_back_home()
+                self.game.go_back_home(confirm_location_check=True, display_info_check=True)
                 if(self.game.image_tools.confirm_location(temp_map_name, tries=2)):
                     check_location = True
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot is currently on the correct island.")
