@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Dialogs 1.3
 import "../controls"
 
 Item{
@@ -110,6 +111,38 @@ Item{
             visible: false
         }
 
+        CustomButton {
+            id: saveLogsButton
+            y: 415
+            width: 60
+            height: 30
+            text: "Save logs"
+            anchors.left: parent.left
+            anchors.bottom: parent.bottom
+            anchors.leftMargin: 20
+            anchors.bottomMargin: 20
+            colorDefault: "#d94012"
+
+            onPressed: {
+                fileSave.open()
+            }
+
+            FileDialog {
+                id: fileSave
+
+                title: "Please choose a text file to save the current log into."
+
+                folder: "../../../"
+                selectExisting: false
+                nameFilters: ["Text File (*.txt)"]
+
+
+                onAccepted: {
+                    backend.save_file(fileSave.fileUrl)
+                }
+            }
+        }
+
         Timer{
             id: updateLogTimerFunction
 
@@ -163,8 +196,10 @@ Item{
 
 
 
+
+
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:1.66;height:453;width:300}
+    D{i:0;autoSize:true;formeditorZoom:1.66;height:453;width:300}D{i:6}
 }
 ##^##*/

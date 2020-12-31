@@ -68,6 +68,17 @@ class MainWindow(QObject):
     checkBotReady = Signal(bool)
     openFile = Signal(str)
     
+    # Save the text_log to the specified text file.
+    @Slot(str)
+    def save_file(self, file_path):
+        file_path = QUrl(file_path).toLocalFile()
+        opened_file = open(file_path, "w")
+        
+        for line in self.text_log:
+            opened_file.write("\n" + line)
+            
+        opened_file.close()
+    
     # Update the flag of the debug mode.
     @Slot(bool)
     def update_debug_mode(self, flag):
