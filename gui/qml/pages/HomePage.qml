@@ -60,9 +60,11 @@ Item{
             width: 100
             height: 50
 
-            text: qsTr("Start")
+            text: startStopButton.enabled ? qsTr("Start") : qsTr("Start disabled")
 
-            colorDefault: "#4891d9"
+            enabled: false
+
+            colorDefault: startStopButton.enabled ? "#4891d9" : "#57585c"
             customRadius: 20
 
             anchors.verticalCenter: parent.verticalCenter
@@ -77,6 +79,35 @@ Item{
                     internal.stopBot()
                 }
             }
+        }
+
+        TextField {
+            id: combatScriptTextField
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.top: parent.top
+            horizontalAlignment: Text.AlignHCenter
+            anchors.rightMargin: 20
+            anchors.topMargin: 20
+            anchors.leftMargin: 20
+
+            readOnly: true
+
+            placeholderText: qsTr("Combat Script: None selected")
+        }
+
+        Label {
+            id: combatScriptTextFieldLabel
+            x: 20
+            width: 260
+            height: 13
+            color: "#00ff00"
+            text: qsTr("Combat script loaded successfully")
+            anchors.top: combatScriptTextField.bottom
+            horizontalAlignment: Text.AlignHCenter
+            anchors.topMargin: 2
+
+            visible: false
         }
 
         Timer{
@@ -113,6 +144,17 @@ Item{
                     internal.stopBot()
                 }
             }
+
+            // Retrieve the name of the opened script file back from backend.
+            function onOpenFile(scriptName){
+                combatScriptTextField.text = qsTr(scriptName)
+                combatScriptTextFieldLabel.visible = true
+            }
+
+            // Enable or disable the Start/Stop button depending on whether the user completed the instructions shown on screen.
+            function onCheckBotReady(flag){
+                startStopButton.enabled = flag
+            }
         }
     }
 }
@@ -123,6 +165,6 @@ Item{
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:1.1;height:480;width:640}
+    D{i:0;autoSize:true;formeditorZoom:1.66;height:453;width:300}
 }
 ##^##*/
