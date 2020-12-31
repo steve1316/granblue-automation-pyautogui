@@ -15,7 +15,7 @@ By downloading this program, you consent to your account potentially getting fla
 # Features
 
 - [x] Customize what skills to use during each turn in a user-created plan. Users can select which plan to use when starting the bot.
-- [ ] A launchable GUI to keep track of logs and selecting what combat script to use.
+- [x] A launchable GUI to keep track of logs and selecting what combat script to use.
 - [x] Farm user-defined amounts of specified materials from Quest, Coop, Raid, Event, etc.
 - [ ] A user-defined timer for how long the bot should run for.
 - [x] Support for Quest navigation.
