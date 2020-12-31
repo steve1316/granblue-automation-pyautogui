@@ -151,6 +151,8 @@ class Debug:
         
         self.game.go_back_home(confirm_location_check=True, display_info_check=True)
         
+        self.game.mouse_tools.scroll_screen_from_home_button(-600)
+        
         list_of_steps_in_order = ["gameplay_extras", "trial_battles",
                                   "trial_battles_old_lignoid", "trial_battles_play",
                                   "wind", "party_selection_ok", "trial_battles_close"]
