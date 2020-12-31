@@ -15,18 +15,31 @@ Item{
         anchors.leftMargin: 0
         anchors.topMargin: 0
 
+        // Select the item and the island that the item is farmed in.
         ComboBox {
-            id: comboBox
+            id: itemComboBox
 
-            x: 80
-            y: 89
             width: 200
-            anchors.horizontalCenterOffset: 0
+            anchors.left: parent.left
+            anchors.top: combatScriptTextField.bottom
+            enabled: false
+            anchors.topMargin: 50
+            anchors.leftMargin: 20
 
-            anchors.horizontalCenter: parent.horizontalCenter
             displayText: qsTr("Please select a item to farm.")
 
             currentIndex: 0
+            textRole: "text"
+            
+            delegate: ItemDelegate {
+                width: itemComboBox.width
+                text: modelData.text
+
+                font.weight: itemComboBox.currentIndex === index ? Font.DemiBold : Font.Normal
+                highlighted: ListView.isCurrentItem
+
+                enabled: modelData.enabled
+            }
 
             model: [
                 // Port Breeze Archipelago
@@ -90,38 +103,147 @@ Item{
                 { text: "Steel Liquid", map: "Agastia", enabled: true },
             ]
 
-            textRole: "text"
-
             onCurrentIndexChanged: {
-                comboBox.displayText = qsTr(comboBox.model[currentIndex].text)
-                console.log("Map selected", comboBox.model[currentIndex].map)
+                itemComboBox.displayText = qsTr(itemComboBox.model[currentIndex].text)
+                logTextArea.append("\nIsland selected: " + itemComboBox.model[currentIndex].map)
+                logTextArea.append("Item selected: " + itemComboBox.model[currentIndex].text)
+
+                // Enable the mission ComboBox.
+                missionComboBox.enabled = true
+
+                // Update the contents of the mission ComboBox with the appropriate mission(s).
+                missionComboBox.currentIndex = 0
+                if(itemComboBox.displayText == "Satin Feather" || itemComboBox.displayText == "Zephyr Feather" || itemComboBox.displayText == "Flying Sprout"){
+                    missionComboBox.model = [
+                        { text: "Port Breeze Archipelago", enabled: false },
+                        { text: "Scattered Cargo", enabled: true },
+                    ]
+                } else if(itemComboBox.displayText == "Fine Sand Bottle"){
+                    missionComboBox.model = [
+                        { text: "Valtz Duchy", enabled: false },
+                        { text: "Lucky Charm Hunt", enabled: true },
+                    ]
+                } else if(itemComboBox.displayText == "Untamed Flame"){
+                    missionComboBox.model = [
+                        { text: "Valtz Duchy", enabled: false },
+                        { text: "Special Op's Request", enabled: true },
+                    ]
+                } else if(itemComboBox.displayText == "Blistering Ore"){
+                    missionComboBox.model = [
+                        { text: "Valtz Duchy", enabled: false },
+                        { text: "Lucky Charm Hunt", enabled: true },
+                        { text: "Special Op's Request", enabled: true },
+                    ]
+                } else if(itemComboBox.displayText == "Fresh Water Jug" || itemComboBox.displayText == "Soothing Splash" || itemComboBox.displayText == "Glowing Coral"){
+                    missionComboBox.model = [
+                        { text: "Auguste Isles", enabled: false },
+                        { text: "Threat to the Fisheries", enabled: true },
+                    ]
+                } else if(itemComboBox.displayText == "Rough Stone" || itemComboBox.displayText == "Swirling Amber"){
+                    missionComboBox.model = [
+                        { text: "Lumacie Archipelago", enabled: false },
+                        { text: "The Fruit of Lumacie", enabled: true },
+                    ]
+                } else if(itemComboBox.displayText == "Coarse Alluvium"){
+                    missionComboBox.model = [
+                        { text: "Lumacie Archipelago", enabled: false },
+                        { text: "Whiff of Danger", enabled: true },
+                    ]
+                } else if(itemComboBox.displayText == "Falcon Feather" || itemComboBox.displayText == "Spring Water Jug" || itemComboBox.displayText == "Vermilion Stone"){
+                    missionComboBox.model = [
+                        { text: "Albion Citadel", enabled: false },
+                        { text: "I Challenge You!", enabled: true },
+                    ]
+                } else if(itemComboBox.displayText == "Slimy Shroom" || itemComboBox.displayText == "Hollow Soul" || itemComboBox.displayText == "Lacrimosa"){
+                    missionComboBox.model = [
+                        { text: "Mist-Shrouded Isle", enabled: false },
+                        { text: "For Whom the Bell Tolls", enabled: true },
+                    ]
+                } else if(itemComboBox.displayText == "Wheat Stalk" || itemComboBox.displayText == "Iron Cluster" || itemComboBox.displayText == "Olea Plant"){
+                    missionComboBox.model = [
+                        { text: "Golonzo Island", enabled: false },
+                        { text: "Golonzo's Battle of Old", enabled: true },
+                    ]
+                } else if(itemComboBox.displayText == "Indigo Fruit" || itemComboBox.displayText == "Foreboding Clover" || itemComboBox.displayText == "Blood Amber"){
+                    missionComboBox.model = [
+                        { text: "Amalthea Island", enabled: false },
+                        { text: "The Dungeon Diet", enabled: true },
+                    ]
+                } else if(itemComboBox.displayText == "Sand Brick" || itemComboBox.displayText == "Native Reed"){
+                    missionComboBox.model = [
+                        { text: "Former Capital Mephorash", enabled: false },
+                        { text: "Trust Busting Dustup", enabled: true },
+                    ]
+                } else if(itemComboBox.displayText == "Antique Cloth"){
+                    missionComboBox.model = [
+                        { text: "Former Capital Mephorash", enabled: false },
+                        { text: "Trust Busting Dustup", enabled: true },
+                        { text: "Erste Kingdom Episode 4", enabled: true },
+                    ]
+                } else if(itemComboBox.displayText == "Prosperity Flame" || itemComboBox.displayText == "Explosive Material" || itemComboBox.displayText == "Steel Liquid"){
+                    missionComboBox.model = [
+                        { text: "Agastia", enabled: false },
+                        { text: "Imperial Wanderer's Soul", enabled: true },
+                    ]
+                }
+
+                // Reset the mission ComboBox back to default.
+                missionComboBox.currentIndex = 0
+                missionComboBox.displayText = qsTr("Please select a mission.")
             }
 
+            onPressedChanged: {
+                itemComboBox.popup.height = 300
+            }
+        }
+
+        // Select mission(s) specific to each item.
+        ComboBox {
+            id: missionComboBox
+
+            width: 200
+            anchors.left: parent.left
+            anchors.top: itemComboBox.bottom
+            enabled: false
+            anchors.topMargin: 50
+            anchors.leftMargin: 20
+
+            displayText: qsTr("Please select a mission.")
+
+            currentIndex: 0
+            textRole: "text"
+
             delegate: ItemDelegate {
-                width: comboBox.width
+                width: missionComboBox.width
                 text: modelData.text
 
-                font.weight: comboBox.currentIndex === index ? Font.DemiBold : Font.Normal
+                font.weight: missionComboBox.currentIndex === index ? Font.DemiBold : Font.Normal
                 highlighted: ListView.isCurrentItem
 
                 enabled: modelData.enabled
             }
 
-            onPressedChanged: {
-                comboBox.popup.height = 300
+            model: []
+
+            onCurrentIndexChanged: {
+                missionComboBox.displayText = qsTr(missionComboBox.model[currentIndex].text)
+                logTextArea.append("\nMission selected: " + missionComboBox.model[currentIndex].text)
             }
+
+            onDisplayTextChanged: backend.check_bot_ready(missionComboBox.displayText)
         }
 
         CustomButton{
             id: buttonOpenFile
+            y: 20
 
-            text: qsTr("Open Script")
-            anchors.left: textField.right
-            anchors.leftMargin: 16
+            text: qsTr("Open")
+            anchors.left: combatScriptTextField.right
+            anchors.right: parent.right
+            anchors.rightMargin: 20
+            anchors.leftMargin: 20
 
-            y: 29
-            width: 95
-            height: 28
+            height: 40
 
             onPressed: {
                 fileOpen.open()
@@ -132,51 +254,82 @@ Item{
 
                 title: "Please choose a combat script file"
 
-                folder: shortcuts.home
+                // Dialog will default to the /scripts/ folder in the root of the bot directory.
+                folder: "../../../scripts/"
                 selectMultiple: false
                 nameFilters: ["Text File (*.txt)"]
 
                 onAccepted: {
-                    backend.openFile(fileOpen.fileUrl)
+                    backend.open_file(fileOpen.fileUrl)
                 }
             }
 
         }
 
-        CheckBox {
-            id: checkBox
+        CustomCheckBox {
+            id: debugModeCheckBox
 
-            text: qsTr("Check Box")
-
+            text: "Debug Mode"
             anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: parent.top
             anchors.bottom: parent.bottom
-            anchors.rightMargin: 273
-            anchors.leftMargin: 273
-            anchors.bottomMargin: 284
-            anchors.topMargin: 156
+            anchors.bottomMargin: 20
+            anchors.leftMargin: 20
+
+            onClicked: {
+                if(debugModeCheckBox.checked){
+                    backend.update_debug_mode(true)
+                    logTextArea.append("\nDebug Mode turned ON. You will now see debugging messages in the log.")
+                }else{
+                    backend.update_debug_mode(false)
+                    logTextArea.append("\nDebug Mode turned OFF. You will no longer see debugging messages in the log.")
+                }
+            }
         }
 
         TextField {
-            id: textField
-            y: 23
+            id: combatScriptTextField
             anchors.left: parent.left
-            anchors.leftMargin: 121
+            anchors.top: parent.top
+            horizontalAlignment: Text.AlignHCenter
+            anchors.topMargin: 20
+            anchors.leftMargin: 20
 
             readOnly: true
 
-            placeholderText: qsTr("No combat script selected.")
+            placeholderText: qsTr("Combat Script: None selected")
+        }
+
+        Label {
+            id: combatScriptTextFieldLabel
+            x: 20
+            width: 200
+            height: 13
+            color: "#00ff00"
+            text: qsTr("Combat script loaded successfully")
+            anchors.top: combatScriptTextField.bottom
+            anchors.topMargin: 5
+
+            visible: false
         }
     }
 
     Connections{
         target: backend
+
+        // Retrieve the name of the opened script file back from backend.
+        function onOpenFile(scriptName){
+            combatScriptTextField.text = qsTr(scriptName)
+            combatScriptTextFieldLabel.visible = true
+            logTextArea.append("\nCombat script selected: " + scriptName)
+
+            // Enable the item selection combobox.
+            itemComboBox.enabled = true
+        }
     }
 }
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:1.25;height:480;width:640}D{i:4}D{i:6}D{i:7}
+    D{i:0;autoSize:true;formeditorZoom:2;height:453;width:300}
 }
 ##^##*/
