@@ -45,7 +45,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] (LOW PRIORITY) Deal with any left-over TODOs.
 - [ ] (LOW PRIORITY) Eventually remove dependence on Game class from ImageUtils and MouseUtils and move any relevant functionality over to the Game class.
 ## Frontend
-- [ ] Add a Save Logs button.
+- [x] Add a Save Logs button.
 - [ ] Add a Group/Party selector.
 - [ ] Add a Summons selector. (Maybe with pictures?)
 - [ ] Add a selector for the amount of the specified item to be farmed.
