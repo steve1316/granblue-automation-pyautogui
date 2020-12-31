@@ -1,6 +1,7 @@
 import multiprocessing
 import os
 import sys
+from pathlib import Path
 
 from PySide2.QtCore import QObject, Signal, Slot, QUrl
 from PySide2.QtGui import QGuiApplication
@@ -10,8 +11,6 @@ from debug import Debug
 from game import Game
 from map_selection import MapSelection
 
-DEBUG = False
-
 class Tester:
     def __init__(self):
         super().__init__()
@@ -19,8 +18,8 @@ class Tester:
         self.game = None
         self.debug = None
         
-    def run_bot(self, queue, isBotRunning, combat_script):
-        self.game = Game(queue=queue, isBotRunning=isBotRunning, combat_script=combat_script, custom_mouse_speed=0.5, debug_mode=DEBUG)
+    def run_bot(self, queue, isBotRunning, combat_script, debug_mode):
+        self.game = Game(queue=queue, isBotRunning=isBotRunning, combat_script=combat_script, custom_mouse_speed=0.5, debug_mode=debug_mode)
         self.map_selection = MapSelection(self.game)
         self.debug = Debug(self.game, isBotRunning=isBotRunning, combat_script=combat_script)
         
@@ -46,8 +45,9 @@ class MainWindow(QObject):
     def __init__(self):
         QObject.__init__(self)
         
-        # Create the Queue for storing logging messages and the flag for the bot status.
+        # Create the Queue for storing logging messages and the flag for the bot ready/running status.
         self.queue = multiprocessing.Queue()
+        self.isBotReady = None
         self.isBotRunning = None
         
         # Create a list in memory to hold all messages in case the frontend wants to save all those messages into a text file.
@@ -57,16 +57,29 @@ class MainWindow(QObject):
                 
         self.bot_object = Tester()
         self.bot_process = None
+        
+        self.debug_mode = False
 
     # Signal connections connecting the following backend functions to the respective functions in the frontend.
-    # The data type inside the Signal indicates the return type from backend to frontend.
+    # The data type inside the Signal indicates the return type from backend to frontend. All of the functions that are connected
+    # to the frontend needs to use the emit() functionality to transmit their return information so that the frontend can receive it.
     updateConsoleLog = Signal(str)
     checkBotStatus = Signal(bool)
+    checkBotReady = Signal(bool)
+    openFile = Signal(str)
     
-    # Obtain the file path to the combat script that the user selected.
+    # Update the flag of the debug mode.
+    @Slot(bool)
+    def update_debug_mode(self, flag):
+        self.debug_mode = flag
+    
+    # Obtain the file path to the combat script that the user selected. After saving the real file path, 
+    # return the full file name of the script back to frontend.
     @Slot(str)
-    def openFile(self, file_path):
+    def open_file(self, file_path):
         self.real_file_path = QUrl(file_path).toLocalFile()
+        file_name = str(Path(self.real_file_path).name)
+        self.openFile.emit(file_name)
     
     # The data type inside the Slot indicates the return type from frontend to backend. 
     # In this case, this function expects nothing from the frontend.
@@ -76,7 +89,16 @@ class MainWindow(QObject):
             self.checkBotStatus.emit(True)
         else:
             self.checkBotStatus.emit(False)
+    
+    # Update the flag of the readyness of the bot.
+    @Slot(str)
+    def check_bot_ready(self, display_text):
+        if(display_text == "Please select a mission."):
+            self.checkBotReady.emit(False)
+        else:
+            self.checkBotReady.emit(True)
 
+    # Grab logging messages from the Queue and then output to the frontend's log.
     @Slot()
     def update_console_log(self):
         while not self.queue.empty():
@@ -89,7 +111,7 @@ class MainWindow(QObject):
     def start_bot(self):
         print("\nStarting bot.")
         self.isBotRunning = multiprocessing.Value("i", 0)
-        self.bot_process = multiprocessing.Process(target=self.bot_object.run_bot, args=(self.queue, self.isBotRunning, self.real_file_path,))
+        self.bot_process = multiprocessing.Process(target=self.bot_object.run_bot, args=(self.queue, self.isBotRunning, self.real_file_path, self.debug_mode,))
         self.bot_process.start()
     
     # Stop the bot.
