@@ -149,6 +149,8 @@ class Debug:
         self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing Combat Mode on the Old Lignoid trial battle mission now...")
         self.game.print_and_save("################################################################################")
         
+        self.game.go_back_home(confirm_location_check=True, display_info_check=True)
+        
         list_of_steps_in_order = ["gameplay_extras", "trial_battles",
                                   "trial_battles_old_lignoid", "trial_battles_play",
                                   "wind", "party_selection_ok", "trial_battles_close"]
