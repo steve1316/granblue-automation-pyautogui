@@ -487,7 +487,7 @@ class Game:
 
         # Open the script text file and process all read lines.
         try:
-            if(script_file_path == ""):
+            if(script_file_path == "" or script_file_path == None):
                 self.print_and_save(f"\n{self.printtime()} [INFO] No script file was given. Using default semi-attack script...")
                 script = open(f"scripts/test_empty.txt", "r")
             else:
