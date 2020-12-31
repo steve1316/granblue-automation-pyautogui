@@ -7,7 +7,7 @@ import "controls"
 Window {
     id: mainWindow
 
-    width: 1200
+    width: 1250
     height: 600
 
     minimumWidth: 1000
@@ -580,7 +580,14 @@ Window {
 
                                 color: "#ffffff"
 
-                                text: "Hello there!"
+                                text: `Welcome to Granblue Automation! 
+                                \n*************************** 
+                                \nInstructions\n----------------
+                                \nNote: The START button is disabled until the following steps are followed through.
+                                \n1. Please have your game window fully visible.
+                                \n2. Go into the Settings Page and select your combat script and select the item and amount that you want to farm for.
+                                \n3. You can head back to the Home Page and click START.
+                                \n\n***************************`
                                 font.pixelSize: 12
                                 textMargin: 5
                                 textFormat: Text.AutoText
@@ -871,6 +878,6 @@ Window {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:0.9}
+    D{i:0;formeditorZoom:1.1}
 }
 ##^##*/
