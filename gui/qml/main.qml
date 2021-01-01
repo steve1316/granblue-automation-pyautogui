@@ -11,7 +11,7 @@ Window {
     height: 600
 
     minimumWidth: 1000
-    minimumHeight: 400
+    minimumHeight: 550
 
     visible: true
 
@@ -544,7 +544,7 @@ Window {
                             // Create a vertical ScrollBar for this Flickable component.
                             ScrollBar.vertical: ScrollBar {
                                 id: verticalScrollBar
-                                 policy: ScrollBar.AlwaysOn // Always display the vertical scrollbar.
+                                policy: ScrollBar.AlwaysOn // Always display the vertical scrollbar.
                             }
 
                             // Create a horizontal ScrollBar for this Flickable component.
@@ -557,8 +557,8 @@ Window {
                             Keys.onUpPressed: verticalScrollBar.decrease()
                             Keys.onDownPressed: verticalScrollBar.increase()
 
-                            Keys.onLeftPressed: horizontalScrollBar.decrease()
-                            Keys.onRightPressed: horizontalScrollBar.increase()
+                            // Keys.onLeftPressed: horizontalScrollBar.decrease()
+                            // Keys.onRightPressed: horizontalScrollBar.increase()
 
                             // Adjust the vertical scroll bar when using the mouse wheel.
                             MouseArea{
@@ -878,6 +878,6 @@ Window {
 
 /*##^##
 Designer {
-    D{i:0;formeditorZoom:1.1}
+    D{i:0;formeditorZoom:0.66}
 }
 ##^##*/
