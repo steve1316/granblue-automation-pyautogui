@@ -223,12 +223,17 @@ class Debug:
 
             # Then click the mission and confirm the location for the Summon Selection Screen.
             self.game.mouse_tools.move_and_click_point(angel_halo_VH[0], angel_halo_VH[1])
+            
+            # Refill using Half Elixir if necessary.
+            self.game.wait_for_ping(1)
+            self.game.check_for_ap()
+            
             self.game.image_tools.confirm_location("select_summon")
 
             # Locate Dark summons and click on the specified Summon.
             self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Selecting the first found FLB Hades Summon...")
             self.game.find_summon_element("dark")
-            summon_check = self.game.find_summon("hades_flb")
+            summon_check = self.game.find_summon("hades")
 
             if (summon_check == False):
                 # Repeat trying to find the specified summon until tries run out.
