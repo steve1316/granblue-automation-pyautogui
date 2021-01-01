@@ -31,7 +31,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] Save each message in the Queue to a list in memory. When frontend requests for a saved log file, save the list in memory to a new log file.
 - [x] Clean up Combat Mode by having all absolute coordinates in variables at the top.
 - [x] Consolidate all finding button and clicking it logic into one function.
-- [ ] Implement detection if party wiped during Combat Mode.
+- [x] Implement detection if party wiped during Combat Mode.
 - [ ] Implement selection from list of Summons in order of most preferred to least. If none after several tries, pick the very first Summon randomly.
 - [ ] (LOW PRIORITY - After 1.0) Remove all sys.exit() code.
 - [ ] (LOW PRIORITY - After 1.0) Implement Special Quests navigation/items.
