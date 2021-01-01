@@ -19,7 +19,7 @@ class Tester:
         self.debug = None
         
     def run_bot(self, queue, isBotRunning, combat_script, debug_mode):
-        self.game = Game(queue=queue, isBotRunning=isBotRunning, combat_script=combat_script, custom_mouse_speed=0.5, debug_mode=debug_mode)
+        self.game = Game(queue=queue, isBotRunning=isBotRunning, combat_script=combat_script, custom_mouse_speed=0.25, debug_mode=debug_mode)
         self.map_selection = MapSelection(self.game)
         self.debug = Debug(self.game, isBotRunning=isBotRunning, combat_script=combat_script)
         
@@ -36,8 +36,8 @@ class Tester:
         # self.debug.test_find_summon_element_tabs()
 
         # Test Combat Mode.
-        # self.debug.test_combat_mode()
-        self.debug.test_combat_mode2()
+        self.debug.test_combat_mode()
+        # self.debug.test_combat_mode2()
         
         isBotRunning.value = 1
 
@@ -134,8 +134,8 @@ class MainWindow(QObject):
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
-    app.setOrganizationName("somename");
-    app.setOrganizationDomain("somename");
+    app.setOrganizationName("somename")
+    app.setOrganizationDomain("somename")
     engine = QQmlApplicationEngine()
 
     # Get the Context.
