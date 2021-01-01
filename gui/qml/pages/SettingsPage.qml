@@ -23,7 +23,7 @@ Item{
             anchors.left: parent.left
             anchors.top: combatScriptTextField.bottom
             enabled: false
-            anchors.topMargin: 50
+            anchors.topMargin: 25
             anchors.leftMargin: 20
 
             displayText: qsTr("Please select a item to farm.")
@@ -205,7 +205,7 @@ Item{
             anchors.left: parent.left
             anchors.top: itemComboBox.bottom
             enabled: false
-            anchors.topMargin: 50
+            anchors.topMargin: 25
             anchors.leftMargin: 20
 
             displayText: qsTr("Please select a mission.")
@@ -311,6 +311,103 @@ Item{
 
             visible: false
         }
+
+        TextField {
+            id: amountOfItemTextField
+            y: 150
+            height: 40
+            text: ""
+            anchors.left: missionComboBox.right
+            anchors.right: parent.right
+            anchors.leftMargin: 20
+            anchors.rightMargin: 20
+            placeholderText: qsTr("#")
+
+            enabled: false
+        }
+
+        Label {
+            id: itemSelectionTextFieldLabel
+            x: 20
+            y: 131
+            width: 200
+            height: 13
+            visible: false
+            color: "#00ff00"
+            text: qsTr("Item selected successfuly")
+            anchors.top: itemComboBox.bottom
+            anchors.topMargin: 5
+        }
+
+        Label {
+            id: missionSelectionTexFieldLabel
+            x: 20
+            y: 196
+            width: 200
+            height: 13
+            visible: false
+            color: "#ffaa00"
+            text: qsTr("Now select the amount to farm for in the right text box")
+            anchors.top: missionComboBox.bottom
+            anchors.topMargin: 5
+        }
+
+        ComboBox {
+            id: groupSelectionComboBox
+            x: 20
+            y: 289
+            width: 100
+            height: 40
+            enabled: false
+        }
+
+        ComboBox {
+            id: partySelectionComboBox
+            x: 180
+            y: 289
+            width: 100
+            height: 40
+            enabled: false
+        }
+
+        // Clicking this button will open up the overlay that will contain selectable Summons.
+        Button {
+            id: button
+            x: 20
+            y: 214
+            text: qsTr("Select Summon")
+
+            onClicked: popup.open()
+
+            Popup {
+                id: popup
+
+                x: Math.round((parent.width - width) / 2)
+                y: Math.round((parent.height - height) / 2)
+
+                width: 400
+                height: 400
+                modal: true
+
+                // Background overlay that dims the things behind this object.
+                Overlay.modal: Rectangle {
+                    id: rectangle
+                    color: "#aacfdbe7"
+                }
+
+                // This Rectangle is where the Flickable component is drawn on.
+                background: Rectangle {
+                    color: "#7e7e7e"
+                    border.color: "#49496b"
+                    border.width: 1
+                    radius: 10
+                }
+
+                CustomFlickableRepeaterForSummons {
+                    
+                }
+            }
+        }
     }
 
     Connections{
@@ -330,6 +427,6 @@ Item{
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:2;height:453;width:300}
+    D{i:0;autoSize:true;formeditorZoom:1.66;height:453;width:300}
 }
 ##^##*/
