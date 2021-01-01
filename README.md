@@ -46,9 +46,9 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] (LOW PRIORITY) Eventually remove dependence on Game class from ImageUtils and MouseUtils and move any relevant functionality over to the Game class.
 ## Frontend
 - [x] Add a Save Logs button.
-- [ ] Add a Group/Party selector.
-- [ ] Add a Summons selector. (Maybe with pictures?)
-- [ ] Add a selector for the amount of the specified item to be farmed.
+- [x] Add a Group/Party selector.
+- [x] Add a Summons selector. (Maybe with pictures?)
+- [x] Add a selector for the amount of the specified item to be farmed.
 - [ ] (LOW PRIORITY) Implement a user-defined timer for how long the bot can run for.
 - [ ] (LOW PRIORITY) Add Special Quest items.
 - [ ] (LOW PRIORITY) Add Coop items.
