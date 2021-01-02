@@ -31,16 +31,19 @@ Flickable {
             ListElement {
                 imageSource: "../../../images/summons/icons/colossus_omega_icon.png"
                 name: "Colossus Omega"
+                element: "Fire"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/shiva_icon.png"
                 name: "Shiva"
+                element: "Fire"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/agni_icon.png"
                 name: "Agni"
+                element: "Fire"
             }
         }
 
@@ -50,21 +53,25 @@ Flickable {
             ListElement {
                 imageSource: "../../../images/summons/icons/leviathan_omega_icon.png"
                 name: "Leviathan Omega"
+                element: "Water"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/europa_icon.png"
                 name: "Europa"
+                element: "Water"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/varuna_icon.png"
                 name: "Varuna"
+                element: "Water"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/bonito_icon.png"
                 name: "Bonito"
+                element: "Water"
             }
         }
 
@@ -74,16 +81,19 @@ Flickable {
             ListElement {
                 imageSource: "../../../images/summons/icons/yggdrasil_omega_icon.png"
                 name: "Yggdrasil Omega"
+                element: "Earth"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/godsworn_alexiel_icon.png"
                 name: "Godsworn Alexiel"
+                element: "Earth"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/titan_icon.png"
                 name: "Titan"
+                element: "Earth"
             }
         }
 
@@ -93,16 +103,19 @@ Flickable {
             ListElement {
                 imageSource: "../../../images/summons/icons/tiamat_omega_icon.png"
                 name: "Tiamat Omega"
+                element: "Wind"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/grimnir_icon.png"
                 name: "Grimnir"
+                element: "Wind"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/zephyrus_icon.png"
                 name: "Zephyrus"
+                element: "Wind"
             }
         }
 
@@ -112,16 +125,19 @@ Flickable {
             ListElement {
                 imageSource: "../../../images/summons/icons/luminiera_omega_icon.png"
                 name: "Luminiera Omega"
+                element: "Light"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/lucifer_icon.png"
                 name: "Lucifer"
+                element: "Light"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/zeus_icon.png"
                 name: "Zeus"
+                element: "Light"
             }
         }
 
@@ -131,16 +147,19 @@ Flickable {
             ListElement {
                 imageSource: "../../../images/summons/icons/celeste_omega_icon.png"
                 name: "Celeste Omega"
+                element: "Dark"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/bahamut_icon.png"
                 name: "Bahamut"
+                element: "Dark"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/hades_icon.png"
                 name: "Hades"
+                element: "Dark"
             }
         }
 
@@ -150,26 +169,31 @@ Flickable {
             ListElement {
                 imageSource: "../../../images/summons/icons/huanglong_icon.png"
                 name: "Huanglong"
+                element: "Misc"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/qilin_icon.png"
                 name: "Qilin"
+                element: "Misc"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/kaguya_icon.png"
                 name: "Kaguya"
+                element: "Misc"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/white_rabbit_icon.png"
                 name: "White Rabbit"
+                element: "Misc"
             }
 
             ListElement {
                 imageSource: "../../../images/summons/icons/black_rabbit_icon.png"
                 name: "Black Rabbit"
+                element: "Misc"
             }
         }
 
@@ -195,7 +219,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        console.log("Selected " + name)
+                        backend.update_summon_name(name, element)
                         popup.close()
                     }
                 }
@@ -235,7 +259,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        console.log("Selected " + name)
+                        backend.update_summon_name(name, element)
                         popup.close()
                     }
                 }
@@ -275,7 +299,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        console.log("Selected " + name)
+                        backend.update_summon_name(name, element)
                         popup.close()
                     }
                 }
@@ -315,7 +339,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        console.log("Selected " + name)
+                        backend.update_summon_name(name, element)
                         popup.close()
                     }
                 }
@@ -355,7 +379,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        console.log("Selected " + name)
+                        backend.update_summon_name(name, element)
                         popup.close()
                     }
                 }
@@ -395,7 +419,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        console.log("Selected " + name)
+                        backend.update_summon_name(name, element)
                         popup.close()
                     }
                 }
@@ -435,7 +459,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        console.log("Selected " + name)
+                        backend.update_summon_name(name, element)
                         popup.close()
                     }
                 }
