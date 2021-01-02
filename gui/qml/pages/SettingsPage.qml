@@ -15,6 +15,64 @@ Item{
         anchors.leftMargin: 0
         anchors.topMargin: 0
 
+        TextField {
+            id: combatScriptTextField
+            anchors.left: parent.left
+            anchors.top: parent.top
+            horizontalAlignment: Text.AlignHCenter
+            anchors.topMargin: 20
+            anchors.leftMargin: 20
+
+            readOnly: true
+
+            placeholderText: qsTr("Combat Script: None selected")
+        }
+
+        Label {
+            id: combatScriptTextFieldLabel
+            x: 20
+            width: 200
+            height: 13
+            color: "#00ff00"
+            text: qsTr("Combat script loaded successfully")
+            anchors.top: combatScriptTextField.bottom
+            anchors.topMargin: 5
+
+            visible: false
+        }
+
+        CustomButton{
+            id: buttonOpenFile
+            y: 20
+
+            text: qsTr("Open")
+            anchors.left: combatScriptTextField.right
+            anchors.right: parent.right
+            anchors.rightMargin: 20
+            anchors.leftMargin: 20
+
+            height: 40
+
+            onPressed: {
+                fileOpen.open()
+            }
+
+            FileDialog{
+                id: fileOpen
+
+                title: "Please choose a combat script file"
+
+                // Dialog will default to the /scripts/ folder in the root of the bot directory.
+                folder: "../../../scripts/"
+                selectMultiple: false
+                nameFilters: ["Text File (*.txt)"]
+
+                onAccepted: {
+                    backend.open_file(fileOpen.fileUrl)
+                }
+            }
+        }
+
         // Select the item and the island that the item is farmed in.
         ComboBox {
             id: itemComboBox
@@ -105,8 +163,6 @@ Item{
 
             onCurrentIndexChanged: {
                 itemComboBox.displayText = qsTr(itemComboBox.model[currentIndex].text)
-                logTextArea.append("\nIsland selected: " + itemComboBox.model[currentIndex].map)
-                logTextArea.append("Item selected: " + itemComboBox.model[currentIndex].text)
 
                 // Enable the mission ComboBox.
                 missionComboBox.enabled = true
@@ -190,11 +246,34 @@ Item{
                 // Reset the mission ComboBox back to default.
                 missionComboBox.currentIndex = 0
                 missionComboBox.displayText = qsTr("Please select a mission.")
+                
+                // Now update the selected item to farm in the backend.
+                backend.update_item_name(itemComboBox.model[currentIndex].text)
+
+                // Tell the backend that its not ready to start yet.
+                backend.check_bot_ready(false)
+
+                // Finally, reveal the Item Selection success message.
+                itemSelectionTextFieldLabel.visible = true
             }
 
             onPressedChanged: {
                 itemComboBox.popup.height = 300
             }
+        }
+
+        // The Item Selection success message.
+        Label {
+            id: itemSelectionTextFieldLabel
+            x: 20
+            y: 131
+            width: 200
+            height: 13
+            visible: false
+            color: "#00ff00"
+            text: qsTr("Item selected successfuly")
+            anchors.top: itemComboBox.bottom
+            anchors.topMargin: 5
         }
 
         // Select mission(s) specific to each item.
@@ -225,47 +304,288 @@ Item{
 
             model: []
 
-            onCurrentIndexChanged: {
-                missionComboBox.displayText = qsTr(missionComboBox.model[currentIndex].text)
-                logTextArea.append("\nMission selected: " + missionComboBox.model[currentIndex].text)
-            }
+            onVisibleChanged: {
+                if(missionComboBox.displayText === qsTr("Please select a mission.") && missionComboBox.enabled == true){
+                    // Inform the user with a message instructing them to select a mission from the ComboBox above.
+                    missionSelectionTextFieldLabel.visible = true
+                    missionSelectionTextFieldLabel.text = qsTr("Select a mission above")
+                    missionSelectionTextFieldLabel.color = "#ff0000"
 
-            onDisplayTextChanged: backend.check_bot_ready(missionComboBox.displayText)
-        }
+                    backend.check_bot_ready(false)
+                }else if(missionComboBox.displayText !== qsTr("Please select a mission.") && missionComboBox.enabled == true && partySelectionComboBox.enabled == true){
+                    // Inform the user with a message stating that selecting a mission was successful and set the bot as ready to start if and only if the user already set the 
+                    // other settings before. This can happen if they, after setting their settings, went back and changed their selected item and mission.
+                    missionSelectionTextFieldLabel.visible = true
+                    missionSelectionTextFieldLabel.text = qsTr("Mission selected successfully")
+                    missionSelectionTextFieldLabel.color = "#00ff00"
 
-        CustomButton{
-            id: buttonOpenFile
-            y: 20
-
-            text: qsTr("Open")
-            anchors.left: combatScriptTextField.right
-            anchors.right: parent.right
-            anchors.rightMargin: 20
-            anchors.leftMargin: 20
-
-            height: 40
-
-            onPressed: {
-                fileOpen.open()
-            }
-
-            FileDialog{
-                id: fileOpen
-
-                title: "Please choose a combat script file"
-
-                // Dialog will default to the /scripts/ folder in the root of the bot directory.
-                folder: "../../../scripts/"
-                selectMultiple: false
-                nameFilters: ["Text File (*.txt)"]
-
-                onAccepted: {
-                    backend.open_file(fileOpen.fileUrl)
+                    backend.check_bot_ready(true)
                 }
             }
 
+            onDisplayTextChanged: {
+                // If this Mission Selection ComboBox was reset to default, reset the instructional message back to informing them that they need to select a new mission.
+                if(missionComboBox.displayText === qsTr("Please select a mission.") && missionComboBox.enabled == true){
+                    missionSelectionTextFieldLabel.visible = true
+                    missionSelectionTextFieldLabel.text = qsTr("Select a mission above")
+                    missionSelectionTextFieldLabel.color = "#ff0000"
+
+                    backend.check_bot_ready(false)
+                }else if(missionComboBox.displayText !== qsTr("Please select a mission.") && missionComboBox.enabled == true && partySelectionComboBox.enabled == true){
+                    // This occurs when the user went back after setting their settings and changed their selected item and mission.
+                    missionSelectionTextFieldLabel.visible = true
+                    missionSelectionTextFieldLabel.text = qsTr("Mission selected successfully")
+                    missionSelectionTextFieldLabel.color = "#00ff00"
+
+                    backend.check_bot_ready(true)
+                }else if(missionComboBox.displayText !== qsTr("Please select a mission.") && missionComboBox.enabled == true && partySelectionComboBox.enabled != true){
+                    // Move the user to the next step by enabling the # of Items selector.
+                    missionSelectionTextFieldLabel.visible = true
+                    missionSelectionTextFieldLabel.text = qsTr("Mission selected successfully")
+                    missionSelectionTextFieldLabel.color = "#00ff00"
+
+                    amountOfItemTextField.enabled = true
+                }
+            }
+
+            onCurrentIndexChanged: {
+                missionComboBox.displayText = qsTr(missionComboBox.model[currentIndex].text)
+
+                // Update the selected mission in the backend.
+                backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[0].text)
+
+                // Reveal the Mission Selection success message.
+                if(botReadyLabel.text !== qsTr("Bot is ready to start")){
+                    missionSelectionTextFieldLabel.visible = true
+                }else if(summonSelectionLabel.text === qsTr("# of Items and Summon selected successfully") && summonSelectionLabel.visible == true){
+                    // Otherwise, tell the bot that it is ready to go and to just use the settings that the user set before changing the item and mission.
+                    backend.check_bot_ready(true)
+                }
+            }
         }
 
+        // The Mission Selection success message.
+        Label {
+            id: missionSelectionTextFieldLabel
+
+            x: 20
+            y: 196
+            width: 200
+            height: 13
+            visible: false
+
+            color: "#00ff00"
+            text: qsTr("Mission selected successfully.")
+            anchors.top: missionComboBox.bottom
+            anchors.topMargin: 5
+
+            onVisibleChanged: {
+                // If this message is revealed, enable the # of Item Selection ComboBox as well.
+                if(missionSelectionTextFieldLabel.visible == true && missionComboBox.displayText !== qsTr("Please select a mission.")){
+                    amountOfItemTextField.enabled = true
+                }
+            }
+        }
+
+        // Select the amount of items that the user wants the bot to acquire.
+        ComboBox {
+            id: amountOfItemTextField
+
+            width: 100
+            height: 40
+            anchors.left: parent.left
+            anchors.top: missionComboBox.bottom
+
+            textRole: "text"
+            displayText: qsTr("# of Item")
+            anchors.leftMargin: 20
+            anchors.topMargin: 25
+
+            currentIndex: 0
+            enabled: false
+
+            // Have the options go from 1 to 999 inclusive.
+            delegate: ItemDelegate {
+                width: missionComboBox.width
+                text: index + 1
+
+                font.weight: missionComboBox.currentIndex === index ? Font.DemiBold : Font.Normal
+                highlighted: ListView.isCurrentItem
+            }
+
+            model: 999
+
+            onEnabledChanged: {
+                // Reveal the instructional message below this ComboBox and change its color to orange to draw the user's eyes to it
+                // while resetting this ComboBox's default text.
+                if(amountOfItemTextField.enabled == true){
+                    amountOfItemTextField.displayText = qsTr("# of Item")
+                    summonSelectionLabel.visible = true
+                    summonSelectionLabel.color = "#fc8c03"
+                }
+            }
+
+            onCurrentIndexChanged: {
+                // Update the backend with the # of Items selected.
+                amountOfItemTextField.displayText = currentIndex + 1
+                backend.update_item_amount(amountOfItemTextField.displayText)
+
+                // Now enable the Summon Selection button and update the instructional message below.
+                if(summonSelectionLabel.text === qsTr("Select item amount to farm above")){
+                    summonButton.enabled = true
+                    summonSelectionLabel.text = qsTr("Now select your Summon")
+                }
+            }
+        }
+
+        // Clicking this button will open up the overlay that will contain selectable Summons.
+        Button {
+            id: summonButton
+
+            text: qsTr("Select Summon")
+            anchors.left: parent.left
+            anchors.top: missionComboBox.bottom
+            anchors.leftMargin: 180
+            anchors.topMargin: 25
+
+            enabled: false
+
+            // On clicked, open up the overlay containing the selectable Summons.
+            onClicked: popup.open()
+
+            Popup {
+                id: popup
+
+                x: Math.round((parent.width - width - 300) / 2)
+                y: Math.round((parent.height - height) / 2)
+
+                width: 400
+                height: 400
+                modal: true // The modal dims the background behind the Rectangle that will hold the list of Summons.
+
+                // This Rectangle is where the Flickable component is drawn on.
+                background: Rectangle {
+                    color: "#7e7e7e"
+                    border.color: "#49496b"
+                    border.width: 1
+                    radius: 10
+                }
+
+                // This will contain all the Summons supported by the bot.
+                CustomFlickableRepeaterForSummons { }
+            }
+        }
+
+        // The Summon Selection success message. Defaults to instructing the user to select # of Items.
+        Label {
+            id: summonSelectionLabel
+
+            x: 20
+            width: 200
+            height: 13
+            visible: false
+
+            color: "#fc8c03"
+            text: qsTr("Select item amount to farm above")
+            anchors.top: summonButton.bottom
+            anchors.topMargin: 5
+        }
+
+        // Select the Group that the desired Party is under.
+        ComboBox {
+            id: groupSelectionComboBox
+
+            x: 20
+            y: 289
+            width: 100
+            height: 40
+            enabled: false
+
+            currentIndex: 0
+
+            delegate: ItemDelegate {
+                width: groupSelectionComboBox.width
+                text: modelData.text
+
+                font.weight: groupSelectionComboBox.currentIndex === index ? Font.DemiBold : Font.Normal
+                highlighted: ListView.isCurrentItem
+            }
+
+            model: [
+                { text: "Group 1" },
+                { text: "Group 2" },
+                { text: "Group 3" },
+                { text: "Group 4" },
+                { text: "Group 5" },
+                { text: "Group 6" },
+                { text: "Group 7" },
+            ]
+
+            onEnabledChanged: {
+                // Reset the index and default Group of the ComboBox and update the backend when this ComboBox gets enabled/reenabled.
+                if(groupSelectionComboBox.enabled == true){
+                    groupSelectionComboBox.currentIndex = 0
+                    groupSelectionComboBox.displayText = qsTr(groupSelectionComboBox.model[currentIndex].text)
+                    backend.update_group_number(groupSelectionComboBox.model[currentIndex].text)
+                }
+            }
+
+            onCurrentIndexChanged: {
+                // Update the text displayed and the backend with the selected Group.
+                groupSelectionComboBox.displayText = qsTr(groupSelectionComboBox.model[currentIndex].text)
+                backend.update_group_number(groupSelectionComboBox.model[currentIndex].text)
+            }
+        }
+
+        // Select the desired Party.
+        ComboBox {
+            id: partySelectionComboBox
+
+            x: 180
+            y: 289
+            width: 100
+            height: 40
+            enabled: false
+
+            currentIndex: 0
+
+            delegate: ItemDelegate {
+                width: partySelectionComboBox.width
+                text: modelData.text
+
+                font.weight: partySelectionComboBox.currentIndex === index ? Font.DemiBold : Font.Normal
+                highlighted: ListView.isCurrentItem
+            }
+
+            model: [
+                { text: "Party 1" },
+                { text: "Party 2" },
+                { text: "Party 3" },
+                { text: "Party 4" },
+                { text: "Party 5" },
+                { text: "Party 6" },
+            ]
+
+            onEnabledChanged: {
+                if(partySelectionComboBox.enabled == true){
+                    // Reset the index and default Party of the ComboBox and update the backend when this ComboBox gets enabled/reenabled.
+                    partySelectionComboBox.currentIndex = 0
+                    partySelectionComboBox.displayText = qsTr(partySelectionComboBox.model[currentIndex].text)
+                    backend.update_party_number(partySelectionComboBox.model[currentIndex].text)
+
+                    // Enable the Start Button.
+                    backend.check_bot_ready(true)
+                }
+            }
+
+            onCurrentIndexChanged: {
+                // Update the text displayed and the backend with the selected Party.
+                partySelectionComboBox.displayText = qsTr(partySelectionComboBox.model[currentIndex].text)
+                backend.update_party_number(partySelectionComboBox.model[currentIndex].text)
+            }
+        }
+
+        // Enable/Disable the Debug Mode on whether or not the user wants to see more informational messages in the log.
         CustomCheckBox {
             id: debugModeCheckBox
 
@@ -286,127 +606,25 @@ Item{
             }
         }
 
-        TextField {
-            id: combatScriptTextField
-            anchors.left: parent.left
-            anchors.top: parent.top
-            horizontalAlignment: Text.AlignHCenter
-            anchors.topMargin: 20
-            anchors.leftMargin: 20
-
-            readOnly: true
-
-            placeholderText: qsTr("Combat Script: None selected")
-        }
-
         Label {
-            id: combatScriptTextFieldLabel
-            x: 20
-            width: 200
-            height: 13
-            color: "#00ff00"
-            text: qsTr("Combat script loaded successfully")
-            anchors.top: combatScriptTextField.bottom
-            anchors.topMargin: 5
+            id: botReadyLabel
 
-            visible: false
-        }
-
-        TextField {
-            id: amountOfItemTextField
-            y: 150
-            height: 40
-            text: ""
-            anchors.left: missionComboBox.right
-            anchors.right: parent.right
-            anchors.leftMargin: 20
-            anchors.rightMargin: 20
-            placeholderText: qsTr("#")
-
-            enabled: false
-        }
-
-        Label {
-            id: itemSelectionTextFieldLabel
-            x: 20
-            y: 131
-            width: 200
-            height: 13
-            visible: false
-            color: "#00ff00"
-            text: qsTr("Item selected successfuly")
-            anchors.top: itemComboBox.bottom
-            anchors.topMargin: 5
-        }
-
-        Label {
-            id: missionSelectionTexFieldLabel
-            x: 20
-            y: 196
-            width: 200
-            height: 13
-            visible: false
-            color: "#ffaa00"
-            text: qsTr("Now select the amount to farm for in the right text box")
-            anchors.top: missionComboBox.bottom
-            anchors.topMargin: 5
-        }
-
-        ComboBox {
-            id: groupSelectionComboBox
-            x: 20
-            y: 289
-            width: 100
-            height: 40
-            enabled: false
-        }
-
-        ComboBox {
-            id: partySelectionComboBox
             x: 180
-            y: 289
+            y: 393
             width: 100
             height: 40
-            enabled: false
-        }
+            color: "#ff0000"
 
-        // Clicking this button will open up the overlay that will contain selectable Summons.
-        Button {
-            id: button
-            x: 20
-            y: 214
-            text: qsTr("Select Summon")
+            text: qsTr("Bot is not ready to start")
+            font.pointSize: 10
 
-            onClicked: popup.open()
-
-            Popup {
-                id: popup
-
-                x: Math.round((parent.width - width) / 2)
-                y: Math.round((parent.height - height) / 2)
-
-                width: 400
-                height: 400
-                modal: true
-
-                // Background overlay that dims the things behind this object.
-                Overlay.modal: Rectangle {
-                    id: rectangle
-                    color: "#aacfdbe7"
-                }
-
-                // This Rectangle is where the Flickable component is drawn on.
-                background: Rectangle {
-                    color: "#7e7e7e"
-                    border.color: "#49496b"
-                    border.width: 1
-                    radius: 10
-                }
-
-                CustomFlickableRepeaterForSummons {
-                    
-                }
-            }
+            anchors.right: parent.right
+            anchors.bottom: parent.bottom
+            horizontalAlignment: Text.AlignLeft
+            verticalAlignment: Text.AlignVCenter
+            wrapMode: Text.WordWrap
+            anchors.bottomMargin: 20
+            anchors.rightMargin: 20
         }
     }
 
@@ -419,8 +637,34 @@ Item{
             combatScriptTextFieldLabel.visible = true
             logTextArea.append("\nCombat script selected: " + scriptName)
 
-            // Enable the item selection combobox.
+            // Enable the Item Selection ComboBox.
             itemComboBox.enabled = true
+        }
+
+        // Output update messages to the log.
+        function onUpdateMessage(updateMessage){
+            logTextArea.append("\n***************************\n" + updateMessage + "\n***************************")
+        }
+
+        // Enable the group and party selectors after the backend receives the user-selected Summon. 
+        // Update the informational message to indicate success.
+        function onEnableGroupAndPartySelectors(){
+            summonSelectionLabel.text = qsTr("# of Items and Summon selected successfully")
+            summonSelectionLabel.color = "#00ff00"
+
+            groupSelectionComboBox.enabled = true
+            partySelectionComboBox.enabled = true     
+        }
+
+        // Update the label at the bottom right on the ready state of the bot.
+        function onCheckBotReady(ready_flag){
+            if(ready_flag){
+                botReadyLabel.text = qsTr("Bot is ready to start")
+                botReadyLabel.color = "#00ff00"
+            }else{
+                botReadyLabel.text = qsTr("Bot is not ready to start")
+                botReadyLabel.color = "#ff0000"
+            }
         }
     }
 }
