@@ -1,0 +1,11 @@
+Turn 1:
+	summon(6)
+end
+
+Turn 1:
+	character2.useSkill(1)
+end
+
+Turn 1:
+	character2.useSkill(2)
+end
