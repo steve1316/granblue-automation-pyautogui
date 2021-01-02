@@ -35,7 +35,7 @@ class Debug:
         self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing Farming Mode for 10x Fine Sand Bottles from Special Op's Request on Valtz Duchy...")
         self.game.print_and_save("################################################################################")
         
-        self.game.start_farming_mode(summon_element_name="water", summon_name="leviathan_omega_ulb", group_number=1, party_number=3, 
+        self.game.start_farming_mode(summon_element_name="water", summon_name="leviathan_omega", group_number=1, party_number=3, 
                                      map_mode="quest", map_name="Valtz Duchy", item_name="Fine Sand Bottle", item_amount_to_farm=10, 
                                      mission_name="Special Op's Request")
         
