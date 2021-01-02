@@ -59,7 +59,7 @@ class Game:
         self.suppress_error = True
 
         # The amount of time to pause after each call to pyautogui. This applies to calls inside mouse_utils and image_utils.
-        pyautogui.PAUSE = 1.0
+        pyautogui.PAUSE = 0.5
 
         # Calibrate the dimensions of the game window on bot launch.
         self.calibrate_game_window()
@@ -353,7 +353,7 @@ class Game:
         else:
             x = set_location[0] + 10
 
-        self.mouse_tools.click_point_instantly(x, y)
+        self.mouse_tools.move_and_click_point(x, y)
 
         # Now select the correct Party.
         if(self.debug_mode):
@@ -374,7 +374,7 @@ class Game:
         elif(party_number == 6):
             x = set_location[0] - 24
 
-        self.mouse_tools.click_point_instantly(x, y)
+        self.mouse_tools.move_and_click_point(x, y)
 
         if(self.debug_mode):
             self.print_and_save(f"\n{self.printtime()} [SUCCESS] Successfully selected Party {party_number}. Now starting the mission.")
@@ -415,7 +415,7 @@ class Game:
             if(self.debug_mode):
                 self.print_and_save(f"{self.printtime()} [DEBUG] Detected dialog window from Lyria/Vyrn on Combat Screen. Closing it now...")
 
-            self.mouse_tools.click_point_instantly(dialog_location[0] + 180, dialog_location[1] - 51)
+            self.mouse_tools.move_and_click_point(dialog_location[0] + 180, dialog_location[1] - 51)
 
         return None
     
@@ -429,19 +429,23 @@ class Game:
         Returns:
             None
         """
-        if(self.image_tools.confirm_location("not_enough_ap", tries=1)):
+        if(self.image_tools.confirm_location("not_enough_ap", tries=2)):
             # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full.
             # TODO: Implement check for when the user ran out of both of them, or one of them.
             if(use_full_elixirs == False):
                 self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Half Elixir...")
-                self.find_and_click_button("refill_half_ap")
+                half_ap_location = self.image_tools.find_button("refill_half_ap")
+                self.mouse_tools.move_and_click_point(half_ap_location[0], half_ap_location[1] + 175)
             else:
                 self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Full Elixir...")
-                self.find_and_click_button("refill_full_ap")
+                full_ap_location = self.image_tools.find_button("refill_full_ap")
+                self.mouse_tools.move_and_click_point(full_ap_location[0], full_ap_location[1] + 175)
             
             # Press the OK button to move to the Summon Selection Screen.
             self.wait_for_ping(1)
             self.find_and_click_button("ok")
+        else:
+            self.print_and_save(f"\n{self.printtime()} [INFO] AP is still available. Moving on...")
         
         return None
 
@@ -467,7 +471,7 @@ class Game:
         elif(character_number == 4):
             x = self.attack_button_location[0] - 76
 
-        self.mouse_tools.click_point_instantly(x, y)
+        self.mouse_tools.move_and_click_point(x, y)
         self.wait_for_ping(1)
 
         return None
@@ -499,7 +503,7 @@ class Game:
             self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 4.")
             x = self.attack_button_location[0] + 39
 
-        self.mouse_tools.click_point_instantly(x, y)
+        self.mouse_tools.move_and_click_point(x, y)
         self.wait_for_ping(2)
 
         return None
@@ -570,8 +574,8 @@ class Game:
                             
                             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
 
-                            self.mouse_tools.click_point_instantly(self.attack_button_location[0], self.attack_button_location[1])
-                            self.wait_for_ping(6 + number_of_charge_attacks)
+                            self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
+                            self.wait_for_ping(4 + number_of_charge_attacks)
                             
                             turn_number += 1
                            
@@ -584,7 +588,7 @@ class Game:
                             if(self.debug_mode):
                                 self.print_and_save(f"{self.printtime()} [DEBUG] Detected the Next Button. Clicking it now...")
 
-                            self.mouse_tools.click_point_instantly(next_button_location[0], next_button_location[1])
+                            self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                             self.wait_for_ping(4)
                             
                         # Check for battle end.
@@ -638,7 +642,7 @@ class Game:
                                 self.use_character_skill(character_selected, skill)
 
                             # Now click the Back button.
-                            self.mouse_tools.click_point_instantly(self.back_button_location[0], self.back_button_location[1])
+                            self.mouse_tools.move_and_click_point(self.back_button_location[0], self.back_button_location[1])
 
                             # Continue to the next line for execution.
                             line_number += 1
@@ -680,7 +684,7 @@ class Game:
                                         self.find_and_click_button("summon_cancel")
                                         
                                         # Now click the Back button.
-                                        self.mouse_tools.click_point_instantly(self.attack_button_location[0] - 322, self.attack_button_location[1])
+                                        self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 322, self.attack_button_location[1])
                                 
                                 # Continue to the next line for execution.
                                 line_number += 1
@@ -692,8 +696,8 @@ class Game:
                     
                     self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
 
-                    self.mouse_tools.click_point_instantly(self.attack_button_location[0], self.attack_button_location[1])
-                    self.wait_for_ping(6 + number_of_charge_attacks)
+                    self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
+                    self.wait_for_ping(4 + number_of_charge_attacks)
 
                     turn_number += 1
                     
@@ -706,7 +710,7 @@ class Game:
                         if(self.debug_mode):
                             self.print_and_save(f"{self.printtime()} [DEBUG] Detected Next Button. Clicking it now...")
 
-                        self.mouse_tools.click_point_instantly(next_button_location[0], next_button_location[1])
+                        self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                         self.wait_for_ping(4)
 
                 # Continue to the next line for execution.
@@ -734,16 +738,16 @@ class Game:
 
                     self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
 
-                    self.mouse_tools.click_point_instantly(self.attack_button_location[0], self.attack_button_location[1])
-                    self.wait_for_ping(6 + number_of_charge_attacks)
+                    self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
+                    self.wait_for_ping(4 + number_of_charge_attacks)
                     
                     turn_number += 1
                     
                     # Check to see if the party wiped.
                     self.party_wipe_check()
 
-                elif(next_button_location != None and self.retreat_check):
-                    self.mouse_tools.click_point_instantly(next_button_location[0], next_button_location[1])
+                elif(next_button_location != None):
+                    self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                     self.wait_for_ping(4)
 
             # Try to click any detected "OK" Buttons several times.
@@ -751,11 +755,16 @@ class Game:
                 self.print_and_save(f"\n{self.printtime()} [INFO] Bot has reached the Quest Results Screen.")
                 while (self.image_tools.confirm_location("loot_collected", tries=2) == False and not self.retreat_check):
                     ok_button_location = self.image_tools.find_button("ok", tries=1)
-
-                    # TODO: Look for "Close" Buttons here as well in case of reaching uncap.
+                    
+                    # Check for any uncap messages and attempt to close those messages.
+                    close_button_location = self.image_tools.find_button("friend_request_cancel", tries=1)
 
                     if(ok_button_location != None):
                         self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
+                        self.wait_for_ping(1)
+                        
+                    if(close_button_location != None):
+                        self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1])
                         self.wait_for_ping(1)
 
             self.print_and_save("\n################################################################################")
@@ -815,7 +824,7 @@ class Game:
                     
                     self.print_and_save("\n\n********************************************************************************")
                     self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained this run: {temp_amount}")
-                    self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained in total: {item_amount_farmed}")
+                    self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained in total: {item_amount_farmed} / {item_amount_to_farm}")
                     self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {amount_of_runs_finished}")
                     self.print_and_save("********************************************************************************\n")
                     
@@ -825,6 +834,7 @@ class Game:
                         
                         # Cancel any friend request popup.
                         if(self.image_tools.confirm_location("friend_request")):
+                            self.print_and_save(f"\n{self.printtime()} [INFO] Detected Friend Request window. Closing it now...")
                             self.find_and_click_button("friend_request_cancel")
                         
                         # Check for available AP.
