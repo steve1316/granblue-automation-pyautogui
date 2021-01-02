@@ -118,8 +118,8 @@ class ImageUtils:
         if(guibot_check):
             button_location = (button_location.target.x, button_location.target.y)
 
-        if(self.debug_mode):
-            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {button_name.upper()} Button at {button_location}.")
+        #if(self.debug_mode):
+        self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {button_name.upper()} Button at {button_location}.")
 
         if (confirm_location_check):
             self.confirm_location(button_name)
@@ -377,6 +377,7 @@ class ImageUtils:
                 # Create a screenshot in the region specified named "test" and save it in the test folder. Then use EasyOCR to extract text from it into a list.
                 test_image = pyautogui.screenshot("images/temp/test.png" ,region=(left, top, width, height))
                 # test_image.show() # Uncomment this line of code to see what the bot captured for the region of the detected text.
+                
                 result = self.reader.readtext("images/temp/test.png", detail=0)
                 
                 # Split any unnecessary characters in the extracted text until only the number remains.
