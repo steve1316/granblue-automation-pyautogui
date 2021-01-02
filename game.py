@@ -236,7 +236,7 @@ class Game:
         if (summon_location != None):
             self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1])
             
-            # TODO: Inform user that bot has found summon.
+            self.print_and_save(f"\n{self.printtime()} [INFO] Found {summon_name.upper()} Summon. Clicking it now...\n")
 
             return True
         else:
@@ -279,13 +279,13 @@ class Game:
         self.print_and_save(f"\n{self.printtime()} [INFO] Summons have now been refreshed.")
         return None
 
-    def find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 3):
+    def find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 2):
         """Select the specified group and party. It will then start the mission.
 
         Args:
             group_number (int): The group that the specified party in in.
             party_number (int): The specified party to start the mission with.
-            tries (int, optional): Number of tries before failing. Defaults to 3.
+            tries (int, optional): Number of tries before failing. Defaults to 2.
 
         Returns:
             None
@@ -648,6 +648,9 @@ class Game:
                             line_number += 1
                             i += 1
                             
+                            # Attempt to wait to see if the character one-shot the enemy or not.
+                            self.wait_for_ping(4)
+                            
                             # Check for battle end.
                             if(self.image_tools.confirm_location("exp_gained", tries=1) == True):
                                 break
@@ -678,7 +681,7 @@ class Game:
                                     ok_button_location = self.image_tools.find_button("ok", tries=1)
                                     if(ok_button_location != None):
                                         self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
-                                        self.wait_for_ping(3)
+                                        self.wait_for_ping(7) # This is 7 seconds to see if the Summon killed all enemies on screen.
                                     else:
                                         self.print_and_save(f"{self.printtime()} [COMBAT] Summon #{j} cannot be invoked due to current restrictions.")
                                         self.find_and_click_button("summon_cancel")
@@ -691,27 +694,37 @@ class Game:
                                 i += 1
 
                 if("end" in line):
-                    # Check if any character has 100% Charge Bar. If so, add 1 second per match.
-                    number_of_charge_attacks = self.find_charge_attacks()
-                    
-                    self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
-
-                    self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
-                    self.wait_for_ping(4 + number_of_charge_attacks)
-
-                    turn_number += 1
-                    
-                    # Check to see if the party wiped.
-                    self.party_wipe_check()
-
-                    # Try to find the "Next" Button only once per turn.
+                    # Attempt to find the "Next" Button first before attacking to preserve the turn number in the backend. If so, skip clicking the "Attack" Button.
+                    # Otherwise, click the "Attack" Button, increment the turn number, and then attempt to find the "Next" Button.
                     next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
                     if(next_button_location != None):
+                        self.print_and_save(f"{self.printtime()} [COMBAT] All enemies on screen have been eliminated before attacking. Preserving Turn {turn_number} by moving to the next Wave...")
                         if(self.debug_mode):
                             self.print_and_save(f"{self.printtime()} [DEBUG] Detected Next Button. Clicking it now...")
 
                         self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                         self.wait_for_ping(4)
+                    else:
+                        # Check if any character has 100% Charge Bar. If so, add 1 second per match.
+                        number_of_charge_attacks = self.find_charge_attacks()
+                        
+                        self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
+
+                        self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
+                        self.wait_for_ping(4 + number_of_charge_attacks)
+
+                        turn_number += 1
+                        
+                        # Check to see if the party wiped.
+                        self.party_wipe_check()
+                        
+                        next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
+                        if(next_button_location != None):
+                            if(self.debug_mode):
+                                self.print_and_save(f"{self.printtime()} [DEBUG] Detected Next Button. Clicking it now...")
+
+                            self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
+                            self.wait_for_ping(4)
 
                 # Continue to the next line for execution.
                 line_number += 1
@@ -802,12 +815,17 @@ class Game:
         if(self.map_selection.select_map(map_mode, map_name, item_name, mission_name)):
             amount_of_runs_finished = 0
             item_amount_farmed = 0
+            summon_check = False
             
             # Keep playing the mission until the bot gains enough of the item specified.
             while(item_amount_farmed < item_amount_to_farm):
-                # Select the specified Summon.
-                self.find_summon_element(summon_element_name)
-                self.find_summon(summon_name)
+                while(summon_check == False): 
+                    self.find_summon_element(summon_element_name)
+                    summon_check = self.find_summon(summon_name)
+                    
+                    # If the Summons were reset, head back to the location of the mission.
+                    if(summon_check == False):
+                        self.map_selection.select_map(map_mode, map_name, item_name, mission_name)
                 
                 # Select the Party specified and then start the mission.
                 self.find_party_and_start_mission(group_number, party_number)
@@ -832,13 +850,14 @@ class Game:
                         # Click the Play Again button.
                         self.find_and_click_button("play_again")
                         
-                        # Cancel any friend request popup.
-                        if(self.image_tools.confirm_location("friend_request")):
-                            self.print_and_save(f"\n{self.printtime()} [INFO] Detected Friend Request window. Closing it now...")
+                        # Loop while clicking any detected Cancel buttons.
+                        while(self.image_tools.find_button("friend_request_cancel", tries=2) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
                             self.find_and_click_button("friend_request_cancel")
                         
                         # Check for available AP.
                         self.check_for_ap(use_full_elixirs=use_full_elixirs)
+                        
+                        summon_check = False
                             
         else:
             self.print_and_save("\nSomething went wrong with navigating to the map.")
