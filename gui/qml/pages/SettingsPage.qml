@@ -174,17 +174,7 @@ Item{
                         { text: "Port Breeze Archipelago", enabled: false },
                         { text: "Scattered Cargo", enabled: true },
                     ]
-                } else if(itemComboBox.displayText == "Fine Sand Bottle"){
-                    missionComboBox.model = [
-                        { text: "Valtz Duchy", enabled: false },
-                        { text: "Lucky Charm Hunt", enabled: true },
-                    ]
-                } else if(itemComboBox.displayText == "Untamed Flame"){
-                    missionComboBox.model = [
-                        { text: "Valtz Duchy", enabled: false },
-                        { text: "Special Op's Request", enabled: true },
-                    ]
-                } else if(itemComboBox.displayText == "Blistering Ore"){
+                } else if(itemComboBox.displayText == "Fine Sand Bottle" || itemComboBox.displayText == "Untamed Flame" || itemComboBox.displayText == "Blistering Ore"){
                     missionComboBox.model = [
                         { text: "Valtz Duchy", enabled: false },
                         { text: "Lucky Charm Hunt", enabled: true },
@@ -195,14 +185,10 @@ Item{
                         { text: "Auguste Isles", enabled: false },
                         { text: "Threat to the Fisheries", enabled: true },
                     ]
-                } else if(itemComboBox.displayText == "Rough Stone" || itemComboBox.displayText == "Swirling Amber"){
+                } else if(itemComboBox.displayText == "Rough Stone" || itemComboBox.displayText == "Swirling Amber" || itemComboBox.displayText == "Coarse Alluvium"){
                     missionComboBox.model = [
                         { text: "Lumacie Archipelago", enabled: false },
                         { text: "The Fruit of Lumacie", enabled: true },
-                    ]
-                } else if(itemComboBox.displayText == "Coarse Alluvium"){
-                    missionComboBox.model = [
-                        { text: "Lumacie Archipelago", enabled: false },
                         { text: "Whiff of Danger", enabled: true },
                     ]
                 } else if(itemComboBox.displayText == "Falcon Feather" || itemComboBox.displayText == "Spring Water Jug" || itemComboBox.displayText == "Vermilion Stone"){
