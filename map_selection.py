@@ -154,9 +154,11 @@ class MapSelection:
         """
         try:
             check_location = False
+            current_location = ""
             
             # Prepare the map name string to be used to look for the correct image file.
             temp_map_name = map_name.replace(" ", "_")
+            temp_map_name = temp_map_name.replace("-", "_")
     
             # Example: map_mode = "quest", map_name: "map1", item_name: "Satin Feather", mission_name: "Scattered Cargo"
             if(map_mode.lower() == "quest"):
@@ -175,72 +177,106 @@ class MapSelection:
                 else:
                     check_location = False
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot is currently not on the correct island.")
+                    
+                    # Attempt to see which island the bot is currently at.
+                    if(self.game.image_tools.confirm_location("port_breeze_archipelago", tries=1)):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at the Port Breeze Archipelago. Now moving to {map_name}...")
+                        current_location = "Port Breeze Archipelago"
+                    elif(self.game.image_tools.confirm_location("valtz_duchy", tries=1)):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at the Valtz Duchy. Now moving to {map_name}...")
+                        current_location = "Valtz Duchy"
+                    elif(self.game.image_tools.confirm_location("auguste_isles", tries=1)):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at the Auguste Isles. Now moving to {map_name}...")
+                        current_location = "Auguste Isles"
+                    elif(self.game.image_tools.confirm_location("lumacie_archipelago", tries=1)):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at the Lumacie Archipelago. Now moving to {map_name}...")
+                        current_location = "Lumacie Archipelago"
+                    elif(self.game.image_tools.confirm_location("albion_citadel", tries=1)):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at the Albion Citadel. Now moving to {map_name}...")
+                        current_location = "Albion Citadel"
+                    elif(self.game.image_tools.confirm_location("mist_shrouded_isle", tries=1)):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at the Mist-Shrouded Isle. Now moving to {map_name}...")
+                        current_location = "Mist-Shrouded Isle"
                 
                 # Go to the Quest Screen.
-                # self.game.mouse_tools.move_and_click_point(self.game.home_button_location[0] - 37, self.game.home_button_location[1] - 758)
                 self.game.find_and_click_button("quest")
                 
                 # If the bot is currently not at the correct island, move to it.
                 if(check_location == False):
-                    location = self.game.image_tools.find_button("world")
-                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                    world_location = self.game.image_tools.find_button("world")
+                    self.game.mouse_tools.move_and_click_point(world_location[0], world_location[1])
                     
                     # TODO: Check for correct Skydom here before proceeding.
                     
-                    # On the World Screen, click the specified coordinates on the window to move to the island.
+                    # On the World Screen, click the specified coordinates on the window to move to the island. 
+                    # If the island is on a different world page, switch pages as necessary.
                     # TODO: Eventually fill this out with every island. Same thing with the farmable missions below.
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to {map_name}...")
                     if(map_name == "Port Breeze Archipelago"):
-                        location = (self.game.home_button_location[0] - 293, self.game.home_button_location[1] - 1044)
-                        self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                        if(current_location == "Mist-Shrouded Isle"):
+                            self.game.find_and_click_button("world_left_arrow")
+                        self.game.find_and_click_button("port_breeze_archipelago")
                     elif(map_name == "Valtz Duchy"):
-                        location = (self.game.home_button_location[0] - 121, self.game.home_button_location[1] - 973)
-                        self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                        if(current_location == "Mist-Shrouded Isle"):
+                            self.game.find_and_click_button("world_left_arrow")
+                        self.game.find_and_click_button("valtz_duchy")
                     elif(map_name == "Auguste Isles"):
-                        location = (self.game.home_button_location[0] - 345, self.game.home_button_location[1] - 893)
-                        self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                        if(current_location == "Mist-Shrouded Isle"):
+                            self.game.find_and_click_button("world_left_arrow")
+                        self.game.find_and_click_button("auguste_isles")
                     elif(map_name == "Lumacie Archipelago"):
-                        location = (self.game.home_button_location[0] - 55, self.game.home_button_location[1] - 841)
-                        self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                        if(current_location == "Mist-Shrouded Isle"):
+                            self.game.find_and_click_button("world_left_arrow")
+                        self.game.find_and_click_button("lumacie_archipelago")
+                    elif(map_name == "Albion Citadel"):
+                        if(current_location == "Mist-Shrouded Isle"):
+                            self.game.find_and_click_button("world_left_arrow")
+                        self.game.find_and_click_button("albion_citadel")
+                    elif(map_name == "Mist-Shrouded Isle"):
+                        if(current_location == "Port Breeze Archipelago" or current_location == "Valtz Duchy" or current_location == "Auguste Isles" or current_location == "Lumacie Archipelago"or current_location == "Albion Citadel"):
+                            self.game.find_and_click_button("world_right_arrow")
+                        self.game.find_and_click_button("mist_shrouded_isle")
                         
                     location = self.game.image_tools.find_button("go")
                     self.game.mouse_tools.move_and_click_point(location[0], location[1])
                     self.game.image_tools.confirm_location("quest")
 
-                # Now that the bot is on the correct island and is on the Quest Screen, click the correct chapter node.
+                # Now that the bot is on the correct island and is on the Quest Screen, click the correct chapter node. 126,268
+                world_location = self.game.image_tools.find_button("world")
                 if(mission_name == "Scattered Cargo"):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 1 (115) node...")
-                    location = (self.game.home_button_location[0] - 280, self.game.home_button_location[1] - 1001)
-                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 1 (115) node at ({world_location[0] + 97}, world_location[1] + 97)...")
+                    self.game.mouse_tools.move_and_click_point(world_location[0] + 97, world_location[1] + 97)
                 elif(mission_name == "Lucky Charm Hunt"):
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 6 (122) node...")
-                    location = (self.game.home_button_location[0] - 41, self.game.home_button_location[1] - 1076)
-                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                    self.game.mouse_tools.move_and_click_point(world_location[0] + 332, world_location[1] + 16)
                 elif(mission_name == "Special Op's Request"):
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 8 node...")
-                    location = (self.game.home_button_location[0] - 118, self.game.home_button_location[1] - 940)
-                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                    self.game.mouse_tools.move_and_click_point(world_location[0] + 258, world_location[1] + 151)
                 elif(mission_name == "Threat to the Fisheries"):
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 9 node...")
-                    location = (self.game.home_button_location[0] - 158, self.game.home_button_location[1] - 980)
-                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                    self.game.mouse_tools.move_and_click_point(world_location[0] + 216, world_location[1] + 113)
                 elif(mission_name == "The Fruit of Lumacie" or mission_name == "Whiff of Danger"):
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 13 (39/52) node...")
-                    location = (self.game.home_button_location[0] - 296, self.game.home_button_location[1] - 1003)
-                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                    self.game.mouse_tools.move_and_click_point(world_location[0] + 78, world_location[1] + 92)
                 elif(mission_name == "I Challenge You!"):
-                    pass
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 17 node...")
+                    self.game.mouse_tools.move_and_click_point(world_location[0] + 119, world_location[1] + 121)
                 elif(mission_name == "For Whom the Bell Tolls"):
-                    pass
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 22 node...")
+                    self.game.mouse_tools.move_and_click_point(world_location[0] + 178, world_location[1] + 33)
                 elif(mission_name == "Golonzo's Battle of Old"):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 25 node...")
                     pass
                 elif(mission_name == "The Dungeon Diet"):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 30 (44/65) node...")
                     pass
                 elif(mission_name == "Trust Busting Dustup"):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 36 (123) node...")
                     pass
                 elif(mission_name == "Erste Kingdom Episode 4"):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 70 node...")
                     pass
                 elif(mission_name == "Imperial Wanderer's Soul"):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 55 node...")
                     pass
                 
                 # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
