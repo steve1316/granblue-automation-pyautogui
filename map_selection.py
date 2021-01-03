@@ -177,7 +177,8 @@ class MapSelection:
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot is currently not on the correct island.")
                 
                 # Go to the Quest Screen.
-                self.game.mouse_tools.move_and_click_point(self.game.home_button_location[0] - 37, self.game.home_button_location[1] - 758)
+                # self.game.mouse_tools.move_and_click_point(self.game.home_button_location[0] - 37, self.game.home_button_location[1] - 758)
+                self.game.find_and_click_button("quest")
                 
                 # If the bot is currently not at the correct island, move to it.
                 if(check_location == False):
