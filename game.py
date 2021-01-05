@@ -159,6 +159,11 @@ class Game:
             None
         """
         temp_location = self.image_tools.find_button(button_name)
+        
+        # If the bot is trying to find the Quest button and failed, chances are that the button is now styled red.
+        if(button_name == "quest" and temp_location == None):
+            temp_location = self.image_tools.find_button("quest2")
+            
         self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1])
         return None
     
