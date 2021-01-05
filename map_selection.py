@@ -140,7 +140,7 @@ class MapSelection:
         
         self.debug_mode = debug_mode
         
-    def select_map(self, map_mode: str, map_name: str, item_name: str, mission_name: str):
+    def select_map(self, map_mode: str, map_name: str, item_name: str, mission_name: str, difficulty: str = None):
         """Navigates the bot to the specified map and preps the bot for Summon/Party selection.
 
         Args:
@@ -148,6 +148,7 @@ class MapSelection:
             map_name (str): Name of the map to look for the specified mission in.
             item_name (str): Name of the item to farm.
             mission_name (str): Name of the mission to farm the item in.
+            difficulty (str, optional): Selected difficulty for Special missions. Defaults to None.
 
         Returns:
             (bool): Return True if the bot reached the Summon Selection Screen. Otherwise, return False.
@@ -165,8 +166,8 @@ class MapSelection:
                 self.game.print_and_save("\n********************************************************************************")
                 self.game.print_and_save(f"{self.game.printtime()} [INFO] Mode: Quest")
                 self.game.print_and_save(f"{self.game.printtime()} [INFO] Map: {map_name}")
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Material to farm: {item_name}")
                 self.game.print_and_save(f"{self.game.printtime()} [INFO] Mission: {mission_name}")
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Material to farm: {item_name}")
                 self.game.print_and_save("********************************************************************************\n")
                 
                 # Go to the Home Screen and check if the bot is already at the correct island or not.
@@ -306,15 +307,129 @@ class MapSelection:
             #     # Go to the Coop Screen.
             #     self.game.go_back_home()
                 
-            # elif(self.farmable_materials[map_mode] == "special"):
-            #     # Go to the Special Quest Screen.
-            #     self.game.go_back_home()
-            #     quest_button_location = self.game.image_tools.find_button("quest")
-            #     self.game.mouse_tools.move_and_click_point(quest_button_location[0], quest_button_location[1])
-            #     self.game.image_tools.confirm_location("quest")
-            #     special_button_location = self.game.image_tools.find_button("special")
-            #     self.game.mouse_tools.move_and_click_point(special_button_location[0], special_button_location[1])
-            #     self.game.image_tools.confirm_location("special")
+            elif(map_mode.lower() == "special"):
+                self.game.print_and_save("\n********************************************************************************")
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Mode: Special")
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Map: {map_name}")
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Mission: {mission_name}")
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Difficulty: {difficulty}")
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Material to farm: {item_name}")
+                self.game.print_and_save("********************************************************************************\n")
+                
+                # Go to the Home Screen.
+                self.game.go_back_home(confirm_location_check=True, display_info_check=True)
+                
+                # Bring up the correct map.
+                self.game.mouse_tools.scroll_screen(self.game.home_button_location[0], self.game.home_button_location[1] - 50, -500)
+                
+                temp_map_name = map_name.lower().replace(" ", "_")
+                temp_mission_name = mission_name.lower().replace(" ", "_")
+                
+                if(self.game.image_tools.confirm_location(temp_map_name))
+                    if(temp_map_name == "basic_treasure_quests"):
+                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Navigating to {mission_name}...")
+                        mission_select_button = self.game.image_tools.find_button(temp_mission_name)
+                        
+                        # Move to the specified Special mission. 558,544
+                        if(mission_name == "Scarlet Trial"):
+                            scarlet_trial_button = (mission_select_button[0] + 145, mission_select_button[0] + 75)
+                            self.game.mouse_tools.move_and_click_point(scarlet_trial_button[0], scarlet_trial_button[1])
+                            
+                            # Start up the Scarlet Trial mission by selecting its difficulty.
+                            self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting {difficulty} Scarlet Trial...")
+                            difficulty_play_buttons = self.game.image_tools.find_all("special_play")
+                            if(difficulty == "Normal"):
+                                difficulty_play_button = (difficulty_play_buttons[0].target.x, difficulty_play_buttons[0].target.y)
+                            elif(difficulty == "Hard"):
+                                difficulty_play_button = (difficulty_play_buttons[1].target.x, difficulty_play_buttons[1].target.y)
+                            else:
+                                difficulty_play_button = (difficulty_play_buttons[2].target.x, difficulty_play_buttons[2].target.y)
+                        elif(mission_name == "Cerulean Trial"):
+                            cerulean_trial_button = (mission_select_button[0] + 145, mission_select_button[0] + 75)
+                            self.game.mouse_tools.move_and_click_point(cerulean_trial_button[0], cerulean_trial_button[1])
+                            
+                            # Start up the Cerulean Trial mission by selecting its difficulty.
+                            self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting {difficulty} Cerulean Trial...")
+                            difficulty_play_buttons = self.game.image_tools.find_all("special_play")
+                            if(difficulty == "Normal"):
+                                difficulty_play_button = (difficulty_play_buttons[0].target.x, difficulty_play_buttons[0].target.y)
+                            elif(difficulty == "Hard"):
+                                difficulty_play_button = (difficulty_play_buttons[1].target.x, difficulty_play_buttons[1].target.y)
+                            else:
+                                difficulty_play_button = (difficulty_play_buttons[2].target.x, difficulty_play_buttons[2].target.y)
+                        elif(mission_name == "Violet Trial"):
+                            violet_trial_button = (mission_select_button[0] + 145, mission_select_button[0] + 75)
+                            self.game.mouse_tools.move_and_click_point(violet_trial_button[0], violet_trial_button[1])
+                            
+                            # Start up the Violet Trial mission by selecting its difficulty.
+                            self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting {difficulty} Violet Trial...")
+                            difficulty_play_buttons = self.game.image_tools.find_all("special_play")
+                            if(difficulty == "Normal"):
+                                difficulty_play_button = (difficulty_play_buttons[0].target.x, difficulty_play_buttons[0].target.y)
+                            elif(difficulty == "Hard"):
+                                difficulty_play_button = (difficulty_play_buttons[1].target.x, difficulty_play_buttons[1].target.y)
+                            else:
+                                difficulty_play_button = (difficulty_play_buttons[2].target.x, difficulty_play_buttons[2].target.y)   
+                    elif(mission_name == "Shiny Slime Search!"):
+                        shiny_slime_search_button = (mission_select_button[0] + 145, mission_select_button[0] + 75)
+                        self.game.mouse_tools.move_and_click_point(shiny_slime_search_button[0], shiny_slime_search_button[1])
+                        
+                        # Start up the Shiny Slime Search! mission by selecting its difficulty.
+                        difficulty_play_buttons = self.game.image_tools.find_all("special_play")
+                        if(difficulty == "Normal"):
+                            difficulty_play_button = (difficulty_play_buttons[0].target.x, difficulty_play_buttons[0].target.y)
+                        elif(difficulty == "Hard"):
+                            difficulty_play_button = (difficulty_play_buttons[1].target.x, difficulty_play_buttons[1].target.y)
+                        else:
+                            difficulty_play_button = (difficulty_play_buttons[2].target.x, difficulty_play_buttons[2].target.y)
+                    elif(mission_name == "Six Dragon Trial"):
+                        six_dragon_trial_button = (mission_select_button[0] + 145, mission_select_button[0] + 75)
+                        self.game.mouse_tools.move_and_click_point(six_dragon_trial_button[0], six_dragon_trial_button[1])
+                        
+                        # Start up the Six Dragon Trial mission by selecting its difficulty.
+                        difficulty_play_buttons = self.game.image_tools.find_all("special_play")
+                        if(difficulty == "Normal"):
+                            difficulty_play_button = (difficulty_play_buttons[0].target.x, difficulty_play_buttons[0].target.y)
+                        elif(difficulty == "Hard"):
+                            difficulty_play_button = (difficulty_play_buttons[1].target.x, difficulty_play_buttons[1].target.y)
+                        else:
+                            difficulty_play_button = (difficulty_play_buttons[2].target.x, difficulty_play_buttons[2].target.y)
+                    elif(mission_name == "Elemental Treasure Quests"):
+                        elemental_treasure_quests_button = (mission_select_button[0] + 145, mission_select_button[0] + 75)
+                        self.game.mouse_tools.move_and_click_point(elemental_treasure_quests_button[0], elemental_treasure_quests_button[1])
+                        
+                        # Start up the Elemental Treasure Quests mission by selecting its difficulty.
+                        difficulty_play_buttons = self.game.image_tools.find_all("special_play")
+                        if(difficulty == "Fire"): # The Hellfire Trial
+                            difficulty_play_button = (difficulty_play_buttons[0].target.x, difficulty_play_buttons[0].target.y)
+                        elif(difficulty == "Water"): # The Deluge Trial
+                            difficulty_play_button = (difficulty_play_buttons[1].target.x, difficulty_play_buttons[1].target.y)
+                        elif(difficulty == "Earth"): # The Wasteland Trial
+                            difficulty_play_button = (difficulty_play_buttons[2].target.x, difficulty_play_buttons[2].target.y)
+                        elif(difficulty == "Wind"): # The Typhoon Trial
+                            difficulty_play_button = (difficulty_play_buttons[3].target.x, difficulty_play_buttons[3].target.y)
+                        elif(difficulty == "Light"): # The Aurora Trial
+                            difficulty_play_button = (difficulty_play_buttons[4].target.x, difficulty_play_buttons[4].target.y)
+                        else: # The Oblivion Trial
+                            difficulty_play_button = (difficulty_play_buttons[5].target.x, difficulty_play_buttons[5].target.y)
+                    elif(mission_name == "Showdowns"):
+                        pass
+                    else:
+                        angel_halo_button = (mission_select_button[0] + 145, mission_select_button[0] + 75)
+                        self.game.mouse_tools.move_and_click_point(angel_halo_button[0], angel_halo_button[1])
+                        
+                        # Start up the Angel Halo mission by selecting its difficulty.
+                        difficulty_play_buttons = self.game.image_tools.find_all("special_play")
+                        if(difficulty == "Normal"):
+                            difficulty_play_button = (difficulty_play_buttons[0].target.x, difficulty_play_buttons[0].target.y)
+                        elif(difficulty == "Hard"):
+                            difficulty_play_button = (difficulty_play_buttons[1].target.x, difficulty_play_buttons[1].target.y)
+                        else:
+                            difficulty_play_button = (difficulty_play_buttons[2].target.x, difficulty_play_buttons[2].target.y)
+                        
+                    print(f"\nFound: {difficulty_play_button}")
+                else:
+                    raise Exception(f"Cannot find the Special Missions.")
 
             return self.game.image_tools.confirm_location("select_summon")
         except Exception as e:
