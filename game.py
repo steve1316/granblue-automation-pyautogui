@@ -504,7 +504,13 @@ class Game:
             x = self.attack_button_location[0] + 39
 
         self.mouse_tools.move_and_click_point(x, y)
-        self.wait_for_ping(2)
+        
+        # Check to see if the character is skill-sealed.
+        if(self.image_tools.confirm_location("use_skill", tries=1)):
+            self.print_and_save(f"{self.printtime()} [COMBAT] Character is currently skill-sealed. Unable to execute command.")
+            self.find_and_click_button("friend_request_cancel")
+        else:
+            self.wait_for_ping(2)
 
         return None
 
