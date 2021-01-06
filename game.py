@@ -158,11 +158,13 @@ class Game:
         Returns:
             None
         """
-        temp_location = self.image_tools.find_button(button_name)
-        
         # If the bot is trying to find the Quest button and failed, chances are that the button is now styled red.
-        if(button_name == "quest" and temp_location == None):
-            temp_location = self.image_tools.find_button("quest2")
+        if(button_name == "quest"):
+            temp_location = self.image_tools.find_button("quest", tries=2)
+            if(temp_location == None):
+                temp_location = self.image_tools.find_button("quest2")
+        else:
+            temp_location = self.image_tools.find_button(button_name)
             
         self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1])
         return None
@@ -823,7 +825,21 @@ class Game:
         self.print_and_save(f"{self.printtime()} [FARM] Farming {item_amount_to_farm}x {item_name}")
         self.print_and_save("################################################################################\n")
         
-        if(self.map_selection.select_map(map_mode, map_name, item_name, mission_name)):
+        difficulty = ""
+        
+        if(map_mode.lower() == "special"):
+            # Attempt to see if the difficulty starts at the 0th index to differentiate between cases like "H" and "VH".
+            if(mission_name.find("N ") == 0):
+                difficulty = "Normal"
+            elif(mission_name.find("H ") == 0):
+                difficulty = "Hard"
+            elif(mission_name.find("VH ") == 0):
+                difficulty = "Very Hard"
+        
+        print("Mission Name: ", mission_name)
+        print("Difficulty: ", difficulty)
+        
+        if(self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)):
             amount_of_runs_finished = 0
             item_amount_farmed = 0
             summon_check = False
@@ -836,7 +852,7 @@ class Game:
                     
                     # If the Summons were reset, head back to the location of the mission.
                     if(summon_check == False):
-                        self.map_selection.select_map(map_mode, map_name, item_name, mission_name)
+                        self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
                 
                 # Select the Party specified and then start the mission.
                 self.find_party_and_start_mission(group_number, party_number)
