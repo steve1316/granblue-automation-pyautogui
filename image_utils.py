@@ -329,11 +329,14 @@ class ImageUtils:
                     else:
                         locations = list(pyautogui.locateAllOnScreen(f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check))
 
-                    if (self.debug_mode and len(locations) != 0):
-                        for location in locations:
-                            self.game.print_and_save(f"{self.printtime()} [INFO] Occurrence found at: " + str(location))
+                    centered_locations = []
+                    self.game.print_and_save("\n")
+                    for location in locations:
+                        self.game.print_and_save(f"{self.printtime()} [INFO] Occurrence found at: " + str(location))
+                        centered_locations.append(pyautogui.center(location))
 
-                    return locations
+                    self.game.print_and_save("\n")
+                    return centered_locations
 
         self.game.print_and_save(f"{self.printtime()} [ERROR] Specified file does not exist inside the /images/ folder or its subfolders.")
 
