@@ -11,7 +11,7 @@ Window {
     height: 600
 
     minimumWidth: 1000
-    minimumHeight: 550
+    minimumHeight: 600
 
     visible: true
 
@@ -688,7 +688,7 @@ Window {
 
                         color: "#d9d9d9"
 
-                        text: qsTr("Application description")
+                        text: qsTr("It is like Full Auto, but with Full Customization!")
 
                         verticalAlignment: Text.AlignVCenter
                         
