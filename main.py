@@ -18,12 +18,12 @@ class Tester:
         self.game = None
         self.debug = None
         
-    def run_bot(self, item_name, item_amount, island_name, mission_name, summon_element_name, summon_name, group_number, party_number, queue, isBotRunning, combat_script, debug_mode):
+    def run_bot(self, item_name, item_amount, farming_mode, location_name, mission_name, summon_element_name, summon_name, group_number, party_number, queue, isBotRunning, combat_script, debug_mode):
         self.game = Game(queue=queue, isBotRunning=isBotRunning, combat_script=combat_script, custom_mouse_speed=0.25, debug_mode=debug_mode)
         self.map_selection = MapSelection(self.game)
         self.debug = Debug(self.game, isBotRunning=isBotRunning, combat_script=combat_script)
         
-        self.game.start_farming_mode(summon_element_name, summon_name, group_number, party_number, "quest", island_name, item_name, item_amount, mission_name)
+        self.game.start_farming_mode(summon_element_name, summon_name, group_number, party_number, farming_mode, location_name, item_name, item_amount, mission_name)
         
         # Test finding amounts of all items on the screen.
         # self.debug.test_item_detection(4)
@@ -62,9 +62,10 @@ class MainWindow(QObject):
         self.bot_process = None
         
         # Hold the following information for the Game class initialization in a new thread.
+        self.farming_mode = ""
         self.item_name = ""
         self.item_amount = ""
-        self.island_name = ""
+        self.location_name = ""
         self.mission_name = ""
         self.summon_element_name = ""
         self.summon_name = ""
@@ -86,26 +87,33 @@ class MainWindow(QObject):
     enableGroupAndPartySelectors = Signal()
     
     
-    # The following functions updates their respective variables to prep for Game class initialization.
+    # The following functions below updates their respective variables to prep for Game class initialization.
+    @Slot(str)
+    def update_farming_mode(self, farming_mode):
+        self.farming_mode = farming_mode
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
+                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
+                                str(self.group_number) + "\nParty Number: " + str(self.party_number))
+    
     @Slot(str)
     def update_item_name(self, item_name):
         self.item_name = item_name
-        self.updateMessage.emit("Item: " + self.item_name + "\nIsland: " + self.island_name + "\nMission: " + self.mission_name + 
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
                                 "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
                                 str(self.group_number) + "\nParty Number: " + str(self.party_number))
         
     @Slot(str)
     def update_item_amount(self, item_amount):
         self.item_amount = int(item_amount)
-        self.updateMessage.emit("Item: " + self.item_name + "\nIsland: " + self.island_name + "\nMission: " + self.mission_name + 
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
                                 "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
                                 str(self.group_number) + "\nParty Number: " + str(self.party_number))
         
     @Slot(str, str)
-    def update_mission_name(self, mission_name, island_name):
+    def update_mission_name(self, mission_name, location_name):
         self.mission_name = mission_name
-        self.island_name = island_name
-        self.updateMessage.emit("Item: " + self.item_name + "\nIsland: " + self.island_name + "\nMission: " + self.mission_name + 
+        self.location_name = location_name
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
                                 "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
                                 str(self.group_number) + "\nParty Number: " + str(self.party_number))
         
@@ -114,7 +122,7 @@ class MainWindow(QObject):
         formatted_summon_name = summon_name.lower().replace(" ", "_")
         self.summon_element_name = summon_element.lower()
         self.summon_name = formatted_summon_name
-        self.updateMessage.emit("Item: " + self.item_name + "\nIsland: " + self.island_name + "\nMission: " + self.mission_name + 
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
                                 "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
                                 str(self.group_number) + "\nParty Number: " + str(self.party_number))
         
@@ -124,7 +132,7 @@ class MainWindow(QObject):
     def update_group_number(self, group_number):
         split_group_number = group_number.split(" ")[1]
         self.group_number = int(split_group_number)
-        self.updateMessage.emit("Item: " + self.item_name + "\nIsland: " + self.island_name + "\nMission: " + self.mission_name + 
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
                                 "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
                                 str(self.group_number) + "\nParty Number: " + str(self.party_number))
         
@@ -132,7 +140,7 @@ class MainWindow(QObject):
     def update_party_number(self, party_number):
         split_party_number = party_number.split(" ")[1]
         self.party_number = int(split_party_number)
-        self.updateMessage.emit("Item: " + self.item_name + "\nIsland: " + self.island_name + "\nMission: " + self.mission_name + 
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
                                 "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
                                 str(self.group_number) + "\nParty Number: " + str(self.party_number))
     
@@ -187,8 +195,8 @@ class MainWindow(QObject):
     def start_bot(self):
         print("\nStarting bot.")
         self.isBotRunning = multiprocessing.Value("i", 0)
-        self.bot_process = multiprocessing.Process(target=self.bot_object.run_bot, args=(self.item_name, self.item_amount, self.island_name, self.mission_name, 
-                                                                                         self.summon_element_name, self.summon_name, self.group_number, self.party_number , 
+        self.bot_process = multiprocessing.Process(target=self.bot_object.run_bot, args=(self.item_name, self.item_amount, self.farming_mode, self.location_name, self.mission_name, 
+                                                                                         self.summon_element_name, self.summon_name, self.group_number, self.party_number, 
                                                                                          self.queue, self.isBotRunning, self.real_file_path, self.debug_mode,))
         self.bot_process.start()
     
