@@ -17,6 +17,7 @@ Item{
 
         TextField {
             id: combatScriptTextField
+            height: 30
             anchors.left: parent.left
             anchors.top: parent.top
             horizontalAlignment: Text.AlignHCenter
@@ -48,10 +49,11 @@ Item{
             text: qsTr("Open")
             anchors.left: combatScriptTextField.right
             anchors.right: parent.right
+            font.pointSize: 10
             anchors.rightMargin: 20
-            anchors.leftMargin: 20
+            anchors.leftMargin: 10
 
-            height: 40
+            height: 30
 
             onPressed: {
                 fileOpen.open()
@@ -73,18 +75,213 @@ Item{
             }
         }
 
+        // Select the farming mode (Quest, Special, Coop, Raid, etc).
+        ComboBox {
+            id: farmingModeComboBox
+
+            width: 200
+            height: 30
+            anchors.left: parent.left
+            anchors.top: combatScriptTextField.bottom
+            anchors.topMargin: 25
+            anchors.leftMargin: 20
+
+            delegate: ItemDelegate {
+                width: farmingModeComboBox.width
+                text: modelData.text
+                enabled: modelData.enabled
+                highlighted: ListView.isCurrentItem
+                font.weight: farmingModeComboBox.currentIndex === index ? Font.DemiBold : Font.Normal
+            }
+
+            enabled: false // Gets enabled when you select your combat script.
+            currentIndex: 0
+            textRole: "text"
+
+            displayText: qsTr("Please select farming mode")
+
+            model: [
+                { text: "Farming Modes", enabled: false },
+                { text: "Quest", enabled: true },
+                { text: "Special", enabled: true }
+            ]
+
+            onCurrentIndexChanged: {
+                farmingModeComboBox.displayText = qsTr(farmingModeComboBox.model[currentIndex].text)
+                farmingModeTextFieldLabel.visible = true
+
+                backend.update_farming_mode(farmingModeComboBox.model[currentIndex].text)
+
+                // Once done updating the backend with the selected farming mode, update the item selection ComboBox below with the appropriate items.
+                if(farmingModeComboBox.model[currentIndex].text === "Quest"){
+                    itemComboBox.model = [
+                        // Port Breeze Archipelago
+                        { text: "Port Breeze Archipelago", enabled: false },
+                        { text: "Satin Feather", enabled: true },
+                        { text: "Zephyr Feather", enabled: true },
+                        { text: "Flying Sprout", enabled: true },
+
+                        // Valtz Duchy
+                        { text: "Valtz Duchy", enabled: false },
+                        { text: "Fine Sand Bottle", enabled: true },
+                        { text: "Untamed Flame", enabled: true },
+                        { text: "Blistering Ore", enabled: true },
+
+                        // Auguste Isles
+                        { text: "Auguste Isles", enabled: false },
+                        { text: "Fresh Water Jug", enabled: true },
+                        { text: "Soothing Splash", enabled: true },
+                        { text: "Glowing Coral", enabled: true },
+
+                        // Lumacie Archipelago
+                        { text: "Lumacie Archipelago", enabled: false },
+                        { text: "Rough Stone", enabled: true },
+                        { text: "Coarse Alluvium", enabled: true },
+                        { text: "Swirling Amber", enabled: true },
+
+                        // Albion Citadel
+                        { text: "Albion Citadel", enabled: false },
+                        { text: "Falcon Feather", enabled: true },
+                        { text: "Spring Water Jug", enabled: true },
+                        { text: "Vermilion Stone", enabled: true },
+
+                        // Mist-Shrouded Isle
+                        { text: "Mist-Shrouded Isle", enabled: false },
+                        { text: "Slimy Shroom", enabled: true },
+                        { text: "Hollow Soul", enabled: true },
+                        { text: "Lacrimosa", enabled: true },
+
+                        // Golonzo Island
+                        { text: "Golonzo Island", enabled: false },
+                        { text: "Wheat Stalk", enabled: true },
+                        { text: "Iron Cluster", enabled: true },
+                        { text: "Olea Plant", enabled: true },
+
+                        // Amalthea Island
+                        { text: "Amalthea Island", enabled: false },
+                        { text: "Indigo Fruit", enabled: true },
+                        { text: "Foreboding Clover", enabled: true },
+                        { text: "Blood Amber", enabled: true },
+
+                        // Former Capital Mephorash
+                        { text: "Former Capital Mephorash", enabled: false },
+                        { text: "Sand Brick", enabled: true },
+                        { text: "Native Reed", enabled: true },
+                        { text: "Antique Cloth", enabled: true },
+
+                        // Agastia
+                        { text: "Agastia", enabled: false },
+                        { text: "Prosperity Flame", enabled: true },
+                        { text: "Explosive Material", enabled: true },
+                        { text: "Steel Liquid", enabled: true },
+                    ]
+                } else if(farmingModeComboBox.model[currentIndex].text === "Special"){
+                    itemComboBox.model = [
+                        // Scarlet Trial
+                        { text: "--------------------", enabled: false },
+                        { text: "Fire Orb", map: "Scarlet Trial", enabled: true },
+                        { text: "Water Orb", map: "Scarlet Trial", enabled: true },
+                        { text: "Earth Orb", map: "Scarlet Trial", enabled: true },
+                        { text: "Wind Orb", map: "Scarlet Trial", enabled: true },
+                        { text: "Light Orb", map: "Scarlet Trial", enabled: true },
+                        { text: "Dark Orb", map: "Scarlet Trial", enabled: true },
+                        { text: "Inferno Orb", map: "Scarlet Trial", enabled: true },
+                        { text: "Frost Orb", map: "Scarlet Trial", enabled: true },
+                        { text: "Rumbling Orb", map: "Scarlet Trial", enabled: true },
+                        { text: "Cyclone Orb", map: "Scarlet Trial", enabled: true },
+                        { text: "Shining Orb", map: "Scarlet Trial", enabled: true },
+                        { text: "Abysm Orb", map: "Scarlet Trial", enabled: true },
+
+                        // Cerulean Trial
+                        { text: "--------------------", enabled: false },
+                        { text: "Red Tome", enabled: true },
+                        { text: "Blue Tome", enabled: true },
+                        { text: "Brown Tome", enabled: true },
+                        { text: "Green Tome", enabled: true },
+                        { text: "White Tome", enabled: true },
+                        { text: "Black Tome", enabled: true },
+                        { text: "Hellfire Scroll", enabled: true },
+                        { text: "Flood Scroll", enabled: true },
+                        { text: "Thunder Scroll", enabled: true },
+                        { text: "Gale Scroll", enabled: true },
+                        { text: "Skylight Scroll", enabled: true },
+                        { text: "Chasm Scroll", enabled: true },
+                        { text: "Infernal Whorl", enabled: true },
+                        { text: "Tidal Whorl", enabled: true },
+                        { text: "Seismic Whorl", enabled: true },
+                        { text: "Tempest Whorl", enabled: true },
+                        { text: "Radiant Whorl", enabled: true },
+                        { text: "Umbral Whorl", enabled: true },
+
+                        // Violet Trial
+                        { text: "--------------------", enabled: false },
+                        { text: "Prism Chip", enabled: true },
+                        { text: "Flawed Prism", enabled: true },
+                        { text: "Flawless Prism", enabled: true },
+                        { text: "Rainbow Prism", enabled: true },
+
+                        // Shiny Slime Search!
+                        { text: "--------------------", enabled: false },
+                        { text: "EXP", enabled: true },
+
+                        // Elemental Treasure Quests
+                        { text: "--------------------", enabled: false },
+                        { text: "Hellfire Fragment", enabled: true },
+                        { text: "Deluge Fragment", enabled: true },
+                        { text: "Wasteland Fragment", enabled: true },
+                        { text: "Typhoon Fragment", enabled: true },
+                        { text: "Aurora Fragment", enabled: true },
+                        { text: "Oblivion Fragment", enabled: true },
+
+                        // Showdowns
+                        { text: "--------------------", enabled: false },
+                    
+                        // Six Dragon Trial
+                        { text: "--------------------", enabled: false },
+                        { text: "Red Dragon Scale", enabled: true },
+                        { text: "Blue Dragon Scale", enabled: true },
+                        { text: "Brown Dragon Scale", enabled: true },
+                        { text: "Green Dragon Scale", enabled: true },
+                        { text: "White Dragon Scale", enabled: true },
+                        { text: "Black Dragon Scale", enabled: true },
+                    ]
+                }
+
+                // After setting the contents of the Item Selection ComboBox, enable it for the user.
+                itemComboBox.enabled = true
+                itemComboBox.currentIndex = 1
+            }
+
+        }
+
+        Label {
+            id: farmingModeTextFieldLabel
+
+            x: 20
+            width: 200
+            height: 13
+
+            visible: false
+            color: "#00ff00"
+            text: qsTr("Farming Mode selected successfully")
+
+            anchors.top: farmingModeComboBox.bottom
+            anchors.topMargin: 5
+        }
+
         // Select the item and the island that the item is farmed in.
         ComboBox {
             id: itemComboBox
 
             width: 200
+            height: 30
             anchors.left: parent.left
-            anchors.top: combatScriptTextField.bottom
-            enabled: false
+            anchors.top: farmingModeComboBox.bottom
             anchors.topMargin: 25
+            enabled: false
             anchors.leftMargin: 20
 
-            displayText: qsTr("Please select a item to farm.")
+            displayText: qsTr("Please select item to farm")
 
             currentIndex: 0
             textRole: "text"
@@ -99,67 +296,7 @@ Item{
                 enabled: modelData.enabled
             }
 
-            model: [
-                // Port Breeze Archipelago
-                { text: "Port Breeze Archipelago", enabled: false },
-                { text: "Satin Feather", map: "Port Breeze Archipelago", enabled: true },
-                { text: "Zephyr Feather", map: "Port Breeze Archipelago", enabled: true },
-                { text: "Flying Sprout", map: "Port Breeze Archipelago", enabled: true },
-
-                // Valtz Duchy
-                { text: "Valtz Duchy", enabled: false },
-                { text: "Fine Sand Bottle", map: "Valtz Duchy", enabled: true },
-                { text: "Untamed Flame", map: "Valtz Duchy", enabled: true },
-                { text: "Blistering Ore", map: "Valtz Duchy", enabled: true },
-
-                // Auguste Isles
-                { text: "Auguste Isles", enabled: false },
-                { text: "Fresh Water Jug", map: "Auguste Isles", enabled: true },
-                { text: "Soothing Splash", map: "Auguste Isles", enabled: true },
-                { text: "Glowing Coral", map: "Auguste Isles", enabled: true },
-
-                // Lumacie Archipelago
-                { text: "Lumacie Archipelago", enabled: false },
-                { text: "Rough Stone", map: "Lumacie Archipelago", enabled: true },
-                { text: "Coarse Alluvium", map: "Lumacie Archipelago", enabled: true },
-                { text: "Swirling Amber", map: "Lumacie Archipelago", enabled: true },
-
-                // Albion Citadel
-                { text: "Albion Citadel", enabled: false },
-                { text: "Falcon Feather", map: "Albion Citadel", enabled: true },
-                { text: "Spring Water Jug", map: "Albion Citadel", enabled: true },
-                { text: "Vermilion Stone", map: "Albion Citadel", enabled: true },
-
-                // Mist-Shrouded Isle
-                { text: "Mist-Shrouded Isle", enabled: false },
-                { text: "Slimy Shroom", map: "Mist-Shrouded Isle", enabled: true },
-                { text: "Hollow Soul", map: "Mist-Shrouded Isle", enabled: true },
-                { text: "Lacrimosa", map: "Mist-Shrouded Isle", enabled: true },
-
-                // Golonzo Island
-                { text: "Golonzo Island", enabled: false },
-                { text: "Wheat Stalk", map: "Golonzo Island", enabled: true },
-                { text: "Iron Cluster", map: "Golonzo Island", enabled: true },
-                { text: "Olea Plant", map: "Golonzo Island", enabled: true },
-
-                // Amalthea Island
-                { text: "Amalthea Island", enabled: false },
-                { text: "Indigo Fruit", map: "Amalthea Island", enabled: true },
-                { text: "Foreboding Clover", map: "Amalthea Island", enabled: true },
-                { text: "Blood Amber", map: "Amalthea Island", enabled: true },
-
-                // Former Capital Mephorash
-                { text: "Former Capital Mephorash", enabled: false },
-                { text: "Sand Brick", map: "Former Capital Mephorash", enabled: true },
-                { text: "Native Reed", map: "Former Capital Mephorash", enabled: true },
-                { text: "Antique Cloth", map: "Former Capital Mephorash", enabled: true },
-
-                // Agastia
-                { text: "Agastia", enabled: false },
-                { text: "Prosperity Flame", map: "Agastia", enabled: true },
-                { text: "Explosive Material", map: "Agastia", enabled: true },
-                { text: "Steel Liquid", map: "Agastia", enabled: true },
-            ]
+            model: []
 
             onCurrentIndexChanged: {
                 itemComboBox.displayText = qsTr(itemComboBox.model[currentIndex].text)
@@ -167,68 +304,338 @@ Item{
                 // Enable the mission ComboBox.
                 missionComboBox.enabled = true
 
-                // Update the contents of the mission ComboBox with the appropriate mission(s).
                 missionComboBox.currentIndex = 0
-                if(itemComboBox.displayText == "Satin Feather" || itemComboBox.displayText == "Zephyr Feather" || itemComboBox.displayText == "Flying Sprout"){
-                    missionComboBox.model = [
-                        { text: "Port Breeze Archipelago", enabled: false },
-                        { text: "Scattered Cargo", enabled: true },
-                    ]
-                } else if(itemComboBox.displayText == "Fine Sand Bottle" || itemComboBox.displayText == "Untamed Flame" || itemComboBox.displayText == "Blistering Ore"){
-                    missionComboBox.model = [
-                        { text: "Valtz Duchy", enabled: false },
-                        { text: "Lucky Charm Hunt", enabled: true },
-                        { text: "Special Op's Request", enabled: true },
-                    ]
-                } else if(itemComboBox.displayText == "Fresh Water Jug" || itemComboBox.displayText == "Soothing Splash" || itemComboBox.displayText == "Glowing Coral"){
-                    missionComboBox.model = [
-                        { text: "Auguste Isles", enabled: false },
-                        { text: "Threat to the Fisheries", enabled: true },
-                    ]
-                } else if(itemComboBox.displayText == "Rough Stone" || itemComboBox.displayText == "Swirling Amber" || itemComboBox.displayText == "Coarse Alluvium"){
-                    missionComboBox.model = [
-                        { text: "Lumacie Archipelago", enabled: false },
-                        { text: "The Fruit of Lumacie", enabled: true },
-                        { text: "Whiff of Danger", enabled: true },
-                    ]
-                } else if(itemComboBox.displayText == "Falcon Feather" || itemComboBox.displayText == "Spring Water Jug" || itemComboBox.displayText == "Vermilion Stone"){
-                    missionComboBox.model = [
-                        { text: "Albion Citadel", enabled: false },
-                        { text: "I Challenge You!", enabled: true },
-                    ]
-                } else if(itemComboBox.displayText == "Slimy Shroom" || itemComboBox.displayText == "Hollow Soul" || itemComboBox.displayText == "Lacrimosa"){
-                    missionComboBox.model = [
-                        { text: "Mist-Shrouded Isle", enabled: false },
-                        { text: "For Whom the Bell Tolls", enabled: true },
-                    ]
-                } else if(itemComboBox.displayText == "Wheat Stalk" || itemComboBox.displayText == "Iron Cluster" || itemComboBox.displayText == "Olea Plant"){
-                    missionComboBox.model = [
-                        { text: "Golonzo Island", enabled: false },
-                        { text: "Golonzo's Battle of Old", enabled: true },
-                    ]
-                } else if(itemComboBox.displayText == "Indigo Fruit" || itemComboBox.displayText == "Foreboding Clover" || itemComboBox.displayText == "Blood Amber"){
-                    missionComboBox.model = [
-                        { text: "Amalthea Island", enabled: false },
-                        { text: "The Dungeon Diet", enabled: true },
-                    ]
-                } else if(itemComboBox.displayText == "Sand Brick" || itemComboBox.displayText == "Native Reed"){
-                    missionComboBox.model = [
-                        { text: "Former Capital Mephorash", enabled: false },
-                        { text: "Trust Busting Dustup", enabled: true },
-                    ]
-                } else if(itemComboBox.displayText == "Antique Cloth"){
-                    missionComboBox.model = [
-                        { text: "Former Capital Mephorash", enabled: false },
-                        { text: "Trust Busting Dustup", enabled: true },
-                        { text: "Erste Kingdom Episode 4", enabled: true },
-                    ]
-                } else if(itemComboBox.displayText == "Prosperity Flame" || itemComboBox.displayText == "Explosive Material" || itemComboBox.displayText == "Steel Liquid"){
-                    missionComboBox.model = [
-                        { text: "Agastia", enabled: false },
-                        { text: "Imperial Wanderer's Soul", enabled: true },
-                    ]
-                }
 
+                if(farmingModeComboBox.displayText === "Quest"){
+                    // Update the contents of the mission ComboBox with the appropriate Quest mission(s).
+                    if(itemComboBox.displayText == "Satin Feather" || itemComboBox.displayText == "Zephyr Feather" || itemComboBox.displayText == "Flying Sprout"){
+                        missionComboBox.model = [
+                            { text: "Port Breeze Archipelago", enabled: false },
+                            { text: "Scattered Cargo", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Fine Sand Bottle" || itemComboBox.displayText == "Untamed Flame" || itemComboBox.displayText == "Blistering Ore"){
+                        missionComboBox.model = [
+                            { text: "Valtz Duchy", enabled: false },
+                            { text: "Lucky Charm Hunt", enabled: true },
+                            { text: "Special Op's Request", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Fresh Water Jug" || itemComboBox.displayText == "Soothing Splash" || itemComboBox.displayText == "Glowing Coral"){
+                        missionComboBox.model = [
+                            { text: "Auguste Isles", enabled: false },
+                            { text: "Threat to the Fisheries", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Rough Stone" || itemComboBox.displayText == "Swirling Amber" || itemComboBox.displayText == "Coarse Alluvium"){
+                        missionComboBox.model = [
+                            { text: "Lumacie Archipelago", enabled: false },
+                            { text: "The Fruit of Lumacie", enabled: true },
+                            { text: "Whiff of Danger", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Falcon Feather" || itemComboBox.displayText == "Spring Water Jug" || itemComboBox.displayText == "Vermilion Stone"){
+                        missionComboBox.model = [
+                            { text: "Albion Citadel", enabled: false },
+                            { text: "I Challenge You!", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Slimy Shroom" || itemComboBox.displayText == "Hollow Soul" || itemComboBox.displayText == "Lacrimosa"){
+                        missionComboBox.model = [
+                            { text: "Mist-Shrouded Isle", enabled: false },
+                            { text: "For Whom the Bell Tolls", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Wheat Stalk" || itemComboBox.displayText == "Iron Cluster" || itemComboBox.displayText == "Olea Plant"){
+                        missionComboBox.model = [
+                            { text: "Golonzo Island", enabled: false },
+                            { text: "Golonzo's Battle of Old", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Indigo Fruit" || itemComboBox.displayText == "Foreboding Clover" || itemComboBox.displayText == "Blood Amber"){
+                        missionComboBox.model = [
+                            { text: "Amalthea Island", enabled: false },
+                            { text: "The Dungeon Diet", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Sand Brick" || itemComboBox.displayText == "Native Reed"){
+                        missionComboBox.model = [
+                            { text: "Former Capital Mephorash", enabled: false },
+                            { text: "Trust Busting Dustup", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Antique Cloth"){
+                        missionComboBox.model = [
+                            { text: "Former Capital Mephorash", enabled: false },
+                            { text: "Trust Busting Dustup", enabled: true },
+                            { text: "Erste Kingdom Episode 4", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Prosperity Flame" || itemComboBox.displayText == "Explosive Material" || itemComboBox.displayText == "Steel Liquid"){
+                        missionComboBox.model = [
+                            { text: "Agastia", enabled: false },
+                            { text: "Imperial Wanderer's Soul", enabled: true },
+                        ]
+                    }
+                }else if(farmingModeComboBox.displayText === "Special"){
+                    // Update the contents of the mission ComboBox with the appropriate Special mission(s).
+                    // Low and High Orbs.
+                    if(itemComboBox.displayText == "Fire Orb" || itemComboBox.displayText == "Inferno Orb"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Hellfire Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    }else if(itemComboBox.displayText == "Water Orb" || itemComboBox.displayText == "Frost Orb"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Deluge Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Earth Orb" || itemComboBox.displayText == "Rumbling Orb"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Wasteland Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Wind Orb" || itemComboBox.displayText == "Cyclone Orb"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Typhoon Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Light Orb" || itemComboBox.displayText == "Shining Orb"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Aurora Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Dark Orb" || itemComboBox.displayText == "Abysm Orb"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Scarlet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Oblivion Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    }
+                    
+                    // Tomes, Scrolls, and Whorls.
+                    else if(itemComboBox.displayText == "Red Tome" || itemComboBox.displayText == "Hellfire Scroll" || itemComboBox.displayText == "Infernal Whorl"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Hellfire Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Blue Tome" || itemComboBox.displayText == "Flood Scroll" || itemComboBox.displayText == "Tidal Whorl"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Deluge Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Brown Tome" || itemComboBox.displayText == "Thunder Scroll" || itemComboBox.displayText == "Seismic Whorl"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Wasteland Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Green Tome" || itemComboBox.displayText == "Gale Scroll" || itemComboBox.displayText == "Tempest Whorl"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Typhoon Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "White Tome" || itemComboBox.displayText == "Skylight Scroll" || itemComboBox.displayText == "Radiant Whorl"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Aurora Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Black Tome" || itemComboBox.displayText == "Chasm Scroll" || itemComboBox.displayText == "Umbral Whorl"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Oblivion Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    }
+
+                    // Chips and Prisms.
+                    else if(itemComboBox.displayText == "Prism Chip" || itemComboBox.displayText == "Flawless Prism" || itemComboBox.displayText == "Rainbow Prism"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Violet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Violet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Violet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Hellfire Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Deluge Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Wasteland Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Typhoon Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Aurora Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Oblivion Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Flawed Prism"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Violet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "H Violet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "VH Violet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Hellfire Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Deluge Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Wasteland Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Typhoon Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Aurora Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Oblivion Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "Angel Halo", enabled: false },
+                            { text: "H Angel Halo", map: "Angel Halo", enabled: true },
+                            { text: "VH Angel Halo", map: "Angel Halo", enabled: true },
+                        ]
+                    }
+
+                    // Farm EXP for characters.
+                    else if(itemComboBox.displayText == "EXP"){
+                        missionComboBox.model = [
+                            { text: "Shiny Slime Search!", enabled: false },
+                            { text: "N Shiny Slime Search!", map: "Shiny Slime Search!", enabled: true },
+                            { text: "H Shiny Slime Search!", map: "Shiny Slime Search!", enabled: true },
+                            { text: "VH Shiny Slime Search!", map: "Shiny Slime Search!", enabled: true },
+                        ]
+                    }
+
+                    // TODO: Showdown materials.
+
+                    // Dragon Scales.
+                    else if(itemComboBox.displayText == "Red Dragon Scale"){
+                        missionComboBox.model = [
+                            { text: "Six Dragon Trial", enabled: false },
+                            { text: "N Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "H Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "VH Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Hellfire Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Blue Dragon Scale"){
+                        missionComboBox.model = [
+                            { text: "Six Dragon Trial", enabled: false },
+                            { text: "N Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "H Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "VH Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Deluge Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Brown Dragon Scale"){
+                        missionComboBox.model = [
+                            { text: "Six Dragon Trial", enabled: false },
+                            { text: "N Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "H Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "VH Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Wasteland Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Green Dragon Scale"){
+                        missionComboBox.model = [
+                            { text: "Six Dragon Trial", enabled: false },
+                            { text: "N Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "H Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "VH Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Typhoon Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "White Dragon Scale"){
+                        missionComboBox.model = [
+                            { text: "Six Dragon Trial", enabled: false },
+                            { text: "N Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "H Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "VH Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Aurora Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "Angel Halo", enabled: false },
+                            { text: "H Angel Halo", map: "Angel Halo", enabled: true },
+                            { text: "VH Angel Halo", map: "Angel Halo", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Black Dragon Scale"){
+                        missionComboBox.model = [
+                            { text: "Six Dragon Trial", enabled: false },
+                            { text: "N Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "H Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "VH Six Dragon Trial", map: "Six Dragon Trial", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Oblivion Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    }
+
+//                    missionComboBox.model = [
+//                        // Basic Treasure Quests
+//                        { text: "Basic Treasure Quests", enabled: false },
+//                        { text: "N Scarlet Trial", enabled: true },
+//                        { text: "H Scarlet Trial", enabled: true },
+//                        { text: "VH Scarlet Trial", enabled: true },
+//                        { text: "Violet Trial", enabled: false },
+//                        { text: "N Violet Trial", enabled: true },
+//                        { text: "H Violet Trial", enabled: true },
+//                        { text: "VH Violet Trial", enabled: true },
+//                        { text: "Cerulean Trial", enabled: false },
+//                        { text: "N Cerulean Trial", enabled: true },
+//                        { text: "H Cerulean Trial", enabled: true },
+//                        { text: "VH Cerulean Trial", enabled: true },
+
+//                        // Shiny Slime Search!
+//                        { text: "Shiny Slime Search!", enabled: false },
+//                        { text: "N Shiny Slime Search!", enabled: true },
+//                        { text: "H Shiny Slime Search!", enabled: true },
+//                        { text: "VH Shiny Slime Search!", enabled: true },
+
+//                        // Six Dragon Trial
+//                        { text: "Six Dragon Trial", enabled: false },
+//                        { text: "N Six Dragon Trial", enabled: true },
+//                        { text: "H Six Dragon Trial", enabled: true },
+//                        { text: "VH Six Dragon Trial", enabled: true },
+
+//                        // Elemental Treasure Quests
+//                        { text: "Elemental Treasure Quests", enabled: false },
+//                        { text: "The Hellfire Trial", enabled: true },
+//                        { text: "The Deluge Trial", enabled: true },
+//                        { text: "The Wasteland Trial", enabled: true },
+//                        { text: "The Typhoon Trial", enabled: true },
+//                        { text: "The Aurora Trial", enabled: true },
+//                        { text: "The Oblivion Trial", enabled: true },
+
+//                        // Showdowns
+//                        { text: "Showdowns", enabled: false },
+
+//                        // Angel Halo
+//                        { text: "Angel Halo", enabled: false },
+//                        { text: "N Angel Halo", enabled: true },
+//                        { text: "H Angel Halo", enabled: true },
+//                        { text: "VH Angel Halo", enabled: true },
+//                    ]
+                }
+                
                 // Reset the mission ComboBox back to default.
                 missionComboBox.currentIndex = 0
                 missionComboBox.displayText = qsTr("Please select a mission.")
@@ -267,28 +674,31 @@ Item{
             id: missionComboBox
 
             width: 200
+            height: 30
             anchors.left: parent.left
             anchors.top: itemComboBox.bottom
-            enabled: false
             anchors.topMargin: 25
+            enabled: false
             anchors.leftMargin: 20
 
-            displayText: qsTr("Please select a mission.")
+            displayText: qsTr("Please select mission")
 
             currentIndex: 0
             textRole: "text"
 
+            model: []
+
             delegate: ItemDelegate {
                 width: missionComboBox.width
                 text: modelData.text
+
+                property var map: modelData.map // Holds the map in which the mission will take place in.
 
                 font.weight: missionComboBox.currentIndex === index ? Font.DemiBold : Font.Normal
                 highlighted: ListView.isCurrentItem
 
                 enabled: modelData.enabled
             }
-
-            model: []
 
             onVisibleChanged: {
                 if(missionComboBox.displayText === qsTr("Please select a mission.") && missionComboBox.enabled == true){
@@ -338,12 +748,17 @@ Item{
                 missionComboBox.displayText = qsTr(missionComboBox.model[currentIndex].text)
 
                 // Update the selected mission in the backend.
-                backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[0].text)
+                if(farmingModeComboBox.displayText == "Quest"){
+                    backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[0].text)
+                }else if(farmingModeComboBox.displayText == "Special"){
+                    backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[currentIndex].map)
+                }
+                
 
                 // Reveal the Mission Selection success message.
                 if(botReadyLabel.text !== qsTr("Bot is ready to start")){
                     missionSelectionTextFieldLabel.visible = true
-                }else if(summonSelectionLabel.text === qsTr("# of Items and Summon selected successfully") && summonSelectionLabel.visible == true){
+                }else if(summonSelectionLabel.text === qsTr("Summon selected successfully") && summonSelectionLabel.visible == true){
                     // Otherwise, tell the bot that it is ready to go and to just use the settings that the user set before changing the item and mission.
                     backend.check_bot_ready(true)
                 }
@@ -378,14 +793,14 @@ Item{
             id: amountOfItemTextField
 
             width: 100
-            height: 40
+            height: 30
             anchors.left: parent.left
             anchors.top: missionComboBox.bottom
+            anchors.topMargin: 25
+            anchors.leftMargin: 20
 
             textRole: "text"
             displayText: qsTr("# of Item")
-            anchors.leftMargin: 20
-            anchors.topMargin: 25
 
             currentIndex: 0
             enabled: false
@@ -406,8 +821,8 @@ Item{
                 // while resetting this ComboBox's default text.
                 if(amountOfItemTextField.enabled == true){
                     amountOfItemTextField.displayText = qsTr("# of Item")
-                    summonSelectionLabel.visible = true
-                    summonSelectionLabel.color = "#fc8c03"
+                    //summonSelectionLabel.visible = true
+                    //summonSelectionLabel.color = "#fc8c03"
                 }
             }
 
@@ -416,10 +831,30 @@ Item{
                 amountOfItemTextField.displayText = currentIndex + 1
                 backend.update_item_amount(amountOfItemTextField.displayText)
 
-                // Now enable the Summon Selection button and update the instructional message below.
-                if(summonSelectionLabel.text === qsTr("Select item amount to farm above")){
+                amountOfItemTextFieldLabel.visible = true
+
+                summonButton.enabled = true
+            }
+        }
+
+        Label {
+            id: amountOfItemTextFieldLabel
+
+            x: 20
+            width: 200
+            height: 13
+            visible: false
+
+            color: "#00ff00"
+            text: qsTr("Amount of items selected successfully")
+
+            anchors.top: amountOfItemTextField.bottom
+            anchors.topMargin: 5
+
+            onVisibleChanged: {
+                if(amountOfItemTextFieldLabel.visible === true){
                     summonButton.enabled = true
-                    summonSelectionLabel.text = qsTr("Now select your Summon")
+                    summonSelectionLabel.visible = true
                 }
             }
         }
@@ -427,12 +862,13 @@ Item{
         // Clicking this button will open up the overlay that will contain selectable Summons.
         Button {
             id: summonButton
+            height: 30
 
             text: qsTr("Select Summon")
             anchors.left: parent.left
-            anchors.top: missionComboBox.bottom
-            anchors.leftMargin: 180
+            anchors.top: amountOfItemTextField.bottom
             anchors.topMargin: 25
+            anchors.leftMargin: 20
 
             enabled: false
 
@@ -472,7 +908,7 @@ Item{
             visible: false
 
             color: "#fc8c03"
-            text: qsTr("Select item amount to farm above")
+            text: qsTr("Now select your Summon")
             anchors.top: summonButton.bottom
             anchors.topMargin: 5
         }
@@ -481,10 +917,13 @@ Item{
         ComboBox {
             id: groupSelectionComboBox
 
-            x: 20
             y: 289
             width: 100
-            height: 40
+            height: 30
+            anchors.left: parent.left
+            anchors.bottom: debugModeCheckBox.top
+            anchors.bottomMargin: 20
+            anchors.leftMargin: 20
             enabled: false
 
             currentIndex: 0
@@ -530,7 +969,11 @@ Item{
             x: 180
             y: 289
             width: 100
-            height: 40
+            height: 30
+            anchors.right: parent.right
+            anchors.bottom: botReadyLabel.top
+            anchors.rightMargin: 20
+            anchors.bottomMargin: 20
             enabled: false
 
             currentIndex: 0
@@ -574,6 +1017,8 @@ Item{
         // Enable/Disable the Debug Mode on whether or not the user wants to see more informational messages in the log.
         CustomCheckBox {
             id: debugModeCheckBox
+            width: 100
+            height: 30
 
             text: "Debug Mode"
             anchors.left: parent.left
@@ -598,7 +1043,7 @@ Item{
             x: 180
             y: 393
             width: 100
-            height: 40
+            height: 30
             color: "#ff0000"
 
             text: qsTr("Bot is not ready to start")
@@ -623,8 +1068,8 @@ Item{
             combatScriptTextFieldLabel.visible = true
             logTextArea.append("\nCombat script selected: " + scriptName)
 
-            // Enable the Item Selection ComboBox.
-            itemComboBox.enabled = true
+            // Enable the Farming Mode ComboBox.
+            farmingModeComboBox.enabled = true
         }
 
         // Output update messages to the log.
@@ -635,7 +1080,7 @@ Item{
         // Enable the group and party selectors after the backend receives the user-selected Summon. 
         // Update the informational message to indicate success.
         function onEnableGroupAndPartySelectors(){
-            summonSelectionLabel.text = qsTr("# of Items and Summon selected successfully")
+            summonSelectionLabel.text = qsTr("Summon selected successfully")
             summonSelectionLabel.color = "#00ff00"
 
             groupSelectionComboBox.enabled = true
