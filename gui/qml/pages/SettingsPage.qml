@@ -1074,6 +1074,7 @@ Item{
 
         // Output update messages to the log.
         function onUpdateMessage(updateMessage){
+            logTextArea.text = ""
             logTextArea.append("\n***************************\n" + updateMessage + "\n***************************")
         }
 
