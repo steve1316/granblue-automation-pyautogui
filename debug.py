@@ -45,8 +45,7 @@ class Debug:
         """Test finding amounts of all items on the screen.
 
         Args:
-            items_to_test (int): The island number that the items belong to. Refer to MapSelection's farmable_materials dictionary 
-            for each island's position as a key to their respective item values.
+            items_to_test (int): The index of the item_list that you want to test text detection against.
             
         Return:
             None
@@ -55,11 +54,14 @@ class Debug:
         self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing finding amounts of all items on screen...")
         self.game.print_and_save("################################################################################")
         
-        item_list = {1: ["Satin Feather", "Zephyr Feather", "Flying Sprout"],
-                     2: ["Fine Sand Bottle", "Untamed Flame", "Blistering Ore"],
-                     3: ["Fresh Water Jug", "Soothing Splash", "Glowing Coral"],
-                     4: ["Rough Stone", "Coarse Alluvium", "Swirling Amber"]
-                     }
+        item_list = {
+            1: ["Satin Feather", "Zephyr Feather", "Flying Sprout"],
+            2: ["Fine Sand Bottle", "Untamed Flame", "Blistering Ore"],
+            3: ["Fresh Water Jug", "Soothing Splash", "Glowing Coral"],
+            4: ["Rough Stone", "Coarse Alluvium", "Swirling Amber"],
+            5: ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb"],
+            6: ["Inferno Orb", "Frost Orb", "Rumbling Orb", "Cyclone Orb", "Shining Orb", "Abysm Orb"]
+        }
         
         for item in item_list[items_to_test]:
             result = self.game.image_tools.find_farmed_items([item])
