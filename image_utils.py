@@ -362,7 +362,9 @@ class ImageUtils:
         
         # List of items blacklisted from using guibot's built-in CV finder due to how similar looking they are. 
         # These items have to use my method using PyAutoGUI instead.
-        blacklisted_items = ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb"]
+        blacklisted_items = ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb",
+                             "Red Tome", "Blue Tome", "Brown Tome", "Green Tome", "White Tome", "Black Tome",
+                             "Hellfire Scroll", "Flood Scroll", "Thunder Scroll", "Gale Scroll", "Skylight Scroll", "Chasm Scroll"]
         
         # Save the amount gained of items in order according to the item_list.
         amounts_farmed = []
@@ -372,7 +374,7 @@ class ImageUtils:
             
             # Detect amounts gained from each item on the Loot Collected Screen. If the item is on the blacklist, use my method instead.
             if(item not in blacklisted_items):
-                locations = self.guibot.find_all(item, timeout=3, allow_zero=True)
+                locations = self.guibot.find_all(item, timeout=1, allow_zero=True)
             else:
                 locations = self.find_all(item, custom_confidence=0.99)
                 
