@@ -427,7 +427,15 @@ Item{
                     }
                     
                     // Tomes, Scrolls, and Whorls.
-                    else if(itemComboBox.displayText == "Red Tome" || itemComboBox.displayText == "Hellfire Scroll" || itemComboBox.displayText == "Infernal Whorl"){
+                    else if(itemComboBox.displayText == "Red Tome"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Hellfire Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    }
+                    else if(itemComboBox.displayText == "Hellfire Scroll" || itemComboBox.displayText == "Infernal Whorl"){
                         missionComboBox.model = [
                             { text: "Basic Treasure Quests", enabled: false },
                             { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
@@ -436,7 +444,14 @@ Item{
                             { text: "Elemental Treasure Quests", enabled: false },
                             { text: "The Hellfire Trial", map: "Elemental Treasure Quests", enabled: true },
                         ]
-                    } else if(itemComboBox.displayText == "Blue Tome" || itemComboBox.displayText == "Flood Scroll" || itemComboBox.displayText == "Tidal Whorl"){
+                    } else if(itemComboBox.displayText == "Blue Tome"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Deluge Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Flood Scroll" || itemComboBox.displayText == "Tidal Whorl"){
                         missionComboBox.model = [
                             { text: "Basic Treasure Quests", enabled: false },
                             { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
@@ -445,7 +460,14 @@ Item{
                             { text: "Elemental Treasure Quests", enabled: false },
                             { text: "The Deluge Trial", map: "Elemental Treasure Quests", enabled: true },
                         ]
-                    } else if(itemComboBox.displayText == "Brown Tome" || itemComboBox.displayText == "Thunder Scroll" || itemComboBox.displayText == "Seismic Whorl"){
+                    } else if(itemComboBox.displayText == "Brown Tome"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Wasteland Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Thunder Scroll" || itemComboBox.displayText == "Seismic Whorl"){
                         missionComboBox.model = [
                             { text: "Basic Treasure Quests", enabled: false },
                             { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
@@ -454,7 +476,14 @@ Item{
                             { text: "Elemental Treasure Quests", enabled: false },
                             { text: "The Wasteland Trial", map: "Elemental Treasure Quests", enabled: true },
                         ]
-                    } else if(itemComboBox.displayText == "Green Tome" || itemComboBox.displayText == "Gale Scroll" || itemComboBox.displayText == "Tempest Whorl"){
+                    } else if(itemComboBox.displayText == "Green Tome"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Typhoon Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Gale Scroll" || itemComboBox.displayText == "Tempest Whorl"){
                         missionComboBox.model = [
                             { text: "Basic Treasure Quests", enabled: false },
                             { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
@@ -463,7 +492,14 @@ Item{
                             { text: "Elemental Treasure Quests", enabled: false },
                             { text: "The Typhoon Trial", map: "Elemental Treasure Quests", enabled: true },
                         ]
-                    } else if(itemComboBox.displayText == "White Tome" || itemComboBox.displayText == "Skylight Scroll" || itemComboBox.displayText == "Radiant Whorl"){
+                    } else if(itemComboBox.displayText == "White Tome"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Aurora Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Skylight Scroll" || itemComboBox.displayText == "Radiant Whorl"){
                         missionComboBox.model = [
                             { text: "Basic Treasure Quests", enabled: false },
                             { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
@@ -472,7 +508,14 @@ Item{
                             { text: "Elemental Treasure Quests", enabled: false },
                             { text: "The Aurora Trial", map: "Elemental Treasure Quests", enabled: true },
                         ]
-                    } else if(itemComboBox.displayText == "Black Tome" || itemComboBox.displayText == "Chasm Scroll" || itemComboBox.displayText == "Umbral Whorl"){
+                    } else if(itemComboBox.displayText == "Black Tome"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Oblivion Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Chasm Scroll" || itemComboBox.displayText == "Umbral Whorl"){
                         missionComboBox.model = [
                             { text: "Basic Treasure Quests", enabled: false },
                             { text: "N Cerulean Trial", map: "Basic Treasure Quests", enabled: true },
