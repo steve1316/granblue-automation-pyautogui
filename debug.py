@@ -45,7 +45,7 @@ class Debug:
         """Test finding amounts of all items on the screen.
 
         Args:
-            items_to_test (int): The index of the item_list that you want to test text detection against.
+            items_to_test (int): The index of the item_list inside this method that you want to test text detection against.
             
         Return:
             None
@@ -60,7 +60,10 @@ class Debug:
             3: ["Fresh Water Jug", "Soothing Splash", "Glowing Coral"],
             4: ["Rough Stone", "Coarse Alluvium", "Swirling Amber"],
             5: ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb"],
-            6: ["Inferno Orb", "Frost Orb", "Rumbling Orb", "Cyclone Orb", "Shining Orb", "Abysm Orb"]
+            6: ["Inferno Orb", "Frost Orb", "Rumbling Orb", "Cyclone Orb", "Shining Orb", "Abysm Orb"],
+            7: ["Red Tome", "Blue Tome", "Brown Tome", "Green Tome", "White Tome", "Black Tome"],
+            8: ["Hellfire Scroll", "Flood Scroll", "Thunder Scroll", "Gale Scroll", "Skylight Scroll", "Chasm Scroll"],
+            9: ["Infernal Whorl", "Tidal Whorl", "Seismic Whorl", "Tempest Whorl", "Radiant Whorl", "Umbral Whorl"]
         }
         
         for item in item_list[items_to_test]:
