@@ -25,10 +25,10 @@ By downloading this program, you consent to your account potentially getting fla
 
 # TODO List
 ## Backend
-- [x] Save each message in the Queue to a list in memory. When frontend requests for a saved log file, save the list in memory to a new log file.
-- [x] Clean up Combat Mode by having all absolute coordinates in variables at the top.
-- [x] Consolidate all finding button and clicking it logic into one function.
-- [x] Implement detection if party wiped during Combat Mode.
+- [x] ~~Save each message in the Queue to a list in memory. When frontend requests for a saved log file, save the list in memory to a new log file.~~
+- [x] ~~Clean up Combat Mode by having all absolute coordinates in variables at the top.~~
+- [x] ~~Consolidate all finding button and clicking it logic into one function.~~
+- [x] ~~Implement detection if party wiped during Combat Mode.~~
 - [ ] ~~Implement selection from list of Summons in order of most preferred to least. If none after several tries, pick the very first Summon randomly.~~ This is axed for now. Might come back to this after the rest of the TODO List is completed.
 - [ ] (MEDIUM PRIORITY) Remove all sys.exit() code.
 - [ ] (HIGH PRIORITY) Implement Special Quests navigation/items.
@@ -42,13 +42,12 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] (LOW PRIORITY) Deal with any left-over TODOs.
 - [ ] (MEDIUM PRIORITY) Implement try-catches to inform users of when errors occur.
 - [ ] (LOW PRIORITY) Eventually remove dependency on Game class from ImageUtils and MouseUtils and move any relevant functionality over to the Game class.
-- [x] (MAX PRIORITY) Because this project was developed on a 1440p monitor, anything less or more than that would break the image processing. All image processing in this project needs to be generalized such that it would not matter whether the user has a 1440p or a 1080p monitor, they would get both get the same results.
+- [x] ~~(MAX PRIORITY) Because this project was developed on a 1440p monitor, anything less or more than that would break the image processing. All image processing in this project needs to be generalized such that it would not matter whether the user has a 1440p or a 1080p monitor, they would get both get the same results.~~
 ## Frontend
-- [x] Add a Save Logs button.
-- [x] Add a Group/Party selector.
-- [x] Add a Summons selector. (Maybe with pictures?)
-- [x] Add a selector for the amount of the specified item to be farmed.
-- [ ] Make the Pages' current widths become the minimum and allow them to expand.
+- [x] ~~Add a Save Logs button.~~
+- [x] ~~Add a Group/Party selector.~~
+- [x] ~~Add a Summons selector. (Maybe with pictures?)~~
+- [x] ~~Add a selector for the amount of the specified item to be farmed.~~
 - [ ] (MEDIUM PRIORITY) Implement a user-defined timer for how long the bot can run for.
 - [ ] (HIGH PRIORITY) Add Special Quest items.
 - [ ] (HIGH PRIORITY) Add Coop items.
