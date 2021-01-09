@@ -63,7 +63,8 @@ class Debug:
             6: ["Inferno Orb", "Frost Orb", "Rumbling Orb", "Cyclone Orb", "Shining Orb", "Abysm Orb"],
             7: ["Red Tome", "Blue Tome", "Brown Tome", "Green Tome", "White Tome", "Black Tome"],
             8: ["Hellfire Scroll", "Flood Scroll", "Thunder Scroll", "Gale Scroll", "Skylight Scroll", "Chasm Scroll"],
-            9: ["Infernal Whorl", "Tidal Whorl", "Seismic Whorl", "Tempest Whorl", "Radiant Whorl", "Umbral Whorl"]
+            9: ["Infernal Whorl", "Tidal Whorl", "Seismic Whorl", "Tempest Whorl", "Radiant Whorl", "Umbral Whorl"],
+            10: ["Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism"]
         }
         
         for item in item_list[items_to_test]:

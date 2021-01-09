@@ -527,12 +527,11 @@ Item{
                     }
 
                     // Chips and Prisms.
-                    else if(itemComboBox.displayText == "Prism Chip" || itemComboBox.displayText == "Flawless Prism" || itemComboBox.displayText == "Rainbow Prism"){
+                    else if(itemComboBox.displayText == "Prism Chip"){
                         missionComboBox.model = [
                             { text: "Basic Treasure Quests", enabled: false },
                             { text: "N Violet Trial", map: "Basic Treasure Quests", enabled: true },
                             { text: "H Violet Trial", map: "Basic Treasure Quests", enabled: true },
-                            { text: "VH Violet Trial", map: "Basic Treasure Quests", enabled: true },
                             { text: "Elemental Treasure Quests", enabled: false },
                             { text: "The Hellfire Trial", map: "Elemental Treasure Quests", enabled: true },
                             { text: "The Deluge Trial", map: "Elemental Treasure Quests", enabled: true },
@@ -557,6 +556,18 @@ Item{
                             { text: "Angel Halo", enabled: false },
                             { text: "H Angel Halo", map: "Angel Halo", enabled: true },
                             { text: "VH Angel Halo", map: "Angel Halo", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText == "Flawless Prism" || itemComboBox.displayText == "Rainbow Prism"){
+                        missionComboBox.model = [
+                            { text: "Basic Treasure Quests", enabled: false },
+                            { text: "VH Violet Trial", map: "Basic Treasure Quests", enabled: true },
+                            { text: "Elemental Treasure Quests", enabled: false },
+                            { text: "The Hellfire Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Deluge Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Wasteland Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Typhoon Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Aurora Trial", map: "Elemental Treasure Quests", enabled: true },
+                            { text: "The Oblivion Trial", map: "Elemental Treasure Quests", enabled: true },
                         ]
                     }
 
