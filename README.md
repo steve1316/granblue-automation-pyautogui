@@ -53,7 +53,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] (HIGH PRIORITY) Add Coop items.
 - [ ] (HIGH PRIORITY) Add Raid items.
 # Requirements
-1. [Python 3.8+](https://www.python.org/downloads/) (Python 3.8.3 was used for the development of this project)
+1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
 2. [Granblue Fantasy account](http://game.granbluefantasy.jp/)
 3. [Twitter Developer account (not required for now)](https://developer.twitter.com/en)
 4. More to be included soon...
@@ -62,16 +62,16 @@ By downloading this program, you consent to your account potentially getting fla
 ```
 // Execute this line in your terminal opened up in the root of the project folder to install all of the following dependencies at once.
 // For Windows:
-pip install -r requirements_windows.txt
+pip install -r requirements.txt
 
 // For Linux (with some additional necessary commands):
-// Note: Linux is unsupported for now...
-<!-- pip3 install -r requirements_linux.txt
-sudo apt-get install python3-tk python3-dev
-sudo apt-get install qt5-default
-pip3 uninstall opencv-python
-pip3 install opencv-python-headless
-sudo apt-get install msttcorefonts // Might be unnecessary. -->
+// Note: Linux is unsupported for now. These needs further testing..
+// pip3 install -r requirements_linux.txt
+// sudo apt-get install python3-tk python3-dev
+// sudo apt-get install qt5-default
+// pip3 uninstall opencv-python
+// pip3 install opencv-python-headless
+// sudo apt-get install msttcorefonts // Might be unnecessary.
 ```
 
 - [PyTorch 1.7.1](https://pytorch.org/) (Installing the CUDA version will improve the speed of template matching if you have a CUDA-compatible GPU)
@@ -84,8 +84,9 @@ sudo apt-get install msttcorefonts // Might be unnecessary. -->
 
 # Instructions
 1. Download the entire project folder.
-2. Open up the game on a Chromium-based browser and log in if you haven't already done so. Click away any daily log in popups until you are at the Main/Home screen.
-3. Now open up the program in the following ways for each OS:
+2. Make sure you installed the project dependencies by having Python 3.8.3+ installed and ran `pip install -r requirements.txt` in a terminal.
+3. Open up the game on a Chromium-based browser and log in if you haven't already done so. Click away any daily log in popups until you are at the Main/Home screen.
+4. Now open up the program in the following ways for each OS:
    - For Windows: Open up the terminal in the root of the project folder and type:
 	```
 	python main.py
