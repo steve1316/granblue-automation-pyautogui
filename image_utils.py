@@ -364,7 +364,12 @@ class ImageUtils:
         # These items have to use my method using PyAutoGUI instead.
         blacklisted_items = ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb",
                              "Red Tome", "Blue Tome", "Brown Tome", "Green Tome", "White Tome", "Black Tome",
-                             "Hellfire Scroll", "Flood Scroll", "Thunder Scroll", "Gale Scroll", "Skylight Scroll", "Chasm Scroll"]
+                             "Hellfire Scroll", "Flood Scroll", "Thunder Scroll", "Gale Scroll", "Skylight Scroll", "Chasm Scroll",
+                             "Jasper Scale", "Infernal Garnet", "Crystal Spirit", "Frozen Hell Prism", "Luminous Judgment", 
+                             "Evil Judge Crystal", "Sagittarius Rune", "Horseman's Plate", "Sunlight Quartz", "Halo Light Quartz",
+                             "Shadow Silver", "Phantom Demon Jewel", "Ifrit Anima", "Ifrit Omega Anima", "Cocytus Anima", "Cocytus Omega Anima",
+                             "Vohu Manah Anima", "Vohu Manah Omega Anima", "Sagittarius Anima", "Sagittarius Omega Anima",
+                             "Corow Anima", "Corow Omega Anima", "Diablo Anima", "Diablo Omega Anima"]
         
         # Save the amount gained of items in order according to the item_list.
         amounts_farmed = []
