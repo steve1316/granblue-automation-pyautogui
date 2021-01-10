@@ -64,7 +64,9 @@ class Debug:
             7: ["Red Tome", "Blue Tome", "Brown Tome", "Green Tome", "White Tome", "Black Tome"],
             8: ["Hellfire Scroll", "Flood Scroll", "Thunder Scroll", "Gale Scroll", "Skylight Scroll", "Chasm Scroll"],
             9: ["Infernal Whorl", "Tidal Whorl", "Seismic Whorl", "Tempest Whorl", "Radiant Whorl", "Umbral Whorl"],
-            10: ["Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism"]
+            10: ["Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism"],
+            11: ["Red Dragon Scale", "Blue Dragon Scale", "Brown Dragon Scale", "Green Dragon Scale", "White Dragon Scale", "Black Dragon Scale"],
+            12: ["Hellfire Fragment", "Deluge Fragment", "Wasteland Fragment", "Typhoon Fragment"]
         }
         
         for item in item_list[items_to_test]:
