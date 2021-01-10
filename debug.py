@@ -66,13 +66,20 @@ class Debug:
             9: ["Infernal Whorl", "Tidal Whorl", "Seismic Whorl", "Tempest Whorl", "Radiant Whorl", "Umbral Whorl"],
             10: ["Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism"],
             11: ["Red Dragon Scale", "Blue Dragon Scale", "Brown Dragon Scale", "Green Dragon Scale", "White Dragon Scale", "Black Dragon Scale"],
-            12: ["Hellfire Fragment", "Deluge Fragment", "Wasteland Fragment", "Typhoon Fragment"]
+            12: ["Hellfire Fragment", "Deluge Fragment", "Wasteland Fragment", "Typhoon Fragment"],
+            13: ["Jasper Scale", "Scorching Peak", "Infernal Garnet", "Ifrit Anima", "Ifrit Omega Anima", "Fire Grimoire"],
+            14: ["Mourning Stone", "Crystal Spirit", "Frozen Hell Prism", "Cocytus Anima", "Cocytus Omega Anima", "Water Grimoire"],
+            15: ["Scrutiny Stone", "Luminous Judgment", "Evil Judge Crystal", "Vohu Manah Anima", "Vohu Manah Omega Anima", "Earth Grimoire"],
+            16: ["Sagittarius Arrowhead", "Sagittarius Rune", "Horseman's Plate", "Sagittarius Anima", "Sagittarius Omega Anima", "Wind Grimoire"],
+            17: ["Solar Ring", "Sunlight Quartz", "Halo Light Quartz", "Corow Anima", "Corow Omega Anima"],
+            18: ["Twilight Cloth Strip", "Shadow Silver", "Phantom Demon Jewel", "Diablo Anima", "Diablo Omega Anima"]
         }
         
         for item in item_list[items_to_test]:
             result = self.game.image_tools.find_farmed_items([item])
             self.game.print_and_save(f"\n{self.game.printtime()} [TEST] {item} farmed: {result}")
             
+        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Item Detection was successful.")
         self.isBotRunning.value = 1
         
     def test_map_selection(self):
