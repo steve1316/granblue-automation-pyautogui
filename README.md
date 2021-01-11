@@ -31,7 +31,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] ~~Implement detection if party wiped during Combat Mode.~~
 - [ ] ~~Implement selection from list of Summons in order of most preferred to least. If none after several tries, pick the very first Summon randomly.~~ This is axed for now. Might come back to this after the rest of the TODO List is completed.
 - [ ] (MEDIUM PRIORITY) Remove all sys.exit() code.
-- [ ] (HIGH PRIORITY) Implement Special Quests navigation/items.
+- [x] ~~(HIGH PRIORITY) Implement Special Quests navigation/items.~~
 - [ ] (HIGH PRIORITY) Implement Coop Quests navigation/items.
 - [ ] (HIGH PRIORITY) Implement Raid navigation/items.
 	- [ ] (HIGH PRIORITY) Implement Twitter room code scraper/parser.
@@ -49,7 +49,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] ~~Add a Summons selector. (Maybe with pictures?)~~
 - [x] ~~Add a selector for the amount of the specified item to be farmed.~~
 - [ ] (MEDIUM PRIORITY) Implement a user-defined timer for how long the bot can run for.
-- [ ] (HIGH PRIORITY) Add Special Quest items.
+- [x] ~~(HIGH PRIORITY) Add Special Quest items.~~
 - [ ] (HIGH PRIORITY) Add Coop items.
 - [ ] (HIGH PRIORITY) Add Raid items.
 # Requirements
