@@ -3,12 +3,14 @@ import multiprocessing
 import sys
 import time
 from timeit import default_timer as timer
+from typing import Iterable
 
 import pyautogui
 
 from image_utils import ImageUtils
 from map_selection import MapSelection
 from mouse_utils import MouseUtils
+from twitter_room_finder import TwitterRoomFinder
 
 
 class Game:
@@ -21,26 +23,26 @@ class Game:
 
     isBotRunning (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
     
+    keys_tokens (Iterable[str]): List of keys and tokens for Twitter API.
+    
     custom_mouse_speed (float, optional): The speed at which the mouse moves at. Defaults to 0.5.
+    
+    combat_script (str, optional): The combat script to use for Combat Mode. Defaults to empty string.
 
-    debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to True.
+    debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
 
     """
 
-    def __init__(self, queue: multiprocessing.Queue, isBotRunning: int, combat_script: str = "", custom_mouse_speed: float = 0.5, debug_mode: bool = False):
+    def __init__(self, queue: multiprocessing.Queue, isBotRunning: int, keys_tokens: Iterable[str], combat_script: str = "", custom_mouse_speed: float = 0.5, debug_mode: bool = False):
         super().__init__()
 
-        # Start a timer signaling bot start in order to keep track of elapsed time in logging messages.
+        # Start a timer signaling bot start in order to keep track of elapsed time and create a Queue to share logging messages between backend and frontend.
         self.starting_time = timer()
-
-        # Queue to keep share logging messages between backend and frontend.
         self.queue = queue
-        
-        # Combat script for use during Combat Mode.
-        self.combat_script = combat_script
-        
-        # Initialize the Map Selection class.
+
+        # Initialize the MapSelection and TwitterRoomFinder objects.
         self.map_selection = MapSelection(self)
+        # self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3])
 
         # Set a debug flag to determine whether or not to print debugging messages.
         self.debug_mode = debug_mode
@@ -53,7 +55,8 @@ class Game:
         self.attack_button_location = None
         self.back_button_location = None
         
-        # Some more flags to keep track of the bot's progress during runtime.
+        # Keep track of the following for Combat Mode.
+        self.combat_script = combat_script
         self.isBotRunning = isBotRunning
         self.retreat_check = False
         self.suppress_error = True
