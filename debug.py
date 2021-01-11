@@ -1,6 +1,8 @@
+import datetime
 import sys
 
 import pyautogui
+import tweepy
 
 
 class Debug:
@@ -12,6 +14,8 @@ class Debug:
     game (game.Game): The Game object to test with.
     
     isBotRunning (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
+    
+    combat_script (str): The combat script to test with.
 
     """
 
@@ -21,6 +25,28 @@ class Debug:
         self.game = game
         self.isBotRunning = isBotRunning
         self.combat_script = combat_script
+        
+    def test_twitter_listener(self):
+        """Tests finding 10 most recent Grimnir room codes from EN.
+        
+        Args:
+            None
+            
+        Return:
+            None
+        """
+        self.game.print_and_save("\n################################################################################")
+        self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing Finding 10 Most Recent Grimnir Room Codes...")
+        self.game.print_and_save("################################################################################")
+        
+        tweets = self.game.room_finder.find_10_most_recent("+Lvl 120 Grimnir")
+        room_codes = self.game.room_finder.clean_tweets(tweets)
+        for i, tweet in enumerate(tweets):
+            self.game.print_and_save(f"\n{self.game.printtime()} [TEST] Tweet created at {tweet.created_at}: \n" + tweet.text)
+            self.game.print_and_save(f"{self.game.printtime()} [TEST] Detected Room Code is: {room_codes[i]}")
+            
+        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Finding 10 Most Recent Grimnir Room Codes from EN was successful.")
+        self.isBotRunning.value = 1
         
     def test_farming_mode(self):
         """Tests the Farming Mode by navigating to the Special Op's Request and farm 10 Fine Sand Bottles with the specified party and summon.
@@ -39,6 +65,7 @@ class Debug:
                                      map_mode="quest", map_name="Valtz Duchy", item_name="Fine Sand Bottle", item_amount_to_farm=10, 
                                      mission_name="Special Op's Request")
         
+        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Farming Mode was successful.")
         self.isBotRunning.value = 1
         
     def test_item_detection(self, items_to_test: int):
