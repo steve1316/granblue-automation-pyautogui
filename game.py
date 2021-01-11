@@ -841,6 +841,8 @@ class Game:
                 difficulty = "Hard"
             elif(mission_name.find("VH ") == 0):
                 difficulty = "Very Hard"
+            elif(mission_name.find("EX ") == 0):
+                difficulty = "Extreme"
         
         print("Mission Name: ", mission_name)
         print("Difficulty: ", difficulty)

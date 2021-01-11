@@ -332,6 +332,8 @@ class MapSelection:
                     temp_mission_name = mission_name[1:]
                 elif(difficulty == "Very Hard"):
                     temp_mission_name = mission_name[3:]
+                elif(difficulty == "Extreme"):
+                    temp_mission_name = mission_name[3:]
                     
                 # If the first character is a whitespace after processing the string, remove it.
                 if(temp_mission_name[0] == " "):
@@ -357,52 +359,28 @@ class MapSelection:
                                     self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Scarlet Trial...")
                                     trial_buttons = self.game.image_tools.find_all("special_play")
                                     self.game.mouse_tools.move_and_click_point(trial_buttons[0][0], trial_buttons[0][1])
-                                    
-                                    # Now start Scarlet Trial with the specified difficulty.
-                                    self.game.wait_for_ping(1)
-                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Now navigating to {difficulty}...")
-                                    difficulty_play_buttons = self.game.image_tools.find_all("special_play")
-                                    
-                                    if(difficulty == "Normal"):
-                                        difficulty_play_button = (difficulty_play_buttons[0][0], difficulty_play_buttons[0][1])
-                                    elif(difficulty == "Hard"):
-                                        difficulty_play_button = (difficulty_play_buttons[1][0], difficulty_play_buttons[1][1])
-                                    else:
-                                        difficulty_play_button = (difficulty_play_buttons[2][0], difficulty_play_buttons[2][1])
                                 elif(temp_mission_name == "Cerulean Trial"):
                                     # Navigate to Cerulean Trial.
                                     self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Cerulean Trial...")
                                     trial_buttons = self.game.image_tools.find_all("special_play")
                                     self.game.mouse_tools.move_and_click_point(trial_buttons[1][0], trial_buttons[1][1])
-                                    
-                                    # Now start Cerulean Trial with the specified difficulty.
-                                    self.game.wait_for_ping(1)
-                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Now navigating to {difficulty}...")
-                                    difficulty_play_buttons = self.game.image_tools.find_all("special_play")
-                                    
-                                    if(difficulty == "Normal"):
-                                        difficulty_play_button = (difficulty_play_buttons[0][0], difficulty_play_buttons[0][1])
-                                    elif(difficulty == "Hard"):
-                                        difficulty_play_button = (difficulty_play_buttons[1][0], difficulty_play_buttons[1][1])
-                                    else:
-                                        difficulty_play_button = (difficulty_play_buttons[2][0], difficulty_play_buttons[2][1])
                                 elif(temp_mission_name == "Violet Trial"):
                                     # Navigate to Violet Trial.
                                     self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Violet Trial...")
                                     trial_buttons = self.game.image_tools.find_all("special_play")
                                     self.game.mouse_tools.move_and_click_point(trial_buttons[2][0], trial_buttons[2][1])
                                     
-                                    # Now start Violet Trial with the specified difficulty.
-                                    self.game.wait_for_ping(1)
-                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Now navigating to {difficulty}...")
-                                    difficulty_play_buttons = self.game.image_tools.find_all("special_play")
-                                    
-                                    if(difficulty == "Normal"):
-                                        difficulty_play_button = (difficulty_play_buttons[0][0], difficulty_play_buttons[0][1])
-                                    elif(difficulty == "Hard"):
-                                        difficulty_play_button = (difficulty_play_buttons[1][0], difficulty_play_buttons[1][1])
-                                    else:
-                                        difficulty_play_button = (difficulty_play_buttons[2][0], difficulty_play_buttons[2][1])
+                                # Now start the Trial with the specified difficulty.
+                                self.game.wait_for_ping(1)
+                                self.game.print_and_save(f"{self.game.printtime()} [INFO] Now navigating to {difficulty}...")
+                                difficulty_play_buttons = self.game.image_tools.find_all("special_play")
+                                
+                                if(difficulty == "Normal"):
+                                    difficulty_play_button = (difficulty_play_buttons[0][0], difficulty_play_buttons[0][1])
+                                elif(difficulty == "Hard"):
+                                    difficulty_play_button = (difficulty_play_buttons[1][0], difficulty_play_buttons[1][1])
+                                else:
+                                    difficulty_play_button = (difficulty_play_buttons[2][0], difficulty_play_buttons[2][1])
                             elif(map_name == "Shiny Slime Search!"):
                                 # Start up the Shiny Slime Search! mission by selecting its difficulty.
                                 self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting {difficulty} Shiny Slime Search!...")
@@ -439,8 +417,50 @@ class MapSelection:
                                     difficulty_play_button = (difficulty_play_buttons[4][0], difficulty_play_buttons[4][1])
                                 elif(temp_mission_name == "The Oblivion Trial"):
                                     difficulty_play_button = (difficulty_play_buttons[5][0], difficulty_play_buttons[5][1])
-                            elif(map_name == "Showdowns"):
-                                raise Exception("Showdowns are not supported yet.")
+                            elif(map_name == "Showdowns"):          
+                                if(temp_mission_name == "Ifrit Showdown"):
+                                    # Navigate to Ifrit Showdown.
+                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Ifrit Showdown...")
+                                    trial_buttons = self.game.image_tools.find_all("special_play")
+                                    self.game.mouse_tools.move_and_click_point(trial_buttons[0][0], trial_buttons[0][1])
+                                elif(temp_mission_name == "Cocytus Showdown"):
+                                    # Navigate to Cocytus Showdown.
+                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Cocytus Showdown...")
+                                    trial_buttons = self.game.image_tools.find_all("special_play")
+                                    self.game.mouse_tools.move_and_click_point(trial_buttons[1][0], trial_buttons[1][1])
+                                elif(temp_mission_name == "Vohu Manah Showdown"):
+                                    # Navigate to Vohu Manah Showdown.
+                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Vohu Manah Showdown...")
+                                    trial_buttons = self.game.image_tools.find_all("special_play")
+                                    self.game.mouse_tools.move_and_click_point(trial_buttons[2][0], trial_buttons[2][1])
+                                elif(temp_mission_name == "Sagittarius Showdown"):
+                                    # Navigate to Sagittarius Showdown.
+                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Sagittarius Showdown...")
+                                    trial_buttons = self.game.image_tools.find_all("special_play")
+                                    self.game.mouse_tools.move_and_click_point(trial_buttons[3][0], trial_buttons[3][1])
+                                elif(temp_mission_name == "Corow Showdown"):
+                                    # Navigate to Corow Showdown.
+                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Corow Showdown...")
+                                    trial_buttons = self.game.image_tools.find_all("special_play")
+                                    self.game.mouse_tools.move_and_click_point(trial_buttons[4][0], trial_buttons[4][1])
+                                elif(temp_mission_name == "Diablo Showdown"):
+                                    # Navigate to Diablo Showdown.
+                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Diablo Showdown...")
+                                    trial_buttons = self.game.image_tools.find_all("special_play")
+                                    self.game.mouse_tools.move_and_click_point(trial_buttons[5][0], trial_buttons[5][1])
+                                    
+                                # Now start the Showdown with the specified difficulty.
+                                self.game.wait_for_ping(1)
+                                self.game.print_and_save(f"{self.game.printtime()} [INFO] Now navigating to {difficulty}...")
+                                difficulty_play_buttons = self.game.image_tools.find_all("special_play")
+                                
+                                if(difficulty == "Hard"):
+                                    difficulty_play_button = (difficulty_play_buttons[1][0], difficulty_play_buttons[1][1])
+                                elif(difficulty == "Very Hard"):
+                                    difficulty_play_button = (difficulty_play_buttons[2][0], difficulty_play_buttons[2][1])
+                                elif(difficulty == "Extreme"):
+                                    difficulty_play_button = (difficulty_play_buttons[3][0], difficulty_play_buttons[3][1])
+                                
                             else:
                                 # Start up the Angel Halo mission by selecting its difficulty.
                                 self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting {difficulty} Angel Halo...")
