@@ -10,6 +10,7 @@ from PySide2.QtQml import QQmlApplicationEngine
 from debug import Debug
 from game import Game
 from map_selection import MapSelection
+from twitter_room_finder import TwitterRoomFinder
 
 class Tester:
     def __init__(self):
@@ -19,11 +20,16 @@ class Tester:
         self.debug = None
         
     def run_bot(self, item_name, item_amount, farming_mode, location_name, mission_name, summon_element_name, summon_name, group_number, party_number, queue, isBotRunning, combat_script, debug_mode):
-        self.game = Game(queue=queue, isBotRunning=isBotRunning, combat_script=combat_script, custom_mouse_speed=0.25, debug_mode=debug_mode)
+        keys_tokens = ["", "", "", ""]
+        
+        self.game = Game(queue=queue, isBotRunning=isBotRunning, keys_tokens=keys_tokens, combat_script=combat_script, custom_mouse_speed=0.25, debug_mode=debug_mode)
         self.map_selection = MapSelection(self.game)
         self.debug = Debug(self.game, isBotRunning=isBotRunning, combat_script=combat_script)
         
         self.game.start_farming_mode(summon_element_name, summon_name, group_number, party_number, farming_mode, location_name, item_name, item_amount, mission_name)
+        
+        # Test finding 10 most recent Grimnir room codes.
+        # self.debug.test_twitter_listener()
         
         # Test finding amounts of all items on the screen.
         # self.debug.test_item_detection(4)
