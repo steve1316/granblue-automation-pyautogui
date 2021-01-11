@@ -820,10 +820,16 @@ class Game:
         Returns:
             None
         """
-        self.print_and_save("\n\n################################################################################")
-        self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode.")
-        self.print_and_save(f"{self.printtime()} [FARM] Farming {item_amount_to_farm}x {item_name}")
-        self.print_and_save("################################################################################\n")
+        if(item_name != "EXP"):
+            self.print_and_save("\n\n################################################################################")
+            self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode.")
+            self.print_and_save(f"{self.printtime()} [FARM] Farming {item_amount_to_farm}x {item_name}")
+            self.print_and_save("################################################################################\n")
+        else:
+            self.print_and_save("\n\n################################################################################")
+            self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode.")
+            self.print_and_save(f"{self.printtime()} [FARM] Doing {item_amount_to_farm}x runs for {item_name}")
+            self.print_and_save("################################################################################\n")
         
         difficulty = ""
         
@@ -863,15 +869,24 @@ class Game:
                 
                 if(self.start_combat_mode(self.combat_script)):
                     # After Combat Mode has finished, count the number of the specified item that has dropped.
-                    temp_amount = self.image_tools.find_farmed_items([item_name])[0]
-                    item_amount_farmed += temp_amount
+                    if(item_name != "EXP"):
+                        temp_amount = self.image_tools.find_farmed_items([item_name])[0]
+                        item_amount_farmed += temp_amount
+                    else:
+                        item_amount_farmed += 1
+                        
                     amount_of_runs_finished += 1
                     
-                    self.print_and_save("\n\n********************************************************************************")
-                    self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained this run: {temp_amount}")
-                    self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained in total: {item_amount_farmed} / {item_amount_to_farm}")
-                    self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {amount_of_runs_finished}")
-                    self.print_and_save("********************************************************************************\n")
+                    if(item_name != "EXP"):
+                        self.print_and_save("\n\n********************************************************************************")
+                        self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained this run: {temp_amount}")
+                        self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained in total: {item_amount_farmed} / {item_amount_to_farm}")
+                        self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {amount_of_runs_finished}")
+                        self.print_and_save("********************************************************************************\n")
+                    else:
+                        self.print_and_save("\n\n********************************************************************************")
+                        self.print_and_save(f"{self.printtime()} [FARM] Runs done for EXP in total: {item_amount_farmed} / {item_amount_to_farm}")
+                        self.print_and_save("********************************************************************************\n")
                     
                     if(item_amount_farmed < item_amount_to_farm):
                         # Click the Play Again button.
