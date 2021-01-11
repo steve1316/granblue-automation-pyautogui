@@ -892,8 +892,9 @@ class Game:
                         # Click the Play Again button.
                         self.find_and_click_button("play_again")
                         
-                        # Loop while clicking any detected Cancel buttons.
-                        while(self.image_tools.find_button("friend_request_cancel", tries=2) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
+                        # Loop while clicking any detected Cancel buttons like from Friend Request popups.
+                        self.wait_for_ping(1)
+                        while(self.image_tools.find_button("friend_request_cancel", tries=1) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
                             self.find_and_click_button("friend_request_cancel")
                         
                         # Check for available AP.
