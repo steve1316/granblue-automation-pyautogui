@@ -268,24 +268,24 @@ class Game:
 
         list_of_steps_in_order = ["gameplay_extras", "trial_battles",
                                   "trial_battles_old_lignoid", "trial_battles_play",
-                                  "wind", "party_selection_ok", "trial_battles_close",
+                                  "choose_a_summon", "party_selection_ok", "trial_battles_close",
                                   "menu", "retreat", "retreat_confirmation", "next"]
 
-        temp_location = None
-
-        # Go through each step in order from left to right.
+        # Go through each step in order from left to right from the list of steps.
         while (len(list_of_steps_in_order) > 0):
-            image_name = list_of_steps_in_order.pop(0)
+            step = list_of_steps_in_order.pop(0)
             
-            if(image_name != "wind"):
-                temp_location = self.image_tools.find_button(image_name)
-                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1])
+            if(step == "trial_battles_old_lignoid"):
+                self.image_tools.confirm_location("trial_battles")
+            
+            image_location = self.image_tools.find_button(step)
+            
+            if(step == "choose_a_summon"):
+                self.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187)
             else:
-                self.find_summon_element(image_name)
-
-                # This will use the temp_location coordinates of the last location which was the Play button for the Trial Battle.
-                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1] + 140)
-
+                self.mouse_tools.move_and_click_point(image_location[0], image_location[1])
+        
+        self.image_tools.confirm_location("trial_battles")
         self.print_and_save(f"\n{self.printtime()} [INFO] Summons have now been refreshed.")
         return None
 
