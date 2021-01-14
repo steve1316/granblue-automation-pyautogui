@@ -72,12 +72,17 @@ Item{
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.rightMargin: 70
 
-            // Starts or stops the bot depending on whether it was already running or not.
-            onClicked: {
-                if(internal.isBotRunning == false){
-                    internal.startBot()
-                }else{
-                    internal.stopBot()
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+
+                // Starts or stops the bot depending on whether it was already running or not.
+                onClicked: {
+                    if(internal.isBotRunning == false){
+                        internal.startBot()
+                    }else{
+                        internal.stopBot()
+                    }
                 }
             }
         }
@@ -123,10 +128,6 @@ Item{
             anchors.bottomMargin: 20
             colorDefault: "#d94012"
 
-            onPressed: {
-                fileSave.open()
-            }
-
             FileDialog {
                 id: fileSave
 
@@ -139,6 +140,15 @@ Item{
 
                 onAccepted: {
                     backend.save_file(fileSave.fileUrl)
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+
+                onPressed: {
+                    fileSave.open()
                 }
             }
         }

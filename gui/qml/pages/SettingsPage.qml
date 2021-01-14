@@ -55,10 +55,6 @@ Item{
 
             height: 30
 
-            onPressed: {
-                fileOpen.open()
-            }
-
             FileDialog{
                 id: fileOpen
 
@@ -71,6 +67,15 @@ Item{
 
                 onAccepted: {
                     backend.open_file(fileOpen.fileUrl)
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+
+                onPressed: {
+                    fileOpen.open()
                 }
             }
         }
@@ -981,7 +986,12 @@ Item{
             enabled: false
 
             // On clicked, open up the overlay containing the selectable Summons.
-            onClicked: popup.open()
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+
+                onClicked: popup.open()
+            }
 
             Popup {
                 id: popup
@@ -1125,6 +1135,7 @@ Item{
         // Enable/Disable the Debug Mode on whether or not the user wants to see more informational messages in the log.
         CustomCheckBox {
             id: debugModeCheckBox
+            y: 365
             width: 100
             height: 30
 
@@ -1134,13 +1145,20 @@ Item{
             anchors.bottomMargin: 20
             anchors.leftMargin: 20
 
-            onClicked: {
-                if(debugModeCheckBox.checked){
-                    backend.update_debug_mode(true)
-                    logTextArea.append("\nDebug Mode turned ON. You will now see debugging messages in the log.")
-                }else{
-                    backend.update_debug_mode(false)
-                    logTextArea.append("\nDebug Mode turned OFF. You will no longer see debugging messages in the log.")
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+
+                onClicked: {
+                    debugModeCheckBox.checked = !debugModeCheckBox.checked
+
+                    if(debugModeCheckBox.checked){
+                        backend.update_debug_mode(true)
+                        logTextArea.append("\nDebug Mode turned ON. You will now see debugging messages in the log.")
+                    }else{
+                        backend.update_debug_mode(false)
+                        logTextArea.append("\nDebug Mode turned OFF. You will no longer see debugging messages in the log.")
+                    }
                 }
             }
         }
@@ -1164,6 +1182,55 @@ Item{
             wrapMode: Text.WordWrap
             anchors.bottomMargin: 20
             anchors.rightMargin: 20
+
+            MouseArea {
+                id: botReadyLabelMouseArea
+
+                width: 20
+                height: 20
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.horizontalCenter: parent.horizontalCenter
+
+                onClicked: {
+                    testModeCheckBox.visible = !testModeCheckBox.visible
+                }
+
+                MouseArea {
+                    anchors.fill: parent
+                    cursorShape: Qt.PointingHandCursor
+
+                    onClicked: {
+                        testModeCheckBox.visible = !testModeCheckBox.visible
+                    }
+                }
+            }
+        }
+
+        CustomCheckBox {
+            id: testModeCheckBox
+
+            x: 180
+            y: 295
+            width: 100
+            height: 30
+            visible: false
+
+            text: "Test Mode"
+
+            MouseArea {
+                anchors.fill: parent
+                cursorShape: Qt.PointingHandCursor
+
+                onClicked: {
+                    testModeCheckBox.checked = !testModeCheckBox.checked
+
+                    if(testModeCheckBox.checked){
+                        backend.check_bot_ready(true)
+                    }else{
+                        backend.check_bot_ready(false)
+                    }
+                }
+            }
         }
     }
 
@@ -1218,6 +1285,6 @@ Item{
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:1.66;height:453;width:300}
+    D{i:0;autoSize:true;formeditorZoom:1.66;height:453;width:300}D{i:29}D{i:34}
 }
 ##^##*/
