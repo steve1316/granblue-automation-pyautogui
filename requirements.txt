@@ -10,3 +10,4 @@ easyocr==1.2.1
 PySide2==5.15.2
 PyYAML==5.3.1
 autopy==4.0.0
+tweepy==3.10.0

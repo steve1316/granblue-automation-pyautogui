@@ -81,6 +81,7 @@ pip install -r requirements.txt
 - [PySide2 5.15.2+](https://pypi.org/project/PySide2/)
 - [PyYAML 5.3.1+](https://pypi.org/project/PyYAML/)
 - [autopy 4.0.0+](https://pypi.org/project/autopy/)
+- [tweepy 3.10.0+](https://pypi.org/project/tweepy)
 
 # Instructions
 1. Download the entire project folder.
