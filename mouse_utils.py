@@ -1,6 +1,6 @@
 import datetime
 from timeit import default_timer as timer
-
+import pyperclip
 import pyautogui
 
 
@@ -134,4 +134,25 @@ class MouseUtils:
 
         self.move_to(x, y)
         pyautogui.scroll(scroll_clicks, x=x, y=y)
+        return None
+
+    def copy_to_clipboard(self, message: str):
+        """Copy the message to the clipboard.
+
+        Args:
+            message (str): The message to be copied.
+
+        Returns:
+            None
+        """
+        pyperclip.copy(message)
+        return None
+    
+    def paste_from_clipboard(self):
+        """Paste from the clipboard. Make sure that the textbox is already selected.
+
+        Returns:
+            None
+        """
+        pyperclip.paste()
         return None
