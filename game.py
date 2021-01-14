@@ -786,7 +786,7 @@ class Game:
                     ok_button_location = self.image_tools.find_button("ok", tries=1)
                     
                     # Check for any uncap messages and attempt to close those messages.
-                    close_button_location = self.image_tools.find_button("friend_request_cancel", tries=1)
+                    close_button_location = self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=True)
 
                     if(ok_button_location != None):
                         self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
@@ -899,7 +899,7 @@ class Game:
                         
                         # Loop while clicking any detected Cancel buttons like from Friend Request popups.
                         self.wait_for_ping(1)
-                        while(self.image_tools.find_button("friend_request_cancel", tries=1) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
+                        while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
                             self.find_and_click_button("friend_request_cancel")
                         
                         # Check for available AP.
