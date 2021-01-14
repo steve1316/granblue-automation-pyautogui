@@ -23,7 +23,7 @@ class Game:
 
     isBotRunning (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
     
-    keys_tokens (Iterable[str]): List of keys and tokens for Twitter API.
+    keys_tokens (Iterable[str]): List of keys and tokens for Twitter API. Its order is: [consumer key, consumer secret key, access token, access secret token].
     
     custom_mouse_speed (float, optional): The speed at which the mouse moves at. Defaults to 0.5.
     
@@ -42,7 +42,7 @@ class Game:
 
         # Initialize the MapSelection and TwitterRoomFinder objects.
         self.map_selection = MapSelection(self)
-        # self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3])
+        self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3])
 
         # Set a debug flag to determine whether or not to print debugging messages.
         self.debug_mode = debug_mode

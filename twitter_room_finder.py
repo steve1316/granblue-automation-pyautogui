@@ -46,11 +46,13 @@ class TwitterRoomFinder():
         self.api = tweepy.API(auth)
         self.game.print_and_save(f"\n{self.game.printtime()} [TWITTER] Successfully connected to the Twitter API.")
     
-    def find_10_most_recent(self, raid_name: str):
+    def find_most_recent(self, raid_name: str, count: int = 10, tweets_only: bool = False):
         """Start listening to tweets containing ':Battle ID'.
 
         Args:
             raid_name (str): Name and level of the raid that appears in tweets containing the room code to it.
+            count (int): Number of most recent tweets to grab. Defaults to 10.
+            tweets_only (bool): Either return tweets or 
 
         Returns:
             tweets (Iterable[str]): List of 10 most recent tweets that match the query.
@@ -64,7 +66,7 @@ class TwitterRoomFinder():
         #   I need backup!
         #   LEVEL and NAME OF RAID
         
-        tweets = self.api.search(q=query, since=today.strftime('%Y-%m-%d'), count=10)
+        tweets = self.api.search(q=query, since=today.strftime('%Y-%m-%d'), count=count)
         return tweets
         
     def clean_tweets(self, tweets: Iterable[str]):
@@ -76,7 +78,7 @@ class TwitterRoomFinder():
         Returns:
             room_codes (Iterable[str]): List of room codes cleaned of all other text.
         """
-        self.game.print_and_save(f"\n{self.game.printtime()} [TWITTER] Now cleaning up and parsing for room codes...")
+        self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Now cleaning up and parsing for room codes...")
         room_codes = []
         
         # Split the text up by whitespaces and find the element in the list that has the room code.

@@ -39,7 +39,7 @@ class Debug:
         self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing Finding 10 Most Recent Grimnir Room Codes...")
         self.game.print_and_save("################################################################################")
         
-        tweets = self.game.room_finder.find_10_most_recent("+Lvl 120 Grimnir")
+        tweets = self.game.room_finder.find_most_recent("+Lvl 120 Grimnir")
         room_codes = self.game.room_finder.clean_tweets(tweets)
         for i, tweet in enumerate(tweets):
             self.game.print_and_save(f"\n{self.game.printtime()} [TEST] Tweet created at {tweet.created_at}: \n" + tweet.text)

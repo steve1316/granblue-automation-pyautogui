@@ -478,6 +478,43 @@ class MapSelection:
                         else:
                             self.game.mouse_tools.scroll_screen(self.game.home_button_location[0], self.game.home_button_location[1] - 50, -500)
                             tries -= 1    
+                elif(map_mode.lower() == "raid"):
+                    self.game.print_and_save("\n********************************************************************************")
+                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Mode: Raid")
+                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Mission: {mission_name}")
+                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Material to farm: {item_name}")
+                    self.game.print_and_save("********************************************************************************\n")
+                    
+                    # Go to the Home Screen.
+                    self.game.go_back_home(confirm_location_check=True, display_info_check=True)
+                    
+                    # Navigate to the Quest Screen -> Backup Requests Screen -> Enter ID Screen.
+                    self.game.find_and_click_button("quest")
+                    self.game.find_and_click_button("raid")
+                    self.game.find_and_click_button("enter_id")
+                    
+                    # Make preparations for farming raids by saving the location of the Join Room button and the Room Code textbox.
+                    join_room_button = self.game.image_tools.find_button("join_a_room")
+                    room_code_textbox = (join_room_button[0] - 185, join_room_button[1])
+
+                    while(True):
+                        # Find 5 most recent tweets for the specified raid.
+                        tweets = self.game.room_finder.find_most_recent(mission_name, 5)
+                        room_codes = self.game.room_finder.clean_tweets(tweets)
+                        
+                        # Loop through each acquired room code and try to join one.
+                        for room_code in room_codes:
+                            self.game.mouse_tools.move_and_click_point(room_code_textbox[0], room_code_textbox[1])
+                            self.game.mouse_tools.copy_to_clipboard(room_code)
+                            self.game.mouse_tools.paste_from_clipboard()
+                            self.game.mouse_tools.move_and_click_point(join_room_button[0], join_room_button[1])
+                            
+                            # If the raid is still on-going, break and head to the Summon Selection Screen.
+                            if(self.game.image_tools.find_button("raid_already_ended") == None):
+                                break
+                            
+
+                        
                 else:
                     raise Exception("Cannot find the Special Missions.")
 
