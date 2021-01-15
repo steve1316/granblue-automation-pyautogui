@@ -158,22 +158,23 @@ class Game:
         time.sleep(seconds)
         return None
     
-    def find_and_click_button(self, button_name: str):
+    def find_and_click_button(self, button_name: str, suppress_error: bool = False):
         """Find the center point of a button image and click it.
 
         Args:
             button_name (str): Name of the button image file in the images/buttons/ folder.
+            suppress_error (bool): Suppresses template matching error depending on boolean. Defaults to False.
 
         Returns:
             None
         """
         # If the bot is trying to find the Quest button and failed, chances are that the button is now styled red.
         if(button_name == "quest"):
-            temp_location = self.image_tools.find_button("quest", tries=2)
+            temp_location = self.image_tools.find_button("quest", tries=2, suppress_error=suppress_error)
             if(temp_location == None):
-                temp_location = self.image_tools.find_button("quest2")
+                temp_location = self.image_tools.find_button("quest2", tries=2, suppress_error=suppress_error)
         else:
-            temp_location = self.image_tools.find_button(button_name)
+            temp_location = self.image_tools.find_button(button_name, suppress_error=suppress_error)
             
         self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1])
         return None
