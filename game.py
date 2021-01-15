@@ -410,7 +410,7 @@ class Game:
         """
         number_of_charge_attacks = 0
         list_of_charge_attacks = self.image_tools.find_all("full_charge", custom_region=(self.attack_button_location[0] - 356, self.attack_button_location[1] + 67, 
-                                                                                         self.attack_button_location[0] - 40, self.attack_button_location[1] + 214))
+                                                                                         self.attack_button_location[0] - 40, self.attack_button_location[1] + 214), hide_info=True)
 
         number_of_charge_attacks = len(list_of_charge_attacks)
 
@@ -461,7 +461,7 @@ class Game:
             self.wait_for_ping(1)
             self.find_and_click_button("ok")
         else:
-            self.print_and_save(f"\n{self.printtime()} [INFO] AP is still available. Moving on...")
+            self.print_and_save(f"\n{self.printtime()} [INFO] AP is available. Moving on...")
         
         return None
 
