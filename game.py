@@ -398,14 +398,12 @@ class Game:
             self.print_and_save(f"\n{self.printtime()} [SUCCESS] Successfully selected Party {party_number}. Now starting the mission.")
 
         # Find and click the "OK" Button to start the mission.
-        self.wait_for_ping(1)
         self.find_and_click_button("party_selection_ok")
         
         # If a dialog window pops up and says "This raid battle has already ended. The Home screen will now appear.", return False.
-        if(self.image_tools.confirm_location("raid_just_ended_home_redirect")):
+        if(self.image_tools.confirm_location("raid_just_ended_home_redirect", tries=1)):
             return False
         
-        self.wait_for_ping(5)
         return True
 
     def find_charge_attacks(self):
@@ -547,18 +545,18 @@ class Game:
         """
         # Open the script text file and process all read lines.
         try:
-            if(script_file_path == "" or script_file_path == None):
-                self.print_and_save(f"\n{self.printtime()} [INFO] No script file was given. Using default semi-attack script...")
-                script = open(f"scripts/test_empty.txt", "r")
-            else:
-                self.print_and_save(f"\n{self.printtime()} [INFO] Now loading up combat script at {script_file_path}...")
-                script = open(script_file_path, "r")
-            
-            lines = script.readlines()
-
             self.print_and_save("\n\n################################################################################")
             self.print_and_save(f"{self.printtime()} [COMBAT] Starting Combat Mode.")
             self.print_and_save("################################################################################\n")
+            
+            if(script_file_path == "" or script_file_path == None):
+                self.print_and_save(f"\n{self.printtime()} [COMBAT] No script file was given. Using default semi-attack script...")
+                script = open(f"scripts/test_empty.txt", "r")
+            else:
+                self.print_and_save(f"\n{self.printtime()} [COMBAT] Now loading up combat script at {script_file_path}...")
+                script = open(script_file_path, "r")
+            
+            lines = script.readlines()            
 
             i = 0  # Index for the list of read lines from the script.
             line_number = 1  # Tells what line number the bot is reading.
@@ -600,21 +598,21 @@ class Game:
                             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
 
                             self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
-                            self.wait_for_ping(4 + number_of_charge_attacks)
+                            self.wait_for_ping(5 + number_of_charge_attacks)
                             
                             turn_number += 1
                            
                         # Check to see if the party wiped.
                         self.party_wipe_check()
 
-                        # Try to find the "Next" Button only once per turn.
-                        next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
+                        # Try to find the "Next" Button each turn.
+                        next_button_location = self.image_tools.find_button("next", tries=3, suppress_error=self.suppress_error)
                         if(next_button_location != None):
                             if(self.debug_mode):
                                 self.print_and_save(f"{self.printtime()} [DEBUG] Detected the Next Button. Clicking it now...")
 
                             self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
-                            self.wait_for_ping(4)
+                            self.wait_for_ping(5)
                             
                         # Check for battle end.
                         if(self.image_tools.confirm_location("exp_gained", tries=1) == True or self.retreat_check):
@@ -674,7 +672,7 @@ class Game:
                             i += 1
                             
                             # Attempt to wait to see if the character one-shot the enemy or not.
-                            self.wait_for_ping(4)
+                            self.wait_for_ping(3)
                             
                             # Check for battle end.
                             if(self.image_tools.confirm_location("exp_gained", tries=1) == True):
@@ -728,7 +726,7 @@ class Game:
                             self.print_and_save(f"{self.printtime()} [DEBUG] Detected Next Button. Clicking it now...")
 
                         self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
-                        self.wait_for_ping(4)
+                        self.wait_for_ping(5)
                     else:
                         # Check if any character has 100% Charge Bar. If so, add 1 second per match.
                         number_of_charge_attacks = self.find_charge_attacks()
@@ -736,20 +734,20 @@ class Game:
                         self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
 
                         self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
-                        self.wait_for_ping(4 + number_of_charge_attacks)
+                        self.wait_for_ping(5 + number_of_charge_attacks)
 
                         turn_number += 1
                         
                         # Check to see if the party wiped.
                         self.party_wipe_check()
                         
-                        next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
+                        next_button_location = self.image_tools.find_button("next", tries=2, suppress_error=self.suppress_error)
                         if(next_button_location != None):
                             if(self.debug_mode):
                                 self.print_and_save(f"{self.printtime()} [DEBUG] Detected Next Button. Clicking it now...")
 
                             self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
-                            self.wait_for_ping(4)
+                            self.wait_for_ping(5)
 
                 # Continue to the next line for execution.
                 line_number += 1
@@ -765,8 +763,8 @@ class Game:
                 self.find_dialog_in_combat("lyria")
                 self.find_dialog_in_combat("vyrn")
 
-                attack_button_location = self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error)
-                next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
+                attack_button_location = self.image_tools.find_button("attack", tries=2, suppress_error=self.suppress_error)
+                next_button_location = self.image_tools.find_button("next", tries=2, suppress_error=self.suppress_error)
 
                 if (attack_button_location != None):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
@@ -777,7 +775,7 @@ class Game:
                     self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
 
                     self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
-                    self.wait_for_ping(4 + number_of_charge_attacks)
+                    self.wait_for_ping(5 + number_of_charge_attacks)
                     
                     turn_number += 1
                     
@@ -786,7 +784,7 @@ class Game:
 
                 elif(next_button_location != None):
                     self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
-                    self.wait_for_ping(4)
+                    self.wait_for_ping(5)
 
             # Try to click any detected "OK" Buttons several times.
             if(not self.retreat_check):
@@ -799,11 +797,9 @@ class Game:
 
                     if(ok_button_location != None):
                         self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
-                        self.wait_for_ping(1)
                         
                     if(close_button_location != None):
                         self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1])
-                        self.wait_for_ping(1)
 
             self.print_and_save("\n################################################################################")
             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
@@ -882,7 +878,8 @@ class Game:
                 
                 if(start_check):
                     # Check for the Items Picked Up popup that appears after starting a Quest mission.
-                    if(self.image_tools.confirm_location("items_picked_up", tries=3)):
+                    self.wait_for_ping(1)
+                    if(self.image_tools.confirm_location("items_picked_up", tries=1)):
                         self.find_and_click_button("ok")
                     
                     if(self.start_combat_mode(self.combat_script)):
