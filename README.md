@@ -17,10 +17,10 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] A user-defined timer for how long the bot should run for.
 - [x] Support for Quest navigation.
 - [ ] Support for Coop navigation.
-- [ ] Support for Raid navigation. (IN-PROGRESS)
+- [x] Support for Raid navigation.
 - [ ] Support for Event(s) navigation.
 - [ ] Support for Guild Wars navigation.
-- [ ] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
+- [x] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
 - [ ] Alert for when anti-bot CAPTCHA pops up.
 
 # TODO List
@@ -33,8 +33,10 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] (MEDIUM PRIORITY) Remove all sys.exit() code.
 - [x] ~~(HIGH PRIORITY) Implement Special Quests navigation/items.~~
 - [ ] (HIGH PRIORITY) Implement Coop Quests navigation/items.
-- [ ] (HIGH PRIORITY) Implement Raid navigation/items. (IN-PROGRESS)
-	- [ ] (HIGH PRIORITY) Implement Twitter room code scraper/parser. (IN-PROGRESS)
+- [x] ~~(HIGH PRIORITY) Implement Raid navigation.~~
+    - [ ] (MAX PRIORITY) Link Raid component from backend to frontend.
+    - [ ] (HIGH PRIORITY) Implement items to farm in Raids. (IN-PROGRESS)
+	- [x] ~~(HIGH PRIORITY) Implement Twitter room code scraper/parser.~~
 	- [ ] (HIGH PRIORITY) Implement Captcha detection.
 - [ ] (LOW PRIORITY) Implement Event navigation/items.
 - [ ] (LOW PRIORITY) Implement Guild Wars/Rise of the Beasts navigation/items.
@@ -51,7 +53,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] (MEDIUM PRIORITY) Implement a user-defined timer for how long the bot can run for.
 - [x] ~~(HIGH PRIORITY) Add Special Quest items.~~
 - [ ] (HIGH PRIORITY) Add Coop items.
-- [ ] (HIGH PRIORITY) Add Raid items.
+- [ ] (HIGH PRIORITY) Add Raid items. (IN-PROGRESS)
 # Requirements
 1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
 2. [Granblue Fantasy account](http://game.granbluefantasy.jp/)
