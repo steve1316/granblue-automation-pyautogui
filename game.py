@@ -65,7 +65,7 @@ class Game:
         pyautogui.PAUSE = 0.5
 
         # Calibrate the dimensions of the game window on bot launch.
-        self.calibrate_game_window()
+        self.go_back_home(display_info_check=True)
 
     def printtime(self):
         """Formats the time since the bot started into a readable, printable HH:MM:SS format using timedelta.
@@ -97,11 +97,14 @@ class Game:
             self.print_and_save(f"\n{self.printtime()} [DEBUG] Recalibrating the dimensions of the game window...")
 
         self.home_button_location = self.image_tools.find_button("home", sleep_time=1)
-
-        self.image_tools.window_left = self.home_button_location[0] - 439
-        self.image_tools.window_top = self.home_button_location[1] - 890
-        self.image_tools.window_width = self.image_tools.window_left + 480
-        self.image_tools.window_height = self.image_tools.window_top + 917
+        
+        # Set the dimensions of the game window and save it in ImageUtils so that future operations do not go out of bounds.
+        home_news_button = self.image_tools.find_button("home_news")
+        home_menu_button = self.image_tools.find_button("home_menu")
+        self.image_tools.window_left = home_news_button[0] - 35 # The x-coordinate of the left edge
+        self.image_tools.window_top = home_menu_button[1] - 24 # The y-coordinate of the top edge
+        self.image_tools.window_width = self.image_tools.window_left + 468 # The width of the region
+        self.image_tools.window_height = (self.home_button_location[1] + 24) - self.image_tools.window_top # The height of the region
 
         if(self.debug_mode):
             self.print_and_save(f"\n{self.printtime()} [SUCCESS] Dimensions of the game window has been successfully recalibrated.")
@@ -115,25 +118,28 @@ class Game:
         return None
 
     def go_back_home(self, confirm_location_check: bool = False, display_info_check: bool = False):
-        """Go back to the Home Screen to reset the bot's position. Also recalibrates the region dimensions of the game window.
+        """Go back to the Home Screen to reset the bot's position. Also able to recalibrate the region dimensions of the game window if display_info_check is True.
 
         Args:
             confirm_location_check (bool, optional): Check to see if the location is correct. Defaults to False.
-            display_info_check (bool, optional): Display display size of screen and game window size. Defaults to False.
+            display_info_check (bool, optional): Recalibrate and display size of screen and game window size. Defaults to False.
 
         Returns:
             None
         """
         if(self.debug_mode):
             self.print_and_save(f"\n{self.printtime()} [DEBUG] Moving back to the Home Screen...")
-
+            
+        # Go to the Home Screen.
+        if(self.home_button_location != None):
+            self.mouse_tools.move_and_click_point(self.home_button_location[0], self.home_button_location[1])
+        else:
+            temp_home_button_location = self.image_tools.find_button("home")
+            self.mouse_tools.move_and_click_point(temp_home_button_location[0], temp_home_button_location[1])
+        
+        # Recalibrate the dimensions of the window if flag is True.
         if (display_info_check):
             self.calibrate_game_window(display_info_check=True)
-        else:
-            self.calibrate_game_window()
-
-        # After recalibrating the dimensions of the game window, click the "Home" button.
-        self.mouse_tools.move_and_click_point(self.home_button_location[0], self.home_button_location[1])
 
         if(confirm_location_check):
             self.image_tools.confirm_location("home")
@@ -533,9 +539,6 @@ class Game:
         Returns:
             (bool): Return True if Combat Mode was successful. #TODO: Return False if the party wiped.
         """
-        # Recalibrate the game window.
-        self.calibrate_game_window()
-
         # Open the script text file and process all read lines.
         try:
             if(script_file_path == "" or script_file_path == None):
