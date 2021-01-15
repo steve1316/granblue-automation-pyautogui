@@ -20,13 +20,13 @@ class ImageUtils:
     
     starting_time (float): Used to keep track of the program's elapsed time for logging purposes.
 
-    window_left (int, optional): The x-coordinate of the top left corner of the region for image matching. Defaults to None.
+    window_left (int, optional): The x-coordinate of the left edge of the region for image matching. Defaults to None.
 
-    window_top (int, optional): The y-coordinate of the top right corner of the region for image matching. Defaults to None.
+    window_top (int, optional): The y-coordinate of the top edge of the region for image matching. Defaults to None.
 
-    window_width (int, optional): The x-coordinate of the bottom right corner minus the x-coordinate of the bottom left corner of the region for image matching. Defaults to None.
+    window_width (int, optional): The width of the region for image matching. Defaults to None.
 
-    window_height (int, optional): The y-coordinate of the bottom right corner minus the y-coordinate of the top right corner of the region for image matching. Defaults to None.
+    window_height (int, optional): The height of the region for image matching. Defaults to None.
 
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to True.
 
@@ -39,10 +39,12 @@ class ImageUtils:
         
         self.game = game
 
+        # The dimensions are set in calibrate_game_window() in Game class.
         self.window_left = window_left
         self.window_top = window_top
         self.window_width = window_width
         self.window_height = window_height
+        
         self.debug_mode = debug_mode
 
         # Initialize GuiBot object for image matching.
