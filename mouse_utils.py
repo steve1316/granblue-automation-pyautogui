@@ -135,6 +135,18 @@ class MouseUtils:
         self.move_to(x, y)
         pyautogui.scroll(scroll_clicks, x=x, y=y)
         return None
+    
+    def clear_textbox(self):
+        """Clear the selected textbox of all text by selecting all text by CTRL + A and then pressing DEL.
+
+        Returns:
+            None
+        """
+        pyautogui.keyDown("ctrl")
+        pyautogui.press("a")
+        pyautogui.keyUp("ctrl")
+        pyautogui.press("del")
+        return None
 
     def copy_to_clipboard(self, message: str):
         """Copy the message to the clipboard.
@@ -154,5 +166,6 @@ class MouseUtils:
         Returns:
             None
         """
-        pyperclip.paste()
+        message = pyperclip.paste()
+        pyautogui.write(message)
         return None
