@@ -25,7 +25,7 @@ class Game:
     
     keys_tokens (Iterable[str]): List of keys and tokens for Twitter API. Its order is: [consumer key, consumer secret key, access token, access secret token].
     
-    custom_mouse_speed (float, optional): The speed at which the mouse moves at. Defaults to 0.5.
+    custom_mouse_speed (float, optional): The speed at which the mouse moves at. Defaults to 0.2.
     
     combat_script (str, optional): The combat script to use for Combat Mode. Defaults to empty string.
 
@@ -33,7 +33,7 @@ class Game:
 
     """
 
-    def __init__(self, queue: multiprocessing.Queue, isBotRunning: int, keys_tokens: Iterable[str], combat_script: str = "", custom_mouse_speed: float = 0.5, debug_mode: bool = False):
+    def __init__(self, queue: multiprocessing.Queue, isBotRunning: int, keys_tokens: Iterable[str], combat_script: str = "", custom_mouse_speed: float = 0.2, debug_mode: bool = False):
         super().__init__()
 
         # Start a timer signaling bot start in order to keep track of elapsed time and create a Queue to share logging messages between backend and frontend.
@@ -62,7 +62,7 @@ class Game:
         self.suppress_error = True
 
         # The amount of time to pause after each call to pyautogui. This applies to calls inside mouse_utils and image_utils.
-        pyautogui.PAUSE = 0.5
+        pyautogui.PAUSE = 0.25
 
         # Calibrate the dimensions of the game window on bot launch.
         self.go_back_home(display_info_check=True)
@@ -249,6 +249,7 @@ class Game:
         Returns:
             (bool): True if the Summon was found and clicked. Otherwise, return False.
         """
+        summon_name = summon_name.lower().replace(" ", "_")
         summon_location = self.image_tools.find_summon(summon_name, self.home_button_location[0], self.home_button_location[1])
         if (summon_location != None):
             self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1])
@@ -401,7 +402,7 @@ class Game:
         self.find_and_click_button("party_selection_ok")
         
         # If a dialog window pops up and says "This raid battle has already ended. The Home screen will now appear.", return False.
-        if(self.image_tools.confirm_location("raid_already_ended_home_redirect")):
+        if(self.image_tools.confirm_location("raid_just_ended_home_redirect")):
             return False
         
         self.wait_for_ping(5)
