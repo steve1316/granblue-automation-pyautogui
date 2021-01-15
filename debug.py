@@ -39,10 +39,12 @@ class Debug:
         self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing Finding 10 Most Recent Grimnir Room Codes...")
         self.game.print_and_save("################################################################################")
         
-        tweets = self.game.room_finder.find_most_recent("+Lvl 120 Grimnir")
+        tweets = self.game.room_finder.find_most_recent("Lvl 120 Grimnir")
         room_codes = self.game.room_finder.clean_tweets(tweets)
-        for i, tweet in enumerate(tweets):
-            self.game.print_and_save(f"\n{self.game.printtime()} [TEST] Tweet created at {tweet.created_at}: \n" + tweet.text)
+        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_INFO] {len(tweets)}")
+        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_INFO] {len(room_codes)}")
+        for i, room_code in enumerate(room_codes):
+            self.game.print_and_save(f"\n{self.game.printtime()} [TEST] {tweets[i].lang.upper()} Tweet created at {tweets[i].created_at}: \n" + tweets[i].text)
             self.game.print_and_save(f"{self.game.printtime()} [TEST] Detected Room Code is: {room_codes[i]}")
             
         self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Finding 10 Most Recent Grimnir Room Codes from EN was successful.")
