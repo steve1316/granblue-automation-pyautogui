@@ -861,6 +861,9 @@ class Game:
             # Keep playing the mission until the bot gains enough of the item specified.
             while(item_amount_farmed < item_amount_to_farm):
                 while(summon_check == False): 
+                    # Check for available AP.
+                    self.check_for_ap(use_full_elixirs=use_full_elixirs)
+                    
                     self.find_summon_element(summon_element_name)
                     summon_check = self.find_summon(summon_name)
                     
