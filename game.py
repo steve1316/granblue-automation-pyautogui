@@ -129,21 +129,21 @@ class Game:
         """
         if(self.debug_mode):
             self.print_and_save(f"\n{self.printtime()} [DEBUG] Moving back to the Home Screen...")
-            
-        # Go to the Home Screen.
-        if(self.home_button_location != None):
-            self.mouse_tools.move_and_click_point(self.home_button_location[0], self.home_button_location[1])
-        else:
-            temp_home_button_location = self.image_tools.find_button("home")
-            self.mouse_tools.move_and_click_point(temp_home_button_location[0], temp_home_button_location[1])
+        
+        if(confirm_location_check):
+            self.image_tools.confirm_location("home")
+        else:    
+            # Go to the Home Screen.
+            if(self.home_button_location != None):
+                self.mouse_tools.move_and_click_point(self.home_button_location[0], self.home_button_location[1])
+            else:
+                temp_home_button_location = self.image_tools.find_button("home")
+                self.mouse_tools.move_and_click_point(temp_home_button_location[0], temp_home_button_location[1])
         
         # Recalibrate the dimensions of the window if flag is True.
         if (display_info_check):
             self.calibrate_game_window(display_info_check=True)
-
-        if(confirm_location_check):
-            self.image_tools.confirm_location("home")
-
+            
         return None
 
     def wait_for_ping(self, seconds: int = 3):
