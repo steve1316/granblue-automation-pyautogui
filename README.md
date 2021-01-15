@@ -17,7 +17,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] A user-defined timer for how long the bot should run for.
 - [x] Support for Quest navigation.
 - [ ] Support for Coop navigation.
-- [x] Support for Raid navigation.
+- [ ] Support for Raid navigation. (IN-PROGRESS)
 - [ ] Support for Event(s) navigation.
 - [ ] Support for Guild Wars navigation.
 - [x] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
@@ -33,8 +33,9 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] (MEDIUM PRIORITY) Remove all sys.exit() code.
 - [x] ~~(HIGH PRIORITY) Implement Special Quests navigation/items.~~
 - [ ] (HIGH PRIORITY) Implement Coop Quests navigation/items.
-- [x] ~~(HIGH PRIORITY) Implement Raid navigation.~~
-    - [ ] (MAX PRIORITY) Link Raid component from backend to frontend.
+- [] (HIGH PRIORITY) Implement Raid navigation. (IN-PROGRESS)
+    - [ ] (MAX PRIORITY) Implement way to exit out of Raids via user script and implement checks for max of 3 on-going raids. Also check to see for pending rewards. (IN-PROGRESS)
+    - [ ] (MAX PRIORITY) Link Raid component from backend to frontend. (IN-PROGRESS)
     - [ ] (HIGH PRIORITY) Implement items to farm in Raids. (IN-PROGRESS)
 	- [x] ~~(HIGH PRIORITY) Implement Twitter room code scraper/parser.~~
 	- [ ] (HIGH PRIORITY) Implement Captcha detection.
