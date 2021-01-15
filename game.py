@@ -304,7 +304,7 @@ class Game:
             tries (int, optional): Number of tries before failing. Defaults to 2.
 
         Returns:
-            None
+            (bool): Returns False if it detects the "Raid is full/Raid is already done" dialog. Otherwise, return True.
         """
         set_location = None
         
@@ -398,9 +398,13 @@ class Game:
         # Find and click the "OK" Button to start the mission.
         self.wait_for_ping(1)
         self.find_and_click_button("party_selection_ok")
+        
+        # If a dialog window pops up and says "This raid battle has already ended. The Home screen will now appear.", return False.
+        if(self.image_tools.confirm_location("raid_already_ended_home_redirect")):
+            return False
+        
         self.wait_for_ping(5)
-
-        return None
+        return True
 
     def find_charge_attacks(self):
         """Find total number of characters ready to Charge Attack.
@@ -461,7 +465,7 @@ class Game:
             self.wait_for_ping(1)
             self.find_and_click_button("ok")
         else:
-            self.print_and_save(f"\n{self.printtime()} [INFO] AP is available. Moving on...")
+            self.print_and_save(f"\n{self.printtime()} [INFO] AP is available. Continuing...")
         
         return None
 
@@ -850,14 +854,11 @@ class Game:
             elif(mission_name.find("EX ") == 0):
                 difficulty = "Extreme"
         
-        print("Mission Name: ", mission_name)
-        print("Difficulty: ", difficulty)
+        amount_of_runs_finished = 0
+        item_amount_farmed = 0
+        summon_check = False
         
-        if(self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)):
-            amount_of_runs_finished = 0
-            item_amount_farmed = 0
-            summon_check = False
-            
+        if((map_mode.lower() != "raid" and self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)) or (map_mode.lower() == "raid" and self.map_selection.join_raid(item_name, mission_name))):
             # Keep playing the mission until the bot gains enough of the item specified.
             while(item_amount_farmed < item_amount_to_farm):
                 while(summon_check == False): 
@@ -869,50 +870,57 @@ class Game:
                     
                     # If the Summons were reset, head back to the location of the mission.
                     if(summon_check == False):
-                        self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
+                        if(map_mode.lower() != "raid"):
+                            self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
+                        else:
+                            self.map_selection.join_raid(item_name, mission_name)
                 
                 # Select the Party specified and then start the mission.
-                self.find_party_and_start_mission(group_number, party_number)
+                start_check = self.find_party_and_start_mission(group_number, party_number)
                 
-                # Check for the Items Picked Up popup that appears after starting a Quest mission.
-                if(self.image_tools.confirm_location("items_picked_up", tries=3)):
-                    self.find_and_click_button("ok")
-                
-                if(self.start_combat_mode(self.combat_script)):
-                    # After Combat Mode has finished, count the number of the specified item that has dropped.
-                    if(item_name != "EXP"):
-                        temp_amount = self.image_tools.find_farmed_items([item_name])[0]
-                        item_amount_farmed += temp_amount
-                    else:
-                        item_amount_farmed += 1
-                        
-                    amount_of_runs_finished += 1
+                if(start_check):
+                    # Check for the Items Picked Up popup that appears after starting a Quest mission.
+                    if(self.image_tools.confirm_location("items_picked_up", tries=3)):
+                        self.find_and_click_button("ok")
                     
-                    if(item_name != "EXP"):
-                        self.print_and_save("\n\n********************************************************************************")
-                        self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained this run: {temp_amount}")
-                        self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained in total: {item_amount_farmed} / {item_amount_to_farm}")
-                        self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {amount_of_runs_finished}")
-                        self.print_and_save("********************************************************************************\n")
-                    else:
-                        self.print_and_save("\n\n********************************************************************************")
-                        self.print_and_save(f"{self.printtime()} [FARM] Runs done for EXP in total: {item_amount_farmed} / {item_amount_to_farm}")
-                        self.print_and_save("********************************************************************************\n")
-                    
-                    if(item_amount_farmed < item_amount_to_farm):
-                        # Click the Play Again button.
-                        self.find_and_click_button("play_again")
-                        
-                        # Loop while clicking any detected Cancel buttons like from Friend Request popups.
-                        self.wait_for_ping(1)
-                        while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
-                            self.find_and_click_button("friend_request_cancel")
-                        
-                        # Check for available AP.
-                        self.check_for_ap(use_full_elixirs=use_full_elixirs)
-                        
-                        summon_check = False
+                    if(self.start_combat_mode(self.combat_script)):
+                        # After Combat Mode has finished, count the number of the specified item that has dropped.
+                        if(item_name != "EXP"):
+                            temp_amount = self.image_tools.find_farmed_items([item_name])[0]
+                            item_amount_farmed += temp_amount
+                        else:
+                            item_amount_farmed += 1
                             
+                        amount_of_runs_finished += 1
+                        
+                        if(item_name != "EXP"):
+                            self.print_and_save("\n\n********************************************************************************")
+                            self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained this run: {temp_amount}")
+                            self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained in total: {item_amount_farmed} / {item_amount_to_farm}")
+                            self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {amount_of_runs_finished}")
+                            self.print_and_save("********************************************************************************\n")
+                        else:
+                            self.print_and_save("\n\n********************************************************************************")
+                            self.print_and_save(f"{self.printtime()} [FARM] Runs done for EXP in total: {item_amount_farmed} / {item_amount_to_farm}")
+                            self.print_and_save("********************************************************************************\n")
+                        
+                        if(item_amount_farmed < item_amount_to_farm):
+                            # Click the Play Again button.
+                            self.find_and_click_button("play_again")
+                            
+                            # Loop while clicking any detected Cancel buttons like from Friend Request popups.
+                            self.wait_for_ping(1)
+                            while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
+                                self.find_and_click_button("friend_request_cancel")
+                            
+                            # TODO: Check for available BP.
+                            
+                            
+                            summon_check = False
+                    else:
+                        # If the Raid already ended while the bot was selecting a Summon and Party, go back to finding a new room code.
+                        self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
+        
         else:
             self.print_and_save("\nSomething went wrong with navigating to the map.")
             
