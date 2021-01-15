@@ -49,12 +49,10 @@ class Debug:
             
         self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Finding 10 Most Recent Grimnir Room Codes from EN was successful.")
         self.isBotRunning.value = 1
+        return None
         
     def test_farming_mode(self):
         """Tests the Farming Mode by navigating to the Special Op's Request and farm 10 Fine Sand Bottles with the specified party and summon.
-        
-        Args:
-            None
             
         Return:
             None
@@ -69,6 +67,7 @@ class Debug:
         
         self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Farming Mode was successful.")
         self.isBotRunning.value = 1
+        return None
         
     def test_item_detection(self, items_to_test: int):
         """Test finding amounts of all items on the screen.
@@ -110,6 +109,7 @@ class Debug:
             
         self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Item Detection was successful.")
         self.isBotRunning.value = 1
+        return None
         
     def test_map_selection(self):
         """Tests navigating to each map that is supported by MapSelection.
@@ -133,7 +133,7 @@ class Debug:
         
         self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Map Selection was successful.")
         self.isBotRunning.value = 1
-        
+        return None
 
     def test_find_summon_element_tabs(self):
         """Tests finding each summon element tab on the Summon Selection Screen by navigating to the Fire Old Lignoid trial battle.
@@ -187,41 +187,46 @@ class Debug:
         else:
             self.isBotRunning.value = 1
             sys.exit(f"\n{self.game.printtime()} [TEST_FAILED] Bot is not at the Summon Selection Screen. Stopping bot...")
+        return None
 
     def test_combat_mode2(self):
+        """Tests almost all of the bot's functionality via navigation and combat by starting the Old Lignoid Trial Battle and fighting it. The combat mode will go on indefinitely until stopped.
+
+        Returns:
+            None
+        """
         self.game.print_and_save("\n################################################################################")
         self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing Combat Mode on the Old Lignoid trial battle mission now...")
         self.game.print_and_save("################################################################################")
         
         self.game.go_back_home(confirm_location_check=True, display_info_check=True)
-        
-        self.game.mouse_tools.scroll_screen_from_home_button(-600)
-        
+        self.mouse_tools.scroll_screen_from_home_button(-600)
+
         list_of_steps_in_order = ["gameplay_extras", "trial_battles",
                                   "trial_battles_old_lignoid", "trial_battles_play",
-                                  "wind", "party_selection_ok", "trial_battles_close"]
-        
-        temp_location = None
+                                  "choose_a_summon", "party_selection_ok", "trial_battles_close"]
 
-        # Go through each step in order from left to right.
+        # Go through each step in order from left to right from the list of steps.
         while (len(list_of_steps_in_order) > 0):
-            image_name = list_of_steps_in_order.pop(0)
+            step = list_of_steps_in_order.pop(0)
             
-            if(image_name != "wind"):
-                temp_location = self.game.image_tools.find_button(image_name)
-                self.game.mouse_tools.move_and_click_point(temp_location[0], temp_location[1])
+            if(step == "trial_battles_old_lignoid"):
+                self.image_tools.confirm_location("trial_battles")
+            
+            image_location = self.image_tools.find_button(step)
+            
+            if(step == "choose_a_summon"):
+                self.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187)
             else:
-                self.game.find_summon_element(image_name)
-
-                # This will use the temp_location coordinates of the last location which was the Play button for the Trial Battle.
-                self.game.mouse_tools.move_and_click_point(temp_location[0], temp_location[1] + 140)
+                self.mouse_tools.move_and_click_point(image_location[0], image_location[1])
         
         self.game.start_combat_mode(self.combat_script)
         
         self.isBotRunning.value = 1
+        return None
     
     def test_combat_mode(self):
-        """Tests almost all of the bot's functionality by starting the Very Hard difficulty Angel Halo Special Battle and completing it. This assumes that Angel Halo is at the very bottom of the Special missions list.
+        """Tests almost all of the bot's functionality via navigation and combat by starting the Very Hard difficulty Angel Halo Special Battle and completing it.
 
         Returns:
             None
@@ -230,68 +235,9 @@ class Debug:
         self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing Combat Mode on Very Hard Difficulty Angel Halo mission now...")
         self.game.print_and_save("################################################################################")
 
-        summon_check = False
-        tries = 2
-        while(summon_check == False):
-            # First go to the Home Screen and calibrate the dimensions of the game window. Then navigation will be as follows: Home Screen -> Quest Screen -> Special Screen.
-            self.game.go_back_home(confirm_location_check=True, display_info_check=True)
-
-            list_of_button_names = ["quest", "special"]
-            for button_name in list_of_button_names:
-                if(button_name == "quest"):
-                    self.game.mouse_tools.move_and_click_point(self.game.home_button_location[0] - 37, self.game.home_button_location[1] - 758)
-                else:
-                    self.game.find_and_click_button(button_name)
-
-            # Attempt to fit all the "Select" buttons into the current view and then find all "Select" Buttons.
-            self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Finding all Special Select Buttons...")
-            self.game.image_tools.confirm_location("special")
-            self.game.mouse_tools.scroll_screen_from_home_button(-400)
-            self.game.wait_for_ping(1)
-
-            special_quests = self.game.image_tools.find_all("select", custom_region=(self.game.image_tools.window_left, self.game.image_tools.window_top, 
-                                                                                     self.game.image_tools.window_width, self.game.image_tools.window_height))
-
-            # Bring up the Difficulty Screen for Angel Halo and select "Very Hard".
-            self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now selecting and moving to Very Hard Difficulty Angel Halo...")
-            angel_halo_special_quest = pyautogui.center(special_quests.pop())
-            self.game.mouse_tools.move_and_click_point(angel_halo_special_quest[0], angel_halo_special_quest[1])
-            self.game.wait_for_ping(1)
-            self.game.image_tools.confirm_location("angel_halo")
-
-            # Select the center of the last "Play" Button which would be the Very Hard Difficulty Angel Halo mission.
-            list_of_special_play_button_locations = self.game.image_tools.find_all("special_play", custom_region=(self.game.image_tools.window_left, self.game.image_tools.window_top, 
-                                                                                                                  self.game.image_tools.window_width, self.game.image_tools.window_height))
-
-            angel_halo_VH = pyautogui.center(list_of_special_play_button_locations.pop())
-
-            # Then click the mission and confirm the location for the Summon Selection Screen.
-            self.game.mouse_tools.move_and_click_point(angel_halo_VH[0], angel_halo_VH[1])
-            
-            # Refill using Half Elixir if necessary.
-            self.game.wait_for_ping(1)
-            self.game.check_for_ap()
-            
-            self.game.image_tools.confirm_location("select_summon")
-
-            # Locate Dark summons and click on the specified Summon.
-            self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Selecting the first found FLB Hades Summon...")
-            self.game.find_summon_element("dark")
-            summon_check = self.game.find_summon("hades")
-
-            if (summon_check == False):
-                # Repeat trying to find the specified summon until tries run out.
-                tries -= 1
-                if (tries <= 0):
-                    sys.exit(f"\n{self.game.printtime()} [TEST_FAILED] Could not find summon after multiple refreshes. Stopping bot...")
-
-        # Select first Group, second Party and then start the Combat Mode.
-        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Selecting First Group, Second Party...")
-        self.game.find_party_and_start_mission(1, 2)
-        self.game.start_combat_mode(self.combat_script)
+        self.game.start_farming_mode("dark", "Celeste Omega", 6, 1, "special", "Angel Halo", "EXP", 1, "VH Angel Halo")
 
         self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Combat Mode was successful.")
         
         self.isBotRunning.value = 1
-
         return None
