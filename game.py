@@ -511,16 +511,16 @@ class Game:
         x = None
         y = self.attack_button_location[1] + 171
         
-        if("useSkill(1)" in skill):
+        if("useskill(1)" in skill.lower()):
             self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 1.")
             x = self.attack_button_location[0] - 213
-        elif("useSkill(2)" in skill):
+        elif("useskill(2)" in skill.lower()):
             self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 2.")
             x = self.attack_button_location[0] - 132
-        elif("useSkill(3)" in skill):
+        elif("useskill(3)" in skill.lower()):
             self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 3.")
             x = self.attack_button_location[0] - 51
-        elif("useSkill(4)" in skill):
+        elif("useskill(4)" in skill.lower()):
             self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 4.")
             x = self.attack_button_location[0] + 39
 
@@ -634,7 +634,7 @@ class Game:
                     self.find_dialog_in_combat("vyrn")
 
                     # Continue reading each line inside the Turn block until you reach the "end" occurrence.
-                    while("end" not in line):
+                    while("end" not in line.lower()):
                         line = lines[i].strip() # Strip any leading and trailing whitespaces.
 
                         # Print each line read if debug mode is active.
@@ -644,13 +644,13 @@ class Game:
 
                         # Determine which character will perform the action.
                         character_selected = 0
-                        if("character1" in line):
+                        if("character1" in line.lower()):
                             character_selected = 1
-                        elif("character2" in line):
+                        elif("character2" in line.lower()):
                             character_selected = 2
-                        elif("character3" in line):
+                        elif("character3" in line.lower()):
                             character_selected = 3
-                        elif("character4" in line):
+                        elif("character4" in line.lower()):
                             character_selected = 4
 
                         # Now perform the skill specified in the read string.
@@ -660,7 +660,7 @@ class Game:
                             self.select_character(character_selected)
 
                             # Execute each skill from left to right for the current character.
-                            skills = line.split(".")
+                            skills = line.lower().split(".")
                             skills.pop(0)
                             for skill in skills:
                                 self.use_character_skill(character_selected, skill)
@@ -681,7 +681,7 @@ class Game:
                         
                         # TODO: Allow for Summon chaining. For now, summoning multiple summons requires individual lines.
                         for j in range(1,7):
-                            if(f"summon({j})" in line):
+                            if(f"summon({j})" in line.lower()):
                                 # Click the Summon Button to bring up the available summons.
                                 self.print_and_save(f"{self.printtime()} [COMBAT] Invoking Summon #{j}...")
                                 self.find_and_click_button("summon")
@@ -717,7 +717,7 @@ class Game:
                                 line_number += 1
                                 i += 1
 
-                if("end" in line):
+                if("end" in line.lower()):
                     # Attempt to find the "Next" Button first before attacking to preserve the turn number in the backend. If so, skip clicking the "Attack" Button.
                     # Otherwise, click the "Attack" Button, increment the turn number, and then attempt to find the "Next" Button.
                     next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
