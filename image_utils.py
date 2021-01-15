@@ -120,8 +120,8 @@ class ImageUtils:
         if(guibot_check):
             button_location = (button_location.target.x, button_location.target.y)
 
-        #if(self.debug_mode):
-        self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {button_name.upper()} Button at {button_location}.")
+        if(self.debug_mode):
+            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {button_name.upper()} Button at {button_location}.")
 
         if (confirm_location_check):
             self.confirm_location(button_name)
