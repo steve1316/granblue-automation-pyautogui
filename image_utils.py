@@ -334,12 +334,17 @@ class ImageUtils:
                     
                     if(len(locations) != 0):
                         # Prepare the list of locations to be centered for use later.
-                        for location in locations:
-                            centered_locations.append(pyautogui.center(location))
+                        for (index, location) in enumerate(locations):
+                            if(index > 0):
+                                # Filter out duplicate locations where they are 1 pixel away from each other.
+                                if(location[1] != (locations[index - 1][1] + 1)):
+                                    centered_locations.append(pyautogui.center(location))
+                            else:
+                                centered_locations.append(pyautogui.center(location))
                         
-                        if(hide_info):
+                        if(not hide_info):
                             self.game.print_and_save("\n")
-                            for location in locations:
+                            for location in centered_locations:
                                 self.game.print_and_save(f"{self.printtime()} [INFO] Occurrence found at: " + str(location))
                             self.game.print_and_save("\n")
                         
