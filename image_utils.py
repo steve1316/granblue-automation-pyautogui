@@ -374,7 +374,9 @@ class ImageUtils:
                              "Evil Judge Crystal", "Sagittarius Rune", "Horseman's Plate", "Sunlight Quartz", "Halo Light Quartz",
                              "Shadow Silver", "Phantom Demon Jewel", "Ifrit Anima", "Ifrit Omega Anima", "Cocytus Anima", "Cocytus Omega Anima",
                              "Vohu Manah Anima", "Vohu Manah Omega Anima", "Sagittarius Anima", "Sagittarius Omega Anima",
-                             "Corow Anima", "Corow Omega Anima", "Diablo Anima", "Diablo Omega Anima"]
+                             "Corow Anima", "Corow Omega Anima", "Diablo Anima", "Diablo Omega Anima",
+                             "Ancient Ecke Sachs", "Ecke Sachs", "Ancient Auberon", "Auberon", "Ancient Perseus", "Perseus",
+                             "Ancient Nalakuvara", "Nalakuvara", "Ancient Bow of Artemis", "Bow of Artemis", "Ancient Cortana", "Cortana"]
         
         # Save the amount gained of items in order according to the item_list.
         amounts_farmed = []
