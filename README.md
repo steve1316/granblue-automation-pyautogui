@@ -33,8 +33,8 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] (MEDIUM PRIORITY) Remove all sys.exit() code.
 - [x] ~~(HIGH PRIORITY) Implement Special Quests navigation/items.~~
 - [ ] (HIGH PRIORITY) Implement Coop Quests navigation/items.
-- [] (HIGH PRIORITY) Implement Raid navigation. (IN-PROGRESS)
-    - [ ] (MAX PRIORITY) Implement way to exit out of Raids via user script and implement checks for max of 3 on-going raids. Also check to see for pending rewards. (IN-PROGRESS)
+- [x] ~~(HIGH PRIORITY) Implement Raid navigation. (IN-PROGRESS)~~
+    - [x] ~~(MAX PRIORITY) Implement way to exit out of Raids via user script and implement checks for max of 3 on-going raids. Also check to see for pending rewards.~~
     - [ ] (MAX PRIORITY) Link Raid component from backend to frontend. (IN-PROGRESS)
     - [ ] (HIGH PRIORITY) Implement items to farm in Raids. (IN-PROGRESS)
 	- [x] ~~(HIGH PRIORITY) Implement Twitter room code scraper/parser.~~
