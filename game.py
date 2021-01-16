@@ -400,12 +400,12 @@ class Game:
         if(self.debug_mode):
             self.print_and_save(f"\n{self.printtime()} [SUCCESS] Successfully selected Party {party_number}. Now starting the mission.")
 
-        # Find and click the "OK" Button to start the mission.
-        self.find_and_click_button("party_selection_ok")
-        
         # If a dialog window pops up and says "This raid battle has already ended. The Home screen will now appear.", return False.
         if(self.image_tools.confirm_location("raid_just_ended_home_redirect", tries=1)):
             return False
+
+        # Find and click the "OK" Button to start the mission.
+        self.find_and_click_button("party_selection_ok")
         
         return True
 
@@ -694,7 +694,7 @@ class Game:
                     self.find_dialog_in_combat("vyrn")
 
                     # Continue reading each line inside the Turn block until you reach the "end" occurrence.
-                    while("end" not in line.lower()):
+                    while("end" not in line.lower() and line.strip() != ""):
                         line = lines[i].strip() # Strip any leading and trailing whitespaces.
 
                         # Print each line read.
@@ -1009,8 +1009,6 @@ class Game:
                             self.wait_for_ping(1)
                             while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
                                 self.find_and_click_button("friend_request_cancel")
-                            
-                            # TODO: Check for BP.
                             
                             self.game.find_and_click_button("raid", suppress_error=True)
                             

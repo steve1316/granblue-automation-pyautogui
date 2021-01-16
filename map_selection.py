@@ -509,6 +509,10 @@ class MapSelection:
             (bool): Return True if the bot reached the Summon Selection Screen. Otherwise, return False.
         """
         if(not self.game.image_tools.confirm_location("raid", tries=1)):
+            self.game.find_and_click_button("quest", suppress_error=True)
+            self.check_for_pending()
+            self.game.find_and_click_button("raid", suppress_error=True)
+            
             if(self.raids_joined >= 3):
                 # If the maximum number of raids has been joined, collect any pending rewards with a interval of 60 seconds in between until the number is below 3.
                 while(self.raids_joined >= 3):
@@ -519,11 +523,7 @@ class MapSelection:
                     self.game.find_and_click_button("quest", suppress_error=True)
                     self.check_for_pending()
             else:
-                # Navigate to the Quest Screen -> Backup Requests Screen -> Enter ID Screen.
-                self.game.find_and_click_button("quest", suppress_error=True)
                 self.check_for_pending()
-            
-            self.game.find_and_click_button("raid", suppress_error=True)
         
         self.game.print_and_save(f"{self.game.printtime()} [INFO] Moving to the Enter ID Screen.")
         self.game.find_and_click_button("enter_id")
