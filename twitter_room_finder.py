@@ -169,23 +169,31 @@ class TwitterRoomFinder():
 
         if(len(self.list_of_id) > 50):
             self.list_of_id = []
-            
-        tweet_jp = self.api.search(q=query_jp, since=today.strftime('%Y-%m-%d'), count=count)
-        for tweet in tweet_jp:
-            if(tweet.id not in self.list_of_id and len(tweets) < count):
-                self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found JP tweet.")
-                tweets.append(tweet)
-                self.list_of_id.append(tweet.id)
-
-        if(len(tweets) < count):
-            tweet_en = self.api.search(q=query_en, since=today.strftime('%Y-%m-%d'), count=count)
-            for tweet in tweet_en:
+        
+        try:    
+            tweet_jp = self.api.search(q=query_jp, since=today.strftime('%Y-%m-%d'), count=count)
+            if(self.debug_mode):
+                self.game.print_and_save(f"\n{self.game.printtime()} [DEBUG] Length of tweets from JP found is: {len(tweet_jp)}")
+            for tweet in tweet_jp:
                 if(tweet.id not in self.list_of_id and len(tweets) < count):
-                    self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found EN tweet.")
+                    self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found JP tweet.")
                     tweets.append(tweet)
                     self.list_of_id.append(tweet.id)
-                    
-        return tweets
+
+            if(len(tweets) < count):
+                tweet_en = self.api.search(q=query_en, since=today.strftime('%Y-%m-%d'), count=count)
+                if(self.debug_mode):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [DEBUG] Length of tweets from EN found is: {len(tweet_en)}")
+                for tweet in tweet_en:
+                    if(tweet.id not in self.list_of_id and len(tweets) < count):
+                        self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found EN tweet.")
+                        tweets.append(tweet)
+                        self.list_of_id.append(tweet.id)
+                        
+            return tweets
+        except Exception as e:
+            self.game.print_and_save(f"{self.game.printtime()} [ERROR] Bot got rate-limited or Twitter failed to respond after a certain amount of time. Exact error is: \n{e}")
+            self.game.isBotRunning.value = 1
         
     def clean_tweets(self, tweets: Iterable[str]):
         """Clean the tweets passed to this function and parse out the room codes from them.
