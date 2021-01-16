@@ -172,6 +172,10 @@ class Game:
             temp_location = self.image_tools.find_button("quest", tries=2, suppress_error=suppress_error)
             if(temp_location == None):
                 temp_location = self.image_tools.find_button("quest2", tries=2, suppress_error=suppress_error)
+        elif(button_name == "raid"):
+            temp_location = self.image_tools.find_button("raid", tries=2, suppress_error=suppress_error)
+            if(temp_location == None):
+                temp_location = self.image_tools.find_button("raid2", tries=2, suppress_error=suppress_error)
         else:
             temp_location = self.image_tools.find_button(button_name, suppress_error=suppress_error)
             
