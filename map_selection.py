@@ -140,6 +140,8 @@ class MapSelection:
         
         self.debug_mode = debug_mode
         
+        self.raids_joined = 0
+        
     def select_map(self, map_mode: str, map_name: str, item_name: str, mission_name: str, difficulty: str):
         """Navigates the bot to the specified map and preps the bot for Summon/Party selection.
 
@@ -163,13 +165,6 @@ class MapSelection:
     
             # Example: map_mode = "quest", map_name: "map1", item_name: "Satin Feather", mission_name: "Scattered Cargo"
             if(map_mode.lower() == "quest"):
-                self.game.print_and_save("\n********************************************************************************")
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Mode: Quest")
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Map: {map_name}")
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Mission: {mission_name}")
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Material to farm: {item_name}")
-                self.game.print_and_save("********************************************************************************\n")
-                
                 # Go to the Home Screen and check if the bot is already at the correct island or not.
                 self.game.go_back_home(confirm_location_check=True, display_info_check=True)
                 if(self.game.image_tools.confirm_location(temp_map_name, tries=2)):
@@ -308,14 +303,6 @@ class MapSelection:
             #     self.game.go_back_home()
                 
             elif(map_mode.lower() == "special"):
-                self.game.print_and_save("\n********************************************************************************")
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Mode: Special")
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Map: {map_name}")
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Mission: {mission_name}")
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Difficulty: {difficulty}")
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Material to farm: {item_name}")
-                self.game.print_and_save("********************************************************************************\n")
-                
                 # Go to the Home Screen.
                 self.game.go_back_home(confirm_location_check=True, display_info_check=True)
                 
@@ -494,18 +481,24 @@ class MapSelection:
         Returns:
             (bool): Return True if the bot reached the Summon Selection Screen. Otherwise, return False.
         """
-        self.game.print_and_save("\n********************************************************************************")
-        self.game.print_and_save(f"{self.game.printtime()} [INFO] Mode: Raid")
-        self.game.print_and_save(f"{self.game.printtime()} [INFO] Mission: {mission_name}")
-        self.game.print_and_save(f"{self.game.printtime()} [INFO] Material to farm: {item_name}")
-        self.game.print_and_save("********************************************************************************\n")
+        if(not self.game.image_tools.confirm_location("raid", tries=1)):
+            if(self.raids_joined >= 3):
+                # If the maximum number of raids has been joined, collect any pending rewards with a interval of 60 seconds in between until the number is below 3.
+                while(self.raids_joined >= 3):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Maximum raids of 3 has been joined. Waiting 60 seconds to see if any finish.")
+                    self.game.go_back_home(confirm_location_check=True)
+
+                    self.game.wait_for_ping(60)
+                    self.game.find_and_click_button("quest", suppress_error=True)
+                    self.check_for_pending()
+            else:
+                # Navigate to the Quest Screen -> Backup Requests Screen -> Enter ID Screen.
+                self.game.find_and_click_button("quest", suppress_error=True)
+                self.check_for_pending()
+            
+            self.game.find_and_click_button("raid", suppress_error=True)
         
-        # Go to the Home Screen.
-        self.game.go_back_home(confirm_location_check=True, display_info_check=True)
-        
-        # Navigate to the Quest Screen -> Backup Requests Screen -> Enter ID Screen.
-        self.game.find_and_click_button("quest", suppress_error=True)
-        self.game.find_and_click_button("raid", suppress_error=True)
+        self.game.print_and_save(f"{self.game.printtime()} [INFO] Moving to the Enter ID Screen.")
         self.game.find_and_click_button("enter_id")
         
         # Make preparations for farming raids by saving the location of the Join Room button and the Room Code textbox.
@@ -526,10 +519,14 @@ class MapSelection:
                 self.game.mouse_tools.paste_from_clipboard()
                 self.game.mouse_tools.click_point_instantly(join_room_button[0], join_room_button[1])
                 
+                # Check for pending rewards popup.
+                self.check_for_pending()
+                
                 # If the raid is still able to be joined, break out and head to the Summon Selection Screen.
                 self.game.wait_for_ping(1)
                 if(not self.game.image_tools.confirm_location("raid_already_ended", tries=1) and not self.game.image_tools.confirm_location("invalid_code", tries=1)):
                     self.game.print_and_save(f"{self.game.printtime()} [INFO] Joining {room_code} was successful.")
+                    self.raids_joined += 1
                     return self.game.image_tools.confirm_location("select_summon")
                 else:
                     self.game.print_and_save(f"{self.game.printtime()} [INFO] {room_code} already ended or invalid.")
