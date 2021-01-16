@@ -39,14 +39,13 @@ class Game:
         # Start a timer signaling bot start in order to keep track of elapsed time and create a Queue to share logging messages between backend and frontend.
         self.starting_time = timer()
         self.queue = queue
-
-        # Initialize the MapSelection and TwitterRoomFinder objects.
-        self.map_selection = MapSelection(self)
-        self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3])
-
+        
         # Set a debug flag to determine whether or not to print debugging messages.
         self.debug_mode = debug_mode
-        
+
+        # Initialize the objects of helper classes.
+        self.map_selection = MapSelection(self)
+        self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3], debug_mode=self.debug_mode)
         self.image_tools = ImageUtils(game=self, starting_time=self.starting_time, debug_mode=self.debug_mode)
         self.mouse_tools = MouseUtils(game=self, starting_time=self.starting_time, mouse_speed=custom_mouse_speed, debug_mode=self.debug_mode)
         
@@ -113,7 +112,7 @@ class Game:
             self.print_and_save("\n\n********************************************************************************")
             self.print_and_save(f"{self.printtime()} [INFO] Screen size: {pyautogui.size()}.")
             self.print_and_save(f"{self.printtime()} [INFO] Game window size: Region({self.image_tools.window_left}, {self.image_tools.window_top}, {self.image_tools.window_width}, {self.image_tools.window_height}).")
-            self.print_and_save("********************************************************************************\n")
+            self.print_and_save("********************************************************************************")
 
         return None
 
@@ -126,23 +125,23 @@ class Game:
 
         Returns:
             None
-        """
-        if(self.debug_mode):
-            self.print_and_save(f"\n{self.printtime()} [DEBUG] Moving back to the Home Screen...")
-        
-        if(confirm_location_check):
-            self.image_tools.confirm_location("home")
-        else:    
+        """   
+        if(not self.image_tools.confirm_location("home", tries=1)):
+            self.print_and_save(f"\n{self.printtime()} [INFO] Moving back to the Home Screen...")
             # Go to the Home Screen.
             if(self.home_button_location != None):
                 self.mouse_tools.move_and_click_point(self.home_button_location[0], self.home_button_location[1])
             else:
-                temp_home_button_location = self.image_tools.find_button("home")
-                self.mouse_tools.move_and_click_point(temp_home_button_location[0], temp_home_button_location[1])
+                self.find_and_click_button("home")
+        else:
+            self.print_and_save(f"\n{self.printtime()} [INFO] Bot is already at the Home Screen.")
         
         # Recalibrate the dimensions of the window if flag is True.
         if (display_info_check):
             self.calibrate_game_window(display_info_check=True)
+            
+        if(confirm_location_check):
+            self.image_tools.confirm_location("home", tries=3)
             
         return None
 
@@ -583,7 +582,7 @@ class Game:
                     self.back_button_location = (self.attack_button_location[0] - 322, self.attack_button_location[1])
 
                 # If the execution reached the next turn block and it is currently not the correct turn, keep pressing the "Attack" Button until the turn number matches.
-                if ("turn" in line.lower() and int(line[5]) != turn_number):
+                if (line[0] != "#" and line[0] != "/" and line.strip() != "" and "turn" in line.lower() and int(line[5]) != turn_number):
                     while (int(line[5]) != turn_number):
                         self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
 
@@ -623,7 +622,7 @@ class Game:
                     break
 
                 # If it is the start of the Turn and it is currently the correct turn, grab the next line for execution.
-                if ("turn" in line.lower() and int(line[5]) == turn_number and not self.retreat_check):
+                if (line[0] != "#" and line[0] != "/" and line.strip() != "" and "turn" in line.lower() and int(line[5]) == turn_number and not self.retreat_check):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}. Reading script now...")
                     
                     i += 1
@@ -636,10 +635,8 @@ class Game:
                     while("end" not in line.lower()):
                         line = lines[i].strip() # Strip any leading and trailing whitespaces.
 
-                        # Print each line read if debug mode is active.
-                        if(line[0] != "#" and line[0] != "/" and line.strip() != ""):
-                            if(self.debug_mode):
-                                self.print_and_save(f"\n{self.printtime()} [DEBUG] Reading Line {line_number}: \"{line.strip()}\"")
+                        # Print each line read.
+                        self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line.strip()}\"")
 
                         # Determine which character will perform the action.
                         character_selected = 0
@@ -748,6 +745,16 @@ class Game:
 
                             self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                             self.wait_for_ping(5)
+                            
+                if("exit" in line.lower()):
+                    # End Combat Mode by heading back to the Home Screen without retreating. 
+                    # Usually for raid farming as to maximize the number of raids joined after completing the provided combat script.
+                    self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line.strip()}\"")
+                    self.print_and_save(f"{self.printtime()} [COMBAT] Leaving this raid without retreating...")
+                    self.find_and_click_button("menu")
+                    self.find_and_click_button("raid_home")
+                    self.find_and_click_button("raid_go_back_home")
+                    return False
 
                 # Continue to the next line for execution.
                 line_number += 1
@@ -789,17 +796,7 @@ class Game:
             # Try to click any detected "OK" Buttons several times.
             if(not self.retreat_check):
                 self.print_and_save(f"\n{self.printtime()} [INFO] Bot has reached the Quest Results Screen.")
-                while (self.image_tools.confirm_location("loot_collected", tries=2) == False and not self.retreat_check):
-                    ok_button_location = self.image_tools.find_button("ok", tries=1)
-                    
-                    # Check for any uncap messages and attempt to close those messages.
-                    close_button_location = self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=True)
-
-                    if(ok_button_location != None):
-                        self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
-                        
-                    if(close_button_location != None):
-                        self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1])
+                self.collect_loot()
 
             self.print_and_save("\n################################################################################")
             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
@@ -831,12 +828,12 @@ class Game:
         if(item_name != "EXP"):
             self.print_and_save("\n\n################################################################################")
             self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode.")
-            self.print_and_save(f"{self.printtime()} [FARM] Farming {item_amount_to_farm}x {item_name}")
+            self.print_and_save(f"{self.printtime()} [FARM] Farming {item_amount_to_farm}x {item_name} at {mission_name}.")
             self.print_and_save("################################################################################\n")
         else:
             self.print_and_save("\n\n################################################################################")
             self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode.")
-            self.print_and_save(f"{self.printtime()} [FARM] Doing {item_amount_to_farm}x runs for {item_name}")
+            self.print_and_save(f"{self.printtime()} [FARM] Doing {item_amount_to_farm}x runs for {item_name} at {mission_name}.")
             self.print_and_save("################################################################################\n")
         
         difficulty = ""
@@ -876,7 +873,7 @@ class Game:
                 # Select the Party specified and then start the mission.
                 start_check = self.find_party_and_start_mission(group_number, party_number)
                 
-                if(start_check):
+                if(start_check and map_mode.lower() != "raid"):
                     # Check for the Items Picked Up popup that appears after starting a Quest mission.
                     self.wait_for_ping(1)
                     if(self.image_tools.confirm_location("items_picked_up", tries=1)):
@@ -912,14 +909,62 @@ class Game:
                             while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
                                 self.find_and_click_button("friend_request_cancel")
                             
-                            # TODO: Check for available BP.
-                            
+                            # Check for available AP.
+                            self.check_for_ap(use_full_elixirs=use_full_elixirs)
                             
                             summon_check = False
                     else:
-                        # If the Raid already ended while the bot was selecting a Summon and Party, go back to finding a new room code.
                         self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
-        
+                elif(start_check and map_mode.lower() == "raid"):
+                    if(self.start_combat_mode(self.combat_script)):
+                        # After Combat Mode has finished, count the number of the specified item that has dropped.
+                        if(item_name != "EXP"):
+                            temp_amount = self.image_tools.find_farmed_items([item_name])[0]
+                            item_amount_farmed += temp_amount
+                        else:
+                            item_amount_farmed += 1
+                            
+                        amount_of_runs_finished += 1
+                        
+                        if(item_name != "EXP"):
+                            self.print_and_save("\n\n********************************************************************************")
+                            self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained this run: {temp_amount}")
+                            self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained in total: {item_amount_farmed} / {item_amount_to_farm}")
+                            self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {amount_of_runs_finished}")
+                            self.print_and_save("********************************************************************************\n")
+                        else:
+                            self.print_and_save("\n\n********************************************************************************")
+                            self.print_and_save(f"{self.printtime()} [FARM] Runs done for EXP in total: {item_amount_farmed} / {item_amount_to_farm}")
+                            self.print_and_save("********************************************************************************\n")
+                        
+                        if(item_amount_farmed < item_amount_to_farm):
+                            self.find_and_click_button("raid_quests")
+                            
+                            # Loop while clicking any detected Cancel buttons like from Friend Request popups.
+                            self.wait_for_ping(1)
+                            while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
+                                self.find_and_click_button("friend_request_cancel")
+                            
+                            # TODO: Check for BP.
+                            
+                            self.game.find_and_click_button("raid", suppress_error=True)
+                            
+                            summon_check = False
+                    else:
+                        if(self.image_tools.confirm_location("check_your_pending_battles", tries=1)):
+                            self.find_and_click_button("ok")
+                            while(self.image_tools.find_button("pending_battle_sidebar", tries=1)):
+                                self.find_and_click_button("pending_battle_sidebar")
+                                self.wait_for_ping(1)
+                                
+                                if(self.image_tools.confirm_location("no_loot", tries=1)):
+                                    self.find_and_click_button("raid_quests")
+                                else:
+                                    self.collect_loot()
+                        
+                        # Join a new raid.
+                        self.map_selection.join_raid(item_name, mission_name)
+                        summon_check = False    
         else:
             self.print_and_save("\nSomething went wrong with navigating to the map.")
             
