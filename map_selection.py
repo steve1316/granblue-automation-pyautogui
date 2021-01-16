@@ -471,6 +471,33 @@ class MapSelection:
         except Exception as e:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception on MapSelection select_map(): \n{e}")
             
+    def check_for_pending(self):
+        """Check and collect any pending rewards and free up slots for the bot to join more raids. After this entire process is completed, the bot should end up at the Quest Screen.
+
+        Returns:
+            None
+        """
+        while(self.game.image_tools.confirm_location("check_your_pending_battles", tries=2)):
+            self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Found some pending battles that need collecting from.")
+            
+            self.game.find_and_click_button("ok")
+            self.game.wait_for_ping(1)
+            
+            if(self.game.image_tools.find_button("pending_battle_sidebar", tries=1)):
+                self.game.find_and_click_button("pending_battle_sidebar")
+                self.game.wait_for_ping(1)
+                
+                if(self.game.image_tools.confirm_location("no_loot", tries=1)):
+                    self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
+                    self.game.find_and_click_button("raid_quests")
+                    self.raids_joined -= 1
+                else:
+                    self.game.collect_loot()
+                    self.raids_joined -= 1
+        
+        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Pending battles have been cleared. Continuing to the Backup Requests Screen...")
+        return None
+            
     def join_raid(self, item_name: str, mission_name: str):
         """Attempt to join the specified raid.
 
