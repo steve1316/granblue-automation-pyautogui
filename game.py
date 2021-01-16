@@ -471,6 +471,35 @@ class Game:
             self.print_and_save(f"\n{self.printtime()} [INFO] AP is available. Continuing...")
         
         return None
+    
+    def check_for_ep(self, use_soul_balm: bool = False):
+        """Check if the user encountered the 'Not Enough EP' popup and it will refill using either Soul Berry or Soul Balm.
+
+        Args:
+            use_soul_balm (bool, optional): Will use Soul Balm instead of Soul Berry based on this. Defaults to False.
+
+        Returns:
+            None
+        """
+        if(self.image_tools.confirm_location("not_enough_ep", tries=2)):
+            # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
+            # TODO: Implement check for when the user ran out of both of them, or one of them.
+            if(use_soul_balm == False):
+                self.print_and_save(f"\n{self.printtime()} [INFO] EP ran out! Using Soul Berries...")
+                half_ep_location = self.image_tools.find_button("refill_soul_berry")
+                self.mouse_tools.move_and_click_point(half_ep_location[0], half_ep_location[1] + 175)
+            else:
+                self.print_and_save(f"\n{self.printtime()} [INFO] BP ran out! Using Soul Balm...")
+                full_ep_location = self.image_tools.find_button("refill_soul_balm")
+                self.mouse_tools.move_and_click_point(full_ep_location[0], full_ep_location[1] + 175)
+            
+            # Press the OK button to move to the Summon Selection Screen.
+            self.wait_for_ping(1)
+            self.find_and_click_button("ok")
+        else:
+            self.print_and_save(f"\n{self.printtime()} [INFO] EP is available. Continuing...")
+        
+        return None
 
     def select_character(self, character_number: int):
         """Selects the portrait of the character specified on the screen.
@@ -840,7 +869,7 @@ class Game:
         return True
     
     def start_farming_mode(self, summon_element_name: str, summon_name: str, group_number: int, party_number: int, map_mode: str, map_name: str, 
-                           item_name: str, item_amount_to_farm: int, mission_name: str, use_full_elixirs: bool = False):
+                           item_name: str, item_amount_to_farm: int, mission_name: str, use_refill_full: bool = False):
         """Start the Farming Mode using the given parameters.
 
         Args:
@@ -853,7 +882,7 @@ class Game:
             item_name (str): Name of the item to farm.
             item_amount_to_farm (int): Amount of the item to farm.
             mission_name (str): Name of the mission to farm the item in.
-            use_full_elixirs (bool, optional): Will use Full Elixir instead of Half Elixir based on this. Defaults to False.
+            use_refill_full (bool, optional): Will use Full Elixir/Soul Balm instead of Half Elixir/Soul Berry based on this. Defaults to False.
         
         Returns:
             None
@@ -890,8 +919,11 @@ class Game:
             # Keep playing the mission until the bot gains enough of the item specified.
             while(item_amount_farmed < item_amount_to_farm):
                 while(summon_check == False): 
-                    # Check for available AP.
-                    self.check_for_ap(use_full_elixirs=use_full_elixirs)
+                    # Check for available AP or BP, depending on mode.
+                    if(map_mode.lower() != "raid"):
+                        self.check_for_ap(use_full_elixirs=use_refill_full)
+                    else:
+                        self.check_for_ep(use_soul_balm=use_refill_full)
                     
                     self.find_summon_element(summon_element_name)
                     summon_check = self.find_summon(summon_name)
@@ -943,12 +975,12 @@ class Game:
                                 self.find_and_click_button("friend_request_cancel")
                             
                             # Check for available AP.
-                            self.check_for_ap(use_full_elixirs=use_full_elixirs)
+                            self.check_for_ap(use_full_elixirs=use_refill_full)
                             
                             summon_check = False
                     else:
                         self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
-                elif(start_check and map_mode.lower() == "raid"):
+                elif(start_check and map_mode.lower() == "raid"): 
                     if(self.start_combat_mode(self.combat_script)):
                         # After Combat Mode has finished, count the number of the specified item that has dropped.
                         if(item_name != "EXP"):
