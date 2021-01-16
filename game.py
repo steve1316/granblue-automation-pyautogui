@@ -532,6 +532,35 @@ class Game:
             self.wait_for_ping(2)
 
         return None
+    
+    def collect_loot(self):
+        """Collect the loot from the Results screen while clicking away any dialog popups.
+
+        Returns:
+            None
+        """
+        self.print_and_save(f"\n{self.printtime()} [INFO] Loot can be collected.")
+        while (self.image_tools.confirm_location("loot_collected", tries=2) == False and not self.retreat_check):
+            ok_button_location = self.image_tools.find_button("ok", tries=1)
+            
+            # Check for any uncap messages and attempt to close those messages.
+            close_button_location = self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=True)
+
+            if(ok_button_location != None):
+                self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
+                
+            if(close_button_location != None):
+                self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1])
+        
+        # Click the Quests button if this was a Raid to go back.
+        if(self.image_tools.find_button("raid_quests", tries=1) != None):
+            self.find_and_click_button("raid_quests")
+            
+            # Clear any Friend Request popups.
+            if(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=True) != None):
+                self.find_and_click_button("friend_request_cancel")
+        
+        return None
 
     def start_combat_mode(self, script_file_path: str = ""):
         """Start the Combat Mode with the given script file name. Start reading through the text file line by line and have the bot proceed accordingly.
