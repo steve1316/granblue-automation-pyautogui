@@ -343,10 +343,8 @@ class ImageUtils:
                                 centered_locations.append(pyautogui.center(location))
                         
                         if(not hide_info):
-                            self.game.print_and_save("\n")
                             for location in centered_locations:
                                 self.game.print_and_save(f"{self.printtime()} [INFO] Occurrence found at: " + str(location))
-                            self.game.print_and_save("\n")
                         
                     return centered_locations
 
@@ -366,7 +364,7 @@ class ImageUtils:
         self.file_resolver.add_path("images/items/")
         
         # List of items blacklisted from using guibot's built-in CV finder due to how similar looking they are. 
-        # These items have to use my method using PyAutoGUI instead.
+        # These items have to use my method using PyAutoGUI instead for the confidence argument from OpenCV.
         blacklisted_items = ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb",
                              "Red Tome", "Blue Tome", "Brown Tome", "Green Tome", "White Tome", "Black Tome",
                              "Hellfire Scroll", "Flood Scroll", "Thunder Scroll", "Gale Scroll", "Skylight Scroll", "Chasm Scroll",
@@ -377,59 +375,84 @@ class ImageUtils:
                              "Corow Anima", "Corow Omega Anima", "Diablo Anima", "Diablo Omega Anima",
                              "Ancient Ecke Sachs", "Ecke Sachs", "Ancient Auberon", "Auberon", "Ancient Perseus", "Perseus",
                              "Ancient Nalakuvara", "Nalakuvara", "Ancient Bow of Artemis", "Bow of Artemis", "Ancient Cortana", "Cortana"]
+
+        lite_blacklisted_items = ["Tiamat Anima", "Tiamat Omega Anima", "Colossus Anima", "Colossus Omega Anima", "Leviathan Anima", "Leviathan Omega Anima", 
+                                 "Yggdrasil Anima", "Yggdrasil Omega Anima", "Luminiera Anima", "Luminiera Omega Anima", "Celeste Anima", "Celeste Omega Anima",
+                                 "Shiva Anima", "Shiva Omega Anima", "Europa Anima", "Europa Omega Anima", "Alexiel Anima", "Alexiel Omega Anima", "Grimnir Anima",
+                                 "Grimnir Omega Anima", "Metatron Anima", "Metatron Omega Anima", "Avatar Anima", "Avatar Omega Anima", "Nezha Anima", "Nezha Omega Anima",
+                                 "Twin Elements Anima", "Twin Elements Omega Anima", "Macula Marius Anima", "Macula Marius Omega Anima", "Medusa Anima", "Medusa Omega Anima",
+                                 "Apollo Anima", "Apollo Omega Anima", "Dark Angel Olivia Anima", "Dark Angel Olivia Omega Anima", "Garuda Anima", "Garuda Omega Anima",
+                                 "Athena Anima", "Athena Omega Anima", "Grani Anima", "Grani Omega Anima", "Baal Anima", "Baal Omega Anima", "Odin Anima", "Odin Omega Anima",
+                                 "Lich Anima", "Lich Omega Anima", "Morrigna Anima", "Morrigna Omega Anima", "Prometheus Anima", "Prometheus Omega Anima", "Ca Ong Anima",
+                                 "Ca Ong Omega Anima", "Gilgamesh Anima", "Gilgamesh Omega Anima", "Hector Anima", "Hector Omega Anima", "Anubis Anima", "Anubis Omega Anima",
+                                 "Huanglong Anima", "Huanglong Omega Anima", "Qilin Anima", "Qilin Omega Anima", "Tiamat Malice Anima", "Leviathan Malice Anima", "Phronesis Anima"]
         
         # Save the amount gained of items in order according to the item_list.
         amounts_farmed = []
+        
+        self.game.print_and_save(f"\n{self.printtime()} [INFO] Now detecting item rewards...")
         
         for item in item_list:
             total_amount_farmed = 0
             
             # Detect amounts gained from each item on the Loot Collected Screen. If the item is on the blacklist, use my method instead.
-            if(item not in blacklisted_items):
-                locations = self.guibot.find_all(item, timeout=1, allow_zero=True)
-            else:
+            if(item in blacklisted_items):
                 locations = self.find_all(item, custom_confidence=0.99)
+            elif(item in lite_blacklisted_items):
+                locations = self.find_all(item, custom_confidence=0.85)
+            else:
+                locations = self.guibot.find_all(item, timeout=1, allow_zero=True)
                 
-            for location in locations:
-                # Deconstruct the location object into coordinates if found using GuiBot.
-                if(item not in blacklisted_items):
-                    location = (location.target.x, location.target.y)
+            for index, location in enumerate(locations):
+                check = False
+                
+                # Filter out any duplicate locations that are 1 pixels from each other.
+                for x in range(index):
+                    if((abs(location[0] - locations[x][0]) <= 1 and location[1] == locations[x][1]) or (abs(location[1] - locations[x][1]) and location[0] == locations[x][0]) or (abs(location[0] - locations[x][0]) and abs(location[1] - locations[x][1]))):
+                        # self.game.print_and_save(f"{self.printtime()} [INFO] Removing duplicate location.")
+                        check = True
+                
+                if(not check):
+                    # Deconstruct the location object into coordinates if found using GuiBot.
+                    if(item not in blacklisted_items and item not in lite_blacklisted_items):
+                        location = (location.target.x, location.target.y)
+                        
+                    self.game.print_and_save(f"{self.printtime()} [INFO] Item detected at {location}")
                     
-                print("Found at ", location)
-                
-                # Adjust the width and height variables if EasyOCR cannot detect the numbers correctly.
-                left = location[0] + 10
-                top = location[1] - 5
-                width = 30
-                height = 25
+                    # Adjust the width and height variables if EasyOCR cannot detect the numbers correctly.
+                    left = location[0] + 10
+                    top = location[1] - 5
+                    width = 30
+                    height = 25
 
-                # Create the /temp folder in the /images/ folder to house the taken screenshots.
-                current_dir = os.getcwd()
-                temp_dir = os.path.join(current_dir, r"images/temp")
-                if not os.path.exists(temp_dir):
-                    os.makedirs(temp_dir)
-                
-                # Create a screenshot in the region specified named "test" and save it in the test folder. Then use EasyOCR to extract text from it into a list.
-                test_image = pyautogui.screenshot("images/temp/test.png", region=(left, top, width, height))
-                # test_image.show() # Uncomment this line of code to see what the bot captured for the region of the detected text.
-                
-                result = self.reader.readtext("images/temp/test.png", detail=0)
-                
-                # Split any unnecessary characters in the extracted text until only the number remains.
-                result_cleaned = 0
-                if(len(result) != 0):
-                    result_split = [char for char in result[0]]
-                    for char in result_split:
-                        try:
-                            if(int(char)):
-                                result_cleaned = int(char)
-                        except ValueError:
-                            continue
-                else:
-                    result_cleaned = 1
+                    # Create the /temp folder in the /images/ folder to house the taken screenshots.
+                    current_dir = os.getcwd()
+                    temp_dir = os.path.join(current_dir, r"images/temp")
+                    if not os.path.exists(temp_dir):
+                        os.makedirs(temp_dir)
                     
-                total_amount_farmed += result_cleaned
+                    # Create a screenshot in the region specified named "test" and save it in the test folder. Then use EasyOCR to extract text from it into a list.
+                    test_image = pyautogui.screenshot("images/temp/test.png", region=(left, top, width, height))
+                    # test_image.show() # Uncomment this line of code to see what the bot captured for the region of the detected text.
+                    
+                    result = self.reader.readtext("images/temp/test.png", detail=0)
+                    
+                    # Split any unnecessary characters in the extracted text until only the number remains.
+                    result_cleaned = 0
+                    if(len(result) != 0):
+                        result_split = [char for char in result[0]]
+                        for char in result_split:
+                            try:
+                                if(int(char)):
+                                    result_cleaned = int(char)
+                            except ValueError:
+                                continue
+                    else:
+                        result_cleaned = 1
+                        
+                    total_amount_farmed += result_cleaned
 
             amounts_farmed.append(total_amount_farmed)
             
+        self.game.print_and_save(f"{self.printtime()} [INFO] Detection of item rewards finished.")
         return amounts_farmed
