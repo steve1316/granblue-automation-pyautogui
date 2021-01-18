@@ -593,25 +593,35 @@ class Game:
                 
             if(close_button_location != None):
                 self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1])
-                
-        temp_amount = self.image_tools.find_farmed_items([item_name])[0]
+        
+        if(self.item_name != "EXP"):        
+            temp_amount = self.image_tools.find_farmed_items([self.item_name])[0]
+        else:
+            temp_amount = 1
+            
         self.item_amount_farmed += temp_amount
             
         self.amount_of_runs_finished += 1
         
-        self.print_and_save("\n\n********************************************************************************")
-        self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained this run: {temp_amount}")
-        self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained in total: {self.item_amount_farmed} / {self.item_amount_to_farm}")
-        self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished}")
-        self.print_and_save("********************************************************************************\n")
+        if(self.item_name != "EXP"):
+            self.print_and_save("\n\n********************************************************************************")
+            self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained this run: {temp_amount}")
+            self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained in total: {self.item_amount_farmed} / {self.item_amount_to_farm}")
+            self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished}")
+            self.print_and_save("********************************************************************************\n")
+        else:
+            self.print_and_save("\n\n********************************************************************************")
+            self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed for EXP: {self.amount_of_runs_finished}")
+            self.print_and_save("********************************************************************************\n")
         
         # Click the Quests button if this was a Raid to go back.
-        if(self.image_tools.find_button("raid_quests", tries=1) != None):
-            self.find_and_click_button("raid_quests")
-            
-            # Clear any Friend Request popups.
-            if(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=True) != None):
-                self.find_and_click_button("friend_request_cancel")
+        if(self.map_mode == "raid"):
+            if(self.image_tools.find_button("raid_quests", tries=1) != None):
+                self.find_and_click_button("raid_quests")
+                
+                # Clear any Friend Request popups.
+                if(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=True) != None):
+                    self.find_and_click_button("friend_request_cancel")
         
         return None
 
@@ -879,7 +889,7 @@ class Game:
             # Try to click any detected "OK" Buttons several times.
             if(not self.retreat_check):
                 self.print_and_save(f"\n{self.printtime()} [INFO] Bot has reached the Quest Results Screen.")
-                self.collect_loot()
+                # self.collect_loot()
 
             self.print_and_save("\n################################################################################")
             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
@@ -933,9 +943,12 @@ class Game:
                 difficulty = "Extreme"
 
         # Save the following information to share between the Game class and the MapSelection class.
+        self.map_mode = map_mode
         self.item_amount_to_farm = item_amount_to_farm
         self.item_name = item_name
         
+        item_amount_farmed = 0
+        amount_of_runs_finished = 0
         summon_check = False
         
         if((map_mode.lower() != "raid" and self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)) or (map_mode.lower() == "raid" and self.map_selection.join_raid(item_name, mission_name))):
@@ -963,30 +976,13 @@ class Game:
                 
                 if(start_check and map_mode.lower() != "raid"):
                     # Check for the Items Picked Up popup that appears after starting a Quest mission.
-                    self.wait_for_ping(1)
+                    self.wait_for_ping(2)
                     if(self.image_tools.confirm_location("items_picked_up", tries=1)):
                         self.find_and_click_button("ok")
                     
                     if(self.start_combat_mode(self.combat_script)):
                         # After Combat Mode has finished, count the number of the specified item that has dropped.
-                        if(item_name != "EXP"):
-                            temp_amount = self.image_tools.find_farmed_items([item_name])[0]
-                            item_amount_farmed += temp_amount
-                        else:
-                            item_amount_farmed += 1
-                            
-                        amount_of_runs_finished += 1
-                        
-                        if(item_name != "EXP"):
-                            self.print_and_save("\n\n********************************************************************************")
-                            self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained this run: {temp_amount}")
-                            self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained in total: {item_amount_farmed} / {item_amount_to_farm}")
-                            self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {amount_of_runs_finished}")
-                            self.print_and_save("********************************************************************************\n")
-                        else:
-                            self.print_and_save("\n\n********************************************************************************")
-                            self.print_and_save(f"{self.printtime()} [FARM] Runs done for EXP in total: {item_amount_farmed} / {item_amount_to_farm}")
-                            self.print_and_save("********************************************************************************\n")
+                        self.collect_loot()
                         
                         if(item_amount_farmed < item_amount_to_farm):
                             # Click the Play Again button.
@@ -1012,24 +1008,7 @@ class Game:
                     else:
                         if(self.start_combat_mode(self.combat_script)):
                             # After Combat Mode has finished, count the number of the specified item that has dropped.
-                            if(item_name != "EXP"):
-                                temp_amount = self.image_tools.find_farmed_items([item_name])[0]
-                                self.item_amount_farmed += temp_amount
-                            else:
-                                self.item_amount_farmed += 1
-                                
-                            self.amount_of_runs_finished += 1
-                            
-                            if(item_name != "EXP"):
-                                self.print_and_save("\n\n********************************************************************************")
-                                self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained this run: {temp_amount}")
-                                self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained in total: {self.item_amount_farmed} / {self.item_amount_to_farm}")
-                                self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished}")
-                                self.print_and_save("********************************************************************************\n")
-                            else:
-                                self.print_and_save("\n\n********************************************************************************")
-                                self.print_and_save(f"{self.printtime()} [FARM] Runs done for EXP in total: {self.item_amount_farmed} / {self.item_amount_to_farm}")
-                                self.print_and_save("********************************************************************************\n")
+                            self.collect_loot()
                             
                             if(item_amount_farmed < item_amount_to_farm):
                                 self.find_and_click_button("raid_quests")
