@@ -483,8 +483,8 @@ class MapSelection:
             self.game.find_and_click_button("ok")
             self.game.wait_for_ping(1)
             
-            if(self.game.image_tools.find_button("pending_battle_sidebar", tries=1)):
-                self.game.find_and_click_button("pending_battle_sidebar")
+            if(self.game.image_tools.find_button("won", tries=1)):
+                self.game.find_and_click_button("won")
                 self.game.wait_for_ping(1)
                 
                 if(self.game.image_tools.confirm_location("no_loot", tries=1)):
@@ -496,6 +496,21 @@ class MapSelection:
                     self.raids_joined -= 1
         
         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Pending battles have been cleared. Continuing to the Backup Requests Screen...")
+        return None
+    
+    def check_for_joined(self):
+        """Check and update the number of raids currently joined.
+
+        Returns:
+            None
+        """
+        self.game.wait_for_ping(1)
+        joined_locations = self.game.image_tools.find_all("joined")
+        
+        if(joined_locations != None):
+            self.raids_joined = len(joined_locations)
+            self.game.print_and_save(f"\n{self.game.printtime()} [INFO] There are currently {self.raids_joined} raids joined.")
+        
         return None
             
     def join_raid(self, item_name: str, mission_name: str):
@@ -512,6 +527,7 @@ class MapSelection:
             self.game.find_and_click_button("quest", suppress_error=True)
             self.check_for_pending()
             self.game.find_and_click_button("raid", suppress_error=True)
+            self.check_for_joined()
             
             if(self.raids_joined >= 3):
                 # If the maximum number of raids has been joined, collect any pending rewards with a interval of 60 seconds in between until the number is below 3.
@@ -546,12 +562,15 @@ class MapSelection:
                 self.game.mouse_tools.paste_from_clipboard()
                 self.game.mouse_tools.click_point_instantly(join_room_button[0], join_room_button[1])
                 
-                # Check for pending rewards popup.
-                self.check_for_pending()
-                
                 # If the raid is still able to be joined, break out and head to the Summon Selection Screen.
                 self.game.wait_for_ping(1)
                 if(not self.game.image_tools.confirm_location("raid_already_ended", tries=1) and not self.game.image_tools.confirm_location("invalid_code", tries=1)):
+                    # Check for EP.
+                    self.game.check_for_ep()
+                    
+                    # Check for pending rewards popup.
+                    self.check_for_pending()
+                    
                     self.game.print_and_save(f"{self.game.printtime()} [INFO] Joining {room_code} was successful.")
                     self.raids_joined += 1
                     return self.game.image_tools.confirm_location("select_summon")
