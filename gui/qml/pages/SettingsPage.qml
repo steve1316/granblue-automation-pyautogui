@@ -108,7 +108,8 @@ Item{
             model: [
                 { text: "Farming Modes", enabled: false },
                 { text: "Quest", enabled: true },
-                { text: "Special", enabled: true }
+                { text: "Special", enabled: true },
+                { text: "Raid", enabled: true}
             ]
 
             onCurrentIndexChanged: {
@@ -184,18 +185,17 @@ Item{
                     itemComboBox.model = [
                         // Scarlet Trial
                         { text: "--------------------", enabled: false },
-                        { text: "Fire Orb", map: "Scarlet Trial", enabled: true },
-                        { text: "Water Orb", map: "Scarlet Trial", enabled: true },
-                        { text: "Earth Orb", map: "Scarlet Trial", enabled: true },
-                        { text: "Wind Orb", map: "Scarlet Trial", enabled: true },
-                        { text: "Light Orb", map: "Scarlet Trial", enabled: true },
-                        { text: "Dark Orb", map: "Scarlet Trial", enabled: true },
-                        { text: "Inferno Orb", map: "Scarlet Trial", enabled: true },
-                        { text: "Frost Orb", map: "Scarlet Trial", enabled: true },
-                        { text: "Rumbling Orb", map: "Scarlet Trial", enabled: true },
-                        { text: "Cyclone Orb", map: "Scarlet Trial", enabled: true },
-                        { text: "Shining Orb", map: "Scarlet Trial", enabled: true },
-                        { text: "Abysm Orb", map: "Scarlet Trial", enabled: true },
+                        { text: "Fire Orb", enabled: true },
+                        { text: "Water Orb", enabled: true },
+                        { text: "Earth Orb",  enabled: true },
+                        { text: "Light Orb", enabled: true },
+                        { text: "Dark Orb", enabled: true },
+                        { text: "Inferno Orb", enabled: true },
+                        { text: "Frost Orb", enabled: true },
+                        { text: "Rumbling Orb", enabled: true },
+                        { text: "Cyclone Orb", enabled: true },
+                        { text: "Shining Orb", enabled: true },
+                        { text: "Abysm Orb", enabled: true },
 
                         // Cerulean Trial
                         { text: "--------------------", enabled: false },
@@ -277,6 +277,281 @@ Item{
                         { text: "Green Dragon Scale", enabled: true },
                         { text: "White Dragon Scale", enabled: true },
                         { text: "Black Dragon Scale", enabled: true },
+                    ]
+                }else if(farmingModeComboBox.model[currentIndex].text === "Raid"){
+                    itemComboBox.model = [
+                        // Tiamat Omega
+                        { text: "--------------------", enabled: false },
+                        { text: "Tiamat Anima", enabled: true },
+                        { text: "Tiamat Omega Anima", enabled: true },
+                        { text: "Tiamat Amood Omega",  enabled: true },
+                        { text: "Tiamat Bolt Omega", enabled: true },
+                        { text: "Tiamat Gauntlet Omega", enabled: true },
+                        { text: "Tiamat Glaive Omega", enabled: true },
+
+                        // Colossus Omega
+                        { text: "--------------------", enabled: false },
+                        { text: "Colossus Anima", enabled: true },
+                        { text: "Colossus Omega Anima", enabled: true },
+                        { text: "Colossus Blade Omega",  enabled: true },
+                        { text: "Colossus Cane Omega", enabled: true },
+                        { text: "Colossus Carbine Omega", enabled: true },
+                        { text: "Colossus Fist Omega", enabled: true },
+
+                        // Leviathan Omega
+                        { text: "--------------------", enabled: false },
+                        { text: "Leviathan Anima", enabled: true },
+                        { text: "Leviathan Omega Anima", enabled: true },
+                        { text: "Leviathan Gaze Omega",  enabled: true },
+                        { text: "Leviathan Spear Omega", enabled: true },
+                        { text: "Leviathan Scepter Omega", enabled: true },
+                        { text: "Leviathan Bow Omega", enabled: true },
+
+                        // Yggdrasil Omega
+                        { text: "--------------------", enabled: false },
+                        { text: "Yggdrasil Anima", enabled: true },
+                        { text: "Yggdrasil Omega Anima", enabled: true },
+                        { text: "Yggdrasil Blade Omega",  enabled: true },
+                        { text: "Yggdrasil Bow Omega", enabled: true },
+                        { text: "Yggdrasil Dagger Omega", enabled: true },
+                        { text: "Yggdrasil Dewbranch Omega", enabled: true },
+
+                        // Luminiera Omega
+                        { text: "--------------------", enabled: false },
+                        { text: "Luminiera Anima", enabled: true },
+                        { text: "Luminiera Omega Anima", enabled: true },
+                        { text: "Luminiera Sword Omega",  enabled: true },
+                        { text: "Luminiera Bhuj Omega", enabled: true },
+                        { text: "Luminiera Bolt Omega", enabled: true },
+                        { text: "Luminiera Harp Omega", enabled: true },
+
+                        // Celeste Omega
+                        { text: "--------------------", enabled: false },
+                        { text: "Celeste Anima", enabled: true },
+                        { text: "Celeste Omega Anima", enabled: true },
+                        { text: "Celeste Harp Omega",  enabled: true },
+                        { text: "Celeste Zaghnal Omega", enabled: true },
+                        { text: "Celeste Horn Omega", enabled: true },
+                        { text: "Celeste Claw Omega", enabled: true },
+
+                        // Twin Elements
+                        { text: "--------------------", enabled: false },
+                        { text: "Twin Elements Anima", enabled: true },
+                        { text: "Twin Elements Omega Anima", enabled: true },
+                        { text: "Ecke Sachs",  enabled: true },
+                        { text: "Ancient Ecke Sachs", enabled: true },
+
+                        // Macula Marius
+                        { text: "--------------------", enabled: false },
+                        { text: "Macula Marius Anima", enabled: true },
+                        { text: "Macula Marius Omega Anima", enabled: true },
+                        { text: "Auberon",  enabled: true },
+                        { text: "Ancient Auberon", enabled: true },
+
+                        // Medusa
+                        { text: "--------------------", enabled: false },
+                        { text: "Medusa Anima", enabled: true },
+                        { text: "Medusa Omega Anima", enabled: true },
+                        { text: "Perseus",  enabled: true },
+                        { text: "Ancient Perseus", enabled: true },
+
+                        // Nezha
+                        { text: "--------------------", enabled: false },
+                        { text: "Nezha Anima", enabled: true },
+                        { text: "Nezha Omega Anima", enabled: true },
+                        { text: "Nalakuvara",  enabled: true },
+                        { text: "Ancient Nalakuvara", enabled: true },
+
+                        // Apollo
+                        { text: "--------------------", enabled: false },
+                        { text: "Apollo Anima", enabled: true },
+                        { text: "Apollo Omega Anima", enabled: true },
+                        { text: "Bow of Artemis",  enabled: true },
+                        { text: "Ancient Bow of Artemis", enabled: true },
+
+                        // Dark Angel Olivia
+                        { text: "--------------------", enabled: false },
+                        { text: "Dark Angel Olivia Anima", enabled: true },
+                        { text: "Dark Angel Olivia Omega Anima", enabled: true },
+                        { text: "Cortana",  enabled: true },
+                        { text: "Ancient Cortana", enabled: true },
+
+                        // Athena
+                        { text: "--------------------", enabled: false },
+                        { text: "Athena Anima", enabled: true },
+                        { text: "Athena Omega Anima", enabled: true },
+                        { text: "Erichthonius",  enabled: true },
+                        { text: "Sword of Pallas", enabled: true },
+
+                        // Grani
+                        { text: "--------------------", enabled: false },
+                        { text: "Grani Anima", enabled: true },
+                        { text: "Grani Omega Anima", enabled: true },
+                        { text: "Bow of Sigurd",  enabled: true },
+                        { text: "Wilhelm", enabled: true },
+
+                        // Baal
+                        { text: "--------------------", enabled: false },
+                        { text: "Baal Anima", enabled: true },
+                        { text: "Baal Omega Anima", enabled: true },
+                        { text: "Solomon's Axe",  enabled: true },
+                        { text: "Spymur's Vision", enabled: true },
+
+                        // Garuda
+                        { text: "--------------------", enabled: false },
+                        { text: "Garuda Anima", enabled: true },
+                        { text: "Garuda Omega Anima", enabled: true },
+                        { text: "Plume of Suparna",  enabled: true },
+                        { text: "Indra's Edge", enabled: true },
+
+                        // Odin
+                        { text: "--------------------", enabled: false },
+                        { text: "Odin Anima", enabled: true },
+                        { text: "Odin Omega Anima", enabled: true },
+                        { text: "Gungnir",  enabled: true },
+                        { text: "Sleipnir Shoe", enabled: true },
+
+                        // Lich
+                        { text: "--------------------", enabled: false },
+                        { text: "Lich Anima", enabled: true },
+                        { text: "Lich Omega Anima", enabled: true },
+                        { text: "Obscuritas",  enabled: true },
+                        { text: "Phantasmas", enabled: true },
+
+                        // Michael
+                        // { text: "--------------------", enabled: false },
+                        // { text: "Michael Anima", enabled: true },
+
+                        // Gabriel
+                        // { text: "--------------------", enabled: false },
+                        // { text: "Gabriel Anima", enabled: true },
+
+                        // Uriel
+                        // { text: "--------------------", enabled: false },
+                        // { text: "Uriel Anima", enabled: true },
+
+                        // Raphael
+                        // { text: "--------------------", enabled: false },
+                        // { text: "Raphael Anima", enabled: true },
+
+                        // Huanglong and Qilin
+                        { text: "--------------------", enabled: false },
+                        { text: "Huanglong Anima", enabled: true },
+                        { text: "Qilin Anima", enabled: true },
+
+                        // Shiva
+                        { text: "--------------------", enabled: false },
+                        { text: "Shiva Anima", enabled: true },
+                        { text: "Shiva Omega Anima", enabled: true },
+                        { text: "Scimitar of Brahman",  enabled: true },
+                        { text: "Trident of Brahman", enabled: true },
+                        { text: "Hand of Brahman", enabled: true },
+                        { text: "Nilakantha", enabled: true },
+
+                        // Europa
+                        { text: "--------------------", enabled: false },
+                        { text: "Europa Anima", enabled: true },
+                        { text: "Europa Omega Anima", enabled: true },
+                        { text: "Tyros Bow",  enabled: true },
+                        { text: "Tyros Scepter", enabled: true },
+                        { text: "Tyros Zither", enabled: true },
+                        { text: "Spirit of Mana", enabled: true },
+
+                        // Godsworn Alexiel
+                        { text: "--------------------", enabled: false },
+                        { text: "Godsworn Alexiel Anima", enabled: true },
+                        { text: "Godsworn Alexiel Omega Anima", enabled: true },
+                        { text: "Nibelung Horn",  enabled: true },
+                        { text: "Nibelung Klinge", enabled: true },
+                        { text: "Nibelung Messer", enabled: true },
+                        { text: "Godsworn Edge", enabled: true },
+
+                        // Grimnir
+                        { text: "--------------------", enabled: false },
+                        { text: "Grimnir Anima", enabled: true },
+                        { text: "Grimnir Omega Anima", enabled: true },
+                        { text: "Last Storm Blade",  enabled: true },
+                        { text: "Last Storm Harp", enabled: true },
+                        { text: "Last Storm Lance", enabled: true },
+                        { text: "Coruscant Crozier", enabled: true },
+
+                        // Metatron
+                        { text: "--------------------", enabled: false },
+                        { text: "Metatron Anima", enabled: true },
+                        { text: "Metatron Omega Anima", enabled: true },
+                        { text: "Mittron's Treasured Blade",  enabled: true },
+                        { text: "Mittron's Gauntlet", enabled: true },
+                        { text: "Mittron's Bow", enabled: true },
+                        { text: "Pillar of Flame", enabled: true },
+
+                        // Avatar
+                        { text: "--------------------", enabled: false },
+                        { text: "Avatar Anima", enabled: true },
+                        { text: "Avatar Omega Anima", enabled: true },
+                        { text: "Abyss Striker",  enabled: true },
+                        { text: "Abyss Spine", enabled: true },
+                        { text: "Abyss Gaze", enabled: true },
+                        { text: "Zechariah", enabled: true },
+
+                        // Prometheus
+                        { text: "--------------------", enabled: false },
+                        { text: "Prometheus Anima", enabled: true },
+                        { text: "Fire of Prometheus",  enabled: true },
+                        { text: "Chains of Caucasus", enabled: true },
+
+                        // Ca Ong
+                        { text: "--------------------", enabled: false },
+                        { text: "Ca Ong Anima", enabled: true },
+                        { text: "Keeper of Hallowed Ground",  enabled: true },
+                        { text: "Savior of Hallowed Ground", enabled: true },
+
+                        // Gilgamesh
+                        { text: "--------------------", enabled: false },
+                        { text: "Gilgamesh Anima", enabled: true },
+                        { text: "All-Might Spear",  enabled: true },
+                        { text: "All-Might Battle-Axe", enabled: true },
+
+                        // Morrigna
+                        { text: "--------------------", enabled: false },
+                        { text: "Morrigna Anima", enabled: true },
+                        { text: "Le Fay",  enabled: true },
+                        { text: "Unius", enabled: true },
+
+                        // Hector
+                        { text: "--------------------", enabled: false },
+                        { text: "Hector Anima", enabled: true },
+                        { text: "Bow of Iliad",  enabled: true },
+                        { text: "Adamantine Gauntlet", enabled: true },
+
+                        // Anubis
+                        { text: "--------------------", enabled: false },
+                        { text: "Anubis Anima", enabled: true },
+                        { text: "Hermanubis",  enabled: true },
+                        { text: "Scales of Dominion", enabled: true },
+
+                        // Tiamat Malice
+                        { text: "--------------------", enabled: false },
+                        { text: "Tiamat Malice Anima", enabled: true },
+                        { text: "Hatsoiiłhał",  enabled: true },
+                        { text: "Majestas", enabled: true },
+
+                        // Leviathan Malice
+                        { text: "--------------------", enabled: false },
+                        { text: "Leviathan Malice Anima", enabled: true },
+                        { text: "Kaladanda",  enabled: true },
+                        { text: "Kris of Hypnos", enabled: true },
+
+                        // Leviathan Malice
+                        { text: "--------------------", enabled: false },
+                        { text: "Leviathan Malice Anima", enabled: true },
+                        { text: "Kaladanda",  enabled: true },
+                        { text: "Kris of Hypnos", enabled: true },
+
+                        // Phronesis
+                        { text: "--------------------", enabled: false },
+                        { text: "Phronesis Anima", enabled: true },
+                        { text: "Dark Thrasher",  enabled: true },
+                        { text: "Master Bamboo Sword", enabled: true },
                     ]
                 }
 
@@ -745,6 +1020,209 @@ Item{
                         missionComboBox.model = [
                             { text: "Elemental Treasure Quests", enabled: false },
                             { text: "The Typhoon Trial", map: "Elemental Treasure Quests", enabled: true },
+                        ]
+                    }
+                } else if(farmingModeComboBox.displayText === "Raid"){
+                    // Omega Weapons
+                    if(itemComboBox.displayText === "Tiamat Anima" || itemComboBox.displayText === "Tiamat Omega Anima" || itemComboBox.displayText === "Tiamat Amood Omega" || itemComboBox.displayText === "Tiamat Bolt Omega"
+                    || itemComboBox.displayText === "Tiamat Gauntlet Omega" || itemComboBox.displayText === "Tiamat Glaive Omega"){
+                        missionComboBox.model = [
+                            { text: "Tiamat Omega", enabled: false },
+                            { text: "Lvl 50 Tiamat Omega", map: "", enabled: true },
+                            { text: "Lvl 100 Tiamat Omega Ayr", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Colossus Anima" || itemComboBox.displayText === "Colossus Omega Anima" || itemComboBox.displayText === "Colossus Blade Omega" || itemComboBox.displayText === "Colossus Cane Omega"
+                    || itemComboBox.displayText === "Colossus Carbine Omega" || itemComboBox.displayText === "Colossus Fist Omega"){
+                        missionComboBox.model = [
+                            { text: "Colossus Omega", enabled: false },
+                            { text: "Lvl 70 Colossus Omega", map: "", enabled: true },
+                            { text: "Lvl 100 Colossus Omega", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Leviathan Anima" || itemComboBox.displayText === "Leviathan Omega Anima" || itemComboBox.displayText === "Leviathan Bow Omega" || itemComboBox.displayText === "Leviathan Gaze Omega"
+                    || itemComboBox.displayText === "Leviathan Scepter Omega" || itemComboBox.displayText === "Leviathan Spear Omega"){
+                        missionComboBox.model = [
+                            { text: "Leviathan Omega", enabled: false },
+                            { text: "Lvl 60 Leviathan Omega", map: "", enabled: true },
+                            { text: "Lvl 100 Leviathan Omega", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Yggdrasil Anima" || itemComboBox.displayText === "Yggdrasil Omega Anima" || itemComboBox.displayText === "Yggdrasil Bow Omega" || itemComboBox.displayText === "Yggdrasil Crystal Blade Omega"
+                    || itemComboBox.displayText === "Yggdrasil Dagger Omega" || itemComboBox.displayText === "Yggdrasil Dewbranch Omega"){
+                        missionComboBox.model = [
+                            { text: "Yggdrasil Omega", enabled: false },
+                            { text: "Lvl 60 Yggdrasil Omega", map: "", enabled: true },
+                            { text: "Lvl 100 Yggdrasil Omega", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Luminiera Anima" || itemComboBox.displayText === "Luminiera Omega Anima" || itemComboBox.displayText === "Luminiera Bhuj Omega" || itemComboBox.displayText === "Luminiera Bolt Omega"
+                    || itemComboBox.displayText === "Luminiera Harp Omega" || itemComboBox.displayText === "Luminiera Sword Omega"){
+                        missionComboBox.model = [
+                            { text: "Luminiera Omega", enabled: false },
+                            { text: "Lvl 75 Luminiera Omega", map: "", enabled: true },
+                            { text: "Lvl 100 Luminiera Omega", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Celeste Anima" || itemComboBox.displayText === "Celeste Omega Anima" || itemComboBox.displayText === "Celeste Harp Omega" || itemComboBox.displayText === "Celeste Claw Omega"
+                    || itemComboBox.displayText === "Celeste Horn Omega" || itemComboBox.displayText === "Celeste Zaghnal Omega"){
+                        missionComboBox.model = [
+                            { text: "Shiva", enabled: false },
+                            { text: "Lvl 120 Shiva", map: "", enabled: true },
+                        ]
+                    } 
+                    
+                    // Regalia Weapons
+                    else if(itemComboBox.displayText === "Shiva Anima" || itemComboBox.displayText === "Shiva Omega Anima" || itemComboBox.displayText === "Hand of Brahman" || itemComboBox.displayText === "Scimitar of Brahman"
+                    || itemComboBox.displayText === "Trident of Brahman" || itemComboBox.displayText === "Nilakantha"){
+                        missionComboBox.model = [
+                            { text: "Shiva", enabled: false },
+                            { text: "Lvl 120 Shiva", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Europa Anima" || itemComboBox.displayText === "Europa Omega Anima" || itemComboBox.displayText === "Tyros Bow" || itemComboBox.displayText === "Tyros Scepter"
+                    || itemComboBox.displayText === "Tyros Zither" || itemComboBox.displayText === "Spirit of Mana"){
+                        missionComboBox.model = [
+                            { text: "Europa", enabled: false },
+                            { text: "Lvl 120 Europa", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Alexiel Anima" || itemComboBox.displayText === "Alexiel Omega Anima" || itemComboBox.displayText === "Nibelung Horn" || itemComboBox.displayText === "Nibelung Klinge"
+                    || itemComboBox.displayText === "Nibelung Messer" || itemComboBox.displayText === "Godsworn Edge"){
+                        missionComboBox.model = [
+                            { text: "Godsworn Alexiel", enabled: false },
+                            { text: "Lvl 120 Godsworn Alexiel", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Grimnir Anima" || itemComboBox.displayText === "Grimnir Omega Anima" || itemComboBox.displayText === "Last Storm Blade" || itemComboBox.displayText === "Last Storm Harp"
+                    || itemComboBox.displayText === "Last Storm Lance" || itemComboBox.displayText === "Coruscant Crozier"){
+                        missionComboBox.model = [
+                            { text: "Grimnir", enabled: false },
+                            { text: "Lvl 120 Grimnir", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Metatron Anima" || itemComboBox.displayText === "Metatron Omega Anima" || itemComboBox.displayText === "Mittron's Treasured Blade" || itemComboBox.displayText === "Mittron's Gauntlet"
+                    || itemComboBox.displayText === "Mittron's Bow" || itemComboBox.displayText === "Pillar of Flame"){
+                        missionComboBox.model = [
+                            { text: "Metatron", enabled: false },
+                            { text: "Lvl 120 Metatron", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Avatar Anima" || itemComboBox.displayText === "Avatar Omega Anima" || itemComboBox.displayText === "Abyss Striker" || itemComboBox.displayText === "Abyss Spine"
+                    || itemComboBox.displayText === "Abyss Gaze" || itemComboBox.displayText === "Zechariah"){
+                        missionComboBox.model = [
+                            { text: "Avatar", enabled: false },
+                            { text: "Lvl 120 Avatar", map: "", enabled: true },
+                        ]
+                    }
+
+                    // Olden Primal and Primal Weapons
+                    else if(itemComboBox.displayText === "Twin Elements Anima" || itemComboBox.displayText === "Twin Elements Omega Anima" || itemComboBox.displayText === "Ancient Ecke Sachs" || itemComboBox.displayText === "Ecke Sachs"){
+                        missionComboBox.model = [
+                            { text: "Twin Elements", enabled: false },
+                            { text: "Lvl 100 Twin Elements", map: "", enabled: true },
+                            { text: "Lvl 120 Twin Elements", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Macula Marius Anima" || itemComboBox.displayText === "Macula Marius Omega Anima" || itemComboBox.displayText === "Ancient Auberon" || itemComboBox.displayText === "Auberon"){
+                        missionComboBox.model = [
+                            { text: "Macula Marius", enabled: false },
+                            { text: "Lvl 100 Macula Marius", map: "", enabled: true },
+                            { text: "Lvl 120 Macula Marius", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Medusa Anima" || itemComboBox.displayText === "Medusa Omega Anima" || itemComboBox.displayText === "Ancient Perseus" || itemComboBox.displayText === "Perseus"){
+                        missionComboBox.model = [
+                            { text: "Medusa", enabled: false },
+                            { text: "Lvl 100 Medusa", map: "", enabled: true },
+                            { text: "Lvl 120 Medusa", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Nezha Anima" || itemComboBox.displayText === "Nezha Omega Anima" || itemComboBox.displayText === "Ancient Nalakuvara" || itemComboBox.displayText === "Nalakuvara"){
+                        missionComboBox.model = [
+                            { text: "Nezha", enabled: false },
+                            { text: "Lvl 100 Nezha", map: "", enabled: true },
+                            { text: "Lvl 120 Nezha", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Apollo Anima" || itemComboBox.displayText === "Apollo Omega Anima" || itemComboBox.displayText === "Ancient Bow of Artemis" || itemComboBox.displayText === "Bow of Artemis"){
+                        missionComboBox.model = [
+                            { text: "Apollo", enabled: false },
+                            { text: "Lvl 100 Apollo", map: "", enabled: true },
+                            { text: "Lvl 120 Apollo", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Dark Angel Olivia Anima" || itemComboBox.displayText === "Dark Angel Olivia Omega Anima" || itemComboBox.displayText === "Ancient Cortana" || itemComboBox.displayText === "Cortana"){
+                        missionComboBox.model = [
+                            { text: "Dark Angel Olivia", enabled: false },
+                            { text: "Lvl 100 Dark Angel Olivia", map: "", enabled: true },
+                            { text: "Lvl 120 Dark Angel Olivia", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Athena Anima" || itemComboBox.displayText === "Athena Omega Anima" || itemComboBox.displayText === "Erichthonius" || itemComboBox.displayText === "Sword of Pallas"){
+                        missionComboBox.model = [
+                            { text: "Athena", enabled: false },
+                            { text: "Lvl 100 Athena", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Grani Anima" || itemComboBox.displayText === "Grani Omega Anima" || itemComboBox.displayText === "Bow of Sigurd" || itemComboBox.displayText === "Wilhelm"){
+                        missionComboBox.model = [
+                            { text: "Grani", enabled: false },
+                            { text: "Lvl 100 Grani", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Baal Anima" || itemComboBox.displayText === "Baal Omega Anima" || itemComboBox.displayText === "Solomon's Axe" || itemComboBox.displayText === "Spymur's Vision"){
+                        missionComboBox.model = [
+                            { text: "Baal", enabled: false },
+                            { text: "Lvl 100 Baal", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Garuda Anima" || itemComboBox.displayText === "Garuda Omega Anima" || itemComboBox.displayText === "Plume of Suparna" || itemComboBox.displayText === "Indra's Edge"){
+                        missionComboBox.model = [
+                            { text: "Garuda", enabled: false },
+                            { text: "Lvl 100 Garuda", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Odin Anima" || itemComboBox.displayText === "Odin Omega Anima" || itemComboBox.displayText === "Gungnir" || itemComboBox.displayText === "Sleipnir Shoe"){
+                        missionComboBox.model = [
+                            { text: "Odin", enabled: false },
+                            { text: "Lvl 100 Odin", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Lich Anima" || itemComboBox.displayText === "Lich Omega Anima" || itemComboBox.displayText === "Obscuritas" || itemComboBox.displayText === "Phantasmas"){
+                        missionComboBox.model = [
+                            { text: "Lich", enabled: false },
+                            { text: "Lvl 100 Lich", map: "", enabled: true },
+                        ]
+                    } 
+                    
+                    // Epic Weapons
+                    else if(itemComboBox.displayText === "Prometheus Anima" || itemComboBox.displayText === "Fire of Prometheus" || itemComboBox.displayText === "Chains of Caucasus"){
+                        missionComboBox.model = [
+                            { text: "Prometheus", enabled: false },
+                            { text: "Lvl 120 Prometheus", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Ca Ong Anima" || itemComboBox.displayText === "Keeper of Hallowed Ground" || itemComboBox.displayText === "Savior of Hallowed Ground"){
+                        missionComboBox.model = [
+                            { text: "Ca Ong", enabled: false },
+                            { text: "Lvl 120 Ca Ong", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Gilgamesh Anima" || itemComboBox.displayText === "All-Might Spear" || itemComboBox.displayText === "All-Might Battle-Axe"){
+                        missionComboBox.model = [
+                            { text: "Gilgamesh", enabled: false },
+                            { text: "Lvl 120 Gilgamesh", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Morrigna Anima" || itemComboBox.displayText === "Le Fay" || itemComboBox.displayText === "Unius"){
+                        missionComboBox.model = [
+                            { text: "Morrigna", enabled: false },
+                            { text: "Lvl 120 Morrigna", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Hector Anima" || itemComboBox.displayText === "Bow of Iliad" || itemComboBox.displayText === "Adamantine Gauntlet"){
+                        missionComboBox.model = [
+                            { text: "Hector", enabled: false },
+                            { text: "Lvl 120 Hector", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Anubis Anima" || itemComboBox.displayText === "Hermanubis" || itemComboBox.displayText === "Scales of Dominion"){
+                        missionComboBox.model = [
+                            { text: "Anubis", enabled: false },
+                            { text: "Lvl 120 Anubis", map: "", enabled: true },
+                        ]
+                    }
+
+                    // Malice Weapons
+                    else if(itemComboBox.displayText === "Tiamat Malice Anima" || itemComboBox.displayText === "Hatsoiiłhał" || itemComboBox.displayText === "Majestas"){
+                        missionComboBox.model = [
+                            { text: "Tiamat Malice", enabled: false },
+                            { text: "Lvl 150 Tiamat Malice", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Leviathan Malice Anima" || itemComboBox.displayText === "Kaladanda" || itemComboBox.displayText === "Kris of Hypnos"){
+                        missionComboBox.model = [
+                            { text: "Leviathan Malice", enabled: false },
+                            { text: "Lvl 150 Leviathan Malice", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Phronesis Anima" || itemComboBox.displayText === "Dark Thrasher" || itemComboBox.displayText === "Master Bamboo Sword"){
+                        missionComboBox.model = [
+                            { text: "Phronesis", enabled: false },
+                            { text: "Lvl 150 Phronesis", map: "", enabled: true },
                         ]
                     }
                 }
