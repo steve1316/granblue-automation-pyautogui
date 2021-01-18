@@ -947,13 +947,13 @@ class Game:
         self.item_amount_to_farm = item_amount_to_farm
         self.item_name = item_name
         
-        item_amount_farmed = 0
-        amount_of_runs_finished = 0
+        self.item_amount_farmed = 0
+        self.amount_of_runs_finished = 0
         summon_check = False
         
         if((map_mode.lower() != "raid" and self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)) or (map_mode.lower() == "raid" and self.map_selection.join_raid(item_name, mission_name))):
             # Keep playing the mission until the bot gains enough of the item specified.
-            while(item_amount_farmed < item_amount_to_farm):
+            while(self.item_amount_farmed < self.item_amount_to_farm):
                 while(summon_check == False): 
                     # Check for available AP or BP, depending on mode.
                     if(map_mode.lower() != "raid"):
@@ -984,14 +984,16 @@ class Game:
                         # After Combat Mode has finished, count the number of the specified item that has dropped.
                         self.collect_loot()
                         
-                        if(item_amount_farmed < item_amount_to_farm):
+                        if(self.item_amount_farmed < self.item_amount_to_farm):
                             # Click the Play Again button.
                             self.find_and_click_button("play_again")
                             
                             # Loop while clicking any detected Cancel buttons like from Friend Request popups.
                             self.wait_for_ping(1)
-                            while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
+                            
+                            while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None):
                                 self.find_and_click_button("friend_request_cancel")
+                                break
                             
                             # Check for available AP.
                             self.check_for_ap(use_full_elixirs=use_refill_full)
@@ -1010,13 +1012,14 @@ class Game:
                             # After Combat Mode has finished, count the number of the specified item that has dropped.
                             self.collect_loot()
                             
-                            if(item_amount_farmed < item_amount_to_farm):
+                            if(self.item_amount_farmed < self.item_amount_to_farm):
                                 self.find_and_click_button("raid_quests")
                                 
                                 # Loop while clicking any detected Cancel buttons like from Friend Request popups.
                                 self.wait_for_ping(1)
-                                while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
+                                while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None):
                                     self.find_and_click_button("friend_request_cancel")
+                                    break
                                 
                                 self.game.find_and_click_button("raid", suppress_error=True)
                                 
