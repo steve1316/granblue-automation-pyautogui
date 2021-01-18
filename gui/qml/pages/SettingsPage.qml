@@ -311,7 +311,7 @@ Item{
                         { text: "--------------------", enabled: false },
                         { text: "Yggdrasil Anima", enabled: true },
                         { text: "Yggdrasil Omega Anima", enabled: true },
-                        { text: "Yggdrasil Blade Omega",  enabled: true },
+                        { text: "Yggdrasil Crystal Blade Omega",  enabled: true },
                         { text: "Yggdrasil Bow Omega", enabled: true },
                         { text: "Yggdrasil Dagger Omega", enabled: true },
                         { text: "Yggdrasil Dewbranch Omega", enabled: true },
@@ -1062,8 +1062,9 @@ Item{
                     } else if(itemComboBox.displayText === "Celeste Anima" || itemComboBox.displayText === "Celeste Omega Anima" || itemComboBox.displayText === "Celeste Harp Omega" || itemComboBox.displayText === "Celeste Claw Omega"
                     || itemComboBox.displayText === "Celeste Horn Omega" || itemComboBox.displayText === "Celeste Zaghnal Omega"){
                         missionComboBox.model = [
-                            { text: "Shiva", enabled: false },
-                            { text: "Lvl 120 Shiva", map: "", enabled: true },
+                            { text: "Celeste", enabled: false },
+                            { text: "Lvl 75 Celeste Omega", map: "", enabled: true },
+                            { text: "Lvl 100 Celeste Omega", map: "", enabled: true },
                         ]
                     } 
                     
