@@ -406,18 +406,20 @@ class ImageUtils:
             for index, location in enumerate(locations):
                 check = False
                 
-                # Filter out any duplicate locations that are 1 pixels from each other.
-                for x in range(index):
-                    if((abs(location[0] - locations[x][0]) <= 1 and location[1] == locations[x][1]) or (abs(location[1] - locations[x][1]) and location[0] == locations[x][0]) or (abs(location[0] - locations[x][0]) and abs(location[1] - locations[x][1]))):
-                        # self.game.print_and_save(f"{self.printtime()} [INFO] Removing duplicate location.")
-                        check = True
+                # Filter out any duplicate locations that are 1 pixels from each other when the item is in either of the blacklists.
+                if(item in blacklisted_items or item in lite_blacklisted_items):
+                    for x in range(index):
+                        if((abs(location[0] - locations[x][0]) <= 1 and location[1] == locations[x][1]) or (abs(location[1] - locations[x][1]) and location[0] == locations[x][0]) or (abs(location[0] - locations[x][0]) and abs(location[1] - locations[x][1]))):
+                            # self.game.print_and_save(f"{self.printtime()} [INFO] Removing duplicate location.")
+                            check = True
                 
                 if(not check):
                     # Deconstruct the location object into coordinates if found using GuiBot.
                     if(item not in blacklisted_items and item not in lite_blacklisted_items):
                         location = (location.target.x, location.target.y)
-                        
-                    self.game.print_and_save(f"{self.printtime()} [INFO] Item detected at {location}")
+                    
+                    if(self.debug_mode):    
+                        self.game.print_and_save(f"{self.printtime()} [DEBUG] Item detected at {location}")
                     
                     # Adjust the width and height variables if EasyOCR cannot detect the numbers correctly.
                     left = location[0] + 10
