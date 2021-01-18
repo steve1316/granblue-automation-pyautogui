@@ -1343,6 +1343,8 @@ Item{
                     backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[0].text)
                 }else if(farmingModeComboBox.displayText === "Special"){
                     backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[currentIndex].map)
+                } else if(farmingModeComboBox.displayText === "Raid"){
+                    backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[currentIndex].map)
                 }
                 
 
