@@ -315,42 +315,45 @@ class Game:
         
         # Find the Group first. If the selected group number is less than 8, it is in Set A. Otherwise, it is in Set B. If failed,
         # alternate searching for Set A / Set B until found or tries are depleted.
-        if(group_number < 8):
-            if(self.debug_mode):
-                self.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find Set A...")
+        try:
+            if(group_number < 8):
+                if(self.debug_mode):
+                    self.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find Set A...")
 
-            while (set_location == None):
-                set_location = self.image_tools.find_button("party_set_a")
-                
-                if (set_location == None):
-                    tries -= 1
-                    
-                    if(self.debug_mode):
-                        self.print_and_save(f"{self.printtime()} [DEBUG] Locating Set A failed. Trying again for Set B...")
-
-                    if (tries <= 0):
-                        sys.exit(f"\n[ERROR] Could not find Set A. Exiting Bot...")
-
-                    # See if the user had Set B active instead of Set A if matching failed.
-                    set_location = self.image_tools.find_button("party_set_b")
-        else:
-            if(self.debug_mode):
-                self.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find Set B...")
-
-            while (set_location == None):
-                set_location = self.image_tools.find_button("party_set_b")
-                
-                if (set_location == None):
-                    tries -= 1
-                    
-                    if(self.debug_mode):
-                        self.print_and_save(f"{self.printtime()} [DEBUG] Locating Set B failed. Trying again for Set A...")
-
-                    if (tries <= 0):
-                        sys.exit(f"\n{self.printtime()} [ERROR] Could not find Set B. Exiting Bot...")
-
-                    # See if the user had Set A active instead of Set B if matching failed.
+                while (set_location == None):
                     set_location = self.image_tools.find_button("party_set_a")
+                    
+                    if (set_location == None):
+                        tries -= 1
+                        
+                        if(self.debug_mode):
+                            self.print_and_save(f"{self.printtime()} [DEBUG] Locating Set A failed. Trying again for Set B...")
+
+                        if (tries <= 0):
+                            raise NotFoundException("Could not find Set A.")
+
+                        # See if the user had Set B active instead of Set A if matching failed.
+                        set_location = self.image_tools.find_button("party_set_b")
+            else:
+                if(self.debug_mode):
+                    self.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find Set B...")
+
+                while (set_location == None):
+                    set_location = self.image_tools.find_button("party_set_b")
+                    
+                    if (set_location == None):
+                        tries -= 1
+                        
+                        if(self.debug_mode):
+                            self.print_and_save(f"{self.printtime()} [DEBUG] Locating Set B failed. Trying again for Set A...")
+
+                        if (tries <= 0):
+                            raise NotFoundException("Could not find Set B.")
+
+                        # See if the user had Set A active instead of Set B if matching failed.
+                        set_location = self.image_tools.find_button("party_set_a")
+        except Exception as e:
+            self.print_and_save(f"{self.printtime()} [ERROR] Exception occurred during Party Selection. Exact error is: \n{e}")
 
         if(self.debug_mode):
             self.print_and_save(f"\n{self.printtime()} [SUCCESS] Successfully selected the correct Set. Now selecting Group {group_number}...")
@@ -813,6 +816,7 @@ class Game:
                     # Usually for raid farming as to maximize the number of raids joined after completing the provided combat script.
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line.strip()}\"")
                     self.print_and_save(f"{self.printtime()} [COMBAT] Leaving this raid without retreating...")
+                    self.wait_for_ping(1)
                     self.find_and_click_button("menu")
                     self.find_and_click_button("raid_home")
                     self.find_and_click_button("raid_go_back_home")
@@ -863,8 +867,8 @@ class Game:
             self.print_and_save("\n################################################################################")
             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
             self.print_and_save("################################################################################")
-        except FileNotFoundError:
-            sys.exit(f"\n{self.printtime()} [ERROR] Cannot find \"{script_file_path}.txt\" inside the /scripts folder. Exiting application now...")
+        except FileNotFoundError as e:
+            self.print_and_save(f"{self.printtime()} [ERROR] Cannot find \"{script_file_path}.txt\" inside the /scripts folder. Exact error is: {e}")
 
         return True
     
@@ -889,12 +893,12 @@ class Game:
         """
         if(item_name != "EXP"):
             self.print_and_save("\n\n################################################################################")
-            self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode.")
+            self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode for {map_mode}.")
             self.print_and_save(f"{self.printtime()} [FARM] Farming {item_amount_to_farm}x {item_name} at {mission_name}.")
             self.print_and_save("################################################################################\n")
         else:
             self.print_and_save("\n\n################################################################################")
-            self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode.")
+            self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode for {map_mode}.")
             self.print_and_save(f"{self.printtime()} [FARM] Doing {item_amount_to_farm}x runs for {item_name} at {mission_name}.")
             self.print_and_save("################################################################################\n")
         
@@ -981,53 +985,59 @@ class Game:
                     else:
                         self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
                 elif(start_check and map_mode.lower() == "raid"): 
-                    if(self.start_combat_mode(self.combat_script)):
-                        # After Combat Mode has finished, count the number of the specified item that has dropped.
-                        if(item_name != "EXP"):
-                            temp_amount = self.image_tools.find_farmed_items([item_name])[0]
-                            item_amount_farmed += temp_amount
-                        else:
-                            item_amount_farmed += 1
-                            
-                        amount_of_runs_finished += 1
-                        
-                        if(item_name != "EXP"):
-                            self.print_and_save("\n\n********************************************************************************")
-                            self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained this run: {temp_amount}")
-                            self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained in total: {item_amount_farmed} / {item_amount_to_farm}")
-                            self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {amount_of_runs_finished}")
-                            self.print_and_save("********************************************************************************\n")
-                        else:
-                            self.print_and_save("\n\n********************************************************************************")
-                            self.print_and_save(f"{self.printtime()} [FARM] Runs done for EXP in total: {item_amount_farmed} / {item_amount_to_farm}")
-                            self.print_and_save("********************************************************************************\n")
-                        
-                        if(item_amount_farmed < item_amount_to_farm):
-                            self.find_and_click_button("raid_quests")
-                            
-                            # Loop while clicking any detected Cancel buttons like from Friend Request popups.
-                            self.wait_for_ping(1)
-                            while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
-                                self.find_and_click_button("friend_request_cancel")
-                            
-                            self.game.find_and_click_button("raid", suppress_error=True)
-                            
-                            summon_check = False
+                    # Cover the occasional case where joining the raid after selecting the Summon and Party leds to the Quest Results Screen with no loot to collect.
+                    if(self.image_tools.confirm_location("no_loot")):
+                        self.print_and_save(f"\n{self.printtime()} [INFO] Seems that the raid just ended. Moving on...")
+                        self.go_back_home()
+                        summon_check = False
                     else:
-                        if(self.image_tools.confirm_location("check_your_pending_battles", tries=1)):
-                            self.find_and_click_button("ok")
-                            while(self.image_tools.find_button("pending_battle_sidebar", tries=1)):
-                                self.find_and_click_button("pending_battle_sidebar")
-                                self.wait_for_ping(1)
+                        if(self.start_combat_mode(self.combat_script)):
+                            # After Combat Mode has finished, count the number of the specified item that has dropped.
+                            if(item_name != "EXP"):
+                                temp_amount = self.image_tools.find_farmed_items([item_name])[0]
+                                item_amount_farmed += temp_amount
+                            else:
+                                item_amount_farmed += 1
                                 
-                                if(self.image_tools.confirm_location("no_loot", tries=1)):
-                                    self.find_and_click_button("raid_quests")
-                                else:
-                                    self.collect_loot()
-                        
-                        # Join a new raid.
-                        self.map_selection.join_raid(item_name, mission_name)
-                        summon_check = False    
+                            amount_of_runs_finished += 1
+                            
+                            if(item_name != "EXP"):
+                                self.print_and_save("\n\n********************************************************************************")
+                                self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained this run: {temp_amount}")
+                                self.print_and_save(f"{self.printtime()} [FARM] Amount of {item_name} gained in total: {item_amount_farmed} / {item_amount_to_farm}")
+                                self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {amount_of_runs_finished}")
+                                self.print_and_save("********************************************************************************\n")
+                            else:
+                                self.print_and_save("\n\n********************************************************************************")
+                                self.print_and_save(f"{self.printtime()} [FARM] Runs done for EXP in total: {item_amount_farmed} / {item_amount_to_farm}")
+                                self.print_and_save("********************************************************************************\n")
+                            
+                            if(item_amount_farmed < item_amount_to_farm):
+                                self.find_and_click_button("raid_quests")
+                                
+                                # Loop while clicking any detected Cancel buttons like from Friend Request popups.
+                                self.wait_for_ping(1)
+                                while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None and not self.image_tools.confirm_location("not_enough_ap", tries=1)):
+                                    self.find_and_click_button("friend_request_cancel")
+                                
+                                self.game.find_and_click_button("raid", suppress_error=True)
+                                
+                                summon_check = False
+                        else:
+                            if(self.image_tools.confirm_location("check_your_pending_battles", tries=1)):
+                                self.find_and_click_button("ok")
+                                while(self.image_tools.find_button("pending_battle_sidebar", tries=1)):
+                                    self.find_and_click_button("pending_battle_sidebar")
+                                    self.wait_for_ping(1)
+                                    
+                                    if(self.image_tools.confirm_location("no_loot", tries=1)):
+                                        self.find_and_click_button("raid_quests")
+                                    else:
+                                        self.collect_loot()
+                            
+                            # Join a new raid.
+                            self.map_selection.join_raid(item_name, mission_name)
+                            summon_check = False    
         else:
             self.print_and_save("\nSomething went wrong with navigating to the map.")
             
