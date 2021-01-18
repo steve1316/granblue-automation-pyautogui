@@ -455,7 +455,7 @@ class Game:
         Returns:
             None
         """
-        if(self.image_tools.confirm_location("not_enough_ap", tries=2)):
+        if(self.image_tools.confirm_location("not_enough_ap", tries=1)):
             # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full.
             # TODO: Implement check for when the user ran out of both of them, or one of them.
             if(use_full_elixirs == False):
@@ -484,7 +484,7 @@ class Game:
         Returns:
             None
         """
-        if(self.image_tools.confirm_location("not_enough_ep", tries=2)):
+        if(self.image_tools.confirm_location("not_enough_ep", tries=1)):
             # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
             # TODO: Implement check for when the user ran out of both of them, or one of them.
             if(use_soul_balm == False):
