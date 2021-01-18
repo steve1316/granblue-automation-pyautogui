@@ -30,7 +30,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] ~~Consolidate all finding button and clicking it logic into one function.~~
 - [x] ~~Implement detection if party wiped during Combat Mode.~~
 - [ ] ~~Implement selection from list of Summons in order of most preferred to least. If none after several tries, pick the very first Summon randomly.~~ This is axed for now. Might come back to this after the rest of the TODO List is completed.
-- [ ] (MEDIUM PRIORITY) Remove all sys.exit() code.
+- [x] ~~(MEDIUM PRIORITY) Remove all sys.exit() code.~~
 - [x] ~~(HIGH PRIORITY) Implement Special Quests navigation/items.~~
 - [ ] (HIGH PRIORITY) Implement Coop Quests navigation/items.
 - [x] ~~(HIGH PRIORITY) Implement Raid navigation. (IN-PROGRESS)~~
