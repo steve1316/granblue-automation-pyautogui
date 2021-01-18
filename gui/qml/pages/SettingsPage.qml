@@ -1393,7 +1393,7 @@ Item{
             textRole: "text"
             displayText: qsTr("# of Item")
 
-            currentIndex: 0
+            currentIndex: -1
             enabled: false
 
             // Have the options go from 1 to 999 inclusive.
