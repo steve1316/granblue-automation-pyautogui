@@ -17,7 +17,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] A user-defined timer for how long the bot should run for.
 - [x] Support for Quest navigation.
 - [ ] Support for Coop navigation.
-- [ ] Support for Raid navigation. (IN-PROGRESS)
+- [x] Support for Raid navigation.
 - [ ] Support for Event(s) navigation.
 - [ ] Support for Guild Wars navigation.
 - [x] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
@@ -35,10 +35,11 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] (HIGH PRIORITY) Implement Coop Quests navigation/items.
 - [x] ~~(HIGH PRIORITY) Implement Raid navigation. (IN-PROGRESS)~~
     - [x] ~~(MAX PRIORITY) Implement way to exit out of Raids via user script and implement checks for max of 3 on-going raids. Also check to see for pending rewards.~~
-    - [ ] (MAX PRIORITY) Link Raid component from backend to frontend. (IN-PROGRESS)
-    - [ ] (HIGH PRIORITY) Implement items to farm in Raids. (IN-PROGRESS)
+    - [x] ~~(MAX PRIORITY) Link Raid component from backend to frontend.~~
+    - [x] ~~(HIGH PRIORITY) Implement items to farm in Raids.~~
 	- [x] ~~(HIGH PRIORITY) Implement Twitter room code scraper/parser.~~
 	- [ ] (HIGH PRIORITY) Implement Captcha detection.
+	- [ ] (MAX PRIORITY) Create instructions on how to create a Twitter Developer account for the Raid component and have the user set the keys into a text file in the project folder. (IN-PROGRESS)
 - [ ] (LOW PRIORITY) Implement Event navigation/items.
 - [ ] (LOW PRIORITY) Implement Guild Wars/Rise of the Beasts navigation/items.
 - [ ] (LOW PRIORITY) Implement if-else logic for users to use in combat scripts.
@@ -54,7 +55,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] (MEDIUM PRIORITY) Implement a user-defined timer for how long the bot can run for.
 - [x] ~~(HIGH PRIORITY) Add Special Quest items.~~
 - [ ] (HIGH PRIORITY) Add Coop items.
-- [ ] (HIGH PRIORITY) Add Raid items. (IN-PROGRESS)
+- [ ] ~~(HIGH PRIORITY) Add Raid items.~~
 # Requirements
 1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
 2. [Granblue Fantasy account](http://game.granbluefantasy.jp/)
