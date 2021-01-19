@@ -2,6 +2,7 @@ import multiprocessing
 import os
 import sys
 from pathlib import Path
+from configparser import ConfigParser
 
 from PySide2.QtCore import QObject, Signal, Slot, QUrl
 from PySide2.QtGui import QGuiApplication
@@ -20,13 +21,22 @@ class Tester:
         self.debug = None
         
     def run_bot(self, item_name, item_amount, farming_mode, location_name, mission_name, summon_element_name, summon_name, group_number, party_number, queue, isBotRunning, combat_script, debug_mode):
-        keys_tokens = ["", "", "", ""]
+        self.config = ConfigParser()
+        self.config.read("config.ini")
+
+        keys_tokens = [self.config.get("twitter", "api_key"), self.config.get("twitter", "api_key_secret"), self.config.get("twitter", "access_token"), self.config.get("twitter", "access_token_secret")]
+        mouse_speed = float(self.config.get("configuration", "mouse_speed"))
         
-        self.game = Game(queue=queue, isBotRunning=isBotRunning, keys_tokens=keys_tokens, combat_script=combat_script, custom_mouse_speed=0.25, debug_mode=debug_mode)
+        self.game = Game(queue=queue, isBotRunning=isBotRunning, keys_tokens=keys_tokens, combat_script=combat_script, custom_mouse_speed=mouse_speed, debug_mode=debug_mode)
         self.map_selection = MapSelection(self.game)
         self.debug = Debug(self.game, isBotRunning=isBotRunning, combat_script=combat_script)
         
-        self.game.start_farming_mode(summon_element_name, summon_name, group_number, party_number, farming_mode, location_name, item_name, item_amount, mission_name)
+        if(farming_mode != "raid"):
+            refill = self.config.getboolean("refill", "refill_using_full_elixir")
+        else:
+            refill = self.config.getboolean("refill", "refill_using_soul_balms")
+        
+        self.game.start_farming_mode(summon_element_name, summon_name, group_number, party_number, farming_mode, location_name, item_name, item_amount, mission_name, use_refill_full=refill)
         
         # Test finding 10 most recent Grimnir room codes.
         # self.debug.test_twitter_listener()
