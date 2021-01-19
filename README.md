@@ -31,6 +31,20 @@ exit
 
 ```
 
+# Table of Contents
+- [Features](<#Features>)
+- [TODO List](<#TODO-List>)
+  - [Backend](<##Backend>)
+  - [Frontend](<##Frontend>)
+- [Requirements](<#Requirements>)
+  - [Python Dependencies](<##Python-Dependencies-(make-sure-to-have-these-installed-before-moving-on-to-the-instructions)>)
+- [Instructions](<#Instructions>)
+  - [How to create a Combat Script](<###How-to-create-my-own-Combat-Script>)
+  - [How to farm Raids](<#Instructions-for-the-Raid-component-of-this-application-(optional,-only-if-you-want-to-farm-Raids)>)
+  - [Virtualization](<#Instructions-on-how-to-get-this-working-on-VMWare-Workstation-Player-or-a-similar-virtual-machine>)
+- [Wiki](<#Wiki>)
+- [Technologies used](<#Technologies-Used>)
+
 ## Disclaimer
 By downloading this program, you consent to your account potentially getting flagged for excessive farming and banned in the next banwave by KMR. I hold no responsibility for how much you use this program for. I trust you have the self-control necessary to only farm in reasonable bursts of time.
 
@@ -88,7 +102,7 @@ By downloading this program, you consent to your account potentially getting fla
 3. [Twitter Developer account (needed to farm Raids)](https://developer.twitter.com/en)
 4. [VMware Workstation Player (optional, if your computer is strong enough to support virtualization)](https://www.vmware.com/products/workstation-player.html)
 
-### Python Dependencies (make sure to have these installed before moving on to the instructions)
+## Python Dependencies (make sure to have these installed before moving on to the instructions)
 ```
 # Execute this command in a terminal opened in the project folder to install all of these requirements.
 
@@ -116,6 +130,10 @@ pip install -r requirements.txt
    - For Mac: I do not have a Mac system so I do not know how they invoke python. Please look online on how to do that for yourself.
 5. Continue by following the instructions that are now shown to you by heading to the Settings and fill out each section. At the end, you will be notified when the program is ready to begin.
 6. (Optional) Check out the config.ini in the root of the project folder and see what internal settings you would like to change before starting.
+
+---
+### How to create my own Combat Script
+- Visit the [Combat Scripting Documentation and Examples wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Combat-Scripting-Documentation-and-Examples) for combat scripting usage and examples.
 
 ---
 
@@ -161,6 +179,9 @@ The application will allow the users to look up tweets made in the past 24 hours
 5. Set the display resolution to be 1920x1080 or higher. You can set it lower, but I cannot guarantee that it will run smoothly at lower resolutions.
 6. After that, download the project folder into the virtual machine and follow the instructions to start the application.
 
+# Wiki
+Visit https://github.com/steve1316/granblue-automation-pyautogui/wiki for detailed documentation and examples.
+
 # Technologies Used
 1. [Python - The main language](https://www.python.org/)
 2. [Qt - Application development framework for the GUI](https://www.qt.io/product/development-tools)
@@ -169,4 +190,5 @@ The application will allow the users to look up tweets made in the past 24 hours
 5. [OpenCV-Python - Provides the confidence (accuracy) argument for PyAutoGUI](https://pypi.org/project/opencv-python/)
 6. [EasyOCR - For text recognition and detection](https://github.com/JaidedAI/EasyOCR)
 7. [Twitter Standard API 1.1 - For searching and parsing texts for Raid room codes to join](https://developer.twitter.com/en/docs/twitter-api/v1)
+8. [VMWare Workstation Player - For virtualizing the program to circumvent control of the main cursor](https://www.vmware.com/products/workstation-player.html)
 
