@@ -35,6 +35,7 @@ exit
 - [Features](<#Features>)
 - [TODO List](<#TODO-List>)
   - [Backend](<##Backend>)
+  - [Combat Scripting](<##Combat-Scripting>)
   - [Frontend](<##Frontend>)
 - [Requirements](<#Requirements>)
   - [Python Dependencies](<##Python-Dependencies-(make-sure-to-have-these-installed-before-moving-on-to-the-instructions)>)
@@ -60,6 +61,7 @@ By downloading this program, you consent to your account potentially getting fla
   - [ ] Alert for when anti-bot CAPTCHA pops up.
 - [ ] Support for Event(s) navigation.
 - [ ] Support for Guild Wars navigation.
+- [ ] Support for Arcarum (currently unknown as to whether I will tackle this. This has to come after I finish the rest of the planned features for me to consider this)
 
 # TODO List
 ## Backend
@@ -70,7 +72,9 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] ~~Implement selection from list of Summons in order of most preferred to least. If none after several tries, pick the very first Summon randomly.~~ This is axed for now. Might come back to this after the rest of the TODO List is completed.
 - [x] ~~(MEDIUM PRIORITY) Remove all sys.exit() code.~~
 - [x] ~~(HIGH PRIORITY) Implement Special Quests navigation/items.~~
-- [ ] (HIGH PRIORITY) Implement Coop Quests navigation/items.
+- [ ] (HIGH PRIORITY) Implement Coop Quests navigation. (IN-PROGRESS)
+  - [ ] (HIGH PRIORITY) Implement Coop items.
+  - [ ] (HIGH PRIORITY) Link this Coop component from backend to frontend.
 - [x] ~~(HIGH PRIORITY) Implement Raid navigation.~~
     - [x] ~~(MAX PRIORITY) Implement way to exit out of Raids via user script and implement checks for max of 3 on-going raids. Also check to see for pending rewards.~~
     - [x] ~~(MAX PRIORITY) Link Raid component from backend to frontend.~~
@@ -80,13 +84,19 @@ By downloading this program, you consent to your account potentially getting fla
 	- [x] ~~(MAX PRIORITY) Create instructions on how to create a Twitter Developer account for the Raid component and have the user set the keys into a text file in the project folder.~~
 - [ ] (LOW PRIORITY) Implement Event navigation/items.
 - [ ] (LOW PRIORITY) Implement Guild Wars/Rise of the Beasts navigation/items.
-- [ ] (LOW PRIORITY) Implement if-else logic for users to use in combat scripts.
 - [ ] (LOW PRIORITY) Deal with any left-over TODOs.
 - [ ] (MEDIUM PRIORITY) Implement try-catches to inform users of when errors occur.
 - [ ] (LOW PRIORITY) Eventually remove dependency on Game class from ImageUtils and MouseUtils and move any relevant functionality over to the Game class.
 - [x] ~~(MAX PRIORITY) Because this project was developed on a 1440p monitor, anything less or more than that would break the image processing. All image processing in this project needs to be generalized such that it would not matter whether the user has a 1440p or a 1080p monitor, they would get both get the same results.~~
 - [ ] (LOW PRIORITY) Create instructions for Linux if it is confirmed to be supported.
-- [ ] (MEDIUM PRIORITY) Create a Wiki in GitHub detailing the usage of this program and provide more documentation on the combat script capability that users can achieve. (IN-PROGRESS)
+- [x] ~~(MEDIUM PRIORITY) Create a Wiki in GitHub detailing the usage of this program and provide more documentation on the combat script capability that users can achieve.~~
+  - [ ] (LOW PRIORITY) Create a page in the Wiki detailing what quests/raids/items that the program currently supports.
+
+## Combat Scripting
+- [ ] (LOW PRIORITY) Implement if-else logic for users to use in combat scripts.
+  - [ ] (LOW PRIORITY) Implement HP/Overdrive/Break status checking in combat scripts.
+- [ ] (LOW PRIORITY) Implement targeting for skills that require the user to select a target in combat scripts (enemies or own characters).
+
 ## Frontend
 - [x] ~~Add a Save Logs button.~~
 - [x] ~~Add a Group/Party selector.~~
