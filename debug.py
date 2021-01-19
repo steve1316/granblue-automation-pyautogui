@@ -41,8 +41,8 @@ class Debug:
         
         tweets = self.game.room_finder.find_most_recent("Lvl 120 Grimnir")
         room_codes = self.game.room_finder.clean_tweets(tweets)
-        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_INFO] {len(tweets)}")
-        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_INFO] {len(room_codes)}")
+        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_INFO] # of Tweets found: {len(tweets)}")
+        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_INFO] # of Room Codes detected: {len(room_codes)}")
         for i, room_code in enumerate(room_codes):
             self.game.print_and_save(f"\n{self.game.printtime()} [TEST] {tweets[i].lang.upper()} Tweet created at {tweets[i].created_at}: \n" + tweets[i].text)
             self.game.print_and_save(f"{self.game.printtime()} [TEST] Detected Room Code is: {room_codes[i]}")
@@ -100,7 +100,9 @@ class Debug:
             15: ["Scrutiny Stone", "Luminous Judgment", "Evil Judge Crystal", "Vohu Manah Anima", "Vohu Manah Omega Anima", "Earth Grimoire"],
             16: ["Sagittarius Arrowhead", "Sagittarius Rune", "Horseman's Plate", "Sagittarius Anima", "Sagittarius Omega Anima", "Wind Grimoire"],
             17: ["Solar Ring", "Sunlight Quartz", "Halo Light Quartz", "Corow Anima", "Corow Omega Anima"],
-            18: ["Twilight Cloth Strip", "Shadow Silver", "Phantom Demon Jewel", "Diablo Anima", "Diablo Omega Anima"]
+            18: ["Twilight Cloth Strip", "Shadow Silver", "Phantom Demon Jewel", "Diablo Anima", "Diablo Omega Anima"],
+            19: ["Tiamat Anima", "Tiamat Omega Anima", "Colossus Anima", "Colossus Omega Anima", "Leviathan Anima", "Leviathan Omega Anima", 
+                 "Yggdrasil Anima", "Yggdrasil Omega Anima",  "Luminiera Anima", "Luminiera Omega Anima", "Celeste Anima", "Celeste Omega Anima"],
         }
         
         for item in item_list[items_to_test]:
