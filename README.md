@@ -125,24 +125,28 @@ In order to get a Twitter Developer account, you need a Twitter account. Recomme
 2. Select "Hobbyist" and then "Exploring the API" and click "Get Started".
 3. If you have not already, add a valid phone number to your account. Now fill out the form and select "Some Experience" for your coding experience and then click "Next".
 4. In the first textbox, state your intention on exploring the Twitter API for educational purposes and using what you learned to develop a Python application. You can either craft your own response based on mine below or copy it outright:
-```
+
+`
 I want to develop a Python application for a mobile Japanese game called Granblue Fantasy that uses tweepy and I want to explore what the Twitter Standard API 1.1 has to offer for me. I plan to use what I learn and apply it to the application so that it can search tweets made by users from the game in the past 24 hours based on user-created queries and parse specific text in the tweets. This is for educational purposes only.
-```
+`
+
 5. Check Yes for "Are you planning to analyze Twitter data?" and either craft your own response based on mine below or copy it outright:
-```
+
+`
 The application will allow the users to look up tweets made in the past 24 hours while searching for tweets that have specific text or keywords in the tweets. It will then return and display those tweets onto the application's GUI.
-```
+`
+
 6. Uncheck the rest of the options and then click "Next".
 7. Accept the "Developer agreement & policy" and click "Submit Application".
 8. Once you verify the email sent to you, either two things will happen:
-   1. You get accepted immediately and can get started on Step 9.
-   2. You have to wait for Twitter to approve your application.
+   - You get accepted immediately and can get started on Step 9.
+   - You have to wait for Twitter to approve your application.
 9. Once you get accepted, head over to https://developer.twitter.com/en/portal/dashboard and click on "Projects & Apps" on the left sidebar and click on "+ Create App".
-10. Give a name to your app. For example, mine is called `GBF Battle ID Finder` and click "Complete".
-11. Now click on "App Settings" at the bottom. Then click on "Keys and tokens" at the top.
-12. Click "Regenerate" for Consumer Keys and copy the API key and the API key secret into their respective places in config.ini in the root of the project folder. After that, click "Yes, I saved them".
-13. Now click "Generate" for "Access token & secret". Again, copy these 2 tokens into their respective places in config.ini and after that, click "Yes, I saved them".
-14. After that, the bot is now ready to access the Twitter API to look for raids.
+10.  Give a name to your app. For example, mine is called `GBF Battle ID Finder` and click "Complete".
+11.  Now click on "App Settings" at the bottom. Then click on "Keys and tokens" at the top.
+12.  Click "Regenerate" for Consumer Keys and copy the API key and the API key secret into their respective places in config.ini in the root of the project folder. After that, click "Yes, I saved them".
+13.  Now click "Generate" for "Access token & secret". Again, copy these 2 tokens into their respective places in config.ini and after that, click "Yes, I saved them".
+14.  After that, the bot is now ready to access the Twitter API to look for raids.
 
 ---
 
