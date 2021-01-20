@@ -28,14 +28,12 @@ class ImageUtils:
 
     window_height (int, optional): The height of the region for image matching. Defaults to None.
 
-    debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to True.
+    debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
 
     """
 
     def __init__(self, game, starting_time: float, window_left: int = None, window_top: int = None, window_width: int = None, window_height: int = None, debug_mode: bool = False):
         super().__init__()
-
-        self.starting_time = starting_time
         
         self.game = game
 
@@ -45,6 +43,7 @@ class ImageUtils:
         self.window_width = window_width
         self.window_height = window_height
         
+        self.starting_time = starting_time
         self.debug_mode = debug_mode
 
         # Initialize GuiBot object for image matching.
@@ -52,9 +51,9 @@ class ImageUtils:
         self.file_resolver = FileResolver()
         
         # Initialize EasyOCR for text detection.
-        self.game.print_and_save("\nInitializing EasyOCR reader...")
+        self.game.print_and_save(f"\n{self.printtime()} [INFO] Initializing EasyOCR reader...")
         self.reader = easyocr.Reader(["en"], gpu=True)
-        self.game.print_and_save("EasyOCR reader initialized.")
+        self.game.print_and_save(f"{self.printtime()} [INFO] EasyOCR reader initialized.")
 
     def printtime(self):
         """Formats the time since the bot started into a readable, printable HH:MM:SS format using timedelta.
@@ -80,7 +79,7 @@ class ImageUtils:
             location (int, int): Tuple of coordinates of where the center of the button is located if image matching was successful. Otherwise, return None.
         """
         if(self.debug_mode):
-            self.game.print_and_save(f"{self.printtime()} [DEBUG] Now attempting to find the {button_name.upper()} Button from current position...")
+            self.game.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find the {button_name.upper()} Button from current position...")
 
         button_location = None
         guibot_check = False
@@ -142,7 +141,7 @@ class ImageUtils:
             (bool): True if current location is confirmed. Otherwise, False.
         """
         if(self.debug_mode):
-            self.game.print_and_save(f"{self.printtime()} [DEBUG] Now attempting to confirm the bot's location at the {location_name.upper()} Screen...")
+            self.game.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to confirm the bot's location at the {location_name.upper()} Screen...")
 
         header_location = None
 
@@ -196,7 +195,7 @@ class ImageUtils:
             summon_location (int, int): Tuple of coordinates of where the center of the summon is located if image matching was successful. Otherwise, return None.
         """
         if(self.debug_mode):
-            self.game.print_and_save(f"[DEBUG] Now attempting to find {summon_name.upper()} Summon...")
+            self.game.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find {summon_name.upper()} Summon...")
 
         summon_location = None
         guibot_check = False
@@ -328,6 +327,9 @@ class ImageUtils:
         Returns:
             locations (list[Box]): List of Boxes where each occurrence is found on the screen. If no occurrence was found, return a empty list. Or if the file does not exist, return None.
         """
+        if(self.debug_mode):
+            self.game.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find all occurrences of the {image_name.upper()} image from current position...")
+        
         dir_path = os.path.dirname(os.path.realpath(__file__))
         
         # Find specified image file by searching subfolders in the images folder.
@@ -362,6 +364,9 @@ class ImageUtils:
                         if(not hide_info):
                             for location in centered_locations:
                                 self.game.print_and_save(f"{self.printtime()} [INFO] Occurrence found at: " + str(location))
+                    else:
+                        if(self.debug_mode):
+                            self.game.print_and_save(f"{self.printtime()} [ERROR] Failed to detect any occurrences of the {image_name.upper()} image from current position...")
                         
                     return centered_locations
 
