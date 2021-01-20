@@ -1,7 +1,8 @@
 import datetime
 from timeit import default_timer as timer
-import pyperclip
+
 import pyautogui
+import pyperclip
 
 
 class MouseUtils:
@@ -14,19 +15,18 @@ class MouseUtils:
     
     starting_time (float): Used to keep track of the program's elapsed time for logging purposes.
 
-    mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.5.
+    mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.2.
 
-    debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to True.
+    debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
 
     """
 
-    def __init__(self, game, starting_time: float, mouse_speed: float = 0.5, debug_mode: bool = False):
+    def __init__(self, game, starting_time: float, mouse_speed: float = 0.2, debug_mode: bool = False):
         super().__init__()
-
-        self.starting_time = starting_time
         
         self.game = game
 
+        self.starting_time = starting_time
         self.mouse_speed = mouse_speed
         self.debug_mode = debug_mode
 
@@ -44,7 +44,7 @@ class MouseUtils:
         Args:
             x (int): X coordinate on the screen.
             y (int): Y coordinate on the screen.
-            custom_mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.
+            custom_mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.0.
 
         Returns:
             None
