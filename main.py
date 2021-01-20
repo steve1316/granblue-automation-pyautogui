@@ -38,17 +38,14 @@ class Tester:
         
         self.game.start_farming_mode(summon_element_name, summon_name, group_number, party_number, farming_mode, location_name, item_name, item_amount, mission_name, use_refill_full=refill)
         
-        # Test finding 10 most recent Grimnir room codes.
+        # Test finding tweets.
         # self.debug.test_twitter_listener()
         
         # Test finding amounts of all items on the screen.
-        # self.debug.test_item_detection(4)
+        # self.debug.test_item_detection()
 
         # Test the Farming Mode.
         # self.debug.test_farming_mode()
-        
-        # Test navigating to all maps supported by MapSelection.
-        # self.debug.test_map_selection()
 
         # Test finding all summon element tabs in Summon Selection Screen.
         # self.debug.test_find_summon_element_tabs()
