@@ -241,11 +241,10 @@ class ImageUtils:
 
         return summon_location
 
-    def find_dialog(self, dialog_name: str, attack_button_x: int, attack_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 1):
-        """Attempt to find the specified dialog window.
+    def find_dialog(self, attack_button_x: int, attack_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 1):
+        """Attempt to find any Lyria/Vyrn dialog popups. Used during Combat Mode.
 
         Args:
-            dialog_name (str): The name of the image file's name of the dialog window.
             attack_button_x (int): X coordinate of where the center of the Attack Button is.
             attack_button_y (int): Y coordinate of where the center of the Attack Button is.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
@@ -256,34 +255,42 @@ class ImageUtils:
         Returns:
             dialog_location (int, int): Tuple of coordinates on the screen for where the match's center was found. Otherwise, return None.
         """
+        if(self.debug_mode):
+            self.game.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find Lyria/Vyrn dialog popups from current position...")
+        
         dialog_location = None
+        dialog_location2 = None
         guibot_check = False
 
-        while (dialog_location == None):
+        while (dialog_location == None and dialog_location2 == None):
             if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_{dialog_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_lyria.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                                                                 region=(attack_button_x - 350, attack_button_y + 28, attack_button_x - 264, attack_button_y + 50))
+                dialog_location2 = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_vyrn.png", confidence=custom_confidence, grayscale=grayscale_check, 
                                                                  region=(attack_button_x - 350, attack_button_y + 28, attack_button_x - 264, attack_button_y + 50))
             else:
-                dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_{dialog_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check)
+                dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_lyria.png", confidence=custom_confidence, grayscale=grayscale_check)
+                dialog_location2 = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_vyrn.png", confidence=custom_confidence, grayscale=grayscale_check)
 
-            if (dialog_location == None):
+            if (dialog_location == None and dialog_location2 == None):
                 if(self.debug_mode):
                     self.game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
 
                 # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/dialogs/")
-                dialog_location = self.guibot.exists(f"dialog_{dialog_name.lower()}")
+                dialog_location = self.guibot.exists(f"dialog_lyria")
+                dialog_location2 = self.guibot.exists(f"dialog_vyrn")
 
-                if (dialog_location == None):
+                if (dialog_location == None and dialog_location2 == None):
                     tries -= 1
                     
                     if (tries <= 0):
                         if(self.debug_mode):
-                            self.game.print_and_save(f"{self.printtime()} [DEBUG] There are no {dialog_name.upper()} Dialog detected on the screen. Continuing with bot execution...")
+                            self.game.print_and_save(f"{self.printtime()} [DEBUG] There are no dialog popups detected on the screen. Continuing with bot execution...")
                         return None
 
                     if(self.debug_mode):
-                        self.game.print_and_save(f"{self.printtime()} [DEBUG] Locating {dialog_name.upper()} Dialog failed. Trying again in {sleep_time} seconds...")
+                        self.game.print_and_save(f"{self.printtime()} [DEBUG] Locating dialog popups failed. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
                 else:
@@ -291,12 +298,22 @@ class ImageUtils:
 
         # If the location was successfully found using GuiBot, convert the Match object to a Location object.
         if(guibot_check):
-            dialog_location = (dialog_location.target.x, dialog_location.target.y)
+            if(dialog_location != None):
+                dialog_location = (dialog_location.target.x, dialog_location.target.y)
+            else:
+                dialog_location2 = (dialog_location2.target.x, dialog_location2.target.y)
 
         if(self.debug_mode):
-            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {dialog_name.upper()} Dialog at {dialog_location}.")
-
-        return dialog_location
+            if(dialog_location != None):
+                self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found a dialog popup at {dialog_location}.")
+            else:
+                self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found a dialog popup at {dialog_location2}.")
+            
+        if(dialog_location != None):
+            return dialog_location
+        else:
+            return dialog_location2
+        
 
     def find_all(self, image_name: str, custom_region: Iterable[Tuple[int, int, int, int]] = None, custom_confidence: float = 0.9, grayscale_check: bool = False, hide_info: bool = False):
         """Find the specified image file by searching through all subfolders and locating all occurrences on the screen.
