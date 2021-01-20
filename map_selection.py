@@ -1,7 +1,22 @@
 
 class MapSelection:
+    """Provides the utility functions needed to perform navigation across the game.
+
+    Attributes
+    ----------
+    game (game.Game): The Game object.
+    
+    debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
+    """
     def  __init__(self, game, debug_mode: bool = False):
         super().__init__()
+        
+        self.game = game
+        
+        self.debug_mode = debug_mode
+        
+        # Makes sure that the number of raids currently joined does not exceed 3.
+        self.raids_joined = 0
         
         # Dictionary of supported farmable materials. Maps selected from recommendations in the GBF wiki website.
         self.farmable_materials = {
@@ -135,12 +150,6 @@ class MapSelection:
                 "Black Dragon Scale": ["Six Dragon Trial", "Oblivion Trial"]
             }
         }
-
-        self.game = game
-        
-        self.debug_mode = debug_mode
-        
-        self.raids_joined = 0
         
     def select_map(self, map_mode: str, map_name: str, item_name: str, mission_name: str, difficulty: str):
         """Navigates the bot to the specified map and preps the bot for Summon/Party selection.
@@ -162,8 +171,7 @@ class MapSelection:
             # Prepare the map name string to be used to look for the correct image file.
             temp_map_name = map_name.replace(" ", "_")
             temp_map_name = temp_map_name.replace("-", "_")
-    
-            # Example: map_mode = "quest", map_name: "map1", item_name: "Satin Feather", mission_name: "Scattered Cargo"
+
             if(map_mode.lower() == "quest"):
                 # Go to the Home Screen and check if the bot is already at the correct island or not.
                 self.game.go_back_home(confirm_location_check=True, display_info_check=True)
@@ -248,7 +256,7 @@ class MapSelection:
                     self.game.mouse_tools.move_and_click_point(location[0], location[1])
                     self.game.image_tools.confirm_location("quest")
 
-                # Now that the bot is on the correct island and is on the Quest Screen, click the correct chapter node. 126,268
+                # Now that the bot is on the correct island and is on the Quest Screen, click the correct chapter node.
                 world_location = self.game.image_tools.find_button("world")
                 if(mission_name == "Scattered Cargo"):
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 1 (115) node at ({world_location[0] + 97}, {world_location[1] + 97})...")
@@ -295,9 +303,6 @@ class MapSelection:
                 mission_location = self.game.image_tools.find_button(temp_mission_name)
                 self.game.mouse_tools.move_and_click_point(mission_location[0], mission_location[1])
                 
-                # Check for available AP.
-                self.game.check_for_ap(use_full_elixirs=False)
-                
             # elif(self.farmable_materials[map_mode] == "coop"):
             #     # Go to the Coop Screen.
             #     self.game.go_back_home()
@@ -333,7 +338,7 @@ class MapSelection:
                         # scrolling the screen down to see more in order to find the Special mission.
                         mission_select_button = self.game.image_tools.find_button(temp_map_name)
                         if(mission_select_button != None):
-                            self.game.print_and_save(f"{self.game.printtime()} [INFO] Navigating to {map_name}...")
+                            self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Navigating to {map_name}...")
                             
                             # Move to the specified Special location by clicking its Select button.
                             special_quest_select_button = (mission_select_button[0] + 145, mission_select_button[1] + 75)
@@ -467,9 +472,14 @@ class MapSelection:
                             tries -= 1    
                 else:
                     raise Exception("Cannot find the Special Missions.")
+            
+            # Check for available AP.
+            self.game.check_for_ap(use_full_elixirs=False)
+            
             return self.game.image_tools.confirm_location("select_summon")
         except Exception as e:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception on MapSelection select_map(): \n{e}")
+            self.game.isBotRunning.value = 1
             
     def check_for_pending(self):
         """Check and collect any pending rewards and free up slots for the bot to join more raids. After this entire process is completed, the bot should end up at the Quest Screen.
