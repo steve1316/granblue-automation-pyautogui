@@ -115,7 +115,7 @@ class Game:
             self.print_and_save(f"\n{self.printtime()} [SUCCESS] Dimensions of the game window has been successfully recalibrated.")
 
         if(display_info_check):
-            self.print_and_save("\n\n********************************************************************************")
+            self.print_and_save("\n********************************************************************************")
             self.print_and_save(f"{self.printtime()} [INFO] Screen size: {pyautogui.size()}.")
             self.print_and_save(f"{self.printtime()} [INFO] Game window size: Region({self.image_tools.window_left}, {self.image_tools.window_top}, {self.image_tools.window_width}, {self.image_tools.window_height}).")
             self.print_and_save("********************************************************************************")
@@ -229,7 +229,8 @@ class Game:
             self.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find {summon_element_name.upper()} Summon Element tab...")
 
         summon_element_location = None
-
+        
+        self.wait_for_ping(1)
         while (summon_element_location == None):
             summon_element_location = self.image_tools.find_button(f"summon_{summon_element_name.lower()}", tries=1)
 
@@ -458,7 +459,7 @@ class Game:
         Returns:
             None
         """
-        if(self.image_tools.confirm_location("not_enough_ap", tries=1)):
+        if(self.image_tools.confirm_location("not_enough_ap", tries=2)):
             # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full.
             # TODO: Implement check for when the user ran out of both of them, or one of them.
             if(use_full_elixirs == False):
@@ -487,7 +488,7 @@ class Game:
         Returns:
             None
         """
-        if(self.image_tools.confirm_location("not_enough_ep", tries=1)):
+        if(self.image_tools.confirm_location("not_enough_ep", tries=2)):
             # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
             # TODO: Implement check for when the user ran out of both of them, or one of them.
             if(use_soul_balm == False):
@@ -530,7 +531,6 @@ class Game:
             x = self.attack_button_location[0] - 76
 
         self.mouse_tools.move_and_click_point(x, y)
-        self.wait_for_ping(1)
 
         return None
 
@@ -567,8 +567,6 @@ class Game:
         if(self.image_tools.confirm_location("use_skill", tries=1)):
             self.print_and_save(f"{self.printtime()} [COMBAT] Character is currently skill-sealed. Unable to execute command.")
             self.find_and_click_button("friend_request_cancel")
-        else:
-            self.wait_for_ping(2)
 
         return None
     
@@ -579,17 +577,16 @@ class Game:
             None
         """
         self.print_and_save(f"\n{self.printtime()} [INFO] Loot can be collected.")
-        while (self.image_tools.confirm_location("loot_collected", tries=2) == False and not self.retreat_check):
+        
+        while (self.image_tools.confirm_location("loot_collected", tries=1) == False and not self.retreat_check):
             ok_button_location = self.image_tools.find_button("ok", tries=1)
-            
-            # Check for any uncap messages and attempt to close those messages.
             close_button_location = self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=True)
 
             if(ok_button_location != None):
-                self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
+                self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1], custom_mouse_speed=0.1)
                 
             if(close_button_location != None):
-                self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1])
+                self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1], custom_mouse_speed=0.1)
         
         if(self.item_name != "EXP"):        
             temp_amount = self.image_tools.find_farmed_items([self.item_name])[0]
@@ -644,20 +641,20 @@ class Game:
                 self.print_and_save(f"\n{self.printtime()} [COMBAT] Now loading up combat script at {script_file_path}...")
                 script = open(script_file_path, "r")
             
+            # Grab all lines in the file and store it into the lines list.
             lines = script.readlines()            
 
             i = 0  # Index for the list of read lines from the script.
             line_number = 1  # Tells what line number the bot is reading.
             turn_number = 1  # Tells current turn for the script execution.
 
-            # Flag to suppress error messages in attempts to finding the "Attack" / "Next" Buttons.
+            # Flag to suppress error messages in attempts to finding the "Attack" / "Next" Buttons and then reset the retreat check flag.
             self.suppress_error = True
-            
-            # Reset the retreat check flag.
             self.retreat_check = False
 
-            # Loop through and execute each line in the combat script until EOF.
+            # This is where the main workflow occurs in. Continue until EOF is reached in the combat script.
             while(i != len(lines) and not self.retreat_check):
+                # Grab the specified line from the list of lines.
                 line = lines[i]
 
                 # Print each line read if debug mode is active.
@@ -675,32 +672,29 @@ class Game:
                     while (int(line[5]) != turn_number):
                         self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
 
-                        self.find_dialog_in_combat("lyria")
-                        self.find_dialog_in_combat("vyrn")
+                        self.find_dialog_in_combat()
 
                         attack_button_location = self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error)
+                        next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
 
                         if (attack_button_location != None):
-                            number_of_charge_attacks = self.find_charge_attacks()
-                            
                             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
-
+                            
+                            number_of_charge_attacks = self.find_charge_attacks()
                             self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
-                            self.wait_for_ping(5 + number_of_charge_attacks)
+                            self.wait_for_ping(3 + number_of_charge_attacks)
                             
                             turn_number += 1
                            
                         # Check to see if the party wiped.
                         self.party_wipe_check()
 
-                        # Try to find the "Next" Button each turn.
-                        next_button_location = self.image_tools.find_button("next", tries=3, suppress_error=self.suppress_error)
                         if(next_button_location != None):
                             if(self.debug_mode):
                                 self.print_and_save(f"{self.printtime()} [DEBUG] Detected the Next Button. Clicking it now...")
 
                             self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
-                            self.wait_for_ping(5)
+                            self.wait_for_ping(3)
                             
                         # Check for battle end.
                         if(self.image_tools.confirm_location("exp_gained", tries=1) == True or self.retreat_check):
@@ -717,15 +711,13 @@ class Game:
                     i += 1
                     line_number += 1
 
-                    self.find_dialog_in_combat("lyria")
-                    self.find_dialog_in_combat("vyrn")
+                    self.find_dialog_in_combat()
 
                     # Continue reading each line inside the Turn block until you reach the "end" occurrence.
                     while("end" not in line.lower() and line.strip() != ""):
-                        line = lines[i].strip() # Strip any leading and trailing whitespaces.
-
-                        # Print each line read.
-                        self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line.strip()}\"")
+                        # Strip any leading and trailing whitespaces.
+                        line = lines[i].strip()
+                        self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line}\"")
 
                         # Determine which character will perform the action.
                         character_selected = 0
@@ -753,12 +745,12 @@ class Game:
                             # Now click the Back button.
                             self.mouse_tools.move_and_click_point(self.back_button_location[0], self.back_button_location[1])
 
+                            # Attempt to wait to see if the character one-shot the enemy or not.
+                            self.wait_for_ping(4)
+                            
                             # Continue to the next line for execution.
                             line_number += 1
                             i += 1
-                            
-                            # Attempt to wait to see if the character one-shot the enemy or not.
-                            self.wait_for_ping(3)
                             
                             # Check for battle end.
                             if(self.image_tools.confirm_location("exp_gained", tries=1) == True):
@@ -767,11 +759,11 @@ class Game:
                         # TODO: Allow for Summon chaining. For now, summoning multiple summons requires individual lines.
                         for j in range(1,7):
                             if(f"summon({j})" in line.lower()):
-                                # Click the Summon Button to bring up the available summons.
-                                self.print_and_save(f"{self.printtime()} [COMBAT] Invoking Summon #{j}...")
+                                # Click the Summon Button to bring up the available Summons.
+                                self.print_and_save(f"{self.printtime()} [COMBAT] Invoking Summon #{j}.")
                                 self.find_and_click_button("summon")
                                 
-                                # Click on the specified summon.
+                                # Click on the specified Summon.
                                 if(j == 1):
                                     self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 317, self.attack_button_location[1] + 138)
                                 elif(j == 2):
@@ -796,11 +788,18 @@ class Game:
                                         self.find_and_click_button("summon_cancel")
                                         
                                         # Now click the Back button.
-                                        self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 322, self.attack_button_location[1])
+                                        self.mouse_tools.move_and_click_point(self.back_button_location[0], self.back_button_location[1])
+                                        
+                                # Check for battle end.
+                                if(self.image_tools.confirm_location("exp_gained", tries=1) == True):
+                                    break
                                 
                                 # Continue to the next line for execution.
                                 line_number += 1
                                 i += 1
+                                
+                        if(self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None):
+                            break
 
                 if("end" in line.lower()):
                     # Attempt to find the "Next" Button first before attacking to preserve the turn number in the backend. If so, skip clicking the "Attack" Button.
@@ -808,71 +807,61 @@ class Game:
                     next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
                     if(next_button_location != None):
                         self.print_and_save(f"{self.printtime()} [COMBAT] All enemies on screen have been eliminated before attacking. Preserving Turn {turn_number} by moving to the next Wave...")
-                        if(self.debug_mode):
-                            self.print_and_save(f"{self.printtime()} [DEBUG] Detected Next Button. Clicking it now...")
-
                         self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
-                        self.wait_for_ping(5)
+                        self.wait_for_ping(3)
                     else:
-                        # Check if any character has 100% Charge Bar. If so, add 1 second per match.
-                        number_of_charge_attacks = self.find_charge_attacks()
-                        
                         self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
-
+                        
+                        number_of_charge_attacks = self.find_charge_attacks()
                         self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
-                        self.wait_for_ping(5 + number_of_charge_attacks)
+                        self.wait_for_ping(3 + number_of_charge_attacks)
 
                         turn_number += 1
                         
                         # Check to see if the party wiped.
                         self.party_wipe_check()
                         
-                        next_button_location = self.image_tools.find_button("next", tries=2, suppress_error=self.suppress_error)
+                        next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
                         if(next_button_location != None):
-                            if(self.debug_mode):
-                                self.print_and_save(f"{self.printtime()} [DEBUG] Detected Next Button. Clicking it now...")
-
                             self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
-                            self.wait_for_ping(5)
+                            self.wait_for_ping(3)
                             
                 if("exit" in line.lower()):
                     # End Combat Mode by heading back to the Home Screen without retreating. 
                     # Usually for raid farming as to maximize the number of raids joined after completing the provided combat script.
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line.strip()}\"")
                     self.print_and_save(f"{self.printtime()} [COMBAT] Leaving this raid without retreating...")
+                    
                     self.wait_for_ping(1)
                     self.find_and_click_button("menu")
                     self.find_and_click_button("raid_home")
                     self.find_and_click_button("raid_go_back_home")
+                    
+                    # Return False to indicate that the Combat Mode ended prematurely.
                     return False
 
                 # Continue to the next line for execution.
                 line_number += 1
                 i += 1
-
-                if (self.image_tools.confirm_location("exp_gained", tries=1) == True or self.retreat_check):
-                    break
-
+            
+            # When execution gets to here outside the while loop from above, it means that the bot has reached the end of the combat script and will now attack 
+            # until the battle ends or the party wipes.
             self.print_and_save(f"\n{self.printtime()} [COMBAT] Bot has reached end of script. Auto-attacking until battle ends...")
 
             # Keep pressing the location of the "Attack" / "Next" Button until the bot reaches the Quest Results Screen.
             while (self.image_tools.confirm_location("exp_gained", tries=1) == False and not self.retreat_check):
-                self.find_dialog_in_combat("lyria")
-                self.find_dialog_in_combat("vyrn")
+                self.find_dialog_in_combat()
 
-                attack_button_location = self.image_tools.find_button("attack", tries=2, suppress_error=self.suppress_error)
-                next_button_location = self.image_tools.find_button("next", tries=2, suppress_error=self.suppress_error)
+                attack_button_location = self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error)
+                next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
 
                 if (attack_button_location != None):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
-
-                    # Check if any character has 100% Charge Bar. If so, add 1 second per match.
-                    number_of_charge_attacks = self.find_charge_attacks()
-
                     self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
-
+                    
+                    number_of_charge_attacks = self.find_charge_attacks()
                     self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
-                    self.wait_for_ping(5 + number_of_charge_attacks)
+                    self.wait_for_ping(3 + number_of_charge_attacks)
                     
                     turn_number += 1
                     
@@ -881,20 +870,19 @@ class Game:
 
                 elif(next_button_location != None):
                     self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
-                    self.wait_for_ping(5)
+                    self.wait_for_ping(3)
 
-            # Try to click any detected "OK" Buttons several times.
             if(not self.retreat_check):
                 self.print_and_save(f"\n{self.printtime()} [INFO] Bot has reached the Quest Results Screen.")
-                # self.collect_loot()
 
             self.print_and_save("\n################################################################################")
             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
             self.print_and_save("################################################################################")
+            
+            return True
         except FileNotFoundError as e:
             self.print_and_save(f"{self.printtime()} [ERROR] Cannot find \"{script_file_path}.txt\" inside the /scripts folder. Exact error is: {e}")
-
-        return True
+            self.isBotRunning.value = 1
     
     def start_farming_mode(self, summon_element_name: str, summon_name: str, group_number: int, party_number: int, map_mode: str, map_name: str, 
                            item_name: str, item_amount_to_farm: int, mission_name: str, use_refill_full: bool = False):
@@ -1039,12 +1027,11 @@ class Game:
         else:
             self.print_and_save("\nSomething went wrong with navigating to the map.")
             
-        self.print_and_save("\n\n################################################################################")
+        self.print_and_save("\n################################################################################")
         self.print_and_save(f"{self.printtime()} [FARM] Ending Farming Mode.")
         self.print_and_save("################################################################################\n")
         
         self.isBotRunning.value = 1
-        
         return None
 
     # TODO: Find a suitable OCR framework that can detect the HP % of the enemies. Until then, this bot will not handle if statements.
