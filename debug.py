@@ -42,12 +42,12 @@ class Debug:
         tweets = self.game.room_finder.find_most_recent("Lvl 120 Grimnir")
         room_codes = self.game.room_finder.clean_tweets(tweets)
         self.game.print_and_save(f"\n{self.game.printtime()} [TEST_INFO] # of Tweets found: {len(tweets)}")
-        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_INFO] # of Room Codes detected: {len(room_codes)}")
+        self.game.print_and_save(f"{self.game.printtime()} [TEST_INFO] # of Room Codes detected: {len(room_codes)}")
         for i, room_code in enumerate(room_codes):
             self.game.print_and_save(f"\n{self.game.printtime()} [TEST] {tweets[i].lang.upper()} Tweet created at {tweets[i].created_at}: \n" + tweets[i].text)
             self.game.print_and_save(f"{self.game.printtime()} [TEST] Detected Room Code is: {room_codes[i]}")
             
-        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Finding 10 Most Recent Grimnir Room Codes from EN was successful.")
+        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Finding 10 Most Recent Grimnir Room Codes was successful.")
         self.isBotRunning.value = 1
         return None
         
@@ -110,30 +110,6 @@ class Debug:
             self.game.print_and_save(f"\n{self.game.printtime()} [TEST] {item} farmed: {result}")
             
         self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Item Detection was successful.")
-        self.isBotRunning.value = 1
-        return None
-        
-    def test_map_selection(self):
-        """Tests navigating to each map that is supported by MapSelection.
-        
-        Returns:
-            None
-        """
-        self.game.print_and_save("\n################################################################################")
-        self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing navigating to all maps supported by MapSelection...")
-        self.game.print_and_save("################################################################################")
-        
-        self.game.map_selection.select_map(map_mode="quest", map_name="Port Breeze Archipelago", item_name="Satin Feather", mission_name="Scattered Cargo")
-        
-        self.game.map_selection.select_map(map_mode="quest", map_name="Valtz Duchy", item_name="Fine Sand Bottle", mission_name="Lucky Charm Hunt")
-        self.game.map_selection.select_map(map_mode="quest", map_name="Valtz Duchy", item_name="Untamed Flame", mission_name="Special Op's Request")
-        
-        self.game.map_selection.select_map(map_mode="quest", map_name="Auguste Isles", item_name="Fresh Water Jug", mission_name="Threat to the Fisheries")
-        
-        self.game.map_selection.select_map(map_mode="quest", map_name="Lumacie Archipelago", item_name="Rough Stone", mission_name="The Fruit of Lumacie")
-        self.game.map_selection.select_map(map_mode="quest", map_name="Lumacie Archipelago", item_name="Coarse Alluvium", mission_name="Whiff of Danger")
-        
-        self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Testing Map Selection was successful.")
         self.isBotRunning.value = 1
         return None
 
@@ -202,7 +178,7 @@ class Debug:
         self.game.print_and_save("################################################################################")
         
         self.game.go_back_home(confirm_location_check=True, display_info_check=True)
-        self.mouse_tools.scroll_screen_from_home_button(-600)
+        self.game.mouse_tools.scroll_screen_from_home_button(-600)
 
         list_of_steps_in_order = ["gameplay_extras", "trial_battles",
                                   "trial_battles_old_lignoid", "trial_battles_play",
@@ -213,14 +189,14 @@ class Debug:
             step = list_of_steps_in_order.pop(0)
             
             if(step == "trial_battles_old_lignoid"):
-                self.image_tools.confirm_location("trial_battles")
+                self.game.image_tools.confirm_location("trial_battles")
             
-            image_location = self.image_tools.find_button(step)
+            image_location = self.game.image_tools.find_button(step)
             
             if(step == "choose_a_summon"):
-                self.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187)
+                self.game.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187)
             else:
-                self.mouse_tools.move_and_click_point(image_location[0], image_location[1])
+                self.game.mouse_tools.move_and_click_point(image_location[0], image_location[1])
         
         self.game.start_combat_mode(self.combat_script)
         
