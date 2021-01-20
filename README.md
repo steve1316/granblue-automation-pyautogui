@@ -13,20 +13,23 @@ For example:
 # This is also a comment.
 
 Turn 1:
-	// On Turn 1, the 6th summon will be summoned. The character on the first position will use their 2nd and then 4th skill. 
-	// Then the character on the third position will use their 3rd skill. Finally, the bot will attack to end the turn.
+	// On Turn 1, the 6th summon will be summoned. The character on the first position will use their 
+  // 2nd and then 4th skill. Then the character on the third position will use their 3rd skill. 
+  // Finally, the bot will attack to end the turn.
 	summon(6)
 	character1.useSkill(2).useSkill(4)
 	character3.useSkill(3)
 end
 
 # The bot will keep clicking the Attack button until it reaches the 5th turn.
-// Keywords are case-insensitive. So long as you spell them correctly, the bot will have no trouble reading your combat script.
+// Keywords are case-insensitive. So long as you spell them correctly, the bot will 
+// have no trouble reading your combat script.
 tURn 5:
 	CharActer2.USEskill(2)
 end
 
-// Use the exit keyword to leave the raid without retreating. Recommended if you are farming raids and only want the bot to be in each raid for a certain number of turns before moving on to the next raid.
+// Use the exit keyword to leave the raid without retreating. Recommended if you are farming raids and 
+// only want the bot to be in each raid for a certain number of turns before moving on to the next raid.
 exit
 
 ```
