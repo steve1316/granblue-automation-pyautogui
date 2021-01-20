@@ -1,3 +1,5 @@
+import traceback
+
 
 class MapSelection:
     """Provides the utility functions needed to perform navigation across the game.
@@ -166,15 +168,16 @@ class MapSelection:
         """
         try:
             check_location = False
-            current_location = ""
             
             # Prepare the map name string to be used to look for the correct image file.
+            current_location = ""
             temp_map_name = map_name.replace(" ", "_")
             temp_map_name = temp_map_name.replace("-", "_")
 
             if(map_mode.lower() == "quest"):
                 # Go to the Home Screen and check if the bot is already at the correct island or not.
                 self.game.go_back_home(confirm_location_check=True, display_info_check=True)
+                
                 if(self.game.image_tools.confirm_location(temp_map_name, tries=2)):
                     check_location = True
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot is currently on the correct island.")
@@ -184,30 +187,45 @@ class MapSelection:
                     
                     # Attempt to see which island the bot is currently at.
                     if(self.game.image_tools.confirm_location("port_breeze_archipelago", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at the Port Breeze Archipelago. Now moving to {map_name}...")
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Port Breeze Archipelago. Now moving to {map_name}...")
                         current_location = "Port Breeze Archipelago"
                     elif(self.game.image_tools.confirm_location("valtz_duchy", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at the Valtz Duchy. Now moving to {map_name}...")
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Valtz Duchy. Now moving to {map_name}...")
                         current_location = "Valtz Duchy"
                     elif(self.game.image_tools.confirm_location("auguste_isles", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at the Auguste Isles. Now moving to {map_name}...")
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Auguste Isles. Now moving to {map_name}...")
                         current_location = "Auguste Isles"
                     elif(self.game.image_tools.confirm_location("lumacie_archipelago", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at the Lumacie Archipelago. Now moving to {map_name}...")
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Lumacie Archipelago. Now moving to {map_name}...")
                         current_location = "Lumacie Archipelago"
                     elif(self.game.image_tools.confirm_location("albion_citadel", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at the Albion Citadel. Now moving to {map_name}...")
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Albion Citadel. Now moving to {map_name}...")
                         current_location = "Albion Citadel"
                     elif(self.game.image_tools.confirm_location("mist_shrouded_isle", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at the Mist-Shrouded Isle. Now moving to {map_name}...")
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Mist-Shrouded Isle. Now moving to {map_name}...")
                         current_location = "Mist-Shrouded Isle"
+                    elif(self.game.image_tools.confirm_location("golonzo_island", tries=1)):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Golonzo Island. Now moving to {map_name}...")
+                        current_location = "Golonzo Island"
+                    elif(self.game.image_tools.confirm_location("amalthea_island", tries=1)):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Amalthea Island. Now moving to {map_name}...")
+                        current_location = "Amalthea Island"
+                    elif(self.game.image_tools.confirm_location("former_capital_mephorash", tries=1)):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Former Capital Mephorash. Now moving to {map_name}...")
+                        current_location = "Former Capital Mephorash"
+                    elif(self.game.image_tools.confirm_location("agastia", tries=1)):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Agastia. Now moving to {map_name}...")
+                        current_location = "Agastia"    
                 
                 # Go to the Quest Screen.
                 self.game.find_and_click_button("quest")
                 
                 # If the bot is currently not at the correct island, move to it.
                 if(check_location == False):
-                    world_location = self.game.image_tools.find_button("world")
+                    # Click the World button.
+                    world_location = self.game.image_tools.find_button("world", tries=2)
+                    if(world_location == None):
+                        world_location = self.game.image_tools.find_button("world2", tries=2)
                     self.game.mouse_tools.move_and_click_point(world_location[0], world_location[1])
                     
                     # TODO: Check for correct Skydom here before proceeding.
@@ -216,48 +234,105 @@ class MapSelection:
                     # If the island is on a different world page, switch pages as necessary.
                     # TODO: Eventually fill this out with every island. Same thing with the farmable missions below.
                     if(map_name == "Port Breeze Archipelago"):
-                        if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash"):
+                        if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash" or current_location == "Agastia"):
                             self.game.find_and_click_button("world_left_arrow")
-                        self.game.find_and_click_button("port_breeze_archipelago")
+                        
+                        if(self.game.image_tools.find_button("port_breeze_archipelago", tries=2) != None):
+                            self.game.find_and_click_button("port_breeze_archipelago")
+                        else:
+                            # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to a manual method.
+                            arrow_location = self.game.image_tools.find_button("world_right_arrow")
+                            self.game.mouse_tools.move_and_click_point(arrow_location[0] - 320, arrow_location[1] - 159)
                     elif(map_name == "Valtz Duchy"):
-                        if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash"):
+                        if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash" or current_location == "Agastia"):
                             self.game.find_and_click_button("world_left_arrow")
-                        self.game.find_and_click_button("valtz_duchy")
+                        
+                        if(self.game.image_tools.find_button("valtz_duchy", tries=2) != None):
+                            self.game.find_and_click_button("valtz_duchy")
+                        else:
+                            arrow_location = self.game.image_tools.find_button("world_right_arrow")
+                            self.game.mouse_tools.move_and_click_point(arrow_location[0] - 150, arrow_location[1] - 85)
                     elif(map_name == "Auguste Isles"):
-                        if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash"):
+                        if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash" or current_location == "Agastia"):
                             self.game.find_and_click_button("world_left_arrow")
-                        self.game.find_and_click_button("auguste_isles")
+                        
+                        if(self.game.image_tools.find_button("auguste_isles", tries=2) != None):
+                            self.game.find_and_click_button("auguste_isles")
+                        else:
+                            arrow_location = self.game.image_tools.find_button("world_right_arrow")
+                            self.game.mouse_tools.move_and_click_point(arrow_location[0] - 374, arrow_location[1] - 5)
                     elif(map_name == "Lumacie Archipelago"):
-                        if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash"):
+                        if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash" or current_location == "Agastia"):
                             self.game.find_and_click_button("world_left_arrow")
-                        self.game.find_and_click_button("lumacie_archipelago")
+                        
+                        if(self.game.image_tools.find_button("lumacie_archipelago", tries=2) != None):
+                            self.game.find_and_click_button("lumacie_archipelago")
+                        else:
+                            arrow_location = self.game.image_tools.find_button("world_right_arrow")
+                            self.game.mouse_tools.move_and_click_point(arrow_location[0] - 84, arrow_location[1] + 39)
                     elif(map_name == "Albion Citadel"):
-                        if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash"):
+                        if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash" or current_location == "Agastia"):
                             self.game.find_and_click_button("world_left_arrow")
-                        self.game.find_and_click_button("albion_citadel")
+                        
+                        if(self.game.image_tools.find_button("albion_citadel", tries=2) != None):
+                            self.game.find_and_click_button("albion_citadel")
+                        else:
+                            arrow_location = self.game.image_tools.find_button("world_right_arrow")
+                            self.game.mouse_tools.move_and_click_point(arrow_location[0] - 267, arrow_location[1] + 121)
                     elif(map_name == "Mist-Shrouded Isle"):
                         if(current_location == "Port Breeze Archipelago" or current_location == "Valtz Duchy" or current_location == "Auguste Isles" or current_location == "Lumacie Archipelago"or current_location == "Albion Citadel"):
                             self.game.find_and_click_button("world_right_arrow")
-                        self.game.find_and_click_button("mist_shrouded_isle")
+                        
+                        if(self.game.image_tools.find_button("mist_shrouded_isle", tries=2) != None):
+                            self.game.find_and_click_button("mist_shrouded_isle")
+                        else:
+                            arrow_location = self.game.image_tools.find_button("world_left_arrow") # 88, 476
+                            self.game.mouse_tools.move_and_click_point(arrow_location[0] + 162, arrow_location[1] + 114)
                     elif(map_name == "Golonzo Island"):
                         if(current_location == "Port Breeze Archipelago" or current_location == "Valtz Duchy" or current_location == "Auguste Isles" or current_location == "Lumacie Archipelago"or current_location == "Albion Citadel"):
                             self.game.find_and_click_button("world_right_arrow")
-                        self.game.find_and_click_button("golonzo_island")
+                        
+                        if(self.game.image_tools.find_button("golonzo_island", tries=2) != None):
+                            self.game.find_and_click_button("golonzo_island")
+                        else:
+                            arrow_location = self.game.image_tools.find_button("world_left_arrow")
+                            self.game.mouse_tools.move_and_click_point(arrow_location[0] + 362, arrow_location[1] + 85)
                     elif(map_name == "Amalthea Island"):
                         if(current_location == "Port Breeze Archipelago" or current_location == "Valtz Duchy" or current_location == "Auguste Isles" or current_location == "Lumacie Archipelago"or current_location == "Albion Citadel"):
                             self.game.find_and_click_button("world_right_arrow")
-                        self.game.find_and_click_button("amalthea_island")
+                        
+                        if(self.game.image_tools.find_button("amalthea_island", tries=2) != None):
+                            self.game.find_and_click_button("amalthea_island")
+                        else:
+                            arrow_location = self.game.image_tools.find_button("world_left_arrow")
+                            self.game.mouse_tools.move_and_click_point(arrow_location[0] + 127, arrow_location[1] - 14)
                     elif(map_name == "Former Capital Mephorash"):
                         if(current_location == "Port Breeze Archipelago" or current_location == "Valtz Duchy" or current_location == "Auguste Isles" or current_location == "Lumacie Archipelago"or current_location == "Albion Citadel"):
                             self.game.find_and_click_button("world_right_arrow")
-                        self.game.find_and_click_button("former_capital_mephorash")
                         
-                    location = self.game.image_tools.find_button("go")
-                    self.game.mouse_tools.move_and_click_point(location[0], location[1])
+                        if(self.game.image_tools.find_button("former_capital_mephorash", tries=2) != None):
+                            self.game.find_and_click_button("former_capital_mephorash")
+                        else:
+                            arrow_location = self.game.image_tools.find_button("world_left_arrow")
+                            self.game.mouse_tools.move_and_click_point(arrow_location[0] + 352, arrow_location[1] - 51)
+                    elif(map_name == "Agastia"):
+                        if(current_location == "Port Breeze Archipelago" or current_location == "Valtz Duchy" or current_location == "Auguste Isles" or current_location == "Lumacie Archipelago"or current_location == "Albion Citadel"):
+                            self.game.find_and_click_button("world_right_arrow")
+                        
+                        if(self.game.image_tools.find_button("agastia", tries=2) != None):
+                            self.game.find_and_click_button("agastia")
+                        else:
+                            arrow_location = self.game.image_tools.find_button("world_left_arrow")
+                            self.game.mouse_tools.move_and_click_point(arrow_location[0] + 190, arrow_location[1] - 148)
+                        
+                    self.game.find_and_click_button("go")
                     self.game.image_tools.confirm_location("quest")
 
                 # Now that the bot is on the correct island and is on the Quest Screen, click the correct chapter node.
-                world_location = self.game.image_tools.find_button("world")
+                world_location = self.game.image_tools.find_button("world", tries=2)
+                if(world_location == None):
+                    world_location = self.game.image_tools.find_button("world2", tries=2)
+                
                 if(mission_name == "Scattered Cargo"):
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 1 (115) node at ({world_location[0] + 97}, {world_location[1] + 97})...")
                     self.game.mouse_tools.move_and_click_point(world_location[0] + 97, world_location[1] + 97)
@@ -279,7 +354,7 @@ class MapSelection:
                 elif(mission_name == "For Whom the Bell Tolls"):
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 22 node...")
                     self.game.mouse_tools.move_and_click_point(world_location[0] + 178, world_location[1] + 33)
-                elif(mission_name == "Golonzo's Battle of Old"):
+                elif(mission_name == "Golonzo's Battles of Old"):
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 25 node...")
                     self.game.mouse_tools.move_and_click_point(world_location[0] + 196, world_location[1] + 5)
                 elif(mission_name == "The Dungeon Diet"):
@@ -290,23 +365,31 @@ class MapSelection:
                     self.game.mouse_tools.move_and_click_point(world_location[0] + 319, world_location[1] + 13)
                 elif(mission_name == "Erste Kingdom Episode 4"):
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 70 node...")
-                    raise Exception("Erste Kingdom Episode 4 is not supported yet.")
+                    self.game.mouse_tools.move_and_click_point(world_location[0] + 253, world_location[1] + 136)
                 elif(mission_name == "Imperial Wanderer's Soul"):
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 55 node...")
-                    raise Exception("Imperial Wanderer's Soul is not supported yet.")
+                    self.game.mouse_tools.move_and_click_point(world_location[0] + 162, world_location[1] + 143)
                 
                 # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
                 self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now bringing up Summon Selection Screen for \"{mission_name}\"...")
                 self.game.mouse_tools.scroll_screen(self.game.home_button_location[0], self.game.home_button_location[1] - 50, -1000)
                 temp_mission_name = mission_name.replace(" ", "_")
                 
-                mission_location = self.game.image_tools.find_button(temp_mission_name)
-                self.game.mouse_tools.move_and_click_point(mission_location[0], mission_location[1])
+                self.game.find_and_click_button(temp_mission_name)
+                
+                # Navigate to Episode 4 for the mission "Ch. 70 - Erste Kingdom".
+                if(mission_name == "Erste Kingdom Episode 4"):
+                    self.game.find_and_click_button("episode_4")
+                    self.game.find_and_click_button("ok")
                 
             # elif(self.farmable_materials[map_mode] == "coop"):
-            #     # Go to the Coop Screen.
-            #     self.game.go_back_home()
+            #     # Go to the Home Screen.
+            #     self.game.go_back_home(confirm_location_check=True, display_info_check=True)
                 
+            #     # Click the Menu button on the Home Screen and then go to Coop Screen.
+            #     self.game.find_and_click_button("home_menu")
+            #     self.game.find_and_click_button("coop")
+
             elif(map_mode.lower() == "special"):
                 # Go to the Home Screen.
                 self.game.go_back_home(confirm_location_check=True, display_info_check=True)
@@ -477,8 +560,8 @@ class MapSelection:
             self.game.check_for_ap(use_full_elixirs=False)
             
             return self.game.image_tools.confirm_location("select_summon")
-        except Exception as e:
-            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception on MapSelection select_map(): \n{e}")
+        except Exception:
+            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception on MapSelection select_map(): \n{traceback.format_exc()}")
             self.game.isBotRunning.value = 1
             
     def check_for_pending(self):

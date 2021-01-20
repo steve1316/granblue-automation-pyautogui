@@ -651,7 +651,7 @@ Item{
                     } else if(itemComboBox.displayText === "Wheat Stalk" || itemComboBox.displayText === "Iron Cluster" || itemComboBox.displayText === "Olea Plant"){
                         missionComboBox.model = [
                             { text: "Golonzo Island", enabled: false },
-                            { text: "Golonzo's Battle of Old", enabled: true },
+                            { text: "Golonzo's Battles of Old", enabled: true },
                         ]
                     } else if(itemComboBox.displayText === "Indigo Fruit" || itemComboBox.displayText === "Foreboding Clover" || itemComboBox.displayText === "Blood Amber"){
                         missionComboBox.model = [
