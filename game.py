@@ -432,16 +432,13 @@ class Game:
 
         return number_of_charge_attacks
 
-    def find_dialog_in_combat(self, dialog_file_name: str):
+    def find_dialog_in_combat(self):
         """Check if there are dialog boxes from either Lyria or Vyrn and click them away.
-
-        Args:
-            dialog_file_name (str): Image file name of the dialog window. Usually its "dialog_lyria" or "vyrnDialog" for the Combat Screen.
 
         Returns:
             None
         """
-        dialog_location = self.image_tools.find_dialog(dialog_file_name, self.attack_button_location[0], self.attack_button_location[1], tries=1)
+        dialog_location = self.image_tools.find_dialog(self.attack_button_location[0], self.attack_button_location[1], tries=1)
 
         if (dialog_location != None):
             if(self.debug_mode):
