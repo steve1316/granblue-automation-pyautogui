@@ -85,7 +85,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] (LOW PRIORITY) Implement Event navigation/items.
 - [ ] (LOW PRIORITY) Implement Guild Wars/Rise of the Beasts navigation/items.
 - [ ] (LOW PRIORITY) Deal with any left-over TODOs.
-- [ ] (MEDIUM PRIORITY) Implement try-catches to inform users of when errors occur.
+- [x] ~~(MEDIUM PRIORITY) Implement try-excepts to inform users of when errors occur.~~
 - [ ] (LOW PRIORITY) Eventually remove dependency on Game class from ImageUtils and MouseUtils and move any relevant functionality over to the Game class.
 - [x] ~~(MAX PRIORITY) Because this project was developed on a 1440p monitor, anything less or more than that would break the image processing. All image processing in this project needs to be generalized such that it would not matter whether the user has a 1440p or a 1080p monitor, they would get both get the same results.~~
 - [ ] (LOW PRIORITY) Create instructions for Linux if it is confirmed to be supported.
