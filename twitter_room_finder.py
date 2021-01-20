@@ -141,18 +141,23 @@ class TwitterRoomFinder():
         auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret)
         auth.set_access_token(self.access_token, self.access_token_secret)
         self.api = tweepy.API(auth)
-        self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Successfully connected to the Twitter API.")
+        
+        # Check to see if connection to Twitter's API was successful.
+        try:
+            user_tweets = self.api.home_timeline()
+            self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Successfully connected to the Twitter API.")
+        except Exception as e:
+            self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Connection to the Twitter API failed. Exact error is: \n{e}")
     
-    def find_most_recent(self, raid_name: str, count: int = 10, tweets_only: bool = False):
+    def find_most_recent(self, raid_name: str, count: int = 10):
         """Start listening to tweets containing room codes starting with JP and then listens for EN tweets if there was not enough collected tweets.
 
         Args:
             raid_name (str): Name and level of the raid that appears in tweets containing the room code to it.
             count (int): Number of most recent tweets to grab. Defaults to 10.
-            tweets_only (bool): Either return tweets or 
 
         Returns:
-            tweets (Iterable[str]): List of 10 most recent tweets that match the query.
+            tweets (Iterable[str]): List of most recent tweets that match the query.
         """
         self.game.print_and_save(f"\n{self.game.printtime()} [TWITTER] Now finding the {count} most recent tweets for {raid_name}.")
         today = datetime.datetime.today()
@@ -167,26 +172,29 @@ class TwitterRoomFinder():
         tweets = []
         list_of_id = []
 
+        # Clear list of tweet IDs if it exceeds 50.
         if(len(self.list_of_id) > 50):
             self.list_of_id = []
         
-        try:    
+        try:
+            # Search JP tweets first and filter for tweets that the bot has not processed yet.
             tweet_jp = self.api.search(q=query_jp, since=today.strftime('%Y-%m-%d'), count=count)
             if(self.debug_mode):
                 self.game.print_and_save(f"\n{self.game.printtime()} [DEBUG] Length of tweets from JP found is: {len(tweet_jp)}")
             for tweet in tweet_jp:
                 if(tweet.id not in self.list_of_id and len(tweets) < count):
-                    self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found JP tweet.")
+                    # self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found JP tweet.")
                     tweets.append(tweet)
                     self.list_of_id.append(tweet.id)
 
+            # Search EN tweets only if the filtered JP tweets was less than the desired amount.
             if(len(tweets) < count):
                 tweet_en = self.api.search(q=query_en, since=today.strftime('%Y-%m-%d'), count=count)
                 if(self.debug_mode):
                     self.game.print_and_save(f"\n{self.game.printtime()} [DEBUG] Length of tweets from EN found is: {len(tweet_en)}")
                 for tweet in tweet_en:
                     if(tweet.id not in self.list_of_id and len(tweets) < count):
-                        self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found EN tweet.")
+                        # self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found EN tweet.")
                         tweets.append(tweet)
                         self.list_of_id.append(tweet.id)
                         
@@ -207,21 +215,25 @@ class TwitterRoomFinder():
         self.game.print_and_save(f"\n{self.game.printtime()} [TWITTER] Now cleaning up the tweets and parsing for room codes...\n")
         room_codes = []
         
-        # Split the text up by whitespaces and find the element in the list that has the room code.
-        for tweet in tweets:
-            if(len(self.already_visited) > 50):
-                self.already_visited = []
-            
-            split_text = tweet.text.split(" ")
-            for i, identifier in enumerate(split_text):
-                if((":Battle" in identifier) or (":参戦ID" in identifier)):
-                    parsed_code = split_text[i - 1]
-                    if(parsed_code not in self.already_visited):
-                        self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found {parsed_code} created at {tweet.created_at}")
-                        room_codes.append(parsed_code)
-                        self.already_visited.append(parsed_code)
-                        break
-                    else:
-                        self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Already visited {parsed_code} before in this session. Skipping this code...")
+        try:
+            # Split the text up by whitespaces and find the element in the list that has the room code.
+            for tweet in tweets:
+                if(len(self.already_visited) > 50):
+                    self.already_visited = []
+                
+                split_text = tweet.text.split(" ")
+                for i, identifier in enumerate(split_text):
+                    if((":Battle" in identifier) or (":参戦ID" in identifier)):
+                        parsed_code = split_text[i - 1]
+                        if(parsed_code not in self.already_visited):
+                            self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found {parsed_code} created at {tweet.created_at}")
+                            room_codes.append(parsed_code)
+                            self.already_visited.append(parsed_code)
+                            break
+                        else:
+                            self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Already visited {parsed_code} before in this session. Skipping this code...")
 
-        return room_codes
+            return room_codes
+        except Exception as e:
+            self.game.print_and_save(f"{self.game.printtime()} [ERROR] Bot cannot parse given tweets. Exact error is: \n{e} \nTweets given to it was: \n{tweets}")
+            self.game.isBotRunning.value = 1
