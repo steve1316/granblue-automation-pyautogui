@@ -1,4 +1,5 @@
 import datetime
+import traceback
 from typing import Iterable
 
 import tweepy
@@ -146,8 +147,8 @@ class TwitterRoomFinder():
         try:
             user_tweets = self.api.home_timeline()
             self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Successfully connected to the Twitter API.")
-        except Exception as e:
-            self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Connection to the Twitter API failed. Exact error is: \n{e}")
+        except Exception:
+            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Connection to the Twitter API failed. Check the config.ini and verify that the keys and tokens are correct. Exact error is: \n{traceback.format_exc()}")
     
     def find_most_recent(self, raid_name: str, count: int = 10):
         """Start listening to tweets containing room codes starting with JP and then listens for EN tweets if there was not enough collected tweets.
@@ -199,8 +200,8 @@ class TwitterRoomFinder():
                         self.list_of_id.append(tweet.id)
                         
             return tweets
-        except Exception as e:
-            self.game.print_and_save(f"{self.game.printtime()} [ERROR] Bot got rate-limited or Twitter failed to respond after a certain amount of time. Exact error is: \n{e}")
+        except Exception:
+            self.game.print_and_save(f"{self.game.printtime()} [ERROR] Bot got rate-limited or Twitter failed to respond after a certain amount of time. Exact error is: \n{traceback.format_exc()}")
             self.game.isBotRunning.value = 1
         
     def clean_tweets(self, tweets: Iterable[str]):
@@ -235,5 +236,5 @@ class TwitterRoomFinder():
 
             return room_codes
         except Exception as e:
-            self.game.print_and_save(f"{self.game.printtime()} [ERROR] Bot cannot parse given tweets. Exact error is: \n{e} \nTweets given to it was: \n{tweets}")
+            self.game.print_and_save(f"{self.game.printtime()} [ERROR] Bot cannot parse given tweets. Exact error is: \n{traceback.format_exc()} \nTweets given to it was: \n{tweets}")
             self.game.isBotRunning.value = 1
