@@ -1,10 +1,10 @@
 import multiprocessing
 import os
 import sys
-from pathlib import Path
 from configparser import ConfigParser
+from pathlib import Path
 
-from PySide2.QtCore import QObject, Signal, Slot, QUrl
+from PySide2.QtCore import QObject, QUrl, Signal, Slot
 from PySide2.QtGui import QGuiApplication
 from PySide2.QtQml import QQmlApplicationEngine
 
@@ -12,6 +12,7 @@ from debug import Debug
 from game import Game
 from map_selection import MapSelection
 from twitter_room_finder import TwitterRoomFinder
+
 
 class Tester:
     def __init__(self):
@@ -24,6 +25,7 @@ class Tester:
         self.config = ConfigParser()
         self.config.read("config.ini")
 
+        # Grab the Twitter API keys and tokens from config.ini and the mouse speed that the user wants too.
         keys_tokens = [self.config.get("twitter", "api_key"), self.config.get("twitter", "api_key_secret"), self.config.get("twitter", "access_token"), self.config.get("twitter", "access_token_secret")]
         mouse_speed = float(self.config.get("configuration", "mouse_speed"))
         
@@ -31,6 +33,7 @@ class Tester:
         self.map_selection = MapSelection(self.game)
         self.debug = Debug(self.game, isBotRunning=isBotRunning, combat_script=combat_script)
         
+        # Determine whether or not the user wants to refill using Full Elixir/Soul Balm.
         if(farming_mode != "raid"):
             refill = self.config.getboolean("refill", "refill_using_full_elixir")
         else:
@@ -94,11 +97,8 @@ class MainWindow(QObject):
     checkBotStatus = Signal(bool)
     checkBotReady = Signal(bool)
     openFile = Signal(str)
-    
     updateMessage = Signal(str)
-    
     enableGroupAndPartySelectors = Signal()
-    
     
     # The following functions below updates their respective variables to prep for Game class initialization.
     @Slot(str)
