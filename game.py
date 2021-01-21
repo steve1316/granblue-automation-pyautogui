@@ -2,6 +2,7 @@ import datetime
 import multiprocessing
 import sys
 import time
+import traceback
 from timeit import default_timer as timer
 from typing import Iterable
 
@@ -101,15 +102,19 @@ class Game:
         if(self.debug_mode):
             self.print_and_save(f"\n{self.printtime()} [DEBUG] Recalibrating the dimensions of the game window...")
 
-        self.home_button_location = self.image_tools.find_button("home", sleep_time=1)
-        
-        # Set the dimensions of the game window and save it in ImageUtils so that future operations do not go out of bounds.
-        home_news_button = self.image_tools.find_button("home_news")
-        home_menu_button = self.image_tools.find_button("home_menu")
-        self.image_tools.window_left = home_news_button[0] - 35 # The x-coordinate of the left edge
-        self.image_tools.window_top = home_menu_button[1] - 24 # The y-coordinate of the top edge
-        self.image_tools.window_width = self.image_tools.window_left + 468 # The width of the region
-        self.image_tools.window_height = (self.home_button_location[1] + 24) - self.image_tools.window_top # The height of the region
+        try:
+            self.home_button_location = self.image_tools.find_button("home", sleep_time=1)
+            
+            # Set the dimensions of the game window and save it in ImageUtils so that future operations do not go out of bounds.
+            home_news_button = self.image_tools.find_button("home_news")
+            home_menu_button = self.image_tools.find_button("home_menu")
+            self.image_tools.window_left = home_news_button[0] - 35 # The x-coordinate of the left edge
+            self.image_tools.window_top = home_menu_button[1] - 24 # The y-coordinate of the top edge
+            self.image_tools.window_width = self.image_tools.window_left + 468 # The width of the region
+            self.image_tools.window_height = (self.home_button_location[1] + 24) - self.image_tools.window_top # The height of the region
+        except Exception:
+            self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while calibrating game window dimensions: \n{traceback.format_exc()}")
+            self.isBotRunning.value = 1
 
         if(self.debug_mode):
             self.print_and_save(f"\n{self.printtime()} [SUCCESS] Dimensions of the game window has been successfully recalibrated.")
@@ -194,24 +199,28 @@ class Game:
         Returns:
             None
         """
+        try:
         # Check to see if party has wiped.
-        party_wipe_indicator = self.image_tools.find_button("party_wipe_indicator", tries=1, suppress_error=self.suppress_error)
-        if(party_wipe_indicator != None):
-            self.print_and_save(f"\n{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Retreating now...")
-            self.wait_for_ping(3)
-            self.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1])
-            
-            self.image_tools.confirm_location("continue")
-            cancel_button = self.image_tools.find_button("summon_cancel")
-            self.mouse_tools.move_and_click_point(cancel_button[0], cancel_button[1])
+            party_wipe_indicator = self.image_tools.find_button("party_wipe_indicator", tries=1, suppress_error=self.suppress_error)
+            if(party_wipe_indicator != None):
+                self.print_and_save(f"\n{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Retreating now...")
+                self.wait_for_ping(3)
+                self.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1])
                 
-            self.image_tools.confirm_location("retreat")
-            retreat_button = self.image_tools.find_button("retreat_confirmation")
-            self.mouse_tools.move_and_click_point(retreat_button[0], retreat_button[1])
-            
-            self.retreat_check = True
+                self.image_tools.confirm_location("continue")
+                cancel_button = self.image_tools.find_button("summon_cancel")
+                self.mouse_tools.move_and_click_point(cancel_button[0], cancel_button[1])
+                    
+                self.image_tools.confirm_location("retreat")
+                retreat_button = self.image_tools.find_button("retreat_confirmation")
+                self.mouse_tools.move_and_click_point(retreat_button[0], retreat_button[1])
+                
+                self.retreat_check = True
         
-        return None
+            return None
+        except Exception:
+            self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while checking if party wiped: \n{traceback.format_exc()}")
+            self.isBotRunning.value = 1
 
     def find_summon_element(self, summon_element_name: str, tries: int = 3):
         """Select the specified element tab for summons.
@@ -284,28 +293,32 @@ class Game:
         self.go_back_home(confirm_location_check=True)
         self.mouse_tools.scroll_screen_from_home_button(-600)
 
-        list_of_steps_in_order = ["gameplay_extras", "trial_battles",
-                                  "trial_battles_old_lignoid", "trial_battles_play",
-                                  "choose_a_summon", "party_selection_ok", "trial_battles_close",
-                                  "menu", "retreat", "retreat_confirmation", "next"]
+        try:
+            list_of_steps_in_order = ["gameplay_extras", "trial_battles",
+                                    "trial_battles_old_lignoid", "trial_battles_play",
+                                    "choose_a_summon", "party_selection_ok", "trial_battles_close",
+                                    "menu", "retreat", "retreat_confirmation", "next"]
 
-        # Go through each step in order from left to right from the list of steps.
-        while (len(list_of_steps_in_order) > 0):
-            step = list_of_steps_in_order.pop(0)
+            # Go through each step in order from left to right from the list of steps.
+            while (len(list_of_steps_in_order) > 0):
+                step = list_of_steps_in_order.pop(0)
+                
+                if(step == "trial_battles_old_lignoid"):
+                    self.image_tools.confirm_location("trial_battles")
+                
+                image_location = self.image_tools.find_button(step)
+                
+                if(step == "choose_a_summon"):
+                    self.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187)
+                else:
+                    self.mouse_tools.move_and_click_point(image_location[0], image_location[1])
             
-            if(step == "trial_battles_old_lignoid"):
-                self.image_tools.confirm_location("trial_battles")
-            
-            image_location = self.image_tools.find_button(step)
-            
-            if(step == "choose_a_summon"):
-                self.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187)
-            else:
-                self.mouse_tools.move_and_click_point(image_location[0], image_location[1])
-        
-        self.image_tools.confirm_location("trial_battles")
-        self.print_and_save(f"\n{self.printtime()} [INFO] Summons have now been refreshed.")
-        return None
+            self.image_tools.confirm_location("trial_battles")
+            self.print_and_save(f"\n{self.printtime()} [INFO] Summons have now been refreshed.")
+            return None
+        except Exception:
+            self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while resetting summons: \n{traceback.format_exc()}")
+            self.isBotRunning.value = 1
 
     def find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 2):
         """Select the specified group and party. It will then start the mission.
@@ -359,8 +372,9 @@ class Game:
 
                         # See if the user had Set A active instead of Set B if matching failed.
                         set_location = self.image_tools.find_button("party_set_a")
-        except Exception as e:
-            self.print_and_save(f"{self.printtime()} [ERROR] Exception occurred during Party Selection. Exact error is: \n{e}")
+        except Exception:
+            self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while selecting A or B Set: \n{traceback.format_exc()}")
+            self.isBotRunning.value = 1
 
         if(self.debug_mode):
             self.print_and_save(f"\n{self.printtime()} [SUCCESS] Successfully selected the correct Set. Now selecting Group {group_number}...")
@@ -881,7 +895,7 @@ class Game:
             
             return True
         except FileNotFoundError as e:
-            self.print_and_save(f"{self.printtime()} [ERROR] Cannot find \"{script_file_path}.txt\" inside the /scripts folder. Exact error is: {e}")
+            self.print_and_save(f"\n{self.printtime()} [ERROR] Cannot find \"{script_file_path}.txt\" inside the /scripts folder: \n{traceback.format_exc()}")
             self.isBotRunning.value = 1
     
     def start_farming_mode(self, summon_element_name: str, summon_name: str, group_number: int, party_number: int, map_mode: str, map_name: str, 
@@ -903,129 +917,132 @@ class Game:
         Returns:
             None
         """
-        if(item_name != "EXP"):
-            self.print_and_save("\n\n################################################################################")
-            self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode for {map_mode}.")
-            self.print_and_save(f"{self.printtime()} [FARM] Farming {item_amount_to_farm}x {item_name} at {mission_name}.")
-            self.print_and_save("################################################################################\n")
-        else:
-            self.print_and_save("\n\n################################################################################")
-            self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode for {map_mode}.")
-            self.print_and_save(f"{self.printtime()} [FARM] Doing {item_amount_to_farm}x runs for {item_name} at {mission_name}.")
-            self.print_and_save("################################################################################\n")
-        
-        difficulty = ""
-        
-        if(map_mode.lower() == "special"):
-            # Attempt to see if the difficulty starts at the 0th index to differentiate between cases like "H" and "VH".
-            if(mission_name.find("N ") == 0):
-                difficulty = "Normal"
-            elif(mission_name.find("H ") == 0):
-                difficulty = "Hard"
-            elif(mission_name.find("VH ") == 0):
-                difficulty = "Very Hard"
-            elif(mission_name.find("EX ") == 0):
-                difficulty = "Extreme"
+        try:
+            if(item_name != "EXP"):
+                self.print_and_save("\n\n################################################################################")
+                self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode for {map_mode}.")
+                self.print_and_save(f"{self.printtime()} [FARM] Farming {item_amount_to_farm}x {item_name} at {mission_name}.")
+                self.print_and_save("################################################################################\n")
+            else:
+                self.print_and_save("\n\n################################################################################")
+                self.print_and_save(f"{self.printtime()} [FARM] Starting Farming Mode for {map_mode}.")
+                self.print_and_save(f"{self.printtime()} [FARM] Doing {item_amount_to_farm}x runs for {item_name} at {mission_name}.")
+                self.print_and_save("################################################################################\n")
+            
+            difficulty = ""
+            
+            if(map_mode.lower() == "special"):
+                # Attempt to see if the difficulty starts at the 0th index to differentiate between cases like "H" and "VH".
+                if(mission_name.find("N ") == 0):
+                    difficulty = "Normal"
+                elif(mission_name.find("H ") == 0):
+                    difficulty = "Hard"
+                elif(mission_name.find("VH ") == 0):
+                    difficulty = "Very Hard"
+                elif(mission_name.find("EX ") == 0):
+                    difficulty = "Extreme"
 
-        # Save the following information to share between the Game class and the MapSelection class.
-        self.map_mode = map_mode
-        self.item_amount_to_farm = item_amount_to_farm
-        self.item_name = item_name
-        
-        self.item_amount_farmed = 0
-        self.amount_of_runs_finished = 0
-        summon_check = False
-        
-        if((map_mode.lower() != "raid" and self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)) or (map_mode.lower() == "raid" and self.map_selection.join_raid(item_name, mission_name))):
-            # Keep playing the mission until the bot gains enough of the item specified.
-            while(self.item_amount_farmed < self.item_amount_to_farm):
-                while(summon_check == False): 
-                    # Check for available AP or BP, depending on mode.
-                    if(map_mode.lower() != "raid"):
-                        self.check_for_ap(use_full_elixirs=use_refill_full)
-                    else:
-                        self.check_for_ep(use_soul_balm=use_refill_full)
-                    
-                    self.find_summon_element(summon_element_name)
-                    summon_check = self.find_summon(summon_name)
-                    
-                    # If the Summons were reset, head back to the location of the mission.
-                    if(summon_check == False):
+            # Save the following information to share between the Game class and the MapSelection class.
+            self.map_mode = map_mode
+            self.item_amount_to_farm = item_amount_to_farm
+            self.item_name = item_name
+            
+            self.item_amount_farmed = 0
+            self.amount_of_runs_finished = 0
+            summon_check = False
+            
+            if((map_mode.lower() != "raid" and self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)) or (map_mode.lower() == "raid" and self.map_selection.join_raid(item_name, mission_name))):
+                # Keep playing the mission until the bot gains enough of the item specified.
+                while(self.item_amount_farmed < self.item_amount_to_farm):
+                    while(summon_check == False): 
+                        # Check for available AP or BP, depending on mode.
                         if(map_mode.lower() != "raid"):
-                            self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
-                        else:
-                            self.map_selection.join_raid(item_name, mission_name)
-                
-                # Select the Party specified and then start the mission.
-                start_check = self.find_party_and_start_mission(group_number, party_number)
-                
-                if(start_check and map_mode.lower() != "raid"):
-                    # Check for the Items Picked Up popup that appears after starting a Quest mission.
-                    self.wait_for_ping(2)
-                    if(self.image_tools.confirm_location("items_picked_up", tries=1)):
-                        self.find_and_click_button("ok")
-                    
-                    if(self.start_combat_mode(self.combat_script)):
-                        # After Combat Mode has finished, count the number of the specified item that has dropped.
-                        self.collect_loot()
-                        
-                        if(self.item_amount_farmed < self.item_amount_to_farm):
-                            # Click the Play Again button.
-                            self.find_and_click_button("play_again")
-                            
-                            # Loop while clicking any detected Cancel buttons like from Friend Request popups.
-                            self.wait_for_ping(1)
-                            
-                            while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None):
-                                self.find_and_click_button("friend_request_cancel")
-                                break
-                            
-                            # Check for available AP.
                             self.check_for_ap(use_full_elixirs=use_refill_full)
-                            
-                            summon_check = False
-                    else:
-                        self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
-                elif(start_check and map_mode.lower() == "raid"): 
-                    # Cover the occasional case where joining the raid after selecting the Summon and Party leds to the Quest Results Screen with no loot to collect.
-                    if(self.image_tools.confirm_location("no_loot")):
-                        self.print_and_save(f"\n{self.printtime()} [INFO] Seems that the raid just ended. Moving on...")
-                        self.go_back_home()
-                        summon_check = False
-                    else:
+                        else:
+                            self.check_for_ep(use_soul_balm=use_refill_full)
+                        
+                        self.find_summon_element(summon_element_name)
+                        summon_check = self.find_summon(summon_name)
+                        
+                        # If the Summons were reset, head back to the location of the mission.
+                        if(summon_check == False):
+                            if(map_mode.lower() != "raid"):
+                                self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
+                            else:
+                                self.map_selection.join_raid(item_name, mission_name)
+                    
+                    # Select the Party specified and then start the mission.
+                    start_check = self.find_party_and_start_mission(group_number, party_number)
+                    
+                    if(start_check and map_mode.lower() != "raid"):
+                        # Check for the Items Picked Up popup that appears after starting a Quest mission.
+                        self.wait_for_ping(2)
+                        if(self.image_tools.confirm_location("items_picked_up", tries=1)):
+                            self.find_and_click_button("ok")
+                        
                         if(self.start_combat_mode(self.combat_script)):
                             # After Combat Mode has finished, count the number of the specified item that has dropped.
                             self.collect_loot()
                             
                             if(self.item_amount_farmed < self.item_amount_to_farm):
-                                self.find_and_click_button("raid_quests")
+                                # Click the Play Again button.
+                                self.find_and_click_button("play_again")
                                 
                                 # Loop while clicking any detected Cancel buttons like from Friend Request popups.
                                 self.wait_for_ping(1)
+                                
                                 while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None):
                                     self.find_and_click_button("friend_request_cancel")
                                     break
                                 
-                                self.game.find_and_click_button("raid", suppress_error=True)
+                                # Check for available AP.
+                                self.check_for_ap(use_full_elixirs=use_refill_full)
                                 
                                 summon_check = False
                         else:
-                            if(self.image_tools.confirm_location("check_your_pending_battles", tries=1)):
-                                self.find_and_click_button("ok")
-                                while(self.image_tools.find_button("pending_battle_sidebar", tries=1)):
-                                    self.find_and_click_button("pending_battle_sidebar")
-                                    self.wait_for_ping(1)
+                            self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
+                    elif(start_check and map_mode.lower() == "raid"): 
+                        # Cover the occasional case where joining the raid after selecting the Summon and Party leds to the Quest Results Screen with no loot to collect.
+                        if(self.image_tools.confirm_location("no_loot")):
+                            self.print_and_save(f"\n{self.printtime()} [INFO] Seems that the raid just ended. Moving on...")
+                            self.go_back_home()
+                            summon_check = False
+                        else:
+                            if(self.start_combat_mode(self.combat_script)):
+                                # After Combat Mode has finished, count the number of the specified item that has dropped.
+                                self.collect_loot()
+                                
+                                if(self.item_amount_farmed < self.item_amount_to_farm):
+                                    self.find_and_click_button("raid_quests")
                                     
-                                    if(self.image_tools.confirm_location("no_loot", tries=1)):
-                                        self.find_and_click_button("raid_quests")
-                                    else:
-                                        self.collect_loot()
-                            
-                            # Join a new raid.
-                            self.map_selection.join_raid(item_name, mission_name)
-                            summon_check = False    
-        else:
-            self.print_and_save("\nSomething went wrong with navigating to the map.")
+                                    # Loop while clicking any detected Cancel buttons like from Friend Request popups.
+                                    self.wait_for_ping(1)
+                                    while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None):
+                                        self.find_and_click_button("friend_request_cancel")
+                                        break
+                                    
+                                    self.game.find_and_click_button("raid", suppress_error=True)
+                                    
+                                    summon_check = False
+                            else:
+                                if(self.image_tools.confirm_location("check_your_pending_battles", tries=1)):
+                                    self.find_and_click_button("ok")
+                                    while(self.image_tools.find_button("pending_battle_sidebar", tries=1)):
+                                        self.find_and_click_button("pending_battle_sidebar")
+                                        self.wait_for_ping(1)
+                                        
+                                        if(self.image_tools.confirm_location("no_loot", tries=1)):
+                                            self.find_and_click_button("raid_quests")
+                                        else:
+                                            self.collect_loot()
+                                
+                                # Join a new raid.
+                                self.map_selection.join_raid(item_name, mission_name)
+                                summon_check = False    
+            else:
+                self.print_and_save("\nSomething went wrong with navigating to the map.")
+        except Exception:
+            self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
             
         self.print_and_save("\n################################################################################")
         self.print_and_save(f"{self.printtime()} [FARM] Ending Farming Mode.")
