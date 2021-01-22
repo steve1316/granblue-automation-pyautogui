@@ -390,15 +390,15 @@ class ImageUtils:
         blacklisted_items = ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb",
                              "Red Tome", "Blue Tome", "Brown Tome", "Green Tome", "White Tome", "Black Tome",
                              "Hellfire Scroll", "Flood Scroll", "Thunder Scroll", "Gale Scroll", "Skylight Scroll", "Chasm Scroll",
-                             "Jasper Scale", "Infernal Garnet", "Crystal Spirit", "Frozen Hell Prism", "Luminous Judgment", 
-                             "Evil Judge Crystal", "Sagittarius Rune", "Horseman's Plate", "Sunlight Quartz", "Halo Light Quartz",
-                             "Shadow Silver", "Phantom Demon Jewel", "Ifrit Anima", "Ifrit Omega Anima", "Cocytus Anima", "Cocytus Omega Anima",
+                             "Jasper Scale", "Crystal Spirit", "Luminous Judgment", "Sagittarius Rune", "Sunlight Quartz", 
+                             "Shadow Silver", "Ifrit Anima", "Ifrit Omega Anima", "Cocytus Anima", "Cocytus Omega Anima",
                              "Vohu Manah Anima", "Vohu Manah Omega Anima", "Sagittarius Anima", "Sagittarius Omega Anima",
-                             "Corow Anima", "Corow Omega Anima", "Diablo Anima", "Diablo Omega Anima",
-                             "Ancient Ecke Sachs", "Ecke Sachs", "Ancient Auberon", "Auberon", "Ancient Perseus", "Perseus",
-                             "Ancient Nalakuvara", "Nalakuvara", "Ancient Bow of Artemis", "Bow of Artemis", "Ancient Cortana", "Cortana"]
+                             "Corow Anima", "Corow Omega Anima", "Diablo Anima", "Diablo Omega Anima", "Ancient Ecke Sachs", 
+                             "Ecke Sachs", "Ancient Auberon", "Auberon", "Ancient Perseus", "Perseus", "Ancient Nalakuvara", 
+                             "Nalakuvara", "Ancient Bow of Artemis", "Bow of Artemis", "Ancient Cortana", "Cortana"]
 
-        lite_blacklisted_items = ["Tiamat Anima", "Tiamat Omega Anima", "Colossus Anima", "Colossus Omega Anima", "Leviathan Anima", "Leviathan Omega Anima", 
+        lite_blacklisted_items = ["Infernal Garnet", "Frozen Hell Prism", "Evil Judge Crystal", "Horseman's Plate", "Halo Light Quartz", "Phantom Demon Jewel", 
+                                 "Tiamat Anima", "Tiamat Omega Anima", "Colossus Anima", "Colossus Omega Anima", "Leviathan Anima", "Leviathan Omega Anima", 
                                  "Yggdrasil Anima", "Yggdrasil Omega Anima", "Luminiera Anima", "Luminiera Omega Anima", "Celeste Anima", "Celeste Omega Anima",
                                  "Shiva Anima", "Shiva Omega Anima", "Europa Anima", "Europa Omega Anima", "Alexiel Anima", "Alexiel Omega Anima", "Grimnir Anima",
                                  "Grimnir Omega Anima", "Metatron Anima", "Metatron Omega Anima", "Avatar Anima", "Avatar Omega Anima", "Nezha Anima", "Nezha Omega Anima",
