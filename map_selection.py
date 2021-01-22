@@ -257,6 +257,8 @@ class MapSelection:
                 self.game.find_and_click_button("home_menu")
                 self.game.find_and_click_button("coop")
                 
+                self.game.image_tools.confirm_location("coop")
+                
                 self.game.mouse_tools.scroll_screen_from_home_button(-400)
                 
                 # Select the difficulty of the mission that it is under.
@@ -509,10 +511,24 @@ class MapSelection:
             # Check for available AP.
             self.game.check_for_ap(use_full_elixirs=False)
             
-            if(map_mode != "coop"):
-                return self.game.image_tools.confirm_location("select_summon")
+            if(map_mode.lower() != "coop"):
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Now checking if bot is currently at Summon Selection screen...")
+                check = self.game.image_tools.confirm_location("select_summon")
+                if(check):
+                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is currently at Summon Selection screen.")
+                    return True
+                else:
+                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is not at Summon Selection screen.")
+                    return False
             else:
-                return self.game.image_tools.confirm_location("coop_without_support_summon")
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Now checking if bot is currently at Party Selection screen...")
+                check = self.game.image_tools.confirm_location("coop_without_support_summon")
+                if(check):
+                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is currently at Party Selection screen.")
+                    return True
+                else:
+                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is not at Party Selection screen.")
+                    return False
         except Exception:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception in MapSelection select_map(): \n{traceback.format_exc()}")
             self.game.isBotRunning.value = 1
