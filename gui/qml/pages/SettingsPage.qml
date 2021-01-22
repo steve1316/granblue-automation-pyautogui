@@ -109,6 +109,7 @@ Item{
                 { text: "Farming Modes", enabled: false },
                 { text: "Quest", enabled: true },
                 { text: "Special", enabled: true },
+                { text: "Coop", enabled: true},
                 { text: "Raid", enabled: true}
             ]
 
@@ -278,7 +279,71 @@ Item{
                         { text: "White Dragon Scale", enabled: true },
                         { text: "Black Dragon Scale", enabled: true },
                     ]
-                }else if(farmingModeComboBox.model[currentIndex].text === "Raid"){
+                } else if(farmingModeComboBox.model[currentIndex].text === "Coop"){
+                    itemComboBox.model = [
+                        // Creeds
+                        { text: "--------------------", enabled: false },
+                        { text: "Warrior Creed", enabled: true },
+                        { text: "Mage Creed", enabled: true },
+
+                        // Materials
+                        { text: "--------------------", enabled: false },
+                        { text: "Infernal Garnet", enabled: true },
+                        { text: "Frozen Hell Prism", enabled: true },
+                        { text: "Evil Judge Crystal", enabled: true },
+                        { text: "Horseman's Plate", enabled: true },
+                        { text: "Halo Light Quartz", enabled: true },
+                        { text: "Phantom Demon Jewel", enabled: true },
+
+                        // Distinctions
+                        { text: "--------------------", enabled: false },
+                        { text: "Gladiator Distinction", enabled: true },
+                        { text: "Guardian Distinction", enabled: true },
+                        { text: "Pilgrim Distinction", enabled: true },
+                        { text: "Mage Distinction", enabled: true },
+                        { text: "Bandit Distinction", enabled: true },
+                        { text: "Fencer Distinction", enabled: true },
+                        { text: "Combatant Distinction", enabled: true },
+                        { text: "Sharpshooter Distinction", enabled: true },
+                        { text: "Troubadour Distinction", enabled: true },
+                        { text: "Cavalryman Distinction", enabled: true },
+                        { text: "Alchemist Distinction", enabled: true },
+                        { text: "Samurai Distinction", enabled: true },
+                        { text: "Ninja Distinction", enabled: true },
+                        { text: "Sword Master Distinction", enabled: true },
+                        { text: "Gunslinger Distinction", enabled: true },
+                        { text: "Mystic Distinction", enabled: true },
+                        { text: "Assassin Distinction", enabled: true },
+                        { text: "Dual Wielder Distinction", enabled: true },
+                        { text: "Shredder Distinction", enabled: true },
+                        { text: "Forester's Distinction", enabled: true },
+                        { text: "Dragoon's Distinction", enabled: true },
+                        { text: "Monk's Distinction", enabled: true },
+                        { text: "Longstrider's Distinction", enabled: true },
+
+                        // Replicas
+                        { text: "--------------------", enabled: false },
+                        { text: "Avenger Replica", enabled: true },
+                        { text: "Skofnung Replica", enabled: true },
+                        { text: "Oliver Replica", enabled: true },
+                        { text: "Aschallon Replica", enabled: true },
+                        { text: "Nirvana Replica", enabled: true },
+                        { text: "Keraunos Replica", enabled: true },
+                        { text: "Hellion Gauntlet Replica", enabled: true },
+                        { text: "Ipetam Replica", enabled: true },
+                        { text: "Rosenbogen Replica", enabled: true },
+                        { text: "Langeleik Replica", enabled: true },
+                        { text: "Romulus Spear Replica", enabled: true },
+                        { text: "Proximo Replica", enabled: true },
+                        { text: "Murakumo Replica", enabled: true },
+                        { text: "Nebuchad Replica", enabled: true },
+                        { text: "Misericorde Replica", enabled: true },
+                        { text: "Faust Replica", enabled: true },
+                        { text: "Muramasa Replica", enabled: true },
+                        { text: "Kapilavastu Replica", enabled: true },
+                        { text: "Practice Drum", enabled: true },
+                    ]
+                } else if(farmingModeComboBox.model[currentIndex].text === "Raid"){
                     itemComboBox.model = [
                         // Tiamat Omega
                         { text: "--------------------", enabled: false },
@@ -1022,6 +1087,327 @@ Item{
                             { text: "The Typhoon Trial", map: "Elemental Treasure Quests", enabled: true },
                         ]
                     }
+                } else if(farmingModeComboBox.displayText === "Coop"){
+                    // Creeds
+                    if(itemComboBox.displayText === "Warrior Creed" || itemComboBox.displayText === "Mage Creed"){
+                        missionComboBox.model = [
+                            { text: "EX1", enabled: false },
+                            { text: "Corridor of Puzzles", map: "", enabled: true },
+                            { text: "Lost in the Dark", map: "", enabled: true },
+                        ]
+                    } 
+                    
+                    // Materials
+                    else if(itemComboBox.displayText === "Infernal Garnet"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Revelation", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Frozen Hell Prism"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Tundra", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Evil Judge Crystal"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Judgement", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Horseman's Plate"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Plains", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Halo Light Quartz"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Eminence", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Phantom Demon Jewel"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Twilight", map: "", enabled: true },
+                        ]
+                    }
+
+                    // Distinctions
+                    else if(itemComboBox.displayText === "Gladiator Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Revelation", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst Severe Cliffs", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Guardian Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Tundra", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Flames", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Pilgrim Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Judgement", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Waves", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Mage Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Judgement", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Waves", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Bandit Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Eminence", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Flames", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Fencer Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Revelation", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst Severe Cliffs", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Combatant Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Tundra", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst Severe Cliffs", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Sharpshooter Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Plains", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Petals", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Troubadour Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Eminence", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Flames", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Cavalryman Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Plains", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Flames", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Alchemist Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Judgement", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Waves", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Samurai Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Twilight", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Petals", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Ninja Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Twilight", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Petals", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Sword Master Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Tundra", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst Severe Cliffs", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Gunslinger Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Plains", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Petals", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Mystic Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Eminence", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Waves", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Assassin Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Twilight", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Petals", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Dual Wielder Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Revelation", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Shredder Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Eminence", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Forester's Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Revelation", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Dragoon's Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Rule of the Tundra", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Flames", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Monk's Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Judgement", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Waves", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Longstrider's Distinction"){
+                        missionComboBox.model = [
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Petals", map: "", enabled: true },
+                        ]
+                    }
+
+                    // Replicas
+                    else if(itemComboBox.displayText === "Avenger Replica"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Revelation", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Skofnung Replica"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Tundra", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Oliver Replica"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Plains", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Waves", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Aschallon Replica"){
+                        missionComboBox.model = [
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst Severe Cliffs", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Nirvana Replica"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Eminence", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Keraunos Replica"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Judgement", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Hellion Gauntlet Replica"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Revelation", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst Severe Cliffs", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Ipetam Replica"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Twilight", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Flames", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Rosenbogen Replica"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Plains", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Langeleik Replica"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Tundra", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Waves", map: "", enabled: true },
+                            { text: "Amidst the Petals", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Romulus Spear Replica"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Eminence", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Waves", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Proximo Replica"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Twilight", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Waves", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Murakumo Replica"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Eminence", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Flames", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Nebuchad Replica"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Twilight", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Flames", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Misericorde Replica"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Plains", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Petals", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Faust Replica"){
+                        missionComboBox.model = [
+                            { text: "EX2", enabled: false },
+                            { text: "Time of Judgement", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Petals", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Muramasa Replica"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Twilight", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst Severe Cliffs", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Kapilavastu Replica"){
+                        missionComboBox.model = [
+                            { text: "EX3", enabled: false },
+                            { text: "Rule of the Tundra", map: "", enabled: true },
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst the Waves", map: "", enabled: true },
+                        ]
+                    } else if(itemComboBox.displayText === "Practice Drum"){
+                        missionComboBox.model = [
+                            { text: "EX4", enabled: false },
+                            { text: "Amidst Severe Cliffs", map: "", enabled: true },
+                        ]
+                    }
                 } else if(farmingModeComboBox.displayText === "Raid"){
                     // Omega Weapons
                     if(itemComboBox.displayText === "Tiamat Anima" || itemComboBox.displayText === "Tiamat Omega Anima" || itemComboBox.displayText === "Tiamat Amood Omega" || itemComboBox.displayText === "Tiamat Bolt Omega"
@@ -1344,6 +1730,8 @@ Item{
                     backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[0].text)
                 }else if(farmingModeComboBox.displayText === "Special"){
                     backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[currentIndex].map)
+                } else if(farmingModeComboBox.displayText === "Coop"){
+                    backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[currentIndex].map)
                 } else if(farmingModeComboBox.displayText === "Raid"){
                     backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[currentIndex].map)
                 }
@@ -1427,7 +1815,12 @@ Item{
 
                 amountOfItemTextFieldLabel.visible = true
 
-                summonButton.enabled = true
+                if(farmingModeComboBox.displayText === qsTr("Coop")){
+                    // Send a blank Summon name to bypass enabling the Select Summon button as hosting Coop solo does not have any selectable Summons.
+                    backend.update_summon_name("", "")
+                } else {
+                    summonButton.enabled = true
+                }
             }
         }
 
@@ -1447,8 +1840,11 @@ Item{
 
             onVisibleChanged: {
                 if(amountOfItemTextFieldLabel.visible === true){
-                    summonButton.enabled = true
-                    summonSelectionLabel.visible = true
+                    if(farmingModeComboBox.displayText !== qsTr("Coop")){
+                        // Only enable the Summon Button if the current farming mode is not Coop.
+                        summonButton.enabled = true
+                        summonSelectionLabel.visible = true
+                    }
                 }
             }
         }
@@ -1744,9 +2140,11 @@ Item{
         // Enable the group and party selectors after the backend receives the user-selected Summon. 
         // Update the informational message to indicate success.
         function onEnableGroupAndPartySelectors(){
-            summonSelectionLabel.text = qsTr("Summon selected successfully")
-            summonSelectionLabel.color = "#00ff00"
-
+            if(farmingModeComboBox.displayText !== qsTr("Coop")){
+                summonSelectionLabel.text = qsTr("Summon selected successfully")
+                summonSelectionLabel.color = "#00ff00"
+            }
+            
             groupSelectionComboBox.enabled = true
             partySelectionComboBox.enabled = true     
         }
