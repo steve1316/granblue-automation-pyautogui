@@ -39,7 +39,7 @@ class Tester:
         else:
             refill = self.config.getboolean("refill", "refill_using_soul_balms")
         
-        self.game.start_farming_mode(summon_element_name, summon_name, group_number, party_number, farming_mode, location_name, item_name, item_amount, mission_name, use_refill_full=refill)
+        self.game.start_farming_mode(summon_element_name=summon_element_name, summon_name=summon_name, group_number=group_number, party_number=party_number, map_mode=farming_mode, map_name=location_name, item_name=item_name, item_amount_to_farm=item_amount, mission_name=mission_name, use_refill_full=refill)
         
         # Test finding tweets.
         # self.debug.test_twitter_listener()
