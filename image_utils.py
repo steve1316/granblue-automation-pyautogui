@@ -412,6 +412,8 @@ class ImageUtils:
         # Save the amount gained of items in order according to the item_list.
         amounts_farmed = []
         
+        guibot_check = False
+        
         self.game.print_and_save(f"\n{self.printtime()} [INFO] Now detecting item rewards...")
         
         for item in item_list:
@@ -424,6 +426,7 @@ class ImageUtils:
                 locations = self.find_all(item, custom_confidence=0.85)
             else:
                 locations = self.guibot.find_all(item, timeout=1, allow_zero=True)
+                guibot_check = True
                 
             for index, location in enumerate(locations):
                 check = False
@@ -432,7 +435,6 @@ class ImageUtils:
                 if(item in blacklisted_items or item in lite_blacklisted_items):
                     for x in range(index):
                         if((abs(location[0] - locations[x][0]) <= 1 and location[1] == locations[x][1]) or (abs(location[1] - locations[x][1]) and location[0] == locations[x][0]) or (abs(location[0] - locations[x][0]) and abs(location[1] - locations[x][1]))):
-                            self.game.print_and_save(f"{self.printtime()} [INFO] Duplicate location detected. Removing it...")
                             check = True
                 
                 if(not check):
@@ -440,8 +442,8 @@ class ImageUtils:
                     if(item not in blacklisted_items and item not in lite_blacklisted_items):
                         location = (location.target.x, location.target.y)
                     
-                    if(self.debug_mode):    
-                        self.game.print_and_save(f"{self.printtime()} [DEBUG] Item detected at {location}")
+                    if(self.debug_mode or guibot_check):    
+                        self.game.print_and_save(f"{self.printtime()} [INFO] Item detected using GuiBot at {location}")
                     
                     # Adjust the width and height variables if EasyOCR cannot detect the numbers correctly.
                     left = location[0] + 10
@@ -475,6 +477,8 @@ class ImageUtils:
                         result_cleaned = 1
                         
                     total_amount_farmed += result_cleaned
+                else:
+                    self.game.print_and_save(f"{self.printtime()} [INFO] Duplicate location detected. Removing it...")
 
             amounts_farmed.append(total_amount_farmed)
             
