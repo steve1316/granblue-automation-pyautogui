@@ -103,6 +103,15 @@ class Debug:
             18: ["Twilight Cloth Strip", "Shadow Silver", "Phantom Demon Jewel", "Diablo Anima", "Diablo Omega Anima"],
             19: ["Tiamat Anima", "Tiamat Omega Anima", "Colossus Anima", "Colossus Omega Anima", "Leviathan Anima", "Leviathan Omega Anima", 
                  "Yggdrasil Anima", "Yggdrasil Omega Anima",  "Luminiera Anima", "Luminiera Omega Anima", "Celeste Anima", "Celeste Omega Anima"],
+            20: ["Gladiator Distinction", "Guardian Distinction", "Pilgrim Distinction", "Mage Distinction", "Bandit Distinction", "Fencer Distinction", "Combatant Distinction", 
+                 "Sharpshooter Distinction", "Troubadour Distinction", "Cavalryman Distinction", "Alchemist Distinction", "Samurai Distinction", "Ninja Distinction", "Sword Master Distinction", 
+                 "Gunslinger Distinction", "Mystic Distinction", "Assassin Distinction", "Dual Wielder Distinction", "Shredder Distinction", "Forester's Distinction", "Dragoon's Distinction",
+                 "Monk's Distinction", "Longstrider's Distinction"],
+            21: ["Avenger Replica", "Skofnung Replica", "Oliver Replica", "Aschallon Replica", "Nirvana Replica", "Keraunos Replica", "Hellion Gauntlet Replica",
+                 "Ipetam Replica", "Rosenbogen Replica", "Langeleik Replica", "Romulus Spear Replica", "Proximo Replica", "Murakumo Replica", "Nebuchad Replica",
+                 "Misericorde Replica", "Faust Replica", "Muramasa Replica", "Kapilavastu Replica", "Practice Drum"],
+            22: ["Rusted Sword", "Rusted Dagger", "Rusted Lance", "Rusted Axe", "Rusted Staff", "Rusted Gun", "Rusted Gauntlet", "Rusted Bow", "Rusted Harp", "Rusted Katana"],
+            23: ["Warrior Creed", "Mage Creed"],
         }
         
         for item in item_list[items_to_test]:
