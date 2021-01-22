@@ -145,7 +145,7 @@ class Game:
             else:
                 self.find_and_click_button("home")
         else:
-            self.print_and_save(f"\n{self.printtime()} [INFO] Bot is already at the Home Screen.")
+            self.print_and_save(f"\n{self.printtime()} [INFO] Bot is at the Home Screen.")
         
         # Recalibrate the dimensions of the window if flag is True.
         if (display_info_check):
@@ -1040,7 +1040,7 @@ class Game:
                                 self.map_selection.join_raid(item_name, mission_name)
                                 summon_check = False    
             else:
-                self.print_and_save("\nSomething went wrong with navigating to the map.")
+                raise Exception("Confirming the location of the Summon Selection Screen after completing the process of selecting the mission returned False.")
         except Exception:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
             
