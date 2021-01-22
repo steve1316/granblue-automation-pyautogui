@@ -77,7 +77,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] ~~(HIGH PRIORITY) Implement Special Quests navigation/items.~~
 - [x] ~~(HIGH PRIORITY) Implement Coop Quests navigation.~~
   - [x] ~~(HIGH PRIORITY) Implement Coop items.~~
-  - [ ] (HIGH PRIORITY) Link this Coop component from backend to frontend. (IN-PROGRESS)
+  - [x] ~~(HIGH PRIORITY) Link this Coop component from backend to frontend.~~
 - [x] ~~(HIGH PRIORITY) Implement Raid navigation.~~
     - [x] ~~(MAX PRIORITY) Implement way to exit out of Raids via user script and implement checks for max of 3 on-going raids. Also check to see for pending rewards.~~
     - [x] ~~(MAX PRIORITY) Link Raid component from backend to frontend.~~
@@ -107,8 +107,8 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] ~~Add a selector for the amount of the specified item to be farmed.~~
 - [ ] (MEDIUM PRIORITY) Implement a user-defined timer for how long the bot can run for.
 - [x] ~~(HIGH PRIORITY) Add Special Quest items.~~
-- [ ] (HIGH PRIORITY) Add Coop items.
-- [ ] ~~(HIGH PRIORITY) Add Raid items.~~
+- [x] ~~(HIGH PRIORITY) Add Coop items.~~
+- [x] ~~(HIGH PRIORITY) Add Raid items.~~
 # Requirements
 1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
 2. [Granblue Fantasy account](http://game.granbluefantasy.jp/)
