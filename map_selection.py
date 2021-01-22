@@ -284,12 +284,23 @@ class MapSelection:
                         
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Extra difficulty for Coop is now selected.")
                     
+                    coop_ex1_list = ["Corridor of Puzzles", "empty", "Lost in the Dark"]
                     coop_ex2_list = ["Time of Judgement", "Time of Revelation", "Time of Eminence"]
                     coop_ex3_list = ["Rule of the Tundra", "Rule of the Plains", "Rule of the Twilight"]
                     coop_ex4_list = ["Amidst the Waves", "Amidst the Petals", "Amidst Severe Cliffs", "Amidst the Flames"]
                     
                     # Make the specified EX category active. Then click the mission's button while making sure that the first mission in each category is skipped.
-                    if(mission_name in coop_ex2_list):
+                    if(mission_name in coop_ex1_list):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now navigating to \"{mission_name}\" from EX1...")
+                        host_quests_buttons = self.game.image_tools.find_all("coop_host_quest")
+                        self.game.mouse_tools.move_and_click_point(host_quests_buttons[0][0], host_quests_buttons[0][1])
+                        
+                        self.game.image_tools.confirm_location("coop_ex1")
+
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now selecting \"{mission_name}\"...")
+                        host_quests_circle_buttons = self.game.image_tools.find_all("coop_host_quest_circle")
+                        self.game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex1_list.index(mission_name)][0], host_quests_circle_buttons[coop_ex1_list.index(mission_name)][1])
+                    elif(mission_name in coop_ex2_list):
                         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now navigating to \"{mission_name}\" from EX2...")
                         host_quests_buttons = self.game.image_tools.find_all("coop_host_quest")
                         self.game.mouse_tools.move_and_click_point(host_quests_buttons[1][0], host_quests_buttons[1][1])
