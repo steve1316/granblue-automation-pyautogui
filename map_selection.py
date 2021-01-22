@@ -20,139 +20,6 @@ class MapSelection:
         # Makes sure that the number of raids currently joined does not exceed 3.
         self.raids_joined = 0
         
-        # Dictionary of supported farmable materials. Maps selected from recommendations in the GBF wiki website.
-        self.farmable_materials = {
-            "quest": {
-                "Port Breeze Archipelago": {
-                    "Satin Feather": "Scattered Cargo",
-                    "Zephyr Feather": "Scattered Cargo",
-                    "Flying Sprout": "Scattered Cargo",
-                },
-                "Valtz Duchy": {
-                    "Fine Sand Bottle": "Lucky Charm Hunt",
-                    "Untamed Flame": "Special Op's Request",
-                    "Blistering Ore": ["Lucky Charm Hunt", "Special Op's Request"],
-                },
-                "Auguste Isles": {
-                    "Fresh Water Jug": "Threat to the Fisheries",
-                    "Soothing Splash": "Threat to the Fisheries",
-                    "Glowing Coral": "Threat to the Fisheries",
-                },
-                "Lumacie Archipelago": {
-                    "Rough Stone": "The Fruit of Lumacie",
-                    "Coarse Alluvium": "Whiff of Danger",
-                    "Swirling Amber": "The Fruit of Lumacie",
-                },
-                "Albion Citadel": {
-                    "Falcon Feather": "I Challenge You!",
-                    "Spring Water Jug": "I Challenge You!",
-                    "Vermilion Stone": "I Challenge You!",
-                },
-                "Mist-Shrouded Isle": {
-                    "Slimy Shroom": "For Whom the Bell Tolls",
-                    "Hollow Soul": "For Whom the Bell Tolls",
-                    "Lacrimosa": "For Whom the Bell Tolls",
-                },
-                "Golonzo Island": {
-                    "Wheat Stalk": "Golonzo's Battle of Old",
-                    "Iron Cluster": "Golonzo's Battle of Old",
-                    "Olea Plant": "Golonzo's Battle of Old", 
-                },
-                "Amalthea Island": {
-                    "Indigo Fruit": "The Dungeon Diet",
-                    "Foreboding Clover": "The Dungeon Diet",
-                    "Blood Amber": "The Dungeon Diet",
-                },
-                "Former Capital Mephorash": {
-                    "Sand Brick": "Trust Busting Dustup",
-                    "Native Reed": "Trust Busting Dustup",
-                    "Antique Cloth": ["Trust Busting Dustup", "Erste Kingdom Episode 4"],
-                },
-                "Agastia": {
-                    "Prosperity Flame": "Imperial Wanderer's Soul",
-                    "Explosive Material": "Imperial Wanderer's Soul",
-                    "Steel Liquid": "Imperial Wanderer's Soul"
-                }
-            },
-            "coop": {
-                "Infernal Garnet": "EX2-3",
-                "Frozen Hell Prism": "EX3-2",
-                "Halo Light Quartz": "EX2-4",
-                "Evil Judge Crystal": "EX2-2",
-                "Horseman's Plate": "EX3-3",
-                "Phantom Demon Jewel": "EX3-4",
-                "Gladiator Distinction": ["EX2-3", "EX4-4"],
-                "Guardian Distinction": ["EX3-2", "EX4-5"],
-                "Pilgrim Distinction": ["EX2-2", "EX4-2"],
-                "Mage Distinction": ["EX2-2", "EX4-2"],
-                "Bandit Distinction": ["EX2-4", "EX4-5"],
-                "Fencer Distinction": ["EX2-3", "EX4-4"],
-                "Combatant Distinction": ["EX3-2", "EX4-4"],
-                "Sharpshooter Distinction": ["EX3-3", "EX4-3"],
-                "Troubadour Distinction": ["EX2-4", "EX4-5"],
-                "Cavalryman Distinction": ["EX3-3", "EX4-5"],
-                "Alchemist Distinction": ["EX2-2", "EX4-2"],
-                "Samurai Distinction": ["EX3-4", "EX4-3"],
-                "Ninja Distinction": ["EX3-4", "EX4-3"],
-                "Sword Master Distinction": ["EX3-2", "EX4-4"],
-                "Gunslinger Distinction": ["EX3-3", "EX4-3"],
-                "Mystic Distinction": ["EX2-4", "EX4-2"],
-                "Assassin Distinction": ["EX3-4", "EX4-3"],
-                "Dual Wielder Distinction": "EX2-3",
-                "Shredder Distinction": "EX2-4",
-                "Forester's Distinction": "EX2-3",
-                "Dragoon's Distinction": ["EX3-2", "EX4-5"],
-                "Monk's Distinction": ["EX2-2", "EX4-2"],
-                "Longstrider's Distinction": None,
-                "Fire Grimoire": "EX4-5",
-                "Water Grimoire": "EX4-2",
-                "Earth Grimoire": "EX4-4",
-                "Wind Grimoire": "EX4-3"
-            },
-            "special": {
-                "Fire Orb": ["Scarlet Trial", "Hellfire Trial"],
-                "Water Orb": ["Scarlet Trial", "Deluge Trial"],
-                "Earth Orb": ["Scarlet Trial", "Wasteland Trial"],
-                "Wind Orb": ["Scarlet Trial", "Typhoon Trial"],
-                "Light Orb": ["Scarlet Trial", "Aurora Trial"],
-                "Dark Orb": ["Scarlet Trial", "Oblivion Trial"],
-                "Inferno Orb": ["Scarlet Trial", "Hellfire Trial"],
-                "Frost Orb": ["Scarlet Trial", "Deluge Trial"],
-                "Rumbling Orb": ["Scarlet Trial", "Wasteland Trial"],
-                "Cyclone Orb": ["Scarlet Trial", "Typhoon Trial"],
-                "Shining Orb": ["Scarlet Trial", "Aurora Trial"],
-                "Abysm Orb": ["Scarlet Trial", "Oblivion Trial"],
-                "Red Tome": ["Cerulean Trial", "Hellfire Trial"],
-                "Blue Tome": ["Cerulean Trial", "Deluge Trial"],
-                "Brown Tome": ["Cerulean Trial", "Wasteland Trial"],
-                "Green Tome": ["Cerulean Trial", "Typhoon Trial"],
-                "White Tome": ["Cerulean Trial", "Aurora Trial"],
-                "Black Tome": ["Cerulean Trial", "Oblivion Trial"],
-                "Hellfire Scroll": ["Cerulean Trial", "Hellfire Trial"],
-                "Flood Scroll": ["Cerulean Trial", "Deluge Trial"],
-                "Thunder Scroll": ["Cerulean Trial", "Wasteland Trial"],
-                "Gale Scroll": ["Cerulean Trial", "Typhoon Trial"],
-                "Skylight Scroll": ["Cerulean Trial", "Aurora Trial"],
-                "Chasm Scroll": ["Cerulean Trial", "Oblivion Trial"],
-                "Infernal Whorl": ["Cerulean Trial", "Angel Halo", "Hellfire Trial"],
-                "Tidal Whorl": ["Cerulean Trial", "Angel Halo", "Deluge Trial"],
-                "Seismic Whorl": ["Cerulean Trial", "Angel Halo", "Wasteland Trial"],
-                "Tempest Whorl": ["Cerulean Trial", "Angel Halo", "Typhoon Trial"],
-                "Radiant Whorl": ["Cerulean Trial", "Angel Halo", "Aurora Trial"],
-                "Umbral Whorl": ["Cerulean Trial", "Angel Halo"],
-                "Prism Chip": ["Violet Trial"],
-                "Flawed Prism": ["Violet Trial"],
-                "Flawless Prism": ["Violet Trial"],
-                "Rainbow Prism": ["Violet Trial"],
-                "Red Dragon Scale": ["Six Dragon Trial", "Hellfire Trial"],
-                "Blue Dragon Scale": ["Six Dragon Trial", "Deluge Trial"],
-                "Brown Dragon Scale": ["Six Dragon Trial", "Wasteland Trial"],
-                "Green Dragon Scale": ["Six Dragon Trial", "Typhoon Trial"],
-                "White Dragon Scale": ["Six Dragon Trial", "Aurora Trial"],
-                "Black Dragon Scale": ["Six Dragon Trial", "Oblivion Trial"]
-            }
-        }
-        
     def select_map(self, map_mode: str, map_name: str, item_name: str, mission_name: str, difficulty: str):
         """Navigates the bot to the specified map and preps the bot for Summon/Party selection.
 
@@ -382,13 +249,85 @@ class MapSelection:
                     self.game.find_and_click_button("episode_4")
                     self.game.find_and_click_button("ok")
                 
-            # elif(self.farmable_materials[map_mode] == "coop"):
-            #     # Go to the Home Screen.
-            #     self.game.go_back_home(confirm_location_check=True, display_info_check=True)
+            elif(map_mode.lower() == "coop"):
+                # Go to the Home Screen.
+                self.game.go_back_home(confirm_location_check=True, display_info_check=True)
                 
-            #     # Click the Menu button on the Home Screen and then go to Coop Screen.
-            #     self.game.find_and_click_button("home_menu")
-            #     self.game.find_and_click_button("coop")
+                # Click the Menu button on the Home Screen and then go to Coop Screen.
+                self.game.find_and_click_button("home_menu")
+                self.game.find_and_click_button("coop")
+                
+                self.game.mouse_tools.scroll_screen_from_home_button(-400)
+                
+                # Select the difficulty of the mission that it is under.
+                if(mission_name == "In a Dusk Dream"):
+                    # Check if the difficulty is already selected. If not, make it active.
+                    if(self.game.image_tools.find_button("coop_hard_selected") == None):
+                        self.game.find_and_click_button("coop_hard")
+                        
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Hard difficulty for Coop is now selected.")
+                    
+                    # Select the category, "Save the Oceans", which should be the 3rd category.
+                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Now navigating to \"{mission_name}\" for Hard difficulty.")
+                    host_quests_buttons = self.game.image_tools.find_all("coop_host_quest")
+                    self.game.mouse_tools.move_and_click_point(host_quests_buttons[2][0], host_quests_buttons[2][1])
+                    
+                    self.game.image_tools.confirm_location("coop_save_the_oceans")
+                    
+                    # Now click "In a Dusk Dream".
+                    host_quests_circle_buttons = self.game.image_tools.find_all("coop_host_quest_circle")
+                    self.game.mouse_tools.move_and_click_point(host_quests_circle_buttons[0][0], host_quests_circle_buttons[0][1])
+                else:
+                    # Check if the difficulty is already selected. If not, make it active.
+                    if(self.game.image_tools.find_button("coop_extra_selected") == None):
+                        self.game.find_and_click_button("coop_extra")
+                        
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Extra difficulty for Coop is now selected.")
+                    
+                    coop_ex2_list = ["Time of Judgement", "Time of Revelation", "Time of Eminence"]
+                    coop_ex3_list = ["Rule of the Tundra", "Rule of the Plains", "Rule of the Twilight"]
+                    coop_ex4_list = ["Amidst the Waves", "Amidst the Petals", "Amidst Severe Cliffs", "Amidst the Flames"]
+                    
+                    # Make the specified EX category active. Then click the mission's button while making sure that the first mission in each category is skipped.
+                    if(mission_name in coop_ex2_list):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now navigating to \"{mission_name}\" from EX2...")
+                        host_quests_buttons = self.game.image_tools.find_all("coop_host_quest")
+                        self.game.mouse_tools.move_and_click_point(host_quests_buttons[1][0], host_quests_buttons[1][1])
+                        
+                        self.game.image_tools.confirm_location("coop_ex2")
+
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now selecting \"{mission_name}\"...")
+                        host_quests_circle_buttons = self.game.image_tools.find_all("coop_host_quest_circle")
+                        self.game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex2_list.index(mission_name) + 1][0], host_quests_circle_buttons[coop_ex2_list.index(mission_name) + 1][1])
+                    elif(mission_name in coop_ex3_list):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now navigating to \"{mission_name}\" from EX3.")
+                        host_quests_buttons = self.game.image_tools.find_all("coop_host_quest")
+                        self.game.mouse_tools.move_and_click_point(host_quests_buttons[2][0], host_quests_buttons[2][1])
+                        
+                        self.game.image_tools.confirm_location("coop_ex3")
+
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now selecting \"{mission_name}\"...")
+                        host_quests_circle_buttons = self.game.image_tools.find_all("coop_host_quest_circle")
+                        self.game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex3_list.index(mission_name) + 1][0], host_quests_circle_buttons[coop_ex3_list.index(mission_name) + 1][1])
+                    elif(mission_name in coop_ex4_list):
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now navigating to \"{mission_name}\" from EX4.")
+                        host_quests_buttons = self.game.image_tools.find_all("coop_host_quest")
+                        self.game.mouse_tools.move_and_click_point(host_quests_buttons[3][0], host_quests_buttons[3][1])
+                        
+                        self.game.image_tools.confirm_location("coop_ex4")
+
+                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now selecting \"{mission_name}\"...")
+                        host_quests_circle_buttons = self.game.image_tools.find_all("coop_host_quest_circle")
+                        self.game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex4_list.index(mission_name) + 1][0], host_quests_circle_buttons[coop_ex4_list.index(mission_name) + 1][1])
+                
+                # After clicking on the mission, create a new Room.
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Opening up a new Coop room...")
+                self.game.find_and_click_button("coop_post_to_crew_chat")
+                self.game.find_and_click_button("ok")
+                
+                # Finally, click "Select Party".
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting a Party for \"{mission_name}\".")
+                self.game.find_and_click_button("coop_select_party")
 
             elif(map_mode.lower() == "special"):
                 # Go to the Home Screen.
@@ -559,7 +498,10 @@ class MapSelection:
             # Check for available AP.
             self.game.check_for_ap(use_full_elixirs=False)
             
-            return self.game.image_tools.confirm_location("select_summon")
+            if(map_mode != "coop"):
+                return self.game.image_tools.confirm_location("select_summon")
+            else:
+                return self.game.image_tools.confirm_location("coop_without_support_summon")
         except Exception:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception in MapSelection select_map(): \n{traceback.format_exc()}")
             self.game.isBotRunning.value = 1

@@ -950,11 +950,12 @@ class Game:
             self.item_amount_farmed = 0
             self.amount_of_runs_finished = 0
             summon_check = False
+            coop_first_run = False
             
             if((map_mode.lower() != "raid" and self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)) or (map_mode.lower() == "raid" and self.map_selection.join_raid(item_name, mission_name))):
                 # Keep playing the mission until the bot gains enough of the item specified.
                 while(self.item_amount_farmed < self.item_amount_to_farm):
-                    while(summon_check == False): 
+                    while(summon_check == False and map_mode.lower() != "coop"): 
                         # Check for available AP or BP, depending on mode.
                         if(map_mode.lower() != "raid"):
                             self.check_for_ap(use_full_elixirs=use_refill_full)
@@ -972,7 +973,15 @@ class Game:
                                 self.map_selection.join_raid(item_name, mission_name)
                     
                     # Select the Party specified and then start the mission.
-                    start_check = self.find_party_and_start_mission(group_number, party_number)
+                    if(map_mode != "coop"):
+                        start_check = self.find_party_and_start_mission(group_number, party_number)
+                    else:
+                        # Only select the Party for this Coop mission once. After that, subsequent runs always has that Party selected.
+                        if(not coop_first_run):
+                            start_check = self.find_party_and_start_mission(group_number, party_number)
+                            coop_first_run = True
+                        
+                        self.find_and_click_button("coop_start")
                     
                     if(start_check and map_mode.lower() != "raid"):
                         # Check for the Items Picked Up popup that appears after starting a Quest mission.
@@ -980,17 +989,20 @@ class Game:
                         if(self.image_tools.confirm_location("items_picked_up", tries=1)):
                             self.find_and_click_button("ok")
                         
+                        # Start Combat Mode here.
                         if(self.start_combat_mode(self.combat_script)):
-                            # After Combat Mode has finished, count the number of the specified item that has dropped.
+                            # After Combat Mode has finished successfully without retreating or exiting prematurely, collect the loot.
                             self.collect_loot()
                             
                             if(self.item_amount_farmed < self.item_amount_to_farm):
-                                # Click the Play Again button.
-                                self.find_and_click_button("play_again")
+                                # Click the Play Again button or the Room button if its Coop.
+                                if(map_mode.lower() != "coop"):
+                                    self.find_and_click_button("play_again")
+                                else:
+                                    self.find_and_click_button("coop_room")
                                 
                                 # Loop while clicking any detected Cancel buttons like from Friend Request popups.
                                 self.wait_for_ping(1)
-                                
                                 while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None):
                                     self.find_and_click_button("friend_request_cancel")
                                     break
