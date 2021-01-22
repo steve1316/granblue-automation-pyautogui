@@ -58,7 +58,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] Farm user-defined amounts of specified materials from Quest, Coop, Raid, Event, etc.
 - [ ] A user-defined timer for how long the bot should run for.
 - [x] Support for Quest navigation.
-- [ ] Support for Coop navigation.
+- [x] Support for Coop navigation.
 - [x] Support for Raid navigation.
   - [x] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
   - [ ] Alert for when anti-bot CAPTCHA pops up.
@@ -75,9 +75,9 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] ~~Implement selection from list of Summons in order of most preferred to least. If none after several tries, pick the very first Summon randomly.~~ This is axed for now. Might come back to this after the rest of the TODO List is completed.
 - [x] ~~(MEDIUM PRIORITY) Remove all sys.exit() code.~~
 - [x] ~~(HIGH PRIORITY) Implement Special Quests navigation/items.~~
-- [ ] (HIGH PRIORITY) Implement Coop Quests navigation. (IN-PROGRESS)
-  - [ ] (HIGH PRIORITY) Implement Coop items.
-  - [ ] (HIGH PRIORITY) Link this Coop component from backend to frontend.
+- [x] ~~(HIGH PRIORITY) Implement Coop Quests navigation.~~
+  - [ ] (HIGH PRIORITY) Implement Coop items. (IN-PROGRESS)
+  - [ ] (HIGH PRIORITY) Link this Coop component from backend to frontend. (IN-PROGRESS)
 - [x] ~~(HIGH PRIORITY) Implement Raid navigation.~~
     - [x] ~~(MAX PRIORITY) Implement way to exit out of Raids via user script and implement checks for max of 3 on-going raids. Also check to see for pending rewards.~~
     - [x] ~~(MAX PRIORITY) Link Raid component from backend to frontend.~~
