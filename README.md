@@ -76,7 +76,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] ~~(MEDIUM PRIORITY) Remove all sys.exit() code.~~
 - [x] ~~(HIGH PRIORITY) Implement Special Quests navigation/items.~~
 - [x] ~~(HIGH PRIORITY) Implement Coop Quests navigation.~~
-  - [ ] (HIGH PRIORITY) Implement Coop items. (IN-PROGRESS)
+  - [x] ~~(HIGH PRIORITY) Implement Coop items.~~
   - [ ] (HIGH PRIORITY) Link this Coop component from backend to frontend. (IN-PROGRESS)
 - [x] ~~(HIGH PRIORITY) Implement Raid navigation.~~
     - [x] ~~(MAX PRIORITY) Implement way to exit out of Raids via user script and implement checks for max of 3 on-going raids. Also check to see for pending rewards.~~
