@@ -432,7 +432,7 @@ class ImageUtils:
                 if(item in blacklisted_items or item in lite_blacklisted_items):
                     for x in range(index):
                         if((abs(location[0] - locations[x][0]) <= 1 and location[1] == locations[x][1]) or (abs(location[1] - locations[x][1]) and location[0] == locations[x][0]) or (abs(location[0] - locations[x][0]) and abs(location[1] - locations[x][1]))):
-                            # self.game.print_and_save(f"{self.printtime()} [INFO] Removing duplicate location.")
+                            self.game.print_and_save(f"{self.printtime()} [INFO] Duplicate location detected. Removing it...")
                             check = True
                 
                 if(not check):
