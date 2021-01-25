@@ -491,6 +491,23 @@ class ImageUtils:
         
         self.game.print_and_save(f"{self.printtime()} [INFO] Detection of item rewards finished.")
         return amounts_farmed
+
+    def wait_vanish(self, image_name: str, timeout: int = 30):
+        """Use GuiBot to check if the provided image vanishes from the screen after a certain amount of time.
+
+        Args:
+            image_name (str): Name of the image file in the /images/buttons/ folder.
+            timeout (int, optional): Timeout in seconds. Defaults to 30.
+
+        Returns:
+            (bool): True if the image vanishes from the screen within the allotted time or False if timeout was reached.
+        """
+        self.game.print_and_save(f"\n{self.printtime()} [INFO] Now waiting for {image_name} to vanish from screen...")
+        self.file_resolver.add_path("images/buttons/")
+        try:
+            return self.guibot.wait_vanish(image_name, timeout=timeout)
+        except Exception as e:
+            self.game.print_and_save(f"{self.printtime()} [ERROR] {image_name} should have vanished from the screen after {timeout} seconds but did not. Exact error is: \n{e}")
     
     def take_screenshot(self):
         """Takes a screenshot of the Quest Results Screen when called in find_farmed_items().
