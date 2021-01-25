@@ -3,6 +3,7 @@ import os
 import sys
 from configparser import ConfigParser
 from pathlib import Path
+from timeit import default_timer as timer
 
 from PySide2.QtCore import QObject, QUrl, Signal, Slot
 from PySide2.QtGui import QGuiApplication
@@ -63,9 +64,10 @@ class MainWindow(QObject):
     def __init__(self):
         QObject.__init__(self)
         
-        # Create the Queue for storing logging messages and the flag for the bot's running status.
+        # Create the Queue for storing logging messages, the flag for the bot's running status, and the amount of seconds that the bot has been running for.
         self.queue = multiprocessing.Queue()
         self.isBotRunning = None
+        self.botRunningTimeInSeconds = None
         
         # Create a list in memory to hold all messages in case the frontend wants to save all those messages into a text file.
         self.text_log = []
@@ -84,9 +86,12 @@ class MainWindow(QObject):
         self.location_name = ""
         self.mission_name = ""
         self.summon_element_name = ""
-        self.summon_name = ""
+        self.summon_name = "none"
         self.group_number = ""
         self.party_number = ""
+        
+        # Amount of time that the bot is allowed to run for in seconds.
+        self.maximum_runtime = "none"
         
         self.debug_mode = False
 
@@ -99,45 +104,62 @@ class MainWindow(QObject):
     openFile = Signal(str)
     updateMessage = Signal(str)
     enableGroupAndPartySelectors = Signal()
+    updateTimerTextField = Signal(str)
+    
+    # Update the amount of time that the bot is allowed to run for. If no time was provided, bot will run until it achieves its main objective.
+    @Slot(str)
+    def update_timer(self, new_time):
+        if(new_time != "" and new_time != "00:00:00" and len(new_time) != 1):
+            self.maximum_runtime = new_time
+            hours, minutes, seconds = new_time.split(":")
+        else:
+            self.maximum_runtime = "none"
+            
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
+                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
     
     # The following functions below updates their respective variables to prep for Game class initialization.
     @Slot(str)
     def update_farming_mode(self, farming_mode):
         self.farming_mode = farming_mode
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
-                                str(self.group_number) + "\nParty Number: " + str(self.party_number))
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
+                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
     
     @Slot(str)
     def update_item_name(self, item_name):
         self.item_name = item_name
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
-                                str(self.group_number) + "\nParty Number: " + str(self.party_number))
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
+                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
         
     @Slot(str)
     def update_item_amount(self, item_amount):
         self.item_amount = int(item_amount)
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
-                                str(self.group_number) + "\nParty Number: " + str(self.party_number))
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
+                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
         
     @Slot(str, str)
     def update_mission_name(self, mission_name, location_name):
         self.mission_name = mission_name
-        self.location_name = location_name
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
-                                str(self.group_number) + "\nParty Number: " + str(self.party_number))
+        if(location_name != ""):
+            self.location_name = location_name
+        else:
+            self.location_name = "none"
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
+                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
         
     @Slot(str, str)
     def update_summon_name(self, summon_name, summon_element):
         formatted_summon_name = summon_name.lower().replace(" ", "_")
         self.summon_element_name = summon_element.lower()
         self.summon_name = formatted_summon_name
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
-                                str(self.group_number) + "\nParty Number: " + str(self.party_number))
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
+                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
         
         self.enableGroupAndPartySelectors.emit()
         
@@ -145,17 +167,17 @@ class MainWindow(QObject):
     def update_group_number(self, group_number):
         split_group_number = group_number.split(" ")[1]
         self.group_number = int(split_group_number)
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
-                                str(self.group_number) + "\nParty Number: " + str(self.party_number))
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
+                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
         
     @Slot(str)
     def update_party_number(self, party_number):
         split_party_number = party_number.split(" ")[1]
         self.party_number = int(split_party_number)
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup Number: " + 
-                                str(self.group_number) + "\nParty Number: " + str(self.party_number))
+        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
+                                "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
     
     # Save the text_log to the specified text file.
     @Slot(str)
@@ -185,7 +207,32 @@ class MainWindow(QObject):
     # In this case, this function expects nothing from the frontend.
     @Slot()
     def check_bot_status(self):
-        if(self.isBotRunning.value == 1):
+        if(self.maximum_runtime != "none"):
+            # Grab the maximum hours, minutes, and seconds.
+            max_hours, max_minutes, max_seconds = self.maximum_runtime.split(":")
+            max_seconds = int(max_hours) * 3600 + int(max_minutes) * 60 + int(max_seconds)
+            
+            # Get the elapsed time since the bot started in seconds.
+            elapsed_seconds = timer() - self.botRunningTimeInSeconds
+
+            # Parse the remaining hours, minutes, and seconds.
+            remaining_seconds = (int(max_seconds) - elapsed_seconds) % (24 * 3600)
+            remaining_hours = remaining_seconds // 3600
+            remaining_seconds %= 3600
+            remaining_minutes = remaining_seconds // 60
+            remaining_seconds %= 60
+            
+            # Now construct the new time that is remaining.
+            remaining_time = "%02d:%02d:%02d" % (remaining_hours, remaining_minutes, remaining_seconds)
+        
+            if(elapsed_seconds >= max_seconds):
+                # Reset the timer back to 00:00:00 to prevent the program from going to 00:00:59 when it stops.
+                self.updateTimerTextField.emit("00:00:00")
+                self.checkBotStatus.emit(True)
+            else:
+                self.updateTimerTextField.emit(remaining_time)
+
+        elif(self.isBotRunning.value == 1):
             self.checkBotStatus.emit(True)
         else:
             self.checkBotStatus.emit(False)
@@ -208,6 +255,7 @@ class MainWindow(QObject):
     def start_bot(self):
         print("\nStarting bot.")
         self.isBotRunning = multiprocessing.Value("i", 0)
+        self.botRunningTimeInSeconds = timer()
         self.bot_process = multiprocessing.Process(target=self.bot_object.run_bot, args=(self.item_name, self.item_amount, self.farming_mode, self.location_name, self.mission_name, 
                                                                                          self.summon_element_name, self.summon_name, self.group_number, self.party_number, 
                                                                                          self.queue, self.isBotRunning, self.real_file_path, self.debug_mode,))
