@@ -1,6 +1,7 @@
 import datetime
 import os
 import time
+from datetime import date
 from timeit import default_timer as timer
 from typing import Iterable, Tuple
 
@@ -42,6 +43,8 @@ class ImageUtils:
         self.window_top = window_top
         self.window_width = window_width
         self.window_height = window_height
+        
+        self.image_number = 0
         
         self.starting_time = starting_time
         self.debug_mode = debug_mode
@@ -481,6 +484,38 @@ class ImageUtils:
                     self.game.print_and_save(f"{self.printtime()} [INFO] Duplicate location detected. Removing it...")
 
             amounts_farmed.append(total_amount_farmed)
-            
+        
+        # If items were detected on the Quest Results Screen, take a screenshot and save in the /results/ folder.    
+        if(len(amounts_farmed) > 0 and amounts_farmed[0] != 0):
+            self.take_screenshot()
+        
         self.game.print_and_save(f"{self.printtime()} [INFO] Detection of item rewards finished.")
         return amounts_farmed
+    
+    def take_screenshot(self):
+        """Takes a screenshot of the Quest Results Screen when called in find_farmed_items().
+
+        Returns:
+            None
+        """
+        self.game.print_and_save(f"{self.printtime()} [INFO] Taking a screenshot of the Quest Results Screen...")
+        
+        # Construct the image file name from the current date, time, and image number.
+        current_time = datetime.datetime.now().strftime("%H-%M-%S")
+        current_date = date.today()
+        new_file_name = f"{current_date} {current_time} #{self.image_number}"
+        self.image_number += 1
+        
+        # Take a screenshot using the calibrated window dimensions.
+        new_image = pyautogui.screenshot(region=(self.window_left, self.window_top, self.window_width, self.window_height))
+        
+        # Create the results directory if it does not already exist.
+        current_dir = os.getcwd()
+        results_dir = os.path.join(current_dir, r"results")
+        if not os.path.exists(results_dir):
+            os.makedirs(results_dir)
+        
+        # Finally, save the new image into the results directory with its new file name.
+        new_image.save(f"./results/{new_file_name}.png")
+        
+        return None
