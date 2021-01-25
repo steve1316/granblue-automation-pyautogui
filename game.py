@@ -896,14 +896,8 @@ class Game:
                     self.wait_for_ping(3)
                     
             while(self.image_tools.confirm_location("exp_gained", tries=1) == False and not self.retreat_check and full_auto):
-                if(self.image_tools.wait_vanish("attack", timeout=15)):
-                    self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
-                    self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
-                    
-                    turn_number += 1
-                    
-                    # Check to see if the party wiped.
-                    self.party_wipe_check()
+                self.party_wipe_check()
+                self.wait_for_ping(3)
                 
                 next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
                 if(next_button_location != None):
