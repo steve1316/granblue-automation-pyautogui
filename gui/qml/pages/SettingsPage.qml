@@ -347,6 +347,7 @@ Item{
                     itemComboBox.model = [
                         // Tiamat Omega
                         { text: "--------------------", enabled: false },
+                        { text: "Tiamat Omega", enabled: true },
                         { text: "Tiamat Anima", enabled: true },
                         { text: "Tiamat Omega Anima", enabled: true },
                         { text: "Tiamat Amood Omega",  enabled: true },
@@ -356,6 +357,7 @@ Item{
 
                         // Colossus Omega
                         { text: "--------------------", enabled: false },
+                        { text: "Colossus Omega", enabled: true },
                         { text: "Colossus Anima", enabled: true },
                         { text: "Colossus Omega Anima", enabled: true },
                         { text: "Colossus Blade Omega",  enabled: true },
@@ -365,6 +367,7 @@ Item{
 
                         // Leviathan Omega
                         { text: "--------------------", enabled: false },
+                        { text: "Leviathan Omega", enabled: true },
                         { text: "Leviathan Anima", enabled: true },
                         { text: "Leviathan Omega Anima", enabled: true },
                         { text: "Leviathan Gaze Omega",  enabled: true },
@@ -374,6 +377,7 @@ Item{
 
                         // Yggdrasil Omega
                         { text: "--------------------", enabled: false },
+                        { text: "Yggdrasil Omega", enabled: true },
                         { text: "Yggdrasil Anima", enabled: true },
                         { text: "Yggdrasil Omega Anima", enabled: true },
                         { text: "Yggdrasil Crystal Blade Omega",  enabled: true },
@@ -383,6 +387,7 @@ Item{
 
                         // Luminiera Omega
                         { text: "--------------------", enabled: false },
+                        { text: "Luminiera Omega", enabled: true },
                         { text: "Luminiera Anima", enabled: true },
                         { text: "Luminiera Omega Anima", enabled: true },
                         { text: "Luminiera Sword Omega",  enabled: true },
@@ -392,6 +397,7 @@ Item{
 
                         // Celeste Omega
                         { text: "--------------------", enabled: false },
+                        { text: "Celeste Omega", enabled: true },
                         { text: "Celeste Anima", enabled: true },
                         { text: "Celeste Omega Anima", enabled: true },
                         { text: "Celeste Harp Omega",  enabled: true },
@@ -1410,42 +1416,42 @@ Item{
                     }
                 } else if(farmingModeComboBox.displayText === "Raid"){
                     // Omega Weapons
-                    if(itemComboBox.displayText === "Tiamat Anima" || itemComboBox.displayText === "Tiamat Omega Anima" || itemComboBox.displayText === "Tiamat Amood Omega" || itemComboBox.displayText === "Tiamat Bolt Omega"
+                    if(itemComboBox.displayText === "Tiamat Omega" || itemComboBox.displayText === "Tiamat Anima" || itemComboBox.displayText === "Tiamat Omega Anima" || itemComboBox.displayText === "Tiamat Amood Omega" || itemComboBox.displayText === "Tiamat Bolt Omega"
                     || itemComboBox.displayText === "Tiamat Gauntlet Omega" || itemComboBox.displayText === "Tiamat Glaive Omega"){
                         missionComboBox.model = [
                             { text: "Tiamat Omega", enabled: false },
                             { text: "Lvl 50 Tiamat Omega", map: "", enabled: true },
                             { text: "Lvl 100 Tiamat Omega Ayr", map: "", enabled: true },
                         ]
-                    } else if(itemComboBox.displayText === "Colossus Anima" || itemComboBox.displayText === "Colossus Omega Anima" || itemComboBox.displayText === "Colossus Blade Omega" || itemComboBox.displayText === "Colossus Cane Omega"
+                    } else if(itemComboBox.displayText === "Colossus Omega" || itemComboBox.displayText === "Colossus Anima" || itemComboBox.displayText === "Colossus Omega Anima" || itemComboBox.displayText === "Colossus Blade Omega" || itemComboBox.displayText === "Colossus Cane Omega"
                     || itemComboBox.displayText === "Colossus Carbine Omega" || itemComboBox.displayText === "Colossus Fist Omega"){
                         missionComboBox.model = [
                             { text: "Colossus Omega", enabled: false },
                             { text: "Lvl 70 Colossus Omega", map: "", enabled: true },
                             { text: "Lvl 100 Colossus Omega", map: "", enabled: true },
                         ]
-                    } else if(itemComboBox.displayText === "Leviathan Anima" || itemComboBox.displayText === "Leviathan Omega Anima" || itemComboBox.displayText === "Leviathan Bow Omega" || itemComboBox.displayText === "Leviathan Gaze Omega"
+                    } else if(itemComboBox.displayText === "Leviathan Omega" || itemComboBox.displayText === "Leviathan Anima" || itemComboBox.displayText === "Leviathan Omega Anima" || itemComboBox.displayText === "Leviathan Bow Omega" || itemComboBox.displayText === "Leviathan Gaze Omega"
                     || itemComboBox.displayText === "Leviathan Scepter Omega" || itemComboBox.displayText === "Leviathan Spear Omega"){
                         missionComboBox.model = [
                             { text: "Leviathan Omega", enabled: false },
                             { text: "Lvl 60 Leviathan Omega", map: "", enabled: true },
                             { text: "Lvl 100 Leviathan Omega", map: "", enabled: true },
                         ]
-                    } else if(itemComboBox.displayText === "Yggdrasil Anima" || itemComboBox.displayText === "Yggdrasil Omega Anima" || itemComboBox.displayText === "Yggdrasil Bow Omega" || itemComboBox.displayText === "Yggdrasil Crystal Blade Omega"
+                    } else if(itemComboBox.displayText === "Yggdrasil Omega" || itemComboBox.displayText === "Yggdrasil Anima" || itemComboBox.displayText === "Yggdrasil Omega Anima" || itemComboBox.displayText === "Yggdrasil Bow Omega" || itemComboBox.displayText === "Yggdrasil Crystal Blade Omega"
                     || itemComboBox.displayText === "Yggdrasil Dagger Omega" || itemComboBox.displayText === "Yggdrasil Dewbranch Omega"){
                         missionComboBox.model = [
                             { text: "Yggdrasil Omega", enabled: false },
                             { text: "Lvl 60 Yggdrasil Omega", map: "", enabled: true },
                             { text: "Lvl 100 Yggdrasil Omega", map: "", enabled: true },
                         ]
-                    } else if(itemComboBox.displayText === "Luminiera Anima" || itemComboBox.displayText === "Luminiera Omega Anima" || itemComboBox.displayText === "Luminiera Bhuj Omega" || itemComboBox.displayText === "Luminiera Bolt Omega"
+                    } else if(itemComboBox.displayText === "Luminiera Omega" || itemComboBox.displayText === "Luminiera Anima" || itemComboBox.displayText === "Luminiera Omega Anima" || itemComboBox.displayText === "Luminiera Bhuj Omega" || itemComboBox.displayText === "Luminiera Bolt Omega"
                     || itemComboBox.displayText === "Luminiera Harp Omega" || itemComboBox.displayText === "Luminiera Sword Omega"){
                         missionComboBox.model = [
                             { text: "Luminiera Omega", enabled: false },
                             { text: "Lvl 75 Luminiera Omega", map: "", enabled: true },
                             { text: "Lvl 100 Luminiera Omega", map: "", enabled: true },
                         ]
-                    } else if(itemComboBox.displayText === "Celeste Anima" || itemComboBox.displayText === "Celeste Omega Anima" || itemComboBox.displayText === "Celeste Harp Omega" || itemComboBox.displayText === "Celeste Claw Omega"
+                    } else if(itemComboBox.displayText === "Celeste Omega" || itemComboBox.displayText === "Celeste Anima" || itemComboBox.displayText === "Celeste Omega Anima" || itemComboBox.displayText === "Celeste Harp Omega" || itemComboBox.displayText === "Celeste Claw Omega"
                     || itemComboBox.displayText === "Celeste Horn Omega" || itemComboBox.displayText === "Celeste Zaghnal Omega"){
                         missionComboBox.model = [
                             { text: "Celeste", enabled: false },
