@@ -23,7 +23,7 @@ Item{
                 logTextArea.text = "" // Reset the log when starting it up.
                 updateLogTimerFunction.running = true
                 checkBotStatusTimerFunction.running = true
-                console.log("Parsing bot logs now...")
+                console.log("\nParsing bot logs now...")
 
                 // Start the backend process.
                 backend.start_bot()
@@ -41,7 +41,7 @@ Item{
                 // Stop logging.
                 updateLogTimerFunction.running = false
                 checkBotStatusTimerFunction.running = false
-                console.log("Now stopping parsing bot logs.")
+                console.log("\nNow stopping parsing bot logs.")
 
                 // Stop the backend process.
                 backend.stop_bot()
@@ -116,6 +116,44 @@ Item{
             visible: false
         }
 
+        CustomTimeEditTextField {
+            id: timeEditTextField
+
+            anchors.top: combatScriptTextFieldLabel.bottom
+            anchors.topMargin: 20
+            anchors.horizontalCenter: parent.horizontalCenter
+
+            // Update the amount of time that the bot is allowed to run for.
+            onTextEdited: {
+                timerValidationTextFieldLabel.visible = true
+
+                if(acceptableInput){
+                    backend.update_timer(timeEditTextField.text)
+                    timerValidationTextFieldLabel.text = qsTr("Time successfully set")
+                    timerValidationTextFieldLabel.color = "#00ff00"
+                }else{
+                    backend.update_timer("")
+                    timerValidationTextFieldLabel.text = qsTr("Time must be in HH:MM:SS and maximum of 23:59:59 for the bot to recognize it")
+                    timerValidationTextFieldLabel.color = "#fc8c03"
+                }
+            }
+        }
+
+        Label {
+            id: timerValidationTextFieldLabel
+            x: 20
+            y: 151
+            width: 260
+            height: 13
+            visible: false
+            color: "#fc8c03"
+            text: qsTr("Time must be in HH:MM:SS and maximum of 23:59:59 for the bot to recognize it")
+            anchors.top: timeEditTextField.bottom
+            horizontalAlignment: Text.AlignHCenter
+            wrapMode: Text.WordWrap
+            anchors.topMargin: 2
+        }
+
         CustomButton {
             id: saveLogsButton
             y: 415
@@ -156,7 +194,7 @@ Item{
         Timer{
             id: updateLogTimerFunction
 
-            interval: 1000
+            interval: 500
             running: false
             repeat: true
 
@@ -198,6 +236,11 @@ Item{
             function onCheckBotReady(flag){
                 startStopButton.enabled = flag
             }
+
+            // Update the timer textfield.
+            function onUpdateTimerTextField(newTime){
+                timeEditTextField.text = newTime
+            }
         }
     }
 }
@@ -210,6 +253,6 @@ Item{
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:1.66;height:453;width:300}D{i:6}
+    D{i:0;autoSize:true;formeditorZoom:1.66;height:453;width:300}
 }
 ##^##*/
