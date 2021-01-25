@@ -1,0 +1,5 @@
+# Script to turn on Full Auto at the start of combat.
+
+Turn 1:
+	enableFullAuto
+end
