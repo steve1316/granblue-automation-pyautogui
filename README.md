@@ -56,7 +56,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] Customize what skills to use during each turn in a user-created plan. Users can select which plan to use when starting the bot.
 - [x] A launchable GUI to keep track of logs and selecting what combat script to use.
 - [x] Farm user-defined amounts of specified materials from Quest, Coop, Raid, Event, etc.
-- [ ] A user-defined timer for how long the bot should run for.
+- [x] A user-defined timer for how long the bot should run for.
 - [x] Support for Quest navigation.
 - [x] Support for Coop navigation.
 - [x] Support for Raid navigation.
@@ -105,7 +105,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] ~~Add a Group/Party selector.~~
 - [x] ~~Add a Summons selector. (Maybe with pictures?)~~
 - [x] ~~Add a selector for the amount of the specified item to be farmed.~~
-- [ ] (MEDIUM PRIORITY) Implement a user-defined timer for how long the bot can run for.
+- [x] ~~(MEDIUM PRIORITY) Implement a user-defined timer for how long the bot can run for.~~
 - [x] ~~(HIGH PRIORITY) Add Special Quest items.~~
 - [x] ~~(HIGH PRIORITY) Add Coop items.~~
 - [x] ~~(HIGH PRIORITY) Add Raid items.~~
