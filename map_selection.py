@@ -594,23 +594,23 @@ class MapSelection:
             (bool): Return True if the bot reached the Summon Selection Screen. Otherwise, return False.
         """
         try:
-            if(not self.game.image_tools.confirm_location("raid", tries=1)):
-                self.game.find_and_click_button("quest", suppress_error=True)
-                self.check_for_pending()
-                self.game.find_and_click_button("raid", suppress_error=True)
-                self.check_for_joined()
-                
-                if(self.raids_joined >= 3):
-                    # If the maximum number of raids has been joined, collect any pending rewards with a interval of 60 seconds in between until the number is below 3.
-                    while(self.raids_joined >= 3):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Maximum raids of 3 has been joined. Waiting 60 seconds to see if any finish.")
-                        self.game.go_back_home(confirm_location_check=True)
+            self.game.go_back_home(confirm_location_check=True)
+            self.game.find_and_click_button("quest", suppress_error=True)
+            self.check_for_pending()
+            self.game.find_and_click_button("raid", suppress_error=True)
+            self.check_for_joined()
+            
+            if(self.raids_joined >= 3):
+                # If the maximum number of raids has been joined, collect any pending rewards with a interval of 60 seconds in between until the number is below 3.
+                while(self.raids_joined >= 3):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Maximum raids of 3 has been joined. Waiting 60 seconds to see if any finish.")
+                    self.game.go_back_home(confirm_location_check=True)
 
-                        self.game.wait_for_ping(60)
-                        self.game.find_and_click_button("quest", suppress_error=True)
-                        self.check_for_pending()
-                else:
+                    self.game.wait_for_ping(60)
+                    self.game.find_and_click_button("quest", suppress_error=True)
                     self.check_for_pending()
+            else:
+                self.check_for_pending()
             
             self.game.print_and_save(f"{self.game.printtime()} [INFO] Moving to the Enter ID Screen.")
             self.game.find_and_click_button("enter_id")
