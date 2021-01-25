@@ -904,6 +904,11 @@ class Game:
                     
                     # Check to see if the party wiped.
                     self.party_wipe_check()
+                
+                next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
+                if(next_button_location != None):
+                    self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
+                    self.wait_for_ping(3)
 
             if(not self.retreat_check):
                 self.print_and_save(f"\n{self.printtime()} [INFO] Bot has reached the Quest Results Screen.")
