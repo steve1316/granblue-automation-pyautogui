@@ -134,3 +134,6 @@ gui/main.pyproject.user
 
 # Temp folder
 images/temp/
+
+# Results folder
+results/
