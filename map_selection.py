@@ -539,6 +539,8 @@ class MapSelection:
         Returns:
             None
         """
+        self.game.wait_for_ping(1)
+        
         try:
             while(self.game.image_tools.confirm_location("check_your_pending_battles", tries=1)):
                 self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Found some pending battles that need collecting from.")
