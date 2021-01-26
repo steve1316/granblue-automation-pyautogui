@@ -208,23 +208,21 @@ class Game:
                 self.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1])
                 
                 self.image_tools.confirm_location("continue")
-                self.find_and_click_button("summon_cancel")
+                self.find_and_click_button("cancel")
                     
-                self.image_tools.confirm_location("retreat")
-                self.find_and_click_button("retreat_confirmation")
-                
-                self.retreat_check = True
-            
-            if(self.image_tools.confirm_location("raid_continue", tries=1)):
-                # Click the Cancel button on the Continue popup.
-                self.find_and_click_button("friend_request_cancel")
-                
-                if(self.image_tools.confirm_location("raid_retreat", tries=2)):
-                    # Click the Home button to back out of the raid without retreating.
-                    self.find_and_click_button("raid_retreat_home")
-                
-                self.retreat_check = True
-        
+                if(self.image_tools.confirm_location("retreat", tries=1)):
+                    # For retreating from Quests.
+                    self.find_and_click_button("retreat_confirmation")
+                    
+                    self.retreat_check = True
+                elif(self.image_tools.confirm_location("raid_continue", tries=1)):
+                    # For backing out of Raids without retreating.
+                    self.find_and_click_button("cancel")
+                    if(self.image_tools.confirm_location("raid_retreat", tries=1)):
+                        self.find_and_click_button("raid_retreat_home")
+                    
+                    self.retreat_check = True
+
             return None
         except Exception:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while checking if party wiped: \n{traceback.format_exc()}")
