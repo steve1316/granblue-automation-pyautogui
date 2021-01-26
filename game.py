@@ -637,7 +637,7 @@ class Game:
             script_file_path (str, optional): Path to the combat script text file. Defaults to "".
 
         Returns:
-            (bool): Return True if Combat Mode was successful. #TODO: Return False if the party wiped.
+            (bool): Return True if Combat Mode was successful. Else, return False if the party wiped or backed out without retreating.
         """
         # Open the script text file and process all read lines.
         try:
@@ -697,6 +697,17 @@ class Game:
                             number_of_charge_attacks = self.find_charge_attacks()
                             self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
                             self.wait_for_ping(3 + number_of_charge_attacks)
+                            
+                            # Wait until the bot sees either the Attack or the Next button BEFORE starting the next turn or moving the execution forward.
+                            tries = 10
+                            while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None):
+                                self.wait_for_ping(1)
+                                self.find_dialog_in_combat()
+                                tries -= 1
+                                if(tries < 0):
+                                    break
+                                
+                            self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
                             
                             turn_number += 1
                            
@@ -835,6 +846,18 @@ class Game:
                         number_of_charge_attacks = self.find_charge_attacks()
                         self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
                         self.wait_for_ping(3 + number_of_charge_attacks)
+                        
+                        # Wait until the bot sees either the Attack or the Next button BEFORE starting the next turn or moving the execution forward.
+                        tries = 10
+                        while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None):
+                            self.wait_for_ping(1)
+                            self.find_dialog_in_combat()
+                            tries -= 1
+                            if(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None or tries < 0):
+                                break
+                            self.wait_for_ping(1)
+                            
+                        self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
 
                         turn_number += 1
                         
@@ -883,6 +906,17 @@ class Game:
                     self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
                     self.wait_for_ping(3 + number_of_charge_attacks)
                     
+                    # Wait until the bot sees either the Attack or the Next button BEFORE starting the next turn or moving the execution forward.
+                    tries = 10
+                    while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None):
+                        self.wait_for_ping(1)
+                        self.find_dialog_in_combat()
+                        tries -= 1
+                        if(tries < 0):
+                            break
+                        
+                    self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
+                    
                     turn_number += 1
                     
                     # Check to see if the party wiped.
@@ -891,25 +925,21 @@ class Game:
                 elif(next_button_location != None):
                     self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                     self.wait_for_ping(3)
-                    
+            
+            # Loop for Full Auto. The game will progress the Quest/Raid without any input required from the bot.     
             while((self.image_tools.confirm_location("exp_gained", tries=1) == False and self.image_tools.confirm_location("no_loot", tries=1) == False and not self.retreat_check and full_auto)):
                 self.party_wipe_check()
-                
-                next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
-                if(next_button_location != None):
-                    self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
-                    self.wait_for_ping(3)
-                
                 self.wait_for_ping(5)
-
-            if(not self.retreat_check):
-                self.print_and_save(f"\n{self.printtime()} [INFO] Bot has reached the Quest Results Screen.")
 
             self.print_and_save("\n################################################################################")
             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
             self.print_and_save("################################################################################")
             
-            return True
+            if(not self.retreat_check):
+                self.print_and_save(f"\n{self.printtime()} [INFO] Bot has reached the Quest Results Screen.")
+                return True
+            else:
+                return False
         except FileNotFoundError as e:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Cannot find \"{script_file_path}.txt\" inside the /scripts folder: \n{traceback.format_exc()}")
             self.isBotRunning.value = 1
