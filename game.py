@@ -600,7 +600,7 @@ class Game:
         """
         self.print_and_save(f"\n{self.printtime()} [INFO] Loot can be collected.")
         
-        while (self.image_tools.confirm_location("loot_collected", tries=1) == False and not self.retreat_check):
+        while (self.image_tools.confirm_location("loot_collected", tries=1) == True and not self.retreat_check):
             ok_button_location = self.image_tools.find_button("ok", tries=1, suppress_error=True)
             close_button_location = self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=True)
             
@@ -629,16 +629,7 @@ class Game:
             self.print_and_save("\n\n********************************************************************************")
             self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed for EXP: {self.amount_of_runs_finished}")
             self.print_and_save("********************************************************************************\n")
-        
-        # Click the Quests button if this was a Raid to go back.
-        if(self.map_mode == "raid"):
-            if(self.image_tools.find_button("raid_quests", tries=1) != None):
-                self.find_and_click_button("raid_quests")
-                
-                # Clear any Friend Request popups.
-                if(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=True) != None):
-                    self.find_and_click_button("friend_request_cancel")
-        
+
         return None
 
     def start_combat_mode(self, script_file_path: str = ""):
@@ -903,14 +894,15 @@ class Game:
                     self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                     self.wait_for_ping(3)
                     
-            while(self.image_tools.confirm_location("exp_gained", tries=1) == False and not self.retreat_check and full_auto):
+            while((self.image_tools.confirm_location("exp_gained", tries=1) == False and self.image_tools.confirm_location("no_loot", tries=1) == False and not self.retreat_check and full_auto)):
                 self.party_wipe_check()
-                self.wait_for_ping(3)
                 
                 next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
                 if(next_button_location != None):
                     self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                     self.wait_for_ping(3)
+                
+                self.wait_for_ping(5)
 
             if(not self.retreat_check):
                 self.print_and_save(f"\n{self.printtime()} [INFO] Bot has reached the Quest Results Screen.")
@@ -1046,7 +1038,7 @@ class Game:
                             summon_check = False
                         else:
                             if(self.start_combat_mode(self.combat_script)):
-                                # After Combat Mode has finished, count the number of the specified item that has dropped.
+                                # After Combat Mode has finished, count the number of the specified item that has dropped. This should put the bot back to the Quest Screen.
                                 self.collect_loot()
                                 
                                 if(self.item_amount_farmed < self.item_amount_to_farm):
@@ -1057,8 +1049,8 @@ class Game:
                                     while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None):
                                         self.find_and_click_button("friend_request_cancel")
                                     
-                                    self.find_and_click_button("raid", suppress_error=True)
-                                    
+                                    # Join a new raid.
+                                    self.map_selection.join_raid(item_name, mission_name)
                                     summon_check = False
                             else:
                                 if(self.image_tools.confirm_location("check_your_pending_battles", tries=1)):
