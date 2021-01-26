@@ -188,7 +188,7 @@ class Game:
             if(temp_location == None):
                 temp_location = self.image_tools.find_button("raid2", tries=2, suppress_error=suppress_error)
         else:
-            temp_location = self.image_tools.find_button(button_name, suppress_error=suppress_error)
+            temp_location = self.image_tools.find_button(button_name, tries=2, suppress_error=suppress_error)
             
         self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1])
         return None
@@ -596,17 +596,23 @@ class Game:
         Returns:
             None
         """
-        self.print_and_save(f"\n{self.printtime()} [INFO] Loot can be collected.")
+        self.print_and_save(f"\n{self.printtime()} [INFO] Detecting if any loot dropped...")
         
-        while (self.image_tools.confirm_location("loot_collected", tries=1) == True and not self.retreat_check):
-            ok_button_location = self.image_tools.find_button("ok", tries=1, suppress_error=True)
-            close_button_location = self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=True)
-            
-            if(close_button_location != None):
-                self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1], custom_mouse_speed=0.1)
+        # Click away the EXP Gained popup and any other popups until the bot reaches the Loot Collected Screen.
+        if(self.image_tools.confirm_location("exp_gained", tries=1) and not self.retreat_check):
+            while(not self.image_tools.confirm_location("loot_collected", tries=1)):
+                ok_button_location = self.image_tools.find_button("ok", tries=1, suppress_error=True)
+                cancel_button_location = self.image_tools.find_button("cancel", tries=1, suppress_error=True)
+                close_button_location = self.image_tools.find_button("close", tries=1, suppress_error=True)
+                
+                if(close_button_location != None):
+                    self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1], custom_mouse_speed=0.1)
+                
+                if(cancel_button_location != None):
+                    self.mouse_tools.move_and_click_point(cancel_button_location[0], cancel_button_location[1], custom_mouse_speed=0.1)
 
-            if(ok_button_location != None):
-                self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1], custom_mouse_speed=0.1)
+                if(ok_button_location != None):
+                    self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1], custom_mouse_speed=0.1)
 
         if(self.item_name != "EXP"):        
             temp_amount = self.image_tools.find_farmed_items([self.item_name])[0]
@@ -1043,14 +1049,16 @@ class Game:
                             if(self.item_amount_farmed < self.item_amount_to_farm):
                                 # Click the Play Again button or the Room button if its Coop.
                                 if(map_mode.lower() != "coop"):
-                                    self.find_and_click_button("play_again")
+                                    if(self.image_tools.find_button("play_again", tries=1)):
+                                        self.find_and_click_button("play_again")
+                                    
+                                    # Clear away any Pending Battles.
+                                    self.map_selection.check_for_pending(map_mode)
                                 else:
                                     self.find_and_click_button("coop_room")
                                 
-                                # Loop while clicking any detected Cancel buttons like from Friend Request popups.
-                                self.wait_for_ping(1)
-                                while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None):
-                                    self.find_and_click_button("friend_request_cancel")
+                                # Start the Quest again.
+                                self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
                                 
                                 # Check for available AP.
                                 self.check_for_ap(use_full_elixirs=use_refill_full)
@@ -1070,12 +1078,13 @@ class Game:
                                 self.collect_loot()
                                 
                                 if(self.item_amount_farmed < self.item_amount_to_farm):
-                                    self.find_and_click_button("raid_quests")
+                                    # Clear away any Pending Battles.
+                                    self.map_selection.check_for_pending(map_mode)
                                     
                                     # Loop while clicking any detected Cancel buttons like from Friend Request popups.
-                                    self.wait_for_ping(1)
-                                    while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None):
-                                        self.find_and_click_button("friend_request_cancel")
+                                    # self.wait_for_ping(1)
+                                    # while(self.image_tools.find_button("cancel", tries=1, suppress_error=self.suppress_error) != None):
+                                    #     self.find_and_click_button("cancel")
                                     
                                     # Join a new raid.
                                     self.map_selection.join_raid(item_name, mission_name)
