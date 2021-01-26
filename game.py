@@ -200,7 +200,7 @@ class Game:
             None
         """
         try:
-        # Check to see if party has wiped.
+            # Check to see if party has wiped.
             party_wipe_indicator = self.image_tools.find_button("party_wipe_indicator", tries=1, suppress_error=self.suppress_error)
             if(party_wipe_indicator != None):
                 self.print_and_save(f"\n{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Retreating now...")
@@ -208,12 +208,20 @@ class Game:
                 self.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1])
                 
                 self.image_tools.confirm_location("continue")
-                cancel_button = self.image_tools.find_button("summon_cancel")
-                self.mouse_tools.move_and_click_point(cancel_button[0], cancel_button[1])
+                self.find_and_click_button("summon_cancel")
                     
                 self.image_tools.confirm_location("retreat")
-                retreat_button = self.image_tools.find_button("retreat_confirmation")
-                self.mouse_tools.move_and_click_point(retreat_button[0], retreat_button[1])
+                self.find_and_click_button("retreat_confirmation")
+                
+                self.retreat_check = True
+            
+            if(self.image_tools.confirm_location("raid_continue", tries=1)):
+                # Click the Cancel button on the Continue popup.
+                self.find_and_click_button("friend_request_cancel")
+                
+                if(self.image_tools.confirm_location("raid_retreat", tries=2)):
+                    # Click the Home button to back out of the raid without retreating.
+                    self.find_and_click_button("raid_retreat_home")
                 
                 self.retreat_check = True
         
@@ -473,7 +481,7 @@ class Game:
         Returns:
             None
         """
-        if(self.image_tools.confirm_location("not_enough_ap", tries=2)):
+        if(self.image_tools.confirm_location("not_enough_ap", tries=1)):
             # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full.
             # TODO: Implement check for when the user ran out of both of them, or one of them.
             if(use_full_elixirs == False):
@@ -502,7 +510,7 @@ class Game:
         Returns:
             None
         """
-        if(self.image_tools.confirm_location("not_enough_ep", tries=2)):
+        if(self.image_tools.confirm_location("not_enough_ep", tries=1)):
             # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
             # TODO: Implement check for when the user ran out of both of them, or one of them.
             if(use_soul_balm == False):
@@ -593,15 +601,15 @@ class Game:
         self.print_and_save(f"\n{self.printtime()} [INFO] Loot can be collected.")
         
         while (self.image_tools.confirm_location("loot_collected", tries=1) == False and not self.retreat_check):
-            ok_button_location = self.image_tools.find_button("ok", tries=1)
+            ok_button_location = self.image_tools.find_button("ok", tries=1, suppress_error=True)
             close_button_location = self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=True)
+            
+            if(close_button_location != None):
+                self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1], custom_mouse_speed=0.1)
 
             if(ok_button_location != None):
                 self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1], custom_mouse_speed=0.1)
-                
-            if(close_button_location != None):
-                self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1], custom_mouse_speed=0.1)
-        
+
         if(self.item_name != "EXP"):        
             temp_amount = self.image_tools.find_farmed_items([self.item_name])[0]
         else:
@@ -991,14 +999,14 @@ class Game:
                                 self.map_selection.join_raid(item_name, mission_name)
                     
                     # Select the Party specified and then start the mission.
-                    if(map_mode != "coop"):
+                    if(map_mode.lower() != "coop"):
                         start_check = self.find_party_and_start_mission(group_number, party_number)
                     else:
                         # Only select the Party for this Coop mission once. After that, subsequent runs always has that Party selected.
                         if(not coop_first_run):
                             start_check = self.find_party_and_start_mission(group_number, party_number)
                             coop_first_run = True
-                        
+
                         self.find_and_click_button("coop_start")
                     
                     if(start_check and map_mode.lower() != "raid"):
@@ -1023,7 +1031,6 @@ class Game:
                                 self.wait_for_ping(1)
                                 while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None):
                                     self.find_and_click_button("friend_request_cancel")
-                                    break
                                 
                                 # Check for available AP.
                                 self.check_for_ap(use_full_elixirs=use_refill_full)
@@ -1049,9 +1056,8 @@ class Game:
                                     self.wait_for_ping(1)
                                     while(self.image_tools.find_button("friend_request_cancel", tries=1, suppress_error=self.suppress_error) != None):
                                         self.find_and_click_button("friend_request_cancel")
-                                        break
                                     
-                                    self.game.find_and_click_button("raid", suppress_error=True)
+                                    self.find_and_click_button("raid", suppress_error=True)
                                     
                                     summon_check = False
                             else:
