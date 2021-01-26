@@ -65,6 +65,16 @@ class ImageUtils:
             str: A formatted string that displays the elapsed time since the bot started.
         """
         return str(datetime.timedelta(seconds=(timer() - self.starting_time))).split('.')[0]
+    
+    def clear_memory_guibot(self):
+        """Eliminates the memory leak caused by GuiBot by deleting the GuiBot object and reinitializing it. This is required before or after every single GuiBot operation, else you will run into cv::OutOfMemoryError.
+
+        Returns:
+            None
+        """
+        del self.guibot
+        self.guibot = GuiBot()
+        return None
 
     def find_button(self, button_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, confirm_location_check: bool = False, tries: int = 5, sleep_time: int = 1, suppress_error: bool = False):
         """Find the location of the specified button.
@@ -101,6 +111,7 @@ class ImageUtils:
                 
                 # Use GuiBot to template match if PyAutoGUI failed.    
                 self.file_resolver.add_path("images/buttons/")
+                self.clear_memory_guibot()
                 button_location = self.guibot.exists(f"{button_name.lower()}")
 
                 if(button_location == None):
@@ -162,6 +173,7 @@ class ImageUtils:
                 
                 # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/headers/")
+                self.clear_memory_guibot()
                 header_location = self.guibot.exists(f"{location_name.lower()}_header")
 
                 if(header_location == None):
@@ -216,6 +228,7 @@ class ImageUtils:
                 
                 # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/summons/")
+                self.clear_memory_guibot()
                 summon_location = self.guibot.exists(f"{summon_name.lower()}")
 
                 if(summon_location == None):
@@ -280,7 +293,9 @@ class ImageUtils:
 
                 # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/dialogs/")
+                self.clear_memory_guibot()
                 dialog_location = self.guibot.exists(f"dialog_lyria")
+                self.clear_memory_guibot()
                 dialog_location2 = self.guibot.exists(f"dialog_vyrn")
 
                 if (dialog_location == None and dialog_location2 == None):
@@ -428,6 +443,7 @@ class ImageUtils:
             elif(item in lite_blacklisted_items):
                 locations = self.find_all(item, custom_confidence=0.85)
             else:
+                self.clear_memory_guibot()
                 locations = self.guibot.find_all(item, timeout=1, allow_zero=True)
                 guibot_check = True
                 
@@ -505,6 +521,7 @@ class ImageUtils:
         self.game.print_and_save(f"\n{self.printtime()} [INFO] Now waiting for {image_name} to vanish from screen...")
         self.file_resolver.add_path("images/buttons/")
         try:
+            self.clear_memory_guibot()
             return self.guibot.wait_vanish(image_name, timeout=timeout)
         except Exception as e:
             self.game.print_and_save(f"{self.printtime()} [ERROR] {image_name} should have vanished from the screen after {timeout} seconds but did not. Exact error is: \n{e}")
