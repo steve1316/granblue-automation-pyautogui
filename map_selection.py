@@ -540,7 +540,7 @@ class MapSelection:
             None
         """
         try:
-            while(self.game.image_tools.confirm_location("check_your_pending_battles", tries=2)):
+            while(self.game.image_tools.confirm_location("check_your_pending_battles", tries=1)):
                 self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Found some pending battles that need collecting from.")
                 
                 self.game.find_and_click_button("ok")
@@ -558,7 +558,7 @@ class MapSelection:
                         self.game.collect_loot()
                         self.raids_joined -= 1
             
-            self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Pending battles have been cleared. Continuing to the Backup Requests Screen...")
+            self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Pending battles have been cleared.")
             return None
         except Exception:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception in MapSelection check_for_pending(): \n{traceback.format_exc()}")
