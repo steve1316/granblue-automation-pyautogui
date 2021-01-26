@@ -43,9 +43,9 @@ class MapSelection:
 
             if(map_mode.lower() == "quest"):
                 # Go to the Home Screen and check if the bot is already at the correct island or not.
-                self.game.go_back_home(confirm_location_check=True, display_info_check=True)
+                self.game.go_back_home(confirm_location_check=True)
                 
-                if(self.game.image_tools.confirm_location(temp_map_name, tries=2)):
+                if(self.game.image_tools.confirm_location(f"map_{temp_map_name}", tries=2)):
                     check_location = True
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot is currently on the correct island.")
                 else:
@@ -53,34 +53,34 @@ class MapSelection:
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot is currently not on the correct island.")
                     
                     # Attempt to see which island the bot is currently at.
-                    if(self.game.image_tools.confirm_location("port_breeze_archipelago", tries=1)):
+                    if(self.game.image_tools.confirm_location("map_port_breeze_archipelago", tries=1)):
                         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Port Breeze Archipelago. Now moving to {map_name}...")
                         current_location = "Port Breeze Archipelago"
-                    elif(self.game.image_tools.confirm_location("valtz_duchy", tries=1)):
+                    elif(self.game.image_tools.confirm_location("map_valtz_duchy", tries=1)):
                         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Valtz Duchy. Now moving to {map_name}...")
                         current_location = "Valtz Duchy"
-                    elif(self.game.image_tools.confirm_location("auguste_isles", tries=1)):
+                    elif(self.game.image_tools.confirm_location("map_auguste_isles", tries=1)):
                         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Auguste Isles. Now moving to {map_name}...")
                         current_location = "Auguste Isles"
-                    elif(self.game.image_tools.confirm_location("lumacie_archipelago", tries=1)):
+                    elif(self.game.image_tools.confirm_location("map_lumacie_archipelago", tries=1)):
                         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Lumacie Archipelago. Now moving to {map_name}...")
                         current_location = "Lumacie Archipelago"
-                    elif(self.game.image_tools.confirm_location("albion_citadel", tries=1)):
+                    elif(self.game.image_tools.confirm_location("map_albion_citadel", tries=1)):
                         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Albion Citadel. Now moving to {map_name}...")
                         current_location = "Albion Citadel"
-                    elif(self.game.image_tools.confirm_location("mist_shrouded_isle", tries=1)):
+                    elif(self.game.image_tools.confirm_location("map_mist_shrouded_isle", tries=1)):
                         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Mist-Shrouded Isle. Now moving to {map_name}...")
                         current_location = "Mist-Shrouded Isle"
-                    elif(self.game.image_tools.confirm_location("golonzo_island", tries=1)):
+                    elif(self.game.image_tools.confirm_location("map_golonzo_island", tries=1)):
                         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Golonzo Island. Now moving to {map_name}...")
                         current_location = "Golonzo Island"
-                    elif(self.game.image_tools.confirm_location("amalthea_island", tries=1)):
+                    elif(self.game.image_tools.confirm_location("map_amalthea_island", tries=1)):
                         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Amalthea Island. Now moving to {map_name}...")
                         current_location = "Amalthea Island"
-                    elif(self.game.image_tools.confirm_location("former_capital_mephorash", tries=1)):
+                    elif(self.game.image_tools.confirm_location("map_former_capital_mephorash", tries=1)):
                         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Former Capital Mephorash. Now moving to {map_name}...")
                         current_location = "Former Capital Mephorash"
-                    elif(self.game.image_tools.confirm_location("agastia", tries=1)):
+                    elif(self.game.image_tools.confirm_location("map_agastia", tries=1)):
                         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Agastia. Now moving to {map_name}...")
                         current_location = "Agastia"    
                 
@@ -251,7 +251,7 @@ class MapSelection:
                 
             elif(map_mode.lower() == "coop"):
                 # Go to the Home Screen.
-                self.game.go_back_home(confirm_location_check=True, display_info_check=True)
+                self.game.go_back_home(confirm_location_check=True)
                 
                 # Click the Menu button on the Home Screen and then go to Coop Screen.
                 self.game.find_and_click_button("home_menu")
@@ -344,7 +344,7 @@ class MapSelection:
 
             elif(map_mode.lower() == "special"):
                 # Go to the Home Screen.
-                self.game.go_back_home(confirm_location_check=True, display_info_check=True)
+                self.game.go_back_home(confirm_location_check=True)
                 
                 # Go to the Quest Screen and then to the Special Screen.
                 self.game.find_and_click_button("quest")

@@ -191,7 +191,7 @@ class Debug:
 
         list_of_steps_in_order = ["gameplay_extras", "trial_battles",
                                   "trial_battles_old_lignoid", "trial_battles_play",
-                                  "choose_a_summon", "party_selection_ok", "trial_battles_close"]
+                                  "choose_a_summon", "party_selection_ok", "close"]
 
         # Go through each step in order from left to right from the list of steps.
         while (len(list_of_steps_in_order) > 0):

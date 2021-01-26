@@ -302,7 +302,7 @@ class Game:
         try:
             list_of_steps_in_order = ["gameplay_extras", "trial_battles",
                                     "trial_battles_old_lignoid", "trial_battles_play",
-                                    "choose_a_summon", "party_selection_ok", "trial_battles_close",
+                                    "choose_a_summon", "party_selection_ok", "close",
                                     "menu", "retreat", "retreat_confirmation", "next"]
 
             # Go through each step in order from left to right from the list of steps.
@@ -586,7 +586,7 @@ class Game:
         # Check to see if the character is skill-sealed.
         if(self.image_tools.confirm_location("use_skill", tries=1)):
             self.print_and_save(f"{self.printtime()} [COMBAT] Character is currently skill-sealed. Unable to execute command.")
-            self.find_and_click_button("friend_request_cancel")
+            self.find_and_click_button("cancel")
 
         return None
     
@@ -810,7 +810,7 @@ class Game:
                                         self.wait_for_ping(7) # This is 7 seconds to see if the Summon killed all enemies on screen.
                                     else:
                                         self.print_and_save(f"{self.printtime()} [COMBAT] Summon #{j} cannot be invoked due to current restrictions.")
-                                        self.find_and_click_button("summon_cancel")
+                                        self.find_and_click_button("cancel")
                                         
                                         # Now click the Back button.
                                         self.mouse_tools.move_and_click_point(self.back_button_location[0], self.back_button_location[1])
@@ -1088,7 +1088,7 @@ class Game:
                                         self.wait_for_ping(1)
                                         
                                         if(self.image_tools.confirm_location("no_loot", tries=1)):
-                                            self.find_and_click_button("raid_quests")
+                                            self.find_and_click_button("quests")
                                         else:
                                             self.collect_loot()
                                 
