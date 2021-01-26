@@ -182,7 +182,7 @@ class ImageUtils:
 
         return True
 
-    def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 3, sleep_time: int = 1):
+    def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 1):
         """Find the location of the specified summon. Will attempt to scroll the screen down to see more Summons if the initial screen position yielded no matches.
 
         Args:
@@ -229,7 +229,7 @@ class ImageUtils:
                         self.game.print_and_save(f"{self.printtime()} [DEBUG] Could not locate the {summon_name.upper()} Summon. Trying again in {sleep_time} seconds...")
 
                     # If matching failed, scroll the screen down to see more Summons.
-                    self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -1000)
+                    self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -400)
                     time.sleep(sleep_time)
                 else:
                     guibot_check = True
