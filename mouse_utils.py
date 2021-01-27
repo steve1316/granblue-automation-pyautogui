@@ -68,13 +68,14 @@ class MouseUtils:
         pyautogui.moveTo(x, y)
         return None
 
-    def move_and_click_point(self, x: int, y: int, custom_mouse_speed: float = 0.0, mouse_clicks=1):
+    def move_and_click_point(self, x: int, y: int, custom_mouse_speed: float = 0.0, mouse_clicks: int = 1):
         """Move the cursor to the specified point on the screen and clicks it.
 
         Args:
             x (int): X coordinate on the screen.
             y (int): Y coordinate on the screen.
             custom_mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.
+            mouse_clicks (int, optional): Number of mouse clicks. Defaults to 1.
 
         Returns:
             None
