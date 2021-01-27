@@ -120,21 +120,21 @@ class Game:
             # Set the dimensions of the game window and save it in ImageUtils so that future operations do not go out of bounds.
             home_news_button = self.image_tools.find_button("home_news")
             home_menu_button = self.image_tools.find_button("home_menu")
-            self.image_tools.window_left = home_news_button[0] - 35 # The x-coordinate of the left edge
-            self.image_tools.window_top = home_menu_button[1] - 24 # The y-coordinate of the top edge
-            self.image_tools.window_width = self.image_tools.window_left + 468 # The width of the region
-            self.image_tools.window_height = (self.home_button_location[1] + 24) - self.image_tools.window_top # The height of the region
+            self.image_tools.window_left = home_news_button[0] - 35  # The x-coordinate of the left edge.
+            self.image_tools.window_top = home_menu_button[1] - 24  # The y-coordinate of the top edge.
+            self.image_tools.window_width = self.image_tools.window_left + 410  # The width of the region.
+            self.image_tools.window_height = (self.home_button_location[1] + 24) - self.image_tools.window_top  # The height of the region.
         except Exception:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while calibrating game window dimensions: \n{traceback.format_exc()}")
             self.isBotRunning.value = 1
 
         if(self.debug_mode):
-            self.print_and_save(f"\n{self.printtime()} [SUCCESS] Dimensions of the game window has been successfully recalibrated.")
+            self.print_and_save(f"{self.printtime()} [SUCCESS] Dimensions of the game window has been successfully recalibrated.")
 
         if(display_info_check):
             self.print_and_save("\n********************************************************************************")
-            self.print_and_save(f"{self.printtime()} [INFO] Screen size: {pyautogui.size()}.")
-            self.print_and_save(f"{self.printtime()} [INFO] Game window size: Region({self.image_tools.window_left}, {self.image_tools.window_top}, {self.image_tools.window_width}, {self.image_tools.window_height}).")
+            self.print_and_save(f"{self.printtime()} [INFO] Screen size: {pyautogui.size()}")
+            self.print_and_save(f"{self.printtime()} [INFO] Game window size: Region({self.image_tools.window_left}, {self.image_tools.window_top}, {self.image_tools.window_width}, {self.image_tools.window_height})")
             self.print_and_save("********************************************************************************")
 
         return None
