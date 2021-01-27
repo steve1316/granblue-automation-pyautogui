@@ -629,6 +629,23 @@ class Game:
             self.print_and_save("********************************************************************************\n")
 
         return None
+    
+    def wait_for_attack(self):
+        """Wait until the bot sees either the Attack or the Next button before starting the next turn or moving the execution forward. It will wait about 20 seconds before moving on to avoid an infinite loop.
+
+        Returns:
+            None
+        """
+        tries = 10
+        while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) == None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) == None):
+            self.wait(1)
+            self.find_dialog_in_combat()
+            tries -= 1
+            if(tries < 0 or self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None):
+                break
+            self.wait(1)
+        
+        return None
 
     def start_combat_mode(self, script_file_path: str = ""):
         """Start the Combat Mode with the given script file name. Start reading through the text file line by line and have the bot proceed accordingly.
