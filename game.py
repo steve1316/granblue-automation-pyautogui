@@ -73,7 +73,8 @@ class Game:
         self.retreat_check = False
         self.suppress_error = True
         
-        # Keep track of the following for Farming Mode.  
+        # Keep track of the following for Farming Mode.
+        self.map_mode = ""
         self.amount_of_runs_finished = 0
         self.item_amount_farmed = 0
         self.item_amount_to_farm = 0
@@ -190,6 +191,9 @@ class Game:
         Returns:
             None
         """
+        if(self.debug_mode):
+            self.print_and_save(f"{self.printtime()} [DEBUG] Attempting to find and click {button_name}.")
+        
         # If the bot is trying to find the Quest button and failed, chances are that the button is now styled red.
         if(button_name == "quest"):
             temp_location = self.image_tools.find_button("quest", tries=1, suppress_error=suppress_error)
@@ -255,9 +259,6 @@ class Game:
         Returns:
             (bool): True if successfully found and clicked the summon element tab. Otherwise, return False.
         """
-        if(self.debug_mode):
-            self.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find {summon_element_name.upper()} Summon Element tab...")
-
         summon_element_location = None
         
         self.wait(1)
@@ -268,10 +269,10 @@ class Game:
                 tries -= 1
                 
                 if (tries == 0):
-                    self.print_and_save(f"{self.printtime()} [FAILED] Failed to find {summon_element_name.upper()} Summon Element tab.")
+                    self.print_and_save(f"{self.printtime()} [ERROR] Failed to find {summon_element_name.upper()} Element tab.")
                     return False
 
-        self.print_and_save(f"{self.printtime()} [SUCCESS] Found {summon_element_name.upper()} Summon Element tab.")
+        self.print_and_save(f"{self.printtime()} [SUCCESS] Found {summon_element_name.upper()} Element tab.")
 
         self.mouse_tools.move_and_click_point(summon_element_location[0], summon_element_location[1])
 
@@ -294,7 +295,7 @@ class Game:
         if (summon_location != None):
             self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1])
             
-            self.print_and_save(f"\n{self.printtime()} [INFO] Found {summon_name.upper()} Summon. Clicking it now...\n")
+            self.print_and_save(f"{self.printtime()} [INFO] Found {summon_name.upper()} Summon.")
 
             return True
         else:
@@ -309,7 +310,7 @@ class Game:
         Returns:
             None
         """
-        self.print_and_save(f"\n{self.printtime()} [INFO] Now refreshing summons...")
+        self.print_and_save(f"\n{self.printtime()} [INFO] Refreshing summons...")
         
         self.go_back_home(confirm_location_check=True)
         self.mouse_tools.scroll_screen_from_home_button(-600)
@@ -335,7 +336,7 @@ class Game:
                     self.mouse_tools.move_and_click_point(image_location[0], image_location[1])
             
             self.image_tools.confirm_location("trial_battles")
-            self.print_and_save(f"\n{self.printtime()} [INFO] Summons have now been refreshed.")
+            self.print_and_save(f"{self.printtime()} [INFO] Summons have now been refreshed.")
             return None
         except Exception:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while resetting summons: \n{traceback.format_exc()}")
@@ -358,17 +359,11 @@ class Game:
         # alternate searching for Set A / Set B until found or tries are depleted.
         try:
             if(group_number < 8):
-                if(self.debug_mode):
-                    self.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find Set A...")
-
                 while (set_location == None):
                     set_location = self.image_tools.find_button("party_set_a")
                     
                     if (set_location == None):
                         tries -= 1
-                        
-                        if(self.debug_mode):
-                            self.print_and_save(f"{self.printtime()} [DEBUG] Locating Set A failed. Trying again for Set B...")
 
                         if (tries <= 0):
                             raise NotFoundException("Could not find Set A.")
@@ -376,17 +371,11 @@ class Game:
                         # See if the user had Set B active instead of Set A if matching failed.
                         set_location = self.image_tools.find_button("party_set_b")
             else:
-                if(self.debug_mode):
-                    self.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find Set B...")
-
                 while (set_location == None):
                     set_location = self.image_tools.find_button("party_set_b")
                     
                     if (set_location == None):
                         tries -= 1
-                        
-                        if(self.debug_mode):
-                            self.print_and_save(f"{self.printtime()} [DEBUG] Locating Set B failed. Trying again for Set A...")
 
                         if (tries <= 0):
                             raise NotFoundException("Could not find Set B.")
@@ -398,7 +387,7 @@ class Game:
             self.isBotRunning.value = 1
 
         if(self.debug_mode):
-            self.print_and_save(f"\n{self.printtime()} [SUCCESS] Successfully selected the correct Set. Now selecting Group {group_number}...")
+            self.print_and_save(f"\n{self.printtime()} [INFO] Successfully selected the correct Set. Now selecting Group {group_number}...")
 
         # Center the mouse on the Set A / Set B Button and then click the correct Group Number Tab.
         x = None
@@ -423,7 +412,7 @@ class Game:
 
         # Now select the correct Party.
         if(self.debug_mode):
-            self.print_and_save(f"\n{self.printtime()} [SUCCESS] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
+            self.print_and_save(f"{self.printtime()} [INFO] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
 
         y = set_location[1] + 325
         
@@ -443,10 +432,11 @@ class Game:
         self.mouse_tools.move_and_click_point(x, y)
 
         if(self.debug_mode):
-            self.print_and_save(f"\n{self.printtime()} [SUCCESS] Successfully selected Party {party_number}. Now starting the mission.")
+            self.print_and_save(f"{self.printtime()} [SUCCESS] Successfully selected Party {party_number}. Now starting the mission.")
 
         # If a dialog window pops up and says "This raid battle has already ended. The Home screen will now appear.", return False.
         if(self.image_tools.confirm_location("raid_just_ended_home_redirect", tries=1)):
+            self.print_and_save(f"{self.printtime()} [WARNING] Raid unfortunately just ended.")
             return False
 
         # Find and click the "OK" Button to start the mission.
@@ -477,9 +467,6 @@ class Game:
         dialog_location = self.image_tools.find_dialog(self.attack_button_location[0], self.attack_button_location[1], tries=1)
 
         if (dialog_location != None):
-            if(self.debug_mode):
-                self.print_and_save(f"{self.printtime()} [DEBUG] Detected dialog window from Lyria/Vyrn on Combat Screen. Closing it now...")
-
             self.mouse_tools.move_and_click_point(dialog_location[0] + 180, dialog_location[1] - 51)
 
         return None
@@ -531,7 +518,7 @@ class Game:
                 half_ep_location = self.image_tools.find_button("refill_soul_berry")
                 self.mouse_tools.move_and_click_point(half_ep_location[0], half_ep_location[1] + 175)
             else:
-                self.print_and_save(f"\n{self.printtime()} [INFO] BP ran out! Using Soul Balm...")
+                self.print_and_save(f"\n{self.printtime()} [INFO] EP ran out! Using Soul Balm...")
                 full_ep_location = self.image_tools.find_button("refill_soul_balm")
                 self.mouse_tools.move_and_click_point(full_ep_location[0], full_ep_location[1] + 175)
             
@@ -565,7 +552,8 @@ class Game:
         elif(character_number == 4):
             x = self.attack_button_location[0] - 76
 
-        self.mouse_tools.move_and_click_point(x, y)
+        # Double-clicking the character portrait to avoid any non-invasive popups from other Raid participants.
+        self.mouse_tools.move_and_click_point(x, y, mouse_clicks=2)
 
         return None
 
@@ -640,12 +628,14 @@ class Game:
         
         if(self.item_name != "EXP"):
             self.print_and_save("\n\n********************************************************************************")
+            self.print_and_save(f"{self.printtime()} [FARM] Mode: {self.map_mode}")
             self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained this run: {temp_amount}")
             self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained in total: {self.item_amount_farmed} / {self.item_amount_to_farm}")
             self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished}")
             self.print_and_save("********************************************************************************\n")
         else:
             self.print_and_save("\n\n********************************************************************************")
+            self.print_and_save(f"{self.printtime()} [FARM] Mode: {self.map_mode}")
             self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed for EXP: {self.amount_of_runs_finished}")
             self.print_and_save("********************************************************************************\n")
 
@@ -1025,12 +1015,13 @@ class Game:
             if((map_mode.lower() != "raid" and self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)) or (map_mode.lower() == "raid" and self.map_selection.join_raid(item_name, mission_name))):
                 # Keep playing the mission until the bot gains enough of the item specified.
                 while(self.item_amount_farmed < self.item_amount_to_farm):
+                    # Loop until the Summon has been selected successfully.
                     while(summon_check == False and map_mode.lower() != "coop"): 
-                        # Check for available AP or BP, depending on mode.
+                        # Check for available AP depending on mode.
                         if(map_mode.lower() != "raid"):
                             self.check_for_ap(use_full_elixirs=self.quest_refill)
-                        else:
-                            self.check_for_ep(use_soul_balm=self.raid_refill)
+                        
+                        self.print_and_save(f"\n{self.printtime()} [INFO] AP/EP check done. Now selecting summon...")
                         
                         self.find_summon_element(summon_element_name)
                         summon_check = self.find_summon(summon_name)
@@ -1038,8 +1029,10 @@ class Game:
                         # If the Summons were reset, head back to the location of the mission.
                         if(summon_check == False):
                             if(map_mode.lower() != "raid"):
+                                self.print_and_save(f"\n{self.printtime()} [INFO] Selecting mission again...")
                                 self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
                             else:
+                                self.print_and_save(f"\n{self.printtime()} [INFO] Joining raids again...")
                                 self.map_selection.join_raid(item_name, mission_name)
                     
                     # Select the Party specified and then start the mission.
@@ -1048,15 +1041,18 @@ class Game:
                     else:
                         # Only select the Party for this Coop mission once. After that, subsequent runs always has that Party selected.
                         if(not coop_first_run):
+                            self.print_and_save(f"\n{self.printtime()} [INFO] Selecting party for this Coop session...")
                             start_check = self.find_party_and_start_mission(group_number, party_number)
                             coop_first_run = True
 
+                        self.print_and_save(f"{self.printtime()} [INFO] Starting Coop mission.")
                         self.find_and_click_button("coop_start")
                     
+                    # After Party has been successfully selected, start Combat Mode.
                     if(start_check and map_mode.lower() != "raid"):
                         # Check for the Items Picked Up popup that appears after starting a Quest mission.
                         self.wait(2)
-                        if(self.image_tools.confirm_location("items_picked_up", tries=1)):
+                        if(map_mode.lower() == "quest" and self.image_tools.confirm_location("items_picked_up", tries=1)):
                             self.find_and_click_button("ok")
                         
                         # Start Combat Mode here.
@@ -1083,6 +1079,7 @@ class Game:
                                 
                                 summon_check = False
                         else:
+                            self.print_and_save(f"\n{self.printtime()} [INFO] Selecting mission again due to retreating...")
                             self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
                     elif(start_check and map_mode.lower() == "raid"): 
                         # Cover the occasional case where joining the raid after selecting the Summon and Party leds to the Quest Results Screen with no loot to collect.
@@ -1091,6 +1088,7 @@ class Game:
                             self.go_back_home()
                             summon_check = False
                         else:
+                            # Start Combat Mode for this Raid.
                             if(self.start_combat_mode(self.combat_script)):
                                 # After Combat Mode has finished, count the number of the specified item that has dropped. This should put the bot back to the Quest Screen.
                                 self.collect_loot()
@@ -1099,25 +1097,12 @@ class Game:
                                     # Clear away any Pending Battles.
                                     self.map_selection.check_for_pending(map_mode)
                                     
-                                    # Loop while clicking any detected Cancel buttons like from Friend Request popups.
-                                    # self.wait(1)
-                                    # while(self.image_tools.find_button("cancel", tries=1, suppress_error=self.suppress_error) != None):
-                                    #     self.find_and_click_button("cancel")
-                                    
                                     # Join a new raid.
                                     self.map_selection.join_raid(item_name, mission_name)
                                     summon_check = False
                             else:
-                                if(self.image_tools.confirm_location("check_your_pending_battles", tries=1)):
-                                    self.find_and_click_button("ok")
-                                    while(self.image_tools.find_button("pending_battle_sidebar", tries=1)):
-                                        self.find_and_click_button("pending_battle_sidebar")
-                                        self.wait(1)
-                                        
-                                        if(self.image_tools.confirm_location("no_loot", tries=1)):
-                                            self.find_and_click_button("quests")
-                                        else:
-                                            self.collect_loot()
+                                # If Combat Mode exited via the exit command, check for Pending Battles.
+                                self.map_selection.check_for_pending("raid")
                                 
                                 # Join a new raid.
                                 self.map_selection.join_raid(item_name, mission_name)
