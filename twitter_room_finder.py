@@ -180,8 +180,6 @@ class TwitterRoomFinder():
         try:
             # Search JP tweets first and filter for tweets that the bot has not processed yet.
             tweet_jp = self.api.search(q=query_jp, since=today.strftime('%Y-%m-%d'), count=count)
-            if(self.debug_mode):
-                self.game.print_and_save(f"\n{self.game.printtime()} [DEBUG] Length of tweets from JP found is: {len(tweet_jp)}")
             for tweet in tweet_jp:
                 if(tweet.id not in self.list_of_id and len(tweets) < count):
                     # self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found JP tweet.")
@@ -191,8 +189,6 @@ class TwitterRoomFinder():
             # Search EN tweets only if the filtered JP tweets was less than the desired amount.
             if(len(tweets) < count):
                 tweet_en = self.api.search(q=query_en, since=today.strftime('%Y-%m-%d'), count=count)
-                if(self.debug_mode):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [DEBUG] Length of tweets from EN found is: {len(tweet_en)}")
                 for tweet in tweet_en:
                     if(tweet.id not in self.list_of_id and len(tweets) < count):
                         # self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found EN tweet.")

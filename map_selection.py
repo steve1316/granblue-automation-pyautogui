@@ -626,7 +626,7 @@ class MapSelection:
                                 self.game.find_and_click_button("quests")
                                 break
                     
-            self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Pending battles have been cleared.")
+            self.game.print_and_save(f"{self.game.printtime()} [INFO] Pending battles have been cleared.")
             return None
         except Exception:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception in MapSelection check_for_pending(): \n{traceback.format_exc()}")
