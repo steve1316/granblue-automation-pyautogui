@@ -705,7 +705,7 @@ class MapSelection:
                     self.game.wait(1)
                     if(not self.game.image_tools.confirm_location("raid_already_ended", tries=1) and not self.game.image_tools.confirm_location("invalid_code", tries=1)):
                         # Check for EP.
-                        self.game.check_for_ep(se_soul_balm=self.game.raid_refill)
+                        self.game.check_for_ep(use_soul_balm=self.game.raid_refill)
                         
                         # Check for pending rewards popup.
                         self.check_for_pending("raid")
