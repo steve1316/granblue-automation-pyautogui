@@ -84,7 +84,7 @@ class Game:
         pyautogui.PAUSE = 0.25
 
         # Calibrate the dimensions of the game window on bot launch.
-        self.go_back_home(display_info_check=True)
+        self.go_back_home(confirm_location_check=True, display_info_check=True)
 
     def printtime(self):
         """Formats the time since the bot started into a readable, printable HH:MM:SS format using timedelta.
@@ -116,7 +116,7 @@ class Game:
             self.print_and_save(f"\n{self.printtime()} [DEBUG] Recalibrating the dimensions of the game window...")
 
         try:
-            self.home_button_location = self.image_tools.find_button("home", sleep_time=1)
+            self.home_button_location = self.image_tools.find_button("home")
             
             # Set the dimensions of the game window and save it in ImageUtils so that future operations do not go out of bounds.
             home_news_button = self.image_tools.find_button("home_news")
@@ -150,7 +150,7 @@ class Game:
         Returns:
             None
         """   
-        if(not self.image_tools.confirm_location("home", tries=1)):
+        if(not self.image_tools.confirm_location("home")):
             self.print_and_save(f"\n{self.printtime()} [INFO] Moving back to the Home Screen...")
             # Go to the Home Screen.
             if(self.home_button_location != None):
@@ -165,7 +165,7 @@ class Game:
             self.calibrate_game_window(display_info_check=True)
             
         if(confirm_location_check):
-            self.image_tools.confirm_location("home", tries=3)
+            self.image_tools.confirm_location("home")
             
         return None
 
@@ -590,7 +590,7 @@ class Game:
         self.print_and_save(f"\n{self.printtime()} [INFO] Detecting if any loot dropped...")
         
         # Click away the EXP Gained popup and any other popups until the bot reaches the Loot Collected Screen.
-        if(self.image_tools.confirm_location("exp_gained", tries=1) and not self.retreat_check):
+        if(self.image_tools.confirm_location("exp_gained") and not self.retreat_check):
             while(not self.image_tools.confirm_location("loot_collected", tries=1)):
                 ok_button_location = self.image_tools.find_button("ok", tries=1, suppress_error=True)
                 cancel_button_location = self.image_tools.find_button("cancel", tries=1, suppress_error=True)
@@ -779,7 +779,7 @@ class Game:
                             i += 1
                             
                             # Check for battle end.
-                            if(self.image_tools.confirm_location("exp_gained", tries=1) == True):
+                            if(self.image_tools.confirm_location("exp_gained", tries=1)):
                                 break
                         
                         # TODO: Allow for Summon chaining. For now, summoning multiple summons requires individual lines.
@@ -819,7 +819,7 @@ class Game:
                                         self.mouse_tools.move_and_click_point(self.back_button_location[0], self.back_button_location[1])
                                         
                                 # Check for battle end.
-                                if(self.image_tools.confirm_location("exp_gained", tries=1) == True):
+                                if(self.image_tools.confirm_location("exp_gained", tries=1)):
                                     break
                                 
                                 # Continue to the next line for execution.
