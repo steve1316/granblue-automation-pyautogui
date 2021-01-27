@@ -240,6 +240,10 @@ class MainWindow(QObject):
     @Slot()
     def start_bot(self):
         print("\nStarting bot.")
+        
+        # Clear the text log.
+        self.text_log.clear()
+        
         self.isBotRunning = multiprocessing.Value("i", 0)
         self.botRunningTimeInSeconds = timer()
         self.bot_process = multiprocessing.Process(target=self.bot_object.run_bot, args=(self.item_name, self.item_amount, self.farming_mode, self.location_name, self.mission_name, 
