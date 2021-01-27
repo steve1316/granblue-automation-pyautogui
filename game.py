@@ -298,24 +298,20 @@ class Game:
         summon_location = self.image_tools.find_summon(summon_name, self.home_button_location[0], self.home_button_location[1])
         if (summon_location != None):
             self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1])
-            
             self.print_and_save(f"{self.printtime()} [INFO] Found {summon_name.upper()} Summon.")
-
             return True
         else:
             # If a Summon is not found, start a Trial Battle to refresh Summons.
             self.reset_summons()
-
             return False
 
     def reset_summons(self):
-        """Reset the Summons available by starting and then retreating from a Trial Battle.
+        """Reset the Summons available by starting and then retreating from a Old Lignoid Trial Battle.
 
         Returns:
             None
         """
         self.print_and_save(f"\n{self.printtime()} [INFO] Refreshing summons...")
-        
         self.go_back_home(confirm_location_check=True)
         self.mouse_tools.scroll_screen_from_home_button(-600)
 
@@ -364,11 +360,9 @@ class Game:
         try:
             if(group_number < 8):
                 while (set_location == None):
-                    set_location = self.image_tools.find_button("party_set_a")
-                    
+                    set_location = self.image_tools.find_button("party_set_a")           
                     if (set_location == None):
                         tries -= 1
-
                         if (tries <= 0):
                             raise NotFoundException("Could not find Set A.")
 
@@ -377,10 +371,8 @@ class Game:
             else:
                 while (set_location == None):
                     set_location = self.image_tools.find_button("party_set_b")
-                    
                     if (set_location == None):
                         tries -= 1
-
                         if (tries <= 0):
                             raise NotFoundException("Could not find Set B.")
 
@@ -391,12 +383,11 @@ class Game:
             self.isBotRunning.value = 1
 
         if(self.debug_mode):
-            self.print_and_save(f"\n{self.printtime()} [INFO] Successfully selected the correct Set. Now selecting Group {group_number}...")
+            self.print_and_save(f"\n{self.printtime()} [DEBUG] Successfully selected the correct Set. Now selecting Group {group_number}...")
 
         # Center the mouse on the Set A / Set B Button and then click the correct Group Number Tab.
         x = None
         y = set_location[1] + 50
-        
         if (group_number == 1):
             x = set_location[0] - 350
         elif(group_number == 2):
@@ -416,10 +407,9 @@ class Game:
 
         # Now select the correct Party.
         if(self.debug_mode):
-            self.print_and_save(f"{self.printtime()} [INFO] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
+            self.print_and_save(f"{self.printtime()} [DEBUG] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
 
         y = set_location[1] + 325
-        
         if(party_number == 1):
             x = set_location[0] - 309
         elif(party_number == 2):
@@ -459,7 +449,6 @@ class Game:
                                                                                          self.attack_button_location[0] - 40, self.attack_button_location[1] + 214), hide_info=True)
 
         number_of_charge_attacks = len(list_of_charge_attacks)
-
         return number_of_charge_attacks
 
     def find_dialog_in_combat(self):
@@ -469,12 +458,10 @@ class Game:
             None
         """
         dialog_location = self.image_tools.find_dialog(self.attack_button_location[0], self.attack_button_location[1], tries=1)
-
         if (dialog_location != None):
             self.mouse_tools.move_and_click_point(dialog_location[0] + 180, dialog_location[1] - 51)
 
         return None
-    
         
     def check_for_ap(self, use_full_elixirs: bool = False):
         """Check if the user encountered the 'Not Enough AP' popup and it will refill using either Half or Full Elixir.
@@ -546,7 +533,6 @@ class Game:
         # Click the portrait of the specified character.
         x = None
         y = self.attack_button_location[1] + 123
-        
         if(character_number == 1):
             x = self.attack_button_location[0] - 317
         elif(character_number == 2):
@@ -558,7 +544,6 @@ class Game:
 
         # Double-clicking the character portrait to avoid any non-invasive popups from other Raid participants.
         self.mouse_tools.move_and_click_point(x, y, mouse_clicks=2)
-
         return None
 
     def use_character_skill(self, character_selected: int, skill: int):
@@ -574,7 +559,6 @@ class Game:
         # Matches the string occurence to which skill the bot needs to select.
         x = None
         y = self.attack_button_location[1] + 171
-        
         if("useskill(1)" in skill.lower()):
             self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 1.")
             x = self.attack_button_location[0] - 213
@@ -621,12 +605,13 @@ class Game:
                 if(ok_button_location != None):
                     self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1], custom_mouse_speed=0.1)
 
-        if(self.item_name != "EXP"):        
-            temp_amount = self.image_tools.find_farmed_items([self.item_name])[0]
-        else:
-            temp_amount = 1
+            # Now that the bot is at the Loot Collected Screen, detect items.
+            if(self.item_name != "EXP"):        
+                temp_amount = self.image_tools.find_farmed_items([self.item_name])[0]
+            else:
+                temp_amount = 1
             
-        self.item_amount_farmed += temp_amount
+            self.item_amount_farmed += temp_amount
             
         self.amount_of_runs_finished += 1
         

@@ -253,10 +253,9 @@ class MapSelection:
                 # Go to the Home Screen.
                 self.game.go_back_home(confirm_location_check=True)
                 
-                # Click the Menu button on the Home Screen and then go to Coop Screen.
+                # Click the Menu button on the Home Screen, go to Coop Screen, and then confirm that the bot arrived.
                 self.game.find_and_click_button("home_menu")
                 self.game.find_and_click_button("coop")
-                
                 self.game.image_tools.confirm_location("coop")
                 
                 self.game.mouse_tools.scroll_screen_from_home_button(-400)
