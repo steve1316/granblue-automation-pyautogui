@@ -1037,20 +1037,17 @@ class Game:
                             if(self.item_amount_farmed < self.item_amount_to_farm):
                                 # Click the Play Again button or the Room button if its Coop.
                                 if(map_mode.lower() != "coop"):
-                                    if(self.image_tools.find_button("play_again", tries=1)):
-                                        self.find_and_click_button("play_again")
-                                    
-                                    # Clear away any Pending Battles.
-                                    self.map_selection.check_for_pending(map_mode)
+                                    if(not self.find_and_click_button("play_again")):
+                                        # Clear away any Pending Battles.
+                                        self.map_selection.check_for_pending(map_mode)
+                                        
+                                        # Start the Quest again.
+                                        self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
                                 else:
                                     self.find_and_click_button("coop_room")
-                                
-                                # Start the Quest again.
-                                self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
-                                
+
                                 # Check for available AP.
                                 self.check_for_ap(use_full_elixirs=self.quest_refill)
-                                
                                 summon_check = False
                         else:
                             self.print_and_save(f"\n{self.printtime()} [INFO] Selecting mission again due to retreating...")
