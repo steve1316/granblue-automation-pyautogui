@@ -92,9 +92,6 @@ class ImageUtils:
         Returns:
             location (int, int): Tuple of coordinates of where the center of the button is located if image matching was successful. Otherwise, return None.
         """
-        if(self.debug_mode):
-            self.game.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find the {button_name.upper()} Button from current position...")
-
         button_location = None
         guibot_check = False
 
@@ -107,9 +104,6 @@ class ImageUtils:
                 button_location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check)
 
             if (button_location == None):
-                if(self.debug_mode):
-                    self.game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
-                
                 # Use GuiBot to template match if PyAutoGUI failed.    
                 self.file_resolver.add_path("images/buttons/")
                 self.clear_memory_guibot()
@@ -120,11 +114,11 @@ class ImageUtils:
                     
                     if (tries <= 0):
                         if(suppress_error != True):
-                            self.game.print_and_save(f"{self.printtime()} [ERROR] Failed to find the {button_name.upper()} Button.")
+                            self.game.print_and_save(f"{self.printtime()} [ERROR] Failed to find the {button_name.upper()} button.")
                         return None
 
                     if(self.debug_mode):
-                        self.game.print_and_save(f"{self.printtime()} [DEBUG] Could not locate the {button_name.upper()} Button. Trying again in {sleep_time} seconds...")
+                        self.game.print_and_save(f"{self.printtime()} [WARNING] Could not locate the {button_name.upper()} button. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
                 else:
@@ -135,7 +129,7 @@ class ImageUtils:
             button_location = (button_location.target.x, button_location.target.y)
 
         if(self.debug_mode):
-            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {button_name.upper()} Button at {button_location}.")
+            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {button_name.upper()} button at {button_location}.")
 
         if (confirm_location_check):
             self.confirm_location(button_name)
@@ -155,12 +149,8 @@ class ImageUtils:
         Returns:
             (bool): True if current location is confirmed. Otherwise, False.
         """
-        if(self.debug_mode):
-            self.game.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to confirm the bot's location at the {location_name.upper()} Screen...")
-
-        header_location = None
-
         # Loop until location is found or return False if image matching failed.
+        header_location = None
         while (header_location == None):
             if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
                 header_location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check, 
@@ -169,9 +159,6 @@ class ImageUtils:
                 header_location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check)
 
             if (header_location == None):
-                if(self.debug_mode):
-                    self.game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
-                
                 # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/headers/")
                 self.clear_memory_guibot()
@@ -181,17 +168,18 @@ class ImageUtils:
                     tries -= 1
                     
                     if (tries <= 0):
+                        # If tries ran out, return False.
                         if(self.debug_mode):
-                            self.game.print_and_save(f"{self.printtime()} [ERROR] Failed to confirm the bot's location at the {location_name.upper()} Screen.")
+                            self.game.print_and_save(f"{self.printtime()} [ERROR] Failed to confirm the bot's location at {location_name.upper()}.")
                         return False
 
                     if(self.debug_mode):
-                        self.game.print_and_save(f"{self.printtime()} [DEBUG] Could not confirm the bot's location at the {location_name.upper()} Screen. Trying again in {sleep_time} seconds...")
+                        self.game.print_and_save(f"{self.printtime()} [WARNING] Could not confirm the bot's location at {location_name.upper()}. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
 
         if(self.debug_mode):
-            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Bot's location is at {location_name.upper()} Screen.")
+            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Bot's current location is at {location_name.upper()}.")
 
         return True
 
@@ -210,9 +198,6 @@ class ImageUtils:
         Returns:
             summon_location (int, int): Tuple of coordinates of where the center of the summon is located if image matching was successful. Otherwise, return None.
         """
-        if(self.debug_mode):
-            self.game.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find {summon_name.upper()} Summon...")
-
         summon_location = None
         guibot_check = False
 
@@ -224,9 +209,6 @@ class ImageUtils:
                 summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_name}.png", confidence=custom_confidence, grayscale=grayscale_check)
 
             if (summon_location == None):
-                if(self.debug_mode):
-                    self.game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
-                
                 # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/summons/")
                 self.clear_memory_guibot()
@@ -240,7 +222,7 @@ class ImageUtils:
                         return None
                 
                     if(self.debug_mode):
-                        self.game.print_and_save(f"{self.printtime()} [DEBUG] Could not locate the {summon_name.upper()} Summon. Trying again in {sleep_time} seconds...")
+                        self.game.print_and_save(f"{self.printtime()} [WARNING] Could not locate {summon_name.upper()} Summon. Trying again in {sleep_time} seconds...")
 
                     # If matching failed, scroll the screen down to see more Summons.
                     self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -400)
@@ -253,7 +235,7 @@ class ImageUtils:
             summon_location = (summon_location.target.x, summon_location.target.y)
 
         if(self.debug_mode):
-            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found the {summon_name.upper()} Summon at {summon_location}.")
+            self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found {summon_name.upper()} Summon at {summon_location}.")
 
         return summon_location
 
@@ -269,46 +251,40 @@ class ImageUtils:
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
 
         Returns:
-            dialog_location (int, int): Tuple of coordinates on the screen for where the match's center was found. Otherwise, return None.
-        """
-        if(self.debug_mode):
-            self.game.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find Lyria/Vyrn dialog popups from current position...")
-        
-        dialog_location = None
-        dialog_location2 = None
+            (int, int): Tuple of coordinates on the screen for where the dialog popup's center was found. Otherwise, return None.
+        """    
+        lyria_dialog_location = None
+        vyrn_dialog_location = None
         guibot_check = False
 
-        while (dialog_location == None and dialog_location2 == None):
+        while (lyria_dialog_location == None and vyrn_dialog_location == None):
             if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_lyria.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                lyria_dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_lyria.png", confidence=custom_confidence, grayscale=grayscale_check, 
                                                                  region=(attack_button_x - 350, attack_button_y + 28, attack_button_x - 264, attack_button_y + 50))
-                dialog_location2 = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_vyrn.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                vyrn_dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_vyrn.png", confidence=custom_confidence, grayscale=grayscale_check, 
                                                                  region=(attack_button_x - 350, attack_button_y + 28, attack_button_x - 264, attack_button_y + 50))
             else:
-                dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_lyria.png", confidence=custom_confidence, grayscale=grayscale_check)
-                dialog_location2 = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_vyrn.png", confidence=custom_confidence, grayscale=grayscale_check)
+                lyria_dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_lyria.png", confidence=custom_confidence, grayscale=grayscale_check)
+                vyrn_dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_vyrn.png", confidence=custom_confidence, grayscale=grayscale_check)
 
-            if (dialog_location == None and dialog_location2 == None):
-                if(self.debug_mode):
-                    self.game.print_and_save(f"{self.printtime()} [DEBUG] Failed matching using PyAutoGUI. Now matching with GuiBot...")
-
+            if (lyria_dialog_location == None and vyrn_dialog_location == None):
                 # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/dialogs/")
                 self.clear_memory_guibot()
-                dialog_location = self.guibot.exists(f"dialog_lyria")
+                lyria_dialog_location = self.guibot.exists(f"dialog_lyria")
                 self.clear_memory_guibot()
-                dialog_location2 = self.guibot.exists(f"dialog_vyrn")
+                vyrn_dialog_location = self.guibot.exists(f"dialog_vyrn")
 
-                if (dialog_location == None and dialog_location2 == None):
+                if (lyria_dialog_location == None and vyrn_dialog_location == None):
                     tries -= 1
                     
                     if (tries <= 0):
                         if(self.debug_mode):
-                            self.game.print_and_save(f"{self.printtime()} [DEBUG] There are no dialog popups detected on the screen. Continuing with bot execution...")
+                            self.game.print_and_save(f"{self.printtime()} [SUCCESS] There are no Lyria/Vyrn dialog popups detected.")
                         return None
 
                     if(self.debug_mode):
-                        self.game.print_and_save(f"{self.printtime()} [DEBUG] Locating dialog popups failed. Trying again in {sleep_time} seconds...")
+                        self.game.print_and_save(f"{self.printtime()} [WARNING] Could not locate any Lyria/Vyrn dialog popups failed. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
                 else:
@@ -316,21 +292,21 @@ class ImageUtils:
 
         # If the location was successfully found using GuiBot, convert the Match object to a Location object.
         if(guibot_check):
-            if(dialog_location != None):
-                dialog_location = (dialog_location.target.x, dialog_location.target.y)
+            if(lyria_dialog_location != None):
+                lyria_dialog_location = (lyria_dialog_location.target.x, lyria_dialog_location.target.y)
             else:
-                dialog_location2 = (dialog_location2.target.x, dialog_location2.target.y)
+                vyrn_dialog_location = (vyrn_dialog_location.target.x, vyrn_dialog_location.target.y)
 
         if(self.debug_mode):
-            if(dialog_location != None):
-                self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found a dialog popup at {dialog_location}.")
+            if(lyria_dialog_location != None):
+                self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found a Lyria dialog popup at {lyria_dialog_location}.")
             else:
-                self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found a dialog popup at {dialog_location2}.")
+                self.game.print_and_save(f"{self.printtime()} [SUCCESS] Found a Vyrn dialog popup at {vyrn_dialog_location}.")
             
-        if(dialog_location != None):
-            return dialog_location
+        if(lyria_dialog_location != None):
+            return lyria_dialog_location
         else:
-            return dialog_location2
+            return vyrn_dialog_location
         
 
     def find_all(self, image_name: str, custom_region: Iterable[Tuple[int, int, int, int]] = None, custom_confidence: float = 0.9, grayscale_check: bool = False, hide_info: bool = False):
@@ -345,10 +321,7 @@ class ImageUtils:
 
         Returns:
             locations (list[Box]): List of Boxes where each occurrence is found on the screen. If no occurrence was found, return a empty list. Or if the file does not exist, return None.
-        """
-        if(self.debug_mode):
-            self.game.print_and_save(f"\n{self.printtime()} [DEBUG] Now attempting to find all occurrences of the {image_name.upper()} image from current position...")
-        
+        """     
         dir_path = os.path.dirname(os.path.realpath(__file__))
         
         # Find specified image file by searching subfolders in the images folder.
@@ -382,10 +355,10 @@ class ImageUtils:
                         
                         if(not hide_info):
                             for location in centered_locations:
-                                self.game.print_and_save(f"{self.printtime()} [INFO] Occurrence found at: " + str(location))
+                                self.game.print_and_save(f"{self.printtime()} [INFO] Occurrence for {image_name.upper()} found at: " + str(location))
                     else:
                         if(self.debug_mode):
-                            self.game.print_and_save(f"{self.printtime()} [ERROR] Failed to detect any occurrences of the {image_name.upper()} image from current position...")
+                            self.game.print_and_save(f"{self.printtime()} [ERROR] Failed to detect any occurrences of {image_name.upper()} images.")
                         
                     return centered_locations
 
@@ -462,8 +435,8 @@ class ImageUtils:
                     if(item not in blacklisted_items and item not in lite_blacklisted_items):
                         location = (location.target.x, location.target.y)
                     
-                    if(self.debug_mode or guibot_check):    
-                        self.game.print_and_save(f"{self.printtime()} [INFO] Item detected using GuiBot at {location}")
+                    if(guibot_check):    
+                        self.game.print_and_save(f"{self.printtime()} [INFO] Occurrence for {item.upper()} found at: {location} using GuiBot.")
                     
                     # Adjust the width and height variables if EasyOCR cannot detect the numbers correctly.
                     left = location[0] + 10
