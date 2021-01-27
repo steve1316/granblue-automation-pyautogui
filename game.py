@@ -472,26 +472,31 @@ class Game:
         Returns:
             None
         """
-        if(self.image_tools.confirm_location("not_enough_ap", tries=1)):
-            # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full.
-            # TODO: Implement check for when the user ran out of both of them, or one of them.
-            if(use_full_elixirs == False):
-                self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Half Elixir...")
-                half_ap_location = self.image_tools.find_button("refill_half_ap")
-                self.mouse_tools.move_and_click_point(half_ap_location[0], half_ap_location[1] + 175)
+        # Loop until the user gets to the Summon Selection Screen.
+        while((self.map_mode.lower() != "coop" and not self.image_tools.confirm_location("select_summon", tries=2)) or 
+              (self.map_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries=2))):
+            if(self.image_tools.confirm_location("not_enough_ap", tries=2)):
+                # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full.
+                # TODO: Implement check for when the user ran out of both of them, or one of them.
+                if(use_full_elixirs == False):
+                    self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Half Elixir...")
+                    half_ap_location = self.image_tools.find_button("refill_half_ap")
+                    self.mouse_tools.move_and_click_point(half_ap_location[0], half_ap_location[1] + 175)
+                else:
+                    self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Full Elixir...")
+                    full_ap_location = self.image_tools.find_button("refill_full_ap")
+                    self.mouse_tools.move_and_click_point(full_ap_location[0], full_ap_location[1] + 175)
+                
+                # Press the OK button to move to the Summon Selection Screen.
+                self.wait(1)
+                self.find_and_click_button("ok")
+                return None
             else:
-                self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Full Elixir...")
-                full_ap_location = self.image_tools.find_button("refill_full_ap")
-                self.mouse_tools.move_and_click_point(full_ap_location[0], full_ap_location[1] + 175)
+                self.wait(1)
             
-            # Press the OK button to move to the Summon Selection Screen.
-            self.wait(1)
-            self.find_and_click_button("ok")
-        else:
-            self.print_and_save(f"\n{self.printtime()} [INFO] AP is available. Continuing...")
-        
+        self.print_and_save(f"\n{self.printtime()} [INFO] AP is available. Continuing...")
         return None
-    
+
     def check_for_ep(self, use_soul_balm: bool = False):
         """Check if the user encountered the 'Not Enough EP' popup and it will refill using either Soul Berry or Soul Balm.
 
