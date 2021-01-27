@@ -892,43 +892,31 @@ class Game:
             self.print_and_save(f"\n{self.printtime()} [COMBAT] Bot has reached end of script. Auto-attacking until battle ends...")
 
             # Keep pressing the location of the "Attack" / "Next" Button until the bot reaches the Quest Results Screen.
-            while(self.image_tools.confirm_location("exp_gained", tries=1) == False and not self.retreat_check and not full_auto):
+            while(not self.retreat_check and not full_auto and self.image_tools.confirm_location("exp_gained", tries=1) == False):
                 self.find_dialog_in_combat()
-
                 attack_button_location = self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error)
-                next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
-
                 if (attack_button_location != None):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
                     self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
-                    
                     number_of_charge_attacks = self.find_charge_attacks()
                     self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
                     self.wait(3 + number_of_charge_attacks)
                     
-                    # Wait until the bot sees either the Attack or the Next button BEFORE starting the next turn or moving the execution forward.
-                    tries = 10
-                    while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) == None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) == None):
-                        self.wait(1)
-                        self.find_dialog_in_combat()
-                        tries -= 1
-                        if(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None or tries < 0):
-                            break
-                        self.wait(1)
-                        
+                    # Wait for the Attack / Next button or move on after about 20 seconds.
+                    self.wait_for_attack()
                     self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
-                    
                     turn_number += 1
                     
                     # Check to see if the party wiped.
                     self.party_wipe_check()
 
-                elif(next_button_location != None):
+                next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
+                if(next_button_location != None):
                     self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                     self.wait(3)
             
             # Loop for Full Auto. The game will progress the Quest/Raid without any input required from the bot.     
-            while((self.image_tools.confirm_location("exp_gained", tries=1) == False and self.image_tools.confirm_location("no_loot", tries=1) == False and not self.retreat_check and full_auto)):
+            while(not self.retreat_check and full_auto and self.image_tools.confirm_location("exp_gained", tries=1) == False and self.image_tools.confirm_location("no_loot", tries=1) == False):
                 self.party_wipe_check()
                 self.wait(5)
 
