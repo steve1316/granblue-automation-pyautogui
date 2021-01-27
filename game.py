@@ -183,7 +183,7 @@ class Game:
             temp_location = self.image_tools.find_button("quest", tries=1, suppress_error=suppress_error)
             if(temp_location == None):
                 temp_location = self.image_tools.find_button("quest2", tries=1, suppress_error=suppress_error)
-            else:
+            if(temp_location == None):
                 # If the blue or red Quest buttons was not detected, user must be in Strike Time with the red Quest button.
                 temp_location = self.image_tools.find_button("quest3", tries=1, suppress_error=suppress_error)
         elif(button_name == "raid"):
