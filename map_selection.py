@@ -84,8 +84,9 @@ class MapSelection:
                         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Agastia. Now moving to {map_name}...")
                         current_location = "Agastia"    
                 
-                # Go to the Quest Screen.
+                # Go to the Quest Screen and confirm if the bot arrived.
                 self.game.find_and_click_button("quest")
+                self.game.image_tools.confirm_location("quest")
                 
                 # If the bot is currently not at the correct island, move to it.
                 if(check_location == False):
@@ -512,7 +513,7 @@ class MapSelection:
             
             if(map_mode.lower() != "coop"):
                 self.game.print_and_save(f"{self.game.printtime()} [INFO] Now checking if bot is currently at Summon Selection screen...")
-                check = self.game.image_tools.confirm_location("select_summon")
+                check = self.game.image_tools.confirm_location("select_summon", tries=5)
                 if(check):
                     self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is currently at Summon Selection screen.")
                     return True
@@ -520,13 +521,13 @@ class MapSelection:
                     self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is not at Summon Selection screen.")
                     return False
             else:
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Now checking if bot is currently at Party Selection screen...")
-                check = self.game.image_tools.confirm_location("coop_without_support_summon")
+                self.game.print_and_save(f"{self.game.printtime()} [INFO] Now checking if bot is currently at Coop Party Selection screen...")
+                check = self.game.image_tools.confirm_location("coop_without_support_summon", tries=5)
                 if(check):
-                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is currently at Party Selection screen.")
+                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is currently at Coop Party Selection screen.")
                     return True
                 else:
-                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is not at Party Selection screen.")
+                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is not at Coop Party Selection screen.")
                     return False
         except Exception:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception in MapSelection select_map(): \n{traceback.format_exc()}")
@@ -566,7 +567,7 @@ class MapSelection:
                                 self.raids_joined -= 1
                 
                 # Check if there are any additional Pending Battles.
-                if(self.game.image_tools.find_button("quest_results_pending_battles", tries=1, suppress_error=True)):
+                if(self.game.image_tools.find_button("quest_results_pending_battles", tries=2, suppress_error=True)):
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Found some additional pending battles that need collecting from.")
                     self.game.find_and_click_button("quest_results_pending_battles")
                     if(self.game.image_tools.confirm_location("pending_battles", tries=2)):
@@ -604,7 +605,7 @@ class MapSelection:
                                         break
             else:
                 # Check if the Play Again button is covered by the Pending Battles button.
-                if(self.game.image_tools.find_button("quest_results_pending_battles", tries=1, suppress_error=True)):
+                if(self.game.image_tools.find_button("quest_results_pending_battles", tries=2, suppress_error=True)):
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Found pending battles that need collecting from.")
                     self.game.find_and_click_button("quest_results_pending_battles")
                     if(self.game.image_tools.confirm_location("pending_battles", tries=1)):
