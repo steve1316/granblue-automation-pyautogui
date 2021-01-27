@@ -509,7 +509,7 @@ class MapSelection:
                     raise Exception("Cannot find the Special Missions.")
             
             # Check for available AP.
-            self.game.check_for_ap(use_full_elixirs=False)
+            self.game.check_for_ap(use_full_elixirs=self.game.quest_refill)
             
             if(map_mode.lower() != "coop"):
                 self.game.print_and_save(f"{self.game.printtime()} [INFO] Now checking if bot is currently at Summon Selection screen...")
@@ -705,7 +705,7 @@ class MapSelection:
                     self.game.wait_for_ping(1)
                     if(not self.game.image_tools.confirm_location("raid_already_ended", tries=1) and not self.game.image_tools.confirm_location("invalid_code", tries=1)):
                         # Check for EP.
-                        self.game.check_for_ep()
+                        self.game.check_for_ep(se_soul_balm=self.game.raid_refill)
                         
                         # Check for pending rewards popup.
                         self.check_for_pending("raid")

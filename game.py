@@ -3,6 +3,7 @@ import multiprocessing
 import sys
 import time
 import traceback
+from configparser import ConfigParser
 from timeit import default_timer as timer
 from typing import Iterable
 
@@ -24,18 +25,29 @@ class Game:
 
     isBotRunning (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
     
-    keys_tokens (Iterable[str]): List of keys and tokens for Twitter API. Its order is: [consumer key, consumer secret key, access token, access secret token].
-    
-    custom_mouse_speed (float, optional): The speed at which the mouse moves at. Defaults to 0.2.
-    
     combat_script (str, optional): The combat script to use for Combat Mode. Defaults to empty string.
 
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
 
     """
 
-    def __init__(self, queue: multiprocessing.Queue, isBotRunning: int, keys_tokens: Iterable[str], combat_script: str = "", custom_mouse_speed: float = 0.2, debug_mode: bool = False):
+    def __init__(self, queue: multiprocessing.Queue, isBotRunning: int, combat_script: str = "", debug_mode: bool = False):
         super().__init__()
+        
+        self.config = ConfigParser()
+        self.config.read("config.ini")
+
+        # Grab the Twitter API keys and tokens from config.ini. The list order is: [consumer key, consumer secret key, access token, access secret token].
+        keys_tokens = [self.config.get("twitter", "api_key"), self.config.get("twitter", "api_key_secret"), self.config.get("twitter", "access_token"), self.config.get("twitter", "access_token_secret")]
+        custom_mouse_speed = float(self.config.get("configuration", "mouse_speed"))
+        
+        # Grab the timings between various actions during Combat Mode from config.ini as well.
+        self.idle_seconds_after_skill = float(self.config.get("configuration", "idle_seconds_after_skill"))
+        self.idle_seconds_after_summon = float(self.config.get("configuration", "idle_seconds_after_summon"))
+        
+        # Determine whether or not the user wants to refill using Full Elixir/Soul Balm.
+        self.quest_refill = self.config.getboolean("refill", "refill_using_full_elixir")
+        self.raid_refill = self.config.getboolean("refill", "refill_using_soul_balms")
 
         # Start a timer signaling bot start in order to keep track of elapsed time and create a Queue to share logging messages between backend and frontend.
         self.starting_time = timer()
@@ -779,8 +791,8 @@ class Game:
                             # Now click the Back button.
                             self.mouse_tools.move_and_click_point(self.back_button_location[0], self.back_button_location[1])
 
-                            # Attempt to wait to see if the character one-shot the enemy or not.
-                            self.wait_for_ping(4)
+                            # Attempt to wait to see if the character one-shot the enemy or not. This is user-defined in the config.ini.
+                            self.wait_for_ping(self.idle_seconds_after_skill)
                             
                             # Continue to the next line for execution.
                             line_number += 1
@@ -816,7 +828,9 @@ class Game:
                                     ok_button_location = self.image_tools.find_button("ok", tries=1)
                                     if(ok_button_location != None):
                                         self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
-                                        self.wait_for_ping(7) # This is 7 seconds to see if the Summon killed all enemies on screen.
+                                        
+                                        # Wait for the Summon animation to complete. This is user-defined in the config.ini.
+                                        self.wait_for_ping(self.idle_seconds_after_summon)
                                     else:
                                         self.print_and_save(f"{self.printtime()} [COMBAT] Summon #{j} cannot be invoked due to current restrictions.")
                                         self.find_and_click_button("cancel")
@@ -953,8 +967,8 @@ class Game:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Cannot find \"{script_file_path}.txt\" inside the /scripts folder: \n{traceback.format_exc()}")
             self.isBotRunning.value = 1
     
-    def start_farming_mode(self, summon_element_name: str, summon_name: str, group_number: int, party_number: int, map_mode: str, map_name: str, 
-                           item_name: str, item_amount_to_farm: int, mission_name: str, use_refill_full: bool = False):
+    def start_farming_mode(self, summon_element_name: str, summon_name: str, group_number: int, party_number: int, map_mode: str, map_name: str, item_name: str, 
+                           item_amount_to_farm: int, mission_name: str):
         """Start the Farming Mode using the given parameters.
 
         Args:
@@ -967,7 +981,6 @@ class Game:
             item_name (str): Name of the item to farm.
             item_amount_to_farm (int): Amount of the item to farm.
             mission_name (str): Name of the mission to farm the item in.
-            use_refill_full (bool, optional): Will use Full Elixir/Soul Balm instead of Half Elixir/Soul Berry based on this. Defaults to False.
         
         Returns:
             None
@@ -1013,9 +1026,9 @@ class Game:
                     while(summon_check == False and map_mode.lower() != "coop"): 
                         # Check for available AP or BP, depending on mode.
                         if(map_mode.lower() != "raid"):
-                            self.check_for_ap(use_full_elixirs=use_refill_full)
+                            self.check_for_ap(use_full_elixirs=self.quest_refill)
                         else:
-                            self.check_for_ep(use_soul_balm=use_refill_full)
+                            self.check_for_ep(use_soul_balm=self.raid_refill)
                         
                         self.find_summon_element(summon_element_name)
                         summon_check = self.find_summon(summon_name)
@@ -1064,7 +1077,7 @@ class Game:
                                 self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
                                 
                                 # Check for available AP.
-                                self.check_for_ap(use_full_elixirs=use_refill_full)
+                                self.check_for_ap(use_full_elixirs=self.quest_refill)
                                 
                                 summon_check = False
                         else:
