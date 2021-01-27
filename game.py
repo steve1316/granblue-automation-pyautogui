@@ -721,12 +721,13 @@ class Game:
                             
                             # Wait until the bot sees either the Attack or the Next button BEFORE starting the next turn or moving the execution forward.
                             tries = 10
-                            while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None):
+                            while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) == None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) == None):
                                 self.wait(1)
                                 self.find_dialog_in_combat()
                                 tries -= 1
-                                if(tries < 0):
+                                if(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None or tries < 0):
                                     break
+                                self.wait(1)
                                 
                             self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
                             
@@ -872,7 +873,7 @@ class Game:
                         
                         # Wait until the bot sees either the Attack or the Next button BEFORE starting the next turn or moving the execution forward.
                         tries = 10
-                        while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None):
+                        while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) == None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) == None):
                             self.wait(1)
                             self.find_dialog_in_combat()
                             tries -= 1
@@ -931,12 +932,13 @@ class Game:
                     
                     # Wait until the bot sees either the Attack or the Next button BEFORE starting the next turn or moving the execution forward.
                     tries = 10
-                    while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None):
+                    while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) == None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) == None):
                         self.wait(1)
                         self.find_dialog_in_combat()
                         tries -= 1
-                        if(tries < 0):
+                        if(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None or tries < 0):
                             break
+                        self.wait(1)
                         
                     self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
                     
