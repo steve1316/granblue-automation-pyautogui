@@ -378,7 +378,7 @@ class MapSelection:
                             # Move to the specified Special location by clicking its Select button.
                             special_quest_select_button = (mission_select_button[0] + 145, mission_select_button[1] + 75)
                             self.game.mouse_tools.move_and_click_point(special_quest_select_button[0], special_quest_select_button[1])
-                            self.game.wait_for_ping(1)
+                            self.game.wait(1)
                             
                             if(map_name == "Basic Treasure Quests"):
                                 if(temp_mission_name == "Scarlet Trial"):
@@ -398,7 +398,7 @@ class MapSelection:
                                     self.game.mouse_tools.move_and_click_point(trial_buttons[2][0], trial_buttons[2][1])
                                     
                                 # Now start the Trial with the specified difficulty.
-                                self.game.wait_for_ping(1)
+                                self.game.wait(1)
                                 self.game.print_and_save(f"{self.game.printtime()} [INFO] Now navigating to {difficulty}...")
                                 difficulty_play_buttons = self.game.image_tools.find_all("special_play")
                                 
@@ -477,7 +477,7 @@ class MapSelection:
                                     self.game.mouse_tools.move_and_click_point(trial_buttons[5][0], trial_buttons[5][1])
                                     
                                 # Now start the Showdown with the specified difficulty.
-                                self.game.wait_for_ping(1)
+                                self.game.wait(1)
                                 self.game.print_and_save(f"{self.game.printtime()} [INFO] Now navigating to {difficulty}...")
                                 difficulty_play_buttons = self.game.image_tools.find_all("special_play")
                                 
@@ -542,7 +542,7 @@ class MapSelection:
         Returns:
             None
         """
-        self.game.wait_for_ping(1)
+        self.game.wait(1)
         
         try:
             if(map_mode.lower() == "raid"):
@@ -550,11 +550,11 @@ class MapSelection:
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Found some pending battles that need collecting from.")
                     
                     self.game.find_and_click_button("ok")
-                    self.game.wait_for_ping(1)
+                    self.game.wait(1)
                     
                     if(self.game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
                         self.game.find_and_click_button("tap_here_to_see_rewards")
-                        self.game.wait_for_ping(1)
+                        self.game.wait(1)
                         
                         if(self.game.image_tools.confirm_location("no_loot", tries=1)):
                             self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
@@ -573,7 +573,7 @@ class MapSelection:
                     if(self.game.image_tools.confirm_location("pending_battles", tries=2)):
                         while(self.game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
                             self.game.find_and_click_button("tap_here_to_see_rewards")
-                            self.game.wait_for_ping(1)
+                            self.game.wait(1)
                             
                             if(self.game.image_tools.confirm_location("no_loot", tries=1)):
                                 self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
@@ -589,7 +589,7 @@ class MapSelection:
                                 self.game.find_and_click_button("quest_results_pending_battles")
                                 while(self.game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
                                     self.game.find_and_click_button("tap_here_to_see_rewards")
-                                    self.game.wait_for_ping(1)
+                                    self.game.wait(1)
                                     
                                     if(self.game.image_tools.confirm_location("no_loot", tries=1)):
                                         self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
@@ -611,7 +611,7 @@ class MapSelection:
                     if(self.game.image_tools.confirm_location("pending_battles", tries=1)):
                         while(self.game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
                             self.game.find_and_click_button("tap_here_to_see_rewards")
-                            self.game.wait_for_ping(1)
+                            self.game.wait(1)
                             
                             if(self.game.image_tools.confirm_location("no_loot", tries=1)):
                                 self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
@@ -639,7 +639,7 @@ class MapSelection:
             None
         """
         try:
-            self.game.wait_for_ping(1)
+            self.game.wait(1)
             joined_locations = self.game.image_tools.find_all("joined")
             
             if(joined_locations != None):
@@ -674,7 +674,7 @@ class MapSelection:
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Maximum raids of 3 has been joined. Waiting 60 seconds to see if any finish.")
                     self.game.go_back_home(confirm_location_check=True)
 
-                    self.game.wait_for_ping(60)
+                    self.game.wait(60)
                     self.game.find_and_click_button("quest", suppress_error=True)
                     self.check_for_pending("raid")
             else:
@@ -702,7 +702,7 @@ class MapSelection:
                     self.game.mouse_tools.click_point_instantly(join_room_button[0], join_room_button[1])
                     
                     # If the raid is still able to be joined, break out and head to the Summon Selection Screen.
-                    self.game.wait_for_ping(1)
+                    self.game.wait(1)
                     if(not self.game.image_tools.confirm_location("raid_already_ended", tries=1) and not self.game.image_tools.confirm_location("invalid_code", tries=1)):
                         # Check for EP.
                         self.game.check_for_ep(se_soul_balm=self.game.raid_refill)
@@ -719,7 +719,7 @@ class MapSelection:
                 
                 tries -= 1
                 self.game.print_and_save(f"\n{self.game.printtime()} [WARNING] Could not find any valid room codes. \nWaiting 60 seconds and then trying again with {tries} tries left before exiting.")
-                self.game.wait_for_ping(60)
+                self.game.wait(60)
                 
             return False
         except Exception:

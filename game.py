@@ -168,7 +168,7 @@ class Game:
             
         return None
 
-    def wait_for_ping(self, seconds: int = 3):
+    def wait(self, seconds: int = 3):
         """Wait the specified seconds to account for ping or loading.
 
         Args:
@@ -219,7 +219,7 @@ class Game:
             party_wipe_indicator = self.image_tools.find_button("party_wipe_indicator", tries=1, suppress_error=self.suppress_error)
             if(party_wipe_indicator != None):
                 self.print_and_save(f"\n{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Retreating now...")
-                self.wait_for_ping(3)
+                self.wait(3)
                 self.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1])
                 
                 self.image_tools.confirm_location("continue")
@@ -260,7 +260,7 @@ class Game:
 
         summon_element_location = None
         
-        self.wait_for_ping(1)
+        self.wait(1)
         while (summon_element_location == None):
             summon_element_location = self.image_tools.find_button(f"summon_{summon_element_name.lower()}", tries=1)
 
@@ -507,7 +507,7 @@ class Game:
                 self.mouse_tools.move_and_click_point(full_ap_location[0], full_ap_location[1] + 175)
             
             # Press the OK button to move to the Summon Selection Screen.
-            self.wait_for_ping(1)
+            self.wait(1)
             self.find_and_click_button("ok")
         else:
             self.print_and_save(f"\n{self.printtime()} [INFO] AP is available. Continuing...")
@@ -536,7 +536,7 @@ class Game:
                 self.mouse_tools.move_and_click_point(full_ep_location[0], full_ep_location[1] + 175)
             
             # Press the OK button to move to the Summon Selection Screen.
-            self.wait_for_ping(1)
+            self.wait(1)
             self.find_and_click_button("ok")
         else:
             self.print_and_save(f"\n{self.printtime()} [INFO] EP is available. Continuing...")
@@ -717,12 +717,12 @@ class Game:
                             
                             number_of_charge_attacks = self.find_charge_attacks()
                             self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
-                            self.wait_for_ping(3 + number_of_charge_attacks)
+                            self.wait(3 + number_of_charge_attacks)
                             
                             # Wait until the bot sees either the Attack or the Next button BEFORE starting the next turn or moving the execution forward.
                             tries = 10
                             while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None):
-                                self.wait_for_ping(1)
+                                self.wait(1)
                                 self.find_dialog_in_combat()
                                 tries -= 1
                                 if(tries < 0):
@@ -740,7 +740,7 @@ class Game:
                                 self.print_and_save(f"{self.printtime()} [DEBUG] Detected the Next Button. Clicking it now...")
 
                             self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
-                            self.wait_for_ping(3)
+                            self.wait(3)
                             
                         # Check for battle end.
                         if(self.image_tools.confirm_location("exp_gained", tries=1) == True or self.retreat_check):
@@ -792,7 +792,7 @@ class Game:
                             self.mouse_tools.move_and_click_point(self.back_button_location[0], self.back_button_location[1])
 
                             # Attempt to wait to see if the character one-shot the enemy or not. This is user-defined in the config.ini.
-                            self.wait_for_ping(self.idle_seconds_after_skill)
+                            self.wait(self.idle_seconds_after_skill)
                             
                             # Continue to the next line for execution.
                             line_number += 1
@@ -830,7 +830,7 @@ class Game:
                                         self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
                                         
                                         # Wait for the Summon animation to complete. This is user-defined in the config.ini.
-                                        self.wait_for_ping(self.idle_seconds_after_summon)
+                                        self.wait(self.idle_seconds_after_summon)
                                     else:
                                         self.print_and_save(f"{self.printtime()} [COMBAT] Summon #{j} cannot be invoked due to current restrictions.")
                                         self.find_and_click_button("cancel")
@@ -862,23 +862,23 @@ class Game:
                     if(next_button_location != None):
                         self.print_and_save(f"{self.printtime()} [COMBAT] All enemies on screen have been eliminated before attacking. Preserving Turn {turn_number} by moving to the next Wave...")
                         self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
-                        self.wait_for_ping(3)
+                        self.wait(3)
                     else:
                         self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
                         
                         number_of_charge_attacks = self.find_charge_attacks()
                         self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
-                        self.wait_for_ping(3 + number_of_charge_attacks)
+                        self.wait(3 + number_of_charge_attacks)
                         
                         # Wait until the bot sees either the Attack or the Next button BEFORE starting the next turn or moving the execution forward.
                         tries = 10
                         while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None):
-                            self.wait_for_ping(1)
+                            self.wait(1)
                             self.find_dialog_in_combat()
                             tries -= 1
                             if(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None or tries < 0):
                                 break
-                            self.wait_for_ping(1)
+                            self.wait(1)
                             
                         self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
 
@@ -890,7 +890,7 @@ class Game:
                         next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
                         if(next_button_location != None):
                             self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
-                            self.wait_for_ping(3)
+                            self.wait(3)
                             
                 if("exit" in line.lower() and not full_auto):
                     # End Combat Mode by heading back to the Home Screen without retreating. 
@@ -898,7 +898,7 @@ class Game:
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line.strip()}\"")
                     self.print_and_save(f"{self.printtime()} [COMBAT] Leaving this raid without retreating...")
                     
-                    self.wait_for_ping(1)
+                    self.wait(1)
                     self.find_and_click_button("menu")
                     self.find_and_click_button("raid_home")
                     self.find_and_click_button("raid_go_back_home")
@@ -927,12 +927,12 @@ class Game:
                     
                     number_of_charge_attacks = self.find_charge_attacks()
                     self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
-                    self.wait_for_ping(3 + number_of_charge_attacks)
+                    self.wait(3 + number_of_charge_attacks)
                     
                     # Wait until the bot sees either the Attack or the Next button BEFORE starting the next turn or moving the execution forward.
                     tries = 10
                     while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None):
-                        self.wait_for_ping(1)
+                        self.wait(1)
                         self.find_dialog_in_combat()
                         tries -= 1
                         if(tries < 0):
@@ -947,12 +947,12 @@ class Game:
 
                 elif(next_button_location != None):
                     self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
-                    self.wait_for_ping(3)
+                    self.wait(3)
             
             # Loop for Full Auto. The game will progress the Quest/Raid without any input required from the bot.     
             while((self.image_tools.confirm_location("exp_gained", tries=1) == False and self.image_tools.confirm_location("no_loot", tries=1) == False and not self.retreat_check and full_auto)):
                 self.party_wipe_check()
-                self.wait_for_ping(5)
+                self.wait(5)
 
             self.print_and_save("\n################################################################################")
             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
@@ -1053,7 +1053,7 @@ class Game:
                     
                     if(start_check and map_mode.lower() != "raid"):
                         # Check for the Items Picked Up popup that appears after starting a Quest mission.
-                        self.wait_for_ping(2)
+                        self.wait(2)
                         if(self.image_tools.confirm_location("items_picked_up", tries=1)):
                             self.find_and_click_button("ok")
                         
@@ -1098,7 +1098,7 @@ class Game:
                                     self.map_selection.check_for_pending(map_mode)
                                     
                                     # Loop while clicking any detected Cancel buttons like from Friend Request popups.
-                                    # self.wait_for_ping(1)
+                                    # self.wait(1)
                                     # while(self.image_tools.find_button("cancel", tries=1, suppress_error=self.suppress_error) != None):
                                     #     self.find_and_click_button("cancel")
                                     
@@ -1110,7 +1110,7 @@ class Game:
                                     self.find_and_click_button("ok")
                                     while(self.image_tools.find_button("pending_battle_sidebar", tries=1)):
                                         self.find_and_click_button("pending_battle_sidebar")
-                                        self.wait_for_ping(1)
+                                        self.wait(1)
                                         
                                         if(self.image_tools.confirm_location("no_loot", tries=1)):
                                             self.find_and_click_button("quests")
