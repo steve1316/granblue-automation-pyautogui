@@ -233,15 +233,15 @@ class Game:
                 self.image_tools.confirm_location("continue")
                 self.find_and_click_button("cancel")
                     
-                if(self.image_tools.confirm_location("retreat", tries=1)):
+                if(self.map_mode.lower() != "raid" and self.image_tools.confirm_location("retreat")):
                     # For retreating from Quests.
                     self.find_and_click_button("retreat_confirmation")
                     
                     self.retreat_check = True
-                elif(self.image_tools.confirm_location("raid_continue", tries=1)):
+                elif(self.image_tools.confirm_location("raid_continue")):
                     # For backing out of Raids without retreating.
                     self.find_and_click_button("cancel")
-                    if(self.image_tools.confirm_location("raid_retreat", tries=1)):
+                    if(self.image_tools.confirm_location("raid_retreat")):
                         self.find_and_click_button("raid_retreat_home")
                     
                     self.retreat_check = True
@@ -266,20 +266,18 @@ class Game:
         summon_element_location = None
         
         self.wait(1)
-        while (summon_element_location == None):
-            summon_element_location = self.image_tools.find_button(f"summon_{summon_element_name.lower()}", tries=1)
+        while(summon_element_location == None):
+            summon_element_location = self.image_tools.find_button(f"summon_{summon_element_name.lower()}")
 
-            if (summon_element_location == None):
+            if(summon_element_location == None):
                 tries -= 1
                 
-                if (tries == 0):
+                if(tries == 0):
                     self.print_and_save(f"{self.printtime()} [ERROR] Failed to find {summon_element_name.upper()} Element tab.")
                     return False
 
         self.print_and_save(f"{self.printtime()} [SUCCESS] Found {summon_element_name.upper()} Element tab.")
-
         self.mouse_tools.move_and_click_point(summon_element_location[0], summon_element_location[1])
-
         return True
 
     def find_summon(self, summon_name: str):
@@ -324,31 +322,32 @@ class Game:
             # Go through each step in order from left to right from the list of steps.
             while (len(list_of_steps_in_order) > 0):
                 step = list_of_steps_in_order.pop(0)
-                
                 if(step == "trial_battles_old_lignoid"):
                     self.image_tools.confirm_location("trial_battles")
+                elif(step == "close"):
+                    self.wait(2)
+                    self.image_tools.confirm_location("trial_battles_description")
                 
                 image_location = self.image_tools.find_button(step)
-                
                 if(step == "choose_a_summon"):
                     self.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187)
                 else:
                     self.mouse_tools.move_and_click_point(image_location[0], image_location[1])
             
-            self.image_tools.confirm_location("trial_battles")
-            self.print_and_save(f"{self.printtime()} [INFO] Summons have now been refreshed.")
+            if(self.image_tools.confirm_location("trial_battles")):
+                self.print_and_save(f"{self.printtime()} [INFO] Summons have now been refreshed.")
             return None
         except Exception:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while resetting summons: \n{traceback.format_exc()}")
             self.isBotRunning.value = 1
 
-    def find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 2):
+    def find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 3):
         """Select the specified group and party. It will then start the mission.
 
         Args:
             group_number (int): The group that the specified party in in.
             party_number (int): The specified party to start the mission with.
-            tries (int, optional): Number of tries before failing. Defaults to 2.
+            tries (int, optional): Number of tries to select a Set before failing. Defaults to 3.
 
         Returns:
             (bool): Returns False if it detects the "Raid is full/Raid is already done" dialog. Otherwise, return True.
@@ -428,13 +427,13 @@ class Game:
         if(self.debug_mode):
             self.print_and_save(f"{self.printtime()} [SUCCESS] Successfully selected Party {party_number}. Now starting the mission.")
 
-        # If a dialog window pops up and says "This raid battle has already ended. The Home screen will now appear.", return False.
-        if(self.image_tools.confirm_location("raid_just_ended_home_redirect", tries=1)):
-            self.print_and_save(f"{self.printtime()} [WARNING] Raid unfortunately just ended.")
-            return False
-
         # Find and click the "OK" Button to start the mission.
         self.find_and_click_button("party_selection_ok")
+        
+        # If a dialog window pops up and says "This raid battle has already ended. The Home screen will now appear.", return False.
+        if(self.map_mode.lower() == "raid" and self.image_tools.confirm_location("raid_just_ended_home_redirect", tries=3)):
+            self.print_and_save(f"{self.printtime()} [WARNING] Raid unfortunately just ended.")
+            return False
         
         return True
 
@@ -506,7 +505,8 @@ class Game:
         Returns:
             None
         """
-        if(self.image_tools.confirm_location("not_enough_ep", tries=1)):
+        self.wait(3)
+        if(self.image_tools.confirm_location("not_enough_ep", tries=2)):
             # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
             # TODO: Implement check for when the user ran out of both of them, or one of them.
             if(use_soul_balm == False):
@@ -580,7 +580,7 @@ class Game:
         self.mouse_tools.move_and_click_point(x, y)
         
         # Check to see if the character is skill-sealed.
-        if(self.image_tools.confirm_location("use_skill", tries=1)):
+        if(self.image_tools.confirm_location("use_skill", tries=2)):
             self.print_and_save(f"{self.printtime()} [COMBAT] Character is currently skill-sealed. Unable to execute command.")
             self.find_and_click_button("cancel")
 
@@ -700,56 +700,41 @@ class Game:
 
                 # Save the position of the center of the "Attack" and "Back" Button. If already found, don't call this again.
                 if(self.attack_button_location == None or self.back_button_location == None):
-                    self.attack_button_location = self.image_tools.find_button("attack", suppress_error=self.suppress_error)
+                    self.attack_button_location = self.image_tools.find_button("attack", tries=10 , suppress_error=self.suppress_error)
                     self.back_button_location = (self.attack_button_location[0] - 322, self.attack_button_location[1])
 
                 # If the execution reached the next turn block and it is currently not the correct turn, keep pressing the "Attack" Button until the turn number matches.
                 if (line[0] != "#" and line[0] != "/" and line.strip() != "" and "turn" in line.lower() and int(line[5]) != turn_number):
                     while (int(line[5]) != turn_number):
                         self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
-
                         self.find_dialog_in_combat()
-
                         attack_button_location = self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error)
-                        next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
 
                         if (attack_button_location != None):
-                            self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
-                            
+                            self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")   
                             number_of_charge_attacks = self.find_charge_attacks()
                             self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
                             self.wait(3 + number_of_charge_attacks)
                             
-                            # Wait until the bot sees either the Attack or the Next button BEFORE starting the next turn or moving the execution forward.
-                            tries = 10
-                            while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) == None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) == None):
-                                self.wait(1)
-                                self.find_dialog_in_combat()
-                                tries -= 1
-                                if(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None or tries < 0):
-                                    break
-                                self.wait(1)
-                                
+                            # Wait for the Attack / Next button or move on after about 20 seconds.
+                            self.wait_for_attack()
                             self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
-                            
                             turn_number += 1
                            
-                        # Check to see if the party wiped.
-                        self.party_wipe_check()
+                            # Check to see if the party wiped.
+                            self.party_wipe_check()
 
+                        next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
                         if(next_button_location != None):
-                            if(self.debug_mode):
-                                self.print_and_save(f"{self.printtime()} [DEBUG] Detected the Next Button. Clicking it now...")
-
                             self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                             self.wait(3)
                             
                         # Check for battle end.
-                        if(self.image_tools.confirm_location("exp_gained", tries=1) == True or self.retreat_check):
+                        if(self.retreat_check or self.image_tools.confirm_location("exp_gained", tries=1)):
                             break
                             
                 # Check for battle end.
-                if(self.image_tools.confirm_location("exp_gained", tries=1) == True or self.retreat_check):
+                if(self.retreat_check or self.image_tools.confirm_location("exp_gained", tries=1)):
                     break
 
                 # If it is the start of the Turn and it is currently the correct turn, grab the next line for execution.
@@ -867,23 +852,13 @@ class Game:
                         self.wait(3)
                     else:
                         self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
-                        
                         number_of_charge_attacks = self.find_charge_attacks()
                         self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
                         self.wait(3 + number_of_charge_attacks)
                         
-                        # Wait until the bot sees either the Attack or the Next button BEFORE starting the next turn or moving the execution forward.
-                        tries = 10
-                        while(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) == None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) == None):
-                            self.wait(1)
-                            self.find_dialog_in_combat()
-                            tries -= 1
-                            if(self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None or tries < 0):
-                                break
-                            self.wait(1)
-                            
+                        # Wait for the Attack / Next button or move on after about 20 seconds.
+                        self.wait_for_attack()
                         self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
-
                         turn_number += 1
                         
                         # Check to see if the party wiped.
@@ -1063,7 +1038,7 @@ class Game:
                     if(start_check and map_mode.lower() != "raid"):
                         # Check for the Items Picked Up popup that appears after starting a Quest mission.
                         self.wait(2)
-                        if(map_mode.lower() == "quest" and self.image_tools.confirm_location("items_picked_up", tries=1)):
+                        if(map_mode.lower() == "quest" and self.image_tools.confirm_location("items_picked_up", tries=5)):
                             self.find_and_click_button("ok")
                         
                         # Start Combat Mode here.
