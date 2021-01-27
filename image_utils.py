@@ -45,6 +45,7 @@ class ImageUtils:
         self.window_height = window_height
         
         self.image_number = 0
+        self.new_folder_name = None
         
         self.starting_time = starting_time
         self.debug_mode = debug_mode
@@ -534,12 +535,14 @@ class ImageUtils:
         """
         self.game.print_and_save(f"{self.printtime()} [INFO] Taking a screenshot of the Quest Results Screen...")
         
-        # Construct the image file name from the current date, time, and image number.
+        # Construct the image file and folder name from the current date, time, and image number.
         current_time = datetime.datetime.now().strftime("%H-%M-%S")
         current_date = date.today()
         new_file_name = f"{current_date} {current_time} #{self.image_number}"
         self.image_number += 1
-        
+        if(self.new_folder_name == None):
+            self.new_folder_name = f"{current_date} {current_time}"
+
         # Take a screenshot using the calibrated window dimensions.
         new_image = pyautogui.screenshot(region=(self.window_left, self.window_top, self.window_width, self.window_height))
         
@@ -549,7 +552,14 @@ class ImageUtils:
         if not os.path.exists(results_dir):
             os.makedirs(results_dir)
         
+        # Then create the new folder to hold this session's screenshots in.
+        new_dir = os.path.join(current_dir, r"results", self.new_folder_name)
+        if not os.path.exists(new_dir):
+            os.makedirs(new_dir)
+        
         # Finally, save the new image into the results directory with its new file name.
-        new_image.save(f"./results/{new_file_name}.png")
+        new_image.save(f"./results/{self.new_folder_name}/{new_file_name}.jpg")
+        
+        self.game.print_and_save(f"{self.printtime()} [INFO] Results image saved as {new_file_name} in {self.new_folder_name} folder...")
         
         return None
