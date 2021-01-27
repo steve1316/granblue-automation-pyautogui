@@ -77,7 +77,7 @@ class ImageUtils:
         self.guibot = GuiBot()
         return None
 
-    def find_button(self, button_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, confirm_location_check: bool = False, tries: int = 5, sleep_time: int = 1, suppress_error: bool = False):
+    def find_button(self, button_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, confirm_location_check: bool = False, tries: int = 3, sleep_time: int = 1, suppress_error: bool = False):
         """Find the location of the specified button.
 
         Args:
@@ -85,7 +85,7 @@ class ImageUtils:
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
             confirm_location_check (bool, optional): Check to see if the location is correct. Defaults to False.
-            tries (int, optional): Number of tries before failing. Defaults to 5.
+            tries (int, optional): Number of tries before failing. Defaults to 3.
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
             suppress_error (bool, optional): Suppresses template matching error depending on boolean. Defaults to False.
 
@@ -136,14 +136,14 @@ class ImageUtils:
 
         return button_location
 
-    def confirm_location(self, location_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 1):
+    def confirm_location(self, location_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 3, sleep_time: int = 1):
         """Confirm the bot's position by searching for the header image.
 
         Args:
             location_name (str): Name of the header image file in the images/headers/ folder.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
-            tries (int, optional): Number of tries before failing. Defaults to 5.
+            tries (int, optional): Number of tries before failing. Defaults to 3.
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
 
         Returns:
@@ -183,7 +183,7 @@ class ImageUtils:
 
         return True
 
-    def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 1):
+    def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 3, sleep_time: int = 1):
         """Find the location of the specified summon. Will attempt to scroll the screen down to see more Summons if the initial screen position yielded no matches.
 
         Args:
@@ -239,7 +239,7 @@ class ImageUtils:
 
         return summon_location
 
-    def find_dialog(self, attack_button_x: int, attack_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 1):
+    def find_dialog(self, attack_button_x: int, attack_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 3, sleep_time: int = 1):
         """Attempt to find any Lyria/Vyrn dialog popups. Used during Combat Mode.
 
         Args:
@@ -247,7 +247,7 @@ class ImageUtils:
             attack_button_y (int): Y coordinate of where the center of the Attack Button is.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
-            tries (int, optional): Number of tries before failing. Defaults to 5.
+            tries (int, optional): Number of tries before failing. Defaults to 3.
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
 
         Returns:
@@ -533,6 +533,6 @@ class ImageUtils:
         # Finally, save the new image into the results directory with its new file name.
         new_image.save(f"./results/{self.new_folder_name}/{new_file_name}.jpg")
         
-        self.game.print_and_save(f"{self.printtime()} [INFO] Results image saved as {new_file_name} in {self.new_folder_name} folder...")
+        self.game.print_and_save(f"{self.printtime()} [INFO] Results image saved as \"{new_file_name}.jpg\" in \"{self.new_folder_name}\" folder...")
         
         return None
