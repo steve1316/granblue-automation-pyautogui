@@ -991,10 +991,6 @@ class Game:
                 while(self.item_amount_farmed < self.item_amount_to_farm):
                     # Loop until the Summon has been selected successfully.
                     while(summon_check == False and map_mode.lower() != "coop"): 
-                        # Check for available AP depending on mode.
-                        if(map_mode.lower() != "raid"):
-                            self.check_for_ap(use_full_elixirs=self.quest_refill)
-                        
                         self.print_and_save(f"\n{self.printtime()} [INFO] AP/EP check done. Now selecting summon...")
                         
                         self.find_summon_element(summon_element_name)
