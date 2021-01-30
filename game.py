@@ -636,6 +636,18 @@ class Game:
 
         return None
     
+    def check_for_friend_request(self):
+        """Detect any Friend Request popups and click them away.
+
+        Returns:
+            None
+        """
+        if(self.image_tools.confirm_location("friend_request")):
+            self.print_and_save(f"\n{self.printtime()} [INFO] Detected Friend Request. Closing it now...")
+            self.find_and_click_button("cancel")
+        
+        return None
+        
     def wait_for_attack(self):
         """Wait until the bot sees either the Attack or the Next button before starting the next turn or moving the execution forward. It will wait about 20 seconds before moving on to avoid an infinite loop.
 
@@ -1043,6 +1055,9 @@ class Game:
                                 else:
                                     self.find_and_click_button("coop_room")
 
+                                # Check for Friend Request popup.
+                                self.check_for_friend_request()
+                                
                                 # Check for available AP.
                                 self.check_for_ap(use_full_elixirs=self.quest_refill)
                                 summon_check = False
