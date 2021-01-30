@@ -957,6 +957,10 @@ Item{
                             { text: "N Shiny Slime Search!", map: "Shiny Slime Search!", enabled: true },
                             { text: "H Shiny Slime Search!", map: "Shiny Slime Search!", enabled: true },
                             { text: "VH Shiny Slime Search!", map: "Shiny Slime Search!", enabled: true },
+                            { text: "Angel Halo", enabled: false },
+                            { text: "N Angel Halo", map: "Angel Halo", enabled: true },
+                            { text: "H Angel Halo", map: "Angel Halo", enabled: true },
+                            { text: "VH Angel Halo", map: "Angel Halo", enabled: true },
                         ]
                     }
 
