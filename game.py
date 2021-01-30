@@ -1074,7 +1074,13 @@ class Game:
                                 
                                 # Join a new raid.
                                 self.map_selection.join_raid(item_name, mission_name)
-                                summon_check = False    
+                                summon_check = False
+                    else:
+                        if(map_mode.lower() == "raid"):
+                            # If the bot reached here, it means that the Raid ended before the bot could start the mission after selecting the Summon and Party.
+                            self.print_and_save(f"{self.printtime()} [INFO] Now looking for another raid to join...")
+                            self.map_selection.join_raid(item_name, mission_name)
+                            summon_check = False
             else:
                 raise Exception("Confirming the location of the Summon Selection Screen after completing the process of selecting the mission returned False.")
         except Exception:
