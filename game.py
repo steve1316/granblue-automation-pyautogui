@@ -894,9 +894,7 @@ class Game:
                     self.print_and_save(f"{self.printtime()} [COMBAT] Leaving this raid without retreating...")
                     
                     self.wait(1)
-                    self.find_and_click_button("menu")
-                    self.find_and_click_button("raid_home")
-                    self.find_and_click_button("raid_go_back_home")
+                    self.go_back_home(confirm_location_check=True)
                     
                     # Return False to indicate that the Combat Mode ended prematurely.
                     return False
