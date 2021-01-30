@@ -603,16 +603,16 @@ class Game:
                 close_button_location = self.image_tools.find_button("close", tries=1, suppress_error=True)
                 
                 if(close_button_location != None):
-                    self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1], custom_mouse_speed=0.1)
+                    self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1])
                 
                 if(cancel_button_location != None):
-                    self.mouse_tools.move_and_click_point(cancel_button_location[0], cancel_button_location[1], custom_mouse_speed=0.1)
+                    self.mouse_tools.move_and_click_point(cancel_button_location[0], cancel_button_location[1])
 
                 if(ok_button_location != None):
-                    self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1], custom_mouse_speed=0.1)
+                    self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
 
             # Now that the bot is at the Loot Collected Screen, detect items.
-            if(self.item_name != "EXP"):        
+            if(self.item_name != "EXP"):
                 temp_amount = self.image_tools.find_farmed_items([self.item_name])[0]
             else:
                 temp_amount = 1
