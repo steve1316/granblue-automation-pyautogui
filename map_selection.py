@@ -687,7 +687,7 @@ class MapSelection:
             join_room_button = self.game.image_tools.find_button("join_a_room")
             room_code_textbox = (join_room_button[0] - 185, join_room_button[1])
 
-            tries = 5
+            tries = 10
             while(tries > 0):
                 # Find 5 most recent tweets for the specified raid.
                 tweets = self.game.room_finder.find_most_recent(mission_name, 5)
@@ -710,11 +710,11 @@ class MapSelection:
                         # Check for pending rewards popup.
                         self.check_for_pending("raid")
                         
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Joining {room_code} was successful.")
+                        self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Joining {room_code} was successful.")
                         self.raids_joined += 1
                         return self.game.image_tools.confirm_location("select_summon")
                     else:
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] {room_code} already ended or invalid.")
+                        self.game.print_and_save(f"{self.game.printtime()} [WARNING] {room_code} already ended or invalid.")
                         self.game.find_and_click_button("ok")
                 
                 tries -= 1
