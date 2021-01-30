@@ -538,7 +538,7 @@ Window {
                             anchors.bottomMargin: 10
                             anchors.topMargin: 10
 
-                            contentHeight: logTextArea.contentHeight + 50 // Update the scrollingView's content height to always have room for the console log text.
+                            //contentHeight: logTextArea.contentHeight + 50 // Update the scrollingView's content height to always have room for the console log text.
                             //contentWidth: 280
 
                             // Create a vertical ScrollBar for this Flickable component.
@@ -547,18 +547,9 @@ Window {
                                 policy: ScrollBar.AlwaysOn // Always display the vertical scrollbar.
                             }
 
-                            // Create a horizontal ScrollBar for this Flickable component.
-//                            ScrollBar.horizontal: ScrollBar {
-//                                id: horizontalScrollBar
-//                                 policy: ScrollBar.AsNeeded // Only display the horizontal scrollbar when needed.
-//                            }
-
                             // Adjust the scroll bars depending on arrow keys pressed.
                             Keys.onUpPressed: verticalScrollBar.decrease()
                             Keys.onDownPressed: verticalScrollBar.increase()
-
-                            // Keys.onLeftPressed: horizontalScrollBar.decrease()
-                            // Keys.onRightPressed: horizontalScrollBar.increase()
 
                             // Adjust the vertical scroll bar when using the mouse wheel.
                             MouseArea{
@@ -574,7 +565,7 @@ Window {
                                 }
                             }
                             
-
+                            // The TextArea where all of the log messages are going to go and be displayed to the user.
                             TextArea.flickable: TextArea {
                                 id: logTextArea
 
@@ -588,13 +579,18 @@ Window {
                                 \n2. Go into the Settings Page and follow the on-screen messages to guide you through setting up the bot.
                                 \n3. You can head back to the Home Page and click START.
                                 \n\n***************************`
+
                                 font.pixelSize: 12
                                 textMargin: 5
                                 textFormat: Text.AutoText
 
                                 horizontalAlignment: Text.AlignLeft
                                 verticalAlignment: Text.AlignTop
-                                wrapMode: Text.NoWrap
+                                wrapMode: Text.WordWrap
+                                anchors.rightMargin: 20
+                                anchors.leftMargin: 20
+                                anchors.bottomMargin: 20
+                                anchors.topMargin: 20
 
                                 clip: false
                                 
@@ -605,14 +601,6 @@ Window {
 
                                 bottomPadding: 10 // This is necessary to prevent any newly appended messages from getting partially cut off at the bottom.
                         
-                                anchors.left: parent.left
-                                anchors.right: parent.right
-                                anchors.top: parent.top
-                                anchors.bottom: parent.bottom
-                                anchors.rightMargin: 10
-                                anchors.leftMargin: 10
-                                anchors.bottomMargin: 10
-                                anchors.topMargin: 10
                             }
                         }
                     }
