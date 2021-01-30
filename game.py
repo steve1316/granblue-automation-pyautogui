@@ -428,11 +428,12 @@ class Game:
             self.print_and_save(f"{self.printtime()} [SUCCESS] Successfully selected Party {party_number}. Now starting the mission.")
 
         # Find and click the "OK" Button to start the mission.
-        self.find_and_click_button("party_selection_ok")
+        self.find_and_click_button("ok")
         
         # If a dialog window pops up and says "This raid battle has already ended. The Home screen will now appear.", return False.
         if(self.map_mode.lower() == "raid" and self.image_tools.confirm_location("raid_just_ended_home_redirect", tries=3)):
             self.print_and_save(f"{self.printtime()} [WARNING] Raid unfortunately just ended.")
+            self.find_and_click_button("ok")
             return False
         
         return True
