@@ -714,17 +714,10 @@ class MapSelection:
                     self.game.mouse_tools.paste_from_clipboard()
                     self.game.mouse_tools.click_point_instantly(join_room_button[0], join_room_button[1])
 
-                    # Check for the Pending Battles popup.
-                    self.game.wait(1)
-                    self.check_for_pending("raid")
-                    
                     # If the raid is still able to be joined, break out and head to the Summon Selection Screen.
-                    if(not self.game.image_tools.confirm_location("raid_already_ended", tries=1) and not self.game.image_tools.confirm_location("invalid_code", tries=1)):
+                    if(not self.check_for_pending("raid", tries=1) and not self.game.image_tools.confirm_location("raid_already_ended", tries=1) and not self.game.image_tools.confirm_location("invalid_code", tries=1)):
                         # Check for EP.
                         self.game.check_for_ep(use_soul_balm=self.game.raid_refill)
-                        
-                        # Check for pending rewards popup.
-                        self.check_for_pending("raid")
                         
                         self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Joining {room_code} was successful.")
                         self.raids_joined += 1
