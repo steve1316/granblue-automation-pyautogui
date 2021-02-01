@@ -1,4 +1,5 @@
-# Script to turn on Full Auto at the start of combat.
+// This script starts Full-Auto mode on Turn 1.
+// It will go uninterrupted until either the party wipes or the quest/raid ends.
 
 Turn 1:
 	enableFullAuto

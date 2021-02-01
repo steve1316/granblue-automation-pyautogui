@@ -1,0 +1,2 @@
+# This script has no commands in it and will cause the bot to attack continously.
+# As such, this empty script mimics Semi-Auto Mode.

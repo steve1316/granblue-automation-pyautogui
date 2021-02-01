@@ -1,9 +1,0 @@
-# Test Script Combat Plan
-
-Turn 1:
-	character1.useSkill(4)
-end
-
-Turn 4:
-	character4.useSkill(1)
-end
