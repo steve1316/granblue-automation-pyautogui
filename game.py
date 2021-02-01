@@ -74,11 +74,25 @@ class Game:
         self.suppress_error = True
         
         # Keep track of the following for Farming Mode.
+        self.summon_element_name = ""
+        self.summon_name = ""
+        self.group_number = 0
+        self.party_number = 0
         self.map_mode = ""
-        self.amount_of_runs_finished = 0
-        self.item_amount_farmed = 0
-        self.item_amount_to_farm = 0
         self.item_name = ""
+        self.item_amount_to_farm = 0
+        self.item_amount_farmed = 0
+        self.amount_of_runs_finished = 0
+        self.mission_name = ""
+        
+        # Keep track of the following for Dimensional Halo.
+        self.enable_dimensional_halo = self.config.getboolean("dimensional_halo", "enable_dimensional_halo")
+        self.dimensional_halo_combat_script = self.config.get("dimensional_halo", "dimensional_halo_combat_script")
+        self.dimensional_halo_summon_name = self.config.get("dimensional_halo", "dimensional_halo_summon_name")
+        self.dimensional_halo_summon_element_name = self.config.get("dimensional_halo", "dimensional_halo_summon_element_name")
+        self.dimensional_halo_group_number = int(self.config.get("dimensional_halo", "dimensional_halo_group_number"))
+        self.dimensional_halo_party_number = int(self.config.get("dimensional_halo", "dimensional_halo_party_number"))
+        self.dimensional_halo_amount = 0
 
         # The amount of time to pause after each call to pyautogui. This applies to calls inside mouse_utils and image_utils.
         pyautogui.PAUSE = 0.25
@@ -651,7 +665,47 @@ class Game:
             self.find_and_click_button("cancel")
         
         return None
+    
+    def check_for_dimensional_halo(self):
+        """Checks for Dimensional Halo and if it appears and the user enabled it in config.ini, start it.
+
+        Returns:
+            (bool): Return True if Dimensional Halo was detected and successfully completed. Otherwise, return False if Combat Mode failed.
+        """
+        if(self.enable_dimensional_halo and self.image_tools.confirm_location("limited_time_quests", tries=1)):
+            self.print_and_save(f"\n{self.printtime()} [INFO] Detected Dimensional Halo. Starting it now...")
+            self.dimensional_halo_amount += 1
+            
+            self.print_and_save("\n\n********************************************************************************")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Summon Element: {self.dimensional_halo_summon_element_name}")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Summon: {self.dimensional_halo_summon_name}")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Group Number: {self.dimensional_halo_group_number}")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Party Number: {self.dimensional_halo_party_number}")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Combat Script: {self.dimensional_halo_combat_script}")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Amount of Dimensional Halos encountered: {self.dimensional_halo_amount}")
+            self.print_and_save("********************************************************************************\n")
+            
+            self.find_and_click_button("play_next")
+            
+            self.wait(1)
+            
+            # Once the bot is at the Summon Selection screen, select your summon and party and start the mission.
+            if(self.image_tools.confirm_location("select_summon")):
+                self.find_summon_element(summon_element_name=self.dimensional_halo_summon_element_name)
+                self.find_summon(summon_name=self.dimensional_halo_summon_name)
+                start_check = self.find_party_and_start_mission(group_number=self.dimensional_halo_group_number, party_number=self.dimensional_halo_party_number)
+                if(start_check and self.start_combat_mode(f"scripts/{self.dimensional_halo_combat_script}.txt")):
+                    self.collect_loot()
+                
+        elif(not self.enable_dimensional_halo and self.image_tools.confirm_location("limited_time_quests", tries=1)):
+            self.print_and_save(f"\n{self.printtime()} [INFO] Dimensional Halo detected but user opted to not run it. Moving on...")
+            self.find_and_click_button("close")
+        else:
+            self.print_and_save(f"\n{self.printtime()} [INFO] No Dimensional Halo detected. Moving on...")
         
+        return None
+    
     def wait_for_attack(self):
         """Wait until the bot sees either the Attack or the Next button before starting the next turn or moving the execution forward. It will wait about 20 seconds before moving on to avoid an infinite loop.
 
@@ -686,7 +740,7 @@ class Game:
             
             if(script_file_path == "" or script_file_path == None):
                 self.print_and_save(f"\n{self.printtime()} [COMBAT] No script file was given. Using default semi-attack script...")
-                script = open(f"scripts/test_empty.txt", "r")
+                script = open(f"scripts/empty.txt", "r")
             else:
                 self.print_and_save(f"\n{self.printtime()} [COMBAT] Now loading up combat script at {script_file_path}...")
                 script = open(script_file_path, "r")
@@ -997,9 +1051,34 @@ class Game:
                     difficulty = "Extreme"
 
             # Save the following information to share between the Game class and the MapSelection class.
+            self.summon_element_name = summon_element_name
+            self.summon_name = summon_name
+            self.group_number = group_number
+            self.party_number = party_number
             self.map_mode = map_mode
-            self.item_amount_to_farm = item_amount_to_farm
             self.item_name = item_name
+            self.item_amount_to_farm = item_amount_to_farm
+            self.mission_name = mission_name
+            
+            # If Dimensional Halo is enabled, save settings for it based on conditions.
+            if(self.item_name == "EXP" and self.enable_dimensional_halo):
+                self.print_and_save(f"\n{self.printtime()} [INFO] Initializing settings for Dimensional Halo...")
+                if(self.dimensional_halo_combat_script == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Dimensional Halo will reuse the one for Farming Mode.")
+                    self.dimensional_halo_combat_script = self.combat_script
+                if(self.dimensional_halo_summon_element_name == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summon Element for Dimensional Halo will reuse the one for Farming Mode.")
+                    self.dimensional_halo_summon_name = self.summon_element_name
+                if(self.dimensional_halo_summon_name == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summon for Dimensional Halo will reuse the one for Farming Mode.")
+                    self.dimensional_halo_summon_name = self.summon_name
+                if(self.dimensional_halo_group_number == 0):
+                    self.print_and_save(f"{self.printtime()} [INFO] Group Number for Dimensional Halo will reuse the one for Farming Mode.")
+                    self.dimensional_halo_group_number = self.group_number
+                if(self.dimensional_halo_party_number == 0):
+                    self.print_and_save(f"{self.printtime()} [INFO] Party Number for Dimensional Halo will reuse the one for Farming Mode.")
+                    self.dimensional_halo_group_number = self.party_number
+                self.print_and_save(f"{self.printtime()} [INFO] Settings initialized for Dimensional Halo...")
             
             self.item_amount_farmed = 0
             self.amount_of_runs_finished = 0
@@ -1064,6 +1143,10 @@ class Game:
 
                                 # Check for Friend Request popup.
                                 self.check_for_friend_request()
+                                
+                                # Check for Dimensional Halo if enabled.
+                                if(self.item_name == "EXP" and self.enable_dimensional_halo):
+                                    self.check_for_dimensional_halo()
                                 
                                 # Check for available AP.
                                 self.check_for_ap(use_full_elixirs=self.quest_refill)
