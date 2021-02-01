@@ -140,9 +140,8 @@ class MainWindow(QObject):
         
     @Slot(str, str)
     def update_summon_name(self, summon_name, summon_element):
-        formatted_summon_name = summon_name.lower().replace(" ", "_")
-        self.summon_element_name = summon_element.lower()
-        self.summon_name = formatted_summon_name
+        self.summon_element_name = summon_element
+        self.summon_name = summon_name
         self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
                                 "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
                                 str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
