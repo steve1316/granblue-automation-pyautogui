@@ -912,7 +912,7 @@ class Game:
             self.print_and_save(f"\n{self.printtime()} [COMBAT] Bot has reached end of script. Auto-attacking until battle ends...")
 
             # Keep pressing the location of the "Attack" / "Next" Button until the bot reaches the Quest Results Screen.
-            while(not self.retreat_check and not full_auto and self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1) == False):
+            while(not self.retreat_check and not full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
                 self.find_dialog_in_combat()
                 attack_button_location = self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error)
                 if (attack_button_location != None):
@@ -936,9 +936,9 @@ class Game:
                     self.wait(3)
             
             # Loop for Full Auto. The game will progress the Quest/Raid without any input required from the bot.     
-            while(not self.retreat_check and full_auto and self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1) == False and self.image_tools.confirm_location("no_loot", tries=1) == False):
+            while(not self.retreat_check and full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
                 self.party_wipe_check()
-                self.wait(5)
+                self.wait(3)
 
             self.print_and_save("\n################################################################################")
             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
