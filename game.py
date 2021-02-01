@@ -276,7 +276,7 @@ class Game:
                     self.print_and_save(f"{self.printtime()} [ERROR] Failed to find {summon_element_name.upper()} Element tab.")
                     return False
 
-        self.print_and_save(f"{self.printtime()} [SUCCESS] Found {summon_element_name.upper()} Element tab.")
+        self.print_and_save(f"\n{self.printtime()} [SUCCESS] Found {summon_element_name.upper()} Element tab.")
         self.mouse_tools.move_and_click_point(summon_element_location[0], summon_element_location[1])
         return True
 
@@ -494,7 +494,7 @@ class Game:
             else:
                 self.wait(1)
             
-        self.print_and_save(f"\n{self.printtime()} [INFO] AP is available. Continuing...")
+        self.print_and_save(f"{self.printtime()} [INFO] AP is available. Continuing...")
         return None
 
     def check_for_ep(self, use_soul_balm: bool = False):
@@ -523,7 +523,7 @@ class Game:
             self.wait(1)
             self.find_and_click_button("ok")
         else:
-            self.print_and_save(f"\n{self.printtime()} [INFO] EP is available. Continuing...")
+            self.print_and_save(f"{self.printtime()} [INFO] EP is available. Continuing...")
         
         return None
 
@@ -624,6 +624,8 @@ class Game:
         if(self.item_name != "EXP"):
             self.print_and_save("\n\n********************************************************************************")
             self.print_and_save(f"{self.printtime()} [FARM] Mode: {self.map_mode}")
+            self.print_and_save(f"{self.printtime()} [FARM] Mission: {self.mission_name}")
+            self.print_and_save(f"{self.printtime()} [FARM] Summon: {self.summon_name}")
             self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained this run: {temp_amount}")
             self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained in total: {self.item_amount_farmed} / {self.item_amount_to_farm}")
             self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished}")
@@ -631,7 +633,9 @@ class Game:
         else:
             self.print_and_save("\n\n********************************************************************************")
             self.print_and_save(f"{self.printtime()} [FARM] Mode: {self.map_mode}")
-            self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed for EXP: {self.amount_of_runs_finished}")
+            self.print_and_save(f"{self.printtime()} [FARM] Mission: {self.mission_name}")
+            self.print_and_save(f"{self.printtime()} [FARM] Summon: {self.summon_name}")
+            self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed for EXP: {self.amount_of_runs_finished} / {self.item_amount_to_farm}")
             self.print_and_save("********************************************************************************\n")
 
         return None
