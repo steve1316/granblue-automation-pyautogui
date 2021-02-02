@@ -85,7 +85,8 @@ By downloading this program, you consent to your account potentially getting fla
 	- [x] ~~(HIGH PRIORITY) Implement Twitter room code scraper/parser.~~
 	- [ ] (HIGH PRIORITY) Implement Captcha detection.
 	- [x] ~~(MAX PRIORITY) Create instructions on how to create a Twitter Developer account for the Raid component and have the user set the keys into a text file in the project folder.~~
-- [ ] (LOW PRIORITY) Implement Event navigation/items.
+- [ ] (LOW PRIORITY) Implement Event navigation. (IN-PROGRESS)
+  - [ ] (LOW PRIORITY) Implement items to farm in Event.
 - [ ] (LOW PRIORITY) Implement Guild Wars/Rise of the Beasts navigation/items.
 - [ ] (LOW PRIORITY) Deal with any left-over TODOs.
 - [x] ~~(MEDIUM PRIORITY) Implement try-excepts to inform users of when errors occur.~~
@@ -93,7 +94,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] ~~(MAX PRIORITY) Because this project was developed on a 1440p monitor, anything less or more than that would break the image processing. All image processing in this project needs to be generalized such that it would not matter whether the user has a 1440p or a 1080p monitor, they would get both get the same results.~~
 - [ ] (LOW PRIORITY) Create instructions for Linux if it is confirmed to be supported.
 - [x] ~~(MEDIUM PRIORITY) Create a Wiki in GitHub detailing the usage of this program and provide more documentation on the combat script capability that users can achieve.~~
-  - [ ] (LOW PRIORITY) Create a page in the Wiki detailing what quests/raids/items that the program currently supports.
+  - [ ] (LOW PRIORITY) Create a page in the Wiki detailing what quests/raids/items that the program currently supports. (IN-PROGRESS)
 
 ## Combat Scripting
 - [ ] (LOW PRIORITY) Implement if-else logic for users to use in combat scripts.
@@ -109,6 +110,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] ~~(HIGH PRIORITY) Add Special Quest items.~~
 - [x] ~~(HIGH PRIORITY) Add Coop items.~~
 - [x] ~~(HIGH PRIORITY) Add Raid items.~~
+- [ ] (MAX PRIORITY) Switch all ComboBox components to my custom Flickable Component and include images for all farmable items. (IN-PROGRESS)
 # Requirements
 1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
 2. [Granblue Fantasy account](http://game.granbluefantasy.jp/)
