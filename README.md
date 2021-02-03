@@ -61,7 +61,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] Support for Coop navigation.
 - [x] Support for Raid navigation.
   - [x] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
-  - [ ] Alert for when anti-bot CAPTCHA pops up.
+  - [x] Alert for when anti-bot CAPTCHA pops up.
 - [ ] Support for Event(s) navigation.
 - [ ] Support for Guild Wars navigation.
 - [ ] Support for Arcarum (currently unknown as to whether I will tackle this. This has to come after I finish the rest of the planned features for me to consider this)
@@ -83,9 +83,9 @@ By downloading this program, you consent to your account potentially getting fla
     - [x] ~~(MAX PRIORITY) Link Raid component from backend to frontend.~~
     - [x] ~~(HIGH PRIORITY) Implement items to farm in Raids.~~
 	- [x] ~~(HIGH PRIORITY) Implement Twitter room code scraper/parser.~~
-	- [ ] (HIGH PRIORITY) Implement Captcha detection. (IN-PROGRESS)
+	- [x] ~~(HIGH PRIORITY) Implement Captcha detection.~~
 	- [x] ~~(MAX PRIORITY) Create instructions on how to create a Twitter Developer account for the Raid component and have the user set the keys into a text file in the project folder.~~
-- [ ] (LOW PRIORITY) Implement Event navigation.
+- [ ] (LOW PRIORITY) Implement Event navigation. (IN-PROGRESS)
   - [ ] (LOW PRIORITY) Implement items to farm in Event.
 - [ ] (LOW PRIORITY) Implement Guild Wars/Rise of the Beasts navigation/items.
 - [ ] (LOW PRIORITY) Deal with any left-over TODOs.
