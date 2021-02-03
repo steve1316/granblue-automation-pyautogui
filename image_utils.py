@@ -536,3 +536,12 @@ class ImageUtils:
         self.game.print_and_save(f"{self.printtime()} [INFO] Results image saved as \"{new_file_name}.jpg\" in \"{self.new_folder_name}\" folder...")
         
         return None
+    
+    def generate_alert_for_captcha(self):
+        """Displays a alert that will inform users that a CAPTCHA was detected.
+
+        Returns:
+            None
+        """
+        pyautogui.alert(text="Stopping bot. Please enter the CAPTCHA yourself and play this mission manually to its completion. \n\nIt is now highly recommended that you take a break of several hours and in the future, please reduce the amount of hours that you use this program consecutively without breaks in between.", title="CAPTCHA Detected!", button="OK")
+        return None

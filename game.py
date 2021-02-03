@@ -264,6 +264,25 @@ class Game:
         except Exception:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while checking if party wiped: \n{traceback.format_exc()}")
             self.isBotRunning.value = 1
+            
+    def check_for_captcha(self):
+        """Checks for CAPTCHA right after selecting a Summon and if detected, alert the user and then stop the bot.
+
+        Returns:
+            None
+        """
+        try:
+            self.wait(2)
+            if(self.image_tools.confirm_location("captcha", tries=1)):
+                raise Exception(f"CAPTCHA DETECTED!")
+            else:
+                self.print_and_save(f"\n{self.printtime()} [CAPTCHA] CAPTCHA not detected. Moving on to Party Selection...")
+        except Exception:
+            self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
+            self.image_tools.generate_alert_for_captcha()
+            self.isBotRunning.value = 1
+            self.wait(1)
+        return None
 
     def find_summon_element(self, summon_element_name: str, tries: int = 3):
         """Select the specified element tab for summons.
@@ -311,6 +330,10 @@ class Game:
         if (summon_location != None):
             self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1])
             self.print_and_save(f"{self.printtime()} [INFO] Found {summon_name.upper()} Summon.")
+            
+            # Check for CAPTCHA here. If detected, stop the bot and alert the user.
+            self.check_for_captcha()
+            
             return True
         else:
             # If a Summon is not found, start a Trial Battle to refresh Summons.
