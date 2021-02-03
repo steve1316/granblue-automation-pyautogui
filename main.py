@@ -133,7 +133,7 @@ class MainWindow(QObject):
         if(location_name != ""):
             self.location_name = location_name
         else:
-            self.location_name = "none"
+            self.location_name = ""
         self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
                                 "\nItem amount: " + str(self.item_amount) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
                                 str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
