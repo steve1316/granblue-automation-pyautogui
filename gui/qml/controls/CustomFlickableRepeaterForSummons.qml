@@ -199,7 +199,7 @@ Flickable {
 
         ///////// Fire Summons /////////
         Label {
-            color: "#ff0033"
+            color: "#aa0000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
             font.bold: true
@@ -220,13 +220,14 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_name(name, element)
-                        popup.close()
+                        summonPopup.close()
+                        summonButton.text = name
                     }
                 }
 
                 source: imageSource
                 Label {
-                    color: "#ff0033"
+                    color: "#aa0000"
                     anchors.left: fireSummonImage.right
                     anchors.leftMargin: 10
                     font.letterSpacing: 1
@@ -239,7 +240,7 @@ Flickable {
 
         ///////// Water Summons /////////
         Label {
-            color: "#00eeff"
+            color: "#00ffff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
             font.bold: true
@@ -260,13 +261,14 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_name(name, element)
-                        popup.close()
+                        summonPopup.close()
+                        summonButton.text = name
                     }
                 }
 
                 source: imageSource
                 Label {
-                    color: "#00eeff"
+                    color: "#00ffff"
                     anchors.left: waterSummonImage.right
                     anchors.leftMargin: 10
                     font.letterSpacing: 1
@@ -279,7 +281,7 @@ Flickable {
 
         ///////// Earth Summons /////////
         Label {
-            color: "#d2691e"
+            color: "#ff8000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
             font.bold: true
@@ -300,13 +302,14 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_name(name, element)
-                        popup.close()
+                        summonPopup.close()
+                        summonButton.text = name
                     }
                 }
 
                 source: imageSource
                 Label {
-                    color: "#d2691e"
+                    color: "#ff8000"
                     anchors.left: earthSummonImage.right
                     anchors.leftMargin: 10
                     font.letterSpacing: 1
@@ -319,7 +322,7 @@ Flickable {
 
         ///////// Wind Summons /////////
         Label {
-            color: "#0dff0d"
+            color: "#00ff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
             font.bold: true
@@ -340,13 +343,14 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_name(name, element)
-                        popup.close()
+                        summonPopup.close()
+                        summonButton.text = name
                     }
                 }
 
                 source: imageSource
                 Label {
-                    color: "#0dff0d"
+                    color: "#00ff00"
                     anchors.left: windSummonImage.right
                     anchors.leftMargin: 10
                     font.letterSpacing: 1
@@ -359,7 +363,7 @@ Flickable {
 
         ///////// Light Summons /////////
         Label {
-            color: "#fbff00"
+            color: "#ffff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
             font.bold: true
@@ -380,13 +384,14 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_name(name, element)
-                        popup.close()
+                        summonPopup.close()
+                        summonButton.text = name
                     }
                 }
 
                 source: imageSource
                 Label {
-                    color: "#fbff00"
+                    color: "#ffff00"
                     anchors.left: lightSummonImage.right
                     anchors.leftMargin: 10
                     font.letterSpacing: 1
@@ -399,7 +404,7 @@ Flickable {
 
         ///////// Dark Summons /////////
         Label {
-            color: "#6a0c8a"
+            color: "#aa00ff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
             font.bold: true
@@ -420,13 +425,14 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_name(name, element)
-                        popup.close()
+                        summonPopup.close()
+                        summonButton.text = name
                     }
                 }
 
                 source: imageSource
                 Label {
-                    color: "#6a0c8a"
+                    color: "#aa00ff"
                     anchors.left: darkSummonImage.right
                     anchors.leftMargin: 10
                     font.letterSpacing: 1
@@ -460,7 +466,8 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_name(name, element)
-                        popup.close()
+                        summonPopup.close()
+                        summonButton.text = name
                     }
                 }
 
