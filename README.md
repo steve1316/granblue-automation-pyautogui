@@ -83,7 +83,7 @@ By downloading this program, you consent to your account potentially getting fla
     - [x] ~~(MAX PRIORITY) Link Raid component from backend to frontend.~~
     - [x] ~~(HIGH PRIORITY) Implement items to farm in Raids.~~
 	- [x] ~~(HIGH PRIORITY) Implement Twitter room code scraper/parser.~~
-	- [ ] (HIGH PRIORITY) Implement Captcha detection.
+	- [ ] (HIGH PRIORITY) Implement Captcha detection. (IN-PROGRESS)
 	- [x] ~~(MAX PRIORITY) Create instructions on how to create a Twitter Developer account for the Raid component and have the user set the keys into a text file in the project folder.~~
 - [ ] (LOW PRIORITY) Implement Event navigation.
   - [ ] (LOW PRIORITY) Implement items to farm in Event.
@@ -110,7 +110,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] ~~(HIGH PRIORITY) Add Special Quest items.~~
 - [x] ~~(HIGH PRIORITY) Add Coop items.~~
 - [x] ~~(HIGH PRIORITY) Add Raid items.~~
-- [ ] (MAX PRIORITY) Switch all ComboBox components to my custom Flickable Component and include images for all farmable items. (IN-PROGRESS)
+- [x] ~~(MAX PRIORITY) Switch all ComboBox components to my custom Flickable Component and include images for all farmable items.~~
 # Requirements
 1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
 2. [Granblue Fantasy account](http://game.granbluefantasy.jp/)
