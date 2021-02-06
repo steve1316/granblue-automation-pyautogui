@@ -190,18 +190,19 @@ class Debug:
         self.game.mouse_tools.scroll_screen_from_home_button(-600)
 
         list_of_steps_in_order = ["gameplay_extras", "trial_battles",
-                                  "trial_battles_old_lignoid", "trial_battles_play",
+                                  "trial_battles_old_lignoid", "play_round_button",
                                   "choose_a_summon", "party_selection_ok", "close"]
 
         # Go through each step in order from left to right from the list of steps.
         while (len(list_of_steps_in_order) > 0):
             step = list_of_steps_in_order.pop(0)
-            
             if(step == "trial_battles_old_lignoid"):
                 self.game.image_tools.confirm_location("trial_battles")
+            elif(step == "close"):
+                self.game.wait(2)
+                self.game.image_tools.confirm_location("trial_battles_description")
             
             image_location = self.game.image_tools.find_button(step)
-            
             if(step == "choose_a_summon"):
                 self.game.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187)
             else:
