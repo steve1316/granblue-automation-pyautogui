@@ -989,7 +989,7 @@ class Game:
                             full_auto = True
                             break
 
-                if("end" in line.lower() and not full_auto):
+                if(line[0] != "#" and line[0] != "/" and line.strip() != "" and "end" in line.lower() and not full_auto):
                     # Attempt to find the "Next" Button first before attacking to preserve the turn number in the backend. If so, skip clicking the "Attack" Button.
                     # Otherwise, click the "Attack" Button, increment the turn number, and then attempt to find the "Next" Button.
                     next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
@@ -1008,15 +1008,15 @@ class Game:
                         self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
                         turn_number += 1
                         
-                        # Check to see if the party wiped.
-                        self.party_wipe_check()
-                        
                         next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
                         if(next_button_location != None):
                             self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                             self.wait(3)
-                            
-                if("exit" in line.lower() and not full_auto):
+                        
+                        # Check to see if the party wiped.
+                        self.party_wipe_check()
+                        
+                if(line[0] != "#" and line[0] != "/" and line.strip() != "" and "exit" in line.lower() and not full_auto):
                     # End Combat Mode by heading back to the Home Screen without retreating. 
                     # Usually for raid farming as to maximize the number of raids joined after completing the provided combat script.
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line.strip()}\"")
@@ -1051,14 +1051,14 @@ class Game:
                     self.wait_for_attack()
                     self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
                     turn_number += 1
-                    
-                    # Check to see if the party wiped.
-                    self.party_wipe_check()
 
                 next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
                 if(next_button_location != None):
                     self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                     self.wait(3)
+
+                # Check to see if the party wiped.
+                self.party_wipe_check()
             
             # Loop for Full Auto. The game will progress the Quest/Raid without any input required from the bot.     
             while(not self.retreat_check and full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
