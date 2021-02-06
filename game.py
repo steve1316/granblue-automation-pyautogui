@@ -352,7 +352,7 @@ class Game:
 
         try:
             list_of_steps_in_order = ["gameplay_extras", "trial_battles",
-                                    "trial_battles_old_lignoid", "trial_battles_play",
+                                    "trial_battles_old_lignoid", "play_round_button",
                                     "choose_a_summon", "party_selection_ok", "close",
                                     "menu", "retreat", "retreat_confirmation", "next"]
 

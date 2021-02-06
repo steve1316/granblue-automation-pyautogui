@@ -160,7 +160,7 @@ class Debug:
         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Starting the Old Lignoid Trial Battle...")
         
         self.game.find_and_click_button("trial_battles_old_lignoid")
-        self.game.find_and_click_button("trial_battles_play")
+        self.game.find_and_click_button("play_round_button")
 
         # Test Successful if the bot is able to find all 7 summon element tabs on the Summon Selection Screen. Otherwise, the test fails.
         self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now finding all 7 summon element tabs on the Summon Selection Screen...")
