@@ -507,6 +507,68 @@ class MapSelection:
                             tries -= 1    
                 else:
                     raise Exception("Cannot find the Special Missions.")
+            elif(map_mode.lower() == "event"):
+                # Go to the Home Screen.
+                self.game.go_back_home(confirm_location_check=True)
+                
+                # Go to the Event by clicking on the Menu button and then click the very first banner.
+                self.game.find_and_click_button("home_menu")
+                banner_locations = self.game.image_tools.find_all("event_banner")
+                self.game.mouse_tools.move_and_click_point(banner_locations[0][0], banner_locations[0][1])
+                
+                # Check and click away the Daily Missions popup.
+                self.game.wait(1)
+                if(self.game.image_tools.confirm_location("event_daily_missions", tries=1)):
+                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Detected Daily Missions popup. Clicking it away...")
+                    self.game.find_and_click_button("cancel")
+                
+                # Remove the difficulty prefix from the mission name.
+                temp_mission_name = mission_name
+                if(difficulty == "Normal"):
+                    temp_mission_name = mission_name[1:]
+                elif(difficulty == "Hard"):
+                    temp_mission_name = mission_name[1:]
+                elif(difficulty == "Very Hard"):
+                    temp_mission_name = mission_name[3:]
+                elif(difficulty == "Extreme"):
+                    temp_mission_name = mission_name[3:]
+                
+                # If the first character is a whitespace after processing the string, remove it.
+                if(temp_mission_name[0] == " "):
+                    temp_mission_name = temp_mission_name[1:]
+                
+                # Scroll down the screen a little bit.
+                self.game.mouse_tools.scroll_screen_from_home_button(-200)
+                
+                if(temp_mission_name.lower() == "event raid"):
+                    # Bring up the Raid Battle popup. Then scroll down the screen a bit for screens less than 1440p to see the entire popup.
+                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Raid...")
+                    self.game.find_and_click_button("event_raid_battle")
+                    self.game.mouse_tools.scroll_screen_from_home_button(-400)
+                    
+                    if(difficulty == "Very Hard"):
+                        self.game.find_and_click_button("event_very_hard_raid")
+                    elif(difficulty == "Extreme"):
+                        self.game.find_and_click_button("event_extreme_raid")
+                        
+                        # If the user does not have enough Treasures to host a Extreme Raid, host a Very Hard Raid instead.
+                        if(not self.game.image_tools.wait_vanish("event_extreme_raid", timeout=3)):
+                            self.game.print_and_save(f"{self.game.printtime()} [INFO] Not enough materials to host Extreme. Hosting Very Hard instead...")
+                            self.game.find_and_click_button("event_very_hard_raid")
+                elif(temp_mission_name.lower() == "event quest"):
+                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Quest...")
+                    self.game.find_and_click_button("event_quests")
+                    self.game.wait(1)
+                    quest_play_locations = self.game.image_tools.find_all("play_round_button")
+                    
+                    if(difficulty == "Normal"):
+                        self.game.mouse_tools.move_and_click_point(quest_play_locations[0][0], quest_play_locations[0][1])
+                    elif(difficulty == "Hard"):
+                        self.game.mouse_tools.move_and_click_point(quest_play_locations[1][0], quest_play_locations[1][1])
+                    elif(difficulty == "Very Hard"):
+                        self.game.mouse_tools.move_and_click_point(quest_play_locations[2][0], quest_play_locations[2][1])
+                    elif(difficulty == "Extreme"):
+                        self.game.mouse_tools.move_and_click_point(quest_play_locations[3][0], quest_play_locations[3][1])
             
             # Check for available AP.
             self.game.check_for_ap(use_full_elixirs=self.game.quest_refill)

@@ -85,13 +85,21 @@ class Game:
         self.amount_of_runs_finished = 0
         self.mission_name = ""
         
+        # Keep track of the following for Events.
+        self.enable_event_nightmare = self.config.getboolean("event", "enable_event_nightmare")
+        self.event_nightmare_combat_script = self.config.get("event", "event_nightmare_combat_script")
+        self.event_nightmare_summon_name = self.config.get("event", "event_nightmare_summon_name")
+        self.event_nightmare_summon_element_name = self.config.get("event", "event_nightmare_summon_element_name")
+        self.event_nightmare_group_number = self.config.get("event", "event_nightmare_group_number")
+        self.event_nightmare_party_number = self.config.get("event", "event_nightmare_party_number")
+        
         # Keep track of the following for Dimensional Halo.
         self.enable_dimensional_halo = self.config.getboolean("dimensional_halo", "enable_dimensional_halo")
         self.dimensional_halo_combat_script = self.config.get("dimensional_halo", "dimensional_halo_combat_script")
         self.dimensional_halo_summon_name = self.config.get("dimensional_halo", "dimensional_halo_summon_name")
         self.dimensional_halo_summon_element_name = self.config.get("dimensional_halo", "dimensional_halo_summon_element_name")
-        self.dimensional_halo_group_number = int(self.config.get("dimensional_halo", "dimensional_halo_group_number"))
-        self.dimensional_halo_party_number = int(self.config.get("dimensional_halo", "dimensional_halo_party_number"))
+        self.dimensional_halo_group_number = self.config.get("dimensional_halo", "dimensional_halo_group_number")
+        self.dimensional_halo_party_number = self.config.get("dimensional_halo", "dimensional_halo_party_number")
         self.dimensional_halo_amount = 0
 
         # The amount of time to pause after each call to pyautogui. This applies to calls inside mouse_utils and image_utils.
@@ -649,7 +657,7 @@ class Game:
                     self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
 
             # Now that the bot is at the Loot Collected Screen, detect items.
-            if(self.item_name != "EXP"):
+            if(self.item_name != "EXP" and self.item_name != "Repeated Runs"):
                 temp_amount = self.image_tools.find_farmed_items([self.item_name])[0]
             else:
                 temp_amount = 1
@@ -658,7 +666,7 @@ class Game:
             
         self.amount_of_runs_finished += 1
         
-        if(self.item_name != "EXP"):
+        if(self.item_name != "EXP" and self.item_name != "Repeated Runs"):
             self.print_and_save("\n\n********************************************************************************")
             self.print_and_save(f"{self.printtime()} [FARM] Mode: {self.map_mode}")
             self.print_and_save(f"{self.printtime()} [FARM] Mission: {self.mission_name}")
@@ -672,7 +680,7 @@ class Game:
             self.print_and_save(f"{self.printtime()} [FARM] Mode: {self.map_mode}")
             self.print_and_save(f"{self.printtime()} [FARM] Mission: {self.mission_name}")
             self.print_and_save(f"{self.printtime()} [FARM] Summon: {self.summon_name}")
-            self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed for EXP: {self.amount_of_runs_finished} / {self.item_amount_to_farm}")
+            self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished} / {self.item_amount_to_farm}")
             self.print_and_save("********************************************************************************\n")
 
         return None
@@ -689,11 +697,50 @@ class Game:
         
         return None
     
+    def check_for_event_nightmare(self):
+        """Checks for Event Nightmare and if it appears and the user enabled it in config.ini, start it.
+
+        Returns:
+            (bool): Return True if Event Nightmare was detected and successfully completed. Otherwise, return False.
+        """
+        if(self.enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests", tries=1)):
+            self.print_and_save(f"\n{self.printtime()} [INFO] Detected Event Nightmare. Starting it now...")
+            
+            self.print_and_save("\n\n********************************************************************************")
+            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare")
+            self.print_and_save(f"{self.printtime()} [EVENT] Summon Element: {self.event_nightmare_summon_element_name}")
+            self.print_and_save(f"{self.printtime()} [EVENT] Summon: {self.event_nightmare_summon_name}")
+            self.print_and_save(f"{self.printtime()} [EVENT] Group Number: {self.event_nightmare_group_number}")
+            self.print_and_save(f"{self.printtime()} [EVENT] Party Number: {self.event_nightmare_party_number}")
+            self.print_and_save(f"{self.printtime()} [EVENT] Combat Script: {self.event_nightmare_combat_script}")
+            self.print_and_save("********************************************************************************\n")
+            
+            self.find_and_click_button("play_next")
+            
+            self.wait(1)
+            
+            # Once the bot is at the Summon Selection screen, select your summon and party and start the mission.
+            if(self.image_tools.confirm_location("select_summon")):
+                self.find_summon_element(summon_element_name=self.event_nightmare_summon_element_name)
+                self.find_summon(summon_name=self.event_nightmare_summon_name)
+                start_check = self.find_party_and_start_mission(group_number=self.event_nightmare_group_number, party_number=self.event_nightmare_party_number)
+                if(start_check and self.start_combat_mode(f"scripts/{self.event_nightmare_combat_script}.txt")):
+                    self.collect_loot()
+                    return True
+                
+        elif(not self.enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests", tries=1)):
+            self.print_and_save(f"\n{self.printtime()} [INFO] Event Nightmare detected but user opted to not run it. Moving on...")
+            self.find_and_click_button("close")
+        else:
+            self.print_and_save(f"\n{self.printtime()} [INFO] No Event Nightmare detected. Moving on...")
+        
+        return False
+    
     def check_for_dimensional_halo(self):
         """Checks for Dimensional Halo and if it appears and the user enabled it in config.ini, start it.
 
         Returns:
-            (bool): Return True if Dimensional Halo was detected and successfully completed. Otherwise, return False if Combat Mode failed.
+            (bool): Return True if Dimensional Halo was detected and successfully completed. Otherwise, return False.
         """
         if(self.enable_dimensional_halo and self.image_tools.confirm_location("limited_time_quests", tries=1)):
             self.print_and_save(f"\n{self.printtime()} [INFO] Detected Dimensional Halo. Starting it now...")
@@ -720,6 +767,7 @@ class Game:
                 start_check = self.find_party_and_start_mission(group_number=self.dimensional_halo_group_number, party_number=self.dimensional_halo_party_number)
                 if(start_check and self.start_combat_mode(f"scripts/{self.dimensional_halo_combat_script}.txt")):
                     self.collect_loot()
+                    return True
                 
         elif(not self.enable_dimensional_halo and self.image_tools.confirm_location("limited_time_quests", tries=1)):
             self.print_and_save(f"\n{self.printtime()} [INFO] Dimensional Halo detected but user opted to not run it. Moving on...")
@@ -727,7 +775,7 @@ class Game:
         else:
             self.print_and_save(f"\n{self.printtime()} [INFO] No Dimensional Halo detected. Moving on...")
         
-        return None
+        return False
     
     def wait_for_attack(self):
         """Wait until the bot sees either the Attack or the Next button before starting the next turn or moving the execution forward. It will wait about 20 seconds before moving on to avoid an infinite loop.
@@ -1062,7 +1110,7 @@ class Game:
             
             difficulty = ""
             
-            if(map_mode.lower() == "special"):
+            if(map_mode.lower() == "special" or map_mode.lower() == "event"):
                 # Attempt to see if the difficulty starts at the 0th index to differentiate between cases like "H" and "VH".
                 if(mission_name.find("N ") == 0):
                     difficulty = "Normal"
@@ -1086,22 +1134,61 @@ class Game:
             # If Dimensional Halo is enabled, save settings for it based on conditions.
             if(self.item_name == "EXP" and self.enable_dimensional_halo):
                 self.print_and_save(f"\n{self.printtime()} [INFO] Initializing settings for Dimensional Halo...")
+                
                 if(self.dimensional_halo_combat_script == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Dimensional Halo will reuse the one for Farming Mode.")
                     self.dimensional_halo_combat_script = self.combat_script
+                    
                 if(self.dimensional_halo_summon_element_name == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Summon Element for Dimensional Halo will reuse the one for Farming Mode.")
                     self.dimensional_halo_summon_name = self.summon_element_name
+                    
                 if(self.dimensional_halo_summon_name == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Summon for Dimensional Halo will reuse the one for Farming Mode.")
                     self.dimensional_halo_summon_name = self.summon_name
-                if(self.dimensional_halo_group_number == 0):
+                    
+                if(self.dimensional_halo_group_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Group Number for Dimensional Halo will reuse the one for Farming Mode.")
                     self.dimensional_halo_group_number = self.group_number
-                if(self.dimensional_halo_party_number == 0):
+                else:
+                    self.dimensional_halo_group_number = int(self.dimensional_halo_group_number)
+                    
+                if(self.dimensional_halo_party_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Party Number for Dimensional Halo will reuse the one for Farming Mode.")
-                    self.dimensional_halo_group_number = self.party_number
+                    self.dimensional_halo_party_number = self.party_number
+                else:
+                    self.dimensional_halo_party_number = int(dimensional_halo_party_number)
+                    
                 self.print_and_save(f"{self.printtime()} [INFO] Settings initialized for Dimensional Halo...")
+            elif(self.item_name == "Repeated Runs" and self.enable_event_nightmare):
+                # Do the same for Event Nightmare if enabled.
+                self.print_and_save(f"\n{self.printtime()} [INFO] Initializing settings for Event...")
+                
+                if(self.event_nightmare_combat_script == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Event will reuse the one for Farming Mode.")
+                    self.event_nightmare_combat_script = self.combat_script
+                    
+                if(self.event_nightmare_summon_element_name == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summon Element for Event will reuse the one for Farming Mode.")
+                    self.event_nightmare_summon_element_name = self.summon_element_name
+                    
+                if(self.event_nightmare_summon_name == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summon for Event will reuse the one for Farming Mode.")
+                    self.event_nightmare_summon_name = self.summon_name
+                    
+                if(self.event_nightmare_group_number == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Group Number for Event will reuse the one for Farming Mode.")
+                    self.event_nightmare_group_number = self.group_number
+                else:
+                    event_nightmare_group_number = int(event_nightmare_group_number)
+                    
+                if(self.event_nightmare_party_number == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Party Number for Event will reuse the one for Farming Mode.")
+                    self.event_nightmare_party_number = self.party_number
+                else:
+                    self.event_nightmare_party_number = int(self.event_nightmare_party_number)
+                    
+                self.print_and_save(f"{self.printtime()} [INFO] Settings initialized for Event...")
             
             self.item_amount_farmed = 0
             self.amount_of_runs_finished = 0
@@ -1170,10 +1257,17 @@ class Game:
                                 # Check for Dimensional Halo if enabled.
                                 if(self.item_name == "EXP" and self.enable_dimensional_halo):
                                     self.check_for_dimensional_halo()
+                                elif(self.map_mode.lower() == "event" and self.enable_event_nightmare):
+                                    self.check_for_event_nightmare()
                                 
                                 # Check for available AP.
                                 self.check_for_ap(use_full_elixirs=self.quest_refill)
                                 summon_check = False
+                                
+                                if(self.map_mode.lower() == "event" and self.image_tools.confirm_location("not_enough_treasure")):
+                                    # If the bot tried to repeat a Extreme difficulty Event Raid and it lacked the treasures to host it, go back to select_map.
+                                    self.find_and_click_button("ok")
+                                    self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
                         else:
                             self.print_and_save(f"\n{self.printtime()} [INFO] Selecting mission again due to retreating...")
                             self.map_selection.select_map(map_mode, map_name, item_name, mission_name, difficulty)
