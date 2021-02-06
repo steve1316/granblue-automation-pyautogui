@@ -110,7 +110,8 @@ Item{
                 { text: "Quest", enabled: true },
                 { text: "Special", enabled: true },
                 { text: "Coop", enabled: true},
-                { text: "Raid", enabled: true}
+                { text: "Raid", enabled: true},
+                { text: "Event", enabled: true},
             ]
 
             onCurrentIndexChanged: {
@@ -118,8 +119,29 @@ Item{
                 farmingModeComboBox.displayText = qsTr(farmingModeComboBox.model[currentIndex].text)
                 farmingModeTextFieldLabel.visible = true
 
-                // Update the backend with the selected Farming Mode and update the instructional message to indicate success.
+                // Display either the itemSelectionButton or ComboBox depending on the Farming Mode selected.
+                if(farmingModeComboBox.displayText === "Event"){
+                    itemSelectionButton.visible = false
+                    itemSelectionButton.enabled = false
+
+                    itemSelectionComboBox.visible = true
+                    itemSelectionComboBox.enabled = true
+                    itemSelectionComboBox.displayText = qsTr("Please select item to farm")
+                    itemSelectionComboBox.currentIndex = 0
+                } else{
+                    itemSelectionComboBox.visible = false
+                    itemSelectionComboBox.enabled = false
+                    itemSelectionComboBox.currentIndex = 0
+
+                    itemSelectionButton.visible = true
+                    itemSelectionButton.enabled = true
+                    itemSelectionButton.text = qsTr("Please select item to farm")
+                }
+
+                // Update the backend with the selected Farming Mode.
                 backend.update_farming_mode(farmingModeComboBox.model[currentIndex].text)
+
+                // Update the instructional message to indicate success.
                 farmingModeTextFieldLabel.text = qsTr("Farming Mode selected successfully")
                 farmingModeTextFieldLabel.color = "#00ff00"
 
@@ -129,8 +151,6 @@ Item{
                 backend.check_bot_ready(false)
 
                 // Now reset both item selection and mission selection components and only enable the item selection component.
-                itemSelectionButton.enabled = true
-                itemSelectionButton.text = qsTr("Please select item to farm")
                 itemSelectionTextFieldLabel.color = "#fc8c03"
                 itemSelectionTextFieldLabel.text = qsTr("Now select the item to farm")
                 itemSelectionTextFieldLabel.visible = true
@@ -170,6 +190,8 @@ Item{
             anchors.topMargin: 25
             enabled: false
             anchors.leftMargin: 20
+
+            visible: true
 
             text: qsTr("Please select the item to farm")
 
@@ -1235,6 +1257,76 @@ Item{
             }
         }
 
+        ComboBox {
+            id: itemSelectionComboBox
+
+            width: 200
+            height: 30
+            anchors.left: parent.left
+            anchors.top: farmingModeComboBox.bottom
+            anchors.topMargin: 25
+            enabled: false
+            anchors.leftMargin: 20
+
+            visible: false
+
+            displayText: qsTr("Please select the item to farm")
+            currentIndex: 0
+            textRole: "text"
+
+            model: [
+                { text: "Event", enabled: false},
+                { text: "Repeated Runs", enabled: true },
+            ]
+
+            delegate: ItemDelegate {
+                width: itemSelectionComboBox.width
+                text: modelData.text
+
+                property var map: modelData.map // Holds the map in which the mission will take place in.
+
+                font.weight: itemSelectionComboBox.currentIndex === index ? Font.DemiBold : Font.Normal
+                highlighted: ListView.isCurrentItem
+
+                enabled: modelData.enabled
+            }
+
+            onCurrentIndexChanged: {
+                itemSelectionComboBox.displayText = itemSelectionComboBox.model[currentIndex].text
+                backend.update_item_name(itemSelectionComboBox.model[currentIndex].text)
+
+                if(itemSelectionComboBox.displayText !== qsTr("Please select the item to farm")){
+                   if(itemSelectionComboBox.displayText === "Repeated Runs"){
+                       missionComboBox.model = [
+                           { text: "Event Raid", enabled: false },
+                           { text: "VH Event Raid", map: "", enabled: true },
+                           { text: "EX Event Raid", map: "", enabled: true },
+                           { text: "Event Quest", enabled: false },
+                           { text: "N Event Quest", map: "", enabled: true },
+                           { text: "H Event Quest", map: "", enabled: true },
+                           { text: "VH Event Quest", map: "", enabled: true },
+                           { text: "EX Event Quest", map: "", enabled: true },
+                       ]
+                   }
+
+                    // Reset and enable the Mission Selection ComboBox.
+                    backend.check_bot_ready(false)
+                    backend.update_mission_name("", "")
+                    missionComboBox.displayText = qsTr("Please select a mission")
+                    missionComboBox.enabled = true
+
+                    // Since the user changed the item, that must mean the missions is changed too.
+                    missionSelectionTextFieldLabel.color = "#fc8c03"
+                    missionSelectionTextFieldLabel.text = qsTr("Now select the mission to farm from")
+                    missionSelectionTextFieldLabel.visible = true
+
+                    // Then update the Item Selection instructional message to indicate success.
+                    itemSelectionTextFieldLabel.text = qsTr("Item selected successfully")
+                    itemSelectionTextFieldLabel.color = "#00ff00"
+                }
+            }
+        }
+
         Label {
             id: itemSelectionTextFieldLabel
 
@@ -1293,6 +1385,8 @@ Item{
                 } else if(farmingModeComboBox.displayText === "Coop" && itemSelectionButton.text !== qsTr("Please select item to farm")){
                     backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[currentIndex].map)
                 } else if(farmingModeComboBox.displayText === "Raid" && itemSelectionButton.text !== qsTr("Please select item to farm")){
+                    backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[currentIndex].map)
+                } else if(farmingModeComboBox.displayText === "Event" && itemSelectionButton.text !== qsTr("Please select item to farm")){
                     backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[currentIndex].map)
                 }
                 
