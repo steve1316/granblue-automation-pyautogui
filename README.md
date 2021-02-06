@@ -13,23 +13,21 @@ For example:
 # This is also a comment.
 
 Turn 1:
-    // On Turn 1, the 6th summon will be summoned. The character on the first position will use their 
-    // 2nd and then 4th skill. Then the character on the third position will use their 3rd skill. 
-    // Finally, the bot will attack to end the turn.
+    // On Turn 1, the following commands will be executed in order:
+    // 6th Summon is envoked, character 1 uses Skill 2 and then Skill 4,
+    // and finally character 3 uses Skill 3.
     summon(6)
     character1.useSkill(2).useSkill(4)
     character3.useSkill(3)
 end
 
 # The bot will keep clicking the Attack button until it reaches the 5th turn.
-// Keywords are case-insensitive. So long as you spell them correctly, the bot will 
-// have no trouble reading your combat script.
-tURn 5:
-    CharActer2.USEskill(2)
+Turn 5:
+    character2.useSkill(2)
 end
 
-// Use the exit keyword to leave the raid without retreating. Recommended if you are farming raids and 
-// only want the bot to be in each raid for a certain number of turns before moving on to the next raid.
+// Use the exit keyword to leave the raid without retreating.
+// Useful when you want to farm multiple raids at once.
 exit
 
 ```
@@ -57,13 +55,14 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] A launchable GUI to keep track of logs and selecting what combat script to use.
 - [x] Farm user-defined amounts of specified materials from Quest, Coop, Raid, Event, etc.
 - [x] A user-defined timer for how long the bot should run for.
-- [x] Support for Quest navigation.
-- [x] Support for Coop navigation.
-- [x] Support for Raid navigation.
+- [x] Support for Quest farming.
+- [x] Support for Coop farming.
+- [x] Support for Raid farming.
   - [x] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
   - [x] Alert for when anti-bot CAPTCHA pops up.
-- [x] Support for Event(s) navigation.
-- [ ] Support for Guild Wars navigation.
+- [x] Support for Event(s) farming.
+- [ ] (ON HOLD) Support for Guild Wars farming. (This is pending a re-run in April)
+- [ ] (ON HOLD) Support for Rise of the Beasts farming. (This is pending a re-run at an unknown date)
 - [ ] Support for Arcarum (currently unknown as to whether I will tackle this. This has to come after I finish the rest of the planned features for me to consider this)
 
 # TODO List
@@ -87,7 +86,10 @@ By downloading this program, you consent to your account potentially getting fla
 	- [x] ~~(MAX PRIORITY) Create instructions on how to create a Twitter Developer account for the Raid component and have the user set the keys into a text file in the project folder.~~
 - [x] ~~(LOW PRIORITY) Implement Event navigation.~~
   - [x] ~~(LOW PRIORITY) Implement items to farm in Event.~~
-- [ ] (LOW PRIORITY) Implement Guild Wars/Rise of the Beasts navigation/items.
+- [ ] (ON HOLD) Implement Guild Wars navigation (This is pending a re-run in April)
+  - [ ] (ON HOLD) Implement Guild Wars items to farm.
+- [ ] (ON HOLD) Implement Rise of the Beasts navigation (This is pending a re-run at an unknown date)
+  - [ ] (ON HOLD) Implement Rise of the Beasts items to farm
 - [ ] (LOW PRIORITY) Deal with any left-over TODOs.
 - [x] ~~(MEDIUM PRIORITY) Implement try-excepts to inform users of when errors occur.~~
 - [ ] (LOW PRIORITY) Eventually remove dependency on Game class from ImageUtils and MouseUtils and move any relevant functionality over to the Game class.
@@ -99,7 +101,7 @@ By downloading this program, you consent to your account potentially getting fla
 ## Combat Scripting
 - [ ] (LOW PRIORITY) Implement if-else logic for users to use in combat scripts.
   - [ ] (LOW PRIORITY) Implement HP/Overdrive/Break status checking in combat scripts.
-- [ ] (LOW PRIORITY) Implement targeting for skills that require the user to select a target in combat scripts (enemies or own characters).
+- [ ] (HIGH PRIORITY) Implement targeting for skills that require the user to select a target in combat scripts. (IN-PROGRESS)
 
 ## Frontend
 - [x] ~~Add a Save Logs button.~~
@@ -110,6 +112,8 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] ~~(HIGH PRIORITY) Add Special Quest items.~~
 - [x] ~~(HIGH PRIORITY) Add Coop items.~~
 - [x] ~~(HIGH PRIORITY) Add Raid items.~~
+- [ ] (ON HOLD) Add Guild Wars items. (This is pending a re-run in April)
+- [ ] (ON HOLD) Add Rise of the Beasts items. (This is pending a re-run at an unknown date)
 - [x] ~~(MAX PRIORITY) Switch all ComboBox components to my custom Flickable Component and include images for all farmable items.~~
 # Requirements
 1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
