@@ -99,9 +99,9 @@ By downloading this program, you consent to your account potentially getting fla
   - [x] ~~(LOW PRIORITY) Create a page in the Wiki detailing what quests/raids/items that the program currently supports.~~
 
 ## Combat Scripting
-- [ ] (LOW PRIORITY) Implement if-else logic for users to use in combat scripts.
-  - [ ] (LOW PRIORITY) Implement HP/Overdrive/Break status checking in combat scripts.
-- [ ] (HIGH PRIORITY) Implement targeting for skills that require the user to select a target in combat scripts. (IN-PROGRESS)
+- [ ] ~~(LOW PRIORITY) Implement if-else logic for users to use in combat scripts.~~ This is scrapped for now as this only applies to niche cases with only a few characters having Overdrive/Break related skills.
+  - [ ] ~~(LOW PRIORITY) Implement HP/Overdrive/Break status checking in combat scripts.~~
+- [x] ~~(HIGH PRIORITY) Implement targeting for skills that require the user to select a target in combat scripts.~~
 
 ## Frontend
 - [x] ~~Add a Save Logs button.~~
