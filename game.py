@@ -203,11 +203,12 @@ class Game:
         time.sleep(seconds)
         return None
     
-    def find_and_click_button(self, button_name: str, suppress_error: bool = False):
+    def find_and_click_button(self, button_name: str, tries: int = 2, suppress_error: bool = False):
         """Find the center point of a button image and click it.
 
         Args:
             button_name (str): Name of the button image file in the images/buttons/ folder.
+            tries (int): Number of tries to attempt to find the specified button image. Defaults to 2.
             suppress_error (bool): Suppresses template matching error depending on boolean. Defaults to False.
 
         Returns:
@@ -218,26 +219,25 @@ class Game:
         
         # If the bot is trying to find the Quest button and failed, chances are that the button is now styled red.
         if(button_name == "quest"):
-            temp_location = self.image_tools.find_button("quest", tries=2, suppress_error=suppress_error)
+            temp_location = self.image_tools.find_button("quest", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
-                temp_location = self.image_tools.find_button("quest2", tries=2, suppress_error=suppress_error)
+                temp_location = self.image_tools.find_button("quest2", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
                 # If the blue or red Quest buttons was not detected, user must be in Strike Time with the red Quest button.
-                temp_location = self.image_tools.find_button("quest3", tries=2, suppress_error=suppress_error)
+                temp_location = self.image_tools.find_button("quest3", tries=tries, suppress_error=suppress_error)
         elif(button_name == "raid"):
-            temp_location = self.image_tools.find_button("raid", tries=2, suppress_error=suppress_error)
+            temp_location = self.image_tools.find_button("raid", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
-                temp_location = self.image_tools.find_button("raid2", tries=2, suppress_error=suppress_error)
+                temp_location = self.image_tools.find_button("raid2", tries=tries, suppress_error=suppress_error)
         else:
-            temp_location = self.image_tools.find_button(button_name, suppress_error=suppress_error)
+            temp_location = self.image_tools.find_button(button_name, tries=tries, suppress_error=suppress_error)
         
         if(temp_location != None):    
             self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1])
+            return True
         else:
             return False
         
-        return True
-    
     def party_wipe_check(self):
         """Check to see if the party has wiped during Combat Mode. Update the retreat check flag if so.
 
