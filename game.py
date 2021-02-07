@@ -624,11 +624,6 @@ class Game:
             x = self.attack_button_location[0] + 39
 
         self.mouse_tools.move_and_click_point(x, y)
-        
-        # Check to see if the character is skill-sealed.
-        if(self.image_tools.confirm_location("use_skill", tries=2)):
-            self.print_and_save(f"{self.printtime()} [COMBAT] Character is currently skill-sealed. Unable to execute command.")
-            self.find_and_click_button("cancel")
 
         return None
     
@@ -911,17 +906,53 @@ class Game:
                             character_selected = 4
 
                         # Now perform the skill specified in the read string.
-                        # TODO: Handle enemy targeting here as well.
                         if(character_selected != 0):
                             # Select the character specified.
                             self.select_character(character_selected)
 
                             # Execute each skill from left to right for the current character.
-                            skills = line.lower().split(".")
-                            skills.pop(0)
-                            for skill in skills:
-                                self.use_character_skill(character_selected, skill)
-
+                            commands = line.split(".")[1:]
+                            
+                            while(len(commands) > 0):
+                                command = commands.pop(0).lower()
+                                if("useskill" in command):
+                                    self.use_character_skill(character_selected, command)
+                                    
+                                    # If the "Use Skill" popup appears, that means either the skill requires a target or the character is skill-sealed.
+                                    if(self.image_tools.confirm_location("use_skill", tries=1)):
+                                        # Check if the skill requires a target.
+                                        select_a_character_location = self.image_tools.find_button("select_a_character", tries=1)
+                                        if(select_a_character_location != None):
+                                            self.print_and_save(f"{self.printtime()} [COMBAT] Skill is now awaiting a target...")
+                                            target = commands.pop(0).lower()
+                                            
+                                            if("target(1)" in target):
+                                                self.print_and_save(f"{self.printtime()} [COMBAT] Targeting Character 1.")
+                                                self.mouse_tools.move_and_click_point(select_a_character_location[0] - 90, select_a_character_location[1] + 85)
+                                            elif("target(2)" in target):
+                                                self.print_and_save(f"{self.printtime()} [COMBAT] Targeting Character 2.")
+                                                self.mouse_tools.move_and_click_point(select_a_character_location[0], select_a_character_location[1] + 85)
+                                            elif("target(3)" in target):
+                                                self.print_and_save(f"{self.printtime()} [COMBAT] Targeting Character 3.")
+                                                self.mouse_tools.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 85)
+                                            elif("target(4)" in target):
+                                                self.print_and_save(f"{self.printtime()} [COMBAT] Targeting Character 4.")
+                                                self.mouse_tools.move_and_click_point(select_a_character_location[0] - 90, select_a_character_location[1] + 250)
+                                            elif("target(5)" in target):
+                                                self.print_and_save(f"{self.printtime()} [COMBAT] Targeting Character 5.")
+                                                self.mouse_tools.move_and_click_point(select_a_character_location[0], select_a_character_location[1] + 250)
+                                            elif("target(6)" in target):
+                                                self.print_and_save(f"{self.printtime()} [COMBAT] Targeting Character 6.")
+                                                self.mouse_tools.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 250)
+                                            else:
+                                                # If the command is not one of the supported targets, close the popup.
+                                                self.find_and_click_button("cancel", tries=1, suppress_error=True)
+                                        
+                                        # Else, check if the character is skill-sealed.
+                                        elif(self.image_tools.confirm_location("skill_unusable", tries=1)):
+                                            self.print_and_save(f"{self.printtime()} [COMBAT] Character is currently skill-sealed. Unable to execute command.")
+                                            self.find_and_click_button("cancel", tries=1, suppress_error=True)
+                                        
                             # Now click the Back button.
                             self.mouse_tools.move_and_click_point(self.back_button_location[0], self.back_button_location[1])
 
