@@ -1314,31 +1314,3 @@ class Game:
         
         self.isBotRunning.value = 1
         return None
-
-    # TODO: Find a suitable OCR framework that can detect the HP % of the enemies. Until then, this bot will not handle if statements.
-    # TODO: Maybe have it be in-line? Example: if(enemy1.hp < 70): character1.useSkill(3),character2.useSkill(1).useSkill(4),character4.useSkill(1),end
-    # def executeConditionalStatement(self, i, target, line, lines):
-    #     whiteSpaceIndex = line.index(" ")
-    #     operator = ""
-    #     # Perform conditional matching to find what operator is being used. Account for the whitespaces before and after the operator.
-    #     if(line[whiteSpaceIndex:(whiteSpaceIndex + 3)] == " < "):
-    #         operator = "<"
-    #         self.print_and_save("[DEBUG] Operator is <")
-    #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 3)] == " > "):
-    #         operator = ">"
-    #         self.print_and_save("[DEBUG] Operator is >")
-    #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 4)] == " <= "):
-    #         operator = "<="
-    #         self.print_and_save("[DEBUG] Operator is <=")
-    #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 4)] == " >= "):
-    #         operator = ">="
-    #         self.print_and_save("[DEBUG] Operator is >=")
-    #     elif(line[whiteSpaceIndex:(whiteSpaceIndex + 4)] == " == "):
-    #         operator = "=="
-    #         self.print_and_save("[DEBUG] Operator is ==")
-
-    #     # Determine whether or not the conditional is met. If not, return the index right after the end for the if statement.
-
-    #     # If conditional is met, execute each line until you hit end for the if statement.
-
-    #     return i
