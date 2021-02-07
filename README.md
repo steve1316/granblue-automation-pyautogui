@@ -90,11 +90,9 @@ By downloading this program, you consent to your account potentially getting fla
   - [ ] (ON HOLD) Implement Guild Wars items to farm.
 - [ ] (ON HOLD) Implement Rise of the Beasts navigation (This is pending a re-run at an unknown date)
   - [ ] (ON HOLD) Implement Rise of the Beasts items to farm
-- [ ] (LOW PRIORITY) Deal with any left-over TODOs.
+- [x] ~~(LOW PRIORITY) Deal with any left-over TODOs.~~
 - [x] ~~(MEDIUM PRIORITY) Implement try-excepts to inform users of when errors occur.~~
-- [ ] (LOW PRIORITY) Eventually remove dependency on Game class from ImageUtils and MouseUtils and move any relevant functionality over to the Game class.
 - [x] ~~(MAX PRIORITY) Because this project was developed on a 1440p monitor, anything less or more than that would break the image processing. All image processing in this project needs to be generalized such that it would not matter whether the user has a 1440p or a 1080p monitor, they would get both get the same results.~~
-- [ ] (LOW PRIORITY) Create instructions for Linux if it is confirmed to be supported.
 - [x] ~~(MEDIUM PRIORITY) Create a Wiki in GitHub detailing the usage of this program and provide more documentation on the combat script capability that users can achieve.~~
   - [x] ~~(LOW PRIORITY) Create a page in the Wiki detailing what quests/raids/items that the program currently supports.~~
 
