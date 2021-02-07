@@ -347,8 +347,8 @@ class ImageUtils:
                         # Prepare the list of locations to be centered for use later.
                         for (index, location) in enumerate(locations):
                             if(index > 0):
-                                # Filter out duplicate locations where they are 1 pixel away from each other.
-                                if(location[1] != (locations[index - 1][1] + 1)):
+                                # Filter out duplicate locations where they are 1 pixel away from each other and those who are the same.
+                                if(location[0] != (locations[index - 1][0] + 1) and location[1] != (locations[index - 1][1] + 1)):
                                     centered_locations.append(pyautogui.center(location))
                             else:
                                 centered_locations.append(pyautogui.center(location))
