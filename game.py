@@ -295,8 +295,6 @@ class Game:
     def find_summon_element(self, summon_element_name: str, tries: int = 3):
         """Select the specified element tab for summons.
 
-        # Todo: ALL images need to be segmented into Lite, Regular, and High to account for different Graphics Settings. Have not tested if confidence helps or not. Might not be needed anymore with GuiBot fallback.
-
         Args:
             summon_element_name (str): Name of the summon element image file in the images/buttons/ folder.
             tries (int, optional): Number of tries before failing. Defaults to 3.
@@ -323,9 +321,6 @@ class Game:
 
     def find_summon(self, summon_name: str):
         """Find the specified Summon on the Summon Selection Screen. Make sure to call this after the find_summon_element() method in order to have the correct Summon Element tab already selected.
-
-        # TODO: Handle user-defined list of preferred summons going from most preferred to least.
-        # TODO: If not found after a certain number of times, select very first Summon. Maybe have it as an option?
 
         Args:
             summon_name (str): Exact name of the Summon image's file name in images/summons folder.
@@ -522,7 +517,6 @@ class Game:
               (self.map_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries=2))):
             if(self.image_tools.confirm_location("not_enough_ap", tries=2)):
                 # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full.
-                # TODO: Implement check for when the user ran out of both of them, or one of them.
                 if(use_full_elixirs == False):
                     self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Half Elixir...")
                     half_ap_location = self.image_tools.find_button("refill_half_ap")
@@ -554,7 +548,6 @@ class Game:
         self.wait(3)
         if(self.image_tools.confirm_location("not_enough_ep", tries=2)):
             # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
-            # TODO: Implement check for when the user ran out of both of them, or one of them.
             if(use_soul_balm == False):
                 self.print_and_save(f"\n{self.printtime()} [INFO] EP ran out! Using Soul Berries...")
                 half_ep_location = self.image_tools.find_button("refill_soul_berry")
@@ -967,7 +960,6 @@ class Game:
                             if(self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
                                 break
                         
-                        # TODO: Allow for Summon chaining. For now, summoning multiple summons requires individual lines.
                         for j in range(1,7):
                             if(f"summon({j})" in line.lower()):
                                 # Click the Summon Button to bring up the available Summons.

@@ -96,11 +96,8 @@ class MapSelection:
                         world_location = self.game.image_tools.find_button("world2", tries=2)
                     self.game.mouse_tools.move_and_click_point(world_location[0], world_location[1])
                     
-                    # TODO: Check for correct Skydom here before proceeding.
-                    
                     # On the World Screen, click the specified coordinates on the window to move to the island. 
                     # If the island is on a different world page, switch pages as necessary.
-                    # TODO: Eventually fill this out with every island. Same thing with the farmable missions below.
                     if(map_name == "Port Breeze Archipelago"):
                         if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash" or current_location == "Agastia"):
                             self.game.find_and_click_button("world_left_arrow")
