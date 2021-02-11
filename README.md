@@ -63,7 +63,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] Support for Event(s) farming.
 - [ ] (ON HOLD) Support for Guild Wars farming. (This is pending a re-run in April)
 - [ ] (ON HOLD) Support for Rise of the Beasts farming. (This is pending a re-run at an unknown date)
-- [ ] Support for Dread Barrage farming. (IN-PROGRESS)
+- [x] Support for Dread Barrage farming.
 - [ ] Support for Arcarum (currently unknown as to whether I will tackle this. This has to come after I finish the rest of the planned features for me to consider this)
 
 # TODO List
@@ -91,7 +91,7 @@ By downloading this program, you consent to your account potentially getting fla
   - [ ] (ON HOLD) Implement Guild Wars items to farm.
 - [ ] (ON HOLD) Implement Rise of the Beasts navigation (This is pending a re-run at an unknown date)
   - [ ] (ON HOLD) Implement Rise of the Beasts items to farm
-- [ ] (HIGH PRIORITY) Implement Dread Barrage navigation. (IN-PROGRESS)
+- [x] (HIGH PRIORITY) Implement Dread Barrage navigation.
 - [x] ~~(LOW PRIORITY) Deal with any left-over TODOs.~~
 - [x] ~~(MEDIUM PRIORITY) Implement try-excepts to inform users of when errors occur.~~
 - [x] ~~(MAX PRIORITY) Because this project was developed on a 1440p monitor, anything less or more than that would break the image processing. All image processing in this project needs to be generalized such that it would not matter whether the user has a 1440p or a 1080p monitor, they would get both get the same results.~~
@@ -116,7 +116,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] ~~(HIGH PRIORITY) Add Raid items.~~
 - [ ] (ON HOLD) Add Guild Wars items. (This is pending a re-run in April)
 - [ ] (ON HOLD) Add Rise of the Beasts items. (This is pending a re-run at an unknown date)
-- [ ] (HIGH PRIORITY) Add support for Dread Barrage. (IN-PROGRESS)
+- [x] (HIGH PRIORITY) Add support for Dread Barrage.
 - [x] ~~(MAX PRIORITY) Switch all ComboBox components to my custom Flickable Component and include images for all farmable items.~~
 # Requirements
 1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
