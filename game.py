@@ -655,7 +655,7 @@ class Game:
                     self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
                     
                 # Double click the screen to hopefully clear away any EMP Mastery level up popups.
-                self.mouse_tools.move_and_click_point(self.home_button_location[0], self.home_button_location[1] - 500, mouse_clicks=2)
+                self.mouse_tools.move_and_click_point(self.home_button_location[0], self.home_button_location[1] - 200, mouse_clicks=2)
 
             # Now that the bot is at the Loot Collected Screen, detect items.
             if(self.item_name != "EXP" and self.item_name != "Repeated Runs"):
