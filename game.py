@@ -101,6 +101,16 @@ class Game:
         self.dimensional_halo_group_number = self.config.get("dimensional_halo", "dimensional_halo_group_number")
         self.dimensional_halo_party_number = self.config.get("dimensional_halo", "dimensional_halo_party_number")
         self.dimensional_halo_amount = 0
+        
+        # Keep track of the following for Dread Barrage Unparalleled Foes.
+        self.enable_unparalleled_foe = self.config.getboolean("dread_barrage", "enable_unparalleled_foe")
+        self.enable_unparalleled_foe_level_95 = self.config.getboolean("dread_barrage", "enable_unparalleled_foe_level_95")
+        self.enable_unparalleled_foe_level_175 = self.config.getboolean("dread_barrage", "enable_unparalleled_foe_level_175")
+        self.unparalleled_foe_combat_script = self.config.get("dread_barrage", "unparalleled_foe_combat_script")
+        self.unparalleled_foe_summon_name = self.config.get("dread_barrage", "unparalleled_foe_summon_name")
+        self.unparalleled_foe_summon_element_name = self.config.get("dread_barrage", "unparalleled_foe_summon_element_name")
+        self.unparalleled_foe_group_number = self.config.get("dread_barrage", "unparalleled_foe_group_number")
+        self.unparalleled_foe_party_number = self.config.get("dread_barrage", "unparalleled_foe_party_number")
 
         # The amount of time to pause after each call to pyautogui. This applies to calls inside mouse_utils and image_utils.
         pyautogui.PAUSE = 0.25
@@ -1146,6 +1156,17 @@ class Game:
                     difficulty = "Very Hard"
                 elif(mission_name.find("EX ") == 0):
                     difficulty = "Extreme"
+            elif(map_mode.lower() == "dread barrage"):
+                if(mission_name.find("1 Star") == 0):
+                    difficulty = "1 Star"
+                elif(mission_name.find("2 Star") == 0):
+                    difficulty = "2 Star"
+                elif(mission_name.find("3 Star") == 0):
+                    difficulty = "3 Star"
+                elif(mission_name.find("4 Star") == 0):
+                    difficulty = "4 Star"
+                elif(mission_name.find("5 Star") == 0):
+                    difficulty = "5 Star"
 
             # Save the following information to share between the Game class and the MapSelection class.
             self.summon_element_name = summon_element_name
@@ -1215,6 +1236,35 @@ class Game:
                     self.event_nightmare_party_number = int(self.event_nightmare_party_number)
                     
                 self.print_and_save(f"{self.printtime()} [INFO] Settings initialized for Event...")
+            elif(self.item_name == "Repeated Runs" and self.enable_unparalleled_foe):
+                # Do the same for Dread Barrage Unparalleled Foes if enabled.
+                self.print_and_save(f"\n{self.printtime()} [INFO] Initializing settings for Dread Barrage Unparalleled Foes...")
+                
+                if(self.unparalleled_foe_combat_script == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
+                    self.unparalleled_foe_combat_script = self.combat_script
+                    
+                if(self.unparalleled_foe_summon_element_name == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summon Element for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
+                    self.unparalleled_foe_summon_element_name = self.summon_element_name
+                    
+                if(self.unparalleled_foe_summon_name == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summon for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
+                    self.unparalleled_foe_summon_name = self.summon_name
+                    
+                if(self.unparalleled_foe_group_number == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Group Number for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
+                    self.unparalleled_foe_group_number = self.group_number
+                else:
+                    unparalleled_foe_group_number = int(unparalleled_foe_group_number)
+                    
+                if(self.unparalleled_foe_party_number == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Party Number for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
+                    self.unparalleled_foe_party_number = self.party_number
+                else:
+                    self.unparalleled_foe_party_number = int(self.unparalleled_foe_party_number)
+                    
+                self.print_and_save(f"{self.printtime()} [INFO] Settings initialized for Dread Barrage Unparalleled Foes...")
             
             self.item_amount_farmed = 0
             self.amount_of_runs_finished = 0
@@ -1277,6 +1327,32 @@ class Game:
                                 else:
                                     self.find_and_click_button("coop_room")
 
+                                # Check for Missions popup for Dread Barrage.
+                                if(map_mode.lower() == "dread barrage" and self.image_tools.confirm_location("dread_barrage_missions", tries=1)):
+                                    self.print_and_save(f"{self.printtime()} [INFO] Found Missions popup for Dread Barrage. Closing it now...")
+                                    self.find_and_click_button("close")
+                                
+                                # If the user wants to fight Unparalleled Foes during Dread Barrage, then start the specified one.
+                                if(map_mode.lower() == "dread barrage" and self.image_tools.confirm_location("dread_barrage_unparalleled_foe", tries=1)):
+                                    ap_0_locations = self.image_tools.find_all("ap_0")
+                                    
+                                    if(self.enable_unparalleled_foe_level_95 and not self.enable_unparalleled_foe_level_175):
+                                        # Start the Level 95 Unparalleled Foe.
+                                        self.print_and_save(f"\n{self.printtime()} [INFO] Starting Level 95 Unparalleled Foe...")
+                                        self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1])
+                                    elif(self.enable_unparalleled_foe_level_175 and not self.enable_unparalleled_foe_level_95):
+                                        # Start the Level 175 Unparalleled Foe.
+                                        self.print_and_save(f"\n{self.printtime()} [INFO] Starting Level 175 Unparalleled Foe...")
+                                        self.mouse_tools.move_and_click_point(ap_0_locations[1][0], ap_0_locations[1][1])
+                                    elif(not self.enable_unparalleled_foe_level_95 and not self.enable_unparalleled_foe_level_175):
+                                        # Close the popup.
+                                        self.print_and_save(f"\n{self.printtime()} [INFO] Closing Dread Barrage Unparalleled Foes popup...")
+                                        self.find_and_click_button("close")
+                                    else:
+                                        # Every other case will default to the Level 95 Unparalleled Foe.
+                                        self.print_and_save(f"\n{self.printtime()} [INFO] Defaulting to Level 95 Unparalleled Foe. Starting it now...")
+                                        self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1])
+                                
                                 # Check for Friend Request popup.
                                 self.check_for_friend_request()
                                 

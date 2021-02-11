@@ -566,7 +566,39 @@ class MapSelection:
                         self.game.mouse_tools.move_and_click_point(quest_play_locations[2][0], quest_play_locations[2][1])
                     elif(difficulty == "Extreme"):
                         self.game.mouse_tools.move_and_click_point(quest_play_locations[3][0], quest_play_locations[3][1])
-            
+            elif(map_mode.lower() == "dread barrage"):
+                # Go to the Home Screen.
+                self.game.go_back_home(confirm_location_check=True)
+                
+                # Scroll down the screen a little bit and then click the Dread Barrage banner.
+                self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now navigating to Dread Barrage...")
+                self.game.mouse_tools.scroll_screen_from_home_button(-400)
+                self.game.find_and_click_button("dread_barrage")
+                self.game.wait(1)
+                
+                if(self.game.image_tools.confirm_location("dread_barrage")):
+                    # Find all the Play buttons at the top of the window.
+                    dread_barrage_play_button_locations = self.game.image_tools.find_all("dread_barrage_play")
+                    
+                    # Navigate to the specified difficulty.
+                    if(difficulty == "1 Star"):
+                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now starting 1 Star Dread Barrage Raid...")
+                        self.game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[0][0], dread_barrage_play_button_locations[0][1])
+                    elif(difficulty == "2 Star"):
+                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now starting 2 Star Dread Barrage Raid...")
+                        self.game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[1][0], dread_barrage_play_button_locations[1][1])
+                    elif(difficulty == "3 Star"):
+                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now starting 3 Star Dread Barrage Raid...")
+                        self.game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[2][0], dread_barrage_play_button_locations[2][1])
+                    elif(difficulty == "4 Star"):
+                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now starting 4 Star Dread Barrage Raid...")
+                        self.game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[3][0], dread_barrage_play_button_locations[3][1])
+                    elif(difficulty == "5 Star"):
+                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now starting 5 Star Dread Barrage Raid...")
+                        self.game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[4][0], dread_barrage_play_button_locations[4][1])
+                    
+                    self.game.wait(2)
+                
             # Check for available AP.
             self.game.check_for_ap(use_full_elixirs=self.game.quest_refill)
             
