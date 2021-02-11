@@ -112,6 +112,7 @@ Item{
                 { text: "Coop", enabled: true},
                 { text: "Raid", enabled: true},
                 { text: "Event", enabled: true},
+                { text: "Dread Barrage", enabled: true},
             ]
 
             onCurrentIndexChanged: {
@@ -120,7 +121,7 @@ Item{
                 farmingModeTextFieldLabel.visible = true
 
                 // Display either the itemSelectionButton or ComboBox depending on the Farming Mode selected.
-                if(farmingModeComboBox.displayText === "Event"){
+                if(farmingModeComboBox.displayText === "Event" || farmingModeComboBox.displayText === "Dread Barrage"){
                     itemSelectionButton.visible = false
                     itemSelectionButton.enabled = false
 
@@ -128,6 +129,19 @@ Item{
                     itemSelectionComboBox.enabled = true
                     itemSelectionComboBox.displayText = qsTr("Please select item to farm")
                     itemSelectionComboBox.currentIndex = 0
+
+                    // Set the contents of the Item Selection ComboBox.
+                    if(farmingModeComboBox.displayText === "Event"){
+                        itemSelectionComboBox.model = [
+                            { text: "Event", enabled: false},
+                            { text: "Repeated Runs", enabled: true },
+                        ]
+                    } else if(farmingModeComboBox.displayText === "Dread Barrage"){
+                        itemSelectionComboBox.model = [
+                            { text: "Dread Barrage", enabled: false},
+                            { text: "Repeated Runs", enabled: true },
+                        ]
+                    }
                 } else{
                     itemSelectionComboBox.visible = false
                     itemSelectionComboBox.enabled = false
@@ -1296,7 +1310,7 @@ Item{
                 backend.update_item_name(itemSelectionComboBox.model[currentIndex].text)
 
                 if(itemSelectionComboBox.displayText !== qsTr("Please select the item to farm")){
-                   if(itemSelectionComboBox.displayText === "Repeated Runs"){
+                   if(farmingModeComboBox.displayText === "Event" && itemSelectionComboBox.displayText === "Repeated Runs"){
                        missionComboBox.model = [
                            { text: "Event Raid", enabled: false },
                            { text: "VH Event Raid", map: "", enabled: true },
@@ -1307,6 +1321,15 @@ Item{
                            { text: "VH Event Quest", map: "", enabled: true },
                            { text: "EX Event Quest", map: "", enabled: true },
                        ]
+                   } else if(farmingModeComboBox.displayText === "Dread Barrage" && itemSelectionComboBox.displayText === "Repeated Runs"){
+                       missionComboBox.model = [
+                            { text: "Dread Barrage Raids", enabled: false },
+                            { text: "1 Star", map: "", enabled: true },
+                            { text: "2 Star", map: "", enabled: true },
+                            { text: "3 Star", map: "", enabled: true },
+                            { text: "4 Star", map: "", enabled: true },
+                            { text: "5 Star", map: "", enabled: true },
+                        ]
                    }
 
                     // Reset and enable the Mission Selection ComboBox.
@@ -1387,6 +1410,8 @@ Item{
                 } else if(farmingModeComboBox.displayText === "Raid" && itemSelectionButton.text !== qsTr("Please select item to farm")){
                     backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[currentIndex].map)
                 } else if(farmingModeComboBox.displayText === "Event" && itemSelectionButton.text !== qsTr("Please select item to farm")){
+                    backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[currentIndex].map)
+                } else if(farmingModeComboBox.displayText === "Dread Barrage" && itemSelectionButton.text !== qsTr("Please select item to farm")){
                     backend.update_mission_name(missionComboBox.model[currentIndex].text, missionComboBox.model[currentIndex].map)
                 }
                 
