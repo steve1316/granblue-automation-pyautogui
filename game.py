@@ -794,6 +794,61 @@ class Game:
             self.wait(1)
         
         return None
+    
+    def request_backup(self):
+        """Request backup during a Raid.
+
+        Returns:
+            None
+        """
+        self.print_and_save(f"\n{self.printtime()} [COMBAT] Now requesting Backup for this Raid.")
+        
+        # Scroll down the screen a little bit to have the "Request Backup" button visible on all screen sizes.
+        self.mouse_tools.scroll_screen_from_home_button(-400)
+        
+        # Now click the "Request Backup" button.
+        self.find_and_click_button("request_backup")
+        
+        # Find the location of the "Cancel" button and then click the button right next to it.
+        # This is to ensure that no matter what the blue "Request Backup" button's appearance, it is ensured to be pressed.
+        cancel_button_location = self.image_tools.find_button("cancel")
+        self.mouse_tools.move_and_click_point(cancel_button_location[0] + 200, cancel_button_location[1])
+        self.wait(1)
+        
+        if(self.image_tools.confirm_location("request_backup_success", tries=1)):
+            self.print_and_save(f"{self.printtime()} [COMBAT] Finished requesting Backup.")
+            self.find_and_click_button("ok")
+        
+        return None
+    
+    def tweet_backup(self):
+        """Request backup during a Raid using Twitter.
+
+        Returns:
+            None
+        """
+        self.print_and_save(f"\n{self.printtime()} [COMBAT] Now requesting Backup for this Raid via Twitter.")
+        
+        # Scroll down the screen a little bit to have the "Request Backup" button visible on all screen sizes.
+        self.mouse_tools.scroll_screen_from_home_button(-400)
+        
+        # Now click the "Request Backup" button.
+        self.find_and_click_button("request_backup")
+        
+        # Then click the "Tweet" button.
+        self.find_and_click_button("request_backup_tweet")
+        self.find_and_click_button("ok")
+        self.wait(1)
+        
+        # On success, click the "OK" button. Otherwise, click the "Cancel" button.
+        if(self.image_tools.confirm_location("request_backup_tweet_success", tries=1)):
+            self.print_and_save(f"{self.printtime()} [COMBAT] Finished requesting Backup via Twitter.")
+            self.find_and_click_button("ok")
+        else:
+            self.print_and_save(f"{self.printtime()} [COMBAT] Failed requesting Backup via Twitter as there is still a cooldown from the last tweet.")
+            self.find_and_click_button("cancel")
+
+        return None
 
     def start_combat_mode(self, script_file_path: str = ""):
         """Start the Combat Mode with the given script file name. Start reading through the text file line by line and have the bot proceed accordingly.
@@ -898,6 +953,14 @@ class Game:
                     while("end" not in line.lower() and line.strip() != ""):
                         # Strip any leading and trailing whitespaces.
                         line = lines[i].strip()
+                        if(line == ""):
+                            line_number += 1
+                            i += 1
+                            continue
+                        
+                        if(i >= len(lines[i])):
+                            break
+                        
                         self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line}\"")
 
                         # Determine which character will perform the action.
@@ -1024,6 +1087,20 @@ class Game:
                             self.find_and_click_button("full_auto")
                             full_auto = True
                             break
+                        
+                        if(line[0] != "#" and line[0] != "/" and line.strip() != "" and "requestbackup" in line.lower() and not full_auto):
+                            # Request Backup for this Raid.
+                            self.request_backup()
+                            line_number += 1
+                            i += 1
+                            line = lines[i]
+                        
+                        if(line[0] != "#" and line[0] != "/" and line.strip() != "" and "tweetbackup" in line.lower() and not full_auto):
+                            # Request Backup via Twitter for this Raid.
+                            self.tweet_backup()
+                            line_number += 1
+                            i += 1
+                            line = lines[i]
 
                 if(line[0] != "#" and line[0] != "/" and line.strip() != "" and "end" in line.lower() and not full_auto):
                     # Attempt to find the "Next" Button first before attacking to preserve the turn number in the backend. If so, skip clicking the "Attack" Button.
