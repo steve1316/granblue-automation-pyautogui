@@ -102,7 +102,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [ ] ~~(LOW PRIORITY) Implement if-else logic for users to use in combat scripts.~~ This is scrapped for now as this only applies to niche cases with only a few characters having Overdrive/Break related skills.
   - [ ] ~~(LOW PRIORITY) Implement HP/Overdrive/Break status checking in combat scripts.~~
 - [x] ~~(HIGH PRIORITY) Implement targeting for skills that require the user to select a target in combat scripts.~~
-- [ ] (HIGH PRIORITY) Provide a new command to allow users to request Backup.
+- [x] ~~(HIGH PRIORITY) Provide a new command to allow users to request Backup.~~
 - [ ] (LOW PRIORITY) Provide new commands to use the following items during Combat Mode: Green Potions, Blue Potions, Full Elixir, Support Potion, Clarity Herb, and Revival Potion.
 
 ## Frontend
@@ -116,7 +116,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] ~~(HIGH PRIORITY) Add Raid items.~~
 - [ ] (ON HOLD) Add Guild Wars items. (This is pending a re-run in April)
 - [ ] (ON HOLD) Add Rise of the Beasts items. (This is pending a re-run at an unknown date)
-- [x] (HIGH PRIORITY) Add support for Dread Barrage.
+- [x] ~~(HIGH PRIORITY) Add support for Dread Barrage.~~
 - [x] ~~(MAX PRIORITY) Switch all ComboBox components to my custom Flickable Component and include images for all farmable items.~~
 # Requirements
 1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
