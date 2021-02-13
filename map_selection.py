@@ -656,7 +656,7 @@ class MapSelection:
                                 self.raids_joined -= 1
                             raid_pending_battle_check = True
                         else:
-                            self.game.collect_loot()
+                            self.game.collect_loot(isPendingBattle=True)
                             if(self.raids_joined > 0):
                                 self.raids_joined -= 1
                             raid_pending_battle_check = True
@@ -676,7 +676,7 @@ class MapSelection:
                                 if(self.raids_joined > 0):
                                     self.raids_joined -= 1
                             else:
-                                self.game.collect_loot()
+                                self.game.collect_loot(isPendingBattle=True)
                                 if(self.raids_joined > 0):
                                     self.raids_joined -= 1
                                 
@@ -690,7 +690,7 @@ class MapSelection:
                                         self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
                                         self.game.find_and_click_button("quests")
                                     else:
-                                        self.game.collect_loot()
+                                        self.game.collect_loot(isPendingBattle=True)
                                         
                                     if(self.game.image_tools.find_button("quest_results_pending_battles", tries=1)):
                                         self.game.find_and_click_button("quest_results_pending_battles")
@@ -709,6 +709,7 @@ class MapSelection:
                 if(self.game.image_tools.find_button("quest_results_pending_battles", tries=tries, suppress_error=True)):
                     self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Found pending battles that need collecting from.")
                     self.game.find_and_click_button("quest_results_pending_battles")
+                    self.game.wait(1)
                     if(self.game.image_tools.confirm_location("pending_battles", tries=1)):
                         while(self.game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
                             self.game.find_and_click_button("tap_here_to_see_rewards")
@@ -718,7 +719,7 @@ class MapSelection:
                                 self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
                                 self.game.find_and_click_button("quests")
                             else:
-                                self.game.collect_loot()
+                                self.game.collect_loot(isPendingBattle=True)
                                 
                             if(self.game.image_tools.find_button("quest_results_pending_battles", tries=1)):
                                 self.game.find_and_click_button("quest_results_pending_battles")

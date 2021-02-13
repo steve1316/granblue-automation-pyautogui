@@ -630,14 +630,15 @@ class Game:
 
         return None
     
-    def collect_loot(self):
+    def collect_loot(self, isPendingBattle: bool = False):
         """Collect the loot from the Results screen while clicking away any dialog popups. Primarily for raids.
+        
+        Args:
+            isPendingBattle (bool): Skip the incrementation of runs attempted if this was a Pending Battle. Defaults to False.
 
         Returns:
             None
         """
-        self.print_and_save(f"\n{self.printtime()} [INFO] Detecting if any loot dropped...")
-        
         # Click away the EXP Gained popup and any other popups until the bot reaches the Loot Collected Screen.
         if(self.image_tools.confirm_location("exp_gained") and not self.retreat_check):
             while(not self.image_tools.confirm_location("loot_collected", tries=1)):
@@ -654,35 +655,37 @@ class Game:
                 if(ok_button_location != None):
                     self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
                     
-                # Double click the screen to hopefully clear away any EMP Mastery level up popups.
-                self.mouse_tools.move_and_click_point(self.home_button_location[0], self.home_button_location[1] - 200, mouse_clicks=2)
+                # Search for and click on the Extended Mastery prompt.
+                self.find_and_click_button("new_extended_mastery_level", tries=1, suppress_error=True)
 
             # Now that the bot is at the Loot Collected Screen, detect items.
-            if(self.item_name != "EXP" and self.item_name != "Repeated Runs"):
-                temp_amount = self.image_tools.find_farmed_items([self.item_name])[0]
-            else:
-                temp_amount = 1
-            
-            self.item_amount_farmed += temp_amount
-            
-        self.amount_of_runs_finished += 1
+            if(not isPendingBattle):
+                self.print_and_save(f"\n{self.printtime()} [INFO] Detecting if any loot dropped...")
+                if(self.item_name != "EXP" and self.item_name != "Repeated Runs"):
+                    temp_amount = self.image_tools.find_farmed_items([self.item_name])[0]
+                else:
+                    temp_amount = 1
+                
+                self.item_amount_farmed += temp_amount
+                self.amount_of_runs_finished += 1
         
-        if(self.item_name != "EXP" and self.item_name != "Repeated Runs"):
-            self.print_and_save("\n\n********************************************************************************")
-            self.print_and_save(f"{self.printtime()} [FARM] Mode: {self.map_mode}")
-            self.print_and_save(f"{self.printtime()} [FARM] Mission: {self.mission_name}")
-            self.print_and_save(f"{self.printtime()} [FARM] Summon: {self.summon_name}")
-            self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained this run: {temp_amount}")
-            self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained in total: {self.item_amount_farmed} / {self.item_amount_to_farm}")
-            self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished}")
-            self.print_and_save("********************************************************************************\n")
-        else:
-            self.print_and_save("\n\n********************************************************************************")
-            self.print_and_save(f"{self.printtime()} [FARM] Mode: {self.map_mode}")
-            self.print_and_save(f"{self.printtime()} [FARM] Mission: {self.mission_name}")
-            self.print_and_save(f"{self.printtime()} [FARM] Summon: {self.summon_name}")
-            self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished} / {self.item_amount_to_farm}")
-            self.print_and_save("********************************************************************************\n")
+        if(not isPendingBattle):    
+            if(self.item_name != "EXP" and self.item_name != "Repeated Runs"):
+                self.print_and_save("\n\n********************************************************************************")
+                self.print_and_save(f"{self.printtime()} [FARM] Mode: {self.map_mode}")
+                self.print_and_save(f"{self.printtime()} [FARM] Mission: {self.mission_name}")
+                self.print_and_save(f"{self.printtime()} [FARM] Summon: {self.summon_name}")
+                self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained this run: {temp_amount}")
+                self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained in total: {self.item_amount_farmed} / {self.item_amount_to_farm}")
+                self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished}")
+                self.print_and_save("********************************************************************************\n")
+            else:
+                self.print_and_save("\n\n********************************************************************************")
+                self.print_and_save(f"{self.printtime()} [FARM] Mode: {self.map_mode}")
+                self.print_and_save(f"{self.printtime()} [FARM] Mission: {self.mission_name}")
+                self.print_and_save(f"{self.printtime()} [FARM] Summon: {self.summon_name}")
+                self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished} / {self.item_amount_to_farm}")
+                self.print_and_save("********************************************************************************\n")
 
         return None
     
