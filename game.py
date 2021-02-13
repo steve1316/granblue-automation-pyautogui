@@ -938,9 +938,17 @@ class Game:
                         # Check for battle end.
                         if(self.retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
                             break
+                        elif(self.image_tools.confirm_location("battle_concluded", tries=1)):
+                            self.print_and_save(f"\n{self.printtime()} [COMBAT] Battle concluded suddenly.")
+                            self.find_and_click_button("ok")
+                            break
                             
                 # Check for battle end.
                 if(self.retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
+                    break
+                elif(self.image_tools.confirm_location("battle_concluded", tries=1)):
+                    self.print_and_save(f"\n{self.printtime()} [COMBAT] Battle concluded suddenly.")
+                    self.find_and_click_button("ok")
                     break
 
                 # If it is the start of the Turn and it is currently the correct turn, grab the next line for execution.
@@ -1036,7 +1044,11 @@ class Game:
                             i += 1
                             
                             # Check for battle end.
-                            if(self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
+                            if(self.retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
+                                break
+                            elif(self.image_tools.confirm_location("battle_concluded", tries=1)):
+                                self.print_and_save(f"\n{self.printtime()} [COMBAT] Battle concluded suddenly.")
+                                self.find_and_click_button("ok")
                                 break
                         
                         for j in range(1,7):
@@ -1075,7 +1087,11 @@ class Game:
                                         self.mouse_tools.move_and_click_point(self.back_button_location[0], self.back_button_location[1])
                                         
                                 # Check for battle end.
-                                if(self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
+                                if(self.retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
+                                    break
+                                elif(self.image_tools.confirm_location("battle_concluded", tries=1)):
+                                    self.print_and_save(f"\n{self.printtime()} [COMBAT] Battle concluded suddenly.")
+                                    self.find_and_click_button("ok")
                                     break
                                 
                                 # Continue to the next line for execution.
@@ -1178,6 +1194,10 @@ class Game:
             
             # Loop for Full Auto. The game will progress the Quest/Raid without any input required from the bot.     
             while(not self.retreat_check and full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
+                if(self.image_tools.confirm_location("battle_concluded", tries=1)):
+                    self.print_and_save(f"\n{self.printtime()} [COMBAT] Battle concluded suddenly.")
+                    self.find_and_click_button("ok")
+                    break
                 self.party_wipe_check()
                 self.wait(3)
 
