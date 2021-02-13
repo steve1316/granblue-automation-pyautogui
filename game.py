@@ -256,26 +256,29 @@ class Game:
         """
         try:
             # Check to see if party has wiped.
-            party_wipe_indicator = self.image_tools.find_button("party_wipe_indicator", tries=1, suppress_error=self.suppress_error)
+            self.print_and_save(f"\n{self.printtime()} [COMBAT] Checking to see if Party wiped...")
+            party_wipe_indicator = self.image_tools.find_button("party_wipe_indicator", tries=1, suppress_error=False)
             if(party_wipe_indicator != None):
-                self.print_and_save(f"\n{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Retreating now...")
-                self.wait(3)
-                self.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1])
+                self.wait(2)
                 
-                self.image_tools.confirm_location("continue")
-                self.find_and_click_button("cancel")
-                    
-                if(self.map_mode.lower() != "raid" and self.image_tools.confirm_location("retreat")):
-                    # For retreating from Quests.
-                    self.find_and_click_button("retreat_confirmation")
-                    
-                    self.retreat_check = True
-                elif(self.image_tools.confirm_location("raid_continue")):
-                    # For backing out of Raids without retreating.
+                # Click on the blue indicator to get rid of the overlay.
+                self.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1])
+
+                if((self.map_mode.lower() != "raid" and self.map_mode.lower() != "dread barrage") and self.image_tools.confirm_location("continue")):
+                    # Cancel the popup that asks you if you want to use a Full Elixir to come back. Then click the red Retreat button.
+                    self.print_and_save(f"{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Retreating now...")
                     self.find_and_click_button("cancel")
-                    if(self.image_tools.confirm_location("raid_retreat")):
-                        self.find_and_click_button("raid_retreat_home")
+                    self.find_and_click_button("retreat_confirmation")
+                    self.retreat_check = True
+                elif((self.map_mode.lower() == "raid" or self.map_mode.lower() == "dread barrage") and self.image_tools.confirm_location("salute_participants")):
+                    # Salute the participants.
+                    self.print_and_save(f"{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Backing out now without retreating...")
+                    self.find_and_click_button("salute")
+                    self.find_and_click_button("ok")
                     
+                    # Then cancel the popup that asks you if you want to use a Full Elixir to come back. Then click the Home button.
+                    self.find_and_click_button("cancel")
+                    self.find_and_click_button("raid_retreat_home")
                     self.retreat_check = True
 
             return None
