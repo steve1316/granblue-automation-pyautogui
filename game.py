@@ -804,6 +804,67 @@ class Game:
         
         return None
     
+    def use_combat_healing_item(self, command: str, target: int = 0):
+        """Uses the specified healing item during Combat mode with an optional target if the item needs it.
+
+        Args:
+            command (str): The command for the healing item to use.
+            target (int, optional): The character target for the item. This depends on what item it is. Defaults to 0.
+
+        Returns:
+            None
+        """
+        if(self.debug_mode):
+            self.print_and_save(f"\n{self.printtime()} [DEBUG] Using item: {command}, target: {target}.")
+        
+        # Click on the green "Heal" button.
+        self.find_and_click_button("heal")
+        
+        # Replace all whitespaces in the item string with underscores and then click on the specified item.
+        command = command.lower().replace(" ", "_")
+        if(command == "usebluepotion" or command == "usesupportpotion"):
+            potion_location = self.image_tools.find_all(command)
+            if(command == "usebluepotion"):
+                self.mouse_tools.move_and_click_point(potion_location[0][0], potion_location[0][1])
+            elif(command == "usesupportpotion"):
+                self.mouse_tools.move_and_click_point(potion_location[1][0], potion_location[1][1])
+        else:
+            self.find_and_click_button(command)
+        
+        if(self.image_tools.wait_vanish("tap_the_item_to_use", timeout=5)):
+            if(command == "usegreenpotion"):
+                self.print_and_save(f"\n{self.printtime()} [COMBAT] Using Green Potion on Character {target}...")
+                self.select_character(target)
+            elif(command == "usebluepotion"):
+                self.print_and_save(f"\n{self.printtime()} [COMBAT] Using Blue Potion on the whole Party...")
+                self.find_and_click_button("use") 
+            elif(command == "usefullelixir"):
+                self.print_and_save(f"\n{self.printtime()} [COMBAT] Using Full Elixir to revive and gain Full Charge...")
+                self.find_and_click_button("ok")
+            elif(command == "usesupportpotion"):
+                self.print_and_save(f"\n{self.printtime()} [COMBAT] Using Support Potion on the whole Party...")
+                self.find_and_click_button("ok")
+            elif(command == "useclaritypotion"):
+                self.print_and_save(f"\n{self.printtime()} [COMBAT] Using Clarity Herb on Character {target}...")
+                self.select_character(target)
+            elif(command == "userevivalpotion"):
+                self.print_and_save(f"\n{self.printtime()} [COMBAT] Using Revival Potion to revive the whole Party...")
+                self.find_and_click_button("ok")
+        
+            # Wait for the healing animation to finish.
+            self.wait(1)
+            
+            if(not self.image_tools.confirm_location("use_item", tries=1)):
+                self.print_and_save(f"{self.printtime()} [SUCCESS] Using item was successful.")
+            else:
+                self.print_and_save(f"{self.printtime()} [WARNING] Using item was not successful. Canceling it now...")
+                self.find_and_click_button("cancel")
+        else:
+            self.print_and_save(f"{self.printtime()} [WARNING] Failed to click on the item. Either it does not exist for this particular mission or you ran out. Canceling it now...")
+            self.find_and_click_button("cancel")
+        
+        return None
+    
     def request_backup(self):
         """Request backup during a Raid.
 
@@ -1123,6 +1184,34 @@ class Game:
                         if(line[0] != "#" and line[0] != "/" and line.strip() != "" and "tweetbackup" in line.lower() and not full_auto):
                             # Request Backup via Twitter for this Raid.
                             self.tweet_backup()
+                            line_number += 1
+                            i += 1
+                            line = lines[i]
+                        
+                        item_commands = ["usegreenpotion.target(1)", "usegreenpotion.target(2)", "usegreenpotion.target(3)", "usegreenpotion.target(4)", "usebluepotion", "usefullelixir", 
+                                         "usesupportpotion", "useclarityherb.target(1)", "useclarityherb.target(2)", "useclarityherb.target(3)", "useclarityherb.target(4)", "userevivalpotion"]
+                        if(line[0] != "#" and line[0] != "/" and line.strip() != "" and line.lower() in item_commands and not full_auto):
+                            # Parse the command from the line.
+                            command = line.split(".").pop(0).lower()
+                            
+                            # Parse the target if the user is using a Green Potion or a Clarity Herb.
+                            if((command == "usegreenpotion" or command == "useclarityherb") and "target" in line.lower()):
+                                target = line.split(".").pop(1).lower()
+                                print(target)
+                                
+                                if("target(1)" in target):
+                                    target = 1
+                                elif("target(2)" in target):
+                                    target = 2
+                                elif("target(3)" in target):
+                                    target = 3
+                                elif("target(4)" in target):
+                                    target = 4
+                            else:
+                                target = 0
+                            
+                            # Use the item and move forward the execution by 1.
+                            self.use_combat_healing_item(command, target)
                             line_number += 1
                             i += 1
                             line = lines[i]
