@@ -1482,12 +1482,6 @@ Item{
 
             model: 999
 
-            onEnabledChanged: {
-                // if(amountOfItemTextField.enabled === true){
-                //     amountOfItemTextField.displayText = qsTr("# of Item")
-                // }
-            }
-
             onCurrentIndexChanged: {
                 // Update the backend with the # of Items selected.
                 amountOfItemTextField.displayText = currentIndex + 1
@@ -1502,9 +1496,12 @@ Item{
                     backend.update_summon_name("", "")
                 } else {
                     summonButton.enabled = true
-                    summonSelectionLabel.color = "#fc8c03"
-                    summonSelectionLabel.text = qsTr("Now select your Summon")
-                    summonSelectionLabel.visible = true
+
+                    if(summonButton.text === "Select Summon"){
+                        summonSelectionLabel.color = "#fc8c03"
+                        summonSelectionLabel.text = qsTr("Now select your Summon")
+                        summonSelectionLabel.visible = true
+                    }
                 }
             }
         }
@@ -1822,6 +1819,7 @@ Item{
             if(farmingModeComboBox.displayText !== qsTr("Coop")){
                 summonSelectionLabel.text = qsTr("Summon selected successfully")
                 summonSelectionLabel.color = "#00ff00"
+                summonSelectionLabel.visible = true
             }
             
             groupSelectionComboBox.enabled = true
