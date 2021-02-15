@@ -103,7 +103,7 @@ By downloading this program, you consent to your account potentially getting fla
   - [ ] ~~(LOW PRIORITY) Implement HP/Overdrive/Break status checking in combat scripts.~~
 - [x] ~~(HIGH PRIORITY) Implement targeting for skills that require the user to select a target in combat scripts.~~
 - [x] ~~(HIGH PRIORITY) Provide a new command to allow users to request Backup.~~
-- [ ] (LOW PRIORITY) Provide new commands to use the following items during Combat Mode: Green Potions, Blue Potions, Full Elixir, Support Potion, Clarity Herb, and Revival Potion.
+- [x] ~~(LOW PRIORITY) Provide new commands to use the following items during Combat Mode: Green Potions, Blue Potions, Full Elixir, Support Potion, Clarity Herb, and Revival Potion.~~
 
 ## Frontend
 - [x] ~~Add a Save Logs button.~~
