@@ -881,6 +881,7 @@ class Game:
         
         # Find the location of the "Cancel" button and then click the button right next to it.
         # This is to ensure that no matter what the blue "Request Backup" button's appearance, it is ensured to be pressed.
+        self.wait(1)
         cancel_button_location = self.image_tools.find_button("cancel")
         self.mouse_tools.move_and_click_point(cancel_button_location[0] + 200, cancel_button_location[1])
         self.wait(1)
