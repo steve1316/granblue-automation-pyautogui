@@ -970,27 +970,17 @@ class Game:
             # Flag for Full Auto. Every command after it will be ignored until the raid is cleared or party wiped.
             full_auto = False
 
-            # This is where the main workflow occurs in. Continue until EOF is reached in the combat script.
+            # Save the positions of the "Attack" and "Back" button.
+            if(self.attack_button_location == None or self.back_button_location == None):
+                self.attack_button_location = self.image_tools.find_button("attack", tries=10)
+                if(self.attack_button_location != None):
+                    self.back_button_location = (self.attack_button_location[0] - 322, self.attack_button_location[1])
+                else:
+                    self.print_and_save(f"\n{self.printtime()} [ERROR] Cannot find Attack button. Raid must have just ended.")
+                    return False
+                
+            # This is where the main workflow of Combat Mode is located and it will loop until the last of the commands have been executed.
             while(i != len(lines) and not self.retreat_check):
-                # Grab the specified line from the list of lines.
-                line = lines[i]
-
-                # Print each line read if debug mode is active.
-                if(line[0] != "#" and line[0] != "/" and line.strip() != ""):
-                    if(self.debug_mode):
-                        self.print_and_save(f"\n{self.printtime()} [DEBUG] Reading Line {line_number}: \"{line.strip()}\"")
-
-                # Save the position of the center of the "Attack" and "Back" Button. If already found, don't call this again.
-                if(self.attack_button_location == None or self.back_button_location == None):
-                    self.attack_button_location = self.image_tools.find_button("attack", tries=10 , suppress_error=self.suppress_error)
-                    if(self.attack_button_location != None):
-                        self.back_button_location = (self.attack_button_location[0] - 322, self.attack_button_location[1])
-                    else:
-                        self.print_and_save(f"\n{self.printtime()} [ERROR] Cannot find Attack button. Raid must have just ended.")
-                        return False
-
-                # If the execution reached the next turn block and it is currently not the correct turn, keep pressing the "Attack" Button until the turn number matches.
-                if(line[0] != "#" and line[0] != "/" and line.strip() != "" and "turn" in line.lower() and int(line.split(":")[0].split(" ")[1]) != turn_number):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Attacking until the bot reaches Turn {int(line.split(':')[0].split(' ')[1])}...")
                     while(int(line.split(":")[0].split(" ")[1]) != turn_number):
                         self.print_and_save(f"{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
