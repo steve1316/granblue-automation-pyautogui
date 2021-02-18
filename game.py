@@ -1572,7 +1572,7 @@ class Game:
                                 self.check_for_friend_request()
                                 
                                 # Check for Dimensional Halo if enabled.
-                                if(self.item_name == "EXP" and self.enable_dimensional_halo):
+                                if(self.farming_mode.lower() == "special" and self.item_name == "EXP" and self.enable_dimensional_halo):
                                     self.check_for_dimensional_halo()
                                 elif(self.map_mode.lower() == "event" and self.enable_event_nightmare):
                                     self.check_for_event_nightmare()
@@ -1592,7 +1592,7 @@ class Game:
                         # Cover the occasional case where joining the raid after selecting the Summon and Party leds to the Quest Results Screen with no loot to collect.
                         if(self.image_tools.confirm_location("no_loot")):
                             self.print_and_save(f"\n{self.printtime()} [INFO] Seems that the raid just ended. Moving on...")
-                            self.go_back_home()
+                            self.go_back_home(confirm_location_check=True)
                             summon_check = False
                         else:
                             # Start Combat Mode for this Raid.
