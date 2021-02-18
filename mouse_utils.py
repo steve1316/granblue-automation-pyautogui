@@ -1,4 +1,5 @@
 import datetime
+import traceback
 from timeit import default_timer as timer
 
 import pyautogui
@@ -12,31 +13,18 @@ class MouseUtils:
     Attributes
     ----------
     game (game.Game): The Game object.
-    
-    starting_time (float): Used to keep track of the program's elapsed time for logging purposes.
 
     mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.2.
 
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
 
     """
-
-    def __init__(self, game, starting_time: float, mouse_speed: float = 0.2, debug_mode: bool = False):
+    def __init__(self, game, mouse_speed: float = 0.2, debug_mode: bool = False):
         super().__init__()
         
         self.game = game
-
-        self.starting_time = starting_time
         self.mouse_speed = mouse_speed
         self.debug_mode = debug_mode
-
-    def printtime(self):
-        """Formats the time since the bot started into a readable, printable HH:MM:SS format using timedelta.
-
-        Returns:
-            str: A formatted string that displays the elapsed time since the bot started.
-        """
-        return str(datetime.timedelta(seconds=(timer() - self.starting_time))).split('.')[0]
 
     def move_to(self, x: int, y: int, custom_mouse_speed: float = 0.0):
         """Move the cursor to the coordinates on the screen.
@@ -51,9 +39,12 @@ class MouseUtils:
         """
         if (custom_mouse_speed <= 0.0):
             custom_mouse_speed = self.mouse_speed
-
-        pyautogui.moveTo(x, y, custom_mouse_speed, pyautogui.easeInOutQuad)
-        return None
+            
+        try:
+            pyautogui.moveTo(x, y, custom_mouse_speed, pyautogui.easeInOutQuad)
+            return None
+        except Exception:
+            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception attempting to move the mouse cursor to Point({x}, {y}): \n{traceback.format_exc()}")
 
     def move_to_instantly(self, x: int, y: int):
         """Move the cursor instantly to the coordinates on the screen.
@@ -65,8 +56,11 @@ class MouseUtils:
         Returns:
             None
         """
-        pyautogui.moveTo(x, y)
-        return None
+        try:
+            pyautogui.moveTo(x, y)
+            return None
+        except Exception:
+            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception attempting to instantly move the mouse cursor to Point({x}, {y}): \n{traceback.format_exc()}")
 
     def move_and_click_point(self, x: int, y: int, custom_mouse_speed: float = 0.0, mouse_clicks: int = 1):
         """Move the cursor to the specified point on the screen and clicks it.
@@ -82,10 +76,13 @@ class MouseUtils:
         """
         if (custom_mouse_speed <= 0.0):
             custom_mouse_speed = self.mouse_speed
-
-        pyautogui.moveTo(x, y, custom_mouse_speed, pyautogui.easeInOutQuad)
-        pyautogui.click(clicks=mouse_clicks)
-        return None
+            
+        try:
+            pyautogui.moveTo(x, y, custom_mouse_speed, pyautogui.easeInOutQuad)
+            pyautogui.click(clicks=mouse_clicks)
+            return None
+        except Exception:
+            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception attempting to move the mouse cursor to Point({x}, {y}) and clicking it: \n{traceback.format_exc()}")
 
     def click_point_instantly(self, x: int, y: int):
         """Click the specified point on the screen instantly.
@@ -97,8 +94,11 @@ class MouseUtils:
         Returns:
             None
         """
-        pyautogui.click(x, y)
-        return None
+        try:
+            pyautogui.click(x, y)
+            return None
+        except Exception:
+            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception attempting to instantly click the Point({x}, {y}): \n{traceback.format_exc()}")
 
     def scroll_screen(self, x: int, y: int, scroll_clicks: int):
         """Attempt to scroll the screen to reveal more UI elements from the provided x and y coordinates.
@@ -112,14 +112,17 @@ class MouseUtils:
             None
         """
         if(self.debug_mode):
-            self.game.print_and_save(f"{self.printtime()} [DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
-
-        self.move_to(x, y)
-        pyautogui.scroll(scroll_clicks, x=x, y=y)
-        return None
+            self.game.print_and_save(f"{self.game.printtime()} [DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
+            
+        try:
+            self.move_to(x, y)
+            pyautogui.scroll(scroll_clicks, x=x, y=y)
+            return None
+        except Exception:
+            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception attempting to scroll the screen at Point({x}, {y}) by {scroll_clicks} clicks: \n{traceback.format_exc()}")
     
     def scroll_screen_from_home_button(self, scroll_clicks: int):
-        """Attempt to scroll the screen using the Home button coordinates to reveal more UI elements.
+        """Attempt to scroll the screen using the "Home" button coordinates to reveal more UI elements.
 
         Args:
             scroll_clicks (int): How much to scroll the screen. Positive for scrolling up and negative for scrolling down.
@@ -127,15 +130,18 @@ class MouseUtils:
         Returns:
             None
         """
-        x = self.game.home_button_location[0]
-        y = self.game.home_button_location[1] - 50
-        
-        if(self.debug_mode):
-            self.game.print_and_save(f"{self.printtime()} [DEBUG] Now scrolling the screen from the Home button's coordinates at ({x}, {y}) by {scroll_clicks} clicks...")
-
-        self.move_to(x, y)
-        pyautogui.scroll(scroll_clicks, x=x, y=y)
-        return None
+        try:
+            if(self.debug_mode):
+                self.game.print_and_save(f"{self.game.printtime()} [DEBUG] Now scrolling the screen from the \"Home\" button's coordinates at ({x}, {y} - 50) by {scroll_clicks} clicks...")
+            
+            x = self.game.home_button_location[0]
+            y = self.game.home_button_location[1] - 50
+                
+            self.move_to(x, y)
+            pyautogui.scroll(scroll_clicks, x=x, y=y)
+            return None
+        except Exception:
+            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception attempting to scroll the screen from the \"Home\" button: \n{traceback.format_exc()}")
     
     def clear_textbox(self):
         """Clear the selected textbox of all text by selecting all text by CTRL + A and then pressing DEL.
