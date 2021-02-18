@@ -635,7 +635,8 @@ class Game:
             x = self.attack_button_location[0] + 39
 
         self.mouse_tools.move_and_click_point(x, y)
-
+        # Double-clicking the skill to avoid any non-invasive popups from other Raid participants.
+        self.mouse_tools.move_and_click_point(x, y, mouse_clicks=2)
         return None
     
     def collect_loot(self, isPendingBattle: bool = False):
