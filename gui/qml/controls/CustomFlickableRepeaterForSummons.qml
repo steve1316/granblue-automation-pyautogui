@@ -221,7 +221,7 @@ Flickable {
                     onClicked: {
                         backend.update_summon_name(name, element)
                         summonPopup.close()
-                        summonButton.text = name
+                        summonSelectionButton.text = name
                     }
                 }
 
@@ -262,7 +262,7 @@ Flickable {
                     onClicked: {
                         backend.update_summon_name(name, element)
                         summonPopup.close()
-                        summonButton.text = name
+                        summonSelectionButton.text = name
                     }
                 }
 
@@ -303,7 +303,7 @@ Flickable {
                     onClicked: {
                         backend.update_summon_name(name, element)
                         summonPopup.close()
-                        summonButton.text = name
+                        summonSelectionButton.text = name
                     }
                 }
 
@@ -344,7 +344,7 @@ Flickable {
                     onClicked: {
                         backend.update_summon_name(name, element)
                         summonPopup.close()
-                        summonButton.text = name
+                        summonSelectionButton.text = name
                     }
                 }
 
@@ -385,7 +385,7 @@ Flickable {
                     onClicked: {
                         backend.update_summon_name(name, element)
                         summonPopup.close()
-                        summonButton.text = name
+                        summonSelectionButton.text = name
                     }
                 }
 
@@ -426,7 +426,7 @@ Flickable {
                     onClicked: {
                         backend.update_summon_name(name, element)
                         summonPopup.close()
-                        summonButton.text = name
+                        summonSelectionButton.text = name
                     }
                 }
 
@@ -467,7 +467,7 @@ Flickable {
                     onClicked: {
                         backend.update_summon_name(name, element)
                         summonPopup.close()
-                        summonButton.text = name
+                        summonSelectionButton.text = name
                     }
                 }
 
