@@ -276,7 +276,11 @@ class Game:
                     
                     # Then cancel the popup that asks you if you want to use a Full Elixir to come back. Then click the Home button.
                     self.find_and_click_button("cancel")
-                    self.find_and_click_button("raid_retreat_home")
+                    # Then click the "Home" button if currently farming raids or the "Leave" button if Coop.
+                    if(self.farming_mode.lower() == "coop"):
+                        self.find_and_click_button("leave")
+                    else:
+                        self.find_and_click_button("raid_retreat_home")
                     self.retreat_check = True
 
             return None
