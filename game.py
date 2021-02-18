@@ -564,8 +564,7 @@ class Game:
         Returns:
             None
         """
-        self.wait(3)
-        if(self.image_tools.confirm_location("not_enough_ep", tries=2)):
+        if(self.farming_mode.lower() == "raid" and self.image_tools.confirm_location("not_enough_ep", tries=2)):
             # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
             if(use_soul_balm == False):
                 self.print_and_save(f"\n{self.printtime()} [INFO] EP ran out! Using Soul Berries...")
