@@ -384,6 +384,10 @@ class Game:
                     self.image_tools.confirm_location("trial_battles_description")
                 
                 image_location = self.image_tools.find_button(step)
+                # If the bot cannot find the "Trial Battles" button under the "Gameplay Extras" section, keep scrolling down until it does.
+                while(step == "trial_battles" and image_location == None):
+                    self.mouse_tools.scroll_screen_from_home_button(-300)
+                    image_location = self.image_tools.find_button(step)
                 if(step == "choose_a_summon"):
                     self.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187)
                 else:
