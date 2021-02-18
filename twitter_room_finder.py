@@ -137,18 +137,7 @@ class TwitterRoomFinder():
         
         self.debug_mode = debug_mode
         
-        # Connect to Twitter's API.
-        self.game.print_and_save(f"\n{self.game.printtime()} [TWITTER] Authenticating...")
-        auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret)
-        auth.set_access_token(self.access_token, self.access_token_secret)
-        self.api = tweepy.API(auth)
-        
-        # Check to see if connection to Twitter's API was successful.
-        try:
-            user_tweets = self.api.home_timeline()
-            self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Successfully connected to the Twitter API.")
-        except Exception:
-            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Connection to the Twitter API failed. Check the config.ini and verify that the keys and tokens are correct. Exact error is: \n{traceback.format_exc()}")
+        self.api = None
     
     def find_most_recent(self, raid_name: str, count: int = 10):
         """Start listening to tweets containing room codes starting with JP and then listens for EN tweets if there was not enough collected tweets.
@@ -160,7 +149,19 @@ class TwitterRoomFinder():
         Returns:
             tweets (Iterable[str]): List of most recent tweets that match the query.
         """
-
+        # Connect to Twitter's API if this is the first run.
+        if(self.api == None):
+            self.game.print_and_save(f"\n{self.game.printtime()} [TWITTER] Authenticating...")
+            auth = tweepy.OAuthHandler(self.consumer_key, self.consumer_secret)
+            auth.set_access_token(self.access_token, self.access_token_secret)
+            self.api = tweepy.API(auth)
+            
+            # Check to see if connection to Twitter's API was successful.
+            try:
+                user_tweets = self.api.home_timeline()
+                self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Successfully connected to the Twitter API.")
+            except Exception:
+                self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Connection to the Twitter API failed. Check the config.ini and verify that the keys and tokens are correct. Exact error is: \n{traceback.format_exc()}")
         
         self.game.print_and_save(f"\n{self.game.printtime()} [TWITTER] Now finding the {count} most recent tweets for {raid_name}.")
         today = datetime.datetime.today()
