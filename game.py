@@ -237,6 +237,10 @@ class Game:
             temp_location = self.image_tools.find_button("raid_flat", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
                 temp_location = self.image_tools.find_button("raid_bouncing", tries=tries, suppress_error=suppress_error)
+        elif(button_name.lower() == "coop_start"):
+            temp_location = self.image_tools.find_button("coop_start_flat", tries=tries, suppress_error=suppress_error)
+            if(temp_location == None):
+                temp_location = self.image_tools.find_button("coop_start_faded", tries=tries, suppress_error=suppress_error)
         else:
             temp_location = self.image_tools.find_button(button_name.lower(), tries=tries, suppress_error=suppress_error)
         
