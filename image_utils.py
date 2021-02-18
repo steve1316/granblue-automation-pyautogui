@@ -183,7 +183,7 @@ class ImageUtils:
 
         return True
 
-    def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 1):
+    def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 1, suppress_error: bool = False):
         """Find the location of the specified summon. Will attempt to scroll the screen down to see more Summons if the initial screen position yielded no matches.
 
         Args:
@@ -194,6 +194,7 @@ class ImageUtils:
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
             tries (int, optional): Number of tries before failing. Defaults to 5.
             sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
+            suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
 
         Returns:
             summon_location (int, int): Tuple of coordinates of where the center of the summon is located if image matching was successful. Otherwise, return None.
@@ -218,7 +219,8 @@ class ImageUtils:
                     tries -= 1
                         
                     if (tries <= 0):
-                        self.game.print_and_save(f"{self.printtime()} [ERROR] Could not find {summon_name.upper()} Summon.")
+                        if(not suppress_error):
+                            self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not find {summon_name.upper()} Summon.")
                         return None
                 
                     if(self.debug_mode):
