@@ -227,7 +227,7 @@ class ImageUtils:
                         self.game.print_and_save(f"{self.printtime()} [WARNING] Could not locate {summon_name.upper()} Summon. Trying again in {sleep_time} seconds...")
 
                     # If matching failed, scroll the screen down to see more Summons.
-                    self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -500)
+                    self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
                     time.sleep(sleep_time)
                 else:
                     guibot_check = True
