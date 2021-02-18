@@ -25,688 +25,44 @@ Flickable {
             }
         }
 
-        // Items for Lvl 50 Tiamat Omega / Lvl 100 Tiamat Omega Ayr
+        // List model that holds all the Raid items that are supported.
         ListModel {
-            id: raidItemsModel_TiamatOmega
-
-            Component.onCompleted: {
-                var listOfItems = ["Tiamat Omega", "Tiamat Anima", "Tiamat Omega Anima", "Tiamat Amood Omega", "Tiamat Bolt Omega", "Tiamat Gauntlet Omega", "Tiamat Glaive Omega"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 70 Colossus Omega / Lvl 100 Colossus Omega
-        ListModel {
-            id: raidItemsModel_ColossusOmega
-
-            Component.onCompleted: {
-                var listOfItems = ["Colossus Omega", "Colossus Anima", "Colossus Omega Anima", "Colossus Blade Omega", "Colossus Cane Omega", "Colossus Carbine Omega", "Colossus Fist Omega"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 60 Leviathan Omega / Lvl 100 Leviathan Omega
-        ListModel {
-            id: raidItemsModel_LeviathanOmega
-
-            Component.onCompleted: {
-                var listOfItems = ["Leviathan Omega", "Leviathan Anima", "Leviathan Omega Anima", "Leviathan Bow Omega", "Leviathan Gaze Omega", "Leviathan Scepter Omega", "Leviathan Spear Omega"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 60 Yggdrasil Omega / Lvl 100 Yggdrasil Omega
-        ListModel {
-            id: raidItemsModel_YggdrasilOmega
-
-            Component.onCompleted: {
-                var listOfItems = ["Yggdrasil Omega", "Yggdrasil Anima", "Yggdrasil Omega Anima", "Yggdrasil Bow Omega", "Yggdrasil Crystal Blade Omega", "Yggdrasil Dagger Omega", "Yggdrasil Dewbranch Omega"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 75 Luminiera Omega / Lvl 100 Luminiera Omega
-        ListModel {
-            id: raidItemsModel_LuminieraOmega
-
-            Component.onCompleted: {
-                var listOfItems = ["Luminiera Omega", "Luminiera Anima", "Luminiera Omega Anima", "Luminiera Bhuj Omega", "Luminiera Bolt Omega", "Luminiera Harp Omega", "Luminiera Sword Omega"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 75 Celeste Omega / Lvl 100 Celeste Omega
-        ListModel {
-            id: raidItemsModel_CelesteOmega
-
-            Component.onCompleted: {
-                var listOfItems = ["Celeste Omega", "Celeste Anima", "Celeste Omega Anima", "Celeste Harp Omega", "Celeste Claw Omega", "Celeste Horn Omega", "Celeste Zaghnal Omega"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 120 Shiva
-        ListModel {
-            id: raidItemsModel_Shiva
-
-            Component.onCompleted: {
-                var listOfItems = ["Shiva Anima", "Shiva Omega Anima", "Hand of Brahman", "Scimitar of Brahman", "Trident of Brahman", "Nilakantha"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 120 Europa
-        ListModel {
-            id: raidItemsModel_Europa
-
-            Component.onCompleted: {
-                var listOfItems = ["Europa Anima", "Europa Omega Anima", "Tyros Bow", "Tyros Scepter", "Tyros Zither", "Spirit of Mana"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 120 Godsworn Alexiel
-        ListModel {
-            id: raidItemsModel_Alexiel
-
-            Component.onCompleted: {
-                var listOfItems = ["Alexiel Anima", "Alexiel Omega Anima", "Nibelung Horn", "Nibelung Klinge", "Nibelung Messer", "Godsworn Edge"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 120 Grimnir
-        ListModel {
-            id: raidItemsModel_Grimnir
-
-            Component.onCompleted: {
-                var listOfItems = ["Grimnir Anima", "Grimnir Omega Anima", "Last Storm Blade", "Last Storm Harp", "Last Storm Lance", "Coruscant Crozier"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 120 Metatron
-        ListModel {
-            id: raidItemsModel_Metatron
-
-            Component.onCompleted: {
-                var listOfItems = ["Metatron Anima", "Metatron Omega Anima", "Mittron's Treasured Blade", "Mittron's Gauntlet", "Mittron's Bow", "Pillar of Flame"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 120 Avatar
-        ListModel {
-            id: raidItemsModel_Avatar
-
-            Component.onCompleted: {
-                var listOfItems = ["Avatar Anima", "Avatar Omega Anima", "Abyss Striker", "Abyss Spine", "Abyss Gaze", "Zechariah"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 100 Twin Elements / Lvl 120 Twin Elements
-        ListModel {
-            id: raidItemsModel_TwinElements
-
-            Component.onCompleted: {
-                var listOfItems = ["Twin Elements Anima", "Twin Elements Omega Anima", "Ancient Ecke Sachs", "Ecke Sachs"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 100 Macula Marius / Lvl 120 Macula Marius
-        ListModel {
-            id: raidItemsModel_MaculaMarius
-
-            Component.onCompleted: {
-                var listOfItems = ["Macula Marius Anima", "Macula Marius Omega Anima", "Ancient Auberon", "Auberon"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 100 Medusa / Lvl 120 Medusa
-        ListModel {
-            id: raidItemsModel_Medusa
-
-            Component.onCompleted: {
-                var listOfItems = ["Medusa Anima", "Medusa Omega Anima", "Ancient Perseus", "Perseus"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 100 Nezha / Lvl 120 Nezha
-        ListModel {
-            id: raidItemsModel_Nezha
-
-            Component.onCompleted: {
-                var listOfItems = ["Nezha Anima", "Nezha Omega Anima", "Ancient Nalakuvara", "Nalakuvara"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 100 Apollo / Lvl 120 Apollo
-        ListModel {
-            id: raidItemsModel_Apollo
-
-            Component.onCompleted: {
-                var listOfItems = ["Apollo Anima", "Apollo Omega Anima", "Ancient Bow of Artemis", "Bow of Artemis"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 100 Dark Angel Olivia / Lvl 120 Dark Angel Olivia
-        ListModel {
-            id: raidItemsModel_DarkAngelOlivia
-
-            Component.onCompleted: {
-                var listOfItems = ["Dark Angel Olivia Anima", "Dark Angel Olivia Omega Anima", "Ancient Cortana", "Cortana"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 100 Athena
-        ListModel {
-            id: raidItemsModel_Athena
-
-            Component.onCompleted: {
-                var listOfItems = ["Athena Anima", "Athena Omega Anima", "Erichthonius", "Sword of Pallas"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-        
-        // Items for Lvl 100 Grani
-        ListModel {
-            id: raidItemsModel_Grani
-
-            Component.onCompleted: {
-                var listOfItems = ["Grani Anima", "Grani Omega Anima", "Bow of Sigurd", "Wilhelm"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 100 Baal
-        ListModel {
-            id: raidItemsModel_Baal
-
-            Component.onCompleted: {
-                var listOfItems = ["Baal Anima", "Baal Omega Anima", "Solomon's Axe", "Spymur's Vision"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 100 Garuda
-        ListModel {
-            id: raidItemsModel_Garuda
-
-            Component.onCompleted: {
-                var listOfItems = ["Garuda Anima", "Garuda Omega Anima", "Plume of Suparna", "Indra's Edge"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-        
-        // Items for Lvl 100 Odin
-        ListModel {
-            id: raidItemsModel_Odin
-
-            Component.onCompleted: {
-                var listOfItems = ["Odin Anima", "Odin Omega Anima", "Gungnir", "Sleipnir Shoe"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 100 Lich
-        ListModel {
-            id: raidItemsModel_Lich
-
-            Component.onCompleted: {
-                var listOfItems = ["Lich Anima", "Lich Omega Anima", "Obscuritas", "Phantasmas"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 120 Prometheus
-        ListModel {
-            id: raidItemsModel_Prometheus
-
-            Component.onCompleted: {
-                var listOfItems = ["Prometheus Anima", "Fire of Prometheus", "Chains of Caucasus"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 120 Ca Ong
-        ListModel {
-            id: raidItemsModel_CaOng
-
-            Component.onCompleted: {
-                var listOfItems = ["Ca Ong Anima", "Keeper of Hallowed Ground", "Savior of Hallowed Ground"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 120 Gilgamesh
-        ListModel {
-            id: raidItemsModel_Gilgamesh
-
-            Component.onCompleted: {
-                var listOfItems = ["Gilgamesh Anima", "All-Might Spear", "All-Might Battle-Axe"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 120 Morrigna
-        ListModel {
-            id: raidItemsModel_Morrigna
-
-            Component.onCompleted: {
-                var listOfItems = ["Morrigna Anima", "Le Fay", "Unius"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 120 Hector
-        ListModel {
-            id: raidItemsModel_Hector
-
-            Component.onCompleted: {
-                var listOfItems = ["Hector Anima", "Bow of Iliad", "Adamantine Gauntlet"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 120 Anubis
-        ListModel {
-            id: raidItemsModel_Anubis
-
-            Component.onCompleted: {
-                var listOfItems = ["Anubis Anima", "Hermanubis", "Scales of Dominion"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 150 Tiamat Malice
-        ListModel {
-            id: raidItemsModel_TiamatMalice
-
-            Component.onCompleted: {
-                var listOfItems = ["Tiamat Malice Anima", "Hatsoiiłhał", "Majestas"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 150 Leviathan Malice
-        ListModel {
-            id: raidItemsModel_LeviathanMalice
-
-            Component.onCompleted: {
-                var listOfItems = ["Leviathan Malice Anima", "Kaladanda", "Kris of Hypnos"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lvl 150 Phronesis
-        ListModel {
-            id: raidItemsModel_Phronesis
-
-            Component.onCompleted: {
-                var listOfItems = ["Phronesis Anima", "Dark Thrasher", "Master Bamboo Sword"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
+            id: itemsModel
+
+            property var listOfItems: {
+                "Tiamat Omega": ["Tiamat Omega", "Tiamat Anima", "Tiamat Omega Anima", "Tiamat Amood Omega", "Tiamat Bolt Omega", "Tiamat Gauntlet Omega", "Tiamat Glaive Omega"],
+                "Colossus Omega": ["Colossus Omega", "Colossus Anima", "Colossus Omega Anima", "Colossus Blade Omega", "Colossus Cane Omega", "Colossus Carbine Omega", "Colossus Fist Omega"],
+                "Leviathan Omega": ["Leviathan Omega", "Leviathan Anima", "Leviathan Omega Anima", "Leviathan Bow Omega", "Leviathan Gaze Omega", "Leviathan Scepter Omega", "Leviathan Spear Omega"],
+                "Yggdrasil Omega": ["Yggdrasil Omega", "Yggdrasil Anima", "Yggdrasil Omega Anima", "Yggdrasil Bow Omega", "Yggdrasil Crystal Blade Omega", "Yggdrasil Dagger Omega", "Yggdrasil Dewbranch Omega"],
+                "Luminiera Omega": ["Luminiera Omega", "Luminiera Anima", "Luminiera Omega Anima", "Luminiera Bhuj Omega", "Luminiera Bolt Omega", "Luminiera Harp Omega", "Luminiera Sword Omega"],
+                "Celeste Omega": ["Celeste Omega", "Celeste Anima", "Celeste Omega Anima", "Celeste Harp Omega", "Celeste Claw Omega", "Celeste Horn Omega", "Celeste Zaghnal Omega"],
+                "Shiva": ["Shiva Anima", "Shiva Omega Anima", "Hand of Brahman", "Scimitar of Brahman", "Trident of Brahman", "Nilakantha"],
+                "Europa": ["Europa Anima", "Europa Omega Anima", "Tyros Bow", "Tyros Scepter", "Tyros Zither", "Spirit of Mana"],
+                "Godsworn Alexiel": ["Alexiel Anima", "Alexiel Omega Anima", "Nibelung Horn", "Nibelung Klinge", "Nibelung Messer", "Godsworn Edge"],
+                "Grimnir": ["Grimnir Anima", "Grimnir Omega Anima", "Last Storm Blade", "Last Storm Harp", "Last Storm Lance", "Coruscant Crozier"],
+                "Metatron": ["Metatron Anima", "Metatron Omega Anima", "Mittron's Treasured Blade", "Mittron's Gauntlet", "Mittron's Bow", "Pillar of Flame"],
+                "Avatar": ["Avatar Anima", "Avatar Omega Anima", "Abyss Striker", "Abyss Spine", "Abyss Gaze", "Zechariah"],
+                "Twin Elements": ["Twin Elements Anima", "Twin Elements Omega Anima", "Ancient Ecke Sachs", "Ecke Sachs"],
+                "Macula Marius": ["Macula Marius Anima", "Macula Marius Omega Anima", "Ancient Auberon", "Auberon"],
+                "Medusa": ["Medusa Anima", "Medusa Omega Anima", "Ancient Perseus", "Perseus"],
+                "Nezha": ["Nezha Anima", "Nezha Omega Anima", "Ancient Nalakuvara", "Nalakuvara"],
+                "Apollo": ["Apollo Anima", "Apollo Omega Anima", "Ancient Bow of Artemis", "Bow of Artemis"],
+                "Dark Angel Olivia": ["Dark Angel Olivia Anima", "Dark Angel Olivia Omega Anima", "Ancient Cortana", "Cortana"],
+                "Athena": ["Athena Anima", "Athena Omega Anima", "Erichthonius", "Sword of Pallas"],
+                "Grani": ["Grani Anima", "Grani Omega Anima", "Bow of Sigurd", "Wilhelm"],
+                "Baal": ["Baal Anima", "Baal Omega Anima", "Solomon's Axe", "Spymur's Vision"],
+                "Garuda": ["Garuda Anima", "Garuda Omega Anima", "Plume of Suparna", "Indra's Edge"],
+                "Odin": ["Odin Anima", "Odin Omega Anima", "Gungnir", "Sleipnir Shoe"],
+                "Lich": ["Lich Anima", "Lich Omega Anima", "Obscuritas", "Phantasmas"],
+                "Prometheus": ["Prometheus Anima", "Fire of Prometheus", "Chains of Caucasus"],
+                "Ca Ong": ["Ca Ong Anima", "Keeper of Hallowed Ground", "Savior of Hallowed Ground"],
+                "Gilgamesh": ["Gilgamesh Anima", "All-Might Spear", "All-Might Battle-Axe"],
+                "Morrigna": ["Morrigna Anima", "Le Fay", "Unius"],
+                "Hector": ["Hector Anima", "Bow of Iliad", "Adamantine Gauntlet"],
+                "Anubis": ["Anubis Anima", "Hermanubis", "Scales of Dominion"],
+                "Tiamat Malice": ["Tiamat Malice Anima", "Hatsoiiłhał", "Majestas"],
+                "Leviathan Malice": ["Leviathan Malice Anima", "Kaladanda", "Kris of Hypnos"],
+                "Phronesis": ["Phronesis Anima", "Dark Thrasher", "Master Bamboo Sword"],
             }
 
             function createListElement(itemName){
@@ -720,6 +76,8 @@ Flickable {
 
         ///////// Raid Items - Tiamat Omega /////////
         Label {
+            id: label_TiamatOmega
+
             color: "#00ff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -732,9 +90,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_TiamatOmega
+            id: repeater_TiamatOmega
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_TiamatOmega.visible === true){
+                    repeater_TiamatOmega.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_TiamatOmega.text].length; i++){
+                        repeater_TiamatOmega.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_TiamatOmega.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_TiamatOmega
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -746,9 +118,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ff00"
                     anchors.left: itemImage_TiamatOmega.right
@@ -763,6 +132,8 @@ Flickable {
 
         ///////// Raid Items - Colossus Omega /////////
         Label {
+            id: label_ColossusOmega
+
             color: "#aa0000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -775,9 +146,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_ColossusOmega
+            id: repeater_ColossusOmega
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_ColossusOmega.visible === true){
+                    repeater_ColossusOmega.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_ColossusOmega.text].length; i++){
+                        repeater_ColossusOmega.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_ColossusOmega.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_ColossusOmega
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -789,9 +174,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa0000"
                     anchors.left: itemImage_ColossusOmega.right
@@ -806,6 +188,8 @@ Flickable {
 
         ///////// Raid Items - Leviathan Omega /////////
         Label {
+            id: label_LeviathanOmega
+
             color: "#00ffff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -818,9 +202,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_LeviathanOmega
+            id: repeater_LeviathanOmega
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_LeviathanOmega.visible === true){
+                    repeater_LeviathanOmega.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_LeviathanOmega.text].length; i++){
+                        repeater_LeviathanOmega.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_LeviathanOmega.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_LeviathanOmega
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -832,9 +230,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ffff"
                     anchors.left: itemImage_LeviathanOmega.right
@@ -849,6 +244,8 @@ Flickable {
 
         ///////// Raid Items - Yggdrasil Omega /////////
         Label {
+            id: label_YggdrasilOmega
+
             color: "#ff8000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -861,9 +258,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_YggdrasilOmega
+            id: repeater_YggdrasilOmega
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_YggdrasilOmega.visible === true){
+                    repeater_YggdrasilOmega.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_YggdrasilOmega.text].length; i++){
+                        repeater_YggdrasilOmega.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_YggdrasilOmega.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_YggdrasilOmega
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -875,9 +286,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ff8000"
                     anchors.left: itemImage_YggdrasilOmega.right
@@ -892,6 +300,8 @@ Flickable {
 
         ///////// Raid Items - Luminiera Omega /////////
         Label {
+            id: label_LuminieraOmega
+
             color: "#ffff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -904,9 +314,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_LuminieraOmega
+            id: repeater_LuminieraOmega
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_LuminieraOmega.visible === true){
+                    repeater_LuminieraOmega.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_LuminieraOmega.text].length; i++){
+                        repeater_LuminieraOmega.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_LuminieraOmega.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_LuminieraOmega
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -918,9 +342,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ffff00"
                     anchors.left: itemImage_LuminieraOmega.right
@@ -935,6 +356,8 @@ Flickable {
 
         ///////// Raid Items - Celeste Omega /////////
         Label {
+            id: label_CelesteOmega
+
             color: "#aa00ff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -947,9 +370,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_CelesteOmega
+            id: repeater_CelesteOmega
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_CelesteOmega.visible === true){
+                    repeater_CelesteOmega.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_CelesteOmega.text].length; i++){
+                        repeater_CelesteOmega.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_CelesteOmega.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_CelesteOmega
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -961,9 +398,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa00ff"
                     anchors.left: itemImage_CelesteOmega.right
@@ -978,6 +412,8 @@ Flickable {
 
         ///////// Raid Items - Shiva /////////
         Label {
+            id: label_Shiva
+
             color: "#aa0000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -990,9 +426,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Shiva
+            id: repeater_Shiva
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_Shiva.visible === true){
+                    repeater_Shiva.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Shiva.text].length; i++){
+                        repeater_Shiva.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Shiva.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_Shiva
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1004,9 +454,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa0000"
                     anchors.left: itemImage_Shiva.right
@@ -1021,6 +468,8 @@ Flickable {
 
         ///////// Raid Items - Europa /////////
         Label {
+            id: label_Europa
+
             color: "#00ffff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1033,9 +482,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Europa
+            id: repeater_Europa
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_Europa.visible === true){
+                    repeater_Europa.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Europa.text].length; i++){
+                        repeater_Europa.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Europa.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_Europa
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1047,9 +510,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ffff"
                     anchors.left: itemImage_Europa.right
@@ -1064,6 +524,8 @@ Flickable {
 
         ///////// Raid Items - Godsworn Alexiel /////////
         Label {
+            id: label_Alexiel
+
             color: "#ff8000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1076,9 +538,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Alexiel
+            id: repeater_Alexiel
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_Alexiel.visible === true){
+                    repeater_Alexiel.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Alexiel.text].length; i++){
+                        repeater_Alexiel.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Alexiel.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_Alexiel
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1089,10 +565,7 @@ Flickable {
                         itemSelectionButton.text = name
                     }
                 }
-
-                source: imageSource
-                width: 35
-                height: 40
+            
                 Label {
                     color: "#ff8000"
                     anchors.left: itemImage_Alexiel.right
@@ -1107,6 +580,8 @@ Flickable {
 
         ///////// Raid Items - Grimnir /////////
         Label {
+            id: label_Grimnir
+
             color: "#00ff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1119,9 +594,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Grimnir
+            id: repeater_Grimnir
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_Grimnir.visible === true){
+                    repeater_Grimnir.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Grimnir.text].length; i++){
+                        repeater_Grimnir.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Grimnir.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_Grimnir
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1133,9 +622,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ff00"
                     anchors.left: itemImage_Grimnir.right
@@ -1150,6 +636,8 @@ Flickable {
 
         ///////// Raid Items - Metatron /////////
         Label {
+            id: label_Metatron
+
             color: "#ffff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1162,9 +650,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Metatron
+            id: repeater_Metatron
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_Metatron.visible === true){
+                    repeater_Metatron.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Metatron.text].length; i++){
+                        repeater_Metatron.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Metatron.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_Metatron
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1176,9 +678,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ffff00"
                     anchors.left: itemImage_Metatron.right
@@ -1193,6 +692,8 @@ Flickable {
 
         ///////// Raid Items - Avatar /////////
         Label {
+            id: label_Avatar
+
             color: "#aa00ff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1205,9 +706,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Avatar
+            id: repeater_Avatar
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_Avatar.visible === true){
+                    repeater_Avatar.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Avatar.text].length; i++){
+                        repeater_Avatar.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Avatar.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_Avatar
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1219,9 +734,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa00ff"
                     anchors.left: itemImage_Avatar.right
@@ -1236,6 +748,8 @@ Flickable {
 
         ///////// Raid Items - Twin Elements /////////
         Label {
+            id: label_TwinElements
+
             color: "#aa0000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1248,9 +762,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_TwinElements
+            id: repeater_TwinElements
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_TwinElements.visible === true){
+                    repeater_TwinElements.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_TwinElements.text].length; i++){
+                        repeater_TwinElements.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_TwinElements.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_TwinElements
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1262,9 +790,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa0000"
                     anchors.left: itemImage_TwinElements.right
@@ -1279,6 +804,7 @@ Flickable {
 
         ///////// Raid Items - Macula Marius /////////
         Label {
+            id: label_MaculaMarius
             color: "#00ffff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1291,9 +817,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_MaculaMarius
+            id: repeater_MaculaMarius
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_MaculaMarius.visible === true){
+                    repeater_MaculaMarius.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_MaculaMarius.text].length; i++){
+                        repeater_MaculaMarius.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_MaculaMarius.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_MaculaMarius
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1305,9 +845,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ffff"
                     anchors.left: itemImage_MaculaMarius.right
@@ -1322,6 +859,8 @@ Flickable {
 
         ///////// Raid Items - Medusa /////////
         Label {
+            id: label_Medusa
+
             color: "#ff8000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1334,9 +873,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Medusa
+            id: repeater_Medusa
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Medusa.visible === true){
+                    repeater_Medusa.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Medusa.text].length; i++){
+                        repeater_Medusa.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Medusa.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Medusa
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1348,9 +901,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ff8000"
                     anchors.left: itemImage_Medusa.right
@@ -1365,6 +915,8 @@ Flickable {
 
         ///////// Raid Items - Nezha /////////
         Label {
+            id: label_Nezha
+
             color: "#00ff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1377,9 +929,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Nezha
+            id: repeater_Nezha
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Nezha.visible === true){
+                    repeater_Nezha.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Nezha.text].length; i++){
+                        repeater_Nezha.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Nezha.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Nezha
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1391,9 +957,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ff00"
                     anchors.left: itemImage_Nezha.right
@@ -1408,6 +971,8 @@ Flickable {
 
         ///////// Raid Items - Apollo /////////
         Label {
+            id: label_Apollo
+
             color: "#ffff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1420,9 +985,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Apollo
+            id: repeater_Apollo
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Apollo.visible === true){
+                    repeater_Apollo.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Apollo.text].length; i++){
+                        repeater_Apollo.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Apollo.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Apollo
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1434,9 +1013,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ffff00"
                     anchors.left: itemImage_Apollo.right
@@ -1451,6 +1027,8 @@ Flickable {
 
         ///////// Raid Items - Dark Angel Olivia /////////
         Label {
+            id: label_DarkAngelOlivia
+
             color: "#aa00ff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1463,9 +1041,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_DarkAngelOlivia
+            id: repeater_DarkAngelOlivia
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_DarkAngelOlivia.visible === true){
+                    repeater_DarkAngelOlivia.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_DarkAngelOlivia.text].length; i++){
+                        repeater_DarkAngelOlivia.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_DarkAngelOlivia.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_DarkAngelOlivia
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1477,9 +1069,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa00ff"
                     anchors.left: itemImage_DarkAngelOlivia.right
@@ -1494,6 +1083,8 @@ Flickable {
 
         ///////// Raid Items - Athena /////////
         Label {
+            id: label_Athena
+
             color: "#aa0000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1506,9 +1097,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Athena
+            id: repeater_Athena
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Athena.visible === true){
+                    repeater_Athena.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Athena.text].length; i++){
+                        repeater_Athena.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Athena.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Athena
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1520,9 +1125,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa0000"
                     anchors.left: itemImage_Athena.right
@@ -1537,6 +1139,8 @@ Flickable {
 
         ///////// Raid Items - Grani /////////
         Label {
+            id: label_Grani
+
             color: "#00ffff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1549,9 +1153,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Grani
+            id: repeater_Grani
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Grani.visible === true){
+                    repeater_Grani.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Grani.text].length; i++){
+                        repeater_Grani.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Grani.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Grani
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1563,9 +1181,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ffff"
                     anchors.left: itemImage_Grani.right
@@ -1580,6 +1195,8 @@ Flickable {
 
         ///////// Raid Items - Baal /////////
         Label {
+            id: label_Baal
+
             color: "#ff8000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1592,9 +1209,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Baal
+            id: repeater_Baal
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Baal.visible === true){
+                    repeater_Baal.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Baal.text].length; i++){
+                        repeater_Baal.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Baal.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Baal
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1606,9 +1237,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ff8000"
                     anchors.left: itemImage_Baal.right
@@ -1623,6 +1251,8 @@ Flickable {
 
         ///////// Raid Items - Garuda /////////
         Label {
+            id: label_Garuda
+
             color: "#00ff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1635,9 +1265,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Garuda
+            id: repeater_Garuda
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Garuda.visible === true){
+                    repeater_Garuda.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Garuda.text].length; i++){
+                        repeater_Garuda.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Garuda.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Garuda
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1649,9 +1293,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ff00"
                     anchors.left: itemImage_Garuda.right
@@ -1666,6 +1307,8 @@ Flickable {
 
         ///////// Raid Items - Odin /////////
         Label {
+            id: label_Odin
+
             color: "#ffff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1678,9 +1321,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Odin
+            id: repeater_Odin
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Odin.visible === true){
+                    repeater_Odin.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Odin.text].length; i++){
+                        repeater_Odin.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Odin.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Odin
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1692,9 +1349,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ffff00"
                     anchors.left: itemImage_Odin.right
@@ -1709,6 +1363,8 @@ Flickable {
 
         ///////// Raid Items - Lich /////////
         Label {
+            id: label_Lich
+
             color: "#aa00ff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1721,9 +1377,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Lich
+            id: repeater_Lich
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Lich.visible === true){
+                    repeater_Lich.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Lich.text].length; i++){
+                        repeater_Lich.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Lich.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Lich
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1735,9 +1405,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa00ff"
                     anchors.left: itemImage_Lich.right
@@ -1752,6 +1419,8 @@ Flickable {
 
         ///////// Raid Items - Prometheus /////////
         Label {
+            id: label_Prometheus
+
             color: "#aa0000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1764,9 +1433,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Prometheus
+            id: repeater_Prometheus
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Prometheus.visible === true){
+                    repeater_Prometheus.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Prometheus.text].length; i++){
+                        repeater_Prometheus.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Prometheus.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Prometheus
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1778,9 +1461,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa0000"
                     anchors.left: itemImage_Prometheus.right
@@ -1795,6 +1475,8 @@ Flickable {
 
         ///////// Raid Items - Ca Ong /////////
         Label {
+            id: label_CaOng
+
             color: "#00ffff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1807,9 +1489,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_CaOng
+            id: repeater_CaOng
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_CaOng.visible === true){
+                    repeater_CaOng.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_CaOng.text].length; i++){
+                        repeater_CaOng.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_CaOng.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_CaOng
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1821,9 +1517,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ffff"
                     anchors.left: itemImage_CaOng.right
@@ -1838,6 +1531,8 @@ Flickable {
 
         ///////// Raid Items - Gilgamesh /////////
         Label {
+            id: label_Gilgamesh
+
             color: "#ff8000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1850,9 +1545,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Gilgamesh
+            id: repeater_Gilgamesh
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Gilgamesh.visible === true){
+                    repeater_Gilgamesh.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Gilgamesh.text].length; i++){
+                        repeater_Gilgamesh.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Gilgamesh.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Gilgamesh
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1864,9 +1573,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ff8000"
                     anchors.left: itemImage_Gilgamesh.right
@@ -1881,6 +1587,8 @@ Flickable {
 
         ///////// Raid Items - Morrigna /////////
         Label {
+            id: label_Morrigna
+
             color: "#00ff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1893,9 +1601,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Morrigna
+            id: repeater_Morrigna
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Morrigna.visible === true){
+                    repeater_Morrigna.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Morrigna.text].length; i++){
+                        repeater_Morrigna.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Morrigna.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Morrigna
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1907,9 +1629,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ff00"
                     anchors.left: itemImage_Morrigna.right
@@ -1924,6 +1643,8 @@ Flickable {
 
         ///////// Raid Items - Hector /////////
         Label {
+            id: label_Hector
+
             color: "#ffff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1936,9 +1657,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Hector
+            id: repeater_Hector
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Hector.visible === true){
+                    repeater_Hector.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Hector.text].length; i++){
+                        repeater_Hector.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Hector.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Hector
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1950,9 +1685,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ffff00"
                     anchors.left: itemImage_Hector.right
@@ -1967,6 +1699,8 @@ Flickable {
 
         ///////// Raid Items - Anubis /////////
         Label {
+            id: label_Anubis
+
             color: "#aa00ff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -1979,9 +1713,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Anubis
+            id: repeater_Anubis
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Anubis.visible === true){
+                    repeater_Anubis.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Anubis.text].length; i++){
+                        repeater_Anubis.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Anubis.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Anubis
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -1993,9 +1741,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa00ff"
                     anchors.left: itemImage_Anubis.right
@@ -2010,6 +1755,8 @@ Flickable {
 
         ///////// Raid Items - Tiamat Malice /////////
         Label {
+            id: label_TiamatMalice
+
             color: "#00ff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -2022,9 +1769,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_TiamatMalice
+            id: repeater_TiamatMalice
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_TiamatMalice.visible === true){
+                    repeater_TiamatMalice.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_TiamatMalice.text].length; i++){
+                        repeater_TiamatMalice.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_TiamatMalice.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_TiamatMalice
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -2036,9 +1797,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ff00"
                     anchors.left: itemImage_TiamatMalice.right
@@ -2053,6 +1811,8 @@ Flickable {
 
         ///////// Raid Items - Leviathan Malice /////////
         Label {
+            id: label_LeviathanMalice
+
             color: "#00ffff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -2065,9 +1825,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_LeviathanMalice
+            id: repeater_LeviathanMalice
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_LeviathanMalice.visible === true){
+                    repeater_LeviathanMalice.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_LeviathanMalice.text].length; i++){
+                        repeater_LeviathanMalice.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_LeviathanMalice.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_LeviathanMalice
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -2079,9 +1853,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ffff"
                     anchors.left: itemImage_LeviathanMalice.right
@@ -2096,6 +1867,8 @@ Flickable {
 
         ///////// Raid Items - Phronesis /////////
         Label {
+            id: label_Phronesis
+
             color: "#ff8000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -2108,9 +1881,23 @@ Flickable {
         }
 
         Repeater {
-            model: raidItemsModel_Phronesis
+            id: repeater_Phronesis
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Phronesis.visible === true){
+                    repeater_Phronesis.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Phronesis.text].length; i++){
+                        repeater_Phronesis.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Phronesis.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_Phronesis
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -2122,9 +1909,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ff8000"
                     anchors.left: itemImage_Phronesis.right
@@ -2136,7 +1920,6 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Phronesis /////////
-
     }
 
     Connections {

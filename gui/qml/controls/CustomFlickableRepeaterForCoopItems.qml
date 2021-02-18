@@ -25,247 +25,23 @@ Flickable {
             }
         }
 
-        // Items for H3-1 In a Dusk Dream.
+        // List model that holds all the Coop items that are supported.
         ListModel {
-            id: coopItemsModel_InADuskDream
+            id: itemsModel
 
-            Component.onCompleted: {
-                var listOfItems = ["EXP"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for EX1-1 Corridor of Puzzles / EX1-3 Lost in the Dark
-        ListModel {
-            id: coopItemsModel_CorridorOfPuzzlesAndLostInTheDark
-
-            Component.onCompleted: {
-                var listOfItems = ["Warrior Creed", "Mage Creed"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for EX2-2 Time of Judgement
-        ListModel {
-            id: coopItemsModel_TimeOfJudgement
-
-            Component.onCompleted: {
-                var listOfItems = ["Evil Judge Crystal", "Pilgrim Distinction", "Mage Distinction", "Alchemist Distinction", "Monk's Distinction", "Keraunos Replica", "Faust Replica"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for EX2-3 Time of Revelation
-        ListModel {
-            id: coopItemsModel_TimeOfRevelation
-
-            Component.onCompleted: {
-                var listOfItems = ["Infernal Garnet", "Gladiator Distinction", "Fencer Distinction", "Dual Wielder Distinction", "Forester's Distinction", "Avenger Replica", "Hellion Gauntlet Replica"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for EX2-4 Time of Eminence
-        ListModel {
-            id: coopItemsModel_TimeOfEminence
-
-            Component.onCompleted: {
-                var listOfItems = ["Halo Light Quartz", "Bandit Distinction", "Troubadour Distinction", "Mystic Distinction", "Shredder Distinction", "Nirvana Replica", "Romulus Spear Replica", "Murakumo Replica"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for EX3-2 Rule of the Tundra
-        ListModel {
-            id: coopItemsModel_RuleOfTheTundra
-
-            Component.onCompleted: {
-                var listOfItems = ["Frozen Hell Prism", "Guardian Distinction", "Combatant Distinction", "Sword Master Distinction", "Dragoon's Distinction", "Skofnung Replica", "Langeleik Replica", "Kapilavastu Replica"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for EX3-3 Rule of the Plains
-        ListModel {
-            id: coopItemsModel_RuleOfThePlains
-
-            Component.onCompleted: {
-                var listOfItems = ["Horseman's Plate", "Sharpshooter Distinction", "Cavalryman Distinction", "Gunslinger Distinction", "Oliver Replica", "Rosenbogen Replica", "Misericorde Replica"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for EX3-4 Rule of the Twilight
-        ListModel {
-            id: coopItemsModel_RuleOfTheTwilight
-
-            Component.onCompleted: {
-                var listOfItems = ["Phantom Demon Jewel", "Samurai Distinction", "Ninja Distinction", "Assassin Distinction", "Ipetam Replica", "Proximo Replica", "Nebuchad Replica", "Muramasa Replica"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for EX4-2 Amidst the Waves
-        ListModel {
-            id: coopItemsModel_AmidstTheWaves
-
-            Component.onCompleted: {
-                var listOfItems = ["Pilgrim Distinction", "Mage Distinction", "Alchemist Distinction", "Mystic Distinction", "Monk's Distinction", "Oliver Replica", "Langeleik Replica", "Romulus Spear Replica", "Proximo Replica", "Kapilavastu Replica"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for EX4-3 Amidst the Petals
-        ListModel {
-            id: coopItemsModel_AmidstThePetals
-
-            Component.onCompleted: {
-                var listOfItems = ["Sharpshooter Distinction", "Samurai Distinction", "Ninja Distinction", "Gunslinger Distinction", "Assassin Distinction", "Longstrider's Distinction", "Langeleik Replica", "Misericorde Replica", "Faust Replica"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for EX4-4 Amidst Severe Cliffs
-        ListModel {
-            id: coopItemsModel_AmidstSevereCliffs
-
-            Component.onCompleted: {
-                var listOfItems = ["Gladiator Distinction", "Fencer Distinction", "Combatant Distinction", "Sword Master Distinction", "Aschallon Replica", "Hellion Gauntlet Replica", "Muramasa Replica", "Practice Drum"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for EX4-5 Amidst the Flames
-        ListModel {
-            id: coopItemsModel_AmidstTheFlames
-
-            Component.onCompleted: {
-                var listOfItems = ["Guardian Distinction", "Bandit Distinction", "Troubadour Distinction", "Cavalryman Distinction", "Dragoon's Distinction", "Ipetam Replica", "Murakumo Replica", "Nebuchad Replica"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
+            property var listOfItems: {
+                "H3-1 In a Dusk Dream": ["EXP"],
+                "EX1-1 Corridor of Puzzles / EX1-3 Lost in the Dark": ["Warrior Creed", "Mage Creed"],
+                "EX2-2 Time of Judgement": ["Evil Judge Crystal", "Pilgrim Distinction", "Mage Distinction", "Alchemist Distinction", "Monk's Distinction", "Keraunos Replica", "Faust Replica"],
+                "EX2-3 Time of Revelation": ["Infernal Garnet", "Gladiator Distinction", "Fencer Distinction", "Dual Wielder Distinction", "Forester's Distinction", "Avenger Replica", "Hellion Gauntlet Replica"],
+                "EX2-4 Time of Eminence": ["Halo Light Quartz", "Bandit Distinction", "Troubadour Distinction", "Mystic Distinction", "Shredder Distinction", "Nirvana Replica", "Romulus Spear Replica", "Murakumo Replica"],
+                "EX3-2 Rule of the Tundra": ["Frozen Hell Prism", "Guardian Distinction", "Combatant Distinction", "Sword Master Distinction", "Dragoon's Distinction", "Skofnung Replica", "Langeleik Replica", "Kapilavastu Replica"],
+                "EX3-3 Rule of the Plains": ["Horseman's Plate", "Sharpshooter Distinction", "Cavalryman Distinction", "Gunslinger Distinction", "Oliver Replica", "Rosenbogen Replica", "Misericorde Replica"],
+                "EX3-4 Rule of the Twilight": ["Phantom Demon Jewel", "Samurai Distinction", "Ninja Distinction", "Assassin Distinction", "Ipetam Replica", "Proximo Replica", "Nebuchad Replica", "Muramasa Replica"],
+                "EX4-2 Amidst the Waves": ["Pilgrim Distinction", "Mage Distinction", "Alchemist Distinction", "Mystic Distinction", "Monk's Distinction", "Oliver Replica", "Langeleik Replica", "Romulus Spear Replica", "Proximo Replica", "Kapilavastu Replica"],
+                "EX4-3 Amidst the Petals": ["Sharpshooter Distinction", "Samurai Distinction", "Ninja Distinction", "Gunslinger Distinction", "Assassin Distinction", "Longstrider's Distinction", "Langeleik Replica", "Misericorde Replica", "Faust Replica"],
+                "EX4-4 Amidst Severe Cliffs": ["Gladiator Distinction", "Fencer Distinction", "Combatant Distinction", "Sword Master Distinction", "Aschallon Replica", "Hellion Gauntlet Replica", "Muramasa Replica", "Practice Drum"],
+                "EX4-5 Amidst the Flames": ["Guardian Distinction", "Bandit Distinction", "Troubadour Distinction", "Cavalryman Distinction", "Dragoon's Distinction", "Ipetam Replica", "Murakumo Replica", "Nebuchad Replica"],
             }
 
             function createListElement(itemName){
@@ -279,6 +55,8 @@ Flickable {
 
         ///////// Coop Items - H3-1 In a Dusk Dream /////////
         Label {
+            id: label_InADuskDream
+
             color: "#ffffff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -291,10 +69,24 @@ Flickable {
         }
 
         Repeater {
-            model: coopItemsModel_InADuskDream
+            id: repeater_InADuskDream
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_InADuskDream.visible === true){
+                    repeater_InADuskDream.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_InADuskDream.text].length; i++){
+                        repeater_InADuskDream.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_InADuskDream.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_InADuskDream
-
+                source: imageSource
+                width: 35
+                height: 40
+                
                 MouseArea {
                     anchors.fill: parent
 
@@ -305,9 +97,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ffffff"
                     anchors.left: itemImage_InADuskDream.right
@@ -322,6 +111,8 @@ Flickable {
 
         ///////// Coop Items - EX1-1 Corridor of Puzzles / EX1-3 Lost in the Dark /////////
         Label {
+            id: label_CorridorOfPuzzlesAndLostInTheDark
+
             color: "#ffffff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -334,10 +125,24 @@ Flickable {
         }
 
         Repeater {
-            model: coopItemsModel_CorridorOfPuzzlesAndLostInTheDark
+            id: repeater_CorridorOfPuzzlesAndLostInTheDark
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_CorridorOfPuzzlesAndLostInTheDark.visible === true){
+                    repeater_CorridorOfPuzzlesAndLostInTheDark.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_CorridorOfPuzzlesAndLostInTheDark.text].length; i++){
+                        repeater_CorridorOfPuzzlesAndLostInTheDark.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_CorridorOfPuzzlesAndLostInTheDark.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_CorridorOfPuzzlesAndLostInTheDark
-
+                source: imageSource
+                width: 35
+                height: 40
+                
                 MouseArea {
                     anchors.fill: parent
 
@@ -348,9 +153,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ffffff"
                     anchors.left: itemImage_CorridorOfPuzzlesAndLostInTheDark.right
@@ -365,6 +167,8 @@ Flickable {
 
         ///////// Coop Items - EX2-2 Time of Judgement /////////
         Label {
+            id: label_TimeOfJudgement
+
             color: "#ff8000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -377,10 +181,24 @@ Flickable {
         }
 
         Repeater {
-            model: coopItemsModel_TimeOfJudgement
+            id: repeater_TimeOfJudgement
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_TimeOfJudgement.visible === true){
+                    repeater_TimeOfJudgement.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_TimeOfJudgement.text].length; i++){
+                        repeater_TimeOfJudgement.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_TimeOfJudgement.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_TimeOfJudgement
-
+                source: imageSource
+                width: 35
+                height: 40
+                
                 MouseArea {
                     anchors.fill: parent
 
@@ -391,9 +209,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ff8000"
                     anchors.left: itemImage_TimeOfJudgement.right
@@ -408,6 +223,8 @@ Flickable {
 
         ///////// Coop Items - EX2-3 Time of Revelation /////////
         Label {
+            id: label_TimeOfRevelation
+
             color: "#aa0000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -420,10 +237,24 @@ Flickable {
         }
 
         Repeater {
-            model: coopItemsModel_TimeOfRevelation
+            id: repeater_TimeOfRevelation
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_TimeOfRevelation.visible === true){
+                    repeater_TimeOfRevelation.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_TimeOfRevelation.text].length; i++){
+                        repeater_TimeOfRevelation.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_TimeOfRevelation.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_TimeOfRevelation
-
+                source: imageSource
+                width: 35
+                height: 40
+                
                 MouseArea {
                     anchors.fill: parent
 
@@ -434,9 +265,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa0000"
                     anchors.left: itemImage_TimeOfRevelation.right
@@ -451,6 +279,8 @@ Flickable {
 
         ///////// Coop Items - EX2-4 Time of Eminence /////////
         Label {
+            id: label_TimeOfEminence
+
             color: "#ffff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -463,10 +293,24 @@ Flickable {
         }
 
         Repeater {
-            model: coopItemsModel_TimeOfEminence
+            id: repeater_TimeOfEminence
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_TimeOfEminence.visible === true){
+                    repeater_TimeOfEminence.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_TimeOfEminence.text].length; i++){
+                        repeater_TimeOfEminence.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_TimeOfEminence.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_TimeOfEminence
-
+                source: imageSource
+                width: 35
+                height: 40
+                
                 MouseArea {
                     anchors.fill: parent
 
@@ -477,9 +321,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ffff00"
                     anchors.left: itemImage_TimeOfEminence.right
@@ -494,6 +335,8 @@ Flickable {
 
         ///////// Coop Items - EX3-2 Rule of the Tundra /////////
         Label {
+            id: label_RuleOfTheTundra
+
             color: "#00ffff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -506,10 +349,24 @@ Flickable {
         }
 
         Repeater {
-            model: coopItemsModel_RuleOfTheTundra
+            id: repeater_RuleOfTheTundra
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_RuleOfTheTundra.visible === true){
+                    repeater_RuleOfTheTundra.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_RuleOfTheTundra.text].length; i++){
+                        repeater_RuleOfTheTundra.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_RuleOfTheTundra.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_RuleOfTheTundra
-
+                source: imageSource
+                width: 35
+                height: 40
+                
                 MouseArea {
                     anchors.fill: parent
 
@@ -520,9 +377,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ffff"
                     anchors.left: itemImage_RuleOfTheTundra.right
@@ -537,6 +391,8 @@ Flickable {
 
         ///////// Coop Items - EX3-3 Rule of the Plains /////////
         Label {
+            id: label_RuleOfThePlains
+
             color: "#00ff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -549,10 +405,24 @@ Flickable {
         }
 
         Repeater {
-            model: coopItemsModel_RuleOfThePlains
+            id: repeater_RuleOfThePlains
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_RuleOfThePlains.visible === true){
+                    repeater_RuleOfThePlains.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_RuleOfThePlains.text].length; i++){
+                        repeater_RuleOfThePlains.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_RuleOfThePlains.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_RuleOfThePlains
-
+                source: imageSource
+                width: 35
+                height: 40
+                
                 MouseArea {
                     anchors.fill: parent
 
@@ -563,9 +433,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ff00"
                     anchors.left: itemImage_RuleOfThePlains.right
@@ -580,6 +447,8 @@ Flickable {
 
         ///////// Coop Items - EX3-4 Rule of the Twilight /////////
         Label {
+            id: label_RuleOfTheTwilight
+
             color: "#aa00ff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -592,10 +461,24 @@ Flickable {
         }
 
         Repeater {
-            model: coopItemsModel_RuleOfTheTwilight
+            id: repeater_RuleOfTheTwilight
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_RuleOfTheTwilight.visible === true){
+                    repeater_RuleOfTheTwilight.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_RuleOfTheTwilight.text].length; i++){
+                        repeater_RuleOfTheTwilight.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_RuleOfTheTwilight.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_RuleOfTheTwilight
-
+                source: imageSource
+                width: 35
+                height: 40
+                
                 MouseArea {
                     anchors.fill: parent
 
@@ -606,9 +489,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa00ff"
                     anchors.left: itemImage_RuleOfTheTwilight.right
@@ -623,6 +503,8 @@ Flickable {
 
         ///////// Coop Items - EX4-2 Amidst the Waves /////////
         Label {
+            id: label_AmidstTheWaves
+
             color: "#00ffff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -635,10 +517,24 @@ Flickable {
         }
 
         Repeater {
-            model: coopItemsModel_AmidstTheWaves
+            id: repeater_AmidstTheWaves
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_AmidstTheWaves.visible === true){
+                    repeater_AmidstTheWaves.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_AmidstTheWaves.text].length; i++){
+                        repeater_AmidstTheWaves.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_AmidstTheWaves.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_AmidstTheWaves
-
+                source: imageSource
+                width: 35
+                height: 40
+                
                 MouseArea {
                     anchors.fill: parent
 
@@ -649,9 +545,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ffff"
                     anchors.left: itemImage_AmidstTheWaves.right
@@ -666,6 +559,8 @@ Flickable {
 
         ///////// Coop Items - EX4-3 Amidst the Petals /////////
         Label {
+            id: label_AmidstThePetals
+
             color: "#00ff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -678,10 +573,24 @@ Flickable {
         }
 
         Repeater {
-            model: coopItemsModel_AmidstThePetals
+            id: repeater_AmidstThePetals
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_AmidstThePetals.visible === true){
+                    repeater_AmidstThePetals.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_AmidstThePetals.text].length; i++){
+                        repeater_AmidstThePetals.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_AmidstThePetals.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_AmidstThePetals
-
+                source: imageSource
+                width: 35
+                height: 40
+                
                 MouseArea {
                     anchors.fill: parent
 
@@ -692,9 +601,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ff00"
                     anchors.left: itemImage_AmidstThePetals.right
@@ -709,6 +615,8 @@ Flickable {
 
         ///////// Coop Items - EX4-4 Amidst Severe Cliffs /////////
         Label {
+            id: label_AmidstSevereCliffs
+
             color: "#ff8000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -721,10 +629,24 @@ Flickable {
         }
 
         Repeater {
-            model: coopItemsModel_AmidstSevereCliffs
+            id: repeater_AmidstSevereCliffs
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_AmidstSevereCliffs.visible === true){
+                    repeater_AmidstSevereCliffs.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_AmidstSevereCliffs.text].length; i++){
+                        repeater_AmidstSevereCliffs.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_AmidstSevereCliffs.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_AmidstSevereCliffs
-
+                source: imageSource
+                width: 35
+                height: 40
+                
                 MouseArea {
                     anchors.fill: parent
 
@@ -735,9 +657,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ff8000"
                     anchors.left: itemImage_AmidstSevereCliffs.right
@@ -752,6 +671,8 @@ Flickable {
 
         ///////// Coop Items - EX4-5 Amidst the Flames /////////
         Label {
+            id: label_AmidstTheFlames
+
             color: "#aa0000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -764,10 +685,24 @@ Flickable {
         }
 
         Repeater {
-            model: coopItemsModel_AmidstTheFlames
+            id: repeater_AmidstTheFlames
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_AmidstTheFlames.visible === true){
+                    repeater_AmidstTheFlames.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_AmidstTheFlames.text].length; i++){
+                        repeater_AmidstTheFlames.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_AmidstTheFlames.text][i]))
+                    }
+                }
+            }
+        
             Image {
                 id: itemImage_AmidstTheFlames
-
+                source: imageSource
+                width: 35
+                height: 40
+                
                 MouseArea {
                     anchors.fill: parent
 
@@ -778,9 +713,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa0000"
                     anchors.left: itemImage_AmidstTheFlames.right
@@ -792,7 +724,6 @@ Flickable {
             }
         }
         ///////// End of Coop Items - EX4-5 Amidst the Flames /////////
-
     }
 
     Connections {

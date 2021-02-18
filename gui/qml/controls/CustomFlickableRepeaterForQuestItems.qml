@@ -25,481 +25,21 @@ Flickable {
             }
         }
 
-        // Items for Port Breeze Archipelago.
+        // List model that holds all the Quest items that are supported.
         ListModel {
-            id: questItemsModel_PortBreezeArchipelago
-
-            Component.onCompleted: {
-                var listOfItems = ["Satin Feather", "Zephyr Feather", "Flying Sprout"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Valtz Duchy.
-        ListModel {
-            id: questItemsModel_ValtzDuchy
-            
-            Component.onCompleted: {
-                var listOfItems = ["Fine Sand Bottle", "Untamed Flame", "Blistering Ore"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Auguste Isles
-        ListModel {
-            id: questItemsModel_AugusteIsles
-
-            Component.onCompleted: {
-                var listOfItems = ["Fresh Water Jug", "Soothing Splash", "Glowing Coral"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Lumacie Archipelago.
-        ListModel {
-            id: questItemsModel_LumacieArchipelago
-
-            Component.onCompleted: {
-                var listOfItems = ["Rough Stone", "Swirling Amber", "Coarse Alluvium"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Albion Citadel.
-        ListModel {
-            id: questItemsModel_AlbionCitadel
-
-            Component.onCompleted: {
-                var listOfItems = ["Falcon Feather", "Spring Water Jug", "Vermilion Stone"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Mist-Shrouded Isle
-        ListModel {
-            id: questItemsModel_MistShroudedIsle
-
-            Component.onCompleted: {
-                var listOfItems = ["Slimy Shroom", "Hollow Soul", "Lacrimosa"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Golonzo Island.
-        ListModel {
-            id: questItemsModel_GolonzoIsland
-
-            Component.onCompleted: {
-                var listOfItems = ["Wheat Stalk", "Iron Cluster", "Olea Plant"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Amalthea Island.
-        ListModel {
-            id: questItemsModel_AmaltheaIsland
-
-            Component.onCompleted: {
-                var listOfItems = ["Indigo Fruit", "Foreboding Clover", "Blood Amber"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Former Capital Mephorash.
-        ListModel {
-            id: questItemsModel_FormerCapitalMephorash
-
-            Component.onCompleted: {
-                var listOfItems = ["Sand Brick", "Native Reed", "Antique Cloth"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Agastia.
-        ListModel {
-            id: questItemsModel_Agastia
-
-            Component.onCompleted: {
-                var listOfItems = ["Prosperity Flame", "Explosive Material", "Steel Liquid"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Scarlet Trial.
-        ListModel {
-            id: specialItemsModel_ScarletTrial
-
-            Component.onCompleted: {
-                var listOfItems = ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb", "Inferno Orb", "Frost Orb", 
-                "Rumbling Orb", "Cyclone Orb", "Shining Orb", "Abysm Orb"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Cerulean Trial.
-        ListModel {
-            id: specialItemsModel_CeruleanTrial
-
-            Component.onCompleted: {
-                var listOfItems = ["Red Tome", "Blue Tome", "Brown Tome", "Green Tome", "White Tome", "Black Tome", "Hellfire Scroll", "Flood Scroll", 
-                "Thunder Scroll", "Gale Scroll", "Skylight Scroll", "Chasm Scroll", "Infernal Whorl", "Tidal Whorl", "Seismic Whorl", "Tempest Whorl",
-                "Radiant Whorl", "Umbral Whorl"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Violet Trial.
-        ListModel {
-            id: specialItemsModel_VioletTrial
-
-            Component.onCompleted: {
-                var listOfItems = ["Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Shiny Slime Search!
-        ListModel {
-            id: specialItemsModel_ShinySlimeSearch
-
-            Component.onCompleted: {
-                var listOfItems = ["EXP"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Six Dragon Trials.
-        ListModel {
-            id: specialItemsModel_SixDragonTrials
-
-            Component.onCompleted: {
-                var listOfItems = ["Red Dragon Scale", "Blue Dragon Scale", "Brown Dragon Scale", "Green Dragon Scale", "White Dragon Scale", "Black Dragon Scale"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Ifrit Showdown.
-        ListModel {
-            id: specialItemsModel_IfritShowdown
-
-            Component.onCompleted: {
-                var listOfItems = ["Jasper Scale", "Scorching Peak", "Infernal Garnet", "Ifrit Anima", "Ifrit Omega Anima"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Cocytus Showdown.
-        ListModel {
-            id: specialItemsModel_CocytusShowdown
-
-            Component.onCompleted: {
-                var listOfItems = ["Mourning Stone", "Crystal Spirit", "Frozen Hell Prism", "Cocytus Anima", "Cocytus Omega Anima"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Vohu Manah Showdown.
-        ListModel {
-            id: specialItemsModel_VohuManahShowdown
-
-            Component.onCompleted: {
-                var listOfItems = ["Scrutiny Stone", "Luminous Judgment", "Evil Judge Crystal", "Vohu Manah Anima", "Vohu Manah Omega Anima"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Sagittarius Showdown.
-        ListModel {
-            id: specialItemsModel_SagittariusShowdown
-
-            Component.onCompleted: {
-                var listOfItems = ["Sagittarius Arrowhead", "Sagittarius Rune", "Horseman's Plate", "Sagittarius Anima", "Sagittarius Omega Anima"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Corow Showdown.
-        ListModel {
-            id: specialItemsModel_CorowShowdown
-
-            Component.onCompleted: {
-                var listOfItems = ["Solar Ring", "Sunlight Quartz", "Halo Light Quartz", "Corow Anima", "Corow Omega Anima"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Diablo Showdown.
-        ListModel {
-            id: specialItemsModel_DiabloShowdown
-
-            Component.onCompleted: {
-                var listOfItems = ["Twilight Cloth Strip", "Shadow Silver", "Phantom Demon Jewel", "Diablo Anima", "Diablo Omega Anima"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Extreme Trials.
-        ListModel {
-            id: specialItemsModel_ExtremeTrials
-
-            Component.onCompleted: {
-                var listOfItems = ["Hellfire Fragment", "Deluge Fragment", "Wasteland Fragment", "Typhoon Fragment"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
-            }
-
-            function createListElement(itemName){
-                var filePath = "../../../images/items/%1.png".arg(itemName)
-                return {
-                    name: itemName,
-                    imageSource: filePath
-                }
-            }
-        }
-
-        // Items for Angel Halo.
-        ListModel {
-            id: specialItemsModel_AngelHalo
-
-            Component.onCompleted: {
-                var listOfItems = ["Angel Halo Weapons"]
-
-                for(var i = 0; i < listOfItems.length; i++){
-                    append(createListElement(listOfItems[i]))
-                }
+            id: itemsModel
+
+            property var listOfItems: {
+                "Port Breeze Archipelago": ["Satin Feather", "Zephyr Feather", "Flying Sprout"],
+                "Valtz Duchy": ["Fine Sand Bottle", "Untamed Flame", "Blistering Ore"],
+                "Auguste Isles": ["Fresh Water Jug", "Soothing Splash", "Glowing Coral"],
+                "Lumacie Archipelago": ["Rough Stone", "Swirling Amber", "Coarse Alluvium"],
+                "Albion Citadel": ["Falcon Feather", "Spring Water Jug", "Vermilion Stone"],
+                "Mist-Shrouded Isle": ["Slimy Shroom", "Hollow Soul", "Lacrimosa"],
+                "Golonzo Island": ["Wheat Stalk", "Iron Cluster", "Olea Plant"],
+                "Amalthea Island": ["Indigo Fruit", "Foreboding Clover", "Blood Amber"],
+                "Former Capital Mephorash": ["Sand Brick", "Native Reed", "Antique Cloth"],
+                "Agastia": ["Prosperity Flame", "Explosive Material", "Steel Liquid"],
             }
 
             function createListElement(itemName){
@@ -513,6 +53,8 @@ Flickable {
 
         ///////// Quest Items - Port Breeze Archipelago /////////
         Label {
+            id: label_PortBreezeArchipelago
+
             color: "#00ff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -525,9 +67,23 @@ Flickable {
         }
 
         Repeater {
-            model: questItemsModel_PortBreezeArchipelago
+            id: repeater_PortBreezeArchipelago
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_PortBreezeArchipelago.visible === true){
+                    repeater_PortBreezeArchipelago.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_PortBreezeArchipelago.text].length; i++){
+                        repeater_PortBreezeArchipelago.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_PortBreezeArchipelago.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_PortBreezeArchipelago
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -539,9 +95,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ff00"
                     anchors.left: itemImage_PortBreezeArchipelago.right
@@ -556,6 +109,8 @@ Flickable {
 
         ///////// Quest Items - Valtz Duchy /////////
         Label {
+            id: label_ValtzDuchy
+
             color: "#aa0000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -568,9 +123,23 @@ Flickable {
         }
 
         Repeater {
-            model: questItemsModel_ValtzDuchy
+            id: repeater_ValtzDuchy
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_ValtzDuchy.visible === true){
+                    repeater_ValtzDuchy.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_ValtzDuchy.text].length; i++){
+                        repeater_ValtzDuchy.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_ValtzDuchy.text][i]))
+                    }
+                }
+            }
+            
             Image {
                 id: itemImage_ValtzDuchy
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -582,9 +151,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa0000"
                     anchors.left: itemImage_ValtzDuchy.right
@@ -599,6 +165,8 @@ Flickable {
 
         ///////// Quest Items - Auguste Isles /////////
         Label {
+            id: label_AugusteIsles
+
             color: "#00ffff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -611,9 +179,23 @@ Flickable {
         }
 
         Repeater {
-            model: questItemsModel_AugusteIsles
+            id: repeater_AugusteIsles
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_AugusteIsles.visible === true){
+                    repeater_AugusteIsles.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_AugusteIsles.text].length; i++){
+                        repeater_AugusteIsles.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_AugusteIsles.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_AugusteIsles
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -625,9 +207,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ffff"
                     anchors.left: itemImage_AugusteIsles.right
@@ -642,6 +221,8 @@ Flickable {
 
         ///////// Quest Items - Lumacie Archipelago /////////
         Label {
+            id: label_LumacieArchipelago
+
             color: "#ff8000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -654,9 +235,23 @@ Flickable {
         }
 
         Repeater {
-            model: questItemsModel_LumacieArchipelago
+            id: repeater_LumacieArchipelago
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_LumacieArchipelago.visible === true){
+                    repeater_LumacieArchipelago.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_LumacieArchipelago.text].length; i++){
+                        repeater_LumacieArchipelago.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_LumacieArchipelago.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_LumacieArchipelago
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -668,9 +263,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ff8000"
                     anchors.left: itemImage_LumacieArchipelago.right
@@ -685,6 +277,8 @@ Flickable {
 
         ///////// Quest Items - Albion Citadel /////////
         Label {
+            id: label_AlbionCitadel
+
             color: "#ffff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -697,9 +291,23 @@ Flickable {
         }
 
         Repeater {
-            model: questItemsModel_AlbionCitadel
+            id: repeater_AlbionCitadel
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_AlbionCitadel.visible === true){
+                    repeater_AlbionCitadel.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_AlbionCitadel.text].length; i++){
+                        repeater_AlbionCitadel.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_AlbionCitadel.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_AlbionCitadel
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -711,9 +319,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ffff00"
                     anchors.left: itemImage_AlbionCitadel.right
@@ -728,6 +333,8 @@ Flickable {
 
         ///////// Quest Items - Mist-Shrouded Isle /////////
         Label {
+            id: label_MistShroudedIsle
+
             color: "#aa00ff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -740,9 +347,23 @@ Flickable {
         }
 
         Repeater {
-            model: questItemsModel_MistShroudedIsle
+            id: repeater_MistShroudedIsle
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_MistShroudedIsle.visible === true){
+                    repeater_MistShroudedIsle.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_MistShroudedIsle.text].length; i++){
+                        repeater_MistShroudedIsle.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_MistShroudedIsle.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_MistShroudedIsle
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -754,9 +375,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa00ff"
                     anchors.left: itemImage_MistShroudedIsle.right
@@ -771,6 +389,8 @@ Flickable {
 
         ///////// Quest Items - Golonzo Island /////////
         Label {
+            id: label_GolonzoIsland
+
             color: "#aa0000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -783,9 +403,23 @@ Flickable {
         }
 
         Repeater {
-            model: questItemsModel_GolonzoIsland
+            id: repeater_GolonzoIsland
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_GolonzoIsland.visible === true){
+                    repeater_GolonzoIsland.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_GolonzoIsland.text].length; i++){
+                        repeater_GolonzoIsland.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_GolonzoIsland.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_GolonzoIsland
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -797,9 +431,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#aa0000"
                     anchors.left: itemImage_GolonzoIsland.right
@@ -814,6 +445,8 @@ Flickable {
 
         ///////// Quest Items - Amalthea Island /////////
         Label {
+            id: label_AmaltheaIsland
+
             color: "#00ff00"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -826,9 +459,23 @@ Flickable {
         }
 
         Repeater {
-            model: questItemsModel_AmaltheaIsland
+            id: repeater_AmaltheaIsland
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_AmaltheaIsland.visible === true){
+                    repeater_AmaltheaIsland.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_AmaltheaIsland.text].length; i++){
+                        repeater_AmaltheaIsland.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_AmaltheaIsland.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_AmaltheaIsland
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -840,9 +487,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ff00"
                     anchors.left: itemImage_AmaltheaIsland.right
@@ -857,6 +501,8 @@ Flickable {
 
         ///////// Quest Items - Former Capital Mephorash /////////
         Label {
+            id: label_FormerCapitalMephorash
+
             color: "#ff8000"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -869,9 +515,23 @@ Flickable {
         }
 
         Repeater {
-            model: questItemsModel_FormerCapitalMephorash
+            id: repeater_FormerCapitalMephorash
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_FormerCapitalMephorash.visible === true){
+                    repeater_FormerCapitalMephorash.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_FormerCapitalMephorash.text].length; i++){
+                        repeater_FormerCapitalMephorash.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_FormerCapitalMephorash.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_FormerCapitalMephorash
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -883,9 +543,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#ff8000"
                     anchors.left: itemImage_FormerCapitalMephorash.right
@@ -900,6 +557,8 @@ Flickable {
 
         ///////// Quest Items - Agastia /////////
         Label {
+            id: label_Agastia
+
             color: "#00ffff"
             anchors.left: parent.left
             horizontalAlignment: Text.AlignHCenter
@@ -912,9 +571,23 @@ Flickable {
         }
 
         Repeater {
-            model: questItemsModel_Agastia
+            id: repeater_Agastia
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_Agastia.visible === true){
+                    repeater_Agastia.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Agastia.text].length; i++){
+                        repeater_Agastia.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Agastia.text][i]))
+                    }
+                }
+            }
+
             Image {
                 id: itemImage_Agastia
+                source: imageSource
+                width: 35
+                height: 40
 
                 MouseArea {
                     anchors.fill: parent
@@ -926,9 +599,6 @@ Flickable {
                     }
                 }
 
-                source: imageSource
-                width: 35
-                height: 40
                 Label {
                     color: "#00ffff"
                     anchors.left: itemImage_Agastia.right
@@ -940,7 +610,6 @@ Flickable {
             }
         }
         ///////// End of Quest Items - Agastia /////////
-
     }
 
     Connections {
