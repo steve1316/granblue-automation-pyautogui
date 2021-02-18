@@ -272,8 +272,10 @@ class Game:
         """
         try:
             # Check to see if Party has wiped.
-            self.print_and_save(f"\n{self.printtime()} [COMBAT] Checking to see if the Party wiped...")
-            party_wipe_indicator = self.image_tools.find_button("party_wipe_indicator", tries=1, suppress_error=False)
+            if(self.debug_mode):
+                self.print_and_save(f"\n{self.printtime()} [DEBUG] Checking to see if the Party wiped...")
+                
+            party_wipe_indicator = self.image_tools.find_button("party_wipe_indicator", tries=1, suppress_error=True)
             if(party_wipe_indicator != None):
                 # Click on the blue indicator to get rid of the overlay.
                 self.wait(2)
@@ -285,7 +287,7 @@ class Game:
                     self.find_and_click_button("cancel")
                     self.find_and_click_button("retreat_confirmation")
                     self.retreat_check = True
-                elif((self.farming_mode.lower() == "coop" or self.farming_mode.lower() == "raid" or self.farming_mode.lower() == "dread barrage") and self.image_tools.confirm_location("salute_participants")):
+                elif((self.farming_mode.lower() == "raid" or self.farming_mode.lower() == "dread barrage") and self.image_tools.confirm_location("salute_participants")):
                     # Salute the participants.
                     self.print_and_save(f"{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Backing out now without retreating...")
                     self.find_and_click_button("salute")
@@ -294,13 +296,26 @@ class Game:
                     # Then cancel the popup that asks you if you want to use a Full Elixir to come back.
                     self.find_and_click_button("cancel")
                     
-                    # Then click the "Home" button if currently farming raids or the "Leave" button if Coop.
-                    if(self.farming_mode.lower() == "coop"):
-                        self.find_and_click_button("leave")
-                    else:
-                        self.find_and_click_button("raid_retreat_home")
+                    # Then click the "Home" button.
+                    self.find_and_click_button("raid_retreat_home")
                     
                     self.retreat_check = True
+                elif(self.farming_mode.lower() == "coop" and self.image_tools.confirm_location("salute_participants")):
+                    # Salute the participants.
+                    self.print_and_save(f"{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Leaving the Coop room...")
+                    self.find_and_click_button("salute")
+                    self.find_and_click_button("ok")
+                    
+                    # Then cancel the popup that asks you if you want to use a Full Elixir to come back.
+                    self.find_and_click_button("cancel")
+                    
+                    # Then click the "Leave" button.
+                    self.find_and_click_button("leave")
+                    
+                    self.retreat_check = True
+            else:
+                if(self.debug_mode):
+                    self.print_and_save(f"{self.printtime()} [DEBUG] Party has not wiped.")
                     
             return None
         except Exception:
