@@ -333,10 +333,18 @@ class MapSelection:
                 # After clicking on the mission, create a new Room.
                 self.game.print_and_save(f"{self.game.printtime()} [INFO] Opening up a new Coop room...")
                 self.game.find_and_click_button("coop_post_to_crew_chat")
+                # Scroll down the screen to see the "OK" button just in case of smaller screens.
+                self.game.mouse_tools.scroll_screen_from_home_button(-400)
                 self.game.find_and_click_button("ok")
                 
-                # Finally, click "Select Party".
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting a Party for \"{mission_name}\".")
+                # Just in case, check for the "You retreated from the raid battle" popup.
+                self.game.wait(1)
+                if(self.game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries=1)):
+                    self.game.find_and_click_button("ok")
+                
+                # Scroll down the screen to see the "Select Party" button just in case of smaller screens.
+                self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Selecting a Party for \"{mission_name}\".")
+                self.game.mouse_tools.scroll_screen_from_home_button(-400)
                 self.game.find_and_click_button("coop_select_party")
 
             elif(map_mode.lower() == "special"):
