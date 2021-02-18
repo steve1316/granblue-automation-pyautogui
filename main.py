@@ -92,7 +92,24 @@ class MainWindow(QObject):
     enableGroupAndPartySelectors = Signal()
     updateTimerTextField = Signal(str)
     
-    # Update the amount of time that the bot is allowed to run for. If no time was provided, bot will run until it achieves its main objective.
+    @Slot()
+    def reset_values(self):
+        """Reset the values for Game class initialization back to default.
+
+        Returns:
+            None
+        """
+        self.farming_mode = ""
+        self.item_name = ""
+        self.item_amount_to_farm = "0"
+        self.location_name = ""
+        self.mission_name = ""
+        self.summon_element_name = ""
+        self.summon_name = "none"
+        self.group_number = ""
+        self.party_number = ""
+        return None
+    
     @Slot(str)
     def update_timer(self, new_time):
         if(new_time != "" and new_time != "00:00:00" and len(new_time) != 1):
