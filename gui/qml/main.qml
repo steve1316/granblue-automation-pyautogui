@@ -284,7 +284,10 @@ Window {
                         buttonColorClicked: "#cc0000"
                         buttonIconSource: "../images/svg_images/close_icon.svg"
 
-                        onClicked: mainWindow.close()
+                        onClicked: {
+                            mainWindow.close()
+                            backend.stop_bot()
+                        }
                     }
                 }
 
@@ -849,6 +852,10 @@ Window {
                                  mainWindow.startSystemResize(Qt.TopEdge)
                              }
         }
+    }
+
+    Connections {
+        target: backend
     }
 }
 
