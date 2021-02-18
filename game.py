@@ -1099,7 +1099,7 @@ class Game:
                     self.find_dialog_in_combat()
                     
                     # Continue reading each line inside the turn block until you reach the "end" command.
-                    while((line.strip() != "" and "end" not in line.lower() and "exit" not in line.lower()) and i >= len(lines[i])):
+                    while((line.strip() != "" and "end" not in line.lower() and "exit" not in line.lower()) and i <= len(lines[i])):
                         # Strip any leading and trailing whitespaces.
                         line = lines[i].strip()
                         
