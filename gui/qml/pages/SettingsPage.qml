@@ -619,7 +619,25 @@ Item{
                             { text: "The Typhoon Trial", map: "Elemental Treasure Quests", enabled: true },
                         ]
                     }
-                } else if(farmingModeComboBox.displayText === "Coop"){
+
+                    // Angel Halo
+                    else if(itemSelectionButton.text === "Angel Halo Weapons") {
+                        missionSelectionComboBox.model = [
+                            { text: "Angel Halo", enabled: false },
+                            { text: "N Angel Halo", map: "Angel Halo", enabled: true },
+                            { text: "H Angel Halo", map: "Angel Halo", enabled: true },
+                            { text: "VH Angel Halo", map: "Angel Halo", enabled: true },
+                        ]
+                    }
+                } else if(farmingModeComboBox.displayText === "Coop") {
+                    // EXP
+                    if(itemSelectionButton.text === "EXP") {
+                        missionSelectionComboBox.model = [
+                            { text: "H3", enabled: false },
+                            { text: "In a Dusk Dream", map: "", enabled: true },
+                        ]
+                    }
+
                     // Creeds
                     if(itemSelectionButton.text === "Warrior Creed" || itemSelectionButton.text === "Mage Creed"){
                         missionComboBox.model = [
