@@ -35,8 +35,8 @@ class TwitterRoomFinder():
         self.access_token = access_token
         self.access_token_secret = access_token_secret
         
-        self.request_limit = 900
-        self.rate_limit = 900 # A maximum of 900 requests per 15 minutes or 900 seconds before getting rate-limited.
+        # self.request_limit = 900
+        # self.rate_limit = 900 # A maximum of 900 requests per 15 minutes or 900 seconds before getting rate-limited.
         
         self.already_visited = []
         self.list_of_id = []
@@ -105,7 +105,7 @@ class TwitterRoomFinder():
             "Lvl 100 Qilin": "Lv100 黒麒麟",
             "Huanglong & Qilin (Impossible)": "黄龍・黒麒麟HL",
             "Lvl 100 Shenxian": "Lv100 四象瑞神",
-
+            
             # Impossible Raids
             "Lvl 110 Rose Queen": "Lv110 ローズクイーン",
             "Lvl 120 Shiva": "Lv120 シヴァ",
@@ -160,6 +160,8 @@ class TwitterRoomFinder():
         Returns:
             tweets (Iterable[str]): List of most recent tweets that match the query.
         """
+
+        
         self.game.print_and_save(f"\n{self.game.printtime()} [TWITTER] Now finding the {count} most recent tweets for {raid_name}.")
         today = datetime.datetime.today()
         query_en = f"+(:Battle ID) AND +({raid_name})"
@@ -172,7 +174,7 @@ class TwitterRoomFinder():
         
         tweets = []
         list_of_id = []
-
+        
         # Clear list of tweet IDs if it exceeds 50.
         if(len(self.list_of_id) > 50):
             self.list_of_id = []
@@ -182,16 +184,14 @@ class TwitterRoomFinder():
             tweet_jp = self.api.search(q=query_jp, since=today.strftime('%Y-%m-%d'), count=count)
             for tweet in tweet_jp:
                 if(tweet.id not in self.list_of_id and len(tweets) < count):
-                    # self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found JP tweet.")
                     tweets.append(tweet)
                     self.list_of_id.append(tweet.id)
-
+                    
             # Search EN tweets only if the filtered JP tweets was less than the desired amount.
             if(len(tweets) < count):
                 tweet_en = self.api.search(q=query_en, since=today.strftime('%Y-%m-%d'), count=count)
                 for tweet in tweet_en:
                     if(tweet.id not in self.list_of_id and len(tweets) < count):
-                        # self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Found EN tweet.")
                         tweets.append(tweet)
                         self.list_of_id.append(tweet.id)
                         
@@ -209,16 +209,17 @@ class TwitterRoomFinder():
         Returns:
             room_codes (Iterable[str]): List of room codes cleaned of all other text.
         """
-        self.game.print_and_save(f"\n{self.game.printtime()} [TWITTER] Now cleaning up the tweets and parsing for room codes...\n")
-        room_codes = []
-        
         try:
-            # Split the text up by whitespaces and find the element in the list that has the room code.
+            self.game.print_and_save(f"\n{self.game.printtime()} [TWITTER] Now cleaning up the tweets and parsing for room codes...\n")
+            room_codes = []
             for tweet in tweets:
                 if(len(self.already_visited) > 50):
                     self.already_visited = []
                 
+                # Split up the tweet's text by whitespaces.
                 split_text = tweet.text.split(" ")
+                
+                # Parse the room code and if it has not been visited yet, append it to the list.
                 for i, identifier in enumerate(split_text):
                     if((":Battle" in identifier) or (":参戦ID" in identifier)):
                         parsed_code = split_text[i - 1]
@@ -229,7 +230,7 @@ class TwitterRoomFinder():
                             break
                         else:
                             self.game.print_and_save(f"{self.game.printtime()} [TWITTER] Already visited {parsed_code} before in this session. Skipping this code...")
-
+                            
             return room_codes
         except Exception as e:
             self.game.print_and_save(f"{self.game.printtime()} [ERROR] Bot cannot parse given tweets. Exact error is: \n{traceback.format_exc()} \nTweets given to it was: \n{tweets}")
