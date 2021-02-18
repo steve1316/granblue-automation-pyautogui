@@ -227,20 +227,18 @@ class Game:
         if(self.debug_mode):
             self.print_and_save(f"{self.printtime()} [DEBUG] Attempting to find and click the button: \"{button_name}\".")
         
-        # If the bot is trying to find the Quest button and failed, chances are that the button is now styled red.
-        if(button_name == "quest"):
-            temp_location = self.image_tools.find_button("quest", tries=tries, suppress_error=suppress_error)
+        if(button_name.lower() == "quest"):
+            temp_location = self.image_tools.find_button("quest_blue", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
-                temp_location = self.image_tools.find_button("quest2", tries=tries, suppress_error=suppress_error)
+                temp_location = self.image_tools.find_button("quest_red", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
-                # If the blue or red Quest buttons was not detected, user must be in Strike Time with the red Quest button.
-                temp_location = self.image_tools.find_button("quest3", tries=tries, suppress_error=suppress_error)
-        elif(button_name == "raid"):
-            temp_location = self.image_tools.find_button("raid", tries=tries, suppress_error=suppress_error)
+                temp_location = self.image_tools.find_button("quest_red_strike_time", tries=tries, suppress_error=suppress_error)
+        elif(button_name.lower() == "raid"):
+            temp_location = self.image_tools.find_button("raid_flat", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
-                temp_location = self.image_tools.find_button("raid2", tries=tries, suppress_error=suppress_error)
+                temp_location = self.image_tools.find_button("raid_bouncing", tries=tries, suppress_error=suppress_error)
         else:
-            temp_location = self.image_tools.find_button(button_name, tries=tries, suppress_error=suppress_error)
+            temp_location = self.image_tools.find_button(button_name.lower(), tries=tries, suppress_error=suppress_error)
         
         if(temp_location != None):    
             self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1])
