@@ -707,7 +707,7 @@ class Game:
         Returns:
             None
         """
-        if(self.image_tools.confirm_location("friend_request")):
+        if(self.image_tools.confirm_location("friend_request", tries=1)):
             self.print_and_save(f"\n{self.printtime()} [INFO] Detected Friend Request. Closing it now...")
             self.find_and_click_button("cancel")
         
