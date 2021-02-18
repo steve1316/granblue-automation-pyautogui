@@ -418,24 +418,24 @@ class Game:
         try:
             if(group_number < 8):
                 while (set_location == None):
-                    set_location = self.image_tools.find_button("party_set_a")           
+                    set_location = self.image_tools.find_button("party_set_a", tries=1)           
                     if (set_location == None):
                         tries -= 1
                         if (tries <= 0):
                             raise NotFoundException("Could not find Set A.")
 
                         # See if the user had Set B active instead of Set A if matching failed.
-                        set_location = self.image_tools.find_button("party_set_b")
+                        set_location = self.image_tools.find_button("party_set_b", tries=1)
             else:
                 while (set_location == None):
-                    set_location = self.image_tools.find_button("party_set_b")
+                    set_location = self.image_tools.find_button("party_set_b", tries=1)
                     if (set_location == None):
                         tries -= 1
                         if (tries <= 0):
                             raise NotFoundException("Could not find Set B.")
 
                         # See if the user had Set A active instead of Set B if matching failed.
-                        set_location = self.image_tools.find_button("party_set_a")
+                        set_location = self.image_tools.find_button("party_set_a", tries=1)
         except Exception:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while selecting A or B Set: \n{traceback.format_exc()}")
             self.isBotRunning.value = 1
