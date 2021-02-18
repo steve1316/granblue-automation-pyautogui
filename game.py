@@ -1608,18 +1608,14 @@ class Game:
                                     self.map_selection.join_raid(item_name, mission_name)
                                     summon_check = False
                             else:
-                                # If Combat Mode exited via the exit command, check for Pending Battles.
-                                self.map_selection.check_for_pending("raid")
-                                
                                 # Join a new raid.
                                 self.map_selection.join_raid(item_name, mission_name)
                                 summon_check = False
-                    else:
-                        if(map_mode.lower() == "raid"):
-                            # If the bot reached here, it means that the Raid ended before the bot could start the mission after selecting the Summon and Party.
-                            self.print_and_save(f"{self.printtime()} [INFO] Now looking for another raid to join...")
-                            self.map_selection.join_raid(item_name, mission_name)
-                            summon_check = False
+                    elif(not start_check and farming_mode.lower() == "raid"):
+                        # If the bot reached here, it means that the Raid ended before the bot could start the mission after selecting the Summon and Party.
+                        self.print_and_save(f"{self.printtime()} [INFO] Seems that the raid ended before the bot was able to join. Now looking for another raid to join...")
+                        self.map_selection.join_raid(item_name, mission_name)
+                        summon_check = False
             else:
                 raise Exception("Confirming the location of the Summon Selection Screen after completing the process of selecting the mission returned False.")
         except Exception:
