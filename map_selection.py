@@ -85,7 +85,7 @@ class MapSelection:
                         current_location = "Agastia"    
                 
                 # Go to the Quest Screen and confirm if the bot arrived.
-                self.game.find_and_click_button("quest")
+                self.game.find_and_click_button("quest", suppress_error=True)
                 self.game.image_tools.confirm_location("quest")
                 
                 # If the bot is currently not at the correct island, move to it.
@@ -344,7 +344,7 @@ class MapSelection:
                 self.game.go_back_home(confirm_location_check=True)
                 
                 # Go to the Quest Screen and then to the Special Screen.
-                self.game.find_and_click_button("quest")
+                self.game.find_and_click_button("quest", suppress_error=True)
                 self.game.find_and_click_button("special")
                 
                 # Process the strings to eventually be used later.
@@ -673,7 +673,7 @@ class MapSelection:
                         
                         if(self.game.image_tools.confirm_location("no_loot", tries=1)):
                             self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
-                            self.game.find_and_click_button("quests")
+                            self.game.find_and_click_button("quests", suppress_error=True)
                             if(self.raids_joined > 0):
                                 self.raids_joined -= 1
                             raid_pending_battle_check = True
@@ -694,7 +694,7 @@ class MapSelection:
                             
                             if(self.game.image_tools.confirm_location("no_loot", tries=1)):
                                 self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
-                                self.game.find_and_click_button("quests")
+                                self.game.find_and_click_button("quests", suppress_error=True)
                                 if(self.raids_joined > 0):
                                     self.raids_joined -= 1
                             else:
@@ -710,7 +710,7 @@ class MapSelection:
                                     
                                     if(self.game.image_tools.confirm_location("no_loot", tries=1)):
                                         self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
-                                        self.game.find_and_click_button("quests")
+                                        self.game.find_and_click_button("quests", suppress_error=True)
                                     else:
                                         self.game.collect_loot(isPendingBattle=True)
                                         
@@ -718,7 +718,7 @@ class MapSelection:
                                         self.game.find_and_click_button("quest_results_pending_battles")
                                     else:
                                         # When there are no more Pending Battles, go back to the Quest Screen.
-                                        self.game.find_and_click_button("quests")
+                                        self.game.find_and_click_button("quests", suppress_error=True)
                                         break
                 
                         self.game.print_and_save(f"{self.game.printtime()} [INFO] Pending battles have been cleared for Raids.")
@@ -739,7 +739,7 @@ class MapSelection:
                             
                             if(self.game.image_tools.confirm_location("no_loot", tries=1)):
                                 self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
-                                self.game.find_and_click_button("quests")
+                                self.game.find_and_click_button("quests", suppress_error=True)
                             else:
                                 self.game.collect_loot(isPendingBattle=True)
                                 
@@ -747,7 +747,7 @@ class MapSelection:
                                 self.game.find_and_click_button("quest_results_pending_battles")
                             else:
                                 # When there are no more Pending Battles, go back to the Quest Screen.
-                                self.game.find_and_click_button("quests")
+                                self.game.find_and_click_button("quests", suppress_error=True)
                                 break
                         
                         self.game.print_and_save(f"{self.game.printtime()} [INFO] Pending battles have been cleared.")
