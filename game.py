@@ -649,7 +649,7 @@ class Game:
             None
         """
         # Click away the EXP Gained popup and any other popups until the bot reaches the Loot Collected Screen.
-        if(self.image_tools.confirm_location("exp_gained") and not self.retreat_check):
+        if(not self.retreat_check and self.image_tools.confirm_location("exp_gained")):
             while(not self.image_tools.confirm_location("loot_collected", tries=1)):
                 ok_button_location = self.image_tools.find_button("ok", tries=1, suppress_error=True)
                 cancel_button_location = self.image_tools.find_button("cancel", tries=1, suppress_error=True)
@@ -670,16 +670,19 @@ class Game:
             # Now that the bot is at the Loot Collected Screen, detect items.
             if(not isPendingBattle):
                 self.print_and_save(f"\n{self.printtime()} [INFO] Detecting if any loot dropped...")
-                if(self.item_name != "EXP" and self.item_name != "Repeated Runs"):
+                if(self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs"):
                     temp_amount = self.image_tools.find_farmed_items([self.item_name])[0]
                 else:
                     temp_amount = 1
                 
                 self.item_amount_farmed += temp_amount
                 self.amount_of_runs_finished += 1
+        else:
+            # If the bot reached here, that means the raid ended without the bot being able to take action so no loot dropped.
+            temp_amount = 0
         
         if(not isPendingBattle):    
-            if(self.item_name != "EXP" and self.item_name != "Repeated Runs"):
+            if(self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs"):
                 self.print_and_save("\n\n********************************************************************************")
                 self.print_and_save(f"{self.printtime()} [FARM] Mode: {self.map_mode}")
                 self.print_and_save(f"{self.printtime()} [FARM] Mission: {self.mission_name}")
