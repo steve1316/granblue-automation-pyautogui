@@ -85,6 +85,12 @@ class MapSelection:
                 
                 # Go to the Quest screen and confirm if the bot arrived.
                 self.game.find_and_click_button("quest", suppress_error=True)
+                
+                # Check for the "You retreated from the raid battle" popup.
+                self.game.wait(1)
+                if(self.game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries=1)):
+                    self.game.find_and_click_button("ok")
+                
                 self.game.image_tools.confirm_location("quest")
                 
                 # If the bot is currently not at the correct island, move to it.
@@ -348,8 +354,17 @@ class MapSelection:
                 # Go to the Home screen.
                 self.game.go_back_home(confirm_location_check=True)
                 
-                # Go to the Quest screen and then to the Special screen.
+                # Go to the Quest screen.
                 self.game.find_and_click_button("quest", suppress_error=True)
+                
+                # Check for the "You retreated from the raid battle" popup.
+                self.game.wait(1)
+                if(self.game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries=1)):
+                    self.game.find_and_click_button("ok")
+                
+                self.game.image_tools.confirm_location("quest")
+                
+                # Go to the Special screen.
                 self.game.find_and_click_button("special")
                 
                 # Format the map and mission name strings.
@@ -798,11 +813,24 @@ class MapSelection:
             (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
         try:
-            # Head to the Home screen, Quest screen, and then to the Raid screen.
+            # Head to the Home screen.
             self.game.go_back_home(confirm_location_check=True)
+            
+            # Then navigate to the Quest screen.
             self.game.find_and_click_button("quest", suppress_error=True)
+            
+            # Check for the "You retreated from the raid battle" popup.
+            self.game.wait(1)
+            if(self.game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries=1)):
+                self.game.find_and_click_button("ok")
+                
+            self.game.image_tools.confirm_location("quest")
+            
             self.check_for_pending("raid")
+            
+            # Now navigate to the Raid screen.
             self.game.find_and_click_button("raid", suppress_error=True)
+            self.game.image_tools.confirm_location("raid")
             
             # Check for any joined raids.
             self.check_for_joined()
