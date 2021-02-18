@@ -801,15 +801,19 @@ class Game:
         """
         tries = 10
         while((not self.retreat_check and self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) == None) or (not self.retreat_check and self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) == None)):
+            # Stagger the checks for dialog popups.
+            if(tries % 2 == 0):
+                self.find_dialog_in_combat()
+            
             self.wait(1)
-            self.find_dialog_in_combat()
+            
             tries -= 1
             if(tries < 0 or self.image_tools.find_button("attack", tries=1, suppress_error=self.suppress_error) != None or self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error) != None):
                 break
-            self.wait(1)
             
             # Check if the Party wiped after Attacking.
             self.party_wipe_check()
+            self.wait(1)
         
         return None
     
