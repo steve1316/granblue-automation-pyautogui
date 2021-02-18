@@ -1142,17 +1142,17 @@ class Game:
                                 
                                 # Click on the specified Summon.
                                 if(j == 1):
-                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 317, self.attack_button_location[1] + 138)
+                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 317, self.attack_button_location[1] + 138, mouse_clicks=2)
                                 elif(j == 2):
-                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 243, self.attack_button_location[1] + 138)
+                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 243, self.attack_button_location[1] + 138, mouse_clicks=2)
                                 elif(j == 3):
-                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 165, self.attack_button_location[1] + 138)
+                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 165, self.attack_button_location[1] + 138, mouse_clicks=2)
                                 elif(j == 4):
-                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 89, self.attack_button_location[1] + 138)
+                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 89, self.attack_button_location[1] + 138, mouse_clicks=2)
                                 elif(j == 5):
-                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 12, self.attack_button_location[1] + 138)
+                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 12, self.attack_button_location[1] + 138, mouse_clicks=2)
                                 else:
-                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] + 63, self.attack_button_location[1] + 138)
+                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] + 63, self.attack_button_location[1] + 138, mouse_clicks=2)
                                     
                                 # Check if it is summonable. Click OK if so. If not, then click Cancel and move on.
                                 if(self.image_tools.confirm_location("summon_details", tries=2)):
