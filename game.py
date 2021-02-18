@@ -981,6 +981,20 @@ class Game:
                 
             # This is where the main workflow of Combat Mode is located and it will loop until the last of the commands have been executed.
             while(i != len(lines) and not self.retreat_check):
+                line = lines[i]
+                
+                # Skip this line if it is empty.
+                if(line == ""):
+                    line_number += 1
+                    i += 1
+                    continue
+                
+                # Print each line read except comments if Debug Mode is active.
+                if(self.debug_mode and line.strip() != "" and line[0] != "#" and line[0] != "/"):
+                    self.print_and_save(f"\n{self.printtime()} [DEBUG] Reading Line {line_number}: \"{line.strip()}\"")
+                    
+                # If the execution reached the next turn block and it is currently not the correct turn, keep pressing the "Attack" button until the turn number matches.
+                if(line.strip() != "" and line[0] != "#" and line[0] != "/" and "turn" in line.lower() and int(line.split(":")[0].split(" ")[1]) != turn_number):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Attacking until the bot reaches Turn {int(line.split(':')[0].split(' ')[1])}...")
                     while(int(line.split(":")[0].split(" ")[1]) != turn_number):
                         self.print_and_save(f"{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
@@ -1023,7 +1037,7 @@ class Game:
                     break
 
                 # If it is the start of the Turn and it is currently the correct turn, grab the next line for execution.
-                if(line[0] != "#" and line[0] != "/" and line.strip() != "" and "turn" in line.lower() and int(line.split(":")[0].split(" ")[1]) == turn_number and not self.retreat_check):
+                if(line.strip() != "" and line[0] != "#" and line[0] != "/" and "turn" in line.lower() and int(line.split(":")[0].split(" ")[1]) == turn_number and not self.retreat_check):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}. Reading script now...")
                     
                     i += 1
@@ -1032,16 +1046,13 @@ class Game:
                     self.find_dialog_in_combat()
 
                     # Continue reading each line inside the Turn block until you reach the "end" occurrence.
-                    while("end" not in line.lower() and line.strip() != ""):
+                    while((line.strip() != "" and "end" not in line.lower() and "exit" not in line.lower()) and i >= len(lines[i])):
                         # Strip any leading and trailing whitespaces.
                         line = lines[i].strip()
                         if(line == ""):
                             line_number += 1
                             i += 1
                             continue
-                        
-                        if(i >= len(lines[i])):
-                            break
                         
                         self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line}\"")
 
@@ -1097,12 +1108,13 @@ class Game:
                                                 self.mouse_tools.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 250)
                                             else:
                                                 # If the command is not one of the supported targets, close the popup.
-                                                self.find_and_click_button("cancel", tries=1, suppress_error=True)
+                                                self.print_and_save(f"{self.printtime()} [COMBAT] Invalid Character target. Canceling now...")
+                                                self.find_and_click_button("cancel")
                                         
                                         # Else, check if the character is skill-sealed.
                                         elif(self.image_tools.confirm_location("skill_unusable", tries=1)):
                                             self.print_and_save(f"{self.printtime()} [COMBAT] Character is currently skill-sealed. Unable to execute command.")
-                                            self.find_and_click_button("cancel", tries=1, suppress_error=True)
+                                            self.find_and_click_button("cancel")
                                         
                             # Now click the Back button.
                             self.mouse_tools.move_and_click_point(self.back_button_location[0], self.back_button_location[1])
@@ -1178,14 +1190,14 @@ class Game:
                             full_auto = True
                             break
                         
-                        if(line[0] != "#" and line[0] != "/" and line.strip() != "" and "requestbackup" in line.lower() and not full_auto):
+                        if(line.strip() != "" and line[0] != "#" and line[0] != "/" and "requestbackup" in line.lower() and not full_auto):
                             # Request Backup for this Raid.
                             self.request_backup()
                             line_number += 1
                             i += 1
                             line = lines[i]
                         
-                        if(line[0] != "#" and line[0] != "/" and line.strip() != "" and "tweetbackup" in line.lower() and not full_auto):
+                        if(line.strip() != "" and line[0] != "#" and line[0] != "/" and "tweetbackup" in line.lower() and not full_auto):
                             # Request Backup via Twitter for this Raid.
                             self.tweet_backup()
                             line_number += 1
@@ -1194,7 +1206,7 @@ class Game:
                         
                         item_commands = ["usegreenpotion.target(1)", "usegreenpotion.target(2)", "usegreenpotion.target(3)", "usegreenpotion.target(4)", "usebluepotion", "usefullelixir", 
                                          "usesupportpotion", "useclarityherb.target(1)", "useclarityherb.target(2)", "useclarityherb.target(3)", "useclarityherb.target(4)", "userevivalpotion"]
-                        if(line[0] != "#" and line[0] != "/" and line.strip() != "" and line.lower() in item_commands and not full_auto):
+                        if(line.strip() != "" and line[0] != "#" and line[0] != "/" and line.lower() in item_commands and not full_auto):
                             # Parse the command from the line.
                             command = line.split(".").pop(0).lower()
                             
@@ -1220,7 +1232,7 @@ class Game:
                             i += 1
                             line = lines[i]
 
-                if(line[0] != "#" and line[0] != "/" and line.strip() != "" and "end" in line.lower() and not full_auto):
+                if(line.strip() != "" and line[0] != "#" and line[0] != "/" and "end" in line.lower() and not full_auto):
                     # Attempt to find the "Next" Button first before attacking to preserve the turn number in the backend. If so, skip clicking the "Attack" Button.
                     # Otherwise, click the "Attack" Button, increment the turn number, and then attempt to find the "Next" Button.
                     next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=self.suppress_error)
@@ -1244,7 +1256,7 @@ class Game:
                             self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                             self.wait(3)
                         
-                        # Check to see if the party wiped.
+                if(line.strip() != "" and line[0] != "#" and line[0] != "/" and "exit" in line.lower() and not full_auto):
                         self.party_wipe_check()
                         
                 if(line[0] != "#" and line[0] != "/" and line.strip() != "" and "exit" in line.lower() and not full_auto):
