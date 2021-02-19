@@ -123,6 +123,7 @@ Item{
                 { text: "Coop", enabled: true},
                 { text: "Raid", enabled: true},
                 { text: "Event", enabled: true},
+                { text: "Event (Token Drawboxes)", enabled: true},
                 { text: "Dread Barrage", enabled: true},
             ]
 
@@ -132,14 +133,14 @@ Item{
                 farmingModeStatusMessage.visible = true
 
                 // Display either the Item Selection button or ComboBox depending on the Farming Mode selected.
-                if(farmingModeComboBox.displayText === "Event" || farmingModeComboBox.displayText === "Dread Barrage") {
+                if(farmingModeComboBox.displayText === "Event" || farmingModeComboBox.displayText === "Event (Token Drawboxes)" || farmingModeComboBox.displayText === "Dread Barrage") {
                     // Set the contents of the Item Selection ComboBox.
-                    if(farmingModeComboBox.displayText === "Event") {
+                    if(farmingModeComboBox.displayText !== "Dread Barrage") {
                         itemSelectionComboBox.model = [
                             { text: "Event", enabled: false},
                             { text: "Repeated Runs", enabled: true },
                         ]
-                    } else if(farmingModeComboBox.displayText === "Dread Barrage") {
+                    } else {
                         itemSelectionComboBox.model = [
                             { text: "Dread Barrage", enabled: false},
                             { text: "Repeated Runs", enabled: true },
@@ -154,14 +155,14 @@ Item{
                     // Reveal and enable the Item Selection ComboBox and reset it to default.
                     itemSelectionComboBox.visible = true
                     itemSelectionComboBox.enabled = true
-                    itemSelectionComboBox.displayText = qsTr("Please select item to farm")
                     itemSelectionComboBox.currentIndex = 0
+                    itemSelectionComboBox.displayText = qsTr("Please select item to farm")
                 } else{
                     // Hide and disable the Item Selection ComboBox.
                     itemSelectionComboBox.visible = false
                     itemSelectionComboBox.enabled = false
-                    itemSelectionComboBox.displayText = qsTr("Please select item to farm")
                     itemSelectionComboBox.currentIndex = 0
+                    itemSelectionComboBox.displayText = qsTr("Please select item to farm")
 
                     // Reveal and enable the Item Selection Button and reset it to default.
                     itemSelectionButton.visible = true
@@ -1409,7 +1410,7 @@ Item{
 
                 if(itemSelectionComboBox.displayText !== qsTr("Please select the item to farm")) {
                     // If the selected Farming Mode is either Event or Dread Barrage, update the contents of the Mission Selection ComboBox with the following.
-                    if(farmingModeComboBox.displayText === "Event" && itemSelectionComboBox.displayText === "Repeated Runs") {
+                    if(farmingModeComboBox.displayText === "Event (Token Drawboxes)" && itemSelectionComboBox.displayText === "Repeated Runs") {
                         missionSelectionComboBox.model = [
                             { text: "Event Raid", enabled: false },
                             { text: "VH Event Raid", map: "", enabled: true },
@@ -1417,6 +1418,15 @@ Item{
                             { text: "Event Quest", enabled: false },
                             { text: "N Event Quest", map: "", enabled: true },
                             { text: "H Event Quest", map: "", enabled: true },
+                            { text: "VH Event Quest", map: "", enabled: true },
+                            { text: "EX Event Quest", map: "", enabled: true },
+                        ]
+                    } else if(farmingModeComboBox.displayText === "Event" && itemSelectionComboBox.displayText === "Repeated Runs") {
+                        missionSelectionComboBox.model = [
+                            { text: "Event Raid", enabled: false },
+                            { text: "VH Event Raid", map: "", enabled: true },
+                            { text: "EX Event Raid", map: "", enabled: true },
+                            { text: "Event Quest", enabled: false },
                             { text: "VH Event Quest", map: "", enabled: true },
                             { text: "EX Event Quest", map: "", enabled: true },
                         ]
