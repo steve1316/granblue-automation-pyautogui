@@ -1621,6 +1621,11 @@ class Game:
                                         self.print_and_save(f"\n{self.printtime()} [INFO] Defaulting to Level 95 Unparalleled Foe. Starting it now...")
                                         self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1])
                                 
+                                # Check for "Trophy Achieved" popup.
+                                if(self.image_tools.confirm_location("trophy_achieved", tries=1)):
+                                    self.print_and_save(f"{self.printtime()} [INFO] Detected \"Trophy Achieved\" popup. Closing it now...")
+                                    self.find_and_click_button("close")
+                                
                                 # Check for "Friend Request" popup.
                                 self.check_for_friend_request()
                                 
