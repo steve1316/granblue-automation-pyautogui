@@ -84,18 +84,19 @@ class MouseUtils:
         except Exception:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception attempting to move the mouse cursor to Point({x}, {y}) and clicking it: \n{traceback.format_exc()}")
 
-    def click_point_instantly(self, x: int, y: int):
+    def click_point_instantly(self, x: int, y: int, mouse_clicks: int = 1):
         """Click the specified point on the screen instantly.
 
         Args:
             x (int): X coordinate on the screen.
             y (int): Y coordinate on the screen.
+            mouse_clicks (int, optional): Number of mouse clicks. Defaults to 1.
 
         Returns:
             None
         """
         try:
-            pyautogui.click(x, y)
+            pyautogui.click(x, y, clicks=mouse_clicks)
             return None
         except Exception:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception attempting to instantly click the Point({x}, {y}): \n{traceback.format_exc()}")
