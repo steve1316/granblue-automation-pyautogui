@@ -60,7 +60,7 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] Support for Raid farming.
   - [x] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
   - [x] Alert for when anti-bot CAPTCHA pops up.
-- [x] Support for Event(s) farming.
+- [x] Support for Event farming.
 - [ ] (ON HOLD) Support for Guild Wars farming. (This is pending a re-run in April)
 - [ ] (ON HOLD) Support for Rise of the Beasts farming. (This is pending a re-run at an unknown date)
 - [x] Support for Dread Barrage farming.
@@ -91,7 +91,7 @@ By downloading this program, you consent to your account potentially getting fla
   - [ ] (ON HOLD) Implement Guild Wars items to farm.
 - [ ] (ON HOLD) Implement Rise of the Beasts navigation (This is pending a re-run at an unknown date)
   - [ ] (ON HOLD) Implement Rise of the Beasts items to farm
-- [x] (HIGH PRIORITY) Implement Dread Barrage navigation.
+- [x] ~~(HIGH PRIORITY) Implement Dread Barrage navigation.~~
 - [x] ~~(LOW PRIORITY) Deal with any left-over TODOs.~~
 - [x] ~~(MEDIUM PRIORITY) Implement try-excepts to inform users of when errors occur.~~
 - [x] ~~(MAX PRIORITY) Because this project was developed on a 1440p monitor, anything less or more than that would break the image processing. All image processing in this project needs to be generalized such that it would not matter whether the user has a 1440p or a 1080p monitor, they would get both get the same results.~~
