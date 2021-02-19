@@ -491,11 +491,11 @@ class MapSelection:
                                 round_difficulty_play_button_locations = self.game.image_tools.find_all("play_round_button")
                                 
                                 if(difficulty == "Hard"):
-                                    difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1])
+                                    difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1])
                                 elif(difficulty == "Very Hard"):
-                                    difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1])
+                                    difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1])
                                 elif(difficulty == "Extreme"):
-                                    difficulty_play_button = (round_difficulty_play_button_locations[3][0], round_difficulty_play_button_locations[3][1])
+                                    difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1])
                                 
                             else:
                                 # Start up the Angel Halo mission by selecting its difficulty.
