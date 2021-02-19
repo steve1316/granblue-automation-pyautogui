@@ -1018,14 +1018,17 @@ class Game:
             self.retreat_check = False
             full_auto = False
             
+            # Reset the saved locations of the "Attack" and "Back" buttons.
+            self.attack_button_location = None
+            self.back_button_location = None
+            
             # Save the positions of the "Attack" and "Back" button.
-            if(self.attack_button_location == None or self.back_button_location == None):
-                self.attack_button_location = self.image_tools.find_button("attack", tries=10)
-                if(self.attack_button_location != None):
-                    self.back_button_location = (self.attack_button_location[0] - 322, self.attack_button_location[1])
-                else:
-                    self.print_and_save(f"\n{self.printtime()} [ERROR] Cannot find Attack button. Raid must have just ended.")
-                    return False
+            self.attack_button_location = self.image_tools.find_button("attack", tries=10)
+            if(self.attack_button_location != None):
+                self.back_button_location = (self.attack_button_location[0] - 322, self.attack_button_location[1])
+            else:
+                self.print_and_save(f"\n{self.printtime()} [ERROR] Cannot find Attack button. Raid must have just ended.")
+                return False
                 
             # This is where the main workflow of Combat Mode is located and it will loop until the last of the commands have been executed.
             while(i != len(lines) and not self.retreat_check):
