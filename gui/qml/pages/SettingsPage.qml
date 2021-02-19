@@ -1538,15 +1538,7 @@ Item{
                 // Update the mission and location names in the backend.
                 if(farmingModeComboBox.displayText === "Quest" && itemSelectionButton.text !== qsTr("Please select item to farm")) {
                     backend.update_mission_name(missionSelectionComboBox.model[currentIndex].text, missionSelectionComboBox.model[0].text)
-                }else if(farmingModeComboBox.displayText === "Special" && itemSelectionButton.text !== qsTr("Please select item to farm")) {
-                    backend.update_mission_name(missionSelectionComboBox.model[currentIndex].text, missionSelectionComboBox.model[currentIndex].map)
-                } else if(farmingModeComboBox.displayText === "Coop" && itemSelectionButton.text !== qsTr("Please select item to farm")) {
-                    backend.update_mission_name(missionSelectionComboBox.model[currentIndex].text, missionSelectionComboBox.model[currentIndex].map)
-                } else if(farmingModeComboBox.displayText === "Raid" && itemSelectionButton.text !== qsTr("Please select item to farm")) {
-                    backend.update_mission_name(missionSelectionComboBox.model[currentIndex].text, missionSelectionComboBox.model[currentIndex].map)
-                } else if(farmingModeComboBox.displayText === "Event" && itemSelectionButton.text !== qsTr("Please select item to farm")) {
-                    backend.update_mission_name(missionSelectionComboBox.model[currentIndex].text, missionSelectionComboBox.model[currentIndex].map)
-                } else if(farmingModeComboBox.displayText === "Dread Barrage" && itemSelectionButton.text !== qsTr("Please select item to farm")) {
+                } else if(farmingModeComboBox.displayText !== "Quest" && (itemSelectionButton.text !== qsTr("Please select item to farm") || itemSelectionComboBox.displayText !== qsTr("Please select item to farm"))) {
                     backend.update_mission_name(missionSelectionComboBox.model[currentIndex].text, missionSelectionComboBox.model[currentIndex].map)
                 }
 
