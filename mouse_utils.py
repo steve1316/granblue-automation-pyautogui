@@ -131,11 +131,11 @@ class MouseUtils:
             None
         """
         try:
-            if(self.debug_mode):
-                self.game.print_and_save(f"{self.game.printtime()} [DEBUG] Now scrolling the screen from the \"Home\" button's coordinates at ({x}, {y} - 50) by {scroll_clicks} clicks...")
-            
             x = self.game.home_button_location[0]
             y = self.game.home_button_location[1] - 50
+            
+            if(self.debug_mode):
+                self.game.print_and_save(f"{self.game.printtime()} [DEBUG] Now scrolling the screen from the \"Home\" button's coordinates at ({x}, {y}) by {scroll_clicks} clicks...")
                 
             self.move_to(x, y)
             pyautogui.scroll(scroll_clicks, x=x, y=y)
