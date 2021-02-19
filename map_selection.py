@@ -865,7 +865,7 @@ class MapSelection:
                 
                 for room_code in room_codes:
                     # Select the "Room Code" textbox and then clear all text from it.
-                    self.game.mouse_tools.click_point_instantly(room_code_textbox[0], room_code_textbox[1])
+                    self.game.mouse_tools.move_and_click_point(room_code_textbox[0], room_code_textbox[1], mouse_clicks=2)
                     self.game.mouse_tools.clear_textbox()
                     
                     # Copy the room code to the clipboard and then paste it into the "Room Code" textbox.
@@ -876,7 +876,7 @@ class MapSelection:
                     self.game.mouse_tools.click_point_instantly(join_room_button[0], join_room_button[1])
                     
                     # If the room code is valid and the raid is able to be joined, break out and head to the Summon Selection screen.
-                    if(not self.check_for_pending("raid", tries=1) and not self.game.image_tools.confirm_location("raid_already_ended", tries=1) and not self.game.image_tools.confirm_location("invalid_code", tries=1)):
+                    if(not self.check_for_pending("raid", tries=1) and not self.game.image_tools.confirm_location("raid_already_ended", tries=1) and not self.game.image_tools.confirm_location("already_taking_part", tries=1) and not self.game.image_tools.confirm_location("invalid_code", tries=1)):
                         # Check for EP.
                         self.game.check_for_ep(use_soul_balm=self.game.raid_refill)
                         
