@@ -1029,21 +1029,22 @@ class Game:
                 
             # This is where the main workflow of Combat Mode is located and it will loop until the last of the commands have been executed.
             while(i != len(lines) and not self.retreat_check):
-                line = lines[i]
+                line = lines[i].strip()
                 
-                # Skip this line if it is empty.
-                if(line == ""):
+                # Skip this line if it is empty or a comment.
+                while(line == "" or line[0] == "#" or line[0] == "/"):
                     line_number += 1
                     i += 1
-                    continue
-                
-                # Print each line read except comments if Debug Mode is active.
-                if(self.debug_mode and line.strip() != "" and line[0] != "#" and line[0] != "/"):
+                    line = lines[i].strip()
+                    
+                # Print each line read if Debug Mode is active.
+                if(self.debug_mode):
                     self.print_and_save(f"\n{self.printtime()} [DEBUG] Reading Line {line_number}: \"{line.strip()}\"")
                     
                 # If the execution reached the next turn block and it is currently not the correct turn, keep pressing the "Attack" button until the turn number matches.
-                if(line.strip() != "" and line[0] != "#" and line[0] != "/" and "turn" in line.lower() and int(line.split(":")[0].split(" ")[1]) != turn_number):
+                if("turn" in line.lower() and int(line.split(":")[0].split(" ")[1]) != turn_number):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Attacking until the bot reaches Turn {int(line.split(':')[0].split(' ')[1])}...")
+                    
                     while(int(line.split(":")[0].split(" ")[1]) != turn_number):
                         self.print_and_save(f"{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
                         self.find_dialog_in_combat()
@@ -1090,24 +1091,29 @@ class Game:
                     break
                 
                 # If it is the start of the Turn and it is currently the correct turn, grab the next line for execution.
-                if(line.strip() != "" and line[0] != "#" and line[0] != "/" and "turn" in line.lower() and int(line.split(":")[0].split(" ")[1]) == turn_number and not self.retreat_check):
+                if("turn" in line.lower() and int(line.split(":")[0].split(" ")[1]) == turn_number and not self.retreat_check):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}. Reading script now...")
-                    
-                    i += 1
-                    line_number += 1
                     
                     self.find_dialog_in_combat()
                     
                     # Continue reading each line inside the turn block until you reach the "end" command.
-                    while((line.strip() != "" and "end" not in line.lower() and "exit" not in line.lower()) and i <= len(lines[i])):
+                    while(("end" not in line.lower() and "exit" not in line.lower()) and i < len(lines)):
                         # Strip any leading and trailing whitespaces.
                         line = lines[i].strip()
                         
-                        # Skip this line if it is empty.
-                        if(line == ""):
+                        # Skip this line if it is empty or a comment.
+                        while(line == "" or line[0] == "#" or line[0] == "/"):
                             line_number += 1
                             i += 1
-                            continue
+                            line = lines[i].strip()
+                        
+                        if("exit" in line.lower() and not full_auto):
+                            # End Combat Mode by heading back to the Home screen without retreating. Usually for raid farming as to maximize the number of raids joined after completing the provided combat script.
+                            self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line.strip()}\"")
+                            self.print_and_save(f"{self.printtime()} [COMBAT] Leaving this raid without retreating...")
+                            self.wait(1)
+                            self.go_back_home(confirm_location_check=True)
+                            return False
                         
                         self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line}\"")
                         
@@ -1176,10 +1182,6 @@ class Game:
                             
                             # Attempt to wait to see if the character one-shot the enemy or not. This is user-defined in the config.ini.
                             self.wait(self.idle_seconds_after_skill)
-                            
-                            # Continue to the next line for execution.
-                            line_number += 1
-                            i += 1
                             
                             if(self.retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
                                 self.print_and_save("\n################################################################################")
@@ -1252,10 +1254,6 @@ class Game:
                                     self.print_and_save("################################################################################")
                                     return False
                                 
-                                # Continue to the next line for execution.
-                                line_number += 1
-                                i += 1
-                                
                         if(self.image_tools.find_button("next", tries=1, suppress_error=True) != None):
                             break
                         
@@ -1265,23 +1263,17 @@ class Game:
                             full_auto = True
                             break
                         
-                        if(line.strip() != "" and line[0] != "#" and line[0] != "/" and "requestbackup" in line.lower() and not full_auto):
+                        if("requestbackup" in line.lower() and not full_auto):
                             # Request Backup for this Raid.
                             self.request_backup()
-                            line_number += 1
-                            i += 1
-                            line = lines[i]
                         
-                        if(line.strip() != "" and line[0] != "#" and line[0] != "/" and "tweetbackup" in line.lower() and not full_auto):
+                        if("tweetbackup" in line.lower() and not full_auto):
                             # Request Backup via Twitter for this Raid.
                             self.tweet_backup()
-                            line_number += 1
-                            i += 1
-                            line = lines[i]
                         
                         item_commands = ["usegreenpotion.target(1)", "usegreenpotion.target(2)", "usegreenpotion.target(3)", "usegreenpotion.target(4)", "usebluepotion", "usefullelixir", 
                                          "usesupportpotion", "useclarityherb.target(1)", "useclarityherb.target(2)", "useclarityherb.target(3)", "useclarityherb.target(4)", "userevivalpotion"]
-                        if(line.strip() != "" and line[0] != "#" and line[0] != "/" and line.lower() in item_commands and not full_auto):
+                        if(line.lower() in item_commands and not full_auto):
                             # Parse the command from the line.
                             command = line.split(".").pop(0).lower()
                             
@@ -1301,11 +1293,12 @@ class Game:
                             
                             # Use the item and continue to the next line for execution.
                             self.use_combat_healing_item(command, target)
-                            line_number += 1
-                            i += 1
-                            line = lines[i]
+                        
+                        # Move onto the next command for execution.
+                        line_number += 1
+                        i += 1
                             
-                if(line.strip() != "" and line[0] != "#" and line[0] != "/" and "end" in line.lower() and not full_auto):
+                if("end" in line.lower() and not full_auto):
                     next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=True)
                     if(next_button_location != None):
                         self.print_and_save(f"{self.printtime()} [COMBAT] All enemies on screen have been eliminated before attacking. Preserving Turn {turn_number} by moving to the next Wave...")
@@ -1326,7 +1319,7 @@ class Game:
                             self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                             self.wait(3)
                         
-                if(line.strip() != "" and line[0] != "#" and line[0] != "/" and "exit" in line.lower() and not full_auto):
+                if("exit" in line.lower() and not full_auto):
                     # End Combat Mode by heading back to the Home screen without retreating. Usually for raid farming as to maximize the number of raids joined after completing the provided combat script.
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line.strip()}\"")
                     self.print_and_save(f"{self.printtime()} [COMBAT] Leaving this raid without retreating...")
