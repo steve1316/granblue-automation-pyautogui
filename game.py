@@ -1414,7 +1414,7 @@ class Game:
             
             # Parse the difficulty for the chosen mission.
             difficulty = ""
-            if(farming_mode.lower() == "special" or farming_mode.lower() == "event"):
+            if(farming_mode.lower() == "special" or farming_mode.lower() == "event" or farming_mode.lower() == "event (token drawboxes)"):
                 if(mission_name.find("N ") == 0):
                     difficulty = "Normal"
                 elif(mission_name.find("H ") == 0):
@@ -1632,7 +1632,7 @@ class Game:
                                 # Check for Dimensional Halo and Event Nightmare if enabled.
                                 if(self.farming_mode.lower() == "special" and self.item_name == "EXP" and self.enable_dimensional_halo):
                                     self.check_for_dimensional_halo()
-                                elif(self.farming_mode.lower() == "event" and self.enable_event_nightmare):
+                                elif((self.farming_mode.lower() == "event" or self.farming_mode.lower() == "event (token drawboxes)") and self.enable_event_nightmare):
                                     self.check_for_event_nightmare()
                                 
                                 # Check for available AP and then reset the Summon check flag.
@@ -1640,7 +1640,7 @@ class Game:
                                 summon_check = False
                                 
                                 # If the bot tried to repeat a Extreme difficulty Event Raid and it lacked the treasures to host it, go back to select_map.
-                                if(self.farming_mode.lower() == "event" and self.image_tools.confirm_location("not_enough_treasure")):
+                                if(self.farming_mode.lower() == "event (token drawboxes)" and self.image_tools.confirm_location("not_enough_treasure")):
                                     self.find_and_click_button("ok")
                                     self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                         else:

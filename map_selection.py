@@ -516,7 +516,8 @@ class MapSelection:
                             tries -= 1    
                 else:
                     raise Exception("Cannot find the Special Missions.")
-            elif(map_mode.lower() == "event"):
+                
+            elif(map_mode.lower() == "event" or map_mode.lower() == "event (token drawboxes)"):
                 # Go to the Home screen.
                 self.game.go_back_home(confirm_location_check=True)
                 
@@ -546,38 +547,76 @@ class MapSelection:
                 if(temp_mission_name[0] == " "):
                     temp_mission_name = temp_mission_name[1:]
                 
-                # Scroll down the screen a little bit.
-                self.game.mouse_tools.scroll_screen_from_home_button(-200)
-                
-                if(temp_mission_name.lower() == "event raid"):
-                    # Bring up the "Raid Battle" popup. Then scroll down the screen a bit for screens less than 1440p to see the entire popup.
-                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Raid...")
-                    self.game.find_and_click_button("event_raid_battle")
-                    self.game.mouse_tools.scroll_screen_from_home_button(-400)
+                if(map_mode.lower() == "event"):
+                    # Click on the "Special Quest" button to head to the Special screen.
+                    self.game.find_and_click_button("event_special_quest")
+                    self.game.image_tools.confirm_location("special")
                     
-                    if(difficulty == "Very Hard"):
-                        self.game.find_and_click_button("event_very_hard_raid")
-                    elif(difficulty == "Extreme"):
-                        self.game.find_and_click_button("event_extreme_raid")
+                    # Find all the "Select" buttons.
+                    select_button_locations = self.game.image_tools.find_all("select")
+                    
+                    if(temp_mission_name.lower() == "event quest"):
+                        # Select the Event Quests.
+                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Quest...")
+                        self.game.mouse_tools.move_and_click_point(select_button_locations[0][0], select_button_locations[0][1])
+                        self.game.wait(1)
                         
-                        # If the user does not have enough Treasures to host a Extreme Raid, host a Very Hard Raid instead.
-                        if(not self.game.image_tools.wait_vanish("event_extreme_raid", timeout=3)):
-                            self.game.print_and_save(f"{self.game.printtime()} [INFO] Not enough materials to host Extreme. Hosting Very Hard instead...")
-                            self.game.find_and_click_button("event_very_hard_raid")
-                elif(temp_mission_name.lower() == "event quest"):
-                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Quest...")
-                    self.game.find_and_click_button("event_quests")
-                    self.game.wait(1)
-                    quest_play_locations = self.game.image_tools.find_all("play_round_button")
+                        # Find all the round "Play" buttons.
+                        round_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                        
+                        if(difficulty == "Very Hard"):
+                            self.game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1])
+                        elif(difficulty == "Extreme"):
+                            self.game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1])
+                    elif(temp_mission_name.lower() == "event raid"):
+                        # Select the Event Raids.
+                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Raid...")
+                        self.game.mouse_tools.move_and_click_point(select_button_locations[1][0], select_button_locations[1][1])
+                        self.game.wait(1)
+                        
+                        # Find all the round "Play" buttons.
+                        round_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                        
+                        if(difficulty == "Very Hard"):
+                            self.game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1])
+                        elif(difficulty == "Extreme"):
+                            self.game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1])
                     
-                    if(difficulty == "Normal"):
-                        self.game.mouse_tools.move_and_click_point(quest_play_locations[0][0], quest_play_locations[0][1])
-                    elif(difficulty == "Hard"):
-                        self.game.mouse_tools.move_and_click_point(quest_play_locations[1][0], quest_play_locations[1][1])
-                    elif(difficulty == "Very Hard"):
-                        self.game.mouse_tools.move_and_click_point(quest_play_locations[2][0], quest_play_locations[2][1])
-                    elif(difficulty == "Extreme"):
-                        self.game.mouse_tools.move_and_click_point(quest_play_locations[3][0], quest_play_locations[3][1])
+                    self.game.wait(1)
+                else:
+                    # Scroll down the screen a little bit for this UI layout that has Token Drawboxes.
+                    self.game.mouse_tools.scroll_screen_from_home_button(-200)
+                    
+                    if(temp_mission_name.lower() == "event raid"):
+                        # Bring up the "Raid Battle" popup. Then scroll down the screen a bit for screens less than 1440p to see the entire popup.
+                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Raid...")
+                        self.game.find_and_click_button("event_raid_battle")
+                        self.game.mouse_tools.scroll_screen_from_home_button(-400)
+                        
+                        if(difficulty == "Very Hard"):
+                            self.game.find_and_click_button("event_very_hard_raid")
+                        elif(difficulty == "Extreme"):
+                            self.game.find_and_click_button("event_extreme_raid")
+                            
+                            # If the user does not have enough Treasures to host a Extreme Raid, host a Very Hard Raid instead.
+                            if(not self.game.image_tools.wait_vanish("event_extreme_raid", timeout=3)):
+                                self.game.print_and_save(f"{self.game.printtime()} [INFO] Not enough materials to host Extreme. Hosting Very Hard instead...")
+                                self.game.find_and_click_button("event_very_hard_raid")
+                    elif(temp_mission_name.lower() == "event quest"):
+                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Quest...")
+                        self.game.find_and_click_button("event_quests")
+                        self.game.wait(1)
+                        quest_play_locations = self.game.image_tools.find_all("play_round_button")
+                        
+                        if(difficulty == "Normal"):
+                            self.game.mouse_tools.move_and_click_point(quest_play_locations[0][0], quest_play_locations[0][1])
+                        elif(difficulty == "Hard"):
+                            self.game.mouse_tools.move_and_click_point(quest_play_locations[1][0], quest_play_locations[1][1])
+                        elif(difficulty == "Very Hard"):
+                            self.game.mouse_tools.move_and_click_point(quest_play_locations[2][0], quest_play_locations[2][1])
+                        elif(difficulty == "Extreme"):
+                            self.game.mouse_tools.move_and_click_point(quest_play_locations[3][0], quest_play_locations[3][1])
+            
             elif(map_mode.lower() == "dread barrage"):
                 # Go to the Home screen.
                 self.game.go_back_home(confirm_location_check=True)
