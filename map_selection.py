@@ -552,13 +552,18 @@ class MapSelection:
                     self.game.find_and_click_button("event_special_quest")
                     self.game.image_tools.confirm_location("special")
                     
+                    # Check to see if the user already had a Nightmare available.
+                    nightmare_is_available = 0
+                    if(self.game.image_tools.find_button("event_nightmare", tries=1) != None):
+                        nightmare_is_available = 1
+                    
                     # Find all the "Select" buttons.
                     select_button_locations = self.game.image_tools.find_all("select")
                     
                     if(temp_mission_name.lower() == "event quest"):
-                        # Select the Event Quests.
+                        # Select the Event Quests. Offset by 1 if there is a Nightmare available.
                         self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Quest...")
-                        self.game.mouse_tools.move_and_click_point(select_button_locations[0][0], select_button_locations[0][1])
+                        self.game.mouse_tools.move_and_click_point(select_button_locations[0 + nightmare_is_available][0], select_button_locations[0 + nightmare_is_available][1])
                         self.game.wait(1)
                         
                         # Find all the round "Play" buttons.
@@ -569,9 +574,9 @@ class MapSelection:
                         elif(difficulty == "Extreme"):
                             self.game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1])
                     elif(temp_mission_name.lower() == "event raid"):
-                        # Select the Event Raids.
+                        # Select the Event Raids. Offset by 1 if there is a Nightmare available.
                         self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Raid...")
-                        self.game.mouse_tools.move_and_click_point(select_button_locations[1][0], select_button_locations[1][1])
+                        self.game.mouse_tools.move_and_click_point(select_button_locations[1 + nightmare_is_available][0], select_button_locations[1 + nightmare_is_available][1])
                         self.game.wait(1)
                         
                         # Find all the round "Play" buttons.

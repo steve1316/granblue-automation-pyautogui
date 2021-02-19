@@ -255,6 +255,12 @@ class Game:
             temp_location = self.image_tools.find_button("coop_start_flat", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
                 temp_location = self.image_tools.find_button("coop_start_faded", tries=tries, suppress_error=suppress_error)
+        elif(button_name.lower() == "event_special_quest"):
+            temp_location = self.image_tools.find_button("event_special_quest", tries=tries, suppress_error=suppress_error)
+            if(temp_location == None):
+                temp_location = self.image_tools.find_button("event_special_quest_flat", tries=tries, suppress_error=suppress_error)
+            if(temp_location == None):
+                temp_location = self.image_tools.find_button("event_special_quest_bouncing", tries=tries, suppress_error=suppress_error)   
         else:
             temp_location = self.image_tools.find_button(button_name.lower(), tries=tries, suppress_error=suppress_error)
         
@@ -760,7 +766,7 @@ class Game:
         Returns:
             (bool): Return True if Event Nightmare was detected and successfully completed. Otherwise, return False.
         """
-        if(self.enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests", tries=1)):
+        if(self.enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests")):
             self.print_and_save(f"\n{self.printtime()} [EVENT] Detected Event Nightmare. Starting it now...")
             
             self.print_and_save("\n\n********************************************************************************")
@@ -788,7 +794,7 @@ class Game:
                     self.collect_loot()
                     return True
                 
-        elif(not self.enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests", tries=1)):
+        elif(not self.enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests")):
             self.print_and_save(f"\n{self.printtime()} [EVENT] Event Nightmare detected but user opted to not run it. Moving on...")
             self.find_and_click_button("close")
         else:
@@ -1632,10 +1638,10 @@ class Game:
                                 # Check for "Friend Request" popup.
                                 self.check_for_friend_request()
                                 
-                                # Check for Dimensional Halo and Event Nightmare if enabled.
-                                if(self.farming_mode.lower() == "special" and self.item_name == "EXP" and self.enable_dimensional_halo):
+                                # Check for Dimensional Halo and Event Nightmare.
+                                if(self.farming_mode.lower() == "special" and self.item_name == "EXP"):
                                     self.check_for_dimensional_halo()
-                                elif((self.farming_mode.lower() == "event" or self.farming_mode.lower() == "event (token drawboxes)") and self.enable_event_nightmare):
+                                elif((self.farming_mode.lower() == "event" or self.farming_mode.lower() == "event (token drawboxes)")):
                                     self.check_for_event_nightmare()
                                 
                                 # Check for available AP and then reset the Summon check flag.
