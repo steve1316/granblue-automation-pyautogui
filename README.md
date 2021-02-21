@@ -14,7 +14,7 @@ For example:
 
 Turn 1:
     // On Turn 1, the following commands will be executed in order:
-    // 6th Summon is envoked, character 1 uses Skill 2 and then Skill 4,
+    // 6th Summon is invoked, character 1 uses Skill 2 and then Skill 4,
     // and finally character 3 uses Skill 3.
     summon(6)
     character1.useSkill(2).useSkill(4)
@@ -66,62 +66,10 @@ By downloading this program, you consent to your account potentially getting fla
 - [x] Support for Dread Barrage farming.
 - [ ] Support for Arcarum (currently unknown as to whether I will tackle this. This has to come after I finish the rest of the planned features for me to consider this)
 
-# TODO List
-## Backend
-- [x] ~~Save each message in the Queue to a list in memory. When frontend requests for a saved log file, save the list in memory to a new log file.~~
-- [x] ~~Clean up Combat Mode by having all absolute coordinates in variables at the top.~~
-- [x] ~~Consolidate all finding button and clicking it logic into one function.~~
-- [x] ~~Implement detection if party wiped during Combat Mode.~~
-- [ ] ~~Implement selection from list of Summons in order of most preferred to least. If none after several tries, pick the very first Summon randomly.~~ This is axed for now. Might come back to this after the rest of the TODO List is completed.
-- [x] ~~(MEDIUM PRIORITY) Remove all sys.exit() code.~~
-- [x] ~~(HIGH PRIORITY) Implement Special Quests navigation/items.~~
-- [x] ~~(HIGH PRIORITY) Implement Coop Quests navigation.~~
-  - [x] ~~(HIGH PRIORITY) Implement Coop items.~~
-  - [x] ~~(HIGH PRIORITY) Link this Coop component from backend to frontend.~~
-- [x] ~~(HIGH PRIORITY) Implement Raid navigation.~~
-    - [x] ~~(MAX PRIORITY) Implement way to exit out of Raids via user script and implement checks for max of 3 on-going raids. Also check to see for pending rewards.~~
-    - [x] ~~(MAX PRIORITY) Link Raid component from backend to frontend.~~
-    - [x] ~~(HIGH PRIORITY) Implement items to farm in Raids.~~
-	- [x] ~~(HIGH PRIORITY) Implement Twitter room code scraper/parser.~~
-	- [x] ~~(HIGH PRIORITY) Implement Captcha detection.~~
-	- [x] ~~(MAX PRIORITY) Create instructions on how to create a Twitter Developer account for the Raid component and have the user set the keys into a text file in the project folder.~~
-- [x] ~~(LOW PRIORITY) Implement Event navigation.~~
-  - [x] ~~(LOW PRIORITY) Implement items to farm in Event.~~
-- [ ] (ON HOLD) Implement Guild Wars navigation (This is pending a re-run in April)
-  - [ ] (ON HOLD) Implement Guild Wars items to farm.
-- [ ] (ON HOLD) Implement Rise of the Beasts navigation (This is pending a re-run at an unknown date)
-  - [ ] (ON HOLD) Implement Rise of the Beasts items to farm
-- [x] ~~(HIGH PRIORITY) Implement Dread Barrage navigation.~~
-- [x] ~~(LOW PRIORITY) Deal with any left-over TODOs.~~
-- [x] ~~(MEDIUM PRIORITY) Implement try-excepts to inform users of when errors occur.~~
-- [x] ~~(MAX PRIORITY) Because this project was developed on a 1440p monitor, anything less or more than that would break the image processing. All image processing in this project needs to be generalized such that it would not matter whether the user has a 1440p or a 1080p monitor, they would get both get the same results.~~
-- [x] ~~(MEDIUM PRIORITY) Create a Wiki in GitHub detailing the usage of this program and provide more documentation on the combat script capability that users can achieve.~~
-  - [x] ~~(LOW PRIORITY) Create a page in the Wiki detailing what quests/raids/items that the program currently supports.~~
-
-## Combat Scripting
-- [ ] ~~(LOW PRIORITY) Implement if-else logic for users to use in combat scripts.~~ This is scrapped for now as this only applies to niche cases with only a few characters having Overdrive/Break related skills.
-  - [ ] ~~(LOW PRIORITY) Implement HP/Overdrive/Break status checking in combat scripts.~~
-- [x] ~~(HIGH PRIORITY) Implement targeting for skills that require the user to select a target in combat scripts.~~
-- [x] ~~(HIGH PRIORITY) Provide a new command to allow users to request Backup.~~
-- [x] ~~(LOW PRIORITY) Provide new commands to use the following items during Combat Mode: Green Potions, Blue Potions, Full Elixir, Support Potion, Clarity Herb, and Revival Potion.~~
-
-## Frontend
-- [x] ~~Add a Save Logs button.~~
-- [x] ~~Add a Group/Party selector.~~
-- [x] ~~Add a Summons selector. (Maybe with pictures?)~~
-- [x] ~~Add a selector for the amount of the specified item to be farmed.~~
-- [x] ~~(MEDIUM PRIORITY) Implement a user-defined timer for how long the bot can run for.~~
-- [x] ~~(HIGH PRIORITY) Add Special Quest items.~~
-- [x] ~~(HIGH PRIORITY) Add Coop items.~~
-- [x] ~~(HIGH PRIORITY) Add Raid items.~~
-- [ ] (ON HOLD) Add Guild Wars items. (This is pending a re-run in April)
-- [ ] (ON HOLD) Add Rise of the Beasts items. (This is pending a re-run at an unknown date)
-- [x] ~~(HIGH PRIORITY) Add support for Dread Barrage.~~
-- [x] ~~(MAX PRIORITY) Switch all ComboBox components to my custom Flickable Component and include images for all farmable items.~~
 # Requirements
 1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
 2. [Granblue Fantasy account](http://game.granbluefantasy.jp/)
-3. [Twitter Developer account (needed to farm Raids)](https://developer.twitter.com/en)
+3. [Twitter Developer account (optional, needed to farm Raids)](https://developer.twitter.com/en)
 4. [VMware Workstation Player (optional, if your computer is strong enough to support virtualization)](https://www.vmware.com/products/workstation-player.html)
 
 ## Python Dependencies (make sure to have these installed before moving on to the instructions)
@@ -156,7 +104,6 @@ pip install -r requirements.txt
 ---
 ### How to create my own Combat Script
 - Visit the [Combat Scripting Documentation and Examples wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Combat-Scripting-Documentation-and-Examples) for combat scripting usage and examples.
-
 ---
 
 ### Instructions for the Raid component of this application (optional, only if you want to farm Raids)
