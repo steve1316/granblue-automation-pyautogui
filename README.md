@@ -32,6 +32,15 @@ exit
 
 ```
 
+---
+### How to create my own Combat Script?
+- Visit the [Combat Scripting Documentation and Examples wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Combat-Scripting-Documentation-and-Examples) for combat scripting usage and examples.
+---
+### What Missions/Items/Summons are supported?
+- Vist the [List of Supported Quests, Special, Coop, Raid, Event, and Dread Barrage Missions and their Farmable Items wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/List-of-Supported-Quests,-Special,-Coop,-Raid,-Event,-and-Dread-Barrage-Missions-and-their-Farmable-Items) for supported content.
+- Vist the [Selectable Summons wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons) for available Summons.
+---
+
 # Table of Contents
 - [Features](<#Features>)
 - [TODO List](<#TODO-List>)
@@ -100,11 +109,6 @@ pip install -r requirements.txt
    - For Mac: I do not have a Mac system so I do not know how they invoke python. Please look online on how to do that for yourself.
 5. Continue by following the instructions that are now shown to you by heading to the Settings and fill out each section. At the end, you will be notified when the program is ready to begin.
 6. (Optional) Check out the config.ini in the root of the project folder and see what internal settings you would like to change before starting.
-
----
-### How to create my own Combat Script
-- Visit the [Combat Scripting Documentation and Examples wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Combat-Scripting-Documentation-and-Examples) for combat scripting usage and examples.
----
 
 ### Instructions for the Raid component of this application (optional, only if you want to farm Raids)
 In order to get a Twitter Developer account, you need a Twitter account. Recommended to use the one bound to your GBF account just to keep it all in one place.
