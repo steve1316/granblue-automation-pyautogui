@@ -1214,6 +1214,24 @@ Item{
                             { text: "Lvl 150 Phronesis", map: "", enabled: true },
                         ]
                     }
+
+                    // Misc Items
+                    else if(itemSelectionButton.text === "Azure Feather" || itemSelectionButton.text === "Heavenly Horn") {
+                        missionSelectionComboBox.model = [
+                            { text: "Grand Order", enabled: false },
+                            { text: "Lvl 100 Grand Order", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Horn of Bahamut" || itemSelectionButton.text === "Champion Merit") {
+                        missionSelectionComboBox.model = [
+                            { text: "Proto Bahamut", enabled: false },
+                            { text: "Lvl 100 Proto Bahamut", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Primeval Horn") {
+                        missionSelectionComboBox.model = [
+                            { text: "Proto Bahamut", enabled: false },
+                            { text: "Lvl 150 Proto Bahamut", map: "", enabled: true },
+                        ]
+                    }
                 }
 
                 if(itemSelectionButton.text !== qsTr("Please select the item to farm") && itemSelectionButton.text !== "") {

@@ -63,6 +63,8 @@ Flickable {
                 "Tiamat Malice": ["Tiamat Malice Anima", "Hatsoiiłhał", "Majestas"],
                 "Leviathan Malice": ["Leviathan Malice Anima", "Kaladanda", "Kris of Hypnos"],
                 "Phronesis": ["Phronesis Anima", "Dark Thrasher", "Master Bamboo Sword"],
+                "Grand Order": ["Azure Feather", "Heavenly Horn"],
+                "Proto Bahamut": ["Horn of Bahamut", "Champion Merit", "Primeval Horn"],
             }
 
             function createListElement(itemName){
@@ -745,6 +747,118 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Avatar /////////
+
+        ///////// Raid Items - Grand Order /////////
+        Label {
+            id: label_GrandOrder
+
+            color: "#ffff00"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Grand Order"
+        }
+
+        Repeater {
+            id: repeater_GrandOrder
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_GrandOrder.visible === true){
+                    repeater_GrandOrder.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_GrandOrder.text].length; i++){
+                        repeater_GrandOrder.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_GrandOrder.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_GrandOrder
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ffff00"
+                    anchors.left: itemImage_GrandOrder.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Grand Order /////////
+
+        ///////// Raid Items - Proto Bahamut /////////
+        Label {
+            id: label_ProtoBahamut
+
+            color: "#aa00ff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Proto Bahamut"
+        }
+
+        Repeater {
+            id: repeater_ProtoBahamut
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_ProtoBahamut.visible === true){
+                    repeater_ProtoBahamut.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_ProtoBahamut.text].length; i++){
+                        repeater_ProtoBahamut.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_ProtoBahamut.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_ProtoBahamut
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#aa00ff"
+                    anchors.left: itemImage_ProtoBahamut.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Proto Bahamut /////////
 
         ///////// Raid Items - Twin Elements /////////
         Label {
