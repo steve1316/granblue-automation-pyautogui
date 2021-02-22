@@ -497,6 +497,13 @@ class MapSelection:
                                 elif(difficulty == "Extreme"):
                                     difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1])
                                 
+                            elif(map_name == "Campaign-Exclusive Quest"):
+                                self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Campaign-Exclusive Quest...")
+                                round_difficulty_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                                
+                                # There is only one round "Play" button for this time-limited quest.
+                                difficulty_play_button = round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1]
+                                
                             else:
                                 # Start up the Angel Halo mission by selecting its difficulty.
                                 self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting {difficulty} Angel Halo...")
