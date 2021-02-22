@@ -533,6 +533,8 @@ Item{
                             { text: "N Angel Halo", map: "Angel Halo", enabled: true },
                             { text: "H Angel Halo", map: "Angel Halo", enabled: true },
                             { text: "VH Angel Halo", map: "Angel Halo", enabled: true },
+                            { text: "Campaign-Exclusive Quest", enabled: false },
+                            { text: "Campaign-Exclusive Quest", map: "Campaign-Exclusive Quest", enabled: true },
                         ]
                     }
 
