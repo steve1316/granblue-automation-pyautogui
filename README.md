@@ -43,10 +43,6 @@ exit
 
 # Table of Contents
 - [Features](<#Features>)
-- [TODO List](<#TODO-List>)
-  - [Backend](<##Backend>)
-  - [Combat Scripting](<##Combat-Scripting>)
-  - [Frontend](<##Frontend>)
 - [Requirements](<#Requirements>)
   - [Python Dependencies](<##Python-Dependencies-(make-sure-to-have-these-installed-before-moving-on-to-the-instructions)>)
 - [Instructions](<#Instructions>)
