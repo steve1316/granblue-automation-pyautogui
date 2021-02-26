@@ -246,7 +246,9 @@ class Game:
             if(temp_location == None):
                 temp_location = self.image_tools.find_button("quest_red", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
-                temp_location = self.image_tools.find_button("quest_red_strike_time", tries=tries, suppress_error=suppress_error)
+                temp_location = self.image_tools.find_button("quest_blue_strike_time", tries=tries, suppress_error=suppress_error)
+            if(temp_location == None):
+                temp_location = self.image_tools.find_button("quest_red_strike_time", tries=tries, suppress_error=suppress_error) 
         elif(button_name.lower() == "raid"):
             temp_location = self.image_tools.find_button("raid_flat", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
