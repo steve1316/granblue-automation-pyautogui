@@ -2,5 +2,5 @@
 // It will go uninterrupted until either the party wipes or the quest/raid ends.
 
 Turn 1:
-	enableFullAuto
+	enableSemiAuto
 end
