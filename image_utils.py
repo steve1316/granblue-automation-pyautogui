@@ -164,7 +164,7 @@ class ImageUtils:
             
         return True
 
-    def find_summon(self, summon_name: str, home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 1, suppress_error: bool = False):
+    def find_summon(self, summon_name, home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 5, sleep_time: int = 1, suppress_error: bool = False):
         """Find the location of the specified Summon. Will attempt to scroll the screen down to see more Summons if the initial screen position yielded no matches.
 
         Args:
@@ -183,39 +183,51 @@ class ImageUtils:
         summon_location = None
         guibot_check = False
         while (summon_location == None):
-            if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_name}.png", confidence=custom_confidence, grayscale=grayscale_check, 
-                                                                 region=(self.window_left, self.window_top, self.window_width, self.window_height))
-            else:
-                summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_name}.png", confidence=custom_confidence, grayscale=grayscale_check)
+
+            index = 0
+            while(summon_location == None and index<(len(summon_name)-1)):
                 
+                print ("THIS IS THE INDEX" + str(index)+ "and this is the LEN! "+str(len(summon_name)))
+                if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
+                    summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_name[index]}.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                                                                    region=(self.window_left, self.window_top, self.window_width, self.window_height))
+                else:
+                    summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_name[index]}.png", confidence=custom_confidence, grayscale=grayscale_check)
+                
+                if(summon_location == None):
+                    index+=1
+
             if (summon_location == None):
                 # Use GuiBot to template match if PyAutoGUI failed.
                 self.file_resolver.add_path("images/summons/")
                 self.clear_memory_guibot()
-                summon_location = self.guibot.exists(f"{summon_name.lower()}")
-                if(summon_location == None):
-                    tries -= 1
-                    if (tries <= 0):
-                        if(not suppress_error):
-                            self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not find {summon_name.upper()} Summon.")
-                        return None
-                    
-                    if(self.debug_mode):
-                        self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not locate {summon_name.upper()} Summon. Trying again in {sleep_time} seconds...")
+                index2=0
+                
+                while(summon_location == None and index2<(len(summon_name)-1) and guibot_check == False):
+                    summon_location = self.guibot.exists(f"{summon_name[index2].lower()}")
+                    if(summon_location == None):
+                        tries -= 1
+                        if (tries <= 0):
+                            if(not suppress_error):
+                                self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not find {summon_name[index2].upper()} Summon.")
+                            return None
                         
-                    # If matching failed, scroll the screen down to see more Summons.
-                    self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
-                    time.sleep(sleep_time)
-                else:
-                    guibot_check = True
+                        if(self.debug_mode):
+                            self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not locate {summon_name[index2].upper()} Summon. Trying again in {sleep_time} seconds...")
+                            
+                        # If matching failed, scroll the screen down to see more Summons.
+                        index2+=1
+                        self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
+                        time.sleep(sleep_time)
+                    else:
+                        guibot_check = True
                     
         # If the location was successfully found using GuiBot, convert the Match object to a Location object.
         if(guibot_check):
             summon_location = (summon_location.target.x, summon_location.target.y)
             
         if(self.debug_mode):
-            self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Found {summon_name.upper()} Summon at {summon_location}.")
+            self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Found {summon_name[index2].upper()} Summon at {summon_location}.")
             
         return summon_location
 
