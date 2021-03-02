@@ -1039,7 +1039,7 @@ class Game:
                 return False
                 
             # This is where the main workflow of Combat Mode is located and it will loop until the last of the commands have been executed.
-            while(i != len(lines) and not self.retreat_check):
+            while(i < len(lines) and not self.retreat_check):
                 line = lines[i].strip()
                 
                 # Skip this line if it is empty or a comment.
@@ -1117,6 +1117,9 @@ class Game:
                             line_number += 1
                             i += 1
                             line = lines[i].strip()
+                        
+                        if("end" in line.lower() and not full_auto):
+                            break
                         
                         if("exit" in line.lower() and not full_auto):
                             # End Combat Mode by heading back to the Home screen without retreating. Usually for raid farming as to maximize the number of raids joined after completing the provided combat script.
