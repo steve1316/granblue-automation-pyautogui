@@ -109,7 +109,7 @@ class Game:
         self.farming_mode = ""
         self.mission_name = ""
         self.summon_element_name = ""
-        self.summon_name = ""
+        self.summon_name = []
         self.group_number = 0
         self.party_number = 0
         self.amount_of_runs_finished = 0
@@ -377,7 +377,7 @@ class Game:
         self.mouse_tools.move_and_click_point(summon_element_location[0], summon_element_location[1])
         return True
 
-    def find_summon(self, summon_name: str):
+    def find_summon(self, summon_name):
         """Finds and selects the specified Summon on the Summon Selection screen and then checks for CAPTCHA right afterwards. 
         Make sure to call this after the find_summon_element() method in order to have the correct Summon element tab already selected.
 
@@ -387,10 +387,12 @@ class Game:
         Returns:
             (bool): True if the Summon was found and clicked. Otherwise, return False.
         """
-        summon_name = summon_name.lower().replace(" ", "_")
-        summon_location = self.image_tools.find_summon(summon_name, self.home_button_location[0], self.home_button_location[1])
+
+        for idx, sn in enumerate(summon_name):
+            summon_name[idx] = summon_name[idx].lower().replace(" ", "_") 
+        summon_location = self.image_tools.find_summon(summon_name, self.home_button_location[0], self.home_button_location[1], tries=5*len(summon_name))
         if (summon_location != None):
-            self.print_and_save(f"{self.printtime()} [INFO] Found {summon_name.upper()} Summon.")
+            self.print_and_save(f"{self.printtime()} [INFO] Found Summon.")
             self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1])
             
             # Check for CAPTCHA here. If detected, stop the bot and alert the user.
@@ -1477,7 +1479,7 @@ class Game:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Cannot find \"{script_file_path}.txt\": \n{traceback.format_exc()}")
             self.isBotRunning.value = 1
     
-    def start_farming_mode(self, item_name: str, item_amount_to_farm: int, farming_mode: str, location_name: str, mission_name: str, summon_element_name: str, summon_name: str, group_number: int, party_number: int):
+    def start_farming_mode(self, item_name: str, item_amount_to_farm: int, farming_mode: str, location_name: str, mission_name: str, summon_element_name: str, summon_name, group_number: int, party_number: int):
         """Start the Farming Mode using the given parameters.
 
         Args:
@@ -1561,7 +1563,7 @@ class Game:
                     self.print_and_save(f"{self.printtime()} [INFO] Summon Element for Dimensional Halo will reuse the one for Farming Mode.")
                     self.dimensional_halo_summon_name = self.summon_element_name
                     
-                if(self.dimensional_halo_summon_name == ""):
+                if(self.dimensional_halo_summon_name == []):
                     self.print_and_save(f"{self.printtime()} [INFO] Summon for Dimensional Halo will reuse the one for Farming Mode.")
                     self.dimensional_halo_summon_name = self.summon_name
                     
@@ -1590,7 +1592,7 @@ class Game:
                     self.print_and_save(f"{self.printtime()} [INFO] Summon Element for Event will reuse the one for Farming Mode.")
                     self.event_nightmare_summon_element_name = self.summon_element_name
                     
-                if(self.event_nightmare_summon_name == ""):
+                if(self.event_nightmare_summon_name == []):
                     self.print_and_save(f"{self.printtime()} [INFO] Summon for Event will reuse the one for Farming Mode.")
                     self.event_nightmare_summon_name = self.summon_name
                     
@@ -1619,7 +1621,7 @@ class Game:
                     self.print_and_save(f"{self.printtime()} [INFO] Summon Element for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
                     self.unparalleled_foe_summon_element_name = self.summon_element_name
                     
-                if(self.unparalleled_foe_summon_name == ""):
+                if(self.unparalleled_foe_summon_name == []):
                     self.print_and_save(f"{self.printtime()} [INFO] Summon for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
                     self.unparalleled_foe_summon_name = self.summon_name
                     

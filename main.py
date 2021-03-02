@@ -28,7 +28,7 @@ class MainDriver:
         self.game = None
         self.debug = None
         
-    def run_bot(self, item_name: str, item_amount_to_farm: str, farming_mode: str, location_name: str, mission_name: str, summon_element_name: str, summon_name: str, group_number: int, 
+    def run_bot(self, item_name: str, item_amount_to_farm: str, farming_mode: str, location_name: str, mission_name: str, summon_element_name: str, summon_name, group_number: int, 
                 party_number: int, combat_script: str, queue: multiprocessing.Queue, isBotRunning: int, debug_mode: bool = False):
         """Starts the main bot process on this Thread.
 
@@ -110,7 +110,7 @@ class MainWindow(QObject):
         self.location_name = ""
         self.mission_name = ""
         self.summon_element_name = ""
-        self.summon_name = "none"
+        self.summon_name = []
         self.group_number = ""
         self.party_number = ""
         
@@ -143,7 +143,7 @@ class MainWindow(QObject):
         self.location_name = ""
         self.mission_name = ""
         self.summon_element_name = ""
-        self.summon_name = "none"
+        self.summon_name = []
         self.group_number = ""
         self.party_number = ""
         return None
@@ -200,7 +200,7 @@ class MainWindow(QObject):
         """
         self.farming_mode = farming_mode
         self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummon: " + str(self.summon_name) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
                                 str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
         return None
     
@@ -218,7 +218,7 @@ class MainWindow(QObject):
         """
         self.item_name = item_name
         self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummon: " + str(self.summon_name) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
                                 str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
         return None
         
@@ -261,7 +261,7 @@ class MainWindow(QObject):
             self.location_name = ""
             
         self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummon: " + str(self.summon_name) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
                                 str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
         return None
         
@@ -279,10 +279,13 @@ class MainWindow(QObject):
             None
         """
         self.summon_element_name = summon_element
-        self.summon_name = summon_name
-        
+        if summon_name not in self.summon_name and summon_name != "None":
+            self.summon_name.append(summon_name)
+        else:
+            self.summon_name.remove(summon_name)
+
         self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummon: " + str(self.summon_name) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
                                 str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
         return None
         
@@ -303,7 +306,7 @@ class MainWindow(QObject):
         self.group_number = int(split_group_number)
         
         self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummon: " + str(self.summon_name) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
                                 str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
         return None
         
@@ -324,7 +327,7 @@ class MainWindow(QObject):
         self.party_number = int(split_party_number)
         
         self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummon: " + self.summon_name + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummon: " + str(self.summon_name) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
                                 str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
         return None
     
