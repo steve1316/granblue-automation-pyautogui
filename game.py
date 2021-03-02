@@ -1312,6 +1312,12 @@ class Game:
                         line_number += 1
                         i += 1
                             
+                if("enablefullauto" in line.lower()):
+                    self.print_and_save(f"{self.printtime()} [COMBAT] Enabling Full Auto. Bot will continue until raid ends or Party wipes.")
+                    self.find_and_click_button("full_auto")
+                    full_auto = True
+                    break
+                
                 if("end" in line.lower() and not full_auto):
                     next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=True)
                     if(next_button_location != None):
