@@ -1022,8 +1022,9 @@ class Game:
             line_number = 1  # Current line number the bot is reading.
             turn_number = 1  # Current turn for the script execution.
             
-            # Reset the retreat and full auto flags.
+            # Reset the retreat, semi auto, and full auto flags.
             self.retreat_check = False
+            semi_auto = False
             full_auto = False
             
             # Reset the saved locations of the "Attack" and "Back" buttons.
@@ -1039,7 +1040,7 @@ class Game:
                 return False
                 
             # This is where the main workflow of Combat Mode is located and it will loop until the last of the commands have been executed.
-            while(i < len(lines) and not self.retreat_check):
+            while(i < len(lines) and not self.retreat_check and not semi_auto and not full_auto):
                 line = lines[i].strip()
                 
                 # Skip this line if it is empty or a comment.
@@ -1118,10 +1119,10 @@ class Game:
                             i += 1
                             line = lines[i].strip()
                         
-                        if("end" in line.lower() and not full_auto):
+                        if("end" in line.lower() and not semi_auto and not full_auto):
                             break
                         
-                        if("exit" in line.lower() and not full_auto):
+                        if("exit" in line.lower() and not semi_auto and not full_auto):
                             # End Combat Mode by heading back to the Home screen without retreating. Usually for raid farming as to maximize the number of raids joined after completing the provided combat script.
                             self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line.strip()}\"")
                             self.print_and_save(f"{self.printtime()} [COMBAT] Leaving this raid without retreating...")
@@ -1271,23 +1272,35 @@ class Game:
                         if(self.image_tools.find_button("next", tries=1, suppress_error=True) != None):
                             break
                         
-                        if("enablefullauto" in line.lower()):
-                            self.print_and_save(f"{self.printtime()} [COMBAT] Enabling Full Auto. Bot will continue until raid ends or Party wipes.")
-                            self.find_and_click_button("full_auto")
-                            full_auto = True
+                        if(not semi_auto and not full_auto and "enablesemiauto" in line.lower()):
+                            self.print_and_save(f"{self.printtime()} [COMBAT] Bot will now attempt to enable Semi Auto...")
+                            semi_auto = True
                             break
                         
-                        if("requestbackup" in line.lower() and not full_auto):
+                        if(not semi_auto and not full_auto and "enablefullauto" in line.lower()):
+                            self.print_and_save(f"{self.printtime()} [COMBAT] Enabling Full Auto. Bot will continue until raid ends or Party wipes.")
+                            enabled_full_auto = self.find_and_click_button("full_auto", tries=5)
+                            
+                            # If the bot failed to find and click the "Full Auto" button, fallback to the "Semi Auto" button.
+                            if(not enabled_full_auto):
+                                self.print_and_save(f"{self.printtime()} [COMBAT] Bot failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
+                                semi_auto = True
+                            else:
+                                full_auto = True
+                            
+                            break
+                        
+                        if("requestbackup" in line.lower() and not semi_auto and not full_auto):
                             # Request Backup for this Raid.
                             self.request_backup()
                         
-                        if("tweetbackup" in line.lower() and not full_auto):
+                        if("tweetbackup" in line.lower() and not semi_auto and not full_auto):
                             # Request Backup via Twitter for this Raid.
                             self.tweet_backup()
                         
                         item_commands = ["usegreenpotion.target(1)", "usegreenpotion.target(2)", "usegreenpotion.target(3)", "usegreenpotion.target(4)", "usebluepotion", "usefullelixir", 
                                          "usesupportpotion", "useclarityherb.target(1)", "useclarityherb.target(2)", "useclarityherb.target(3)", "useclarityherb.target(4)", "userevivalpotion"]
-                        if(line.lower() in item_commands and not full_auto):
+                        if(line.lower() in item_commands and not semi_auto and not full_auto):
                             # Parse the command from the line.
                             command = line.split(".").pop(0).lower()
                             
@@ -1312,13 +1325,27 @@ class Game:
                         line_number += 1
                         i += 1
                             
-                if("enablefullauto" in line.lower()):
-                    self.print_and_save(f"{self.printtime()} [COMBAT] Enabling Full Auto. Bot will continue until raid ends or Party wipes.")
-                    self.find_and_click_button("full_auto")
-                    full_auto = True
+                if(not semi_auto and not full_auto and "enablesemiauto" in line.lower()):
+                    self.print_and_save(f"{self.printtime()} [COMBAT] Bot will now attempt to enable Semi Auto...")
+                    semi_auto = True
+                    break
+                elif(semi_auto):
                     break
                 
-                if("end" in line.lower() and not full_auto):
+                if(not semi_auto and not full_auto and "enablefullauto" in line.lower()):
+                    self.print_and_save(f"{self.printtime()} [COMBAT] Enabling Full Auto. Bot will continue until raid ends or Party wipes.")
+                    enabled_full_auto = self.find_and_click_button("full_auto")
+                            
+                    # If the bot failed to find and click the "Full Auto" button, fallback to the "Semi Auto" button.
+                    if(not enabled_full_auto):
+                        self.print_and_save(f"{self.printtime()} [COMBAT] Bot failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
+                        semi_auto = True
+                    else:
+                        full_auto = True
+                        
+                    break
+                
+                if("end" in line.lower() and not semi_auto and not full_auto):
                     next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=True)
                     if(next_button_location != None):
                         self.print_and_save(f"{self.printtime()} [COMBAT] All enemies on screen have been eliminated before attacking. Preserving Turn {turn_number} by moving to the next Wave...")
@@ -1328,6 +1355,28 @@ class Game:
                         self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
                         number_of_charge_attacks = self.find_charge_attacks()
                         self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
+                        
+                        # Peek ahead of the script while the Party is currently attacking and see if it detects the command "enableSemiAuto" outside of a Turn block.
+                        temp_index = i
+                        while(temp_index < len(lines)):
+                            temp_line = lines[temp_index].strip()
+                            
+                            # Skip this line if it is empty or a comment.
+                            if(temp_line == "" or temp_line[0] == "#" or temp_line[0] == "/"):
+                                temp_index += 1
+                                continue
+                            
+                            # Enable Semi Auto if the command is read. Otherwise it can break out of the loop if it reaches a new Turn block.
+                            if("enablesemiauto" in temp_line.lower()):
+                                self.print_and_save(f"{self.printtime()} [COMBAT] Enabling Semi Auto. Bot will continue until raid ends or Party wipes.")
+                                self.find_and_click_button("semi_auto")
+                                semi_auto = True
+                                break
+                            elif("turn" in temp_line.lower()):
+                                break
+                            
+                            temp_index += 1
+                        
                         self.wait(3 + number_of_charge_attacks)
                         self.wait_for_attack()
                         self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
@@ -1339,7 +1388,7 @@ class Game:
                             self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                             self.wait(3)
                         
-                if("exit" in line.lower() and not full_auto):
+                if("exit" in line.lower() and not semi_auto and not full_auto):
                     # End Combat Mode by heading back to the Home screen without retreating. Usually for raid farming as to maximize the number of raids joined after completing the provided combat script.
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Reading Line {line_number}: \"{line.strip()}\"")
                     self.print_and_save(f"{self.printtime()} [COMBAT] Leaving this raid without retreating...")
@@ -1355,7 +1404,7 @@ class Game:
             self.print_and_save(f"\n{self.printtime()} [COMBAT] Bot has reached end of script. Automatically attacking until battle ends or Party wipes...")
             
             # Keep pressing the location of the "Attack" / "Next" button until the bot reaches the Quest Results screen.
-            while(not self.retreat_check and not full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
+            while(not self.retreat_check and not semi_auto and not full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
                 self.find_dialog_in_combat()
                 attack_button_location = self.image_tools.find_button("attack", tries=1, suppress_error=True)
                 if (attack_button_location != None):
@@ -1374,8 +1423,38 @@ class Game:
                     self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                     self.wait(3)
                     
-            # Main workflow loop for Full Auto. The game will progress the Quest/Raid until it ends or the Party wipes.    
-            while(not self.retreat_check and full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
+            
+            # Double check to see if Semi Auto is turned on. Note that the "Semi Auto" button only appears while the Party is attacking.
+            if(not self.retreat_check and semi_auto and not full_auto):
+                self.print_and_save(f"{self.printtime()} [COMBAT] Double checking to see if Semi Auto is enabled...")
+                enabled_semi_auto = self.image_tools.find_button("semi_auto_enabled")
+                if(not enabled_semi_auto):
+                    # Have the Party attack and then attempt to see if the "Semi Auto" button becomes visible.
+                    self.find_and_click_button("attack")
+                    enabled_semi_auto = self.find_and_click_button("semi_auto", tries=5)
+                    
+                    # If the bot still cannot find the "Semi Auto" button, that probably means the user has the "Full Auto" button on the screen instead of the "Semi Auto" button.
+                    if(not enabled_semi_auto):
+                        self.print_and_save(f"{self.printtime()} [COMBAT] Failed to enable Semi Auto. Falling back to Full Auto...")
+                        semi_auto = False
+                        full_auto = True
+                        
+                        # Enable Full Auto.
+                        self.find_and_click_button("full_auto")
+                    else:
+                        self.print_and_save(f"{self.printtime()} [COMBAT] Semi Auto is now enabled.")
+            
+            # Main workflow loop for Semi Auto. The game will progress the Quest/Raid until it ends or the Party wipes.
+            while(not self.retreat_check and semi_auto and not full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
+                if(self.image_tools.confirm_location("battle_concluded", tries=1)):
+                    self.print_and_save(f"\n{self.printtime()} [COMBAT] Battle concluded suddenly.")
+                    self.find_and_click_button("ok")
+                    break
+                self.party_wipe_check()
+                self.wait(3)
+            
+            # Main workflow loop for Full Auto. The game will progress the Quest/Raid until it ends or the Party wipes.
+            while(not self.retreat_check and not semi_auto and full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
                 if(self.image_tools.confirm_location("battle_concluded", tries=1)):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Battle concluded suddenly.")
                     self.find_and_click_button("ok")
