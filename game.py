@@ -108,8 +108,8 @@ class Game:
         self.item_amount_farmed = 0
         self.farming_mode = ""
         self.mission_name = ""
-        self.summon_element_name = []
-        self.summon_name = []
+        self.summon_element_list = []
+        self.summon_list = []
         self.group_number = 0
         self.party_number = 0
         self.amount_of_runs_finished = 0
@@ -350,23 +350,23 @@ class Game:
             self.isBotRunning.value = 1
             self.wait(1)
 
-    def find_summon(self, summon_name: Iterable[str], summon_element_name: Iterable[str]):
+    def find_summon(self, summon_list: Iterable[str], summon_element_list: Iterable[str]):
         """Finds and selects the specified Summon based on the current index on the Summon Selection screen and then checks for CAPTCHA right afterwards. 
 
         Args:
-            summon_name (Iterable[str]): List of names of the Summon image's file name in /images/summons/ folder.
-            summon_element_name (Iterable[str]): List of names of the Summon element image file in the /images/buttons/ folder.
+            summon_list (Iterable[str]): List of names of the Summon image's file name in /images/summons/ folder.
+            summon_element_list (Iterable[str]): List of names of the Summon element image file in the /images/buttons/ folder.
 
         Returns:
             (bool): True if the Summon was found and clicked. Otherwise, return False.
         """
         # Format the Summon name and Summon element name strings.
-        for idx, sn in enumerate(summon_name):
-            summon_name[idx] = sn.lower().replace(" ", "_") 
-        for idx, summon_ele in enumerate(summon_element_name):
-            summon_element_name[idx] = summon_ele.lower()
+        for idx, summon in enumerate(summon_list):
+            summon_list[idx] = summon.lower().replace(" ", "_") 
+        for idx, summon_ele in enumerate(summon_element_list):
+            summon_element_list[idx] = summon_ele.lower()
             
-        summon_location = self.image_tools.find_summon(summon_name, summon_element_name, self.home_button_location[0], self.home_button_location[1])
+        summon_location = self.image_tools.find_summon(summon_list, summon_element_list, self.home_button_location[0], self.home_button_location[1])
         if (summon_location != None):
             self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1])
             
@@ -709,7 +709,7 @@ class Game:
                 self.print_and_save("********************************************************************************")
                 self.print_and_save(f"{self.printtime()} [FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"{self.printtime()} [FARM] Mission: {self.mission_name}")
-                self.print_and_save(f"{self.printtime()} [FARM] Summon: {self.summon_name}")
+                self.print_and_save(f"{self.printtime()} [FARM] Summons: {self.summon_list}")
                 self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained this run: {temp_amount}")
                 self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained in total: {self.item_amount_farmed} / {self.item_amount_to_farm}")
                 self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished}")
@@ -720,7 +720,7 @@ class Game:
                 self.print_and_save("********************************************************************************")
                 self.print_and_save(f"{self.printtime()} [FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"{self.printtime()} [FARM] Mission: {self.mission_name}")
-                self.print_and_save(f"{self.printtime()} [FARM] Summon: {self.summon_name}")
+                self.print_and_save(f"{self.printtime()} [FARM] Summons: {self.summon_list}")
                 self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished} / {self.item_amount_to_farm}")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
@@ -1454,7 +1454,7 @@ class Game:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Cannot find \"{script_file_path}.txt\": \n{traceback.format_exc()}")
             self.isBotRunning.value = 1
     
-    def start_farming_mode(self, item_name: str, item_amount_to_farm: int, farming_mode: str, location_name: str, mission_name: str, summon_element_name: str, summon_name, group_number: int, party_number: int):
+    def start_farming_mode(self, item_name: str, item_amount_to_farm: int, farming_mode: str, location_name: str, mission_name: str, summon_element_list: Iterable[str], summon_list: Iterable[str], group_number: int, party_number: int):
         """Start the Farming Mode using the given parameters.
 
         Args:
@@ -1463,8 +1463,8 @@ class Game:
             farming_mode (str): Mode to look for the specified item and map in.
             location_name (str): Name of the map to look for the specified mission in.
             mission_name (str): Name of the mission to farm the item in.
-            summon_element_name (str): Name of the Summon element image file in the /images/buttons/ folder.
-            summon_name (str): Exact name of the Summon image's file name in /images/summons/ folder.
+            summon_element_list (Iterable[str]): List of names of the Summon element image file in the /images/buttons/ folder.
+            summon_list (Iterable[str]): List of names of the Summon image's file name in /images/summons/ folder.
             group_number (int): The Group that the specified Party in in.
             party_number (int): The specified Party to start the mission with.
         
@@ -1521,8 +1521,8 @@ class Game:
             self.item_amount_to_farm = item_amount_to_farm
             self.farming_mode = farming_mode
             self.mission_name = mission_name
-            self.summon_element_name = summon_element_name
-            self.summon_name = summon_name
+            self.summon_element_list = summon_element_list
+            self.summon_list = summon_list
             self.group_number = group_number
             self.party_number = party_number
             
@@ -1622,7 +1622,7 @@ class Game:
                     self.print_and_save(f"\n{self.printtime()} [INFO] Selecting Summon before starting mission for Farming Mode...")
                     while(summon_check == False and farming_mode.lower() != "coop"): 
                         # Select the Summon element and the Summon itself.
-                        summon_check = self.find_summon(summon_name, summon_element_name)
+                        summon_check = self.find_summon(summon_list, summon_element_list)
                         
                         # If the Summons were reset, select the mission again.
                         if(summon_check == False):

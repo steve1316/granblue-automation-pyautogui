@@ -164,11 +164,11 @@ class ImageUtils:
             
         return True
 
-    def find_summon(self, summon_name: Iterable[str], summon_element_names: Iterable[str], home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, suppress_error: bool = False):
+    def find_summon(self, summon_list: Iterable[str], summon_element_list: Iterable[str], home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, suppress_error: bool = False):
         """Find the location of the specified Summon. Will attempt to scroll the screen down to see more Summons if the initial screen position yielded no matches.
 
         Args:
-            summon_name (Iterable[str]): List of names of the Summon image's file name in /images/summons/ folder.
+            summon_list (Iterable[str]): List of names of the Summon image's file name in /images/summons/ folder.
             summon_element_name (Iterable[str]): List of names of the Summon element image file in the /images/buttons/ folder.
             home_button_x (int): X coordinate of where the center of the Home Button is.
             home_button_y (int): Y coordinate of where the center of the Home Button is.
@@ -180,37 +180,35 @@ class ImageUtils:
             summon_location (int, int): Tuple of coordinates of where the center of the Summon is located if image matching was successful. Otherwise, return None.
         """
         if(self.debug_mode):
-            self.game.print_and_save(f"{self.game.printtime()} [DEBUG] Received the following list of Summons to search for: {str(summon_name)}")
-            self.game.print_and_save(f"{self.game.printtime()} [DEBUG] Received the following list of Elements: {str(summon_element_names)}")
+            self.game.print_and_save(f"{self.game.printtime()} [DEBUG] Received the following list of Summons to search for: {str(summon_list)}")
+            self.game.print_and_save(f"{self.game.printtime()} [DEBUG] Received the following list of Elements: {str(summon_element_list)}")
+        
         summon_location = None
         guibot_check = False
         summon_index = 0
-        while(summon_location == None and summon_index < len(summon_name)):
-            # Scroll up to the top of the page.
-            if(self.find_button("bottom_of_summon_selection", tries=1) != None):
-                self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, 10000)
-            
+        
+        while(summon_location == None and summon_index < len(summon_list)):
             # First select the Summon Element tab at the current index.
-            self.game.print_and_save(f"{self.game.printtime()} [INFO] Now attempting to find: {summon_name[summon_index].upper()}")
-            current_summon_element = summon_element_names[summon_index]
+            self.game.print_and_save(f"{self.game.printtime()} [INFO] Now attempting to find: {summon_list[summon_index].upper()}")
+            current_summon_element = summon_element_list[summon_index]
             self.game.find_and_click_button(f"summon_{current_summon_element}")
             
-            while (summon_location == None and summon_index < len(summon_name)):
+            while (summon_location == None and summon_index < len(summon_list)):
                 # Now try and find the Summon at the current index.
                 if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
-                    summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_name[summon_index]}.png", confidence=custom_confidence, grayscale=grayscale_check, 
+                    summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_list[summon_index]}.png", confidence=custom_confidence, grayscale=grayscale_check, 
                                                                     region=(self.window_left, self.window_top, self.window_width, self.window_height))
                 else:
-                    summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_name[summon_index]}.png", confidence=custom_confidence, grayscale=grayscale_check)
+                    summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_list[summon_index]}.png", confidence=custom_confidence, grayscale=grayscale_check)
                     
                 if (summon_location == None):
                     # Use GuiBot to template match if PyAutoGUI failed.
                     self.file_resolver.add_path("images/summons/")
                     self.clear_memory_guibot()
-                    summon_location = self.guibot.exists(f"{summon_name[summon_index]}")
+                    summon_location = self.guibot.exists(f"{summon_list[summon_index]}")
                     if(summon_location == None):        
                         if(self.debug_mode):
-                            self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not locate {summon_name[summon_index].upper()} Summon. Trying again...")
+                            self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not locate {summon_list[summon_index].upper()} Summon. Trying again...")
                             
                         # If matching failed, scroll the screen down to see more Summons.
                         self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
@@ -223,7 +221,7 @@ class ImageUtils:
                     else:
                         guibot_check = True
                         
-            if(summon_location == None and (summon_index + 1) >= len(summon_name)):
+            if(summon_location == None and (summon_index + 1) >= len(summon_list)):
                 if(not suppress_error):
                     self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not find any of the specified Summons.")
                 return None
@@ -232,7 +230,7 @@ class ImageUtils:
         if(guibot_check):
             summon_location = (summon_location.target.x, summon_location.target.y)
             
-        self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Found {summon_name[summon_index].upper()} Summon at {summon_location}.")
+        self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Found {summon_list[summon_index].upper()} Summon at {summon_location}.")
             
         return summon_location
 
