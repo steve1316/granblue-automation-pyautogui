@@ -109,7 +109,7 @@ class MainWindow(QObject):
         self.item_amount_to_farm = ""
         self.location_name = ""
         self.mission_name = ""
-        self.summon_element_name = ""
+        self.summon_element_name = []
         self.summon_name = []
         self.group_number = ""
         self.party_number = ""
@@ -142,7 +142,7 @@ class MainWindow(QObject):
         self.item_amount_to_farm = "0"
         self.location_name = ""
         self.mission_name = ""
-        self.summon_element_name = ""
+        self.summon_element_name = []
         self.summon_name = []
         self.group_number = ""
         self.party_number = ""
@@ -278,15 +278,19 @@ class MainWindow(QObject):
         Returns:
             None
         """
-        self.summon_element_name = summon_element
-        if summon_name not in self.summon_name and summon_name != "None":
-            self.summon_name.append(summon_name)
-        else:
-            self.summon_name.remove(summon_name)
+        if(summon_name != "none"):
+            if (summon_name not in self.summon_name):
+                self.summon_name.append(summon_name)
+                self.summon_element_name.append(summon_element)
+            else:
+                # If the user selected a Summon that had been already selected, remove it from the list. Remove its element as well.
+                index = self.summon_name.index(summon_name)
+                self.summon_name.remove(summon_name)
+                self.summon_element_name.pop(index)
 
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummon: " + str(self.summon_name) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
-                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
+            self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
+                                    "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummons: " + str(self.summon_name) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
+                                    str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
         return None
         
     @Slot(str)
