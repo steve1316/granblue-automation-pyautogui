@@ -210,14 +210,14 @@ class ImageUtils:
                         if(self.debug_mode):
                             self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not locate {summon_list[summon_index].upper()} Summon. Trying again...")
                             
-                        # If matching failed, scroll the screen down to see more Summons.
-                        self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
-                        
                         # If the bot reached the bottom of the page, scroll back up to the top and start searching for the next Summon.
                         if(self.find_button("bottom_of_summon_selection", tries=1, suppress_error=True) != None):
                             self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, 10000)
                             summon_index += 1
                             break
+                       
+                        # If matching failed, scroll the screen down to see more Summons.
+                        self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
                     else:
                         guibot_check = True
                         
