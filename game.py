@@ -53,7 +53,9 @@ class Game:
         self.enable_event_nightmare = self.config.getboolean("event", "enable_event_nightmare")
         self.event_nightmare_combat_script = self.config.get("event", "event_nightmare_combat_script")
         self.event_nightmare_summon_list = self.config.get("event", "event_nightmare_summon_list")
+        self.event_nightmare_summon_list = self.event_nightmare_summon_list.replace(" ","_").split(",")
         self.event_nightmare_summon_element_list = self.config.get("event", "event_nightmare_summon_element_list")
+        self.event_nightmare_summon_element_list = self.event_nightmare_summon_element_list.replace(" ","_").split(",")
         self.event_nightmare_group_number = self.config.get("event", "event_nightmare_group_number")
         self.event_nightmare_party_number = self.config.get("event", "event_nightmare_party_number")
         
@@ -61,18 +63,22 @@ class Game:
         self.enable_dimensional_halo = self.config.getboolean("dimensional_halo", "enable_dimensional_halo")
         self.dimensional_halo_combat_script = self.config.get("dimensional_halo", "dimensional_halo_combat_script")
         self.dimensional_halo_summon_list = self.config.get("dimensional_halo", "dimensional_halo_summon_list")
+        self.dimensional_halo_summon_list = self.dimensional_halo_summon_list.replace(" ","_").split(",")
         self.dimensional_halo_summon_element_list = self.config.get("dimensional_halo", "dimensional_halo_summon_element_list")
+        self.dimensional_halo_summon_element_list = self.dimensional_halo_summon_element_list.replace(" ","_").split(",")
         self.dimensional_halo_group_number = self.config.get("dimensional_halo", "dimensional_halo_group_number")
         self.dimensional_halo_party_number = self.config.get("dimensional_halo", "dimensional_halo_party_number")
         self.dimensional_halo_amount = 0
-        
+
         # Keep track of the following for Dread Barrage Unparalleled Foes.
         self.enable_unparalleled_foe = self.config.getboolean("dread_barrage", "enable_unparalleled_foe")
         self.enable_unparalleled_foe_level_95 = self.config.getboolean("dread_barrage", "enable_unparalleled_foe_level_95")
         self.enable_unparalleled_foe_level_175 = self.config.getboolean("dread_barrage", "enable_unparalleled_foe_level_175")
         self.unparalleled_foe_combat_script = self.config.get("dread_barrage", "unparalleled_foe_combat_script")
         self.unparalleled_foe_summon_list = self.config.get("dread_barrage", "unparalleled_foe_summon_list")
+        self.unparalleled_foe_summon_list = self.unparalleled_foe_summon_list.replace(" ","_").split(",")
         self.unparalleled_foe_summon_element_list = self.config.get("dread_barrage", "unparalleled_foe_summon_element_list")
+        self.unparalleled_foe_summon_element_list = self.unparalleled_foe_summon_element_list.replace(" ","_").split(",")
         self.unparalleled_foe_group_number = self.config.get("dread_barrage", "unparalleled_foe_group_number")
         self.unparalleled_foe_party_number = self.config.get("dread_barrage", "unparalleled_foe_party_number")
         ########## config.ini ##########
@@ -1545,12 +1551,12 @@ class Game:
                     self.dimensional_halo_group_number = self.group_number
                 else:
                     self.dimensional_halo_group_number = int(self.dimensional_halo_group_number)
-                    
+
                 if(self.dimensional_halo_party_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Party Number for Dimensional Halo will reuse the one for Farming Mode.")
                     self.dimensional_halo_party_number = self.party_number
                 else:
-                    self.dimensional_halo_party_number = int(dimensional_halo_party_number)
+                    self.dimensional_halo_party_number = int(self.dimensional_halo_party_number)
                     
                 self.print_and_save(f"{self.printtime()} [INFO] Settings initialized for Dimensional Halo...")
             elif(self.item_name == "Repeated Runs" and self.enable_event_nightmare):
