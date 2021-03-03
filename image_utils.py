@@ -187,13 +187,13 @@ class ImageUtils:
         guibot_check = False
         summon_index = 0
         
-        while(summon_location == None and summon_index < len(summon_list)):
+        while(summon_location == None and summon_index <= len(summon_list)):
             # First select the Summon Element tab at the current index.
             self.game.print_and_save(f"{self.game.printtime()} [INFO] Now attempting to find: {summon_list[summon_index].upper()}")
             current_summon_element = summon_element_list[summon_index]
             self.game.find_and_click_button(f"summon_{current_summon_element}")
             
-            while (summon_location == None and summon_index < len(summon_list)):
+            while (summon_location == None and summon_index <= len(summon_list)):
                 # Now try and find the Summon at the current index.
                 if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
                     summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_list[summon_index]}.png", confidence=custom_confidence, grayscale=grayscale_check, 
@@ -221,7 +221,7 @@ class ImageUtils:
                     else:
                         guibot_check = True
                         
-            if(summon_location == None and (summon_index + 1) >= len(summon_list)):
+            if(summon_location == None and (summon_index + 1) > len(summon_list)):
                 if(not suppress_error):
                     self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not find any of the specified Summons.")
                 return None
