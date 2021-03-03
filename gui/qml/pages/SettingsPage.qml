@@ -1733,11 +1733,15 @@ Item{
             enabled: false
 
             onTextChanged: {
-                if(farmingModeComboBox.displayText !== qsTr("Coop") && summonSelectionButton.text !== qsTr("Select Summon")) {
+                if(farmingModeComboBox.enabled === true && farmingModeComboBox.displayText !== qsTr("Coop") && summonSelectionButton.text !== qsTr("Select Summon")) {
                     // Update the Summon Selection status message to indicate success.
                     summonSelectionStatusMessage.visible = true
                     summonSelectionStatusMessage.color = "#00ff00"
                     summonSelectionStatusMessage.text = qsTr("Summon selected successfully")
+                } else if(farmingModeComboBox.enabled === true && farmingModeComboBox.displayText !== qsTr("Coop") && summonSelectionButton.text === qsTr("Select Summon")) {
+                    summonSelectionStatusMessage.visible = true
+                    summonSelectionStatusMessage.color = "#fc8c03"
+                    summonSelectionStatusMessage.text = qsTr("Now select your Summon")
                 }
 
                 if(summonSelectionButton.text !== qsTr("Select Summon")) {
@@ -1747,6 +1751,11 @@ Item{
 
                     // Finally, enable the Start Button on the Home page.
                     backend.check_bot_ready(true)
+                } else {
+                    // If the user got back to 0 Summons selected, disable the Group and Party ComboBoxes and disable the Start Button.
+                    groupSelectionComboBox.enabled = false
+                    partySelectionComboBox.enabled = false
+                    backend.check_bot_ready(false)
                 }
             }
 
@@ -2036,6 +2045,15 @@ Item{
             }else{
                 botReadyLabel.text = qsTr("Bot is not ready to start")
                 botReadyLabel.color = "#ff0000"
+            }
+        }
+
+        // Gets the current length of the Summon list and updates the Summon Selection button with the number of Summons currently selected.
+        function onGetSummonListLength(listLength) {
+            if(listLength !== 0) {
+                summonSelectionButton.text = listLength + qsTr(" Summon(s) selected")
+            } else {
+                summonSelectionButton.text = qsTr("Select Summon")
             }
         }
     }

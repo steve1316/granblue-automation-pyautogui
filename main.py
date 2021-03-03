@@ -130,6 +130,7 @@ class MainWindow(QObject):
     updateMessage = Signal(str)
     enableGroupAndPartySelectors = Signal()
     updateTimerTextField = Signal(str)
+    getSummonListLength = Signal(int)
     
     @Slot()
     def reset_values(self):
@@ -284,7 +285,7 @@ class MainWindow(QObject):
                 self.summon_list.append(summon_name)
                 self.summon_element_list.append(summon_element)
             else:
-                # If the user selected a Summon that had been already selected, remove it from the list. Remove its element as well.
+                # If the user selected a Summon that had already been selected, remove it from the list. Remove its element as well.
                 index = self.summon_list.index(summon_name)
                 self.summon_list.remove(summon_name)
                 self.summon_element_list.pop(index)
@@ -292,6 +293,10 @@ class MainWindow(QObject):
             self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
                                     "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummons: " + str(self.summon_list) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
                                     str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
+        
+        # Send the current length of the Summon list to the frontend.
+        self.getSummonListLength.emit(len(self.summon_list))
+        
         return None
         
     @Slot(str)

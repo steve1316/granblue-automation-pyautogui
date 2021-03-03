@@ -220,8 +220,6 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_list(name, element)
-                         
-                        summonSelectionButton.text = name
                     }
                 }
 
@@ -261,7 +259,6 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_list(name, element)
-                        summonSelectionButton.text = name
                     }
                 }
 
@@ -301,8 +298,6 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_list(name, element)
-                        
-                        summonSelectionButton.text = name
                     }
                 }
 
@@ -342,8 +337,6 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_list(name, element)
-                         
-                        summonSelectionButton.text = name
                     }
                 }
 
@@ -383,8 +376,6 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_list(name, element)
-                         
-                        summonSelectionButton.text = name
                     }
                 }
 
@@ -424,8 +415,6 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_list(name, element)
-                         
-                        summonSelectionButton.text = name
                     }
                 }
 
@@ -465,8 +454,6 @@ Flickable {
 
                     onClicked: {
                         backend.update_summon_list(name, element)
-                         
-                        summonSelectionButton.text = name
                     }
                 }
 
