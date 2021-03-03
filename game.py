@@ -52,16 +52,16 @@ class Game:
         # Keep track of the following for Events.
         self.enable_event_nightmare = self.config.getboolean("event", "enable_event_nightmare")
         self.event_nightmare_combat_script = self.config.get("event", "event_nightmare_combat_script")
-        self.event_nightmare_summon_name = self.config.get("event", "event_nightmare_summon_name")
-        self.event_nightmare_summon_element_name = self.config.get("event", "event_nightmare_summon_element_name")
+        self.event_nightmare_summon_list = self.config.get("event", "event_nightmare_summon_list")
+        self.event_nightmare_summon_element_list = self.config.get("event", "event_nightmare_summon_element_list")
         self.event_nightmare_group_number = self.config.get("event", "event_nightmare_group_number")
         self.event_nightmare_party_number = self.config.get("event", "event_nightmare_party_number")
         
         # Keep track of the following for Dimensional Halo.
         self.enable_dimensional_halo = self.config.getboolean("dimensional_halo", "enable_dimensional_halo")
         self.dimensional_halo_combat_script = self.config.get("dimensional_halo", "dimensional_halo_combat_script")
-        self.dimensional_halo_summon_name = self.config.get("dimensional_halo", "dimensional_halo_summon_name")
-        self.dimensional_halo_summon_element_name = self.config.get("dimensional_halo", "dimensional_halo_summon_element_name")
+        self.dimensional_halo_summon_list = self.config.get("dimensional_halo", "dimensional_halo_summon_list")
+        self.dimensional_halo_summon_element_list = self.config.get("dimensional_halo", "dimensional_halo_summon_element_list")
         self.dimensional_halo_group_number = self.config.get("dimensional_halo", "dimensional_halo_group_number")
         self.dimensional_halo_party_number = self.config.get("dimensional_halo", "dimensional_halo_party_number")
         self.dimensional_halo_amount = 0
@@ -71,8 +71,8 @@ class Game:
         self.enable_unparalleled_foe_level_95 = self.config.getboolean("dread_barrage", "enable_unparalleled_foe_level_95")
         self.enable_unparalleled_foe_level_175 = self.config.getboolean("dread_barrage", "enable_unparalleled_foe_level_175")
         self.unparalleled_foe_combat_script = self.config.get("dread_barrage", "unparalleled_foe_combat_script")
-        self.unparalleled_foe_summon_name = self.config.get("dread_barrage", "unparalleled_foe_summon_name")
-        self.unparalleled_foe_summon_element_name = self.config.get("dread_barrage", "unparalleled_foe_summon_element_name")
+        self.unparalleled_foe_summon_list = self.config.get("dread_barrage", "unparalleled_foe_summon_list")
+        self.unparalleled_foe_summon_element_list = self.config.get("dread_barrage", "unparalleled_foe_summon_element_list")
         self.unparalleled_foe_group_number = self.config.get("dread_barrage", "unparalleled_foe_group_number")
         self.unparalleled_foe_party_number = self.config.get("dread_barrage", "unparalleled_foe_party_number")
         ########## config.ini ##########
@@ -751,8 +751,8 @@ class Game:
             self.print_and_save("\n\n********************************************************************************")
             self.print_and_save("********************************************************************************")
             self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare")
-            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Summon Element: {self.event_nightmare_summon_element_name}")
-            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Summon: {self.event_nightmare_summon_name}")
+            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Summon Elements: {self.event_nightmare_summon_element_list}")
+            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Summons: {self.event_nightmare_summon_list}")
             self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Group Number: {self.event_nightmare_group_number}")
             self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Party Number: {self.event_nightmare_party_number}")
             self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Combat Script: {self.event_nightmare_combat_script}")
@@ -764,8 +764,7 @@ class Game:
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             self.wait(1)
             if(self.image_tools.confirm_location("select_summon")):
-                self.find_summon_element(self.event_nightmare_summon_element_name)
-                self.find_summon(self.event_nightmare_summon_name)
+                self.find_summon(self.event_nightmare_summon_list, self.event_nightmare_summon_element_list)
                 start_check = self.find_party_and_start_mission(self.event_nightmare_group_number, self.event_nightmare_party_number)
                 
                 # Once preparations are completed, start Combat Mode.
@@ -794,8 +793,8 @@ class Game:
             self.print_and_save("\n\n********************************************************************************")
             self.print_and_save("********************************************************************************")
             self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo")
-            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Summon Element: {self.dimensional_halo_summon_element_name}")
-            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Summon: {self.dimensional_halo_summon_name}")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Summon Elements: {self.dimensional_halo_summon_element_list}")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Summons: {self.dimensional_halo_summon_list}")
             self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Group Number: {self.dimensional_halo_group_number}")
             self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Party Number: {self.dimensional_halo_party_number}")
             self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Combat Script: {self.dimensional_halo_combat_script}")
@@ -808,8 +807,7 @@ class Game:
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             self.wait(1)
             if(self.image_tools.confirm_location("select_summon")):
-                self.find_summon_element(summon_element_name=self.dimensional_halo_summon_element_name)
-                self.find_summon(summon_name=self.dimensional_halo_summon_name)
+                self.find_summon(self.dimensional_halo_summon_list, self.dimensional_halo_summon_element_list)
                 start_check = self.find_party_and_start_mission(group_number=self.dimensional_halo_group_number, party_number=self.dimensional_halo_party_number)
                 
                 # Once preparations are completed, start Combat Mode.
@@ -1534,13 +1532,13 @@ class Game:
                     self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Dimensional Halo will reuse the one for Farming Mode.")
                     self.dimensional_halo_combat_script = self.combat_script
                     
-                if(self.dimensional_halo_summon_element_name == ""):
-                    self.print_and_save(f"{self.printtime()} [INFO] Summon Element for Dimensional Halo will reuse the one for Farming Mode.")
-                    self.dimensional_halo_summon_name = self.summon_element_name
+                if(self.dimensional_halo_summon_element_list == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summon Elements for Dimensional Halo will reuse the ones for Farming Mode.")
+                    self.dimensional_halo_summon_list = self.summon_element_list
                     
-                if(self.dimensional_halo_summon_name == []):
-                    self.print_and_save(f"{self.printtime()} [INFO] Summon for Dimensional Halo will reuse the one for Farming Mode.")
-                    self.dimensional_halo_summon_name = self.summon_name
+                if(self.dimensional_halo_summon_list == []):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summons for Dimensional Halo will reuse the ones for Farming Mode.")
+                    self.dimensional_halo_summon_list = self.summon_list
                     
                 if(self.dimensional_halo_group_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Group Number for Dimensional Halo will reuse the one for Farming Mode.")
@@ -1563,13 +1561,13 @@ class Game:
                     self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Event will reuse the one for Farming Mode.")
                     self.event_nightmare_combat_script = self.combat_script
                     
-                if(self.event_nightmare_summon_element_name == ""):
-                    self.print_and_save(f"{self.printtime()} [INFO] Summon Element for Event will reuse the one for Farming Mode.")
-                    self.event_nightmare_summon_element_name = self.summon_element_name
+                if(self.event_nightmare_summon_element_list == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summon Elements for Event will reuse the ones for Farming Mode.")
+                    self.event_nightmare_summon_element_list = self.summon_element_list
                     
-                if(self.event_nightmare_summon_name == []):
-                    self.print_and_save(f"{self.printtime()} [INFO] Summon for Event will reuse the one for Farming Mode.")
-                    self.event_nightmare_summon_name = self.summon_name
+                if(self.event_nightmare_summon_list == []):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summons for Event will reuse the ones for Farming Mode.")
+                    self.event_nightmare_summon_list = self.summon_list
                     
                 if(self.event_nightmare_group_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Group Number for Event will reuse the one for Farming Mode.")
@@ -1592,13 +1590,13 @@ class Game:
                     self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
                     self.unparalleled_foe_combat_script = self.combat_script
                     
-                if(self.unparalleled_foe_summon_element_name == ""):
-                    self.print_and_save(f"{self.printtime()} [INFO] Summon Element for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
-                    self.unparalleled_foe_summon_element_name = self.summon_element_name
+                if(self.unparalleled_foe_summon_element_list == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summon Elements for Dread Barrage Unparalleled Foes will reuse the ones for Farming Mode.")
+                    self.unparalleled_foe_summon_element_list = self.summon_element_list
                     
-                if(self.unparalleled_foe_summon_name == []):
-                    self.print_and_save(f"{self.printtime()} [INFO] Summon for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
-                    self.unparalleled_foe_summon_name = self.summon_name
+                if(self.unparalleled_foe_summon_list == []):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summons for Dread Barrage Unparalleled Foes will reuse the ones for Farming Mode.")
+                    self.unparalleled_foe_summon_list = self.summon_list
                     
                 if(self.unparalleled_foe_group_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Group Number for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
