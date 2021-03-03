@@ -108,7 +108,7 @@ class Game:
         self.item_amount_farmed = 0
         self.farming_mode = ""
         self.mission_name = ""
-        self.summon_element_name = ""
+        self.summon_element_name = []
         self.summon_name = []
         self.group_number = 0
         self.party_number = 0
@@ -350,49 +350,24 @@ class Game:
             self.isBotRunning.value = 1
             self.wait(1)
 
-    def find_summon_element(self, summon_element_name: str, tries: int = 3):
-        """Select the specified element tab for Summons.
+    def find_summon(self, summon_name: Iterable[str], summon_element_name: Iterable[str]):
+        """Finds and selects the specified Summon based on the current index on the Summon Selection screen and then checks for CAPTCHA right afterwards. 
 
         Args:
-            summon_element_name (str): Name of the Summon element image file in the /images/buttons/ folder.
-            tries (int, optional): Number of tries before failing. Defaults to 3.
-
-        Returns:
-            (bool): True if successfully found and clicked the Summon element tab. Otherwise, return False.
-        """
-        summon_element_location = None
-        
-        self.wait(1)
-        while(summon_element_location == None):
-            summon_element_location = self.image_tools.find_button(f"summon_{summon_element_name.lower()}")
-            
-            if(summon_element_location == None):
-                tries -= 1
-                
-                if(tries == 0):
-                    self.print_and_save(f"{self.printtime()} [ERROR] Failed to find {summon_element_name.upper()} element tab.")
-                    return False
-
-        self.print_and_save(f"{self.printtime()} [SUCCESS] Found {summon_element_name.upper()} element tab.")
-        self.mouse_tools.move_and_click_point(summon_element_location[0], summon_element_location[1])
-        return True
-
-    def find_summon(self, summon_name):
-        """Finds and selects the specified Summon on the Summon Selection screen and then checks for CAPTCHA right afterwards. 
-        Make sure to call this after the find_summon_element() method in order to have the correct Summon element tab already selected.
-
-        Args:
-            summon_name (str): Exact name of the Summon image's file name in /images/summons/ folder.
+            summon_name (Iterable[str]): List of names of the Summon image's file name in /images/summons/ folder.
+            summon_element_name (Iterable[str]): List of names of the Summon element image file in the /images/buttons/ folder.
 
         Returns:
             (bool): True if the Summon was found and clicked. Otherwise, return False.
         """
-
+        # Format the Summon name and Summon element name strings.
         for idx, sn in enumerate(summon_name):
-            summon_name[idx] = summon_name[idx].lower().replace(" ", "_") 
-        summon_location = self.image_tools.find_summon(summon_name, self.home_button_location[0], self.home_button_location[1], tries=5*len(summon_name))
+            summon_name[idx] = sn.lower().replace(" ", "_") 
+        for idx, summon_ele in enumerate(summon_element_name):
+            summon_element_name[idx] = summon_ele.lower()
+            
+        summon_location = self.image_tools.find_summon(summon_name, summon_element_name, self.home_button_location[0], self.home_button_location[1])
         if (summon_location != None):
-            self.print_and_save(f"{self.printtime()} [INFO] Found Summon.")
             self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1])
             
             # Check for CAPTCHA here. If detected, stop the bot and alert the user.
@@ -1647,8 +1622,7 @@ class Game:
                     self.print_and_save(f"\n{self.printtime()} [INFO] Selecting Summon before starting mission for Farming Mode...")
                     while(summon_check == False and farming_mode.lower() != "coop"): 
                         # Select the Summon element and the Summon itself.
-                        self.find_summon_element(summon_element_name)
-                        summon_check = self.find_summon(summon_name)
+                        summon_check = self.find_summon(summon_name, summon_element_name)
                         
                         # If the Summons were reset, select the mission again.
                         if(summon_check == False):
