@@ -1681,7 +1681,7 @@ Item{
 
                     // Finally, set the bot ready status to true.
                     backend.check_bot_ready(true)
-                } else {
+                } else if(summonSelectionButton.text === qsTr("Select Summon")) {
                     // Reset the Summon Selection button and its relevant status message.
                     summonSelectionButton.enabled = true
                     summonSelectionButton.text = qsTr("Select Summon")
