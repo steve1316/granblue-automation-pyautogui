@@ -1504,7 +1504,7 @@ Item{
                     // Now reset the following to default in the backend.
                     backend.update_mission_name("", "")
                     backend.update_item_amount("0")
-                    backend.update_summon_name("none", "")
+                    backend.update_summon_list("", "")
                     
                     // Finally, update the item name in the backend and set the bot ready status to false.
                     backend.update_item_name(itemSelectionComboBox.model[currentIndex].text)
@@ -1606,7 +1606,7 @@ Item{
 
                     // Reset the following to default in the backend.
                     backend.update_item_amount("0")
-                    backend.update_summon_name("none", "")
+                    backend.update_summon_list("", "")
 
                     // Finally, set the bot ready status to false.
                     backend.check_bot_ready(false)
@@ -1673,7 +1673,7 @@ Item{
                     summonSelectionStatusMessage.text = qsTr("Now select your Summon")
 
                     // Send blank Summon and element names to bypass enabling the Select Summon button as hosting Coop solo does not have any selectable Summons.
-                    backend.update_summon_name("none", "")
+                    backend.update_summon_list("", "")
 
                     // Now enable the Group and Party Selectors.
                     groupSelectionComboBox.enabled = true

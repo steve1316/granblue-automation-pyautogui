@@ -279,7 +279,7 @@ class MainWindow(QObject):
         Returns:
             None
         """
-        if(summon_name != "none"):
+        if(summon_name != ""):
             if (summon_name not in self.summon_list):
                 self.summon_list.append(summon_name)
                 self.summon_element_list.append(summon_element)
