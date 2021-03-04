@@ -1,0 +1,6 @@
+// This script starts Semi-Auto mode on Turn 1.
+// It will go uninterrupted until either the party wipes or the quest/raid ends.
+
+Turn 1:
+	enableSemiAuto
+end
