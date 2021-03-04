@@ -135,6 +135,8 @@ class MainWindow(QObject):
     @Slot()
     def reset_values(self):
         """Reset the values for Game class initialization back to default.
+        
+        @Slot()
 
         Returns:
             None
@@ -296,6 +298,20 @@ class MainWindow(QObject):
         
         # Send the current length of the Summon list to the frontend.
         self.getSummonListLength.emit(len(self.summon_list))
+        
+        return None
+    
+    @Slot()
+    def clear_summon_list(self):
+        """Clears the Summon and Summon Element lists for the frontend.
+
+        @Slot()
+
+        Returns:
+            None
+        """
+        self.summon_element_list.clear()
+        self.summon_list.clear()
         
         return None
         

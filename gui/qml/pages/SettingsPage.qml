@@ -1756,6 +1756,7 @@ Item{
                     groupSelectionComboBox.enabled = false
                     partySelectionComboBox.enabled = false
                     backend.check_bot_ready(false)
+                    backend.clear_summon_list()
                 }
             }
 
