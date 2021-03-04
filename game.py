@@ -1709,12 +1709,14 @@ class Game:
                                 self.check_for_friend_request()
                                 
                                 # Check for Dimensional Halo and Event Nightmare.
-                                if(self.farming_mode.lower() == "special" and self.enable_dimensional_halo and (self.item_name == "EXP" or self.item_name == "Angel Halo Weapons")):
-                                    self.check_for_dimensional_halo()
-                                    self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                if(self.farming_mode.lower() == "special" and self.mission_name == "VH Angel Halo" and self.enable_dimensional_halo and (self.item_name == "EXP" or self.item_name == "Angel Halo Weapons")):
+                                    if(self.check_for_dimensional_halo()):
+                                        # Make sure the bot goes back to the Home screen when completing a Dimensional Halo so that the "Play Again" functionality comes back.
+                                        self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 elif((self.farming_mode.lower() == "event" or self.farming_mode.lower() == "event (token drawboxes)")):
-                                    self.check_for_event_nightmare()
-                                    self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                    if(self.check_for_event_nightmare()):
+                                        # Make sure the bot goes back to the Home screen when completing a Event Nightmare so that the "Play Again" functionality comes back.
+                                        self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 
                                 # Check for available AP and then reset the Summon check flag.
                                 self.check_for_ap(use_full_elixirs=self.quest_refill)
