@@ -52,33 +52,54 @@ class Game:
         # Keep track of the following for Events.
         self.enable_event_nightmare = self.config.getboolean("event", "enable_event_nightmare")
         self.event_nightmare_combat_script = self.config.get("event", "event_nightmare_combat_script")
+        
         self.event_nightmare_summon_list = self.config.get("event", "event_nightmare_summon_list")
         self.event_nightmare_summon_list = self.event_nightmare_summon_list.replace(" ","_").split(",")
+        if(len(self.event_nightmare_summon_list) == 1 and self.event_nightmare_summon_list[0] == ""):
+            self.event_nightmare_summon_list.clear()
+            
         self.event_nightmare_summon_element_list = self.config.get("event", "event_nightmare_summon_element_list")
         self.event_nightmare_summon_element_list = self.event_nightmare_summon_element_list.replace(" ","_").split(",")
+        if(len(self.event_nightmare_summon_element_list) == 1 and self.event_nightmare_summon_element_list[0] == ""):
+            self.event_nightmare_summon_element_list.clear()
+            
         self.event_nightmare_group_number = self.config.get("event", "event_nightmare_group_number")
         self.event_nightmare_party_number = self.config.get("event", "event_nightmare_party_number")
         
         # Keep track of the following for Dimensional Halo.
         self.enable_dimensional_halo = self.config.getboolean("dimensional_halo", "enable_dimensional_halo")
         self.dimensional_halo_combat_script = self.config.get("dimensional_halo", "dimensional_halo_combat_script")
+        
         self.dimensional_halo_summon_list = self.config.get("dimensional_halo", "dimensional_halo_summon_list")
         self.dimensional_halo_summon_list = self.dimensional_halo_summon_list.replace(" ","_").split(",")
+        if(len(self.dimensional_halo_summon_list) == 1 and self.dimensional_halo_summon_list[0] == ""):
+            self.dimensional_halo_summon_list.clear()
+            
         self.dimensional_halo_summon_element_list = self.config.get("dimensional_halo", "dimensional_halo_summon_element_list")
         self.dimensional_halo_summon_element_list = self.dimensional_halo_summon_element_list.replace(" ","_").split(",")
+        if(len(self.dimensional_halo_summon_element_list) == 1 and self.dimensional_halo_summon_element_list[0] == ""):
+            self.dimensional_halo_summon_element_list.clear()
+            
         self.dimensional_halo_group_number = self.config.get("dimensional_halo", "dimensional_halo_group_number")
         self.dimensional_halo_party_number = self.config.get("dimensional_halo", "dimensional_halo_party_number")
         self.dimensional_halo_amount = 0
-
+        
         # Keep track of the following for Dread Barrage Unparalleled Foes.
         self.enable_unparalleled_foe = self.config.getboolean("dread_barrage", "enable_unparalleled_foe")
         self.enable_unparalleled_foe_level_95 = self.config.getboolean("dread_barrage", "enable_unparalleled_foe_level_95")
         self.enable_unparalleled_foe_level_175 = self.config.getboolean("dread_barrage", "enable_unparalleled_foe_level_175")
         self.unparalleled_foe_combat_script = self.config.get("dread_barrage", "unparalleled_foe_combat_script")
+        
         self.unparalleled_foe_summon_list = self.config.get("dread_barrage", "unparalleled_foe_summon_list")
         self.unparalleled_foe_summon_list = self.unparalleled_foe_summon_list.replace(" ","_").split(",")
+        if(len(self.unparalleled_foe_summon_list) == 1 and self.unparalleled_foe_summon_list[0] == ""):
+            self.unparalleled_foe_summon_list.clear()
+            
         self.unparalleled_foe_summon_element_list = self.config.get("dread_barrage", "unparalleled_foe_summon_element_list")
         self.unparalleled_foe_summon_element_list = self.unparalleled_foe_summon_element_list.replace(" ","_").split(",")
+        if(len(self.unparalleled_foe_summon_element_list) == 1 and self.unparalleled_foe_summon_element_list[0] == ""):
+            self.unparalleled_foe_summon_element_list.clear()
+            
         self.unparalleled_foe_group_number = self.config.get("dread_barrage", "unparalleled_foe_group_number")
         self.unparalleled_foe_party_number = self.config.get("dread_barrage", "unparalleled_foe_party_number")
         ########## config.ini ##########
@@ -1531,18 +1552,20 @@ class Game:
             self.party_number = party_number
             
             # If Dimensional Halo is enabled, save settings for it based on conditions.
-            if(self.item_name == "EXP" and self.enable_dimensional_halo):
+            if(self.farming_mode.lower() == "special" and self.mission_name == "VH Angel Halo" and self.enable_dimensional_halo and (self.item_name == "EXP" or self.item_name == "Angel Halo Weapons")):
                 self.print_and_save(f"\n{self.printtime()} [INFO] Initializing settings for Dimensional Halo...")
                 
                 if(self.dimensional_halo_combat_script == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Dimensional Halo will reuse the one for Farming Mode.")
                     self.dimensional_halo_combat_script = self.combat_script
+                else:
+                    self.dimensional_halo_combat_script = 0
                     
-                if(self.dimensional_halo_summon_element_list == ""):
+                if(len(self.dimensional_halo_summon_element_list) == 0):
                     self.print_and_save(f"{self.printtime()} [INFO] Summon Elements for Dimensional Halo will reuse the ones for Farming Mode.")
-                    self.dimensional_halo_summon_list = self.summon_element_list
+                    self.dimensional_halo_summon_element_list = self.summon_element_list
                     
-                if(self.dimensional_halo_summon_list == []):
+                if(len(self.dimensional_halo_summon_list) == 0):
                     self.print_and_save(f"{self.printtime()} [INFO] Summons for Dimensional Halo will reuse the ones for Farming Mode.")
                     self.dimensional_halo_summon_list = self.summon_list
                     
@@ -1567,11 +1590,11 @@ class Game:
                     self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Event will reuse the one for Farming Mode.")
                     self.event_nightmare_combat_script = self.combat_script
                     
-                if(self.event_nightmare_summon_element_list == ""):
+                if(len(self.event_nightmare_summon_element_list) == 0):
                     self.print_and_save(f"{self.printtime()} [INFO] Summon Elements for Event will reuse the ones for Farming Mode.")
                     self.event_nightmare_summon_element_list = self.summon_element_list
                     
-                if(self.event_nightmare_summon_list == []):
+                if(len(self.event_nightmare_summon_list) == 0):
                     self.print_and_save(f"{self.printtime()} [INFO] Summons for Event will reuse the ones for Farming Mode.")
                     self.event_nightmare_summon_list = self.summon_list
                     
@@ -1596,11 +1619,11 @@ class Game:
                     self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
                     self.unparalleled_foe_combat_script = self.combat_script
                     
-                if(self.unparalleled_foe_summon_element_list == ""):
+                if(len(self.unparalleled_foe_summon_element_list) == 0):
                     self.print_and_save(f"{self.printtime()} [INFO] Summon Elements for Dread Barrage Unparalleled Foes will reuse the ones for Farming Mode.")
                     self.unparalleled_foe_summon_element_list = self.summon_element_list
                     
-                if(self.unparalleled_foe_summon_list == []):
+                if(len(self.unparalleled_foe_summon_list) == 0):
                     self.print_and_save(f"{self.printtime()} [INFO] Summons for Dread Barrage Unparalleled Foes will reuse the ones for Farming Mode.")
                     self.unparalleled_foe_summon_list = self.summon_list
                     
