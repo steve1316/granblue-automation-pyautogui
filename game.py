@@ -1709,7 +1709,7 @@ class Game:
                                 self.check_for_friend_request()
                                 
                                 # Check for Dimensional Halo and Event Nightmare.
-                                if(self.farming_mode.lower() == "special" and self.item_name == "EXP"):
+                                if(self.farming_mode.lower() == "special" and self.enable_dimensional_halo and (self.item_name == "EXP" or self.item_name == "Angel Halo Weapons")):
                                     self.check_for_dimensional_halo()
                                     self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 elif((self.farming_mode.lower() == "event" or self.farming_mode.lower() == "event (token drawboxes)")):
