@@ -1,5 +1,6 @@
 import datetime
 import multiprocessing
+import os
 import sys
 import time
 import traceback
@@ -32,6 +33,9 @@ class Game:
     """
     def __init__(self, queue: multiprocessing.Queue, isBotRunning: int, combat_script: str = "", debug_mode: bool = False):
         super().__init__()
+        
+        # Save a reference to the original current working directory.
+        self.owd = os.getcwd()
         
         ########## config.ini ##########
         # Grab the Twitter API keys and tokens from config.ini. The list order is: [consumer key, consumer secret key, access token, access secret token].
@@ -795,7 +799,7 @@ class Game:
                 start_check = self.find_party_and_start_mission(self.event_nightmare_group_number, self.event_nightmare_party_number)
                 
                 # Once preparations are completed, start Combat Mode.
-                if(start_check and self.start_combat_mode(f"scripts/{self.event_nightmare_combat_script}.txt")):
+                if(start_check and self.start_combat_mode(self.event_nightmare_combat_script, isNightmare=True)):
                     self.collect_loot()
                     return True
                 
@@ -838,7 +842,7 @@ class Game:
                 start_check = self.find_party_and_start_mission(group_number=self.dimensional_halo_group_number, party_number=self.dimensional_halo_party_number)
                 
                 # Once preparations are completed, start Combat Mode.
-                if(start_check and self.start_combat_mode(f"scripts/{self.dimensional_halo_combat_script}.txt")):
+                if(start_check and self.start_combat_mode(self.dimensional_halo_combat_script, isNightmare=True)):
                     self.collect_loot()
                     return True
                 
@@ -992,11 +996,12 @@ class Game:
             
         return None
 
-    def start_combat_mode(self, script_file_path: str = ""):
+    def start_combat_mode(self, script_file_path: str = "", isNightmare: bool = False):
         """Start Combat Mode with the given script file path. Start reading through the text file line by line and have the bot proceed with the commands accordingly.
 
         Args:
             script_file_path (str, optional): Path to the combat script text file. Defaults to "".
+            isNightmare (bool, optional): If Combat Mode is being used for a Nightmare, determines the method of reading the script file.
 
         Returns:
             (bool): Return True if Combat Mode was successful. Else, return False if the Party wiped or backed out without retreating.
@@ -1010,10 +1015,22 @@ class Game:
             
             # Open the combat script text file.
             if(script_file_path == "" or script_file_path == None):
-                self.print_and_save(f"\n{self.printtime()} [COMBAT] No script file was provided. Using default semi-attack script...")
-                script = open(f"scripts/empty.txt", "r")
+                self.print_and_save(f"\n{self.printtime()} [COMBAT] No script file was provided. Using default full_auto.txt script.")
+                os.chdir(os.getcwd() + "/scripts/")
+                script = open(os.path.abspath("full_auto.txt"), "r")
+                os.chdir(self.owd)
+            elif(isNightmare):
+                self.print_and_save(f"\n{self.printtime()} [COMBAT] Now loading up combat script for this at {os.getcwd()}\scripts\{script_file_path}")
+                os.chdir(os.getcwd() + "/scripts/")
+                root, extension = os.path.splitext(script_file_path)
+                if(not extension):
+                    script = open(os.path.abspath(script_file_path + ".txt"), "r")
+                else:
+                    script = open(os.path.abspath(script_file_path), "r")
+                os.chdir(self.owd)
             else:
-                self.print_and_save(f"\n{self.printtime()} [COMBAT] Now loading up combat script at {script_file_path}...")
+                self.print_and_save(f"\n{self.printtime()} [COMBAT] Now loading up combat script at {script_file_path}")
+                os.chdir(self.owd)
                 script = open(script_file_path, "r")
             
             # Grab all lines in the file and store it in a list.
