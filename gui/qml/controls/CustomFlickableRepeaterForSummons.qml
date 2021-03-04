@@ -219,9 +219,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        backend.update_summon_name(name, element)
-                        summonPopup.close()
-                        summonSelectionButton.text = name
+                        backend.update_summon_list(name, element)
                     }
                 }
 
@@ -260,9 +258,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        backend.update_summon_name(name, element)
-                        summonPopup.close()
-                        summonSelectionButton.text = name
+                        backend.update_summon_list(name, element)
                     }
                 }
 
@@ -301,9 +297,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        backend.update_summon_name(name, element)
-                        summonPopup.close()
-                        summonSelectionButton.text = name
+                        backend.update_summon_list(name, element)
                     }
                 }
 
@@ -342,9 +336,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        backend.update_summon_name(name, element)
-                        summonPopup.close()
-                        summonSelectionButton.text = name
+                        backend.update_summon_list(name, element)
                     }
                 }
 
@@ -383,9 +375,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        backend.update_summon_name(name, element)
-                        summonPopup.close()
-                        summonSelectionButton.text = name
+                        backend.update_summon_list(name, element)
                     }
                 }
 
@@ -424,9 +414,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        backend.update_summon_name(name, element)
-                        summonPopup.close()
-                        summonSelectionButton.text = name
+                        backend.update_summon_list(name, element)
                     }
                 }
 
@@ -465,9 +453,7 @@ Flickable {
                     anchors.fill: parent
 
                     onClicked: {
-                        backend.update_summon_name(name, element)
-                        summonPopup.close()
-                        summonSelectionButton.text = name
+                        backend.update_summon_list(name, element)
                     }
                 }
 
