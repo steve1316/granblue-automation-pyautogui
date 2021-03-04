@@ -386,6 +386,10 @@ class MapSelection:
                 if(self.game.image_tools.confirm_location("special")):
                     tries = 2
                     while(tries != 0):
+                        # Scroll the screen down if its any of the Special Quests that are more towards the bottom of the page to alleviate problems for smaller screens.
+                        if(map_name != "Campaign-Exclusive Quest" and map_name != "Basic Treasure Quests" and map_mode != "Shiny Slime Search!" and map_mode != "Six Dragon Trial"):
+                            self.game.mouse_tools.scroll_screen(self.game.home_button_location[0], self.game.home_button_location[1] - 50, -500)
+                        
                         # Bring up the mission's difficulty screen. If it cannot find it, loop for a maximum of 2 times while 
                         # scrolling the screen down to see more in order to find the Special mission.
                         mission_select_button = self.game.image_tools.find_button(temp_map_name)
