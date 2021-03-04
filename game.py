@@ -1710,11 +1710,11 @@ class Game:
                                 
                                 # Check for Dimensional Halo and Event Nightmare.
                                 if(self.farming_mode.lower() == "special" and self.item_name == "EXP"):
-                                    self.check_for_dimensional_halo()
-                                    self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                    if self.check_for_dimensional_halo():
+                                        self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 elif((self.farming_mode.lower() == "event" or self.farming_mode.lower() == "event (token drawboxes)")):
-                                    self.check_for_event_nightmare()
-                                    self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                    if self.check_for_event_nightmare():
+                                        self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 
                                 # Check for available AP and then reset the Summon check flag.
                                 self.check_for_ap(use_full_elixirs=self.quest_refill)
