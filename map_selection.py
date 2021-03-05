@@ -8,13 +8,15 @@ class MapSelection:
     ----------
     game (game.Game): The Game object.
     
+    isBotRunning (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
+    
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
     """
-    def  __init__(self, game, debug_mode: bool = False):
+    def  __init__(self, game, isBotRunning: int, debug_mode: bool = False):
         super().__init__()
         
         self.game = game
-        self.debug_mode = debug_mode
+        self.isBotRunning = isBotRunning
         
         # Makes sure that the number of raids currently joined does not exceed 3.
         self.raids_joined = 0
@@ -722,7 +724,7 @@ class MapSelection:
                     return False
         except Exception:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception in MapSelection select_map(): \n{traceback.format_exc()}")
-            self.game.isBotRunning.value = 1
+            self.isBotRunning.value = 1
             
     def check_for_pending(self, map_mode: str, tries: int = 2):
         """Check and collect any pending rewards and free up slots for the bot to join more raids. After this entire process is completed, the bot should end up at the Quest screen.
@@ -845,7 +847,7 @@ class MapSelection:
             return False
         except Exception:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception in MapSelection check_for_pending(): \n{traceback.format_exc()}")
-            self.game.isBotRunning.value = 1
+            self.isBotRunning.value = 1
     
     def check_for_joined(self):
         """Check and update the number of raids currently joined.
@@ -864,7 +866,7 @@ class MapSelection:
             return None
         except Exception:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception in MapSelection check_for_joined(): \n{traceback.format_exc()}")
-            self.game.isBotRunning.value = 1
+            self.isBotRunning.value = 1
             
     def join_raid(self, item_name: str, mission_name: str):
         """Attempt to join the specified raid.
@@ -958,4 +960,4 @@ class MapSelection:
             return False
         except Exception:
             self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception in MapSelection join_raid(): \n{traceback.format_exc()}")
-            self.game.isBotRunning.value = 1
+            self.isBotRunning.value = 1

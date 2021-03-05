@@ -119,7 +119,7 @@ class Game:
         self.debug_mode = debug_mode
         
         # Initialize the objects of helper classes.
-        self.map_selection = MapSelection(self)
+        self.map_selection = MapSelection(self, isBotRunning)
         self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3], debug_mode=self.debug_mode)
         self.image_tools = ImageUtils(game=self, debug_mode=self.debug_mode)
         self.mouse_tools = MouseUtils(game=self, mouse_speed=custom_mouse_speed, debug_mode=self.debug_mode)
