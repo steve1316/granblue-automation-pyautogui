@@ -122,60 +122,6 @@ class Debug:
         self.isBotRunning.value = 1
         return None
 
-    def test_find_summon_element_tabs(self):
-        """Tests finding each summon element tab on the Summon Selection Screen by navigating to the Fire Old Lignoid trial battle.
-
-        Returns:
-            None
-        """
-        self.game.print_and_save("\n################################################################################")
-        self.game.print_and_save(f"{self.game.printtime()} [TEST] Testing finding all Summon Element tabs on the Summon Selection screen...")
-        self.game.print_and_save("################################################################################")
-
-        # Reset the bot's current position by heading back to the Home Screen.
-        self.game.go_back_home(confirm_location_check=True, display_info_check=True)
-
-        # Scroll the Home Screen down and find and click the Gameplay Extras button.
-        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Finding and selecting the Gameplay Extras Button...")
-        self.game.mouse_tools.scroll_screen_from_home_button(-400)
-
-        self.game.find_and_click_button("gameplay_extras")
-
-        # Now attempt to find the Trial Battles Button in a loop. It will scroll the screen down to show more if there are too many in-game event banners clogging up the screen.
-        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Finding and selecting the Trial Battles Button...")
-        tries = 3
-        while(True):
-            trial_battles_location = self.game.image_tools.find_button("trial_battles", tries=1)
-            if(trial_battles_location == None):
-                self.game.mouse_tools.scroll_screen_from_home_button(-400)
-            else:
-                self.game.mouse_tools.move_and_click_point(trial_battles_location[0], trial_battles_location[1])
-                break
-
-            tries -= 1
-            if(tries <= 0):
-                sys.exit(f"\n{self.game.printtime()} [TEST_FAILED] Failed to find the Trial Battles button inside the Gameplay Extras dropdown menu. Stopping bot...")
-
-        # Next, start up the Old Lignoid Trial Battle.
-        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Starting the Old Lignoid Trial Battle...")
-        
-        self.game.find_and_click_button("trial_battles_old_lignoid")
-        self.game.find_and_click_button("play_round_button")
-
-        # Test Successful if the bot is able to find all 7 summon element tabs on the Summon Selection Screen. Otherwise, the test fails.
-        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now finding all 7 summon element tabs on the Summon Selection Screen...")
-        if(self.game.image_tools.confirm_location("select_summon")):
-            if(self.game.find_summon_element("fire") and self.game.find_summon_element("water") and self.game.find_summon_element("earth") and self.game.find_summon_element("wind") and self.game.find_summon_element("light") and self.game.find_summon_element("dark") and self.game.find_summon_element("misc")):
-                self.game.print_and_save(f"\n{self.game.printtime()} [TEST_SUCCESS] Finding all summon element tabs was successful.")
-                self.isBotRunning.value = 1
-            else:
-                self.isBotRunning.value = 1
-                sys.exit(f"\n{self.game.printtime()} [TEST_FAILED] Failed to find one or more summon element tabs. Stopping bot...")
-        else:
-            self.isBotRunning.value = 1
-            sys.exit(f"\n{self.game.printtime()} [TEST_FAILED] Bot is not at the Summon Selection Screen. Stopping bot...")
-        return None
-
     def test_combat_mode2(self):
         """Tests almost all of the bot's functionality via navigation and combat by starting the Old Lignoid Trial Battle and fighting it. The combat mode will go on indefinitely until stopped.
 
