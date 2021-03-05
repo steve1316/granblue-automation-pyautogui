@@ -196,10 +196,12 @@ class Game:
             # window_top: The y-coordinate of the top edge.
             # window_width: The width of the region.
             # window_height: The height of the region.
-            self.image_tools.window_left = home_news_button[0] - 35
-            self.image_tools.window_top = home_menu_button[1] - 24
-            self.image_tools.window_width = self.image_tools.window_left + 410
-            self.image_tools.window_height = (self.home_button_location[1] + 24) - self.image_tools.window_top
+            window_left = home_news_button[0] - 35
+            window_top = home_menu_button[1] - 24
+            window_width = window_left + 410
+            window_height = (self.home_button_location[1] + 24) - window_top
+            
+            self.image_tools.update_window_dimensions(window_left, window_top, window_width, window_height)
         except Exception:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while calibrating game window dimensions: \n{traceback.format_exc()}")
             self._isBotRunning.value = 1
@@ -208,10 +210,11 @@ class Game:
             self.print_and_save(f"{self.printtime()} [SUCCESS] Dimensions of the game window has been successfully recalibrated.")
             
         if(display_info_check):
+            window_dimensions = self.image_tools.get_window_dimensions()
             self.print_and_save("\n********************************************************************************")
             self.print_and_save("********************************************************************************")
             self.print_and_save(f"{self.printtime()} [INFO] Screen Size: {pyautogui.size()}")
-            self.print_and_save(f"{self.printtime()} [INFO] Game Window Dimensions: Region({self.image_tools.window_left}, {self.image_tools.window_top}, {self.image_tools.window_width}, {self.image_tools.window_height})")
+            self.print_and_save(f"{self.printtime()} [INFO] Game Window Dimensions: Region({window_dimensions[0]}, {window_dimensions[1]}, {window_dimensions[2]}, {window_dimensions[3]})")
             self.print_and_save("********************************************************************************")
             self.print_and_save("********************************************************************************")
             

@@ -19,28 +19,20 @@ class ImageUtils:
     ----------
     game (game.Game): The Game object.
 
-    window_left (int, optional): The x-coordinate of the left edge of the region for image matching. Defaults to None.
-
-    window_top (int, optional): The y-coordinate of the top edge of the region for image matching. Defaults to None.
-
-    window_width (int, optional): The width of the region for image matching. Defaults to None.
-
-    window_height (int, optional): The height of the region for image matching. Defaults to None.
-
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
 
     """
-    def __init__(self, game, window_left: int = None, window_top: int = None, window_width: int = None, window_height: int = None, debug_mode: bool = False):
+    def __init__(self, game, debug_mode: bool = False):
         super().__init__()
         
         self._game = game
         self._debug_mode = debug_mode
         
         # The dimensions are set in calibrate_game_window() in Game class.
-        self._window_left = window_left
-        self._window_top = window_top
-        self._window_width = window_width
-        self._window_height = window_height
+        self._window_left = None
+        self._window_top = None
+        self._window_width = None
+        self._window_height = None
         
         # Initialize the following for saving screenshots.
         self._image_number = 0
@@ -54,6 +46,33 @@ class ImageUtils:
         self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Initializing EasyOCR reader...")
         self._reader = easyocr.Reader(["en"], gpu=True)
         self._game.print_and_save(f"{self._game.printtime()} [INFO] EasyOCR reader initialized.")
+    
+    def update_window_dimensions(self, window_left: int, window_top: int, window_width: int, window_height: int):
+        """Updates the window dimensions for PyAutoGUI to perform faster operations in.
+
+        Args:
+            window_left (int, optional): The x-coordinate of the left edge of the region for image matching.
+            window_top (int, optional): The y-coordinate of the top edge of the region for image matching.
+            window_width (int, optional): The width of the region for image matching.
+            window_height (int, optional): The height of the region for image matching.
+
+        Returns:
+            None
+        """
+        self._window_left = window_left
+        self._window_top = window_top
+        self._window_width = window_width
+        self._window_height = window_height
+        
+        return None
+    
+    def get_window_dimensions(self):
+        """Get the window dimensions as a Tuple of 4 integers.
+
+        Returns:
+            (int, int, int, int): A Tuple of 4 integers consisting of (window_left, window_top, window_width, window_height).
+        """
+        return (self._window_left, self._window_top, self._window_width, self._window_height)
     
     def _clear_memory_guibot(self):
         """Eliminates the memory leak caused by GuiBot by deleting the GuiBot object and reinitializing it. This is required before or after every single GuiBot operation, else you will run into cv::OutOfMemoryError.
