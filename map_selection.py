@@ -535,6 +535,8 @@ class MapSelection:
                 # Go to the Event by clicking on the "Menu" button and then click the very first banner.
                 self.game.find_and_click_button("home_menu")
                 banner_locations = self.game.image_tools.find_all("event_banner")
+                if(len(banner_locations) == 0):
+                    banner_locations = self.game.image_tools.find_all("event_banner_blue")
                 self.game.mouse_tools.move_and_click_point(banner_locations[0][0], banner_locations[0][1])
                 
                 # Check and click away the "Daily Missions" popup.
