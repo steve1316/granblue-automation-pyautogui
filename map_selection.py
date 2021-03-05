@@ -555,6 +555,8 @@ class MapSelection:
                     temp_mission_name = mission_name[3:]
                 elif(difficulty == "Extreme"):
                     temp_mission_name = mission_name[3:]
+                elif(difficulty == "Impossible"):
+                    temp_mission_name = mission_name[3:]
                 
                 # If the first character is a whitespace after processing the string, remove it.
                 if(temp_mission_name[0] == " "):
@@ -612,14 +614,19 @@ class MapSelection:
                         self.game.mouse_tools.scroll_screen_from_home_button(-400)
                         
                         if(difficulty == "Very Hard"):
-                            self.game.find_and_click_button("event_very_hard_raid")
+                            self.game.find_and_click_button("event_raid_very_hard")
                         elif(difficulty == "Extreme"):
-                            self.game.find_and_click_button("event_extreme_raid")
+                            self.game.find_and_click_button("event_raid_extreme")
+                        elif(difficulty == "Impossible"):
+                            self.game.find_and_click_button("event_raid_impossible")
                             
-                            # If the user does not have enough Treasures to host a Extreme Raid, host a Very Hard Raid instead.
-                            if(not self.game.image_tools.wait_vanish("event_extreme_raid", timeout=3)):
-                                self.game.print_and_save(f"{self.game.printtime()} [INFO] Not enough materials to host Extreme. Hosting Very Hard instead...")
-                                self.game.find_and_click_button("event_very_hard_raid")
+                        # If the user does not have enough Treasures to host a Extreme or an Impossible Raid, host a Very Hard Raid instead.
+                        if(difficulty == "Extreme" and not self.game.image_tools.wait_vanish("event_raid_extreme", timeout=3)):
+                            self.game.print_and_save(f"{self.game.printtime()} [INFO] Not enough materials to host Extreme. Hosting Very Hard instead...")
+                            self.game.find_and_click_button("event_very_hard_raid")
+                        elif(difficulty == "Impossible" and not self.game.image_tools.wait_vanish("event_raid_impossible", timeout=3)):
+                            self.game.print_and_save(f"{self.game.printtime()} [INFO] Not enough materials to host Impossible. Hosting Very Hard instead...")
+                            self.game.find_and_click_button("event_very_hard_raid")
                     elif(temp_mission_name.lower() == "event quest"):
                         self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Quest...")
                         self.game.find_and_click_button("event_quests")

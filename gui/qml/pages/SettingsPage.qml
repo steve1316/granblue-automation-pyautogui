@@ -1435,6 +1435,7 @@ Item{
                             { text: "Event Raid", enabled: false },
                             { text: "VH Event Raid", map: "", enabled: true },
                             { text: "EX Event Raid", map: "", enabled: true },
+                            { text: "IM Event Raid", map: "", enabled: true },
                             { text: "Event Quest", enabled: false },
                             { text: "N Event Quest", map: "", enabled: true },
                             { text: "H Event Quest", map: "", enabled: true },

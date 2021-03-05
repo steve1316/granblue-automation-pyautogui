@@ -1541,6 +1541,8 @@ class Game:
                     difficulty = "Very Hard"
                 elif(mission_name.find("EX ") == 0):
                     difficulty = "Extreme"
+                elif(mission_name.find("IM ") == 0):
+                    difficulty = "Impossible"
             elif(farming_mode.lower() == "dread barrage"):
                 if(mission_name.find("1 Star") == 0):
                     difficulty = "1 Star"
@@ -1762,7 +1764,7 @@ class Game:
                                 self.check_for_ap(use_full_elixirs=self.quest_refill)
                                 summon_check = False
                                 
-                                # If the bot tried to repeat a Extreme difficulty Event Raid and it lacked the treasures to host it, go back to select_map.
+                                # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select_map().
                                 if(self.farming_mode.lower() == "event (token drawboxes)" and self.image_tools.confirm_location("not_enough_treasure")):
                                     self.find_and_click_button("ok")
                                     self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
