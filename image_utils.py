@@ -33,36 +33,36 @@ class ImageUtils:
     def __init__(self, game, window_left: int = None, window_top: int = None, window_width: int = None, window_height: int = None, debug_mode: bool = False):
         super().__init__()
         
-        self.game = game
-        self.debug_mode = debug_mode
+        self._game = game
+        self._debug_mode = debug_mode
         
         # The dimensions are set in calibrate_game_window() in Game class.
-        self.window_left = window_left
-        self.window_top = window_top
-        self.window_width = window_width
-        self.window_height = window_height
+        self._window_left = window_left
+        self._window_top = window_top
+        self._window_width = window_width
+        self._window_height = window_height
         
         # Initialize the following for saving screenshots.
-        self.image_number = 0
-        self.new_folder_name = None
+        self._image_number = 0
+        self._new_folder_name = None
         
         # Initialize GuiBot object for image matching.
-        self.guibot = GuiBot()
-        self.file_resolver = FileResolver()
+        self._guibot = GuiBot()
+        self._file_resolver = FileResolver()
         
         # Initialize EasyOCR for text detection.
-        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Initializing EasyOCR reader...")
-        self.reader = easyocr.Reader(["en"], gpu=True)
-        self.game.print_and_save(f"{self.game.printtime()} [INFO] EasyOCR reader initialized.")
+        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Initializing EasyOCR reader...")
+        self._reader = easyocr.Reader(["en"], gpu=True)
+        self._game.print_and_save(f"{self._game.printtime()} [INFO] EasyOCR reader initialized.")
     
-    def clear_memory_guibot(self):
+    def _clear_memory_guibot(self):
         """Eliminates the memory leak caused by GuiBot by deleting the GuiBot object and reinitializing it. This is required before or after every single GuiBot operation, else you will run into cv::OutOfMemoryError.
 
         Returns:
             None
         """
-        del self.guibot
-        self.guibot = GuiBot()
+        del self._guibot
+        self._guibot = GuiBot()
         return None
 
     def find_button(self, button_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, confirm_location_check: bool = False, tries: int = 3, sleep_time: int = 1, suppress_error: bool = False):
@@ -83,26 +83,26 @@ class ImageUtils:
         button_location = None
         guibot_check = False
         while (button_location == None):
-            if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
+            if(self._window_left != None or self._window_top != None or self._window_width != None or self._window_height != None):
                 button_location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check, 
-                                                          region=(self.window_left, self.window_top, self.window_width, self.window_height))
+                                                          region=(self._window_left, self._window_top, self._window_width, self._window_height))
             else:
                 button_location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence=custom_confidence, grayscale=grayscale_check)
                 
             if (button_location == None):
                 # Use GuiBot to template match if PyAutoGUI failed.    
-                self.file_resolver.add_path("images/buttons/")
-                self.clear_memory_guibot()
-                button_location = self.guibot.exists(f"{button_name.lower()}")
+                self._file_resolver.add_path("images/buttons/")
+                self._clear_memory_guibot()
+                button_location = self._guibot.exists(f"{button_name.lower()}")
                 if(button_location == None):
                     tries -= 1
                     if (tries <= 0):
                         if(not suppress_error):
-                            self.game.print_and_save(f"{self.game.printtime()} [WARNING] Failed to find the {button_name.upper()} button.")
+                            self._game.print_and_save(f"{self._game.printtime()} [WARNING] Failed to find the {button_name.upper()} button.")
                         return None
                     
-                    if(self.debug_mode):
-                        self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not locate the {button_name.upper()} button. Trying again in {sleep_time} seconds...")
+                    if(self._debug_mode):
+                        self._game.print_and_save(f"{self._game.printtime()} [WARNING] Could not locate the {button_name.upper()} button. Trying again in {sleep_time} seconds...")
                         
                     time.sleep(sleep_time)
                 else:
@@ -112,8 +112,8 @@ class ImageUtils:
         if(guibot_check):
             button_location = (button_location.target.x, button_location.target.y)
             
-        if(self.debug_mode):
-            self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Found the {button_name.upper()} button at {button_location}.")
+        if(self._debug_mode):
+            self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] Found the {button_name.upper()} button at {button_location}.")
             
         if (confirm_location_check):
             self.confirm_location(button_name)
@@ -135,32 +135,32 @@ class ImageUtils:
         """
         header_location = None
         while (header_location == None):
-            if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
+            if(self._window_left != None or self._window_top != None or self._window_width != None or self._window_height != None):
                 header_location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check, 
-                                                          region=(self.window_left, self.window_top, self.window_width, self.window_height))
+                                                          region=(self._window_left, self._window_top, self._window_width, self._window_height))
             else:
                 header_location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence=custom_confidence, grayscale=grayscale_check)
                 
             if (header_location == None):
                 # Use GuiBot to template match if PyAutoGUI failed.
-                self.file_resolver.add_path("images/headers/")
-                self.clear_memory_guibot()
-                header_location = self.guibot.exists(f"{location_name.lower()}_header")
+                self._file_resolver.add_path("images/headers/")
+                self._clear_memory_guibot()
+                header_location = self._guibot.exists(f"{location_name.lower()}_header")
                 if(header_location == None):
                     tries -= 1
                     if (tries <= 0):
                         # If tries ran out, return False.
-                        if(self.debug_mode):
-                            self.game.print_and_save(f"{self.game.printtime()} [WARNING] Failed to confirm the bot's location at {location_name.upper()}.")
+                        if(self._debug_mode):
+                            self._game.print_and_save(f"{self._game.printtime()} [WARNING] Failed to confirm the bot's location at {location_name.upper()}.")
                         return False
                     
-                    if(self.debug_mode):
-                        self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not confirm the bot's location at {location_name.upper()}. Trying again in {sleep_time} seconds...")
+                    if(self._debug_mode):
+                        self._game.print_and_save(f"{self._game.printtime()} [WARNING] Could not confirm the bot's location at {location_name.upper()}. Trying again in {sleep_time} seconds...")
                         
                     time.sleep(sleep_time)
                     
-        if(self.debug_mode):
-            self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Bot's current location is at {location_name.upper()}.")
+        if(self._debug_mode):
+            self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] Bot's current location is at {location_name.upper()}.")
             
         return True
 
@@ -179,9 +179,9 @@ class ImageUtils:
         Returns:
             summon_location (int, int): Tuple of coordinates of where the center of the Summon is located if image matching was successful. Otherwise, return None.
         """
-        if(self.debug_mode):
-            self.game.print_and_save(f"{self.game.printtime()} [DEBUG] Received the following list of Summons to search for: {str(summon_list)}")
-            self.game.print_and_save(f"{self.game.printtime()} [DEBUG] Received the following list of Elements: {str(summon_element_list)}")
+        if(self._debug_mode):
+            self._game.print_and_save(f"{self._game.printtime()} [DEBUG] Received the following list of Summons to search for: {str(summon_list)}")
+            self._game.print_and_save(f"{self._game.printtime()} [DEBUG] Received the following list of Elements: {str(summon_element_list)}")
         
         summon_location = None
         guibot_check = False
@@ -189,48 +189,48 @@ class ImageUtils:
         
         while(summon_location == None and summon_index <= len(summon_list)):
             # First select the Summon Element tab at the current index.
-            self.game.print_and_save(f"{self.game.printtime()} [INFO] Now attempting to find: {summon_list[summon_index].upper()}")
+            self._game.print_and_save(f"{self._game.printtime()} [INFO] Now attempting to find: {summon_list[summon_index].upper()}")
             current_summon_element = summon_element_list[summon_index]
-            self.game.find_and_click_button(f"summon_{current_summon_element}")
+            self._game.find_and_click_button(f"summon_{current_summon_element}")
             
             while (summon_location == None and summon_index <= len(summon_list)):
                 # Now try and find the Summon at the current index.
-                if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
+                if(self._window_left != None or self._window_top != None or self._window_width != None or self._window_height != None):
                     summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_list[summon_index]}.png", confidence=custom_confidence, grayscale=grayscale_check, 
-                                                                    region=(self.window_left, self.window_top, self.window_width, self.window_height))
+                                                                    region=(self._window_left, self._window_top, self._window_width, self._window_height))
                 else:
                     summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_list[summon_index]}.png", confidence=custom_confidence, grayscale=grayscale_check)
                     
                 if (summon_location == None):
                     # Use GuiBot to template match if PyAutoGUI failed.
-                    self.file_resolver.add_path("images/summons/")
-                    self.clear_memory_guibot()
-                    summon_location = self.guibot.exists(f"{summon_list[summon_index]}")
+                    self._file_resolver.add_path("images/summons/")
+                    self._clear_memory_guibot()
+                    summon_location = self._guibot.exists(f"{summon_list[summon_index]}")
                     if(summon_location == None):        
-                        if(self.debug_mode):
-                            self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not locate {summon_list[summon_index].upper()} Summon. Trying again...")
+                        if(self._debug_mode):
+                            self._game.print_and_save(f"{self._game.printtime()} [WARNING] Could not locate {summon_list[summon_index].upper()} Summon. Trying again...")
                             
                         # If the bot reached the bottom of the page, scroll back up to the top and start searching for the next Summon.
                         if(self.find_button("bottom_of_summon_selection", tries=1, suppress_error=True) != None):
-                            self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, 10000)
+                            self._game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, 10000)
                             summon_index += 1
                             break
                        
                         # If matching failed, scroll the screen down to see more Summons.
-                        self.game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
+                        self._game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
                     else:
                         guibot_check = True
                         
             if(summon_location == None and (summon_index + 1) > len(summon_list)):
                 if(not suppress_error):
-                    self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not find any of the specified Summons.")
+                    self._game.print_and_save(f"{self._game.printtime()} [WARNING] Could not find any of the specified Summons.")
                 return None
                     
         # If the location was successfully found using GuiBot, convert the Match object to a Location object.
         if(guibot_check):
             summon_location = (summon_location.target.x, summon_location.target.y)
             
-        self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Found {summon_list[summon_index].upper()} Summon at {summon_location}.")
+        self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] Found {summon_list[summon_index].upper()} Summon at {summon_location}.")
             
         return summon_location
 
@@ -252,7 +252,7 @@ class ImageUtils:
         vyrn_dialog_location = None
         guibot_check = False
         while (lyria_dialog_location == None and vyrn_dialog_location == None):
-            if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None):
+            if(self._window_left != None or self._window_top != None or self._window_width != None or self._window_height != None):
                 lyria_dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_lyria.png", confidence=custom_confidence, grayscale=grayscale_check, 
                                                                  region=(attack_button_x - 350, attack_button_y + 28, attack_button_x - 264, attack_button_y + 50))
                 vyrn_dialog_location = pyautogui.locateCenterOnScreen(f"images/dialogs/dialog_vyrn.png", confidence=custom_confidence, grayscale=grayscale_check, 
@@ -263,20 +263,20 @@ class ImageUtils:
                 
             if (lyria_dialog_location == None and vyrn_dialog_location == None):
                 # Use GuiBot to template match if PyAutoGUI failed.
-                self.file_resolver.add_path("images/dialogs/")
-                self.clear_memory_guibot()
-                lyria_dialog_location = self.guibot.exists(f"dialog_lyria")
-                self.clear_memory_guibot()
-                vyrn_dialog_location = self.guibot.exists(f"dialog_vyrn")
+                self._file_resolver.add_path("images/dialogs/")
+                self._clear_memory_guibot()
+                lyria_dialog_location = self._guibot.exists(f"dialog_lyria")
+                self._clear_memory_guibot()
+                vyrn_dialog_location = self._guibot.exists(f"dialog_vyrn")
                 if (lyria_dialog_location == None and vyrn_dialog_location == None):
                     tries -= 1
                     if (tries <= 0):
-                        if(self.debug_mode):
-                            self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] There are no Lyria/Vyrn dialog popups detected.")
+                        if(self._debug_mode):
+                            self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] There are no Lyria/Vyrn dialog popups detected.")
                         return None
                     
-                    if(self.debug_mode):
-                        self.game.print_and_save(f"{self.game.printtime()} [WARNING] Could not locate any Lyria/Vyrn dialog popups failed. Trying again in {sleep_time} seconds...")
+                    if(self._debug_mode):
+                        self._game.print_and_save(f"{self._game.printtime()} [WARNING] Could not locate any Lyria/Vyrn dialog popups failed. Trying again in {sleep_time} seconds...")
                         
                     time.sleep(sleep_time)
                 else:
@@ -289,11 +289,11 @@ class ImageUtils:
             else:
                 vyrn_dialog_location = (vyrn_dialog_location.target.x, vyrn_dialog_location.target.y)
                 
-        if(self.debug_mode):
+        if(self._debug_mode):
             if(lyria_dialog_location != None):
-                self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Found a Lyria dialog popup at {lyria_dialog_location}.")
+                self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] Found a Lyria dialog popup at {lyria_dialog_location}.")
             else:
-                self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Found a Vyrn dialog popup at {vyrn_dialog_location}.")
+                self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] Found a Vyrn dialog popup at {vyrn_dialog_location}.")
             
         if(lyria_dialog_location != None):
             return lyria_dialog_location
@@ -320,10 +320,10 @@ class ImageUtils:
             for file in files:
                 file_name = os.path.splitext(str(file))[0]
                 if (file_name.lower() == image_name.lower()):
-                    if(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None and custom_region == None):
+                    if(self._window_left != None or self._window_top != None or self._window_width != None or self._window_height != None and custom_region == None):
                         locations = list(pyautogui.locateAllOnScreen(f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check, 
-                                                                     region=(self.window_left, self.window_top, self.window_width, self.window_height)))
-                    elif(self.window_left != None or self.window_top != None or self.window_width != None or self.window_height != None and custom_region != None):
+                                                                     region=(self._window_left, self._window_top, self._window_width, self._window_height)))
+                    elif(self._window_left != None or self._window_top != None or self._window_width != None or self._window_height != None and custom_region != None):
                         locations = list(pyautogui.locateAllOnScreen(f"{root}/{image_name}.png", confidence=custom_confidence, grayscale=grayscale_check, 
                                                                      region=custom_region))
                     else:
@@ -341,14 +341,14 @@ class ImageUtils:
                         
                         if(not hide_info):
                             for location in centered_locations:
-                                self.game.print_and_save(f"{self.game.printtime()} [INFO] Occurrence for {image_name.upper()} found at: " + str(location))
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Occurrence for {image_name.upper()} found at: " + str(location))
                     else:
-                        if(self.debug_mode):
-                            self.game.print_and_save(f"{self.game.printtime()} [DEBUG] Failed to detect any occurrences of {image_name.upper()} images.")
+                        if(self._debug_mode):
+                            self._game.print_and_save(f"{self._game.printtime()} [DEBUG] Failed to detect any occurrences of {image_name.upper()} images.")
                         
                     return centered_locations
                 
-        self.game.print_and_save(f"{self.game.printtime()} [ERROR] Specified file does not exist inside the /images/ folder or its subfolders.")
+        self._game.print_and_save(f"{self._game.printtime()} [ERROR] Specified file does not exist inside the /images/ folder or its subfolders.")
         return None
 
     def find_farmed_items(self, item_list: Iterable[str]):
@@ -360,7 +360,7 @@ class ImageUtils:
         Returns:
             amounts_farmed (Iterable[int]): List of amounts gained for items in order according to the given item_list.
         """
-        self.file_resolver.add_path("images/items/")
+        self._file_resolver.add_path("images/items/")
         
         # List of items blacklisted from using GuiBot's built-in CV finder due to how similar looking they are. These items have to use my method using 
         # PyAutoGUI instead for the confidence argument from OpenCV as GuiBot does not have a confidence argument.
@@ -386,7 +386,7 @@ class ImageUtils:
                                  "Ca Ong Omega Anima", "Gilgamesh Anima", "Gilgamesh Omega Anima", "Hector Anima", "Hector Omega Anima", "Anubis Anima", "Anubis Omega Anima",
                                  "Huanglong Anima", "Huanglong Omega Anima", "Qilin Anima", "Qilin Omega Anima", "Tiamat Malice Anima", "Leviathan Malice Anima", "Phronesis Anima"]
         
-        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now detecting item rewards...")
+        self._game.print_and_save(f"{self._game.printtime()} [INFO] Now detecting item rewards...")
         amounts_farmed = []
         guibot_check = False
         for item in item_list:
@@ -398,8 +398,8 @@ class ImageUtils:
             elif(item in lite_blacklisted_items):
                 locations = self.find_all(item, custom_confidence=0.85)
             else:
-                self.clear_memory_guibot()
-                locations = self.guibot.find_all(item, timeout=1, allow_zero=True)
+                self._clear_memory_guibot()
+                locations = self._guibot.find_all(item, timeout=1, allow_zero=True)
                 guibot_check = True
                 
             for index, location in enumerate(locations):
@@ -419,7 +419,7 @@ class ImageUtils:
                         location = (location.target.x, location.target.y)
                     
                     if(guibot_check):    
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Occurrence for {item.upper()} found at: {location} using GuiBot.")
+                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Occurrence for {item.upper()} found at: {location} using GuiBot.")
                     
                     # Adjust the width and height variables if EasyOCR cannot detect the numbers correctly.
                     left = location[0] + 10
@@ -436,7 +436,7 @@ class ImageUtils:
                     # Create a screenshot in the specified region named "test" and save it in the /temp/ folder. Then use EasyOCR to extract text from it into a list.
                     test_image = pyautogui.screenshot("images/temp/test.png", region=(left, top, width, height))
                     # test_image.show() # Uncomment this line of code to see what the bot captured for the region of the detected text.  
-                    result = self.reader.readtext("images/temp/test.png", detail=0)
+                    result = self._reader.readtext("images/temp/test.png", detail=0)
                     
                     # Split any unnecessary characters in the extracted text until only the number remains.
                     result_cleaned = 0
@@ -453,15 +453,15 @@ class ImageUtils:
                         
                     total_amount_farmed += result_cleaned
                 else:
-                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Duplicate location detected. Removing it...")
+                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Duplicate location detected. Removing it...")
                     
             amounts_farmed.append(total_amount_farmed)
         
         # If items were detected on the Quest Results screen, take a screenshot and save in the /results/ folder.    
         if(len(amounts_farmed) > 0 and amounts_farmed[0] != 0):
-            self.take_screenshot()
+            self._take_screenshot()
         
-        self.game.print_and_save(f"{self.game.printtime()} [INFO] Detection of item rewards finished.")
+        self._game.print_and_save(f"{self._game.printtime()} [INFO] Detection of item rewards finished.")
         return amounts_farmed
 
     def wait_vanish(self, image_name: str, timeout: int = 30):
@@ -474,37 +474,37 @@ class ImageUtils:
         Returns:
             (bool): True if the image vanishes from the screen within the allotted time or False if timeout was reached.
         """
-        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now waiting for {image_name} to vanish from screen...")
-        self.file_resolver.add_path("images/buttons/")
+        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now waiting for {image_name} to vanish from screen...")
+        self._file_resolver.add_path("images/buttons/")
         try:
-            self.clear_memory_guibot()
-            if(self.guibot.wait_vanish(image_name, timeout=timeout)):
-                self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Image successfully vanished from screen...")
+            self._clear_memory_guibot()
+            if(self._guibot.wait_vanish(image_name, timeout=timeout)):
+                self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] Image successfully vanished from screen...")
                 return True
             else:
-                self.game.print_and_save(f"{self.game.printtime()} [WARNING] Image did not vanish from screen...")
+                self._game.print_and_save(f"{self._game.printtime()} [WARNING] Image did not vanish from screen...")
                 return False
         except Exception as e:
-            self.game.print_and_save(f"{self.game.printtime()} [ERROR] {image_name} should have vanished from the screen after {timeout} seconds but did not. Exact error is: \n{e}")
+            self._game.print_and_save(f"{self._game.printtime()} [ERROR] {image_name} should have vanished from the screen after {timeout} seconds but did not. Exact error is: \n{e}")
     
-    def take_screenshot(self):
+    def _take_screenshot(self):
         """Takes a screenshot of the Quest Results screen when called in find_farmed_items().
 
         Returns:
             None
         """
-        self.game.print_and_save(f"{self.game.printtime()} [INFO] Taking a screenshot of the Quest Results screen...")
+        self._game.print_and_save(f"{self._game.printtime()} [INFO] Taking a screenshot of the Quest Results screen...")
         
         # Construct the image file and folder name from the current date, time, and image number.
         current_time = datetime.datetime.now().strftime("%H-%M-%S")
         current_date = date.today()
-        new_file_name = f"{current_date} {current_time} #{self.image_number}"
-        self.image_number += 1
-        if(self.new_folder_name == None):
-            self.new_folder_name = f"{current_date} {current_time}"
+        new_file_name = f"{current_date} {current_time} #{self._image_number}"
+        self._image_number += 1
+        if(self._new_folder_name == None):
+            self._new_folder_name = f"{current_date} {current_time}"
             
         # Take a screenshot using the calibrated window dimensions.
-        new_image = pyautogui.screenshot(region=(self.window_left, self.window_top, self.window_width, self.window_height))
+        new_image = pyautogui.screenshot(region=(self._window_left, self._window_top, self._window_width, self._window_height))
         
         # Create the /results/ directory if it does not already exist.
         current_dir = os.getcwd()
@@ -513,13 +513,13 @@ class ImageUtils:
             os.makedirs(results_dir)
         
         # Then create a new folder to hold this session's screenshots in.
-        new_dir = os.path.join(current_dir, r"results", self.new_folder_name)
+        new_dir = os.path.join(current_dir, r"results", self._new_folder_name)
         if not os.path.exists(new_dir):
             os.makedirs(new_dir)
         
         # Finally, save the new image into the results directory with its new file name.
-        new_image.save(f"./results/{self.new_folder_name}/{new_file_name}.jpg")
-        self.game.print_and_save(f"{self.game.printtime()} [INFO] Results image saved as \"{new_file_name}.jpg\" in \"{self.new_folder_name}\" folder...")
+        new_image.save(f"./results/{self._new_folder_name}/{new_file_name}.jpg")
+        self._game.print_and_save(f"{self._game.printtime()} [INFO] Results image saved as \"{new_file_name}.jpg\" in \"{self._new_folder_name}\" folder...")
         return None
     
     def generate_alert_for_captcha(self):

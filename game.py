@@ -35,115 +35,114 @@ class Game:
         super().__init__()
         
         # Save a reference to the original current working directory.
-        self.owd = os.getcwd()
+        self._owd = os.getcwd()
         
         ########## config.ini ##########
         # Grab the Twitter API keys and tokens from config.ini. The list order is: [consumer key, consumer secret key, access token, access secret token].
-        self.config = ConfigParser()
-        self.config.read("config.ini")
-        keys_tokens = [self.config.get("twitter", "api_key"), self.config.get("twitter", "api_key_secret"), 
-                       self.config.get("twitter", "access_token"), self.config.get("twitter", "access_token_secret")]
-        custom_mouse_speed = float(self.config.get("configuration", "mouse_speed"))
+        config = ConfigParser()
+        config.read("config.ini")
+        keys_tokens = [config.get("twitter", "api_key"), config.get("twitter", "api_key_secret"), config.get("twitter", "access_token"), config.get("twitter", "access_token_secret")]
+        custom_mouse_speed = float(config.get("configuration", "mouse_speed"))
         
         # Grab the timings between various actions during Combat Mode from config.ini as well.
-        self.idle_seconds_after_skill = float(self.config.get("configuration", "idle_seconds_after_skill"))
-        self.idle_seconds_after_summon = float(self.config.get("configuration", "idle_seconds_after_summon"))
+        self._idle_seconds_after_skill = float(config.get("configuration", "idle_seconds_after_skill"))
+        self._idle_seconds_after_summon = float(config.get("configuration", "idle_seconds_after_summon"))
         
         # Determine whether or not the user wants to refill using Full Elixir/Soul Balm.
-        self.quest_refill = self.config.getboolean("refill", "refill_using_full_elixir")
-        self.raid_refill = self.config.getboolean("refill", "refill_using_soul_balms")
+        self.use_full_elixir = config.getboolean("refill", "refill_using_full_elixir")
+        self.use_soul_balm = config.getboolean("refill", "refill_using_soul_balms")
         
         # Keep track of the following for Events.
-        self.enable_event_nightmare = self.config.getboolean("event", "enable_event_nightmare")
-        self.event_nightmare_combat_script = self.config.get("event", "event_nightmare_combat_script")
+        self._enable_event_nightmare = config.getboolean("event", "enable_event_nightmare")
+        self._event_nightmare_combat_script = config.get("event", "event_nightmare_combat_script")
         
-        self.event_nightmare_summon_list = self.config.get("event", "event_nightmare_summon_list")
-        self.event_nightmare_summon_list = self.event_nightmare_summon_list.replace(" ","_").split(",")
-        if(len(self.event_nightmare_summon_list) == 1 and self.event_nightmare_summon_list[0] == ""):
-            self.event_nightmare_summon_list.clear()
+        self._event_nightmare_summon_list = config.get("event", "event_nightmare_summon_list")
+        self._event_nightmare_summon_list = self._event_nightmare_summon_list.replace(" ","_").split(",")
+        if(len(self._event_nightmare_summon_list) == 1 and self._event_nightmare_summon_list[0] == ""):
+            self._event_nightmare_summon_list.clear()
             
-        self.event_nightmare_summon_element_list = self.config.get("event", "event_nightmare_summon_element_list")
-        self.event_nightmare_summon_element_list = self.event_nightmare_summon_element_list.replace(" ","_").split(",")
-        if(len(self.event_nightmare_summon_element_list) == 1 and self.event_nightmare_summon_element_list[0] == ""):
-            self.event_nightmare_summon_element_list.clear()
+        self._event_nightmare_summon_element_list = config.get("event", "event_nightmare_summon_element_list")
+        self._event_nightmare_summon_element_list = self._event_nightmare_summon_element_list.replace(" ","_").split(",")
+        if(len(self._event_nightmare_summon_element_list) == 1 and self._event_nightmare_summon_element_list[0] == ""):
+            self._event_nightmare_summon_element_list.clear()
             
-        self.event_nightmare_group_number = self.config.get("event", "event_nightmare_group_number")
-        self.event_nightmare_party_number = self.config.get("event", "event_nightmare_party_number")
+        self._event_nightmare_group_number = config.get("event", "event_nightmare_group_number")
+        self._event_nightmare_party_number = config.get("event", "event_nightmare_party_number")
         
         # Keep track of the following for Dimensional Halo.
-        self.enable_dimensional_halo = self.config.getboolean("dimensional_halo", "enable_dimensional_halo")
-        self.dimensional_halo_combat_script = self.config.get("dimensional_halo", "dimensional_halo_combat_script")
+        self._enable_dimensional_halo = config.getboolean("dimensional_halo", "enable_dimensional_halo")
+        self._dimensional_halo_combat_script = config.get("dimensional_halo", "dimensional_halo_combat_script")
         
-        self.dimensional_halo_summon_list = self.config.get("dimensional_halo", "dimensional_halo_summon_list")
-        self.dimensional_halo_summon_list = self.dimensional_halo_summon_list.replace(" ","_").split(",")
-        if(len(self.dimensional_halo_summon_list) == 1 and self.dimensional_halo_summon_list[0] == ""):
-            self.dimensional_halo_summon_list.clear()
+        self._dimensional_halo_summon_list = config.get("dimensional_halo", "dimensional_halo_summon_list")
+        self._dimensional_halo_summon_list = self._dimensional_halo_summon_list.replace(" ","_").split(",")
+        if(len(self._dimensional_halo_summon_list) == 1 and self._dimensional_halo_summon_list[0] == ""):
+            self._dimensional_halo_summon_list.clear()
             
-        self.dimensional_halo_summon_element_list = self.config.get("dimensional_halo", "dimensional_halo_summon_element_list")
-        self.dimensional_halo_summon_element_list = self.dimensional_halo_summon_element_list.replace(" ","_").split(",")
-        if(len(self.dimensional_halo_summon_element_list) == 1 and self.dimensional_halo_summon_element_list[0] == ""):
-            self.dimensional_halo_summon_element_list.clear()
+        self._dimensional_halo_summon_element_list = config.get("dimensional_halo", "dimensional_halo_summon_element_list")
+        self._dimensional_halo_summon_element_list = self._dimensional_halo_summon_element_list.replace(" ","_").split(",")
+        if(len(self._dimensional_halo_summon_element_list) == 1 and self._dimensional_halo_summon_element_list[0] == ""):
+            self._dimensional_halo_summon_element_list.clear()
             
-        self.dimensional_halo_group_number = self.config.get("dimensional_halo", "dimensional_halo_group_number")
-        self.dimensional_halo_party_number = self.config.get("dimensional_halo", "dimensional_halo_party_number")
-        self.dimensional_halo_amount = 0
+        self._dimensional_halo_group_number = config.get("dimensional_halo", "dimensional_halo_group_number")
+        self._dimensional_halo_party_number = config.get("dimensional_halo", "dimensional_halo_party_number")
+        self._dimensional_halo_amount = 0
         
         # Keep track of the following for Dread Barrage Unparalleled Foes.
-        self.enable_unparalleled_foe = self.config.getboolean("dread_barrage", "enable_unparalleled_foe")
-        self.enable_unparalleled_foe_level_95 = self.config.getboolean("dread_barrage", "enable_unparalleled_foe_level_95")
-        self.enable_unparalleled_foe_level_175 = self.config.getboolean("dread_barrage", "enable_unparalleled_foe_level_175")
-        self.unparalleled_foe_combat_script = self.config.get("dread_barrage", "unparalleled_foe_combat_script")
+        self._enable_unparalleled_foe = config.getboolean("dread_barrage", "enable_unparalleled_foe")
+        self._enable_unparalleled_foe_level_95 = config.getboolean("dread_barrage", "enable_unparalleled_foe_level_95")
+        self._enable_unparalleled_foe_level_175 = config.getboolean("dread_barrage", "enable_unparalleled_foe_level_175")
+        self.unparalleled_foe_combat_script = config.get("dread_barrage", "unparalleled_foe_combat_script")
         
-        self.unparalleled_foe_summon_list = self.config.get("dread_barrage", "unparalleled_foe_summon_list")
-        self.unparalleled_foe_summon_list = self.unparalleled_foe_summon_list.replace(" ","_").split(",")
-        if(len(self.unparalleled_foe_summon_list) == 1 and self.unparalleled_foe_summon_list[0] == ""):
-            self.unparalleled_foe_summon_list.clear()
+        self._unparalleled_foe_summon_list = config.get("dread_barrage", "unparalleled_foe_summon_list")
+        self._unparalleled_foe_summon_list = self._unparalleled_foe_summon_list.replace(" ","_").split(",")
+        if(len(self._unparalleled_foe_summon_list) == 1 and self._unparalleled_foe_summon_list[0] == ""):
+            self._unparalleled_foe_summon_list.clear()
             
-        self.unparalleled_foe_summon_element_list = self.config.get("dread_barrage", "unparalleled_foe_summon_element_list")
-        self.unparalleled_foe_summon_element_list = self.unparalleled_foe_summon_element_list.replace(" ","_").split(",")
-        if(len(self.unparalleled_foe_summon_element_list) == 1 and self.unparalleled_foe_summon_element_list[0] == ""):
-            self.unparalleled_foe_summon_element_list.clear()
+        self._unparalleled_foe_summon_element_list = config.get("dread_barrage", "unparalleled_foe_summon_element_list")
+        self._unparalleled_foe_summon_element_list = self._unparalleled_foe_summon_element_list.replace(" ","_").split(",")
+        if(len(self._unparalleled_foe_summon_element_list) == 1 and self._unparalleled_foe_summon_element_list[0] == ""):
+            self._unparalleled_foe_summon_element_list.clear()
             
-        self.unparalleled_foe_group_number = self.config.get("dread_barrage", "unparalleled_foe_group_number")
-        self.unparalleled_foe_party_number = self.config.get("dread_barrage", "unparalleled_foe_party_number")
+        self._unparalleled_foe_group_number = config.get("dread_barrage", "unparalleled_foe_group_number")
+        self._unparalleled_foe_party_number = config.get("dread_barrage", "unparalleled_foe_party_number")
         ########## config.ini ##########
         
         # Start a timer signaling bot start in order to keep track of elapsed time and create a Queue to share logging messages between backend and frontend.
-        self.starting_time = timer()
-        self.queue = queue
+        self._starting_time = timer()
+        self._queue = queue
         
         # Keep track of a bot running status flag shared in memory. Value of 0 means the bot is currently running and a value of 1 means that the bot has stopped.
-        self.isBotRunning = isBotRunning
+        self._isBotRunning = isBotRunning
         
         # Set a debug flag to determine whether or not to print debugging messages.
-        self.debug_mode = debug_mode
+        self._debug_mode = debug_mode
         
         # Initialize the objects of helper classes.
-        self.map_selection = MapSelection(self, isBotRunning)
-        self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3], debug_mode=self.debug_mode)
-        self.image_tools = ImageUtils(game=self, debug_mode=self.debug_mode)
-        self.mouse_tools = MouseUtils(game=self, mouse_speed=custom_mouse_speed, debug_mode=self.debug_mode)
+        self._map_selection = MapSelection(self, isBotRunning)
+        self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3], debug_mode=self._debug_mode)
+        self.image_tools = ImageUtils(game=self, debug_mode=self._debug_mode)
+        self.mouse_tools = MouseUtils(game=self, mouse_speed=custom_mouse_speed, debug_mode=self._debug_mode)
         
         # Save the locations of the "Home", "Attack", and "Back" buttons for use in other classes.
         self.home_button_location = None
-        self.attack_button_location = None
-        self.back_button_location = None
+        self._attack_button_location = None
+        self._back_button_location = None
         
         # Keep track of the following for Combat Mode.
-        self.combat_script = combat_script
-        self.retreat_check = False
+        self._combat_script = combat_script
+        self._retreat_check = False
         
         # Keep track of the following for Farming Mode.
-        self.item_name = ""
-        self.item_amount_to_farm = 0
-        self.item_amount_farmed = 0
-        self.farming_mode = ""
-        self.mission_name = ""
-        self.summon_element_list = []
-        self.summon_list = []
-        self.group_number = 0
-        self.party_number = 0
-        self.amount_of_runs_finished = 0
+        self._item_name = ""
+        self._item_amount_to_farm = 0
+        self._item_amount_farmed = 0
+        self._farming_mode = ""
+        self._mission_name = ""
+        self._summon_element_list = []
+        self._summon_list = []
+        self._group_number = 0
+        self._party_number = 0
+        self._amount_of_runs_finished = 0
         
         # The amount of time to pause after each call to PyAutoGUI. This applies to calls inside mouse_utils and image_utils.
         pyautogui.PAUSE = 0.25
@@ -157,7 +156,7 @@ class Game:
         Returns:
             str: A formatted string that displays the elapsed time since the bot started.
         """
-        return str(datetime.timedelta(seconds=(timer() - self.starting_time))).split('.')[0]
+        return str(datetime.timedelta(seconds=(timer() - self._starting_time))).split('.')[0]
     
     def print_and_save(self, message: str):
         """Saves the logging message into the Queue to be shared with the frontend and then prints it to console.
@@ -168,11 +167,11 @@ class Game:
         Returns:
             None
         """
-        self.queue.put(message)
+        self._queue.put(message)
         print(message)
         return None
 
-    def calibrate_game_window(self, display_info_check: bool = False):
+    def _calibrate_game_window(self, display_info_check: bool = False):
         """Recalibrate the dimensions of the game window for fast and accurate image matching.
 
         Args:
@@ -181,7 +180,7 @@ class Game:
         Returns:
             None
         """
-        if(self.debug_mode):
+        if(self._debug_mode):
             self.print_and_save(f"\n{self.printtime()} [DEBUG] Recalibrating the dimensions of the game window...")
             
         try:
@@ -203,9 +202,9 @@ class Game:
             self.image_tools.window_height = (self.home_button_location[1] + 24) - self.image_tools.window_top
         except Exception:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while calibrating game window dimensions: \n{traceback.format_exc()}")
-            self.isBotRunning.value = 1
+            self._isBotRunning.value = 1
             
-        if(self.debug_mode):
+        if(self._debug_mode):
             self.print_and_save(f"{self.printtime()} [SUCCESS] Dimensions of the game window has been successfully recalibrated.")
             
         if(display_info_check):
@@ -239,7 +238,7 @@ class Game:
         
         # Recalibrate the dimensions of the game window.
         if(display_info_check):
-            self.calibrate_game_window(display_info_check=True)
+            self._calibrate_game_window(display_info_check=True)
             
         if(confirm_location_check):
             self.image_tools.confirm_location("home")
@@ -269,7 +268,7 @@ class Game:
         Returns:
             (bool): Return True if the button was found and clicked. Otherwise, return False.
         """
-        if(self.debug_mode):
+        if(self._debug_mode):
             self.print_and_save(f"{self.printtime()} [DEBUG] Attempting to find and click the button: \"{button_name}\".")
         
         if(button_name.lower() == "quest"):
@@ -303,7 +302,7 @@ class Game:
         else:
             return False
         
-    def party_wipe_check(self):
+    def _party_wipe_check(self):
         """Check to see if the Party has wiped during Combat Mode. Update the retreat check flag if so.
 
         Returns:
@@ -311,7 +310,7 @@ class Game:
         """
         try:
             # Check to see if Party has wiped.
-            if(self.debug_mode):
+            if(self._debug_mode):
                 self.print_and_save(f"\n{self.printtime()} [DEBUG] Checking to see if the Party wiped...")
                 
             party_wipe_indicator = self.image_tools.find_button("party_wipe_indicator", tries=1, suppress_error=True)
@@ -320,13 +319,13 @@ class Game:
                 self.wait(2)
                 self.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1])
                 
-                if((self.farming_mode.lower() != "raid" and self.farming_mode.lower() != "dread barrage") and self.image_tools.confirm_location("continue")):
+                if((self._farming_mode.lower() != "raid" and self._farming_mode.lower() != "dread barrage") and self.image_tools.confirm_location("continue")):
                     # Cancel the popup that asks you if you want to use a Full Elixir to come back. Then click the red "Retreat" button.
                     self.print_and_save(f"{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Retreating now...")
                     self.find_and_click_button("cancel")
                     self.find_and_click_button("retreat_confirmation")
-                    self.retreat_check = True
-                elif((self.farming_mode.lower() == "raid" or self.farming_mode.lower() == "dread barrage") and self.image_tools.confirm_location("salute_participants")):
+                    self._retreat_check = True
+                elif((self._farming_mode.lower() == "raid" or self._farming_mode.lower() == "dread barrage") and self.image_tools.confirm_location("salute_participants")):
                     # Salute the participants.
                     self.print_and_save(f"{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Backing out now without retreating...")
                     self.find_and_click_button("salute")
@@ -338,8 +337,8 @@ class Game:
                     # Then click the "Home" button.
                     self.find_and_click_button("raid_retreat_home")
                     
-                    self.retreat_check = True
-                elif(self.farming_mode.lower() == "coop" and self.image_tools.confirm_location("salute_participants")):
+                    self._retreat_check = True
+                elif(self._farming_mode.lower() == "coop" and self.image_tools.confirm_location("salute_participants")):
                     # Salute the participants.
                     self.print_and_save(f"{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Leaving the Coop room...")
                     self.find_and_click_button("salute")
@@ -351,15 +350,15 @@ class Game:
                     # Then click the "Leave" button.
                     self.find_and_click_button("leave")
                     
-                    self.retreat_check = True
+                    self._retreat_check = True
             else:
-                if(self.debug_mode):
+                if(self._debug_mode):
                     self.print_and_save(f"{self.printtime()} [DEBUG] Party has not wiped.")
                     
             return None
         except Exception:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while checking if Party wiped during Combat Mode: \n{traceback.format_exc()}")
-            self.isBotRunning.value = 1
+            self._isBotRunning.value = 1
             
     def check_for_captcha(self):
         """Checks for CAPTCHA right after selecting a Summon and if detected, alert the user and then stop the bot.
@@ -378,10 +377,10 @@ class Game:
         except Exception:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
             self.image_tools.generate_alert_for_captcha()
-            self.isBotRunning.value = 1
+            self._isBotRunning.value = 1
             self.wait(1)
 
-    def find_summon(self, summon_list: Iterable[str], summon_element_list: Iterable[str]):
+    def _select_summon(self, summon_list: Iterable[str], summon_element_list: Iterable[str]):
         """Finds and selects the specified Summon based on the current index on the Summon Selection screen and then checks for CAPTCHA right afterwards. 
 
         Args:
@@ -407,10 +406,10 @@ class Game:
             return True
         else:
             # If a Summon is not found, start a Trial Battle to refresh Summons.
-            self.reset_summons()
+            self._reset_summons()
             return False
 
-    def reset_summons(self):
+    def _reset_summons(self):
         """Reset the Summons available by starting and then retreating from a Old Lignoid Trial Battle.
 
         Returns:
@@ -452,9 +451,9 @@ class Game:
             return None
         except Exception:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while resetting Summons: \n{traceback.format_exc()}")
-            self.isBotRunning.value = 1
+            self._isBotRunning.value = 1
 
-    def find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 3):
+    def _find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 3):
         """Select the specified Group and Party. It will then start the mission.
 
         Args:
@@ -491,10 +490,10 @@ class Game:
                         set_location = self.image_tools.find_button("party_set_a", tries=1)
         except Exception:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Bot encountered exception while selecting A or B Set: \n{traceback.format_exc()}")
-            self.isBotRunning.value = 1
+            self._isBotRunning.value = 1
             
         # Center the mouse on the "Set A" / "Set B" button and then click the correct Group tab.
-        if(self.debug_mode):
+        if(self._debug_mode):
             self.print_and_save(f"\n{self.printtime()} [DEBUG] Successfully selected the correct Set. Now selecting Group {group_number}...")
         
         x = None
@@ -517,7 +516,7 @@ class Game:
         self.mouse_tools.move_and_click_point(x, y)
         
         # Now select the correct Party.
-        if(self.debug_mode):
+        if(self._debug_mode):
             self.print_and_save(f"{self.printtime()} [DEBUG] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
         
         x = None    
@@ -537,60 +536,60 @@ class Game:
         y = set_location[1] + 325
         self.mouse_tools.move_and_click_point(x, y)
         
-        if(self.debug_mode):
+        if(self._debug_mode):
             self.print_and_save(f"{self.printtime()} [DEBUG] Successfully selected Party {party_number}. Now starting the mission.")
             
         # Find and click the "OK" button to start the mission.
         self.find_and_click_button("ok")
         
         # If a popup appears and says "This raid battle has already ended. The Home screen will now appear.", return False.
-        if(self.farming_mode.lower() == "raid" and self.image_tools.confirm_location("raid_just_ended_home_redirect")):
+        if(self._farming_mode.lower() == "raid" and self.image_tools.confirm_location("raid_just_ended_home_redirect")):
             self.print_and_save(f"\n{self.printtime()} [WARNING] Raid unfortunately just ended. Backing out now...")
             self.find_and_click_button("ok")
             return False
         
         return True
 
-    def find_charge_attacks(self):
+    def _find_charge_attacks(self):
         """Find total number of characters ready to Charge Attack.
 
         Returns:
             number_of_charge_attacks (int): Total number of image matches found for charge attacks.
         """
         number_of_charge_attacks = 0
-        list_of_charge_attacks = self.image_tools.find_all("full_charge", custom_region=(self.attack_button_location[0] - 356, self.attack_button_location[1] + 67, 
-                                                                                         self.attack_button_location[0] - 40, self.attack_button_location[1] + 214), hide_info=True)
+        list_of_charge_attacks = self.image_tools.find_all("full_charge", custom_region=(self._attack_button_location[0] - 356, self._attack_button_location[1] + 67, 
+                                                                                         self._attack_button_location[0] - 40, self._attack_button_location[1] + 214), hide_info=True)
         
         number_of_charge_attacks = len(list_of_charge_attacks)
         return number_of_charge_attacks
 
-    def find_dialog_in_combat(self):
+    def _find_dialog_in_combat(self):
         """Check if there are dialog popups from either Lyria or Vyrn and click them away.
 
         Returns:
             None
         """
-        dialog_location = self.image_tools.find_dialog(self.attack_button_location[0], self.attack_button_location[1], tries=1)
+        dialog_location = self.image_tools.find_dialog(self._attack_button_location[0], self._attack_button_location[1], tries=1)
         if (dialog_location != None):
             self.mouse_tools.move_and_click_point(dialog_location[0] + 180, dialog_location[1] - 51)
             
         return None
         
-    def check_for_ap(self, use_full_elixirs: bool = False):
+    def check_for_ap(self, use_full_elixir: bool = False):
         """Check if the user encountered the "Not Enough AP" popup and it will refill using either Half or Full Elixir.
 
         Args:
-            use_full_elixirs (bool, optional): Will use Full Elixir instead of Half Elixir based on whether this is True or not. Defaults to False.
+            use_full_elixir (bool, optional): Will use Full Elixir instead of Half Elixir based on whether this is True or not. Defaults to False.
 
         Returns:
             None
         """
         # Loop until the user gets to the Summon Selection screen.
-        while((self.farming_mode.lower() != "coop" and not self.image_tools.confirm_location("select_summon", tries=2)) or 
-              (self.farming_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries=2))):
+        while((self._farming_mode.lower() != "coop" and not self.image_tools.confirm_location("select_summon", tries=2)) or 
+              (self._farming_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries=2))):
             if(self.image_tools.confirm_location("not_enough_ap", tries=2)):
                 # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full Elixir.
-                if(use_full_elixirs == False):
+                if(use_full_elixir == False):
                     self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Half Elixir...")
                     half_ap_location = self.image_tools.find_button("refill_half_ap")
                     self.mouse_tools.move_and_click_point(half_ap_location[0], half_ap_location[1] + 175)
@@ -618,7 +617,7 @@ class Game:
         Returns:
             None
         """
-        if(self.farming_mode.lower() == "raid" and self.image_tools.confirm_location("not_enough_ep", tries=2)):
+        if(self._farming_mode.lower() == "raid" and self.image_tools.confirm_location("not_enough_ep", tries=2)):
             # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
             if(use_soul_balm == False):
                 self.print_and_save(f"\n{self.printtime()} [INFO] EP ran out! Using Soul Berries...")
@@ -637,7 +636,7 @@ class Game:
         
         return None
 
-    def select_character(self, character_number: int):
+    def _select_character(self, character_number: int):
         """Selects the portrait of the character specified on the Combat screen.
 
         Args:
@@ -648,21 +647,21 @@ class Game:
         """
         x = None
         if(character_number == 1):
-            x = self.attack_button_location[0] - 317
+            x = self._attack_button_location[0] - 317
         elif(character_number == 2):
-            x = self.attack_button_location[0] - 240
+            x = self._attack_button_location[0] - 240
         elif(character_number == 3):
-            x = self.attack_button_location[0] - 158
+            x = self._attack_button_location[0] - 158
         elif(character_number == 4):
-            x = self.attack_button_location[0] - 76
+            x = self._attack_button_location[0] - 76
         
-        y = self.attack_button_location[1] + 123
+        y = self._attack_button_location[1] + 123
         
         # Double-clicking the character portrait to avoid any non-invasive popups from other Raid participants.
         self.mouse_tools.move_and_click_point(x, y, mouse_clicks=2)
         return None
 
-    def use_character_skill(self, character_selected: int, skill: int):
+    def _use_character_skill(self, character_selected: int, skill: int):
         """Activate the specified skill for the already selected character.
 
         Args:
@@ -676,18 +675,18 @@ class Game:
         x = None
         if("useskill(1)" in skill.lower()):
             self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 1.")
-            x = self.attack_button_location[0] - 213
+            x = self._attack_button_location[0] - 213
         elif("useskill(2)" in skill.lower()):
             self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 2.")
-            x = self.attack_button_location[0] - 132
+            x = self._attack_button_location[0] - 132
         elif("useskill(3)" in skill.lower()):
             self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 3.")
-            x = self.attack_button_location[0] - 51
+            x = self._attack_button_location[0] - 51
         elif("useskill(4)" in skill.lower()):
             self.print_and_save(f"{self.printtime()} [COMBAT] Character {character_selected} uses Skill 4.")
-            x = self.attack_button_location[0] + 39
+            x = self._attack_button_location[0] + 39
             
-        y = self.attack_button_location[1] + 171
+        y = self._attack_button_location[1] + 171
         
         # Double-clicking the skill to avoid any non-invasive popups from other Raid participants.
         self.mouse_tools.move_and_click_point(x, y, mouse_clicks=2)
@@ -703,7 +702,7 @@ class Game:
             None
         """
         # Click away the "EXP Gained" popup and any other popups until the bot reaches the Loot Collected screen.
-        if(not self.retreat_check and self.image_tools.confirm_location("exp_gained")):
+        if(not self._retreat_check and self.image_tools.confirm_location("exp_gained")):
             while(not self.image_tools.confirm_location("loot_collected", tries=1)):
                 close_button_location = self.image_tools.find_button("close", tries=1, suppress_error=True)
                 if(close_button_location != None):
@@ -723,36 +722,36 @@ class Game:
             # Now that the bot is at the Loot Collected screen, detect any user-specified items.
             if(not isPendingBattle):
                 self.print_and_save(f"\n{self.printtime()} [INFO] Detecting if any user-specified loot dropped this run...")
-                if(self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs"):
-                    temp_amount = self.image_tools.find_farmed_items([self.item_name])[0]
+                if(self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs"):
+                    temp_amount = self.image_tools.find_farmed_items([self._item_name])[0]
                 else:
                     temp_amount = 1
                 
-                self.item_amount_farmed += temp_amount
-                self.amount_of_runs_finished += 1
+                self._item_amount_farmed += temp_amount
+                self._amount_of_runs_finished += 1
         else:
             # If the bot reached here, that means the raid ended without the bot being able to take action so no loot dropped.
             temp_amount = 0
         
         if(not isPendingBattle):    
-            if(self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs"):
+            if(self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs"):
                 self.print_and_save("\n\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
-                self.print_and_save(f"{self.printtime()} [FARM] Farming Mode: {self.farming_mode}")
-                self.print_and_save(f"{self.printtime()} [FARM] Mission: {self.mission_name}")
-                self.print_and_save(f"{self.printtime()} [FARM] Summons: {self.summon_list}")
-                self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained this run: {temp_amount}")
-                self.print_and_save(f"{self.printtime()} [FARM] Amount of {self.item_name} gained in total: {self.item_amount_farmed} / {self.item_amount_to_farm}")
-                self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished}")
+                self.print_and_save(f"{self.printtime()} [FARM] Farming Mode: {self._farming_mode}")
+                self.print_and_save(f"{self.printtime()} [FARM] Mission: {self._mission_name}")
+                self.print_and_save(f"{self.printtime()} [FARM] Summons: {self._summon_list}")
+                self.print_and_save(f"{self.printtime()} [FARM] Amount of {self._item_name} gained this run: {temp_amount}")
+                self.print_and_save(f"{self.printtime()} [FARM] Amount of {self._item_name} gained in total: {self._item_amount_farmed} / {self._item_amount_to_farm}")
+                self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self._amount_of_runs_finished}")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
             else:
                 self.print_and_save("\n\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
-                self.print_and_save(f"{self.printtime()} [FARM] Farming Mode: {self.farming_mode}")
-                self.print_and_save(f"{self.printtime()} [FARM] Mission: {self.mission_name}")
-                self.print_and_save(f"{self.printtime()} [FARM] Summons: {self.summon_list}")
-                self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self.amount_of_runs_finished} / {self.item_amount_to_farm}")
+                self.print_and_save(f"{self.printtime()} [FARM] Farming Mode: {self._farming_mode}")
+                self.print_and_save(f"{self.printtime()} [FARM] Mission: {self._mission_name}")
+                self.print_and_save(f"{self.printtime()} [FARM] Summons: {self._summon_list}")
+                self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self._amount_of_runs_finished} / {self._item_amount_to_farm}")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
                 
@@ -770,23 +769,23 @@ class Game:
         
         return None
     
-    def check_for_event_nightmare(self):
+    def _check_for_event_nightmare(self):
         """Checks for Event Nightmare and if it appears and the user enabled it in config.ini, start it.
 
         Returns:
             (bool): Return True if Event Nightmare was detected and successfully completed. Otherwise, return False.
         """
-        if(self.enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests")):
+        if(self._enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests")):
             self.print_and_save(f"\n{self.printtime()} [EVENT] Detected Event Nightmare. Starting it now...")
             
             self.print_and_save("\n\n********************************************************************************")
             self.print_and_save("********************************************************************************")
             self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare")
-            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Summon Elements: {self.event_nightmare_summon_element_list}")
-            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Summons: {self.event_nightmare_summon_list}")
-            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Group Number: {self.event_nightmare_group_number}")
-            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Party Number: {self.event_nightmare_party_number}")
-            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Combat Script: {self.event_nightmare_combat_script}")
+            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Summon Elements: {self._event_nightmare_summon_element_list}")
+            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Summons: {self._event_nightmare_summon_list}")
+            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Group Number: {self._event_nightmare_group_number}")
+            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Party Number: {self._event_nightmare_party_number}")
+            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Combat Script: {self._event_nightmare_combat_script}")
             self.print_and_save("********************************************************************************")
             self.print_and_save("********************************************************************************\n")
             
@@ -795,15 +794,15 @@ class Game:
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             self.wait(1)
             if(self.image_tools.confirm_location("select_summon")):
-                self.find_summon(self.event_nightmare_summon_list, self.event_nightmare_summon_element_list)
-                start_check = self.find_party_and_start_mission(self.event_nightmare_group_number, self.event_nightmare_party_number)
+                self._select_summon(self._event_nightmare_summon_list, self._event_nightmare_summon_element_list)
+                start_check = self._find_party_and_start_mission(self._event_nightmare_group_number, self._event_nightmare_party_number)
                 
                 # Once preparations are completed, start Combat Mode.
-                if(start_check and self.start_combat_mode(self.event_nightmare_combat_script, isNightmare=True)):
+                if(start_check and self.start_combat_mode(self._event_nightmare_combat_script, isNightmare=True)):
                     self.collect_loot()
                     return True
                 
-        elif(not self.enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests")):
+        elif(not self._enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests")):
             self.print_and_save(f"\n{self.printtime()} [EVENT] Event Nightmare detected but user opted to not run it. Moving on...")
             self.find_and_click_button("close")
         else:
@@ -811,25 +810,25 @@ class Game:
         
         return False
     
-    def check_for_dimensional_halo(self):
+    def _check_for_dimensional_halo(self):
         """Checks for Dimensional Halo and if it appears and the user enabled it in config.ini, start it.
 
         Returns:
             (bool): Return True if Dimensional Halo was detected and successfully completed. Otherwise, return False.
         """
-        if(self.enable_dimensional_halo and self.image_tools.confirm_location("limited_time_quests", tries=1)):
+        if(self._enable_dimensional_halo and self.image_tools.confirm_location("limited_time_quests", tries=1)):
             self.print_and_save(f"\n{self.printtime()} [D.HALO] Detected Dimensional Halo. Starting it now...")
-            self.dimensional_halo_amount += 1
+            self._dimensional_halo_amount += 1
             
             self.print_and_save("\n\n********************************************************************************")
             self.print_and_save("********************************************************************************")
             self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo")
-            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Summon Elements: {self.dimensional_halo_summon_element_list}")
-            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Summons: {self.dimensional_halo_summon_list}")
-            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Group Number: {self.dimensional_halo_group_number}")
-            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Party Number: {self.dimensional_halo_party_number}")
-            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Combat Script: {self.dimensional_halo_combat_script}")
-            self.print_and_save(f"{self.printtime()} [D.HALO] Amount of Dimensional Halos encountered: {self.dimensional_halo_amount}")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Summon Elements: {self._dimensional_halo_summon_element_list}")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Summons: {self._dimensional_halo_summon_list}")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Group Number: {self._dimensional_halo_group_number}")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Party Number: {self._dimensional_halo_party_number}")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Dimensional Halo Combat Script: {self._dimensional_halo_combat_script}")
+            self.print_and_save(f"{self.printtime()} [D.HALO] Amount of Dimensional Halos encountered: {self._dimensional_halo_amount}")
             self.print_and_save("********************************************************************************")
             self.print_and_save("********************************************************************************\n")
             
@@ -838,15 +837,15 @@ class Game:
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             self.wait(1)
             if(self.image_tools.confirm_location("select_summon")):
-                self.find_summon(self.dimensional_halo_summon_list, self.dimensional_halo_summon_element_list)
-                start_check = self.find_party_and_start_mission(group_number=self.dimensional_halo_group_number, party_number=self.dimensional_halo_party_number)
+                self._select_summon(self._dimensional_halo_summon_list, self._dimensional_halo_summon_element_list)
+                start_check = self._find_party_and_start_mission(group_number=self._dimensional_halo_group_number, party_number=self._dimensional_halo_party_number)
                 
                 # Once preparations are completed, start Combat Mode.
-                if(start_check and self.start_combat_mode(self.dimensional_halo_combat_script, isNightmare=True)):
+                if(start_check and self.start_combat_mode(self._dimensional_halo_combat_script, isNightmare=True)):
                     self.collect_loot()
                     return True
                 
-        elif(not self.enable_dimensional_halo and self.image_tools.confirm_location("limited_time_quests", tries=1)):
+        elif(not self._enable_dimensional_halo and self.image_tools.confirm_location("limited_time_quests", tries=1)):
             self.print_and_save(f"\n{self.printtime()} [D.HALO] Dimensional Halo detected but user opted to not run it. Moving on...")
             self.find_and_click_button("close")
         else:
@@ -854,17 +853,17 @@ class Game:
         
         return False
     
-    def wait_for_attack(self):
+    def _wait_for_attack(self):
         """Wait for a maximum of 20 seconds until the bot sees either the Attack or the Next button before starting a new turn.
 
         Returns:
             None
         """
         tries = 10
-        while((not self.retreat_check and self.image_tools.find_button("attack", tries=1, suppress_error=True) == None) or (not self.retreat_check and self.image_tools.find_button("next", tries=1, suppress_error=True) == None)):
+        while((not self._retreat_check and self.image_tools.find_button("attack", tries=1, suppress_error=True) == None) or (not self._retreat_check and self.image_tools.find_button("next", tries=1, suppress_error=True) == None)):
             # Stagger the checks for dialog popups.
             if(tries % 2 == 0):
-                self.find_dialog_in_combat()
+                self._find_dialog_in_combat()
             
             self.wait(1)
             
@@ -873,12 +872,12 @@ class Game:
                 break
             
             # Check if the Party wiped after attacking.
-            self.party_wipe_check()
+            self._party_wipe_check()
             self.wait(1)
         
         return None
     
-    def use_combat_healing_item(self, command: str, target: int = 0):
+    def _use_combat_healing_item(self, command: str, target: int = 0):
         """Uses the specified healing item during Combat mode with an optional target if the item needs it.
 
         Args:
@@ -888,7 +887,7 @@ class Game:
         Returns:
             None
         """
-        if(self.debug_mode):
+        if(self._debug_mode):
             self.print_and_save(f"\n{self.printtime()} [DEBUG] Using item: {command}, target: Character {target}.")
         
         # Click on the green "Heal" button.
@@ -912,7 +911,7 @@ class Game:
         if(self.image_tools.wait_vanish("tap_the_item_to_use", timeout=5)):
             if(command == "usegreenpotion"):
                 self.print_and_save(f"\n{self.printtime()} [COMBAT] Using Green Potion on Character {target}...")
-                self.select_character(target)
+                self._select_character(target)
             elif(command == "usebluepotion"):
                 self.print_and_save(f"\n{self.printtime()} [COMBAT] Using Blue Potion on the whole Party...")
                 self.find_and_click_button("use") 
@@ -924,7 +923,7 @@ class Game:
                 self.find_and_click_button("ok")
             elif(command == "useclaritypotion"):
                 self.print_and_save(f"\n{self.printtime()} [COMBAT] Using Clarity Herb on Character {target}...")
-                self.select_character(target)
+                self._select_character(target)
             elif(command == "userevivalpotion"):
                 self.print_and_save(f"\n{self.printtime()} [COMBAT] Using Revival Potion to revive the whole Party...")
                 self.find_and_click_button("ok")
@@ -943,7 +942,7 @@ class Game:
         
         return None
     
-    def request_backup(self):
+    def _request_backup(self):
         """Request backup during a Raid.
 
         Returns:
@@ -969,7 +968,7 @@ class Game:
         
         return None
     
-    def tweet_backup(self):
+    def _tweet_backup(self):
         """Request backup during a Raid using Twitter.
 
         Returns:
@@ -1018,7 +1017,7 @@ class Game:
                 self.print_and_save(f"\n{self.printtime()} [COMBAT] No script file was provided. Using default full_auto.txt script.")
                 os.chdir(os.getcwd() + "/scripts/")
                 script = open(os.path.abspath("full_auto.txt"), "r")
-                os.chdir(self.owd)
+                os.chdir(self._owd)
             elif(isNightmare):
                 self.print_and_save(f"\n{self.printtime()} [COMBAT] Now loading up combat script for this at {os.getcwd()}\scripts\{script_file_path}")
                 os.chdir(os.getcwd() + "/scripts/")
@@ -1027,10 +1026,10 @@ class Game:
                     script = open(os.path.abspath(script_file_path + ".txt"), "r")
                 else:
                     script = open(os.path.abspath(script_file_path), "r")
-                os.chdir(self.owd)
+                os.chdir(self._owd)
             else:
                 self.print_and_save(f"\n{self.printtime()} [COMBAT] Now loading up combat script at {script_file_path}")
-                os.chdir(self.owd)
+                os.chdir(self._owd)
                 script = open(script_file_path, "r")
             
             # Grab all lines in the file and store it in a list.
@@ -1042,24 +1041,24 @@ class Game:
             turn_number = 1  # Current turn for the script execution.
             
             # Reset the retreat, semi auto, and full auto flags.
-            self.retreat_check = False
+            self._retreat_check = False
             semi_auto = False
             full_auto = False
             
             # Reset the saved locations of the "Attack" and "Back" buttons.
-            self.attack_button_location = None
-            self.back_button_location = None
+            self._attack_button_location = None
+            self._back_button_location = None
             
             # Save the positions of the "Attack" and "Back" button.
-            self.attack_button_location = self.image_tools.find_button("attack", tries=10)
-            if(self.attack_button_location != None):
-                self.back_button_location = (self.attack_button_location[0] - 322, self.attack_button_location[1])
+            self._attack_button_location = self.image_tools.find_button("attack", tries=10)
+            if(self._attack_button_location != None):
+                self._back_button_location = (self._attack_button_location[0] - 322, self._attack_button_location[1])
             else:
                 self.print_and_save(f"\n{self.printtime()} [ERROR] Cannot find Attack button. Raid must have just ended.")
                 return False
                 
             # This is where the main workflow of Combat Mode is located and it will loop until the last of the commands have been executed.
-            while(i < len(lines) and not self.retreat_check and not semi_auto and not full_auto):
+            while(i < len(lines) and not self._retreat_check and not semi_auto and not full_auto):
                 line = lines[i].strip()
                 
                 # Skip this line if it is empty or a comment.
@@ -1069,7 +1068,7 @@ class Game:
                     line = lines[i].strip()
                     
                 # Print each line read if Debug Mode is active.
-                if(self.debug_mode):
+                if(self._debug_mode):
                     self.print_and_save(f"\n{self.printtime()} [DEBUG] Reading Line {line_number}: \"{line.strip()}\"")
                     
                 # If the execution reached the next turn block and it is currently not the correct turn, keep pressing the "Attack" button until the turn number matches.
@@ -1078,17 +1077,17 @@ class Game:
                     
                     while(int(line.split(":")[0].split(" ")[1]) != turn_number):
                         self.print_and_save(f"{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
-                        self.find_dialog_in_combat()
+                        self._find_dialog_in_combat()
                         
                         attack_button_location = self.image_tools.find_button("attack", tries=1, suppress_error=True)
                         if (attack_button_location != None):
                             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
-                            number_of_charge_attacks = self.find_charge_attacks()
-                            self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
+                            number_of_charge_attacks = self._find_charge_attacks()
+                            self.mouse_tools.move_and_click_point(self._attack_button_location[0], self._attack_button_location[1])
                             self.wait(3 + number_of_charge_attacks)
-                            self.wait_for_attack()
+                            self._wait_for_attack()
                             self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
-                            self.party_wipe_check()
+                            self._party_wipe_check()
                             turn_number += 1
                             
                         next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=True)
@@ -1096,7 +1095,7 @@ class Game:
                             self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
                             self.wait(3)
                             
-                        if(self.retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
+                        if(self._retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
                             self.print_and_save("\n################################################################################")
                             self.print_and_save("################################################################################")
                             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
@@ -1114,7 +1113,7 @@ class Game:
                             self.print_and_save("################################################################################")
                             return False
                             
-                if(self.retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
+                if(self._retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
                     break
                 elif(self.image_tools.confirm_location("battle_concluded", tries=1)):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Battle concluded suddenly.")
@@ -1122,10 +1121,10 @@ class Game:
                     break
                 
                 # If it is the start of the Turn and it is currently the correct turn, grab the next line for execution.
-                if("turn" in line.lower() and int(line.split(":")[0].split(" ")[1]) == turn_number and not self.retreat_check):
+                if("turn" in line.lower() and int(line.split(":")[0].split(" ")[1]) == turn_number and not self._retreat_check):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}. Reading script now...")
                     
-                    self.find_dialog_in_combat()
+                    self._find_dialog_in_combat()
                     
                     # Continue reading each line inside the turn block until you reach the "end" command.
                     while(("end" not in line.lower() and "exit" not in line.lower()) and i < len(lines)):
@@ -1164,7 +1163,7 @@ class Game:
                             
                         if(character_selected != 0):
                             # Select the character specified.
-                            self.select_character(character_selected)
+                            self._select_character(character_selected)
                             
                             # Execute each skill from left to right for this character.
                             commands = line.split(".")[1:]
@@ -1173,7 +1172,7 @@ class Game:
                                 
                                 if("useskill" in command):
                                     # Use the skill.
-                                    self.use_character_skill(character_selected, command)
+                                    self._use_character_skill(character_selected, command)
                                     
                                     if(self.image_tools.confirm_location("use_skill", tries=1)):
                                         # Check if the skill requires a target.
@@ -1212,12 +1211,12 @@ class Game:
                                             self.find_and_click_button("cancel")
                                         
                             # Now click the "Back" button.
-                            self.mouse_tools.move_and_click_point(self.back_button_location[0], self.back_button_location[1])
+                            self.mouse_tools.move_and_click_point(self._back_button_location[0], self._back_button_location[1])
                             
                             # Attempt to wait to see if the character one-shot the enemy or not. This is user-defined in the config.ini.
-                            self.wait(self.idle_seconds_after_skill)
+                            self.wait(self._idle_seconds_after_skill)
                             
-                            if(self.retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
+                            if(self._retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
                                 self.print_and_save("\n################################################################################")
                                 self.print_and_save("################################################################################")
                                 self.print_and_save(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
@@ -1243,17 +1242,17 @@ class Game:
                                 
                                 # Click on the specified Summon.
                                 if(j == 1):
-                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 317, self.attack_button_location[1] + 138, mouse_clicks=2)
+                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 317, self._attack_button_location[1] + 138, mouse_clicks=2)
                                 elif(j == 2):
-                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 243, self.attack_button_location[1] + 138, mouse_clicks=2)
+                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 243, self._attack_button_location[1] + 138, mouse_clicks=2)
                                 elif(j == 3):
-                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 165, self.attack_button_location[1] + 138, mouse_clicks=2)
+                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 165, self._attack_button_location[1] + 138, mouse_clicks=2)
                                 elif(j == 4):
-                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 89, self.attack_button_location[1] + 138, mouse_clicks=2)
+                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 89, self._attack_button_location[1] + 138, mouse_clicks=2)
                                 elif(j == 5):
-                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] - 12, self.attack_button_location[1] + 138, mouse_clicks=2)
+                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 12, self._attack_button_location[1] + 138, mouse_clicks=2)
                                 else:
-                                    self.mouse_tools.move_and_click_point(self.attack_button_location[0] + 63, self.attack_button_location[1] + 138, mouse_clicks=2)
+                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] + 63, self._attack_button_location[1] + 138, mouse_clicks=2)
                                     
                                 # Check if it is able to be summoned.
                                 if(self.image_tools.confirm_location("summon_details", tries=2)):
@@ -1262,15 +1261,15 @@ class Game:
                                         self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
                                         
                                         # Wait for the Summon animation to complete. This is user-defined in the config.ini.
-                                        self.wait(self.idle_seconds_after_summon)
+                                        self.wait(self._idle_seconds_after_summon)
                                     else:
                                         self.print_and_save(f"{self.printtime()} [COMBAT] Summon #{j} cannot be invoked due to current restrictions.")
                                         self.find_and_click_button("cancel")
                                         
                                         # Click the "Back" button.
-                                        self.mouse_tools.move_and_click_point(self.back_button_location[0], self.back_button_location[1])
+                                        self.mouse_tools.move_and_click_point(self._back_button_location[0], self._back_button_location[1])
                                         
-                                if(self.retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
+                                if(self._retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
                                     self.print_and_save("\n################################################################################")
                                     self.print_and_save("################################################################################")
                                     self.print_and_save(f"{self.printtime()} [COMBAT] Ending Combat Mode.")
@@ -1311,11 +1310,11 @@ class Game:
                         
                         if("requestbackup" in line.lower() and not semi_auto and not full_auto):
                             # Request Backup for this Raid.
-                            self.request_backup()
+                            self._request_backup()
                         
                         if("tweetbackup" in line.lower() and not semi_auto and not full_auto):
                             # Request Backup via Twitter for this Raid.
-                            self.tweet_backup()
+                            self._tweet_backup()
                         
                         item_commands = ["usegreenpotion.target(1)", "usegreenpotion.target(2)", "usegreenpotion.target(3)", "usegreenpotion.target(4)", "usebluepotion", "usefullelixir", 
                                          "usesupportpotion", "useclarityherb.target(1)", "useclarityherb.target(2)", "useclarityherb.target(3)", "useclarityherb.target(4)", "userevivalpotion"]
@@ -1338,7 +1337,7 @@ class Game:
                                 target = 0
                             
                             # Use the item and continue to the next line for execution.
-                            self.use_combat_healing_item(command, target)
+                            self._use_combat_healing_item(command, target)
                         
                         # Move onto the next command for execution.
                         line_number += 1
@@ -1372,8 +1371,8 @@ class Game:
                         self.wait(3)
                     else:
                         self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
-                        number_of_charge_attacks = self.find_charge_attacks()
-                        self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
+                        number_of_charge_attacks = self._find_charge_attacks()
+                        self.mouse_tools.move_and_click_point(self._attack_button_location[0], self._attack_button_location[1])
                         
                         # Peek ahead of the script while the Party is currently attacking and see if it detects the command "enableSemiAuto" outside of a Turn block.
                         temp_index = i
@@ -1397,9 +1396,9 @@ class Game:
                             temp_index += 1
                         
                         self.wait(3 + number_of_charge_attacks)
-                        self.wait_for_attack()
+                        self._wait_for_attack()
                         self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
-                        self.party_wipe_check()
+                        self._party_wipe_check()
                         turn_number += 1
                         
                         next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=True)
@@ -1423,18 +1422,18 @@ class Game:
             self.print_and_save(f"\n{self.printtime()} [COMBAT] Bot has reached end of script. Automatically attacking until battle ends or Party wipes...")
             
             # Keep pressing the location of the "Attack" / "Next" button until the bot reaches the Quest Results screen.
-            while(not self.retreat_check and not semi_auto and not full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
-                self.find_dialog_in_combat()
+            while(not self._retreat_check and not semi_auto and not full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
+                self._find_dialog_in_combat()
                 attack_button_location = self.image_tools.find_button("attack", tries=1, suppress_error=True)
                 if (attack_button_location != None):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
                     self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
-                    number_of_charge_attacks = self.find_charge_attacks()
-                    self.mouse_tools.move_and_click_point(self.attack_button_location[0], self.attack_button_location[1])
+                    number_of_charge_attacks = self._find_charge_attacks()
+                    self.mouse_tools.move_and_click_point(self._attack_button_location[0], self._attack_button_location[1])
                     self.wait(3 + number_of_charge_attacks)
-                    self.wait_for_attack()
+                    self._wait_for_attack()
                     self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
-                    self.party_wipe_check()
+                    self._party_wipe_check()
                     turn_number += 1
                     
                 next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=True)
@@ -1444,7 +1443,7 @@ class Game:
                     
             
             # Double check to see if Semi Auto is turned on. Note that the "Semi Auto" button only appears while the Party is attacking.
-            if(not self.retreat_check and semi_auto and not full_auto):
+            if(not self._retreat_check and semi_auto and not full_auto):
                 self.print_and_save(f"{self.printtime()} [COMBAT] Double checking to see if Semi Auto is enabled...")
                 enabled_semi_auto = self.image_tools.find_button("semi_auto_enabled")
                 if(not enabled_semi_auto):
@@ -1464,21 +1463,21 @@ class Game:
                         self.print_and_save(f"{self.printtime()} [COMBAT] Semi Auto is now enabled.")
             
             # Main workflow loop for Semi Auto. The game will progress the Quest/Raid until it ends or the Party wipes.
-            while(not self.retreat_check and semi_auto and not full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
+            while(not self._retreat_check and semi_auto and not full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
                 if(self.image_tools.confirm_location("battle_concluded", tries=1)):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Battle concluded suddenly.")
                     self.find_and_click_button("ok")
                     break
-                self.party_wipe_check()
+                self._party_wipe_check()
                 self.wait(3)
             
             # Main workflow loop for Full Auto. The game will progress the Quest/Raid until it ends or the Party wipes.
-            while(not self.retreat_check and not semi_auto and full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
+            while(not self._retreat_check and not semi_auto and full_auto and not self.image_tools.confirm_location("exp_gained", tries=1) and not self.image_tools.confirm_location("no_loot", tries=1)):
                 if(self.image_tools.confirm_location("battle_concluded", tries=1)):
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Battle concluded suddenly.")
                     self.find_and_click_button("ok")
                     break
-                self.party_wipe_check()
+                self._party_wipe_check()
                 self.wait(3)
                 
             self.print_and_save("\n################################################################################")
@@ -1487,14 +1486,14 @@ class Game:
             self.print_and_save("################################################################################")
             self.print_and_save("################################################################################")
             
-            if(not self.retreat_check):
+            if(not self._retreat_check):
                 self.print_and_save(f"\n{self.printtime()} [INFO] Bot has reached the Quest Results screen.")
                 return True
             else:
                 return False
         except FileNotFoundError as e:
             self.print_and_save(f"\n{self.printtime()} [ERROR] Cannot find \"{script_file_path}.txt\": \n{traceback.format_exc()}")
-            self.isBotRunning.value = 1
+            self._isBotRunning.value = 1
     
     def start_farming_mode(self, item_name: str, item_amount_to_farm: int, farming_mode: str, location_name: str, mission_name: str, summon_element_list: Iterable[str], summon_list: Iterable[str], group_number: int, party_number: int):
         """Start the Farming Mode using the given parameters.
@@ -1555,137 +1554,137 @@ class Game:
                 elif(mission_name.find("5 Star") == 0):
                     difficulty = "5 Star"
             
-            self.item_amount_farmed = 0
-            self.amount_of_runs_finished = 0
+            self._item_amount_farmed = 0
+            self._amount_of_runs_finished = 0
             summon_check = False
             coop_first_run = False
                     
             # Save the following information to share between the Game class and the MapSelection class.
-            self.item_name = item_name
-            self.item_amount_to_farm = item_amount_to_farm
-            self.farming_mode = farming_mode
-            self.mission_name = mission_name
-            self.summon_element_list = summon_element_list
-            self.summon_list = summon_list
-            self.group_number = group_number
-            self.party_number = party_number
+            self._item_name = item_name
+            self._item_amount_to_farm = item_amount_to_farm
+            self._farming_mode = farming_mode
+            self._mission_name = mission_name
+            self._summon_element_list = summon_element_list
+            self._summon_list = summon_list
+            self._group_number = group_number
+            self._party_number = party_number
             
             # If Dimensional Halo is enabled, save settings for it based on conditions.
-            if(self.farming_mode.lower() == "special" and self.mission_name == "VH Angel Halo" and self.enable_dimensional_halo and (self.item_name == "EXP" or self.item_name == "Angel Halo Weapons")):
+            if(self._farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and self._enable_dimensional_halo and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons")):
                 self.print_and_save(f"\n{self.printtime()} [INFO] Initializing settings for Dimensional Halo...")
                 
-                if(self.dimensional_halo_combat_script == ""):
+                if(self._dimensional_halo_combat_script == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Dimensional Halo will reuse the one for Farming Mode.")
-                    self.dimensional_halo_combat_script = self.combat_script
+                    self._dimensional_halo_combat_script = self._combat_script
                 else:
-                    self.dimensional_halo_combat_script = 0
+                    self._dimensional_halo_combat_script = 0
                     
-                if(len(self.dimensional_halo_summon_element_list) == 0):
+                if(len(self._dimensional_halo_summon_element_list) == 0):
                     self.print_and_save(f"{self.printtime()} [INFO] Summon Elements for Dimensional Halo will reuse the ones for Farming Mode.")
-                    self.dimensional_halo_summon_element_list = self.summon_element_list
+                    self._dimensional_halo_summon_element_list = self._summon_element_list
                     
-                if(len(self.dimensional_halo_summon_list) == 0):
+                if(len(self._dimensional_halo_summon_list) == 0):
                     self.print_and_save(f"{self.printtime()} [INFO] Summons for Dimensional Halo will reuse the ones for Farming Mode.")
-                    self.dimensional_halo_summon_list = self.summon_list
+                    self._dimensional_halo_summon_list = self._summon_list
                     
-                if(self.dimensional_halo_group_number == ""):
+                if(self._dimensional_halo_group_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Group Number for Dimensional Halo will reuse the one for Farming Mode.")
-                    self.dimensional_halo_group_number = self.group_number
+                    self._dimensional_halo_group_number = self._group_number
                 else:
-                    self.dimensional_halo_group_number = int(self.dimensional_halo_group_number)
+                    self._dimensional_halo_group_number = int(self._dimensional_halo_group_number)
 
-                if(self.dimensional_halo_party_number == ""):
+                if(self._dimensional_halo_party_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Party Number for Dimensional Halo will reuse the one for Farming Mode.")
-                    self.dimensional_halo_party_number = self.party_number
+                    self._dimensional_halo_party_number = self._party_number
                 else:
-                    self.dimensional_halo_party_number = int(self.dimensional_halo_party_number)
+                    self._dimensional_halo_party_number = int(self._dimensional_halo_party_number)
                     
                 self.print_and_save(f"{self.printtime()} [INFO] Settings initialized for Dimensional Halo...")
-            elif(self.item_name == "Repeated Runs" and self.enable_event_nightmare):
+            elif(self._item_name == "Repeated Runs" and self._enable_event_nightmare):
                 # Do the same for Event Nightmare if enabled.
                 self.print_and_save(f"\n{self.printtime()} [INFO] Initializing settings for Event...")
                 
-                if(self.event_nightmare_combat_script == ""):
+                if(self._event_nightmare_combat_script == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Event will reuse the one for Farming Mode.")
-                    self.event_nightmare_combat_script = self.combat_script
+                    self._event_nightmare_combat_script = self._combat_script
                     
-                if(len(self.event_nightmare_summon_element_list) == 0):
+                if(len(self._event_nightmare_summon_element_list) == 0):
                     self.print_and_save(f"{self.printtime()} [INFO] Summon Elements for Event will reuse the ones for Farming Mode.")
-                    self.event_nightmare_summon_element_list = self.summon_element_list
+                    self._event_nightmare_summon_element_list = self._summon_element_list
                     
-                if(len(self.event_nightmare_summon_list) == 0):
+                if(len(self._event_nightmare_summon_list) == 0):
                     self.print_and_save(f"{self.printtime()} [INFO] Summons for Event will reuse the ones for Farming Mode.")
-                    self.event_nightmare_summon_list = self.summon_list
+                    self._event_nightmare_summon_list = self._summon_list
                     
-                if(self.event_nightmare_group_number == ""):
+                if(self._event_nightmare_group_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Group Number for Event will reuse the one for Farming Mode.")
-                    self.event_nightmare_group_number = self.group_number
+                    self._event_nightmare_group_number = self._group_number
                 else:
                     event_nightmare_group_number = int(event_nightmare_group_number)
                     
-                if(self.event_nightmare_party_number == ""):
+                if(self._event_nightmare_party_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Party Number for Event will reuse the one for Farming Mode.")
-                    self.event_nightmare_party_number = self.party_number
+                    self._event_nightmare_party_number = self._party_number
                 else:
-                    self.event_nightmare_party_number = int(self.event_nightmare_party_number)
+                    self._event_nightmare_party_number = int(self._event_nightmare_party_number)
                     
                 self.print_and_save(f"{self.printtime()} [INFO] Settings initialized for Event...")
-            elif(self.item_name == "Repeated Runs" and self.enable_unparalleled_foe):
+            elif(self._item_name == "Repeated Runs" and self._enable_unparalleled_foe):
                 # Do the same for Dread Barrage Unparalleled Foes if enabled.
                 self.print_and_save(f"\n{self.printtime()} [INFO] Initializing settings for Dread Barrage Unparalleled Foes...")
                 
                 if(self.unparalleled_foe_combat_script == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
-                    self.unparalleled_foe_combat_script = self.combat_script
+                    self.unparalleled_foe_combat_script = self._combat_script
                     
-                if(len(self.unparalleled_foe_summon_element_list) == 0):
+                if(len(self._unparalleled_foe_summon_element_list) == 0):
                     self.print_and_save(f"{self.printtime()} [INFO] Summon Elements for Dread Barrage Unparalleled Foes will reuse the ones for Farming Mode.")
-                    self.unparalleled_foe_summon_element_list = self.summon_element_list
+                    self._unparalleled_foe_summon_element_list = self._summon_element_list
                     
-                if(len(self.unparalleled_foe_summon_list) == 0):
+                if(len(self._unparalleled_foe_summon_list) == 0):
                     self.print_and_save(f"{self.printtime()} [INFO] Summons for Dread Barrage Unparalleled Foes will reuse the ones for Farming Mode.")
-                    self.unparalleled_foe_summon_list = self.summon_list
+                    self._unparalleled_foe_summon_list = self._summon_list
                     
-                if(self.unparalleled_foe_group_number == ""):
+                if(self._unparalleled_foe_group_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Group Number for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
-                    self.unparalleled_foe_group_number = self.group_number
+                    self._unparalleled_foe_group_number = self._group_number
                 else:
                     unparalleled_foe_group_number = int(unparalleled_foe_group_number)
                     
-                if(self.unparalleled_foe_party_number == ""):
+                if(self._unparalleled_foe_party_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Party Number for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
-                    self.unparalleled_foe_party_number = self.party_number
+                    self._unparalleled_foe_party_number = self._party_number
                 else:
-                    self.unparalleled_foe_party_number = int(self.unparalleled_foe_party_number)
+                    self._unparalleled_foe_party_number = int(self._unparalleled_foe_party_number)
                     
                 self.print_and_save(f"{self.printtime()} [INFO] Settings initialized for Dread Barrage Unparalleled Foes...")
                 
             # Main workflow for Farming Mode.
-            if((farming_mode.lower() != "raid" and self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)) or 
-               (farming_mode.lower() == "raid" and self.map_selection.join_raid(item_name, mission_name))):
-                while(self.item_amount_farmed < self.item_amount_to_farm):
+            if((farming_mode.lower() != "raid" and self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)) or 
+               (farming_mode.lower() == "raid" and self._map_selection.join_raid(item_name, mission_name))):
+                while(self._item_amount_farmed < self._item_amount_to_farm):
                     # Loop until the specified Summon has been selected successfully.
                     self.print_and_save(f"\n{self.printtime()} [INFO] Selecting Summon before starting mission for Farming Mode...")
                     while(summon_check == False and farming_mode.lower() != "coop"): 
                         # Select the Summon element and the Summon itself.
-                        summon_check = self.find_summon(summon_list, summon_element_list)
+                        summon_check = self._select_summon(summon_list, summon_element_list)
                         
                         # If the Summons were reset, select the mission again.
                         if(summon_check == False):
                             if(farming_mode.lower() != "raid"):
                                 self.print_and_save(f"\n{self.printtime()} [INFO] Selecting mission again after resetting Summons...")
-                                self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                             else:
                                 self.print_and_save(f"\n{self.printtime()} [INFO] Joining raids again after resetting Summons...")
-                                self.map_selection.join_raid(item_name, mission_name)
+                                self._map_selection.join_raid(item_name, mission_name)
                     
                     # Select the specified Party and then start the mission.
                     if(farming_mode.lower() != "coop"):
-                        start_check = self.find_party_and_start_mission(group_number, party_number)
+                        start_check = self._find_party_and_start_mission(group_number, party_number)
                     else:
                         # Only select the Party for this Coop mission once. After that, subsequent runs always has that Party selected.
                         if(not coop_first_run):
-                            start_check = self.find_party_and_start_mission(group_number, party_number)
+                            start_check = self._find_party_and_start_mission(group_number, party_number)
                             coop_first_run = True
                             
                         self.print_and_save(f"{self.printtime()} [INFO] Starting Coop mission.")
@@ -1699,19 +1698,19 @@ class Game:
                             self.find_and_click_button("ok")
                         
                         # Start Combat Mode for this mission.
-                        if(self.start_combat_mode(self.combat_script)):
+                        if(self.start_combat_mode(self._combat_script)):
                             # If Combat Mode finished successfully without retreating or exiting prematurely, start loot detection.
                             self.collect_loot()
                             
-                            if(self.item_amount_farmed < self.item_amount_to_farm):
+                            if(self._item_amount_farmed < self._item_amount_to_farm):
                                 # Click the Play Again button or the Room button if its Coop.
                                 if(farming_mode.lower() != "coop"):
                                     if(not self.find_and_click_button("play_again")):
                                         # Clear away any Pending Battles.
-                                        self.map_selection.check_for_pending(farming_mode)
+                                        self._map_selection.check_for_pending(farming_mode)
                                         
                                         # Start the mission again.
-                                        self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                        self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 else:
                                     self.find_and_click_button("coop_room")
                                     
@@ -1725,15 +1724,15 @@ class Game:
                                     # Find the locations of the "AP 0" text underneath each Unparalleled Foe.
                                     ap_0_locations = self.image_tools.find_all("ap_0")
                                     
-                                    if(self.enable_unparalleled_foe_level_95 and not self.enable_unparalleled_foe_level_175):
+                                    if(self._enable_unparalleled_foe_level_95 and not self._enable_unparalleled_foe_level_175):
                                         # Start the Level 95 Unparalleled Foe.
                                         self.print_and_save(f"\n{self.printtime()} [INFO] Starting Level 95 Unparalleled Foe...")
                                         self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1])
-                                    elif(self.enable_unparalleled_foe_level_175 and not self.enable_unparalleled_foe_level_95):
+                                    elif(self._enable_unparalleled_foe_level_175 and not self._enable_unparalleled_foe_level_95):
                                         # Start the Level 175 Unparalleled Foe.
                                         self.print_and_save(f"\n{self.printtime()} [INFO] Starting Level 175 Unparalleled Foe...")
                                         self.mouse_tools.move_and_click_point(ap_0_locations[1][0], ap_0_locations[1][1])
-                                    elif(not self.enable_unparalleled_foe_level_95 and not self.enable_unparalleled_foe_level_175):
+                                    elif(not self._enable_unparalleled_foe_level_95 and not self._enable_unparalleled_foe_level_175):
                                         # Close the popup.
                                         self.print_and_save(f"\n{self.printtime()} [INFO] Closing Dread Barrage Unparalleled Foes popup...")
                                         self.find_and_click_button("close")
@@ -1751,27 +1750,27 @@ class Game:
                                 self.check_for_friend_request()
                                 
                                 # Check for Dimensional Halo and Event Nightmare.
-                                if(self.farming_mode.lower() == "special" and self.mission_name == "VH Angel Halo" and self.enable_dimensional_halo and (self.item_name == "EXP" or self.item_name == "Angel Halo Weapons")):
-                                    if(self.check_for_dimensional_halo()):
+                                if(self._farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and self._enable_dimensional_halo and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons")):
+                                    if(self._check_for_dimensional_halo()):
                                         # Make sure the bot goes back to the Home screen when completing a Dimensional Halo so that the "Play Again" functionality comes back.
-                                        self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
-                                elif((self.farming_mode.lower() == "event" or self.farming_mode.lower() == "event (token drawboxes)")):
-                                    if(self.check_for_event_nightmare()):
+                                        self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                elif((self._farming_mode.lower() == "event" or self._farming_mode.lower() == "event (token drawboxes)")):
+                                    if(self._check_for_event_nightmare()):
                                         # Make sure the bot goes back to the Home screen when completing a Event Nightmare so that the "Play Again" functionality comes back.
-                                        self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                        self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 
                                 # Check for available AP and then reset the Summon check flag.
-                                self.check_for_ap(use_full_elixirs=self.quest_refill)
+                                self.check_for_ap(use_full_elixir=self.use_full_elixir)
                                 summon_check = False
                                 
                                 # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select_map().
-                                if(self.farming_mode.lower() == "event (token drawboxes)" and self.image_tools.confirm_location("not_enough_treasure")):
+                                if(self._farming_mode.lower() == "event (token drawboxes)" and self.image_tools.confirm_location("not_enough_treasure")):
                                     self.find_and_click_button("ok")
-                                    self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                    self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                         else:
                             # Start the mission again if the Party wiped or exited prematurely during Combat Mode.
                             self.print_and_save(f"\n{self.printtime()} [INFO] Selecting mission again due to retreating...")
-                            self.map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                            self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                     
                     elif(start_check and farming_mode.lower() == "raid"): 
                         # Cover the occasional case where joining the raid after selecting the Summon and Party led to the Quest Results screen with no loot to collect.
@@ -1781,25 +1780,25 @@ class Game:
                             summon_check = False
                         else:
                             # Start Combat Mode for this Raid.
-                            if(self.start_combat_mode(self.combat_script)):
+                            if(self.start_combat_mode(self._combat_script)):
                                 # If Combat Mode finished successfully without retreating or exiting prematurely, start loot detection.
                                 self.collect_loot()
                                 
-                                if(self.item_amount_farmed < self.item_amount_to_farm):
+                                if(self._item_amount_farmed < self._item_amount_to_farm):
                                     # Clear away any Pending Battles.
-                                    self.map_selection.check_for_pending(farming_mode)
+                                    self._map_selection.check_for_pending(farming_mode)
                                     
                                     # Join a new raid.
-                                    self.map_selection.join_raid(item_name, mission_name)
+                                    self._map_selection.join_raid(item_name, mission_name)
                                     summon_check = False
                             else:
                                 # Join a new raid.
-                                self.map_selection.join_raid(item_name, mission_name)
+                                self._map_selection.join_raid(item_name, mission_name)
                                 summon_check = False
                     elif(not start_check and farming_mode.lower() == "raid"):
                         # If the bot reached here, it means that the Raid ended before the bot could start the mission after selecting the Summon and Party.
                         self.print_and_save(f"{self.printtime()} [INFO] Seems that the raid ended before the bot was able to join. Now looking for another raid to join...")
-                        self.map_selection.join_raid(item_name, mission_name)
+                        self._map_selection.join_raid(item_name, mission_name)
                         summon_check = False
             else:
                 raise Exception("Confirming the location of the Summon Selection screen after selecting the mission returned False.")
@@ -1812,5 +1811,5 @@ class Game:
         self.print_and_save("################################################################################")
         self.print_and_save("################################################################################\n")
         
-        self.isBotRunning.value = 1
+        self._isBotRunning.value = 1
         return None

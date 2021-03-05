@@ -15,11 +15,12 @@ class MapSelection:
     def  __init__(self, game, isBotRunning: int, debug_mode: bool = False):
         super().__init__()
         
-        self.game = game
-        self.isBotRunning = isBotRunning
+        self._game = game
+        self._isBotRunning = isBotRunning
+        self._debug_mode = debug_mode
         
         # Makes sure that the number of raids currently joined does not exceed 3.
-        self.raids_joined = 0
+        self._raids_joined = 0
         
     def select_map(self, map_mode: str, map_name: str, item_name: str, mission_name: str, difficulty: str):
         """Navigates the bot to the specified map and preps the bot for Summon/Party selection.
@@ -44,256 +45,256 @@ class MapSelection:
             
             if(map_mode.lower() == "quest"):
                 # Go to the Home screen and check if the bot is already at the correct island or not.
-                self.game.go_back_home(confirm_location_check=True)
+                self._game.go_back_home(confirm_location_check=True)
                 
-                if(self.game.image_tools.confirm_location(f"map_{temp_map_name}", tries=2)):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot is currently on the correct island.")
+                if(self._game.image_tools.confirm_location(f"map_{temp_map_name}", tries=2)):
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Bot is currently on the correct island.")
                     check_location = True
                 else:
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot is currently not on the correct island.")
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Bot is currently not on the correct island.")
                     check_location = False
                     
                     # Check to see which island the bot is currently at.
-                    if(self.game.image_tools.confirm_location("map_port_breeze_archipelago", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Port Breeze Archipelago. Now moving to {map_name}...")
+                    if(self._game.image_tools.confirm_location("map_port_breeze_archipelago", tries=1)):
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Bot's current location is at Port Breeze Archipelago. Now moving to {map_name}...")
                         current_location = "Port Breeze Archipelago"
-                    elif(self.game.image_tools.confirm_location("map_valtz_duchy", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Valtz Duchy. Now moving to {map_name}...")
+                    elif(self._game.image_tools.confirm_location("map_valtz_duchy", tries=1)):
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Bot's current location is at Valtz Duchy. Now moving to {map_name}...")
                         current_location = "Valtz Duchy"
-                    elif(self.game.image_tools.confirm_location("map_auguste_isles", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Auguste Isles. Now moving to {map_name}...")
+                    elif(self._game.image_tools.confirm_location("map_auguste_isles", tries=1)):
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Bot's current location is at Auguste Isles. Now moving to {map_name}...")
                         current_location = "Auguste Isles"
-                    elif(self.game.image_tools.confirm_location("map_lumacie_archipelago", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Lumacie Archipelago. Now moving to {map_name}...")
+                    elif(self._game.image_tools.confirm_location("map_lumacie_archipelago", tries=1)):
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Bot's current location is at Lumacie Archipelago. Now moving to {map_name}...")
                         current_location = "Lumacie Archipelago"
-                    elif(self.game.image_tools.confirm_location("map_albion_citadel", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Albion Citadel. Now moving to {map_name}...")
+                    elif(self._game.image_tools.confirm_location("map_albion_citadel", tries=1)):
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Bot's current location is at Albion Citadel. Now moving to {map_name}...")
                         current_location = "Albion Citadel"
-                    elif(self.game.image_tools.confirm_location("map_mist_shrouded_isle", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Mist-Shrouded Isle. Now moving to {map_name}...")
+                    elif(self._game.image_tools.confirm_location("map_mist_shrouded_isle", tries=1)):
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Bot's current location is at Mist-Shrouded Isle. Now moving to {map_name}...")
                         current_location = "Mist-Shrouded Isle"
-                    elif(self.game.image_tools.confirm_location("map_golonzo_island", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Golonzo Island. Now moving to {map_name}...")
+                    elif(self._game.image_tools.confirm_location("map_golonzo_island", tries=1)):
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Bot's current location is at Golonzo Island. Now moving to {map_name}...")
                         current_location = "Golonzo Island"
-                    elif(self.game.image_tools.confirm_location("map_amalthea_island", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Amalthea Island. Now moving to {map_name}...")
+                    elif(self._game.image_tools.confirm_location("map_amalthea_island", tries=1)):
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Bot's current location is at Amalthea Island. Now moving to {map_name}...")
                         current_location = "Amalthea Island"
-                    elif(self.game.image_tools.confirm_location("map_former_capital_mephorash", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Former Capital Mephorash. Now moving to {map_name}...")
+                    elif(self._game.image_tools.confirm_location("map_former_capital_mephorash", tries=1)):
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Bot's current location is at Former Capital Mephorash. Now moving to {map_name}...")
                         current_location = "Former Capital Mephorash"
-                    elif(self.game.image_tools.confirm_location("map_agastia", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Bot's current location is at Agastia. Now moving to {map_name}...")
+                    elif(self._game.image_tools.confirm_location("map_agastia", tries=1)):
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Bot's current location is at Agastia. Now moving to {map_name}...")
                         current_location = "Agastia"    
                 
                 # Go to the Quest screen and confirm if the bot arrived.
-                self.game.find_and_click_button("quest", suppress_error=True)
+                self._game.find_and_click_button("quest", suppress_error=True)
                 
                 # Check for the "You retreated from the raid battle" popup.
-                self.game.wait(1)
-                if(self.game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries=1)):
-                    self.game.find_and_click_button("ok")
+                self._game.wait(1)
+                if(self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries=1)):
+                    self._game.find_and_click_button("ok")
                 
-                self.game.image_tools.confirm_location("quest")
+                self._game.image_tools.confirm_location("quest")
                 
                 # If the bot is currently not at the correct island, move to it.
                 if(check_location == False):
                     # Click the "World" button.
-                    world_location = self.game.image_tools.find_button("world", tries=2)
+                    world_location = self._game.image_tools.find_button("world", tries=2)
                     if(world_location == None):
-                        world_location = self.game.image_tools.find_button("world2", tries=2)
+                        world_location = self._game.image_tools.find_button("world2", tries=2)
                    
-                    self.game.mouse_tools.move_and_click_point(world_location[0], world_location[1])
+                    self._game.mouse_tools.move_and_click_point(world_location[0], world_location[1])
                     
                     # On the World screen, click the specified coordinates on the window to move to the island. 
                     # If the island is on a different world page, switch pages as necessary.
                     if(map_name == "Port Breeze Archipelago"):
                         if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash" or current_location == "Agastia"):
-                            self.game.find_and_click_button("world_left_arrow")
+                            self._game.find_and_click_button("world_left_arrow")
                         
-                        if(self.game.image_tools.find_button("port_breeze_archipelago", tries=2) != None):
-                            self.game.find_and_click_button("port_breeze_archipelago")
+                        if(self._game.image_tools.find_button("port_breeze_archipelago", tries=2) != None):
+                            self._game.find_and_click_button("port_breeze_archipelago")
                         else:
                             # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to a manual method.
-                            arrow_location = self.game.image_tools.find_button("world_right_arrow")
-                            self.game.mouse_tools.move_and_click_point(arrow_location[0] - 320, arrow_location[1] - 159)
+                            arrow_location = self._game.image_tools.find_button("world_right_arrow")
+                            self._game.mouse_tools.move_and_click_point(arrow_location[0] - 320, arrow_location[1] - 159)
                     elif(map_name == "Valtz Duchy"):
                         if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash" or current_location == "Agastia"):
-                            self.game.find_and_click_button("world_left_arrow")
+                            self._game.find_and_click_button("world_left_arrow")
                         
-                        if(self.game.image_tools.find_button("valtz_duchy", tries=2) != None):
-                            self.game.find_and_click_button("valtz_duchy")
+                        if(self._game.image_tools.find_button("valtz_duchy", tries=2) != None):
+                            self._game.find_and_click_button("valtz_duchy")
                         else:
-                            arrow_location = self.game.image_tools.find_button("world_right_arrow")
-                            self.game.mouse_tools.move_and_click_point(arrow_location[0] - 150, arrow_location[1] - 85)
+                            arrow_location = self._game.image_tools.find_button("world_right_arrow")
+                            self._game.mouse_tools.move_and_click_point(arrow_location[0] - 150, arrow_location[1] - 85)
                     elif(map_name == "Auguste Isles"):
                         if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash" or current_location == "Agastia"):
-                            self.game.find_and_click_button("world_left_arrow")
+                            self._game.find_and_click_button("world_left_arrow")
                         
-                        if(self.game.image_tools.find_button("auguste_isles", tries=2) != None):
-                            self.game.find_and_click_button("auguste_isles")
+                        if(self._game.image_tools.find_button("auguste_isles", tries=2) != None):
+                            self._game.find_and_click_button("auguste_isles")
                         else:
-                            arrow_location = self.game.image_tools.find_button("world_right_arrow")
-                            self.game.mouse_tools.move_and_click_point(arrow_location[0] - 374, arrow_location[1] - 5)
+                            arrow_location = self._game.image_tools.find_button("world_right_arrow")
+                            self._game.mouse_tools.move_and_click_point(arrow_location[0] - 374, arrow_location[1] - 5)
                     elif(map_name == "Lumacie Archipelago"):
                         if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash" or current_location == "Agastia"):
-                            self.game.find_and_click_button("world_left_arrow")
+                            self._game.find_and_click_button("world_left_arrow")
                         
-                        if(self.game.image_tools.find_button("lumacie_archipelago", tries=2) != None):
-                            self.game.find_and_click_button("lumacie_archipelago")
+                        if(self._game.image_tools.find_button("lumacie_archipelago", tries=2) != None):
+                            self._game.find_and_click_button("lumacie_archipelago")
                         else:
-                            arrow_location = self.game.image_tools.find_button("world_right_arrow")
-                            self.game.mouse_tools.move_and_click_point(arrow_location[0] - 84, arrow_location[1] + 39)
+                            arrow_location = self._game.image_tools.find_button("world_right_arrow")
+                            self._game.mouse_tools.move_and_click_point(arrow_location[0] - 84, arrow_location[1] + 39)
                     elif(map_name == "Albion Citadel"):
                         if(current_location == "Mist-Shrouded Isle" or current_location == "Golonzo Island" or current_location == "Amalthea Island" or current_location == "Former Capital Mephorash" or current_location == "Agastia"):
-                            self.game.find_and_click_button("world_left_arrow")
+                            self._game.find_and_click_button("world_left_arrow")
                         
-                        if(self.game.image_tools.find_button("albion_citadel", tries=2) != None):
-                            self.game.find_and_click_button("albion_citadel")
+                        if(self._game.image_tools.find_button("albion_citadel", tries=2) != None):
+                            self._game.find_and_click_button("albion_citadel")
                         else:
-                            arrow_location = self.game.image_tools.find_button("world_right_arrow")
-                            self.game.mouse_tools.move_and_click_point(arrow_location[0] - 267, arrow_location[1] + 121)
+                            arrow_location = self._game.image_tools.find_button("world_right_arrow")
+                            self._game.mouse_tools.move_and_click_point(arrow_location[0] - 267, arrow_location[1] + 121)
                     elif(map_name == "Mist-Shrouded Isle"):
                         if(current_location == "Port Breeze Archipelago" or current_location == "Valtz Duchy" or current_location == "Auguste Isles" or current_location == "Lumacie Archipelago"or current_location == "Albion Citadel"):
-                            self.game.find_and_click_button("world_right_arrow")
+                            self._game.find_and_click_button("world_right_arrow")
                         
-                        if(self.game.image_tools.find_button("mist_shrouded_isle", tries=2) != None):
-                            self.game.find_and_click_button("mist_shrouded_isle")
+                        if(self._game.image_tools.find_button("mist_shrouded_isle", tries=2) != None):
+                            self._game.find_and_click_button("mist_shrouded_isle")
                         else:
-                            arrow_location = self.game.image_tools.find_button("world_left_arrow")
-                            self.game.mouse_tools.move_and_click_point(arrow_location[0] + 162, arrow_location[1] + 114)
+                            arrow_location = self._game.image_tools.find_button("world_left_arrow")
+                            self._game.mouse_tools.move_and_click_point(arrow_location[0] + 162, arrow_location[1] + 114)
                     elif(map_name == "Golonzo Island"):
                         if(current_location == "Port Breeze Archipelago" or current_location == "Valtz Duchy" or current_location == "Auguste Isles" or current_location == "Lumacie Archipelago"or current_location == "Albion Citadel"):
-                            self.game.find_and_click_button("world_right_arrow")
+                            self._game.find_and_click_button("world_right_arrow")
                         
-                        if(self.game.image_tools.find_button("golonzo_island", tries=2) != None):
-                            self.game.find_and_click_button("golonzo_island")
+                        if(self._game.image_tools.find_button("golonzo_island", tries=2) != None):
+                            self._game.find_and_click_button("golonzo_island")
                         else:
-                            arrow_location = self.game.image_tools.find_button("world_left_arrow")
-                            self.game.mouse_tools.move_and_click_point(arrow_location[0] + 362, arrow_location[1] + 85)
+                            arrow_location = self._game.image_tools.find_button("world_left_arrow")
+                            self._game.mouse_tools.move_and_click_point(arrow_location[0] + 362, arrow_location[1] + 85)
                     elif(map_name == "Amalthea Island"):
                         if(current_location == "Port Breeze Archipelago" or current_location == "Valtz Duchy" or current_location == "Auguste Isles" or current_location == "Lumacie Archipelago"or current_location == "Albion Citadel"):
-                            self.game.find_and_click_button("world_right_arrow")
+                            self._game.find_and_click_button("world_right_arrow")
                         
-                        if(self.game.image_tools.find_button("amalthea_island", tries=2) != None):
-                            self.game.find_and_click_button("amalthea_island")
+                        if(self._game.image_tools.find_button("amalthea_island", tries=2) != None):
+                            self._game.find_and_click_button("amalthea_island")
                         else:
-                            arrow_location = self.game.image_tools.find_button("world_left_arrow")
-                            self.game.mouse_tools.move_and_click_point(arrow_location[0] + 127, arrow_location[1] - 14)
+                            arrow_location = self._game.image_tools.find_button("world_left_arrow")
+                            self._game.mouse_tools.move_and_click_point(arrow_location[0] + 127, arrow_location[1] - 14)
                     elif(map_name == "Former Capital Mephorash"):
                         if(current_location == "Port Breeze Archipelago" or current_location == "Valtz Duchy" or current_location == "Auguste Isles" or current_location == "Lumacie Archipelago"or current_location == "Albion Citadel"):
-                            self.game.find_and_click_button("world_right_arrow")
+                            self._game.find_and_click_button("world_right_arrow")
                         
-                        if(self.game.image_tools.find_button("former_capital_mephorash", tries=2) != None):
-                            self.game.find_and_click_button("former_capital_mephorash")
+                        if(self._game.image_tools.find_button("former_capital_mephorash", tries=2) != None):
+                            self._game.find_and_click_button("former_capital_mephorash")
                         else:
-                            arrow_location = self.game.image_tools.find_button("world_left_arrow")
-                            self.game.mouse_tools.move_and_click_point(arrow_location[0] + 352, arrow_location[1] - 51)
+                            arrow_location = self._game.image_tools.find_button("world_left_arrow")
+                            self._game.mouse_tools.move_and_click_point(arrow_location[0] + 352, arrow_location[1] - 51)
                     elif(map_name == "Agastia"):
                         if(current_location == "Port Breeze Archipelago" or current_location == "Valtz Duchy" or current_location == "Auguste Isles" or current_location == "Lumacie Archipelago"or current_location == "Albion Citadel"):
-                            self.game.find_and_click_button("world_right_arrow")
+                            self._game.find_and_click_button("world_right_arrow")
                         
-                        if(self.game.image_tools.find_button("agastia", tries=2) != None):
-                            self.game.find_and_click_button("agastia")
+                        if(self._game.image_tools.find_button("agastia", tries=2) != None):
+                            self._game.find_and_click_button("agastia")
                         else:
-                            arrow_location = self.game.image_tools.find_button("world_left_arrow")
-                            self.game.mouse_tools.move_and_click_point(arrow_location[0] + 190, arrow_location[1] - 148)
+                            arrow_location = self._game.image_tools.find_button("world_left_arrow")
+                            self._game.mouse_tools.move_and_click_point(arrow_location[0] + 190, arrow_location[1] - 148)
                         
                     # Click "Go" on the popup after clicking on the map node.
-                    self.game.find_and_click_button("go")
-                    self.game.image_tools.confirm_location("quest")
+                    self._game.find_and_click_button("go")
+                    self._game.image_tools.confirm_location("quest")
                     
                 # Grab the location of the "World" button.
-                world_location = self.game.image_tools.find_button("world", tries=2)
+                world_location = self._game.image_tools.find_button("world", tries=2)
                 if(world_location == None):
-                    world_location = self.game.image_tools.find_button("world2", tries=2)
+                    world_location = self._game.image_tools.find_button("world2", tries=2)
                 
                 # Now that the bot is on the correct island and is at the Quest screen, click the correct chapter node.
                 if(mission_name == "Scattered Cargo"):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 1 (115) node at ({world_location[0] + 97}, {world_location[1] + 97})...")
-                    self.game.mouse_tools.move_and_click_point(world_location[0] + 97, world_location[1] + 97)
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Moving to Chapter 1 (115) node at ({world_location[0] + 97}, {world_location[1] + 97})...")
+                    self._game.mouse_tools.move_and_click_point(world_location[0] + 97, world_location[1] + 97)
                 elif(mission_name == "Lucky Charm Hunt"):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 6 (122) node...")
-                    self.game.mouse_tools.move_and_click_point(world_location[0] + 332, world_location[1] + 16)
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Moving to Chapter 6 (122) node...")
+                    self._game.mouse_tools.move_and_click_point(world_location[0] + 332, world_location[1] + 16)
                 elif(mission_name == "Special Op's Request"):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 8 node...")
-                    self.game.mouse_tools.move_and_click_point(world_location[0] + 258, world_location[1] + 151)
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Moving to Chapter 8 node...")
+                    self._game.mouse_tools.move_and_click_point(world_location[0] + 258, world_location[1] + 151)
                 elif(mission_name == "Threat to the Fisheries"):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 9 node...")
-                    self.game.mouse_tools.move_and_click_point(world_location[0] + 216, world_location[1] + 113)
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Moving to Chapter 9 node...")
+                    self._game.mouse_tools.move_and_click_point(world_location[0] + 216, world_location[1] + 113)
                 elif(mission_name == "The Fruit of Lumacie" or mission_name == "Whiff of Danger"):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 13 (39/52) node...")
-                    self.game.mouse_tools.move_and_click_point(world_location[0] + 78, world_location[1] + 92)
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Moving to Chapter 13 (39/52) node...")
+                    self._game.mouse_tools.move_and_click_point(world_location[0] + 78, world_location[1] + 92)
                 elif(mission_name == "I Challenge You!"):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 17 node...")
-                    self.game.mouse_tools.move_and_click_point(world_location[0] + 119, world_location[1] + 121)
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Moving to Chapter 17 node...")
+                    self._game.mouse_tools.move_and_click_point(world_location[0] + 119, world_location[1] + 121)
                 elif(mission_name == "For Whom the Bell Tolls"):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 22 node...")
-                    self.game.mouse_tools.move_and_click_point(world_location[0] + 178, world_location[1] + 33)
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Moving to Chapter 22 node...")
+                    self._game.mouse_tools.move_and_click_point(world_location[0] + 178, world_location[1] + 33)
                 elif(mission_name == "Golonzo's Battles of Old"):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 25 node...")
-                    self.game.mouse_tools.move_and_click_point(world_location[0] + 196, world_location[1] + 5)
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Moving to Chapter 25 node...")
+                    self._game.mouse_tools.move_and_click_point(world_location[0] + 196, world_location[1] + 5)
                 elif(mission_name == "The Dungeon Diet"):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 30 (44/65) node...")
-                    self.game.mouse_tools.move_and_click_point(world_location[0] + 242, world_location[1] + 24)
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Moving to Chapter 30 (44/65) node...")
+                    self._game.mouse_tools.move_and_click_point(world_location[0] + 242, world_location[1] + 24)
                 elif(mission_name == "Trust Busting Dustup"):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 36 (123) node...")
-                    self.game.mouse_tools.move_and_click_point(world_location[0] + 319, world_location[1] + 13)
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Moving to Chapter 36 (123) node...")
+                    self._game.mouse_tools.move_and_click_point(world_location[0] + 319, world_location[1] + 13)
                 elif(mission_name == "Erste Kingdom Episode 4"):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 70 node...")
-                    self.game.mouse_tools.move_and_click_point(world_location[0] + 253, world_location[1] + 136)
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Moving to Chapter 70 node...")
+                    self._game.mouse_tools.move_and_click_point(world_location[0] + 253, world_location[1] + 136)
                 elif(mission_name == "Imperial Wanderer's Soul"):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Moving to Chapter 55 node...")
-                    self.game.mouse_tools.move_and_click_point(world_location[0] + 162, world_location[1] + 143)
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Moving to Chapter 55 node...")
+                    self._game.mouse_tools.move_and_click_point(world_location[0] + 162, world_location[1] + 143)
                 
                 # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
-                self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now bringing up Summon Selection screen for \"{mission_name}\"...")
-                self.game.mouse_tools.scroll_screen(self.game.home_button_location[0], self.game.home_button_location[1] - 50, -1000)
+                self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now bringing up Summon Selection screen for \"{mission_name}\"...")
+                self._game.mouse_tools.scroll_screen(self._game.home_button_location[0], self._game.home_button_location[1] - 50, -1000)
                 temp_mission_name = mission_name.replace(" ", "_")
                 
-                self.game.find_and_click_button(temp_mission_name)
+                self._game.find_and_click_button(temp_mission_name)
                 
                 # Navigate to Episode 4 for the mission "Ch. 70 - Erste Kingdom".
                 if(mission_name == "Erste Kingdom Episode 4"):
-                    self.game.find_and_click_button("episode_4")
-                    self.game.find_and_click_button("ok")
+                    self._game.find_and_click_button("episode_4")
+                    self._game.find_and_click_button("ok")
                 
             elif(map_mode.lower() == "coop"):
                 # Go to the Home screen.
-                self.game.go_back_home(confirm_location_check=True)
+                self._game.go_back_home(confirm_location_check=True)
                 
                 # Click the "Menu" button on the Home screen, go to Coop screen, and then confirm that the bot arrived.
-                self.game.find_and_click_button("home_menu")
-                self.game.find_and_click_button("coop")
-                self.game.image_tools.confirm_location("coop")
+                self._game.find_and_click_button("home_menu")
+                self._game.find_and_click_button("coop")
+                self._game.image_tools.confirm_location("coop")
                 
                 # Scroll down the screen to see more of the Coop missions on smaller screens.
-                self.game.mouse_tools.scroll_screen_from_home_button(-400)
+                self._game.mouse_tools.scroll_screen_from_home_button(-400)
                 
                 # Find the locations of all of the "Host Quest" buttons.
-                host_quest_button_locations = self.game.image_tools.find_all("coop_host_quest")
+                host_quest_button_locations = self._game.image_tools.find_all("coop_host_quest")
                 
                 # Select the difficulty of the mission that it is under.
                 if(mission_name == "In a Dusk Dream"):
                     # Check if the difficulty is already selected. If not, make it active.
-                    if(self.game.image_tools.find_button("coop_hard_selected") == None):
-                        self.game.find_and_click_button("coop_hard")
+                    if(self._game.image_tools.find_button("coop_hard_selected") == None):
+                        self._game.find_and_click_button("coop_hard")
                         
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Hard difficulty for Coop is now selected.")
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Hard difficulty for Coop is now selected.")
                     
                     # Select the category, "Save the Oceans", which should be the 3rd category.
-                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Now navigating to \"{mission_name}\" for Hard difficulty.")
-                    self.game.mouse_tools.move_and_click_point(host_quest_button_locations[2][0], host_quest_button_locations[2][1])
-                    self.game.image_tools.confirm_location("coop_save_the_oceans")
+                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Now navigating to \"{mission_name}\" for Hard difficulty.")
+                    self._game.mouse_tools.move_and_click_point(host_quest_button_locations[2][0], host_quest_button_locations[2][1])
+                    self._game.image_tools.confirm_location("coop_save_the_oceans")
                     
                     # Now click "In a Dusk Dream".
-                    host_quests_circle_buttons = self.game.image_tools.find_all("coop_host_quest_circle")
-                    self.game.mouse_tools.move_and_click_point(host_quests_circle_buttons[0][0], host_quests_circle_buttons[0][1])
+                    host_quests_circle_buttons = self._game.image_tools.find_all("coop_host_quest_circle")
+                    self._game.mouse_tools.move_and_click_point(host_quests_circle_buttons[0][0], host_quests_circle_buttons[0][1])
                 else:
                     # Check if the difficulty is already selected. If not, make it active.
-                    if(self.game.image_tools.find_button("coop_extra_selected") == None):
-                        self.game.find_and_click_button("coop_extra")
+                    if(self._game.image_tools.find_button("coop_extra_selected") == None):
+                        self._game.find_and_click_button("coop_extra")
                         
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Extra difficulty for Coop is now selected.")
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Extra difficulty for Coop is now selected.")
                     
                     coop_ex1_list = ["Corridor of Puzzles", "empty", "Lost in the Dark"]
                     coop_ex2_list = ["Time of Judgement", "Time of Revelation", "Time of Eminence"]
@@ -302,72 +303,72 @@ class MapSelection:
                     
                     # Make the specified EX category active. Then click the mission's button while making sure that the first mission in each category is skipped.
                     if(mission_name in coop_ex1_list):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now navigating to \"{mission_name}\" from EX1...")
-                        self.game.mouse_tools.move_and_click_point(host_quest_button_locations[0][0], host_quest_button_locations[0][1])
-                        self.game.image_tools.confirm_location("coop_ex1")
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now navigating to \"{mission_name}\" from EX1...")
+                        self._game.mouse_tools.move_and_click_point(host_quest_button_locations[0][0], host_quest_button_locations[0][1])
+                        self._game.image_tools.confirm_location("coop_ex1")
                         
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now selecting \"{mission_name}\"...")
-                        host_quests_circle_buttons = self.game.image_tools.find_all("coop_host_quest_circle")
-                        self.game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex1_list.index(mission_name)][0], host_quests_circle_buttons[coop_ex1_list.index(mission_name)][1])
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now selecting \"{mission_name}\"...")
+                        host_quests_circle_buttons = self._game.image_tools.find_all("coop_host_quest_circle")
+                        self._game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex1_list.index(mission_name)][0], host_quests_circle_buttons[coop_ex1_list.index(mission_name)][1])
                     elif(mission_name in coop_ex2_list):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now navigating to \"{mission_name}\" from EX2...")
-                        self.game.mouse_tools.move_and_click_point(host_quest_button_locations[1][0], host_quest_button_locations[1][1])
-                        self.game.image_tools.confirm_location("coop_ex2")
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now navigating to \"{mission_name}\" from EX2...")
+                        self._game.mouse_tools.move_and_click_point(host_quest_button_locations[1][0], host_quest_button_locations[1][1])
+                        self._game.image_tools.confirm_location("coop_ex2")
                         
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now selecting \"{mission_name}\"...")
-                        host_quests_circle_buttons = self.game.image_tools.find_all("coop_host_quest_circle")
-                        self.game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex2_list.index(mission_name) + 1][0], host_quests_circle_buttons[coop_ex2_list.index(mission_name) + 1][1])
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now selecting \"{mission_name}\"...")
+                        host_quests_circle_buttons = self._game.image_tools.find_all("coop_host_quest_circle")
+                        self._game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex2_list.index(mission_name) + 1][0], host_quests_circle_buttons[coop_ex2_list.index(mission_name) + 1][1])
                     elif(mission_name in coop_ex3_list):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now navigating to \"{mission_name}\" from EX3.")
-                        self.game.mouse_tools.move_and_click_point(host_quest_button_locations[2][0], host_quest_button_locations[2][1])
-                        self.game.image_tools.confirm_location("coop_ex3")
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now navigating to \"{mission_name}\" from EX3.")
+                        self._game.mouse_tools.move_and_click_point(host_quest_button_locations[2][0], host_quest_button_locations[2][1])
+                        self._game.image_tools.confirm_location("coop_ex3")
                         
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now selecting \"{mission_name}\"...")
-                        host_quests_circle_buttons = self.game.image_tools.find_all("coop_host_quest_circle")
-                        self.game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex3_list.index(mission_name) + 1][0], host_quests_circle_buttons[coop_ex3_list.index(mission_name) + 1][1])
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now selecting \"{mission_name}\"...")
+                        host_quests_circle_buttons = self._game.image_tools.find_all("coop_host_quest_circle")
+                        self._game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex3_list.index(mission_name) + 1][0], host_quests_circle_buttons[coop_ex3_list.index(mission_name) + 1][1])
                     elif(mission_name in coop_ex4_list):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now navigating to \"{mission_name}\" from EX4.")
-                        self.game.mouse_tools.move_and_click_point(host_quest_button_locations[3][0], host_quest_button_locations[3][1])
-                        self.game.image_tools.confirm_location("coop_ex4")
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now navigating to \"{mission_name}\" from EX4.")
+                        self._game.mouse_tools.move_and_click_point(host_quest_button_locations[3][0], host_quest_button_locations[3][1])
+                        self._game.image_tools.confirm_location("coop_ex4")
                         
-                        self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now selecting \"{mission_name}\"...")
-                        host_quests_circle_buttons = self.game.image_tools.find_all("coop_host_quest_circle")
-                        self.game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex4_list.index(mission_name) + 1][0], host_quests_circle_buttons[coop_ex4_list.index(mission_name) + 1][1])
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now selecting \"{mission_name}\"...")
+                        host_quests_circle_buttons = self._game.image_tools.find_all("coop_host_quest_circle")
+                        self._game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex4_list.index(mission_name) + 1][0], host_quests_circle_buttons[coop_ex4_list.index(mission_name) + 1][1])
                 
                 # After clicking on the mission, create a new Room.
-                self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Opening up a new Coop room...")
-                self.game.find_and_click_button("coop_post_to_crew_chat")
+                self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Opening up a new Coop room...")
+                self._game.find_and_click_button("coop_post_to_crew_chat")
                 
                 # Scroll down the screen to see the "OK" button just in case of smaller screens.
-                self.game.mouse_tools.scroll_screen_from_home_button(-400)
-                self.game.find_and_click_button("ok")
+                self._game.mouse_tools.scroll_screen_from_home_button(-400)
+                self._game.find_and_click_button("ok")
                 
                 # Just in case, check for the "You retreated from the raid battle" popup.
-                self.game.wait(1)
-                if(self.game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries=1)):
-                    self.game.find_and_click_button("ok")
+                self._game.wait(1)
+                if(self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries=1)):
+                    self._game.find_and_click_button("ok")
                 
                 # Scroll down the screen to see the "Select Party" button just in case of smaller screens.
-                self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Selecting a Party for \"{mission_name}\".")
-                self.game.mouse_tools.scroll_screen_from_home_button(-400)
-                self.game.find_and_click_button("coop_select_party")
+                self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Selecting a Party for \"{mission_name}\".")
+                self._game.mouse_tools.scroll_screen_from_home_button(-400)
+                self._game.find_and_click_button("coop_select_party")
                 
             elif(map_mode.lower() == "special"):
                 # Go to the Home screen.
-                self.game.go_back_home(confirm_location_check=True)
+                self._game.go_back_home(confirm_location_check=True)
                 
                 # Go to the Quest screen.
-                self.game.find_and_click_button("quest", suppress_error=True)
+                self._game.find_and_click_button("quest", suppress_error=True)
                 
                 # Check for the "You retreated from the raid battle" popup.
-                self.game.wait(1)
-                if(self.game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries=1)):
-                    self.game.find_and_click_button("ok")
+                self._game.wait(1)
+                if(self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries=1)):
+                    self._game.find_and_click_button("ok")
                 
-                self.game.image_tools.confirm_location("quest")
+                self._game.image_tools.confirm_location("quest")
                 
                 # Go to the Special screen.
-                self.game.find_and_click_button("special")
+                self._game.find_and_click_button("special")
                 
                 # Format the map and mission name strings.
                 temp_map_name = map_name.lower().replace(" ", "_")
@@ -385,43 +386,43 @@ class MapSelection:
                 if(temp_mission_name[0] == " "):
                     temp_mission_name = temp_mission_name[1:]
                     
-                if(self.game.image_tools.confirm_location("special")):
+                if(self._game.image_tools.confirm_location("special")):
                     tries = 2
                     while(tries != 0):
                         # Scroll the screen down if its any of the Special Quests that are more towards the bottom of the page to alleviate problems for smaller screens.
                         if(map_name != "Campaign-Exclusive Quest" and map_name != "Basic Treasure Quests" and map_mode != "Shiny Slime Search!" and map_mode != "Six Dragon Trial"):
-                            self.game.mouse_tools.scroll_screen(self.game.home_button_location[0], self.game.home_button_location[1] - 50, -500)
+                            self._game.mouse_tools.scroll_screen(self._game.home_button_location[0], self._game.home_button_location[1] - 50, -500)
                         
                         # Bring up the mission's difficulty screen. If it cannot find it, loop for a maximum of 2 times while 
                         # scrolling the screen down to see more in order to find the Special mission.
-                        mission_select_button = self.game.image_tools.find_button(temp_map_name)
+                        mission_select_button = self._game.image_tools.find_button(temp_map_name)
                         if(mission_select_button != None):
-                            self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Navigating to {map_name}...")
+                            self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Navigating to {map_name}...")
                             
                             # Move to the specified Special location by clicking its "Select" button.
                             special_quest_select_button = (mission_select_button[0] + 145, mission_select_button[1] + 75)
-                            self.game.mouse_tools.move_and_click_point(special_quest_select_button[0], special_quest_select_button[1])
-                            self.game.wait(1)
+                            self._game.mouse_tools.move_and_click_point(special_quest_select_button[0], special_quest_select_button[1])
+                            self._game.wait(1)
                             
                             if(map_name == "Basic Treasure Quests"):
-                                round_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                                round_play_button_locations = self._game.image_tools.find_all("play_round_button")
                                 if(temp_mission_name == "Scarlet Trial"):
                                     # Navigate to Scarlet Trial.
-                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Scarlet Trial...")
-                                    self.game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1])
+                                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting Scarlet Trial...")
+                                    self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1])
                                 elif(temp_mission_name == "Cerulean Trial"):
                                     # Navigate to Cerulean Trial.
-                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Cerulean Trial...")
-                                    self.game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1])
+                                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting Cerulean Trial...")
+                                    self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1])
                                 elif(temp_mission_name == "Violet Trial"):
                                     # Navigate to Violet Trial.
-                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Violet Trial...")
-                                    self.game.mouse_tools.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1])
+                                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting Violet Trial...")
+                                    self._game.mouse_tools.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1])
                                     
                                 # Now start the Trial with the specified difficulty.
-                                self.game.wait(1)
-                                self.game.print_and_save(f"{self.game.printtime()} [INFO] Now navigating to {difficulty}...")
-                                round_difficulty_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                                self._game.wait(1)
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Now navigating to {difficulty}...")
+                                round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
                                 if(difficulty == "Normal"):
                                     difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1])
                                 elif(difficulty == "Hard"):
@@ -430,8 +431,8 @@ class MapSelection:
                                     difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1])
                             elif(map_name == "Shiny Slime Search!"):
                                 # Start up the Shiny Slime Search! mission by selecting its difficulty.
-                                self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting {difficulty} Shiny Slime Search!...")
-                                round_difficulty_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting {difficulty} Shiny Slime Search!...")
+                                round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
                                 if(difficulty == "Normal"):
                                     difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1])
                                 elif(difficulty == "Hard"):
@@ -440,8 +441,8 @@ class MapSelection:
                                     difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1])
                             elif(map_name == "Six Dragon Trial"):
                                 # Start up the Six Dragon Trial mission by selecting its difficulty.
-                                self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting {difficulty} Six Dragon Trial...")
-                                round_difficulty_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting {difficulty} Six Dragon Trial...")
+                                round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
                                 if(difficulty == "Normal"):
                                     difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1])
                                 elif(difficulty == "Hard"):
@@ -450,8 +451,8 @@ class MapSelection:
                                     difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1])
                             elif(map_name == "Elemental Treasure Quests"):
                                 # Start up the specified Elemental Treasure Quest mission.
-                                self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting {mission_name}...")
-                                round_difficulty_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting {mission_name}...")
+                                round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
                                 if(temp_mission_name == "The Hellfire Trial"):
                                     difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1])
                                 elif(temp_mission_name == "The Deluge Trial"):
@@ -465,36 +466,36 @@ class MapSelection:
                                 elif(temp_mission_name == "The Oblivion Trial"):
                                     difficulty_play_button = (round_difficulty_play_button_locations[5][0], round_difficulty_play_button_locations[5][1])
                             elif(map_name == "Showdowns"):
-                                round_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                                round_play_button_locations = self._game.image_tools.find_all("play_round_button")
                                 if(temp_mission_name == "Ifrit Showdown"):
                                     # Navigate to Ifrit Showdown.
-                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Ifrit Showdown...")
-                                    self.game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1])
+                                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting Ifrit Showdown...")
+                                    self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1])
                                 elif(temp_mission_name == "Cocytus Showdown"):
                                     # Navigate to Cocytus Showdown.
-                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Cocytus Showdown...")
-                                    self.game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1])
+                                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting Cocytus Showdown...")
+                                    self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1])
                                 elif(temp_mission_name == "Vohu Manah Showdown"):
                                     # Navigate to Vohu Manah Showdown.
-                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Vohu Manah Showdown...")
-                                    self.game.mouse_tools.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1])
+                                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting Vohu Manah Showdown...")
+                                    self._game.mouse_tools.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1])
                                 elif(temp_mission_name == "Sagittarius Showdown"):
                                     # Navigate to Sagittarius Showdown.
-                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Sagittarius Showdown...")
-                                    self.game.mouse_tools.move_and_click_point(round_play_button_locations[3][0], round_play_button_locations[3][1])
+                                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting Sagittarius Showdown...")
+                                    self._game.mouse_tools.move_and_click_point(round_play_button_locations[3][0], round_play_button_locations[3][1])
                                 elif(temp_mission_name == "Corow Showdown"):
                                     # Navigate to Corow Showdown.
-                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Corow Showdown...")
-                                    self.game.mouse_tools.move_and_click_point(round_play_button_locations[4][0], round_play_button_locations[4][1])
+                                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting Corow Showdown...")
+                                    self._game.mouse_tools.move_and_click_point(round_play_button_locations[4][0], round_play_button_locations[4][1])
                                 elif(temp_mission_name == "Diablo Showdown"):
                                     # Navigate to Diablo Showdown.
-                                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Diablo Showdown...")
-                                    self.game.mouse_tools.move_and_click_point(round_play_button_locations[5][0], round_play_button_locations[5][1])
+                                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting Diablo Showdown...")
+                                    self._game.mouse_tools.move_and_click_point(round_play_button_locations[5][0], round_play_button_locations[5][1])
                                     
                                 # Now start the Showdown with the specified difficulty.
-                                self.game.wait(1)
-                                self.game.print_and_save(f"{self.game.printtime()} [INFO] Now navigating to {difficulty}...")
-                                round_difficulty_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                                self._game.wait(1)
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Now navigating to {difficulty}...")
+                                round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
                                 
                                 if(difficulty == "Hard"):
                                     difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1])
@@ -504,16 +505,16 @@ class MapSelection:
                                     difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1])
                                 
                             elif(map_name == "Campaign-Exclusive Quest"):
-                                self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting Campaign-Exclusive Quest...")
-                                round_difficulty_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting Campaign-Exclusive Quest...")
+                                round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
                                 
                                 # There is only one round "Play" button for this time-limited quest.
                                 difficulty_play_button = round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1]
                                 
                             else:
                                 # Start up the Angel Halo mission by selecting its difficulty.
-                                self.game.print_and_save(f"{self.game.printtime()} [INFO] Selecting {difficulty} Angel Halo...")
-                                round_difficulty_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Selecting {difficulty} Angel Halo...")
+                                round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
                                 if(difficulty == "Normal"):
                                     difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1])
                                 elif(difficulty == "Hard"):
@@ -522,30 +523,30 @@ class MapSelection:
                                     difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1])
                                     
                             # Now click the "Play" button for the specified difficulty and that should put the bot at the Summon Selection screen.
-                            self.game.mouse_tools.move_and_click_point(difficulty_play_button[0], difficulty_play_button[1])
+                            self._game.mouse_tools.move_and_click_point(difficulty_play_button[0], difficulty_play_button[1])
                             break
                         else:
-                            self.game.mouse_tools.scroll_screen(self.game.home_button_location[0], self.game.home_button_location[1] - 50, -500)
+                            self._game.mouse_tools.scroll_screen(self._game.home_button_location[0], self._game.home_button_location[1] - 50, -500)
                             tries -= 1    
                 else:
                     raise Exception("Cannot find the Special Missions.")
                 
             elif(map_mode.lower() == "event" or map_mode.lower() == "event (token drawboxes)"):
                 # Go to the Home screen.
-                self.game.go_back_home(confirm_location_check=True)
+                self._game.go_back_home(confirm_location_check=True)
                 
                 # Go to the Event by clicking on the "Menu" button and then click the very first banner.
-                self.game.find_and_click_button("home_menu")
-                banner_locations = self.game.image_tools.find_all("event_banner")
+                self._game.find_and_click_button("home_menu")
+                banner_locations = self._game.image_tools.find_all("event_banner")
                 if(len(banner_locations) == 0):
-                    banner_locations = self.game.image_tools.find_all("event_banner_blue")
-                self.game.mouse_tools.move_and_click_point(banner_locations[0][0], banner_locations[0][1])
+                    banner_locations = self._game.image_tools.find_all("event_banner_blue")
+                self._game.mouse_tools.move_and_click_point(banner_locations[0][0], banner_locations[0][1])
                 
                 # Check and click away the "Daily Missions" popup.
-                self.game.wait(1)
-                if(self.game.image_tools.confirm_location("event_daily_missions", tries=1)):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Detected \"Daily Missions\" popup. Clicking it away...")
-                    self.game.find_and_click_button("cancel")
+                self._game.wait(1)
+                if(self._game.image_tools.confirm_location("event_daily_missions", tries=1)):
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Detected \"Daily Missions\" popup. Clicking it away...")
+                    self._game.find_and_click_button("cancel")
                 
                 # Remove the difficulty prefix from the mission name.
                 temp_mission_name = mission_name
@@ -566,165 +567,165 @@ class MapSelection:
                 
                 if(map_mode.lower() == "event"):
                     # Click on the "Special Quest" button to head to the Special screen.
-                    self.game.find_and_click_button("event_special_quest")
-                    self.game.image_tools.confirm_location("special")
+                    self._game.find_and_click_button("event_special_quest")
+                    self._game.image_tools.confirm_location("special")
                     
                     # Check to see if the user already had a Nightmare available.
                     nightmare_is_available = 0
-                    if(self.game.image_tools.find_button("event_nightmare", tries=1) != None):
+                    if(self._game.image_tools.find_button("event_nightmare", tries=1) != None):
                         nightmare_is_available = 1
                     
                     # Find all the "Select" buttons.
-                    select_button_locations = self.game.image_tools.find_all("select")
+                    select_button_locations = self._game.image_tools.find_all("select")
                     
                     if(temp_mission_name.lower() == "event quest"):
                         # Select the Event Quests. Offset by 1 if there is a Nightmare available.
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Quest...")
-                        self.game.mouse_tools.move_and_click_point(select_button_locations[0 + nightmare_is_available][0], select_button_locations[0 + nightmare_is_available][1])
-                        self.game.wait(1)
+                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Now hosting Event Quest...")
+                        self._game.mouse_tools.move_and_click_point(select_button_locations[0 + nightmare_is_available][0], select_button_locations[0 + nightmare_is_available][1])
+                        self._game.wait(1)
                         
                         # Find all the round "Play" buttons.
-                        round_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                        round_play_button_locations = self._game.image_tools.find_all("play_round_button")
                         
                         if(difficulty == "Very Hard"):
-                            self.game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1])
+                            self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1])
                         elif(difficulty == "Extreme"):
-                            self.game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1])
+                            self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1])
                     elif(temp_mission_name.lower() == "event raid"):
                         # Select the Event Raids. Offset by 1 if there is a Nightmare available.
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Raid...")
-                        self.game.mouse_tools.move_and_click_point(select_button_locations[1 + nightmare_is_available][0], select_button_locations[1 + nightmare_is_available][1])
-                        self.game.wait(1)
+                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Now hosting Event Raid...")
+                        self._game.mouse_tools.move_and_click_point(select_button_locations[1 + nightmare_is_available][0], select_button_locations[1 + nightmare_is_available][1])
+                        self._game.wait(1)
                         
                         # Find all the round "Play" buttons.
-                        round_play_button_locations = self.game.image_tools.find_all("play_round_button")
+                        round_play_button_locations = self._game.image_tools.find_all("play_round_button")
                         
                         if(difficulty == "Very Hard"):
-                            self.game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1])
+                            self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1])
                         elif(difficulty == "Extreme"):
-                            self.game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1])
+                            self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1])
                     
-                    self.game.wait(1)
+                    self._game.wait(1)
                 else:
                     # Scroll down the screen a little bit for this UI layout that has Token Drawboxes.
-                    self.game.mouse_tools.scroll_screen_from_home_button(-200)
+                    self._game.mouse_tools.scroll_screen_from_home_button(-200)
                     
                     if(temp_mission_name.lower() == "event raid"):
                         # Bring up the "Raid Battle" popup. Then scroll down the screen a bit for screens less than 1440p to see the entire popup.
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Raid...")
-                        self.game.find_and_click_button("event_raid_battle")
-                        self.game.mouse_tools.scroll_screen_from_home_button(-400)
+                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Now hosting Event Raid...")
+                        self._game.find_and_click_button("event_raid_battle")
+                        self._game.mouse_tools.scroll_screen_from_home_button(-400)
                         
                         if(difficulty == "Very Hard"):
-                            self.game.find_and_click_button("event_raid_very_hard")
+                            self._game.find_and_click_button("event_raid_very_hard")
                         elif(difficulty == "Extreme"):
-                            self.game.find_and_click_button("event_raid_extreme")
+                            self._game.find_and_click_button("event_raid_extreme")
                         elif(difficulty == "Impossible"):
-                            self.game.find_and_click_button("event_raid_impossible")
+                            self._game.find_and_click_button("event_raid_impossible")
                             
                         # If the user does not have enough Treasures to host a Extreme or an Impossible Raid, host a Very Hard Raid instead.
-                        if(difficulty == "Extreme" and not self.game.image_tools.wait_vanish("event_raid_extreme", timeout=3)):
-                            self.game.print_and_save(f"{self.game.printtime()} [INFO] Not enough materials to host Extreme. Hosting Very Hard instead...")
-                            self.game.find_and_click_button("event_very_hard_raid")
-                        elif(difficulty == "Impossible" and not self.game.image_tools.wait_vanish("event_raid_impossible", timeout=3)):
-                            self.game.print_and_save(f"{self.game.printtime()} [INFO] Not enough materials to host Impossible. Hosting Very Hard instead...")
-                            self.game.find_and_click_button("event_very_hard_raid")
+                        if(difficulty == "Extreme" and not self._game.image_tools.wait_vanish("event_raid_extreme", timeout=3)):
+                            self._game.print_and_save(f"{self._game.printtime()} [INFO] Not enough materials to host Extreme. Hosting Very Hard instead...")
+                            self._game.find_and_click_button("event_very_hard_raid")
+                        elif(difficulty == "Impossible" and not self._game.image_tools.wait_vanish("event_raid_impossible", timeout=3)):
+                            self._game.print_and_save(f"{self._game.printtime()} [INFO] Not enough materials to host Impossible. Hosting Very Hard instead...")
+                            self._game.find_and_click_button("event_very_hard_raid")
                     elif(temp_mission_name.lower() == "event quest"):
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now hosting Event Quest...")
-                        self.game.find_and_click_button("event_quests")
-                        self.game.wait(1)
-                        quest_play_locations = self.game.image_tools.find_all("play_round_button")
+                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Now hosting Event Quest...")
+                        self._game.find_and_click_button("event_quests")
+                        self._game.wait(1)
+                        quest_play_locations = self._game.image_tools.find_all("play_round_button")
                         
                         if(difficulty == "Normal"):
-                            self.game.mouse_tools.move_and_click_point(quest_play_locations[0][0], quest_play_locations[0][1])
+                            self._game.mouse_tools.move_and_click_point(quest_play_locations[0][0], quest_play_locations[0][1])
                         elif(difficulty == "Hard"):
-                            self.game.mouse_tools.move_and_click_point(quest_play_locations[1][0], quest_play_locations[1][1])
+                            self._game.mouse_tools.move_and_click_point(quest_play_locations[1][0], quest_play_locations[1][1])
                         elif(difficulty == "Very Hard"):
-                            self.game.mouse_tools.move_and_click_point(quest_play_locations[2][0], quest_play_locations[2][1])
+                            self._game.mouse_tools.move_and_click_point(quest_play_locations[2][0], quest_play_locations[2][1])
                         elif(difficulty == "Extreme"):
-                            self.game.mouse_tools.move_and_click_point(quest_play_locations[3][0], quest_play_locations[3][1])
+                            self._game.mouse_tools.move_and_click_point(quest_play_locations[3][0], quest_play_locations[3][1])
             
             elif(map_mode.lower() == "dread barrage"):
                 # Go to the Home screen.
-                self.game.go_back_home(confirm_location_check=True)
+                self._game.go_back_home(confirm_location_check=True)
                 
                 # Scroll down the screen a little bit and then click the Dread Barrage banner.
-                self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Now navigating to Dread Barrage...")
-                self.game.mouse_tools.scroll_screen_from_home_button(-400)
-                self.game.find_and_click_button("dread_barrage")
-                self.game.wait(2)
+                self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now navigating to Dread Barrage...")
+                self._game.mouse_tools.scroll_screen_from_home_button(-400)
+                self._game.find_and_click_button("dread_barrage")
+                self._game.wait(2)
                 
-                if(self.game.image_tools.confirm_location("dread_barrage")):
+                if(self._game.image_tools.confirm_location("dread_barrage")):
                     # Check if there is already a hosted Dread Barrage mission.
-                    if(self.game.image_tools.confirm_location("resume_quests", tries=1)):
-                        self.game.print_and_save(f"\n{self.game.printtime()} [WARNING] Detected that there is already a hosted Dread Barrage mission.")
+                    if(self._game.image_tools.confirm_location("resume_quests", tries=1)):
+                        self._game.print_and_save(f"\n{self._game.printtime()} [WARNING] Detected that there is already a hosted Dread Barrage mission.")
                         expiry_time_in_seconds = 0
                         
-                        while(self.game.image_tools.confirm_location("resume_quests", tries=1)):
+                        while(self._game.image_tools.confirm_location("resume_quests", tries=1)):
                             # If there is already a hosted Dread Barrage mission, the bot will wait for a total of 1 hour and 30 minutes 
                             # for either the raid to expire or for anyone in the room to clear it.
-                            self.game.print_and_save(f"\n{self.game.printtime()} [WARNING] The bot will now either wait for the expiry time of 1 hour and 30 minutes or for someone else in the room to clear it.")
-                            self.game.print_and_save(f"{self.game.printtime()} [WARNING] The bot will now refresh the page every 30 seconds to check if it is still there before proceeding.")
-                            self.game.print_and_save(f"{self.game.printtime()} [WARNING] User can either wait it out, revive and fight it to completion, or retreat from the mission manually.")
-                            self.game.wait(30)
+                            self._game.print_and_save(f"\n{self._game.printtime()} [WARNING] The bot will now either wait for the expiry time of 1 hour and 30 minutes or for someone else in the room to clear it.")
+                            self._game.print_and_save(f"{self._game.printtime()} [WARNING] The bot will now refresh the page every 30 seconds to check if it is still there before proceeding.")
+                            self._game.print_and_save(f"{self._game.printtime()} [WARNING] User can either wait it out, revive and fight it to completion, or retreat from the mission manually.")
+                            self._game.wait(30)
                             
-                            self.game.find_and_click_button("reload")
-                            self.game.wait(2)
+                            self._game.find_and_click_button("reload")
+                            self._game.wait(2)
                             
                             expiry_time_in_seconds += 30
                             if(expiry_time_in_seconds >= 5400):
                                 break
                         
-                        self.game.print_and_save(f"\n{self.game.printtime()} [SUCCESS] Hosted Dread Barrage mission is now gone either because of timeout or someone else in the room killed it. Moving on...\n")
+                        self._game.print_and_save(f"\n{self._game.printtime()} [SUCCESS] Hosted Dread Barrage mission is now gone either because of timeout or someone else in the room killed it. Moving on...\n")
                     
                     # Find all the "Play" buttons at the top of the window.
-                    dread_barrage_play_button_locations = self.game.image_tools.find_all("dread_barrage_play")
+                    dread_barrage_play_button_locations = self._game.image_tools.find_all("dread_barrage_play")
                     
                     # Navigate to the specified difficulty.
                     if(difficulty == "1 Star"):
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now starting 1 Star Dread Barrage Raid...")
-                        self.game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[0][0], dread_barrage_play_button_locations[0][1])
+                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Now starting 1 Star Dread Barrage Raid...")
+                        self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[0][0], dread_barrage_play_button_locations[0][1])
                     elif(difficulty == "2 Star"):
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now starting 2 Star Dread Barrage Raid...")
-                        self.game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[1][0], dread_barrage_play_button_locations[1][1])
+                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Now starting 2 Star Dread Barrage Raid...")
+                        self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[1][0], dread_barrage_play_button_locations[1][1])
                     elif(difficulty == "3 Star"):
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now starting 3 Star Dread Barrage Raid...")
-                        self.game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[2][0], dread_barrage_play_button_locations[2][1])
+                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Now starting 3 Star Dread Barrage Raid...")
+                        self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[2][0], dread_barrage_play_button_locations[2][1])
                     elif(difficulty == "4 Star"):
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now starting 4 Star Dread Barrage Raid...")
-                        self.game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[3][0], dread_barrage_play_button_locations[3][1])
+                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Now starting 4 Star Dread Barrage Raid...")
+                        self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[3][0], dread_barrage_play_button_locations[3][1])
                     elif(difficulty == "5 Star"):
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Now starting 5 Star Dread Barrage Raid...")
-                        self.game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[4][0], dread_barrage_play_button_locations[4][1])
+                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Now starting 5 Star Dread Barrage Raid...")
+                        self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[4][0], dread_barrage_play_button_locations[4][1])
                     
-                    self.game.wait(2)
+                    self._game.wait(2)
                 
             # Check for available AP.
-            self.game.check_for_ap(use_full_elixirs=self.game.quest_refill)
+            self._game.check_for_ap(use_full_elixir=self._game.use_full_elixir)
             
             # Check to see if the bot is at the Summon Selection screen.
             if(map_mode.lower() != "coop"):
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Now checking if bot is currently at Summon Selection screen...")
-                check = self.game.image_tools.confirm_location("select_summon", tries=5)
+                self._game.print_and_save(f"{self._game.printtime()} [INFO] Now checking if bot is currently at Summon Selection screen...")
+                check = self._game.image_tools.confirm_location("select_summon", tries=5)
                 if(check):
-                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is currently at Summon Selection screen.")
+                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Bot is currently at Summon Selection screen.")
                     return True
                 else:
-                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is not at Summon Selection screen.")
+                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Bot is not at Summon Selection screen.")
                     return False
             else:
                 # If its Coop, check to see if the bot is at the Party Selection screen.
-                self.game.print_and_save(f"{self.game.printtime()} [INFO] Now checking if bot is currently at Coop Party Selection screen...")
-                check = self.game.image_tools.confirm_location("coop_without_support_summon", tries=5)
+                self._game.print_and_save(f"{self._game.printtime()} [INFO] Now checking if bot is currently at Coop Party Selection screen...")
+                check = self._game.image_tools.confirm_location("coop_without_support_summon", tries=5)
                 if(check):
-                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is currently at Coop Party Selection screen.")
+                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Bot is currently at Coop Party Selection screen.")
                     return True
                 else:
-                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Bot is not at Coop Party Selection screen.")
+                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Bot is not at Coop Party Selection screen.")
                     return False
         except Exception:
-            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception in MapSelection select_map(): \n{traceback.format_exc()}")
-            self.isBotRunning.value = 1
+            self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception in MapSelection select_map(): \n{traceback.format_exc()}")
+            self._isBotRunning.value = 1
             
     def check_for_pending(self, map_mode: str, tries: int = 2):
         """Check and collect any pending rewards and free up slots for the bot to join more raids. After this entire process is completed, the bot should end up at the Quest screen.
@@ -737,119 +738,119 @@ class MapSelection:
             (bool): Return True if Pending Battles were detected. Otherwise, return False.
         """
         try:
-            self.game.wait(1)
+            self._game.wait(1)
             raid_pending_battle_check = False
             if(map_mode.lower() == "raid"):
                 # Check for the "Check your Pending Battles" popup when navigating to the Quest screen.
-                while(self.game.image_tools.confirm_location("check_your_pending_battles", tries=tries)):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Found some pending battles that need collecting from.")
+                while(self._game.image_tools.confirm_location("check_your_pending_battles", tries=tries)):
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Found some pending battles that need collecting from.")
                     
-                    self.game.find_and_click_button("ok")
-                    self.game.wait(1)
+                    self._game.find_and_click_button("ok")
+                    self._game.wait(1)
                     
                     # Tap on a Pending Battle to collect it.
-                    if(self.game.image_tools.find_button("tap_here_to_see_rewards", tries=1)):
-                        self.game.find_and_click_button("tap_here_to_see_rewards")
-                        self.game.wait(1)
+                    if(self._game.image_tools.find_button("tap_here_to_see_rewards", tries=1)):
+                        self._game.find_and_click_button("tap_here_to_see_rewards")
+                        self._game.wait(1)
                         
-                        if(self.game.image_tools.confirm_location("no_loot", tries=1)):
-                            self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
-                            self.game.find_and_click_button("quests", suppress_error=True)
-                            if(self.raids_joined > 0):
-                                self.raids_joined -= 1
+                        if(self._game.image_tools.confirm_location("no_loot", tries=1)):
+                            self._game.print_and_save(f"{self._game.printtime()} [INFO] No loot can be collected.")
+                            self._game.find_and_click_button("quests", suppress_error=True)
+                            if(self._raids_joined > 0):
+                                self._raids_joined -= 1
                             raid_pending_battle_check = True
                         else:
                             # If there is loot available, start loot detection.
-                            self.game.collect_loot(isPendingBattle=True)
-                            if(self.raids_joined > 0):
-                                self.raids_joined -= 1
+                            self._game.collect_loot(isPendingBattle=True)
+                            if(self._raids_joined > 0):
+                                self._raids_joined -= 1
                             raid_pending_battle_check = True
                 
                 # Check if there are any additional Pending Battles on the Loot Collected screen.
-                if(self.game.image_tools.find_button("quest_results_pending_battles", tries=tries, suppress_error=True)):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Found some additional pending battles that need collecting from.")
-                    self.game.find_and_click_button("quest_results_pending_battles")
+                if(self._game.image_tools.find_button("quest_results_pending_battles", tries=tries, suppress_error=True)):
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Found some additional pending battles that need collecting from.")
+                    self._game.find_and_click_button("quest_results_pending_battles")
                     
-                    if(self.game.image_tools.confirm_location("pending_battles", tries=2)):
+                    if(self._game.image_tools.confirm_location("pending_battles", tries=2)):
                         # Loop and collect from every Pending Battles detected.
-                        while(self.game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
-                            self.game.find_and_click_button("tap_here_to_see_rewards")
-                            self.game.wait(1)
+                        while(self._game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
+                            self._game.find_and_click_button("tap_here_to_see_rewards")
+                            self._game.wait(1)
                             
-                            if(self.game.image_tools.confirm_location("no_loot", tries=1)):
-                                self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
-                                self.game.find_and_click_button("quests", suppress_error=True)
-                                if(self.raids_joined > 0):
-                                    self.raids_joined -= 1
+                            if(self._game.image_tools.confirm_location("no_loot", tries=1)):
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] No loot can be collected.")
+                                self._game.find_and_click_button("quests", suppress_error=True)
+                                if(self._raids_joined > 0):
+                                    self._raids_joined -= 1
                             else:
                                 # If there is loot available, start loot detection.
-                                self.game.collect_loot(isPendingBattle=True)
-                                if(self.raids_joined > 0):
-                                    self.raids_joined -= 1
+                                self._game.collect_loot(isPendingBattle=True)
+                                if(self._raids_joined > 0):
+                                    self._raids_joined -= 1
                                 
                             # While on the Loot Collected screen, if there are more Pending Battles then head back to the Pending Battles screen.
-                            if(self.game.image_tools.find_button("quest_results_pending_battles", tries=1)):
-                                self.game.find_and_click_button("quest_results_pending_battles")
+                            if(self._game.image_tools.find_button("quest_results_pending_battles", tries=1)):
+                                self._game.find_and_click_button("quest_results_pending_battles")
                                 
-                                while(self.game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
-                                    self.game.find_and_click_button("tap_here_to_see_rewards")
-                                    self.game.wait(1)
+                                while(self._game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
+                                    self._game.find_and_click_button("tap_here_to_see_rewards")
+                                    self._game.wait(1)
                                     
-                                    if(self.game.image_tools.confirm_location("no_loot", tries=1)):
-                                        self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
-                                        self.game.find_and_click_button("quests", suppress_error=True)
+                                    if(self._game.image_tools.confirm_location("no_loot", tries=1)):
+                                        self._game.print_and_save(f"{self._game.printtime()} [INFO] No loot can be collected.")
+                                        self._game.find_and_click_button("quests", suppress_error=True)
                                     else:
                                         # If there is loot available, start loot detection.
-                                        self.game.collect_loot(isPendingBattle=True)
+                                        self._game.collect_loot(isPendingBattle=True)
                                         
-                                    if(self.game.image_tools.find_button("quest_results_pending_battles", tries=1)):
-                                        self.game.find_and_click_button("quest_results_pending_battles")
+                                    if(self._game.image_tools.find_button("quest_results_pending_battles", tries=1)):
+                                        self._game.find_and_click_button("quest_results_pending_battles")
                                     else:
                                         # When there are no more Pending Battles, go back to the Quest screen.
-                                        self.game.find_and_click_button("quests", suppress_error=True)
+                                        self._game.find_and_click_button("quests", suppress_error=True)
                                         break
                 
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Pending battles have been cleared for Raids.")
+                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Pending battles have been cleared for Raids.")
                         return True
                 elif(raid_pending_battle_check):
-                    self.game.print_and_save(f"{self.game.printtime()} [INFO] Pending battles have been collected from for Raids.")
+                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Pending battles have been collected from for Raids.")
                     return True
             else:
                 # Check if the "Play Again" button is covered by the "Pending Battles" button.
-                if(self.game.image_tools.find_button("quest_results_pending_battles", tries=tries, suppress_error=True)):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Found pending battles that need collecting from.")
-                    self.game.find_and_click_button("quest_results_pending_battles")
-                    self.game.wait(1)
-                    if(self.game.image_tools.confirm_location("pending_battles", tries=1)):
+                if(self._game.image_tools.find_button("quest_results_pending_battles", tries=tries, suppress_error=True)):
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Found pending battles that need collecting from.")
+                    self._game.find_and_click_button("quest_results_pending_battles")
+                    self._game.wait(1)
+                    if(self._game.image_tools.confirm_location("pending_battles", tries=1)):
                         # Loop and collect from every Pending Battles detected.
-                        while(self.game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
-                            self.game.find_and_click_button("tap_here_to_see_rewards")
-                            self.game.wait(1)
+                        while(self._game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
+                            self._game.find_and_click_button("tap_here_to_see_rewards")
+                            self._game.wait(1)
                             
-                            if(self.game.image_tools.confirm_location("no_loot", tries=1)):
-                                self.game.print_and_save(f"{self.game.printtime()} [INFO] No loot can be collected.")
-                                self.game.find_and_click_button("quests", suppress_error=True)
+                            if(self._game.image_tools.confirm_location("no_loot", tries=1)):
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] No loot can be collected.")
+                                self._game.find_and_click_button("quests", suppress_error=True)
                             else:
                                 # If there is loot available, start loot detection.
-                                self.game.collect_loot(isPendingBattle=True)
+                                self._game.collect_loot(isPendingBattle=True)
                                 
-                            if(self.game.image_tools.find_button("quest_results_pending_battles", tries=1)):
-                                self.game.find_and_click_button("quest_results_pending_battles")
+                            if(self._game.image_tools.find_button("quest_results_pending_battles", tries=1)):
+                                self._game.find_and_click_button("quest_results_pending_battles")
                             else:
                                 # When there are no more Pending Battles, go back to the Quest screen.
-                                self.game.find_and_click_button("quests", suppress_error=True)
+                                self._game.find_and_click_button("quests", suppress_error=True)
                                 break
                         
-                        self.game.print_and_save(f"{self.game.printtime()} [INFO] Pending battles have been cleared.")
+                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Pending battles have been cleared.")
                         return True
                     
-            self.game.print_and_save(f"{self.game.printtime()} [INFO] No Pending Battles needed to be cleared.")
+            self._game.print_and_save(f"{self._game.printtime()} [INFO] No Pending Battles needed to be cleared.")
             return False
         except Exception:
-            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception in MapSelection check_for_pending(): \n{traceback.format_exc()}")
-            self.isBotRunning.value = 1
+            self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception in MapSelection check_for_pending(): \n{traceback.format_exc()}")
+            self._isBotRunning.value = 1
     
-    def check_for_joined(self):
+    def _check_for_joined(self):
         """Check and update the number of raids currently joined.
 
         Returns:
@@ -857,16 +858,16 @@ class MapSelection:
         """
         try:
             # Find out the number of currently joined raids.
-            self.game.wait(1)
-            joined_locations = self.game.image_tools.find_all("joined")
+            self._game.wait(1)
+            joined_locations = self._game.image_tools.find_all("joined")
             if(joined_locations != None):
-                self.raids_joined = len(joined_locations)
-                self.game.print_and_save(f"\n{self.game.printtime()} [INFO] There are currently {self.raids_joined} raids joined.")
+                self._raids_joined = len(joined_locations)
+                self._game.print_and_save(f"\n{self._game.printtime()} [INFO] There are currently {self._raids_joined} raids joined.")
         
             return None
         except Exception:
-            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception in MapSelection check_for_joined(): \n{traceback.format_exc()}")
-            self.isBotRunning.value = 1
+            self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception in MapSelection _check_for_joined(): \n{traceback.format_exc()}")
+            self._isBotRunning.value = 1
             
     def join_raid(self, item_name: str, mission_name: str):
         """Attempt to join the specified raid.
@@ -880,84 +881,84 @@ class MapSelection:
         """
         try:
             # Head to the Home screen.
-            self.game.go_back_home(confirm_location_check=True)
+            self._game.go_back_home(confirm_location_check=True)
             
             # Then navigate to the Quest screen.
-            self.game.find_and_click_button("quest", suppress_error=True)
+            self._game.find_and_click_button("quest", suppress_error=True)
             
             # Check for the "You retreated from the raid battle" popup.
-            self.game.wait(1)
-            if(self.game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries=1)):
-                self.game.find_and_click_button("ok")
+            self._game.wait(1)
+            if(self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries=1)):
+                self._game.find_and_click_button("ok")
                 
-            self.game.image_tools.confirm_location("quest")
+            self._game.image_tools.confirm_location("quest")
             
             self.check_for_pending("raid")
             
             # Now navigate to the Raid screen.
-            self.game.find_and_click_button("raid", suppress_error=True)
-            self.game.image_tools.confirm_location("raid")
+            self._game.find_and_click_button("raid", suppress_error=True)
+            self._game.image_tools.confirm_location("raid")
             
             # Check for any joined raids.
-            self.check_for_joined()
+            self._check_for_joined()
             
-            if(self.raids_joined >= 3):
+            if(self._raids_joined >= 3):
                 # If the maximum number of raids has been joined, collect any pending rewards with a interval of 60 seconds in between until the number of joined raids is below 3.
-                while(self.raids_joined >= 3):
-                    self.game.print_and_save(f"\n{self.game.printtime()} [INFO] Maximum raids of 3 has been joined. Waiting 60 seconds to see if any finish.")
-                    self.game.go_back_home(confirm_location_check=True)
+                while(self._raids_joined >= 3):
+                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Maximum raids of 3 has been joined. Waiting 60 seconds to see if any finish.")
+                    self._game.go_back_home(confirm_location_check=True)
                     
-                    self.game.wait(60)
+                    self._game.wait(60)
                     
-                    self.game.find_and_click_button("quest", suppress_error=True)
+                    self._game.find_and_click_button("quest", suppress_error=True)
                     self.check_for_pending("raid")
             else:
                 self.check_for_pending("raid")
             
             # Click on the "Enter ID" button.
-            self.game.print_and_save(f"{self.game.printtime()} [INFO] Moving to the Enter ID screen.")
-            self.game.find_and_click_button("enter_id")
+            self._game.print_and_save(f"{self._game.printtime()} [INFO] Moving to the Enter ID screen.")
+            self._game.find_and_click_button("enter_id")
             
             # Make preparations for farming raids by saving the location of the "Join Room" button and the "Room Code" textbox.
-            join_room_button = self.game.image_tools.find_button("join_a_room")
+            join_room_button = self._game.image_tools.find_button("join_a_room")
             room_code_textbox = (join_room_button[0] - 185, join_room_button[1])
             
             # Loop and try to join a raid from a parsed list of room codes. If none of the room codes worked, wait 60 seconds before trying again with a new set of room codes for a maximum of 10 tries.
             tries = 10
             while(tries > 0):
                 # Find 5 most recent tweets for the specified raid and then parse for room codes.
-                tweets = self.game.room_finder.find_most_recent(mission_name, 5)
-                room_codes = self.game.room_finder.clean_tweets(tweets)
+                tweets = self._game.room_finder.find_most_recent(mission_name, 5)
+                room_codes = self._game.room_finder.clean_tweets(tweets)
                 
                 for room_code in room_codes:
                     # Select the "Room Code" textbox and then clear all text from it.
-                    self.game.mouse_tools.move_and_click_point(room_code_textbox[0], room_code_textbox[1], mouse_clicks=2)
-                    self.game.mouse_tools.clear_textbox()
+                    self._game.mouse_tools.move_and_click_point(room_code_textbox[0], room_code_textbox[1], mouse_clicks=2)
+                    self._game.mouse_tools.clear_textbox()
                     
                     # Copy the room code to the clipboard and then paste it into the "Room Code" textbox.
-                    self.game.mouse_tools.copy_to_clipboard(room_code)
-                    self.game.mouse_tools.paste_from_clipboard()
+                    self._game.mouse_tools.copy_to_clipboard(room_code)
+                    self._game.mouse_tools.paste_from_clipboard()
                     
                     # Now click on the "Join Room" button.
-                    self.game.mouse_tools.click_point_instantly(join_room_button[0], join_room_button[1])
+                    self._game.mouse_tools.click_point_instantly(join_room_button[0], join_room_button[1])
                     
                     # If the room code is valid and the raid is able to be joined, break out and head to the Summon Selection screen.
-                    if(not self.check_for_pending("raid", tries=1) and not self.game.image_tools.confirm_location("raid_already_ended", tries=1) and not self.game.image_tools.confirm_location("already_taking_part", tries=1) and not self.game.image_tools.confirm_location("invalid_code", tries=1)):
+                    if(not self.check_for_pending("raid", tries=1) and not self._game.image_tools.confirm_location("raid_already_ended", tries=1) and not self._game.image_tools.confirm_location("already_taking_part", tries=1) and not self._game.image_tools.confirm_location("invalid_code", tries=1)):
                         # Check for EP.
-                        self.game.check_for_ep(use_soul_balm=self.game.raid_refill)
+                        self._game.check_for_ep(use_soul_balm=self._game.use_soul_balm)
                         
-                        self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Joining {room_code} was successful.")
-                        self.raids_joined += 1
-                        return self.game.image_tools.confirm_location("select_summon")
+                        self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] Joining {room_code} was successful.")
+                        self._raids_joined += 1
+                        return self._game.image_tools.confirm_location("select_summon")
                     else:
-                        self.game.print_and_save(f"{self.game.printtime()} [WARNING] {room_code} already ended or invalid.")
-                        self.game.find_and_click_button("ok")
+                        self._game.print_and_save(f"{self._game.printtime()} [WARNING] {room_code} already ended or invalid.")
+                        self._game.find_and_click_button("ok")
                 
                 tries -= 1
-                self.game.print_and_save(f"\n{self.game.printtime()} [WARNING] Could not find any valid room codes. \nWaiting 60 seconds and then trying again with {tries} tries left before exiting.")
-                self.game.wait(60)
+                self._game.print_and_save(f"\n{self._game.printtime()} [WARNING] Could not find any valid room codes. \nWaiting 60 seconds and then trying again with {tries} tries left before exiting.")
+                self._game.wait(60)
                 
             return False
         except Exception:
-            self.game.print_and_save(f"\n{self.game.printtime()} [ERROR] Bot encountered exception in MapSelection join_raid(): \n{traceback.format_exc()}")
-            self.isBotRunning.value = 1
+            self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception in MapSelection join_raid(): \n{traceback.format_exc()}")
+            self._isBotRunning.value = 1

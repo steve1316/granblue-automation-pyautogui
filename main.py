@@ -26,8 +26,8 @@ class MainDriver:
     """
     def __init__(self):
         super().__init__()
-        self.game = None
-        self.debug = None
+        self._game = None
+        self._debug = None
         
     def run_bot(self, item_name: str, item_amount_to_farm: str, farming_mode: str, location_name: str, mission_name: str, summon_element_list: Iterable[str], summon_list: Iterable[str], group_number: int, 
                 party_number: int, combat_script: str, queue: multiprocessing.Queue, isBotRunning: int, debug_mode: bool = False):
@@ -52,27 +52,23 @@ class MainDriver:
             None
         """
         # Initialize the Game and Debug classes.
-        self.game = Game(queue=queue, isBotRunning=isBotRunning, combat_script=combat_script, debug_mode=debug_mode)
-        self.debug = Debug(self.game, isBotRunning=isBotRunning, combat_script=combat_script)
+        self._game = Game(queue=queue, isBotRunning=isBotRunning, combat_script=combat_script, debug_mode=debug_mode)
+        self._debug = Debug(self._game, isBotRunning=isBotRunning, combat_script=combat_script)
 
-        self.game.start_farming_mode(item_name=item_name, item_amount_to_farm=item_amount_to_farm, farming_mode=farming_mode, location_name=location_name, mission_name=mission_name, 
-                                     summon_element_list=summon_element_list, summon_list=summon_list, group_number=group_number, party_number=party_number)
+        self._game.start_farming_mode(item_name=item_name, item_amount_to_farm=item_amount_to_farm, farming_mode=farming_mode, location_name=location_name, mission_name=mission_name, summon_element_list=summon_element_list, summon_list=summon_list, group_number=group_number, party_number=party_number)
         
         # Test finding tweets.
-        # self.debug.test_twitter_listener()
+        # self._debug.test_twitter_listener()
         
         # Test finding amounts of all items on the screen.
-        # self.debug.test_item_detection()
+        # self._debug.test_item_detection()
 
         # Test the Farming Mode.
-        # self.debug.test_farming_mode()
-
-        # Test finding all summon element tabs in Summon Selection Screen.
-        # self.debug.test_find_summon_element_tabs()
+        # self._debug.test_farming_mode()
 
         # Test Combat Mode.
-        # self.debug.test_combat_mode()
-        # self.debug.test_combat_mode2()
+        # self._debug.test_combat_mode()
+        # self._debug.test_combat_mode2()
         
         isBotRunning.value = 1
         return None
@@ -90,35 +86,35 @@ class MainWindow(QObject):
         QObject.__init__(self)
         
         # Create the Queue for storing logging messages, the flag for the bot's running status, and the amount of seconds that the bot has been running for.
-        self.queue = multiprocessing.Queue()
-        self.isBotRunning = None
-        self.botRunningTimeInSeconds = None
+        self._queue = multiprocessing.Queue()
+        self._isBotRunning = None
+        self._botRunningTimeInSeconds = None
         
         # Create a list in memory to hold all messages in case the frontend wants to save all those messages into a text file.
-        self.text_log = []
+        self._text_log = []
         
         # Hold the file path to the combat script for use during Combat Mode.
-        self.real_file_path = None
+        self._real_file_path = None
                 
         # Prep the following objects for multi-processed threading.        
-        self.bot_object = MainDriver()
-        self.bot_process = None
+        self._bot_object = MainDriver()
+        self._bot_process = None
         
         # Hold the following information for the Game class initialization in a new thread.
-        self.farming_mode = ""
-        self.item_name = ""
-        self.item_amount_to_farm = ""
-        self.location_name = ""
-        self.mission_name = ""
-        self.summon_element_list = []
-        self.summon_list = []
-        self.group_number = ""
-        self.party_number = ""
+        self._farming_mode = ""
+        self._item_name = ""
+        self._item_amount_to_farm = ""
+        self._location_name = ""
+        self._mission_name = ""
+        self._summon_element_list = []
+        self._summon_list = []
+        self._group_number = ""
+        self._party_number = ""
         
         # Amount of time that the bot is allowed to run for in seconds.
-        self.maximum_runtime = "none"
+        self._maximum_runtime = "none"
         
-        self.debug_mode = False
+        self._debug_mode = False
 
     # These signal connections connects the following backend functions to their respective functions in the frontend via the Connections type in the Signal and Handler Event System in Qt QML.
     # The data type inside the Signal indicates the return type going from backend to frontend. All of the functions that are connected to the frontend needs to use the emit() functionality 
@@ -141,15 +137,15 @@ class MainWindow(QObject):
         Returns:
             None
         """
-        self.farming_mode = ""
-        self.item_name = ""
-        self.item_amount_to_farm = "0"
-        self.location_name = ""
-        self.mission_name = ""
-        self.summon_element_list = []
-        self.summon_list = []
-        self.group_number = ""
-        self.party_number = ""
+        self._farming_mode = ""
+        self._item_name = ""
+        self._item_amount_to_farm = "0"
+        self._location_name = ""
+        self._mission_name = ""
+        self._summon_element_list = []
+        self._summon_list = []
+        self._group_number = ""
+        self._party_number = ""
         return None
     
     @Slot(str)
@@ -165,13 +161,13 @@ class MainWindow(QObject):
             None
         """
         if(new_time != "" and new_time != "00:00:00" and len(new_time) != 1):
-            self.maximum_runtime = new_time
+            self._maximum_runtime = new_time
         else:
-            self.maximum_runtime = "none"
+            self._maximum_runtime = "none"
             
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummons: " + str(self.summon_list) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
-                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
+        self.updateMessage.emit("Farming Mode: " + self._farming_mode + "\nItem Name: " + self._item_name + "\nLocation: " + self._location_name + "\nMission: " + self._mission_name + 
+                                "\nItem amount to farm: " + str(self._item_amount_to_farm) + "\nSummons: " + str(self._summon_list) + "\nGroup #: " + str(self._group_number) + "\nParty #: " + 
+                                str(self._party_number) + "\nRunning Time: " + str(self._maximum_runtime))
         return None
     
         
@@ -187,7 +183,7 @@ class MainWindow(QObject):
         Returns:
             None
         """
-        self.debug_mode = flag
+        self._debug_mode = flag
         return None
     
     @Slot(str)
@@ -202,10 +198,10 @@ class MainWindow(QObject):
         Returns:
             None
         """
-        self.farming_mode = farming_mode
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummons: " + str(self.summon_list) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
-                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
+        self._farming_mode = farming_mode
+        self.updateMessage.emit("Farming Mode: " + self._farming_mode + "\nItem Name: " + self._item_name + "\nLocation: " + self._location_name + "\nMission: " + self._mission_name + 
+                                "\nItem amount to farm: " + str(self._item_amount_to_farm) + "\nSummons: " + str(self._summon_list) + "\nGroup #: " + str(self._group_number) + "\nParty #: " + 
+                                str(self._party_number) + "\nRunning Time: " + str(self._maximum_runtime))
         return None
     
     @Slot(str)
@@ -220,10 +216,10 @@ class MainWindow(QObject):
         Returns:
             None
         """
-        self.item_name = item_name
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummons: " + str(self.summon_list) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
-                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
+        self._item_name = item_name
+        self.updateMessage.emit("Farming Mode: " + self._farming_mode + "\nItem Name: " + self._item_name + "\nLocation: " + self._location_name + "\nMission: " + self._mission_name + 
+                                "\nItem amount to farm: " + str(self._item_amount_to_farm) + "\nSummons: " + str(self._summon_list) + "\nGroup #: " + str(self._group_number) + "\nParty #: " + 
+                                str(self._party_number) + "\nRunning Time: " + str(self._maximum_runtime))
         return None
         
     @Slot(str)
@@ -238,11 +234,11 @@ class MainWindow(QObject):
         Returns:
             None
         """
-        self.item_amount_to_farm = int(item_amount)
+        self._item_amount_to_farm = int(item_amount)
         
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummons: " + str(self.summon_list) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
-                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
+        self.updateMessage.emit("Farming Mode: " + self._farming_mode + "\nItem Name: " + self._item_name + "\nLocation: " + self._location_name + "\nMission: " + self._mission_name + 
+                                "\nItem amount to farm: " + str(self._item_amount_to_farm) + "\nSummons: " + str(self._summon_list) + "\nGroup #: " + str(self._group_number) + "\nParty #: " + 
+                                str(self._party_number) + "\nRunning Time: " + str(self._maximum_runtime))
         return None
         
     @Slot(str, str)
@@ -258,15 +254,15 @@ class MainWindow(QObject):
         Returns:
             None
         """
-        self.mission_name = mission_name
+        self._mission_name = mission_name
         if(location_name != ""):
-            self.location_name = location_name
+            self._location_name = location_name
         else:
-            self.location_name = ""
+            self._location_name = ""
             
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummons: " + str(self.summon_list) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
-                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
+        self.updateMessage.emit("Farming Mode: " + self._farming_mode + "\nItem Name: " + self._item_name + "\nLocation: " + self._location_name + "\nMission: " + self._mission_name + 
+                                "\nItem amount to farm: " + str(self._item_amount_to_farm) + "\nSummons: " + str(self._summon_list) + "\nGroup #: " + str(self._group_number) + "\nParty #: " + 
+                                str(self._party_number) + "\nRunning Time: " + str(self._maximum_runtime))
         return None
         
     @Slot(str, str)
@@ -283,21 +279,21 @@ class MainWindow(QObject):
             None
         """
         if(summon_name != ""):
-            if (summon_name not in self.summon_list):
-                self.summon_list.append(summon_name)
-                self.summon_element_list.append(summon_element)
+            if (summon_name not in self._summon_list):
+                self._summon_list.append(summon_name)
+                self._summon_element_list.append(summon_element)
             else:
                 # If the user selected a Summon that had already been selected, remove it from the list. Remove its element as well.
-                index = self.summon_list.index(summon_name)
-                self.summon_list.remove(summon_name)
-                self.summon_element_list.pop(index)
+                index = self._summon_list.index(summon_name)
+                self._summon_list.remove(summon_name)
+                self._summon_element_list.pop(index)
 
-            self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                    "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummons: " + str(self.summon_list) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
-                                    str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
+            self.updateMessage.emit("Farming Mode: " + self._farming_mode + "\nItem Name: " + self._item_name + "\nLocation: " + self._location_name + "\nMission: " + self._mission_name + 
+                                    "\nItem amount to farm: " + str(self._item_amount_to_farm) + "\nSummons: " + str(self._summon_list) + "\nGroup #: " + str(self._group_number) + "\nParty #: " + 
+                                    str(self._party_number) + "\nRunning Time: " + str(self._maximum_runtime))
         
         # Send the current length of the Summon list to the frontend.
-        self.getSummonListLength.emit(len(self.summon_list))
+        self.getSummonListLength.emit(len(self._summon_list))
         
         return None
     
@@ -310,8 +306,8 @@ class MainWindow(QObject):
         Returns:
             None
         """
-        self.summon_element_list.clear()
-        self.summon_list.clear()
+        self._summon_element_list.clear()
+        self._summon_list.clear()
         
         return None
         
@@ -329,11 +325,11 @@ class MainWindow(QObject):
         """
         # Parse the Group number and then convert it to int.
         split_group_number = group_number.split(" ")[1]
-        self.group_number = int(split_group_number)
+        self._group_number = int(split_group_number)
         
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummons: " + str(self.summon_list) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
-                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
+        self.updateMessage.emit("Farming Mode: " + self._farming_mode + "\nItem Name: " + self._item_name + "\nLocation: " + self._location_name + "\nMission: " + self._mission_name + 
+                                "\nItem amount to farm: " + str(self._item_amount_to_farm) + "\nSummons: " + str(self._summon_list) + "\nGroup #: " + str(self._group_number) + "\nParty #: " + 
+                                str(self._party_number) + "\nRunning Time: " + str(self._maximum_runtime))
         return None
         
     @Slot(str)
@@ -350,11 +346,11 @@ class MainWindow(QObject):
         """
         # Parse the Party number and then convert it to int.
         split_party_number = party_number.split(" ")[1]
-        self.party_number = int(split_party_number)
+        self._party_number = int(split_party_number)
         
-        self.updateMessage.emit("Farming Mode: " + self.farming_mode + "\nItem Name: " + self.item_name + "\nLocation: " + self.location_name + "\nMission: " + self.mission_name + 
-                                "\nItem amount to farm: " + str(self.item_amount_to_farm) + "\nSummons: " + str(self.summon_list) + "\nGroup #: " + str(self.group_number) + "\nParty #: " + 
-                                str(self.party_number) + "\nRunning Time: " + str(self.maximum_runtime))
+        self.updateMessage.emit("Farming Mode: " + self._farming_mode + "\nItem Name: " + self._item_name + "\nLocation: " + self._location_name + "\nMission: " + self._mission_name + 
+                                "\nItem amount to farm: " + str(self._item_amount_to_farm) + "\nSummons: " + str(self._summon_list) + "\nGroup #: " + str(self._group_number) + "\nParty #: " + 
+                                str(self._party_number) + "\nRunning Time: " + str(self._maximum_runtime))
         return None
     
     @Slot(str)
@@ -373,7 +369,7 @@ class MainWindow(QObject):
         file_path = QUrl(file_path).toLocalFile()
         opened_file = open(file_path, "w")
 
-        for line in self.text_log:
+        for line in self._text_log:
             opened_file.write("\n" + line)
             
         opened_file.close()
@@ -392,8 +388,8 @@ class MainWindow(QObject):
             None
         """
         # Parse the file path to the specified file from Qt QML, grab the file name and then transmit it to the frontend.
-        self.real_file_path = QUrl(file_path).toLocalFile()
-        file_name = str(Path(self.real_file_path).name)
+        self._real_file_path = QUrl(file_path).toLocalFile()
+        file_name = str(Path(self._real_file_path).name)
         self.openFile.emit(file_name)
         return None
     
@@ -406,13 +402,13 @@ class MainWindow(QObject):
         Returns:
             None
         """
-        if(self.maximum_runtime != "none"):
+        if(self._maximum_runtime != "none"):
             # Grab the maximum hours, minutes, and seconds.
-            max_hours, max_minutes, max_seconds = self.maximum_runtime.split(":")
+            max_hours, max_minutes, max_seconds = self._maximum_runtime.split(":")
             max_seconds = int(max_hours) * 3600 + int(max_minutes) * 60 + int(max_seconds)
             
             # Get the elapsed time since the bot started in seconds.
-            elapsed_seconds = timer() - self.botRunningTimeInSeconds
+            elapsed_seconds = timer() - self._botRunningTimeInSeconds
 
             # Parse the remaining hours, minutes, and seconds.
             remaining_seconds = (int(max_seconds) - elapsed_seconds) % (24 * 3600)
@@ -432,7 +428,7 @@ class MainWindow(QObject):
                 self.updateTimerTextField.emit(remaining_time)
 
         # Transmit True if the bot had stopped running and False otherwise.
-        elif(self.isBotRunning.value == 1):
+        elif(self._isBotRunning.value == 1):
             self.checkBotStatus.emit(True)
         else:
             self.checkBotStatus.emit(False)
@@ -449,9 +445,9 @@ class MainWindow(QObject):
             None
         """
         # While the Queue is not empty, grab a message from it, append it to the log, and then transmit the message to the frontend.
-        while not self.queue.empty():
-            message = self.queue.get()
-            self.text_log.append(message)
+        while not self._queue.empty():
+            message = self._queue.get()
+            self._text_log.append(message)
             self.updateConsoleLog.emit(message)
         
         return None
@@ -483,21 +479,21 @@ class MainWindow(QObject):
         print("\n[STATUS] Starting bot on a new Thread...")
         
         # Clear the text log.
-        self.text_log.clear()
+        self._text_log.clear()
         
         # Save the isBotRunning flag as an int in memory to be shared across classes. Value of 0 means the bot is currently running and a value of 1 means the bot has stopped.
-        self.isBotRunning = multiprocessing.Value("i", 0)
+        self._isBotRunning = multiprocessing.Value("i", 0)
         
         # Start the timer for the running time of the bot.
-        self.botRunningTimeInSeconds = timer()
+        self._botRunningTimeInSeconds = timer()
         
         # Create a new Process whose target is the MainDriver's run_bot() method.
-        self.bot_process = multiprocessing.Process(target=self.bot_object.run_bot, args=(self.item_name, self.item_amount_to_farm, self.farming_mode, self.location_name,
-                                                                                         self.mission_name, self.summon_element_list, self.summon_list, self.group_number,
-                                                                                         self.party_number, self.real_file_path, self.queue, self.isBotRunning, self.debug_mode))
+        self._bot_process = multiprocessing.Process(target=self._bot_object.run_bot, args=(self._item_name, self._item_amount_to_farm, self._farming_mode, self._location_name,
+                                                                                         self._mission_name, self._summon_element_list, self._summon_list, self._group_number,
+                                                                                         self._party_number, self._real_file_path, self._queue, self._isBotRunning, self._debug_mode))
         
         # Now start the new Process on a new Thread.
-        self.bot_process.start()
+        self._bot_process.start()
         return None
     
     @Slot()
@@ -509,11 +505,10 @@ class MainWindow(QObject):
         Returns:
             None
         """
-        if(self.bot_process != None):
+        if(self._bot_process != None):
             print("\n[STATUS] Stopping the bot and terminating the Thread.")
-            self.bot_process.terminate()
+            self._bot_process.terminate()
         return None
-
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
