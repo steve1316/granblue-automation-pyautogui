@@ -478,7 +478,12 @@ class ImageUtils:
         self.file_resolver.add_path("images/buttons/")
         try:
             self.clear_memory_guibot()
-            return self.guibot.wait_vanish(image_name, timeout=timeout)
+            if(self.guibot.wait_vanish(image_name, timeout=timeout)):
+                self.game.print_and_save(f"{self.game.printtime()} [SUCCESS] Image successfully vanished from screen...")
+                return True
+            else:
+                self.game.print_and_save(f"{self.game.printtime()} [WARNING] Image did not vanish from screen...")
+                return False
         except Exception as e:
             self.game.print_and_save(f"{self.game.printtime()} [ERROR] {image_name} should have vanished from the screen after {timeout} seconds but did not. Exact error is: \n{e}")
     
