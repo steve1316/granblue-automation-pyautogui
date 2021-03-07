@@ -969,6 +969,9 @@ class Game:
             self.print_and_save(f"{self.printtime()} [COMBAT] Finished requesting Backup.")
             self.find_and_click_button("ok")
         
+        # Move the view back up to the top of the page to ensure all elements are visible.
+        self.mouse_tools.scroll_screen_from_home_button(400)
+        
         return None
     
     def _tweet_backup(self):
@@ -996,6 +999,9 @@ class Game:
             self.print_and_save(f"{self.printtime()} [COMBAT] Failed requesting Backup via Twitter as there is still a cooldown from the last tweet.")
             self.find_and_click_button("cancel")
             
+        # Move the view back up to the top of the page to ensure all elements are visible.
+        self.mouse_tools.scroll_screen_from_home_button(400)
+        
         return None
 
     def start_combat_mode(self, script_file_path: str = "", isNightmare: bool = False):
