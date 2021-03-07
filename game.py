@@ -1751,7 +1751,7 @@ class Game:
                                 self.check_for_friend_request()
                                 
                                 # Check for Dimensional Halo and Event Nightmare.
-                                if(self._farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and self._enable_dimensional_halo and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons")):
+                                if(self._farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons")):
                                     if(self._check_for_dimensional_halo()):
                                         # Make sure the bot goes back to the Home screen when completing a Dimensional Halo so that the "Play Again" functionality comes back.
                                         self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
