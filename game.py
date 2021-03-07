@@ -1579,8 +1579,6 @@ class Game:
                 if(self._dimensional_halo_combat_script == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Dimensional Halo will reuse the one for Farming Mode.")
                     self._dimensional_halo_combat_script = self._combat_script
-                else:
-                    self._dimensional_halo_combat_script = 0
                     
                 if(len(self._dimensional_halo_summon_element_list) == 0):
                     self.print_and_save(f"{self.printtime()} [INFO] Summon Elements for Dimensional Halo will reuse the ones for Farming Mode.")
