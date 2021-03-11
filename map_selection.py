@@ -901,7 +901,7 @@ class MapSelection:
                     self._game.mouse_tools.click_point_instantly(join_room_button[0], join_room_button[1])
                     
                     # If the room code is valid and the raid is able to be joined, break out and head to the Summon Selection screen.
-                    if(not self.check_for_pending("raid", tries=1) and not self._game.image_tools.confirm_location("raid_already_ended", tries=1) and not self._game.image_tools.confirm_location("already_taking_part", tries=1) and not self._game.image_tools.confirm_location("invalid_code", tries=1)):
+                    if(not self.check_for_pending("raid") and not self._game.image_tools.confirm_location("raid_already_ended", tries=1) and not self._game.image_tools.confirm_location("already_taking_part", tries=1) and not self._game.image_tools.confirm_location("invalid_code", tries=1)):
                         # Check for EP.
                         self._game.check_for_ep(use_soul_balm=self._game.use_soul_balm)
                         
