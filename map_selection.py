@@ -727,123 +727,87 @@ class MapSelection:
             self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception in MapSelection select_map(): \n{traceback.format_exc()}")
             self._isBotRunning.value = 1
             
-    def check_for_pending(self, map_mode: str, tries: int = 2):
-        """Check and collect any pending rewards and free up slots for the bot to join more raids. After this entire process is completed, the bot should end up at the Quest screen.
+    def _clear_pending_battle(self):
+        """Process a Pending Battle.
+
+        Returns:
+            None
+        """
+        self._game.find_and_click_button("tap_here_to_see_rewards")
+        self._game.wait(1)
+        
+        if(self._game.image_tools.confirm_location("no_loot", tries=1)):
+            self._game.print_and_save(f"{self._game.printtime()} [INFO] No loot can be collected.")
+            
+            # Navigate back to the Quests screen.
+            self._game.find_and_click_button("quests", suppress_error=True)
+            if(self._raids_joined > 0):
+                self._raids_joined -= 1
+        else:
+            # If there is loot available, start loot detection.
+            self._game.collect_loot(isPendingBattle=True)
+            
+            if(self._raids_joined > 0):
+                self._raids_joined -= 1
+        
+        return None
+    
+    def check_for_pending(self, map_mode: str):
+        """Check and collect any pending rewards and free up slots for the bot to join more raids.
 
         Args:
             map_mode (str): The mode that will dictate what logic to follow next.
-            tries (int): Number of tries of checking for Pending Battles. Defaults to 2.
 
         Returns:
             (bool): Return True if Pending Battles were detected. Otherwise, return False.
         """
         try:
             self._game.wait(1)
-            raid_pending_battle_check = False
-            if(map_mode.lower() == "raid"):
-                # Check for the "Check your Pending Battles" popup when navigating to the Quest screen.
-                while(self._game.image_tools.confirm_location("check_your_pending_battles", tries=tries)):
-                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Found some pending battles that need collecting from.")
-                    
+            
+            # Check for the "Check your Pending Battles" popup when navigating to the Quest screen or attempting to join a raid when there are 6 Pending Battles
+            # or check if the "Play Again" button is covered by the "Pending Battles" button for any other Farming Mode.
+            if((map_mode.lower() == "raid" and self._game.image_tools.confirm_location("check_your_pending_battles", tries=1)) or 
+               (map_mode.lower() != "raid" and self._game.image_tools.find_button("quest_results_pending_battles", tries=1, suppress_error=True))):
+                self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Found Pending Battles that need collecting from.")
+                
+                if(map_mode.lower() == "raid"):
                     self._game.find_and_click_button("ok")
                     self._game.wait(1)
-                    
-                    # Tap on a Pending Battle to collect it.
-                    if(self._game.image_tools.find_button("tap_here_to_see_rewards", tries=1)):
-                        self._game.find_and_click_button("tap_here_to_see_rewards")
-                        self._game.wait(1)
-                        
-                        if(self._game.image_tools.confirm_location("no_loot", tries=1)):
-                            self._game.print_and_save(f"{self._game.printtime()} [INFO] No loot can be collected.")
-                            self._game.find_and_click_button("quests", suppress_error=True)
-                            if(self._raids_joined > 0):
-                                self._raids_joined -= 1
-                            raid_pending_battle_check = True
-                        else:
-                            # If there is loot available, start loot detection.
-                            self._game.collect_loot(isPendingBattle=True)
-                            if(self._raids_joined > 0):
-                                self._raids_joined -= 1
-                            raid_pending_battle_check = True
-                
-                # Check if there are any additional Pending Battles on the Loot Collected screen.
-                if(self._game.image_tools.find_button("quest_results_pending_battles", tries=tries, suppress_error=True)):
-                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Found some additional pending battles that need collecting from.")
-                    self._game.find_and_click_button("quest_results_pending_battles")
-                    
-                    if(self._game.image_tools.confirm_location("pending_battles", tries=2)):
-                        # Loop and collect from every Pending Battles detected.
-                        while(self._game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
-                            self._game.find_and_click_button("tap_here_to_see_rewards")
-                            self._game.wait(1)
-                            
-                            if(self._game.image_tools.confirm_location("no_loot", tries=1)):
-                                self._game.print_and_save(f"{self._game.printtime()} [INFO] No loot can be collected.")
-                                self._game.find_and_click_button("quests", suppress_error=True)
-                                if(self._raids_joined > 0):
-                                    self._raids_joined -= 1
-                            else:
-                                # If there is loot available, start loot detection.
-                                self._game.collect_loot(isPendingBattle=True)
-                                if(self._raids_joined > 0):
-                                    self._raids_joined -= 1
-                                
-                            # While on the Loot Collected screen, if there are more Pending Battles then head back to the Pending Battles screen.
-                            if(self._game.image_tools.find_button("quest_results_pending_battles", tries=1)):
-                                self._game.find_and_click_button("quest_results_pending_battles")
-                                
-                                while(self._game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
-                                    self._game.find_and_click_button("tap_here_to_see_rewards")
-                                    self._game.wait(1)
-                                    
-                                    if(self._game.image_tools.confirm_location("no_loot", tries=1)):
-                                        self._game.print_and_save(f"{self._game.printtime()} [INFO] No loot can be collected.")
-                                        self._game.find_and_click_button("quests", suppress_error=True)
-                                    else:
-                                        # If there is loot available, start loot detection.
-                                        self._game.collect_loot(isPendingBattle=True)
-                                        
-                                    if(self._game.image_tools.find_button("quest_results_pending_battles", tries=1)):
-                                        self._game.find_and_click_button("quest_results_pending_battles")
-                                    else:
-                                        # When there are no more Pending Battles, go back to the Quest screen.
-                                        self._game.find_and_click_button("quests", suppress_error=True)
-                                        break
-                
-                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Pending battles have been cleared for Raids.")
-                        return True
-                elif(raid_pending_battle_check):
-                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Pending battles have been collected from for Raids.")
-                    return True
-            else:
-                # Check if the "Play Again" button is covered by the "Pending Battles" button.
-                if(self._game.image_tools.find_button("quest_results_pending_battles", tries=tries, suppress_error=True)):
-                    self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Found pending battles that need collecting from.")
+                else:
                     self._game.find_and_click_button("quest_results_pending_battles")
                     self._game.wait(1)
-                    if(self._game.image_tools.confirm_location("pending_battles", tries=1)):
-                        # Loop and collect from every Pending Battles detected.
-                        while(self._game.image_tools.find_button("tap_here_to_see_rewards", tries=2)):
-                            self._game.find_and_click_button("tap_here_to_see_rewards")
+                
+                if(self._game.image_tools.confirm_location("pending_battles", tries=1)):
+                    # Tap on a Pending Battle to collect it.
+                    while(self._game.image_tools.find_button("tap_here_to_see_rewards", tries=1)):
+                        self._clear_pending_battle()
+                        
+                        # While on the Loot Collected screen, if there are more Pending Battles then head back to the Pending Battles screen.
+                        if(self._game.image_tools.find_button("quest_results_pending_battles", tries=1)):
+                            self._game.find_and_click_button("quest_results_pending_battles")
                             self._game.wait(1)
                             
-                            if(self._game.image_tools.confirm_location("no_loot", tries=1)):
-                                self._game.print_and_save(f"{self._game.printtime()} [INFO] No loot can be collected.")
-                                self._game.find_and_click_button("quests", suppress_error=True)
-                            else:
-                                # If there is loot available, start loot detection.
-                                self._game.collect_loot(isPendingBattle=True)
+                            # Close the Skyscope mission popup.
+                            if(self._game.enable_skyscope and self._game.image_tools.confirm_location("skyscope")):
+                                self._game.find_and_click_button("close")
+                                self._game.wait(1)
                                 
-                            if(self._game.image_tools.find_button("quest_results_pending_battles", tries=1)):
-                                self._game.find_and_click_button("quest_results_pending_battles")
-                            else:
-                                # When there are no more Pending Battles, go back to the Quest screen.
-                                self._game.find_and_click_button("quests", suppress_error=True)
-                                break
-                        
-                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Pending battles have been cleared.")
-                        return True
-                    
+                            self._game.check_for_friend_request()
+                            self._game.wait(1)
+                        else:
+                            # When there are no more Pending Battles, go back to the Quests screen.
+                            self._game.find_and_click_button("quests", suppress_error=True)
+                            
+                            # Close the Skyscope mission popup.
+                            if(self._game.enable_skyscope and self._game.image_tools.confirm_location("skyscope")):
+                                self._game.find_and_click_button("close")
+                                self._game.wait(1)
+                                
+                            break
+                            
+                self._game.print_and_save(f"{self._game.printtime()} [INFO] Pending battles have been cleared.")
+                return True
+               
             self._game.print_and_save(f"{self._game.printtime()} [INFO] No Pending Battles needed to be cleared.")
             return False
         except Exception:
@@ -943,7 +907,7 @@ class MapSelection:
                     self._game.mouse_tools.click_point_instantly(join_room_button[0], join_room_button[1])
                     
                     # If the room code is valid and the raid is able to be joined, break out and head to the Summon Selection screen.
-                    if(not self.check_for_pending("raid", tries=1) and not self._game.image_tools.confirm_location("raid_already_ended", tries=1) and not self._game.image_tools.confirm_location("already_taking_part", tries=1) and not self._game.image_tools.confirm_location("invalid_code", tries=1)):
+                    if(not self.check_for_pending("raid") and not self._game.image_tools.confirm_location("raid_already_ended", tries=1) and not self._game.image_tools.confirm_location("already_taking_part", tries=1) and not self._game.image_tools.confirm_location("invalid_code", tries=1)):
                         # Check for EP.
                         self._game.check_for_ep(use_soul_balm=self._game.use_soul_balm)
                         
