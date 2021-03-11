@@ -144,6 +144,9 @@ class Game:
         self._party_number = 0
         self._amount_of_runs_finished = 0
         
+        # Enable checking for Skyscope mission popups.
+        self.enable_skyscope = True
+        
         # The amount of time to pause after each call to PyAutoGUI. This applies to calls inside mouse_utils and image_utils.
         pyautogui.PAUSE = 0.25
         
@@ -1751,6 +1754,10 @@ class Game:
                                 # Check for "Trophy Achieved" popup.
                                 if(self.image_tools.confirm_location("trophy_achieved", tries=1)):
                                     self.print_and_save(f"{self.printtime()} [INFO] Detected \"Trophy Achieved\" popup. Closing it now...")
+                                    self.find_and_click_button("close")
+                                
+                                # Check for any Skyscope popups.
+                                if(self.enable_skyscope and self.image_tools.confirm_location("skyscope", tries=1)):
                                     self.find_and_click_button("close")
                                 
                                 # Check for "Friend Request" popup.
