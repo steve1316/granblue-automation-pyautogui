@@ -797,6 +797,12 @@ class MapSelection:
                         else:
                             # When there are no more Pending Battles, go back to the Quests screen.
                             self._game.find_and_click_button("quests", suppress_error=True)
+                            
+                            # Close the Skyscope mission popup.
+                            if(self._game.enable_skyscope and self._game.image_tools.confirm_location("skyscope")):
+                                self._game.find_and_click_button("close")
+                                self._game.wait(1)
+                                
                             break
                             
                 self._game.print_and_save(f"{self._game.printtime()} [INFO] Pending battles have been cleared.")
