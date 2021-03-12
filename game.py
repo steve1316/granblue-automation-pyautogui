@@ -143,6 +143,7 @@ class Game:
         self._group_number = 0
         self._party_number = 0
         self._amount_of_runs_finished = 0
+        self._coop_first_run = True
         
         # Enable checking for Skyscope mission popups.
         self.enable_skyscope = True
@@ -608,6 +609,8 @@ class Game:
                 self.wait(1)
                 self.find_and_click_button("ok")
                 return None
+            elif(self.farming_mode.lower() == "coop" and not self._coop_first_run and self.image_tools.find_button("attack")):
+                break
             else:
                 self.wait(1)
             
@@ -1586,7 +1589,6 @@ class Game:
             self._item_amount_farmed = 0
             self._amount_of_runs_finished = 0
             summon_check = False
-            coop_first_run = False
                     
             # Save the following information to share between the Game class and the MapSelection class.
             self._item_name = item_name
@@ -1710,13 +1712,13 @@ class Game:
                         start_check = self._find_party_and_start_mission(group_number, party_number)
                     else:
                         # Only select the Party for this Coop mission once. After that, subsequent runs always has that Party selected.
-                        if(not coop_first_run):
+                        if(self._coop_first_run):
                             start_check = self._find_party_and_start_mission(group_number, party_number)
-                            coop_first_run = True
+                            self._coop_first_run = False
+                            self.find_and_click_button("coop_start")
                             
                         self.print_and_save(f"{self.printtime()} [INFO] Starting Coop mission.")
-                        self.find_and_click_button("coop_start")
-                    
+                        
                     # After Party has been successfully selected, start Combat Mode.
                     if(start_check and farming_mode.lower() != "raid"):
                         # Check for the "Items Picked Up" popup that appears after starting a Quest mission.
