@@ -136,7 +136,7 @@ class Game:
         self._item_name = ""
         self._item_amount_to_farm = 0
         self._item_amount_farmed = 0
-        self._farming_mode = ""
+        self.farming_mode = ""
         self._mission_name = ""
         self._summon_element_list = []
         self._summon_list = []
@@ -325,13 +325,13 @@ class Game:
                 self.wait(2)
                 self.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1])
                 
-                if((self._farming_mode.lower() != "raid" and self._farming_mode.lower() != "dread barrage") and self.image_tools.confirm_location("continue")):
+                if((self.farming_mode.lower() != "raid" and self.farming_mode.lower() != "dread barrage") and self.image_tools.confirm_location("continue")):
                     # Cancel the popup that asks you if you want to use a Full Elixir to come back. Then click the red "Retreat" button.
                     self.print_and_save(f"{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Retreating now...")
                     self.find_and_click_button("cancel")
                     self.find_and_click_button("retreat_confirmation")
                     self._retreat_check = True
-                elif((self._farming_mode.lower() == "raid" or self._farming_mode.lower() == "dread barrage") and self.image_tools.confirm_location("salute_participants")):
+                elif((self.farming_mode.lower() == "raid" or self.farming_mode.lower() == "dread barrage") and self.image_tools.confirm_location("salute_participants")):
                     # Salute the participants.
                     self.print_and_save(f"{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Backing out now without retreating...")
                     self.find_and_click_button("salute")
@@ -344,7 +344,7 @@ class Game:
                     self.find_and_click_button("raid_retreat_home")
                     
                     self._retreat_check = True
-                elif(self._farming_mode.lower() == "coop" and self.image_tools.confirm_location("salute_participants")):
+                elif(self.farming_mode.lower() == "coop" and self.image_tools.confirm_location("salute_participants")):
                     # Salute the participants.
                     self.print_and_save(f"{self.printtime()} [COMBAT] Party has unfortunately wiped during Combat Mode. Leaving the Coop room...")
                     self.find_and_click_button("salute")
@@ -549,7 +549,7 @@ class Game:
         self.find_and_click_button("ok")
         
         # If a popup appears and says "This raid battle has already ended. The Home screen will now appear.", return False.
-        if(self._farming_mode.lower() == "raid" and self.image_tools.confirm_location("raid_just_ended_home_redirect")):
+        if(self.farming_mode.lower() == "raid" and self.image_tools.confirm_location("raid_just_ended_home_redirect")):
             self.print_and_save(f"\n{self.printtime()} [WARNING] Raid unfortunately just ended. Backing out now...")
             self.find_and_click_button("ok")
             return False
@@ -591,8 +591,8 @@ class Game:
             None
         """
         # Loop until the user gets to the Summon Selection screen.
-        while((self._farming_mode.lower() != "coop" and not self.image_tools.confirm_location("select_summon", tries=2)) or 
-              (self._farming_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries=2))):
+        while((self.farming_mode.lower() != "coop" and not self.image_tools.confirm_location("select_summon", tries=2)) or 
+              (self.farming_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries=2))):
             if(self.image_tools.confirm_location("not_enough_ap", tries=2)):
                 # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full Elixir.
                 if(use_full_elixir == False):
@@ -623,7 +623,7 @@ class Game:
         Returns:
             None
         """
-        if(self._farming_mode.lower() == "raid" and self.image_tools.confirm_location("not_enough_ep", tries=2)):
+        if(self.farming_mode.lower() == "raid" and self.image_tools.confirm_location("not_enough_ep", tries=2)):
             # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
             if(use_soul_balm == False):
                 self.print_and_save(f"\n{self.printtime()} [INFO] EP ran out! Using Soul Berries...")
@@ -743,7 +743,7 @@ class Game:
             if(self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs"):
                 self.print_and_save("\n\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
-                self.print_and_save(f"{self.printtime()} [FARM] Farming Mode: {self._farming_mode}")
+                self.print_and_save(f"{self.printtime()} [FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"{self.printtime()} [FARM] Mission: {self._mission_name}")
                 self.print_and_save(f"{self.printtime()} [FARM] Summons: {self._summon_list}")
                 self.print_and_save(f"{self.printtime()} [FARM] Amount of {self._item_name} gained this run: {temp_amount}")
@@ -754,7 +754,7 @@ class Game:
             else:
                 self.print_and_save("\n\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
-                self.print_and_save(f"{self.printtime()} [FARM] Farming Mode: {self._farming_mode}")
+                self.print_and_save(f"{self.printtime()} [FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"{self.printtime()} [FARM] Mission: {self._mission_name}")
                 self.print_and_save(f"{self.printtime()} [FARM] Summons: {self._summon_list}")
                 self.print_and_save(f"{self.printtime()} [FARM] Amount of runs completed: {self._amount_of_runs_finished} / {self._item_amount_to_farm}")
@@ -1574,7 +1574,7 @@ class Game:
             # Save the following information to share between the Game class and the MapSelection class.
             self._item_name = item_name
             self._item_amount_to_farm = item_amount_to_farm
-            self._farming_mode = farming_mode
+            self.farming_mode = farming_mode
             self._mission_name = mission_name
             self._summon_element_list = summon_element_list
             self._summon_list = summon_list
@@ -1582,7 +1582,7 @@ class Game:
             self._party_number = party_number
             
             # If Dimensional Halo is enabled, save settings for it based on conditions.
-            if(self._farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and self._enable_dimensional_halo and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons")):
+            if(self.farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and self._enable_dimensional_halo and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons")):
                 self.print_and_save(f"\n{self.printtime()} [INFO] Initializing settings for Dimensional Halo...")
                 
                 if(self._dimensional_halo_combat_script == ""):
@@ -1764,11 +1764,11 @@ class Game:
                                 self.check_for_friend_request()
                                 
                                 # Check for Dimensional Halo and Event Nightmare.
-                                if(self._farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons")):
+                                if(self.farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons")):
                                     if(self._check_for_dimensional_halo()):
                                         # Make sure the bot goes back to the Home screen when completing a Dimensional Halo so that the "Play Again" functionality comes back.
                                         self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
-                                elif((self._farming_mode.lower() == "event" or self._farming_mode.lower() == "event (token drawboxes)")):
+                                elif((self.farming_mode.lower() == "event" or self.farming_mode.lower() == "event (token drawboxes)")):
                                     if(self._check_for_event_nightmare()):
                                         # Make sure the bot goes back to the Home screen when completing a Event Nightmare so that the "Play Again" functionality comes back.
                                         self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
@@ -1778,7 +1778,7 @@ class Game:
                                 summon_check = False
                                 
                                 # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select_map().
-                                if(self._farming_mode.lower() == "event (token drawboxes)" and self.image_tools.confirm_location("not_enough_treasure")):
+                                if(self.farming_mode.lower() == "event (token drawboxes)" and self.image_tools.confirm_location("not_enough_treasure")):
                                     self.find_and_click_button("ok")
                                     self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                         else:
