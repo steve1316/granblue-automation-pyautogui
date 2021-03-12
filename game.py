@@ -1740,6 +1740,14 @@ class Game:
                                         self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 else:
                                     self.find_and_click_button("coop_room")
+                                    self.wait(1)
+                                    
+                                    # Check for the "Daily Missions" popup for Coop.
+                                    if(self.image_tools.confirm_location("coop_daily_missions", tries=1)):
+                                        self.find_and_click_button("close")
+                                    
+                                    # Now click the "Start" button.
+                                    self.find_and_click_button("coop_start")
                                     
                                 # Check for "Missions" popup for Dread Barrage.
                                 if(farming_mode.lower() == "dread barrage" and self.image_tools.confirm_location("dread_barrage_missions", tries=1)):
