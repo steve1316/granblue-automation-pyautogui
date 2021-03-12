@@ -698,11 +698,12 @@ class Game:
         self.mouse_tools.move_and_click_point(x, y, mouse_clicks=2)
         return None
     
-    def collect_loot(self, isPendingBattle: bool = False):
+    def collect_loot(self, isPendingBattle: bool = False, isEventNightmare: bool = False):
         """Collect the loot from the Results screen while clicking away any dialog popups. Primarily for raids.
         
         Args:
             isPendingBattle (bool): Skip the incrementation of runs attempted if this was a Pending Battle. Defaults to False.
+            isSkippableEventNightmare (bool): Skip the incrementation of runs attempted if this was a Event Nightmare. Defaults to False.
 
         Returns:
             None
@@ -726,7 +727,7 @@ class Game:
                 self.find_and_click_button("new_extended_mastery_level", tries=1, suppress_error=True)
                 
             # Now that the bot is at the Loot Collected screen, detect any user-specified items.
-            if(not isPendingBattle):
+            if(not isPendingBattle and not isEventNightmare):
                 self.print_and_save(f"\n{self.printtime()} [INFO] Detecting if any user-specified loot dropped this run...")
                 if(self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs"):
                     temp_amount = self.image_tools.find_farmed_items([self._item_name])[0]
@@ -739,7 +740,7 @@ class Game:
             # If the bot reached here, that means the raid ended without the bot being able to take action so no loot dropped.
             temp_amount = 0
         
-        if(not isPendingBattle):    
+        if(not isPendingBattle and not isEventNightmare):    
             if(self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs"):
                 self.print_and_save("\n\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
@@ -782,35 +783,51 @@ class Game:
             (bool): Return True if Event Nightmare was detected and successfully completed. Otherwise, return False.
         """
         if(self._enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests")):
-            self.print_and_save(f"\n{self.printtime()} [EVENT] Detected Event Nightmare. Starting it now...")
-            
-            self.print_and_save("\n\n********************************************************************************")
-            self.print_and_save("********************************************************************************")
-            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare")
-            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Summon Elements: {self._event_nightmare_summon_element_list}")
-            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Summons: {self._event_nightmare_summon_list}")
-            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Group Number: {self._event_nightmare_group_number}")
-            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Party Number: {self._event_nightmare_party_number}")
-            self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Combat Script: {self._event_nightmare_combat_script}")
-            self.print_and_save("********************************************************************************")
-            self.print_and_save("********************************************************************************\n")
-            
-            self.find_and_click_button("play_next")
-            
-            # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
-            self.wait(1)
-            if(self.image_tools.confirm_location("select_summon")):
-                self._select_summon(self._event_nightmare_summon_list, self._event_nightmare_summon_element_list)
-                start_check = self._find_party_and_start_mission(self._event_nightmare_group_number, self._event_nightmare_party_number)
+            # First check if the Event Nightmare is skippable.
+            event_claim_loot_location = self.image_tools.find_button("event_claim_loot", tries=1, suppress_error=True)
+            if(event_claim_loot_location != None):
+                self.print_and_save(f"\n{self.printtime()} [EVENT] Skippable Event Nightmare detected. Claiming it now...")
+                self.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1])
+                self.collect_loot(isEventNightmare=True)
+                return True
+            else:
+                self.print_and_save(f"\n{self.printtime()} [EVENT] Detected Event Nightmare. Starting it now...")
                 
-                # Once preparations are completed, start Combat Mode.
-                if(start_check and self.start_combat_mode(self._event_nightmare_combat_script, isNightmare=True)):
-                    self.collect_loot()
-                    return True
+                self.print_and_save("\n\n********************************************************************************")
+                self.print_and_save("********************************************************************************")
+                self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare")
+                self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Summon Elements: {self._event_nightmare_summon_element_list}")
+                self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Summons: {self._event_nightmare_summon_list}")
+                self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Group Number: {self._event_nightmare_group_number}")
+                self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Party Number: {self._event_nightmare_party_number}")
+                self.print_and_save(f"{self.printtime()} [EVENT] Event Nightmare Combat Script: {self._event_nightmare_combat_script}")
+                self.print_and_save("********************************************************************************")
+                self.print_and_save("********************************************************************************\n")
+                
+                self.find_and_click_button("play_next")
+                
+                # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
+                self.wait(1)
+                if(self.image_tools.confirm_location("select_summon")):
+                    self._select_summon(self._event_nightmare_summon_list, self._event_nightmare_summon_element_list)
+                    start_check = self._find_party_and_start_mission(self._event_nightmare_group_number, self._event_nightmare_party_number)
+                    
+                    # Once preparations are completed, start Combat Mode.
+                    if(start_check and self.start_combat_mode(self._event_nightmare_combat_script, isNightmare=True)):
+                        self.collect_loot(isEventNightmare=True)
+                        return True
                 
         elif(not self._enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests")):
-            self.print_and_save(f"\n{self.printtime()} [EVENT] Event Nightmare detected but user opted to not run it. Moving on...")
-            self.find_and_click_button("close")
+            # First check if the Event Nightmare is skippable.
+            event_claim_loot_location = self.image_tools.find_button("event_claim_loot", tries=1, suppress_error=True)
+            if(event_claim_loot_location != None):
+                self.print_and_save(f"\n{self.printtime()} [EVENT] Skippable Event Nightmare detected but user opted to not run it. Claiming it regardless...")
+                self.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1])
+                self.collect_loot(isEventNightmare=True)
+                return True
+            else:
+                self.print_and_save(f"\n{self.printtime()} [EVENT] Event Nightmare detected but user opted to not run it. Moving on...")
+                self.find_and_click_button("close")
         else:
             self.print_and_save(f"\n{self.printtime()} [EVENT] No Event Nightmare detected. Moving on...")
         
