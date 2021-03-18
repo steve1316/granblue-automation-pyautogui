@@ -65,6 +65,7 @@ Flickable {
                 "Phronesis": ["Phronesis Anima", "Dark Thrasher", "Master Bamboo Sword"],
                 "Grand Order": ["Azure Feather", "Heavenly Horn"],
                 "Proto Bahamut": ["Horn of Bahamut", "Champion Merit", "Primeval Horn"],
+                "Rose Queen": ["Rose Petal"],
             }
 
             function createListElement(itemName){
@@ -747,6 +748,62 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Avatar /////////
+
+        ///////// Raid Items - Rose Queen /////////
+        Label {
+            id: label_RoseQueen
+
+            color: "#ff8000"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Rose Queen"
+        }
+
+        Repeater {
+            id: repeater_RoseQueen
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_RoseQueen.visible === true){
+                    repeater_RoseQueen.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_RoseQueen.text].length; i++){
+                        repeater_RoseQueen.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_RoseQueen.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_RoseQueen
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ff8000"
+                    anchors.left: itemImage_RoseQueen.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Rose Queen /////////
 
         ///////// Raid Items - Grand Order /////////
         Label {

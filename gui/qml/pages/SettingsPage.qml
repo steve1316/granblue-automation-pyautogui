@@ -1231,6 +1231,11 @@ Item{
                             { text: "Proto Bahamut", enabled: false },
                             { text: "Lvl 150 Proto Bahamut", map: "", enabled: true },
                         ]
+                    } else if(itemSelectionButton.text === "Rose Petal") {
+                        missionSelectionComboBox.model = [
+                            { text: "Rose Queen", enabled: false },
+                            { text: "Lvl 110 Rose Queen", map: "", enabled: true },
+                        ]
                     }
                 }
 
