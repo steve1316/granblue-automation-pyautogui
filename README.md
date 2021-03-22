@@ -69,7 +69,7 @@ By downloading this program, you consent to your account potentially getting fla
   - [x] Alert for when anti-bot CAPTCHA pops up.
 - [x] Support for Event farming.
 - [ ] (ON HOLD) Support for Guild Wars farming. (This is pending a re-run in April)
-- [ ] Support for Rise of the Beasts farming. (IN-PROGRESS)
+- [x] Support for Rise of the Beasts farming.
 - [x] Support for Dread Barrage farming.
 - [ ] Support for Arcarum (currently unknown as to whether I will tackle this. This has to come after I finish the rest of the planned features for me to consider this)
 
