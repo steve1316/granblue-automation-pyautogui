@@ -1563,7 +1563,7 @@ class Game:
             
             # Parse the difficulty for the chosen mission.
             difficulty = ""
-            if(farming_mode.lower() == "special" or farming_mode.lower() == "event" or farming_mode.lower() == "event (token drawboxes)"):
+            if(farming_mode.lower() == "special" or farming_mode.lower() == "event" or farming_mode.lower() == "event (token drawboxes)" or farming_mode.lower() == "rise of the beasts"):
                 if(mission_name.find("N ") == 0):
                     difficulty = "Normal"
                 elif(mission_name.find("H ") == 0):
@@ -1787,8 +1787,16 @@ class Game:
                                 if(self.enable_skyscope and self.image_tools.confirm_location("skyscope", tries=1)):
                                     self.find_and_click_button("close")
                                 
+                                # Check for "Daily Missions" popup for Rise of the Beasts.
+                                if(farming_mode.lower() == "rise of the beasts" and self.image_tools.confirm_location("event_daily_missions", tries=1)):
+                                    self.find_and_click_button("close")
+                                
                                 # Check for "Friend Request" popup.
                                 self.check_for_friend_request()
+                                
+                                # Check for "Proud Solo Quest" popup for Rise of the Beasts.
+                                if(farming_mode.lower() == "rise of the beasts" and self.image_tools.confirm_location("proud_solo_quest", tries=1)):
+                                    self.find_and_click_button("close")
                                 
                                 # Check for Dimensional Halo and Event Nightmare.
                                 if(self.farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons")):
