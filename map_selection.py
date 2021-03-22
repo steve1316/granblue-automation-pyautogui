@@ -700,6 +700,87 @@ class MapSelection:
                     
                     self._game.wait(2)
                 
+            elif(map_mode.lower() == "rise of the beasts"):
+                # Go to the Home screen.
+                self._game.go_back_home(confirm_location_check=True)
+                
+                # Go to the Event by clicking on the "Menu" button and then click the very first banner.
+                self._game.find_and_click_button("home_menu")
+                banner_locations = self._game.image_tools.find_all("event_banner")
+                if(len(banner_locations) == 0):
+                    banner_locations = self._game.image_tools.find_all("event_banner_blue")
+                self._game.mouse_tools.move_and_click_point(banner_locations[0][0], banner_locations[0][1])
+                
+                self._game.wait(1)
+                
+                if(self._game.image_tools.confirm_location("rotb")):
+                    # Remove the difficulty prefix from the mission name.
+                    temp_mission_name = mission_name
+                    if(difficulty == "Normal"):
+                        temp_mission_name = mission_name[1:]
+                    elif(difficulty == "Hard"):
+                        temp_mission_name = mission_name[1:]
+                    elif(difficulty == "Very Hard"):
+                        temp_mission_name = mission_name[3:]
+                    elif(difficulty == "Extreme"):
+                        temp_mission_name = mission_name[3:]
+                    elif(difficulty == "Impossible"):
+                        temp_mission_name = mission_name[3:]
+                    
+                    # If the first character is a whitespace after processing the string, remove it.
+                    if(temp_mission_name[0] == " "):
+                        temp_mission_name = temp_mission_name[1:]
+                    
+                    # Only Raids are marked with Extreme difficulty.
+                    if(difficulty == "Extreme"):
+                        # Click on the Raid banner.
+                        self._game.find_and_click_button("rotb_extreme")
+                        
+                        if(self._game.image_tools.confirm_location("rotb_battle_the_beasts")):
+                            # Find the location of the "Close" button and then click on the specified Raid using its coordinate position.
+                            close_button_location = self._game.image_tools.find_button("close")
+                            
+                            if(temp_mission_name.lower() == "zhuque"):
+                                self._game.mouse_tools.move_and_click_point(close_button_location[0] - 150, close_button_location[1] - 200)
+                            elif(temp_mission_name.lower() == "xuanwu"):
+                                self._game.mouse_tools.move_and_click_point(close_button_location[0] - 300, close_button_location[1] - 200)
+                            elif(temp_mission_name.lower() == "baihu"):
+                                self._game.mouse_tools.move_and_click_point(close_button_location[0] + 55, close_button_location[1] - 200)
+                            elif(temp_mission_name.lower() == "qinglong"):
+                                self._game.mouse_tools.move_and_click_point(close_button_location[0] + 145, close_button_location[1] - 200)
+                    else:
+                        # Scroll the screen down to make way for smaller screens.
+                        self._game.mouse_tools.scroll_screen_from_home_button(-400)
+                        
+                        # Find all instances of the "Select" button on the screen and click on the first instance.
+                        select_button_locations = self._game.image_tools.find_all("select")
+                        self._game.mouse_tools.move_and_click_point(select_button_locations[0][0], select_button_locations[0][1])
+                        
+                        if(self._game.image_tools.confirm_location("rotb_rising_beasts_showdown")):
+                            # Find all the round "Play" buttons.
+                            round_play_button_locations = self._game.image_tools.find_all("play_round_button")
+                            
+                            if(temp_mission_name.lower() == "zhuque"):
+                                self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1])
+                            elif(temp_mission_name.lower() == "xuanwu"):
+                                self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1])
+                            elif(temp_mission_name.lower() == "baihu"):
+                                self._game.mouse_tools.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1])
+                            elif(temp_mission_name.lower() == "qinglong"):
+                                self._game.mouse_tools.move_and_click_point(round_play_button_locations[3][0], round_play_button_locations[3][1])
+                            
+                            self._game.wait(1)
+                            
+                            # Find all the round "Play" buttons again.
+                            round_play_button_locations = self._game.image_tools.find_all("play_round_button")
+                            
+                            if(difficulty == "Normal"):
+                                self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1])
+                            elif(difficulty == "Hard"):
+                                self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1])
+                            elif(difficulty == "Very Hard"):
+                                self._game.mouse_tools.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1])
+                    
             # Check for available AP.
             self._game.check_for_ap(use_full_elixir=self._game.use_full_elixir)
             
