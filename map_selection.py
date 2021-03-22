@@ -737,17 +737,14 @@ class MapSelection:
                         self._game.find_and_click_button("rotb_extreme")
                         
                         if(self._game.image_tools.confirm_location("rotb_battle_the_beasts")):
-                            # Find the location of the "Close" button and then click on the specified Raid using its coordinate position.
-                            close_button_location = self._game.image_tools.find_button("close")
-                            
                             if(temp_mission_name.lower() == "zhuque"):
-                                self._game.mouse_tools.move_and_click_point(close_button_location[0] - 150, close_button_location[1] - 200)
+                                self._game.find_and_click_button("rotb_raid_zhuque")
                             elif(temp_mission_name.lower() == "xuanwu"):
-                                self._game.mouse_tools.move_and_click_point(close_button_location[0] - 300, close_button_location[1] - 200)
+                                self._game.find_and_click_button("rotb_raid_xuanwu")
                             elif(temp_mission_name.lower() == "baihu"):
-                                self._game.mouse_tools.move_and_click_point(close_button_location[0] + 55, close_button_location[1] - 200)
+                                self._game.find_and_click_button("rotb_raid_baihu")
                             elif(temp_mission_name.lower() == "qinglong"):
-                                self._game.mouse_tools.move_and_click_point(close_button_location[0] + 145, close_button_location[1] - 200)
+                                self._game.find_and_click_button("rotb_raid_qinglong")
                     else:
                         # Scroll the screen down to make way for smaller screens.
                         self._game.mouse_tools.scroll_screen_from_home_button(-400)
