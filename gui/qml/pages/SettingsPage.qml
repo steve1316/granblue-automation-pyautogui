@@ -124,6 +124,7 @@ Item{
                 { text: "Raid", enabled: true},
                 { text: "Event", enabled: true},
                 { text: "Event (Token Drawboxes)", enabled: true},
+                { text: "Rise of the Beasts", enabled: true},
                 { text: "Dread Barrage", enabled: true},
             ]
 
@@ -133,7 +134,7 @@ Item{
                 farmingModeStatusMessage.visible = true
 
                 // Display either the Item Selection button or ComboBox depending on the Farming Mode selected.
-                if(farmingModeComboBox.displayText === "Event" || farmingModeComboBox.displayText === "Event (Token Drawboxes)" || farmingModeComboBox.displayText === "Dread Barrage") {
+                if(farmingModeComboBox.displayText === "Event" || farmingModeComboBox.displayText === "Event (Token Drawboxes)" || farmingModeComboBox.displayText === "Dread Barrage" || farmingModeComboBox.displayText === "Rise of the Beasts") {
                     // Set the contents of the Item Selection ComboBox.
                     if(farmingModeComboBox.displayText !== "Dread Barrage") {
                         itemSelectionComboBox.model = [
@@ -1464,6 +1465,27 @@ Item{
                             { text: "3 Star", map: "", enabled: true },
                             { text: "4 Star", map: "", enabled: true },
                             { text: "5 Star", map: "", enabled: true },
+                        ]
+                    } else if(farmingModeComboBox.displayText === "Rise of the Beasts" && itemSelectionComboBox.displayText === "Repeated Runs") {
+                        missionSelectionComboBox.model = [
+                            { text: "Event Raid", enabled: false },
+                            { text: "EX Zhuque", map: "", enabled: true },
+                            { text: "EX Xuanwu", map: "", enabled: true },
+                            { text: "EX Baihu", map: "", enabled: true },
+                            { text: "EX Qinglong", map: "", enabled: true },
+                            { text: "Event Quest", enabled: false },
+                            { text: "N Zhuque", map: "", enabled: true },
+                            { text: "H Zhuque", map: "", enabled: true },
+                            { text: "VH Zhuque", map: "", enabled: true },
+                            { text: "N Xuanwu", map: "", enabled: true },
+                            { text: "H Xuanwu", map: "", enabled: true },
+                            { text: "VH Xuanwu", map: "", enabled: true },
+                            { text: "N Baihu", map: "", enabled: true },
+                            { text: "H Baihu", map: "", enabled: true },
+                            { text: "VH Baihu", map: "", enabled: true },
+                            { text: "N Qinglong", map: "", enabled: true },
+                            { text: "H Qinglong", map: "", enabled: true },
+                            { text: "VH Qinglong", map: "", enabled: true },
                         ]
                     }
 
