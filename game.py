@@ -1876,6 +1876,8 @@ class Game:
                                 
                                 # Check for "Proud Solo Quest" popup for Rise of the Beasts.
                                 if(farming_mode.lower() == "rise of the beasts" and self.image_tools.confirm_location("proud_solo_quest", tries=1)):
+                                    # Scroll down the screen a little bit because the popup itself is too long for screen sizes around 1080p.
+                                    self.mouse_tools.scroll_screen_from_home_button(-400)
                                     self.find_and_click_button("close")
                                     
                                 # Check for "Extreme+" popup for Rise of the Beasts.
