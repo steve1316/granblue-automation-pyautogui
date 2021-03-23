@@ -1846,6 +1846,10 @@ class Game:
                                         # Make sure the bot goes back to the Home screen when completing a Event Nightmare so that the "Play Again" functionality comes back.
                                         self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 
+                                # Check for any Skyscope popups.
+                                if(self.enable_skyscope and self.image_tools.confirm_location("skyscope", tries=1)):
+                                    self.find_and_click_button("close")
+                                
                                 # Check for available AP and then reset the Summon check flag.
                                 self.check_for_ap(use_full_elixir=self.use_full_elixir)
                                 summon_check = False
