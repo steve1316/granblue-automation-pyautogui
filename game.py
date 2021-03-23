@@ -888,6 +888,48 @@ class Game:
         
         return False
     
+    def _check_for_rotb_extreme_plus(self):
+        """Checks for Extreme+ for Rise of the Beasts and if it appears and the user enabled it in config.ini, start it.
+
+        Returns:
+            (bool): Return True if Extreme+ was detected and successfully completed. Otherwise, return False.
+        """
+        if(self._enable_rotb_extreme_plus and self.image_tools.confirm_location("rotb_extreme_plus", tries=2)):
+            self.print_and_save(f"\n{self.printtime()} [ROTB] Detected Extreme+. Starting it now...")
+            
+            self.print_and_save("\n\n********************************************************************************")
+            self.print_and_save("********************************************************************************")
+            self.print_and_save(f"{self.printtime()} [ROTB] Rise of the Beasts Extreme+")
+            self.print_and_save(f"{self.printtime()} [ROTB] Rise of the Beasts Extreme+ Summon Elements: {self._rotb_extreme_plus_summon_element_list}")
+            self.print_and_save(f"{self.printtime()} [ROTB] Rise of the Beasts Extreme+ Summons: {self._rotb_extreme_plus_summon_list}")
+            self.print_and_save(f"{self.printtime()} [ROTB] Rise of the Beasts Extreme+ Group Number: {self._rotb_extreme_plus_group_number}")
+            self.print_and_save(f"{self.printtime()} [ROTB] Rise of the Beasts Extreme+ Party Number: {self._rotb_extreme_plus_party_number}")
+            self.print_and_save(f"{self.printtime()} [ROTB] Rise of the Beasts Extreme+ Combat Script: {self._rotb_extreme_plus_combat_script}")
+            self.print_and_save(f"{self.printtime()} [ROTB] Amount of Rise of the Beasts Extreme+ encountered: {self._rotb_extreme_plus_amount}")
+            self.print_and_save("********************************************************************************")
+            self.print_and_save("********************************************************************************\n")
+            
+            self.find_and_click_button("play_next")
+            
+            # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
+            self.wait(1)
+            if(self.image_tools.confirm_location("select_summon")):
+                self._select_summon(self._rotb_extreme_plus_summon_list, self._rotb_extreme_plus_summon_element_list)
+                start_check = self._find_party_and_start_mission(group_number=self._rotb_extreme_plus_group_number, party_number=self._rotb_extreme_plus_party_number)
+                
+                # Once preparations are completed, start Combat mode.
+                if(start_check and self.start_combat_mode(self._rotb_extreme_plus_combat_script, isNightmare=True)):
+                    self.collect_loot()
+                    return True
+                
+        elif(not self._enable_rotb_extreme_plus and self.image_tools.confirm_location("rotb_extreme_plus", tries=2)):
+            self.print_and_save(f"\n{self.printtime()} [ROTB] Rise of the Beasts Extreme+ detected but user opted to not run it. Moving on...")
+            self.find_and_click_button("close")
+        else:
+            self.print_and_save(f"\n{self.printtime()} [ROTB] No Rise of the Beasts Extreme+ detected. Moving on...")
+            
+        return False
+    
     def _wait_for_attack(self):
         """Wait for a maximum of 20 seconds until the bot sees either the Attack or the Next button before starting a new turn.
 
@@ -1835,6 +1877,12 @@ class Game:
                                 # Check for "Proud Solo Quest" popup for Rise of the Beasts.
                                 if(farming_mode.lower() == "rise of the beasts" and self.image_tools.confirm_location("proud_solo_quest", tries=1)):
                                     self.find_and_click_button("close")
+                                    
+                                # Check for "Extreme+" popup for Rise of the Beasts.
+                                if(farming_mode.lower() == "rise of the beasts"):
+                                    if(self._check_for_rotb_extreme_plus()):
+                                        # Make sure the bot goes back to the Home screen when completing a Extreme+ so that the "Play Again" functionality comes back.
+                                        self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 
                                 # Check for Dimensional Halo and Event Nightmare.
                                 if(self.farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons")):
