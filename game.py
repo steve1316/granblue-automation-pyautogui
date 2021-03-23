@@ -87,6 +87,15 @@ class Game:
         self._dimensional_halo_party_number = config.get("dimensional_halo", "dimensional_halo_party_number")
         self._dimensional_halo_amount = 0
         
+        # Keep track of the following for Rise of the Beasts.
+        self._enable_rotb_extreme_plus = config.getboolean("rise_of_the_beasts", "enable_rotb_extreme_plus")
+        self._rotb_extreme_plus_combat_script = config.get("rise_of_the_beasts", "rotb_extreme_plus_combat_script")
+        self._rotb_extreme_plus_summon_list = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_list")
+        self._rotb_extreme_plus_summon_element_list = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_element_list")
+        self._rotb_extreme_plus_group_number = config.get("rise_of_the_beasts", "rotb_extreme_plus_group_number")
+        self._rotb_extreme_plus_party_number = config.get("rise_of_the_beasts", "rotb_extreme_plus_party_number")
+        self._rotb_extreme_plus_amount = 0
+        
         # Keep track of the following for Dread Barrage Unparalleled Foes.
         self._enable_unparalleled_foe = config.getboolean("dread_barrage", "enable_unparalleled_foe")
         self._enable_unparalleled_foe_level_95 = config.getboolean("dread_barrage", "enable_unparalleled_foe_level_95")
@@ -1649,7 +1658,7 @@ class Game:
                     self.print_and_save(f"{self.printtime()} [INFO] Group Number for Event will reuse the one for Farming Mode.")
                     self._event_nightmare_group_number = self._group_number
                 else:
-                    event_nightmare_group_number = int(event_nightmare_group_number)
+                    self._event_nightmare_group_number = int(self._event_nightmare_group_number)
                     
                 if(self._event_nightmare_party_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Party Number for Event will reuse the one for Farming Mode.")
@@ -1658,6 +1667,35 @@ class Game:
                     self._event_nightmare_party_number = int(self._event_nightmare_party_number)
                     
                 self.print_and_save(f"{self.printtime()} [INFO] Settings initialized for Event...")
+            elif(self._item_name == "Repeated Runs" and self._enable_rotb_extreme_plus):
+                # Do the same for Rise of the Beasts Extreme+ if enabled.
+                self.print_and_save(f"\n{self.printtime()} [INFO] Initializing settings for Rise of the Beasts Extreme+...")
+                
+                if(self._rotb_extreme_plus_combat_script == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Combat Script for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
+                    self._event_nightmare_combat_script = self._combat_script
+                    
+                if(len(self._rotb_extreme_plus_summon_element_list) == 0):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summon Elements for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
+                    self._rotb_extreme_plus_summon_element_list = self._summon_element_list
+                    
+                if(len(self._rotb_extreme_plus_summon_list) == 0):
+                    self.print_and_save(f"{self.printtime()} [INFO] Summons for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
+                    self._rotb_extreme_plus_summon_list = self._summon_list
+                    
+                if(self._rotb_extreme_plus_group_number == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Group Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
+                    self._rotb_extreme_plus_group_number = self._group_number
+                else:
+                    self._rotb_extreme_plus_group_number = int(self._rotb_extreme_plus_group_number)
+                    
+                if(self._rotb_extreme_plus_party_number == ""):
+                    self.print_and_save(f"{self.printtime()} [INFO] Party Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
+                    self._rotb_extreme_plus_party_number = self._party_number
+                else:
+                    self._rotb_extreme_plus_party_number = int(self._rotb_extreme_plus_party_number)
+                    
+                self.print_and_save(f"{self.printtime()} [INFO] Settings initialized for Rise of the Beasts Extreme+...")
             elif(self._item_name == "Repeated Runs" and self._enable_unparalleled_foe):
                 # Do the same for Dread Barrage Unparalleled Foes if enabled.
                 self.print_and_save(f"\n{self.printtime()} [INFO] Initializing settings for Dread Barrage Unparalleled Foes...")
