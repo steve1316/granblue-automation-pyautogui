@@ -120,12 +120,17 @@ class TwitterRoomFinder():
             "Lvl 120 Morrigna": "Lv120 バイヴカハ",
             "Lvl 120 Hector": "Lv120 ヘクトル",
             "Lvl 120 Anubis": "Lv120 アヌビス",
-            "Lvl 150 Tiamat Malice": "Lv150 ティアマト・マリス",
-            "Lvl 150 Leviathan Malice": "Lv150 リヴァイアサン・マリス",
-            "Lvl 150 Phronesis": "Lv150 フロネシス",
             "Lvl 200 Akasha": "Lv200 アーカーシャ",
             "Lvl 150 Lucilius": "Lv150 ルシファー",
             "Lvl 250 Lucilius": "Lv250 ルシファー",
+            
+            # Malice Raids
+            "Lvl 150 Tiamat Malice": "Lv150 ティアマト・マリス",
+            "Lvl 150 Leviathan Malice": "Lv150 リヴァイアサン・マリス",
+            "Lvl 150 Phronesis": "Lv150 フロネシス",
+            "Lvl 150 Luminiera Malice": "Lv150 シュヴァリエ・マリス",
+            
+            # Six Dragon Raids
             "Lvl 200 Wilnas": "Lv200 ウィルナス",
             "Lvl 200 Wamdus": "Lv200 ワムデュス",
             "Lvl 200 Galleon": "Lv200 ガレヲン",
