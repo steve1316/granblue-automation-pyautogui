@@ -29,19 +29,20 @@ Flickable {
         ListModel {
             id: itemsModel
 
+            // The order of these items is defined in-game by heading to their "Get from Quests" section when you click on the item to find out where to farm it. Additional locations are provided by the item's page at gbf.wiki
             property var listOfItems: {
                 "H3-1 In a Dusk Dream": ["EXP"],
                 "EX1-1 Corridor of Puzzles / EX1-3 Lost in the Dark": ["Warrior Creed", "Mage Creed"],
-                "EX2-2 Time of Judgement": ["Evil Judge Crystal", "Pilgrim Distinction", "Mage Distinction", "Alchemist Distinction", "Monk's Distinction", "Keraunos Replica", "Faust Replica"],
-                "EX2-3 Time of Revelation": ["Infernal Garnet", "Gladiator Distinction", "Fencer Distinction", "Dual Wielder Distinction", "Forester's Distinction", "Avenger Replica", "Hellion Gauntlet Replica"],
-                "EX2-4 Time of Eminence": ["Halo Light Quartz", "Bandit Distinction", "Troubadour Distinction", "Mystic Distinction", "Shredder Distinction", "Nirvana Replica", "Romulus Spear Replica", "Murakumo Replica"],
-                "EX3-2 Rule of the Tundra": ["Frozen Hell Prism", "Guardian Distinction", "Combatant Distinction", "Sword Master Distinction", "Dragoon's Distinction", "Skofnung Replica", "Langeleik Replica", "Kapilavastu Replica"],
-                "EX3-3 Rule of the Plains": ["Horseman's Plate", "Sharpshooter Distinction", "Cavalryman Distinction", "Gunslinger Distinction", "Oliver Replica", "Rosenbogen Replica", "Misericorde Replica"],
-                "EX3-4 Rule of the Twilight": ["Phantom Demon Jewel", "Samurai Distinction", "Ninja Distinction", "Assassin Distinction", "Ipetam Replica", "Proximo Replica", "Nebuchad Replica", "Muramasa Replica"],
-                "EX4-2 Amidst the Waves": ["Pilgrim Distinction", "Mage Distinction", "Alchemist Distinction", "Mystic Distinction", "Monk's Distinction", "Oliver Replica", "Langeleik Replica", "Romulus Spear Replica", "Proximo Replica", "Kapilavastu Replica"],
-                "EX4-3 Amidst the Petals": ["Sharpshooter Distinction", "Samurai Distinction", "Ninja Distinction", "Gunslinger Distinction", "Assassin Distinction", "Longstrider's Distinction", "Langeleik Replica", "Misericorde Replica", "Faust Replica"],
-                "EX4-4 Amidst Severe Cliffs": ["Gladiator Distinction", "Fencer Distinction", "Combatant Distinction", "Sword Master Distinction", "Aschallon Replica", "Hellion Gauntlet Replica", "Muramasa Replica", "Practice Drum"],
-                "EX4-5 Amidst the Flames": ["Guardian Distinction", "Bandit Distinction", "Troubadour Distinction", "Cavalryman Distinction", "Dragoon's Distinction", "Ipetam Replica", "Murakumo Replica", "Nebuchad Replica"],
+                "EX2-2 Time of Judgement": ["Keraunos Replica", "Faust Replica", "Mage Distinction", "Pilgrim Distinction", "Alchemist Distinction", "Monk's Distinction", "Evil Judge Crystal"],
+                "EX2-3 Time of Revelation": ["Avenger Replica", "Hellion Gauntlet Replica", "Gladiator Distinction", "Fencer Distinction", "Dual Wielder Distinction", "Forester's Distinction", "Infernal Garnet"],
+                "EX2-4 Time of Eminence": ["Nirvana Replica", "Romulus Spear Replica", "Murakumo Replica", "Bandit Distinction", "Troubadour Distinction", "Mystic Distinction", "Shredder Distinction", "Contractor Distinction", "Halo Light Quartz"],
+                "EX3-2 Rule of the Tundra": ["Skofnung Replica", "Langeleik Replica", "Combatant Distinction", "Guardian Distinction", "Sword Master Distinction", "Dragoon's Distinction", "Frozen Hell Prism"],
+                "EX3-3 Rule of the Plains": ["Oliver Replica", "Rosenbogen Replica",  "Sharpshooter Distinction", "Gunslinger Distinction", "Cavalryman Distinction", "Longstrider's Distinction", "Horseman's Plate"],
+                "EX3-4 Rule of the Twilight": ["Ipetam Replica", "Muramasa Replica", "Proximo Replica", "Samurai Distinction", "Assassin Distinction", "Ninja Distinction", "Dancer Distinction", "Phantom Demon Jewel"],
+                "EX4-2 Amidst the Waves": ["Oliver Replica", "Romulus Spear Replica", "Kapilavastu Replica", "Mystic Distinction", "Pilgrim Distinction", "Alchemist Distinction", "Mage Distinction", "Monk's Distinction"],
+                "EX4-3 Amidst the Petals": ["Langeleik Replica", "Faust Replica", "Misericorde Replica", "Arabesque Replica", "Ninja Distinction", "Samurai Distinction", "Sharpshooter Distinction", "Gunslinger Distinction", "Longstrider's Distinction", "Dancer Distinction"],
+                "EX4-4 Amidst Severe Cliffs": ["Hellion Gauntlet Replica", "Muramasa Replica", "Aschallon Replica", "Practice Drum", "Combatant Distinction", "Gladiator Distinction", "Sword Master Distinction", "Fencer Distinction"],
+                "EX4-5 Amidst the Flames": ["Ipetam Replica", "Murakumo Replica", "Nebuchad Replica", "Proximo Replica", "Guardian Distinction", "Cavalryman Distinction", "Bandit Distinction", "Troubadour Distinction", "Dragoon's Distinction", "Contractor Distinction"],
             }
 
             function createListElement(itemName){
