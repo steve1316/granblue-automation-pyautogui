@@ -63,9 +63,20 @@ Flickable {
                 "Tiamat Malice": ["Tiamat Malice Anima", "Hatsoiiłhał", "Majestas"],
                 "Leviathan Malice": ["Leviathan Malice Anima", "Kaladanda", "Kris of Hypnos"],
                 "Phronesis": ["Phronesis Anima", "Dark Thrasher", "Master Bamboo Sword"],
+                "Luminiera Malice": ["Luminiera Malice Anima", "Colomba", "Seyfert"],
                 "Grand Order": ["Azure Feather", "Heavenly Horn"],
                 "Proto Bahamut": ["Horn of Bahamut", "Champion Merit", "Primeval Horn"],
                 "Rose Queen": ["Rose Petal"],
+                "Michael": ["Michael Anima"],
+                "Gabriel": ["Gabriel Anima"],
+                "Uriel": ["Uriel Anima"],
+                "Raphael": ["Raphael Anima"],
+                "Wilnas": ["Wilnas's Finger"],
+                "Wamdus": ["Wamdus's Cnidocyte"],
+                "Galleon": ["Galleon's Jaw"],
+                "Ewiyar": ["Ewiyar's Beak"],
+                "Lu Woh": ["Lu Woh's Horn"],
+                "Fediel": ["Fediel's Spine"]
             }
 
             function createListElement(itemName){
@@ -748,6 +759,230 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Avatar /////////
+
+        ///////// Raid Items - Michael /////////
+        Label {
+            id: label_Michael
+
+            color: "#aa0000"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Michael"
+        }
+
+        Repeater {
+            id: repeater_Michael
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Michael.visible === true){
+                    repeater_Michael.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Michael.text].length; i++){
+                        repeater_Michael.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Michael.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_Michael
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#aa0000"
+                    anchors.left: itemImage_Michael.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Michael /////////
+
+        ///////// Raid Items - Gabriel /////////
+        Label {
+            id: label_Gabriel
+
+            color: "#00ffff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Gabriel"
+        }
+
+        Repeater {
+            id: repeater_Gabriel
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Gabriel.visible === true){
+                    repeater_Gabriel.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Gabriel.text].length; i++){
+                        repeater_Gabriel.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Gabriel.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_Gabriel
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#00ffff"
+                    anchors.left: itemImage_Gabriel.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Gabriel /////////
+
+        ///////// Raid Items - Uriel /////////
+        Label {
+            id: label_Uriel
+
+            color: "#ff8000"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Uriel"
+        }
+
+        Repeater {
+            id: repeater_Uriel
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Uriel.visible === true){
+                    repeater_Uriel.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Uriel.text].length; i++){
+                        repeater_Uriel.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Uriel.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_Uriel
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ff8000"
+                    anchors.left: itemImage_Uriel.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Uriel /////////
+
+        ///////// Raid Items - Raphael /////////
+        Label {
+            id: label_Raphael
+
+            color: "#00ff00"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Raphael"
+        }
+
+        Repeater {
+            id: repeater_Raphael
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Raphael.visible === true){
+                    repeater_Raphael.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Raphael.text].length; i++){
+                        repeater_Raphael.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Raphael.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_Raphael
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#00ff00"
+                    anchors.left: itemImage_Raphael.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Uriel /////////
 
         ///////// Raid Items - Rose Queen /////////
         Label {
@@ -1924,6 +2159,342 @@ Flickable {
         }
         ///////// End of Raid Items - Anubis /////////
 
+        ///////// Raid Items - Wilnas /////////
+        Label {
+            id: label_Wilnas
+
+            color: "#aa0000"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Wilnas"
+        }
+
+        Repeater {
+            id: repeater_Wilnas
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Wilnas.visible === true){
+                    repeater_Wilnas.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Wilnas.text].length; i++){
+                        repeater_Wilnas.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Wilnas.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_Wilnas
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#aa0000"
+                    anchors.left: itemImage_Wilnas.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Wilnas /////////
+
+        ///////// Raid Items - Wamdus /////////
+        Label {
+            id: label_Wamdus
+
+            color: "#00ffff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Wamdus"
+        }
+
+        Repeater {
+            id: repeater_Wamdus
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Wamdus.visible === true){
+                    repeater_Wamdus.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Wamdus.text].length; i++){
+                        repeater_Wamdus.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Wamdus.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_Wamdus
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#00ffff"
+                    anchors.left: itemImage_Wamdus.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Wamdus /////////
+
+        ///////// Raid Items - Galleon /////////
+        Label {
+            id: label_Galleon
+
+            color: "#ff8000"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Galleon"
+        }
+
+        Repeater {
+            id: repeater_Galleon
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Galleon.visible === true){
+                    repeater_Galleon.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Galleon.text].length; i++){
+                        repeater_Galleon.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Galleon.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_Galleon
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ff8000"
+                    anchors.left: itemImage_Galleon.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Galleon /////////
+
+        ///////// Raid Items - Ewiyar /////////
+        Label {
+            id: label_Ewiyar
+
+            color: "#00ff00"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Ewiyar"
+        }
+
+        Repeater {
+            id: repeater_Ewiyar
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Ewiyar.visible === true){
+                    repeater_Ewiyar.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Ewiyar.text].length; i++){
+                        repeater_Ewiyar.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Ewiyar.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_Ewiyar
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#00ff00"
+                    anchors.left: itemImage_Ewiyar.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Ewiyar /////////
+
+        ///////// Raid Items - Lu Woh /////////
+        Label {
+            id: label_LuWoh
+
+            color: "#ffff00"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Lu Woh"
+        }
+
+        Repeater {
+            id: repeater_LuWoh
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_LuWoh.visible === true){
+                    repeater_LuWoh.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_LuWoh.text].length; i++){
+                        repeater_LuWoh.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_LuWoh.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_LuWoh
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ffff00"
+                    anchors.left: itemImage_LuWoh.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Lu Woh /////////
+
+        ///////// Raid Items - Fediel /////////
+        Label {
+            id: label_Fediel
+
+            color: "#aa00ff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Fediel"
+        }
+
+        Repeater {
+            id: repeater_Fediel
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Fediel.visible === true){
+                    repeater_Fediel.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Fediel.text].length; i++){
+                        repeater_Fediel.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Fediel.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_Fediel
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#aa00ff"
+                    anchors.left: itemImage_Fediel.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Fediel /////////
+
         ///////// Raid Items - Tiamat Malice /////////
         Label {
             id: label_TiamatMalice
@@ -2091,6 +2662,62 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Phronesis /////////
+
+        ///////// Raid Items - Luminiera Malice /////////
+        Label {
+            id: label_LuminieraMalice
+
+            color: "#ffff00"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Luminiera Malice"
+        }
+
+        Repeater {
+            id: repeater_LuminieraMalice
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_LuminieraMalice.visible === true){
+                    repeater_LuminieraMalice.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_LuminieraMalice.text].length; i++){
+                        repeater_LuminieraMalice.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_LuminieraMalice.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_LuminieraMalice
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ffff00"
+                    anchors.left: itemImage_LuminieraMalice.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Luminiera Malice /////////
     }
 
     Connections {
