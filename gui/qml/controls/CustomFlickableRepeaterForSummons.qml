@@ -185,6 +185,12 @@ Flickable {
             }
 
             ListElement {
+                imageSource: "../../../images/summons/icons/nobiyo_icon.png"
+                name: "Nobiyo"
+                element: "Misc"
+            }
+
+            ListElement {
                 imageSource: "../../../images/summons/icons/white_rabbit_icon.png"
                 name: "White Rabbit"
                 element: "Misc"
