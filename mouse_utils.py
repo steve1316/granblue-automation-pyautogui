@@ -1,4 +1,5 @@
 import datetime
+import random
 import traceback
 from timeit import default_timer as timer
 
@@ -62,12 +63,13 @@ class MouseUtils:
         except Exception:
             self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to instantly move the mouse cursor to Point({x}, {y}): \n{traceback.format_exc()}")
 
-    def move_and_click_point(self, x: int, y: int, custom_mouse_speed: float = 0.0, mouse_clicks: int = 1):
+    def move_and_click_point(self, x: int, y: int, image_name: str, custom_mouse_speed: float = 0.0, mouse_clicks: int = 1):
         """Move the cursor to the specified point on the screen and clicks it.
 
         Args:
             x (int): X coordinate on the screen.
             y (int): Y coordinate on the screen.
+            image_name (str): File name of the image in /images/buttons/ folder.
             custom_mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.
             mouse_clicks (int, optional): Number of mouse clicks. Defaults to 1.
 
@@ -78,29 +80,72 @@ class MouseUtils:
             custom_mouse_speed = self._mouse_speed
             
         try:
-            pyautogui.moveTo(x, y, custom_mouse_speed, pyautogui.easeInOutQuad)
+            new_x, new_y = self._randomize_point(x, y, image_name)
+            
+            pyautogui.moveTo(new_x, new_y, custom_mouse_speed, pyautogui.easeInOutQuad)
             pyautogui.click(clicks=mouse_clicks)
             return None
         except Exception:
             self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to move the mouse cursor to Point({x}, {y}) and clicking it: \n{traceback.format_exc()}")
 
-    def click_point_instantly(self, x: int, y: int, mouse_clicks: int = 1):
+    def click_point_instantly(self, x: int, y: int, image_name: str, mouse_clicks: int = 1):
         """Click the specified point on the screen instantly.
 
         Args:
             x (int): X coordinate on the screen.
             y (int): Y coordinate on the screen.
+            image_name (str): File name of the image in /images/buttons/ folder.
             mouse_clicks (int, optional): Number of mouse clicks. Defaults to 1.
 
         Returns:
             None
         """
         try:
-            pyautogui.click(x, y, clicks=mouse_clicks)
+            new_x, new_y = self._randomize_point(x, y, image_name)
+            
+            pyautogui.click(new_x, new_y, clicks=mouse_clicks)
             return None
         except Exception:
             self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to instantly click the Point({x}, {y}): \n{traceback.format_exc()}")
 
+    def _randomize_point(self, x: int, y: int, image_name: str):
+        """Randomize the clicking location in an attempt to avoid clicking the same location that may make the bot look suspicious.
+
+        Args:
+            x (int): X coordinate on the screen of the center of the match location.
+            y (int): Y coordinate on the screen of the center of the match location.
+            image_name (str): File name of the image in /images/buttons/ folder.
+
+        Returns:
+            (int, int): Tuple of the newly randomized location to click.
+        """
+        try:
+            width, height = self._game.image_tools.get_button_dimensions(image_name)
+            
+            dimensions_x0 = x - (width // 2)
+            dimensions_x1 = x + (width // 2)
+            
+            dimensions_y0 = y - (height // 2)
+            dimensions_y1 = y + (height // 2)
+            
+            new_x = 0
+            new_y = 0
+            
+            while(True):
+                new_width = random.randint(1, width - 1)
+                new_height = random.randint(1, height - 1)
+                
+                new_x = dimensions_x0 + new_width
+                new_y = dimensions_y0 + new_height
+                
+                # If the new coordinates are within the bounds of the template image, break out of the loop and return the coordinates.
+                if(new_x > dimensions_x0 or new_x < dimensions_x1 or new_y > dimensions_y0 or new_y < dimensions_y1):
+                    break
+            
+            return (new_x, new_y)
+        except Exception:
+            self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to randomize point: \n{traceback.format_exc()}")
+    
     def scroll_screen(self, x: int, y: int, scroll_clicks: int):
         """Attempt to scroll the screen to reveal more UI elements from the provided x and y coordinates.
 
