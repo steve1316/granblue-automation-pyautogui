@@ -550,3 +550,15 @@ class ImageUtils:
         """
         pyautogui.alert(text="Stopping bot. Please enter the CAPTCHA yourself and play this mission manually to its completion. \n\nIt is now highly recommended that you take a break of several hours and in the future, please reduce the amount of hours that you use this program consecutively without breaks in between.", title="CAPTCHA Detected!", button="OK")
         return None
+    
+    def generate_alert(self, message: str):
+        """Displays a alert that will inform users about various user errors that may occur.
+
+        Args:
+            message (str): The message to be displayed.
+
+        Returns:
+            None
+        """
+        pyautogui.alert(text=message, button="OK")
+        return None
