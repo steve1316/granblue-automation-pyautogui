@@ -567,7 +567,10 @@ class MapSelection:
                 
                 if(map_mode.lower() == "event"):
                     # Click on the "Special Quest" button to head to the Special screen.
-                    self._game.find_and_click_button("event_special_quest")
+                    if(not self._game.find_and_click_button("event_special_quest")):
+                        self._game.image_tools.generate_alert("Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
+                        self._isBotRunning.value = 1
+                        raise("Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
                     self._game.image_tools.confirm_location("special")
                     
                     # Check to see if the user already had a Nightmare available.
@@ -613,7 +616,10 @@ class MapSelection:
                     if(temp_mission_name.lower() == "event raid"):
                         # Bring up the "Raid Battle" popup. Then scroll down the screen a bit for screens less than 1440p to see the entire popup.
                         self._game.print_and_save(f"{self._game.printtime()} [INFO] Now hosting Event Raid...")
-                        self._game.find_and_click_button("event_raid_battle")
+                        if(not self._game.find_and_click_button("event_raid_battle")):
+                            self._game.image_tools.generate_alert("Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
+                            self._isBotRunning.value = 1
+                            raise("Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
                         self._game.mouse_tools.scroll_screen_from_home_button(-400)
                         
                         if(difficulty == "Very Hard"):
