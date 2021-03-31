@@ -4,6 +4,7 @@ import time
 from datetime import date
 from timeit import default_timer as timer
 from typing import Iterable, Tuple
+from PIL import Image
 
 import easyocr
 import pyautogui
@@ -506,6 +507,19 @@ class ImageUtils:
                 return False
         except Exception as e:
             self._game.print_and_save(f"{self._game.printtime()} [ERROR] {image_name} should have vanished from the screen after {timeout} seconds but did not. Exact error is: \n{e}")
+    
+    def get_button_dimensions(self, image_name: str):
+        """Get the dimensions of a image in images/buttons/ folder.
+
+        Args:
+            image_name (str): File name of the image in images/buttons/ folder.
+
+        Returns:
+            (int, int): Tuple of the width and the height.
+        """
+        image = Image.open(f"images/buttons/{image_name}.png")
+        width, height = image.size
+        return (width, height)
     
     def _take_screenshot(self):
         """Takes a screenshot of the Quest Results screen when called in find_farmed_items().

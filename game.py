@@ -245,10 +245,7 @@ class Game:
         """   
         if(not self.image_tools.confirm_location("home")):
             self.print_and_save(f"\n{self.printtime()} [INFO] Moving back to the Home screen...")
-            if(self.home_button_location != None):
-                self.mouse_tools.move_and_click_point(self.home_button_location[0], self.home_button_location[1])
-            else:
-                self.find_and_click_button("home")
+            self.find_and_click_button("home")
         else:
             self.print_and_save(f"{self.printtime()} [INFO] Bot is at the Home screen.")
         
@@ -294,29 +291,44 @@ class Game:
             if(temp_location == None):
                 temp_location = self.image_tools.find_button("quest_blue_strike_time", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
-                temp_location = self.image_tools.find_button("quest_red_strike_time", tries=tries, suppress_error=suppress_error) 
+                temp_location = self.image_tools.find_button("quest_red_strike_time", tries=tries, suppress_error=suppress_error)
+            
+            if(temp_location != None):
+                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "quest_blue")
+                return True
         elif(button_name.lower() == "raid"):
             temp_location = self.image_tools.find_button("raid_flat", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
                 temp_location = self.image_tools.find_button("raid_bouncing", tries=tries, suppress_error=suppress_error)
+            
+            if(temp_location != None):
+                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "raid_flat")
+                return True
         elif(button_name.lower() == "coop_start"):
             temp_location = self.image_tools.find_button("coop_start_flat", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
                 temp_location = self.image_tools.find_button("coop_start_faded", tries=tries, suppress_error=suppress_error)
+            
+            if(temp_location != None):
+                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "coop_start_flat")
+                return True
         elif(button_name.lower() == "event_special_quest"):
             temp_location = self.image_tools.find_button("event_special_quest", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
                 temp_location = self.image_tools.find_button("event_special_quest_flat", tries=tries, suppress_error=suppress_error)
             if(temp_location == None):
-                temp_location = self.image_tools.find_button("event_special_quest_bouncing", tries=tries, suppress_error=suppress_error)   
+                temp_location = self.image_tools.find_button("event_special_quest_bouncing", tries=tries, suppress_error=suppress_error)
+            
+            if(temp_location != None):
+                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "event_special_quest")
+                return True
         else:
             temp_location = self.image_tools.find_button(button_name.lower(), tries=tries, suppress_error=suppress_error)
+            if(temp_location != None):
+                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], button_name)
+                return True
         
-        if(temp_location != None):
-            self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1])
-            return True
-        else:
-            return False
+        return False
         
     def _party_wipe_check(self):
         """Check to see if the Party has wiped during Combat Mode. Update the retreat check flag if so.
@@ -333,7 +345,7 @@ class Game:
             if(party_wipe_indicator != None):
                 # Click on the blue indicator to get rid of the overlay.
                 self.wait(2)
-                self.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1])
+                self.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1], "party_wipe_indicator")
                 
                 if((self.farming_mode.lower() != "raid" and self.farming_mode.lower() != "dread barrage") and self.image_tools.confirm_location("continue")):
                     # Cancel the popup that asks you if you want to use a Full Elixir to come back. Then click the red "Retreat" button.
@@ -414,7 +426,7 @@ class Game:
             
         summon_location = self.image_tools.find_summon(summon_list, summon_element_list, self.home_button_location[0], self.home_button_location[1])
         if (summon_location != None):
-            self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1])
+            self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1], "template_summon")
             
             # Check for CAPTCHA here. If detected, stop the bot and alert the user.
             self.check_for_captcha()
@@ -457,9 +469,9 @@ class Game:
                     image_location = self.image_tools.find_button(step)
                     
                 if(step == "choose_a_summon"):
-                    self.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187)
+                    self.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187, step)
                 else:
-                    self.mouse_tools.move_and_click_point(image_location[0], image_location[1])
+                    self.mouse_tools.move_and_click_point(image_location[0], image_location[1], step)
             
             if(self.image_tools.confirm_location("trial_battles")):
                 self.print_and_save(f"{self.printtime()} [SUCCESS] Summons have now been refreshed.")
@@ -529,7 +541,7 @@ class Game:
             x = set_location[0] + 10
         
         y = set_location[1] + 50
-        self.mouse_tools.move_and_click_point(x, y)
+        self.mouse_tools.move_and_click_point(x, y, "template_group")
         
         # Now select the correct Party.
         if(self._debug_mode):
@@ -550,7 +562,7 @@ class Game:
             x = set_location[0] - 24
             
         y = set_location[1] + 325
-        self.mouse_tools.move_and_click_point(x, y)
+        self.mouse_tools.move_and_click_point(x, y, "template_party")
         
         if(self._debug_mode):
             self.print_and_save(f"{self.printtime()} [DEBUG] Successfully selected Party {party_number}. Now starting the mission.")
@@ -587,7 +599,7 @@ class Game:
         """
         dialog_location = self.image_tools.find_dialog(self._attack_button_location[0], self._attack_button_location[1], tries=1)
         if (dialog_location != None):
-            self.mouse_tools.move_and_click_point(dialog_location[0] + 180, dialog_location[1] - 51)
+            self.mouse_tools.move_and_click_point(dialog_location[0] + 180, dialog_location[1] - 51, "template_dialog")
             
         return None
         
@@ -608,11 +620,11 @@ class Game:
                 if(use_full_elixir == False):
                     self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Half Elixir...")
                     half_ap_location = self.image_tools.find_button("refill_half_ap")
-                    self.mouse_tools.move_and_click_point(half_ap_location[0], half_ap_location[1] + 175)
+                    self.mouse_tools.move_and_click_point(half_ap_location[0], half_ap_location[1] + 175, "use")
                 else:
                     self.print_and_save(f"\n{self.printtime()} [INFO] AP ran out! Using Full Elixir...")
                     full_ap_location = self.image_tools.find_button("refill_full_ap")
-                    self.mouse_tools.move_and_click_point(full_ap_location[0], full_ap_location[1] + 175)
+                    self.mouse_tools.move_and_click_point(full_ap_location[0], full_ap_location[1] + 175, "use")
                 
                 # Press the "OK" button to move to the Summon Selection screen.
                 self.wait(1)
@@ -640,11 +652,11 @@ class Game:
             if(use_soul_balm == False):
                 self.print_and_save(f"\n{self.printtime()} [INFO] EP ran out! Using Soul Berries...")
                 half_ep_location = self.image_tools.find_button("refill_soul_berry")
-                self.mouse_tools.move_and_click_point(half_ep_location[0], half_ep_location[1] + 175)
+                self.mouse_tools.move_and_click_point(half_ep_location[0], half_ep_location[1] + 175, "use")
             else:
                 self.print_and_save(f"\n{self.printtime()} [INFO] EP ran out! Using Soul Balm...")
                 full_ep_location = self.image_tools.find_button("refill_soul_balm")
-                self.mouse_tools.move_and_click_point(full_ep_location[0], full_ep_location[1] + 175)
+                self.mouse_tools.move_and_click_point(full_ep_location[0], full_ep_location[1] + 175, "use")
             
             # Press the "OK" button to move to the Summon Selection screen.
             self.wait(1)
@@ -676,7 +688,7 @@ class Game:
         y = self._attack_button_location[1] + 123
         
         # Double-clicking the character portrait to avoid any non-invasive popups from other Raid participants.
-        self.mouse_tools.move_and_click_point(x, y, mouse_clicks=2)
+        self.mouse_tools.move_and_click_point(x, y, "template_character", mouse_clicks=2)
         return None
 
     def _use_character_skill(self, character_selected: int, skill: int):
@@ -707,7 +719,7 @@ class Game:
         y = self._attack_button_location[1] + 171
         
         # Double-clicking the skill to avoid any non-invasive popups from other Raid participants.
-        self.mouse_tools.move_and_click_point(x, y, mouse_clicks=2)
+        self.mouse_tools.move_and_click_point(x, y, "template_skill", mouse_clicks=2)
         return None
     
     def collect_loot(self, isPendingBattle: bool = False, isEventNightmare: bool = False):
@@ -723,18 +735,10 @@ class Game:
         # Click away the "EXP Gained" popup and any other popups until the bot reaches the Loot Collected screen.
         if(not self._retreat_check and self.image_tools.confirm_location("exp_gained")):
             while(not self.image_tools.confirm_location("loot_collected", tries=1)):
-                close_button_location = self.image_tools.find_button("close", tries=1, suppress_error=True)
-                if(close_button_location != None):
-                    self.mouse_tools.move_and_click_point(close_button_location[0], close_button_location[1])
-                    
-                cancel_button_location = self.image_tools.find_button("cancel", tries=1, suppress_error=True)    
-                if(cancel_button_location != None):
-                    self.mouse_tools.move_and_click_point(cancel_button_location[0], cancel_button_location[1])
-                   
-                ok_button_location = self.image_tools.find_button("ok", tries=1, suppress_error=True) 
-                if(ok_button_location != None):
-                    self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
-                    
+                self.find_and_click_button("close", tries=1, suppress_error=True)
+                self.find_and_click_button("cancel", tries=1, suppress_error=True)
+                self.find_and_click_button("ok", tries=1, suppress_error=True)
+                
                 # Search for and click on the "Extended Mastery" popup.
                 self.find_and_click_button("new_extended_mastery_level", tries=1, suppress_error=True)
                 
@@ -799,7 +803,7 @@ class Game:
             event_claim_loot_location = self.image_tools.find_button("event_claim_loot", tries=1, suppress_error=True)
             if(event_claim_loot_location != None):
                 self.print_and_save(f"\n{self.printtime()} [EVENT] Skippable Event Nightmare detected. Claiming it now...")
-                self.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1])
+                self.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
                 self.collect_loot(isEventNightmare=True)
                 return True
             else:
@@ -834,7 +838,7 @@ class Game:
             event_claim_loot_location = self.image_tools.find_button("event_claim_loot", tries=1, suppress_error=True)
             if(event_claim_loot_location != None):
                 self.print_and_save(f"\n{self.printtime()} [EVENT] Skippable Event Nightmare detected but user opted to not run it. Claiming it regardless...")
-                self.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1])
+                self.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
                 self.collect_loot(isEventNightmare=True)
                 return True
             else:
@@ -978,9 +982,9 @@ class Game:
             # Blue and Support Potions share the same image but they are at different positions on the screen.
             potion_location = self.image_tools.find_all(command)
             if(command == "usebluepotion"):
-                self.mouse_tools.move_and_click_point(potion_location[0][0], potion_location[0][1])
+                self.mouse_tools.move_and_click_point(potion_location[0][0], potion_location[0][1], "usebluepotion")
             elif(command == "usesupportpotion"):
-                self.mouse_tools.move_and_click_point(potion_location[1][0], potion_location[1][1])
+                self.mouse_tools.move_and_click_point(potion_location[1][0], potion_location[1][1], "usesupportpotion")
         else:
             self.find_and_click_button(command)
         
@@ -1035,7 +1039,7 @@ class Game:
         # This is to ensure that no matter what the blue "Request Backup" button's appearance, it is ensured to be pressed.
         self.wait(1)
         cancel_button_location = self.image_tools.find_button("cancel")
-        self.mouse_tools.move_and_click_point(cancel_button_location[0] + 200, cancel_button_location[1])
+        self.mouse_tools.move_and_click_point(cancel_button_location[0] + 200, cancel_button_location[1], "cancel")
         
         # If requesting backup was successful, click "OK" to close the popup.
         self.wait(1)
@@ -1166,7 +1170,7 @@ class Game:
                         if (attack_button_location != None):
                             self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
                             number_of_charge_attacks = self._find_charge_attacks()
-                            self.mouse_tools.move_and_click_point(self._attack_button_location[0], self._attack_button_location[1])
+                            self.mouse_tools.move_and_click_point(self._attack_button_location[0], self._attack_button_location[1], "attack")
                             self.wait(3 + number_of_charge_attacks)
                             self._wait_for_attack()
                             self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
@@ -1175,7 +1179,7 @@ class Game:
                             
                         next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=True)
                         if(next_button_location != None):
-                            self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
+                            self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1], "next")
                             self.wait(3)
                             
                         if(self._retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
@@ -1267,22 +1271,22 @@ class Game:
                                             target = commands.pop(0).lower()
                                             if("target(1)" in target):
                                                 self.print_and_save(f"{self.printtime()} [COMBAT] Targeting Character 1.")
-                                                self.mouse_tools.move_and_click_point(select_a_character_location[0] - 90, select_a_character_location[1] + 85)
+                                                self.mouse_tools.move_and_click_point(select_a_character_location[0] - 90, select_a_character_location[1] + 85, "template_target")
                                             elif("target(2)" in target):
                                                 self.print_and_save(f"{self.printtime()} [COMBAT] Targeting Character 2.")
-                                                self.mouse_tools.move_and_click_point(select_a_character_location[0], select_a_character_location[1] + 85)
+                                                self.mouse_tools.move_and_click_point(select_a_character_location[0], select_a_character_location[1] + 85, "template_target")
                                             elif("target(3)" in target):
                                                 self.print_and_save(f"{self.printtime()} [COMBAT] Targeting Character 3.")
-                                                self.mouse_tools.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 85)
+                                                self.mouse_tools.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 85, "template_target")
                                             elif("target(4)" in target):
                                                 self.print_and_save(f"{self.printtime()} [COMBAT] Targeting Character 4.")
-                                                self.mouse_tools.move_and_click_point(select_a_character_location[0] - 90, select_a_character_location[1] + 250)
+                                                self.mouse_tools.move_and_click_point(select_a_character_location[0] - 90, select_a_character_location[1] + 250, "template_target")
                                             elif("target(5)" in target):
                                                 self.print_and_save(f"{self.printtime()} [COMBAT] Targeting Character 5.")
-                                                self.mouse_tools.move_and_click_point(select_a_character_location[0], select_a_character_location[1] + 250)
+                                                self.mouse_tools.move_and_click_point(select_a_character_location[0], select_a_character_location[1] + 250, "template_target")
                                             elif("target(6)" in target):
                                                 self.print_and_save(f"{self.printtime()} [COMBAT] Targeting Character 6.")
-                                                self.mouse_tools.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 250)
+                                                self.mouse_tools.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 250, "template_target")
                                             else:
                                                 # If the command is not one of the supported targets, close the popup.
                                                 self.print_and_save(f"{self.printtime()} [COMBAT] Invalid Character target. Canceling now...")

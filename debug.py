@@ -150,9 +150,9 @@ class Debug:
             
             image_location = self._game.image_tools.find_button(step)
             if(step == "choose_a_summon"):
-                self._game.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187)
+                self._game.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187, step)
             else:
-                self._game.mouse_tools.move_and_click_point(image_location[0], image_location[1])
+                self._game.mouse_tools.move_and_click_point(image_location[0], image_location[1], step)
         
         self._game.start_combat_mode(self._combat_script)
         
