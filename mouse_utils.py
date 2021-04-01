@@ -4,6 +4,7 @@ import traceback
 from timeit import default_timer as timer
 
 import pyautogui
+import pyclick
 import pyperclip
 
 
@@ -14,19 +15,24 @@ class MouseUtils:
     Attributes
     ----------
     game (game.Game): The Game object.
+    
+    enableBezierCruve (bool): Enables the usage of the Bezier Curve to allow the bot to utilize human-like but slow mouse movement.
 
     mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.2.
 
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
 
     """
-    def __init__(self, game, mouse_speed: float = 0.2, debug_mode: bool = False):
+    def __init__(self, game, enableBezierCurve: bool, mouse_speed: float = 0.2, debug_mode: bool = False):
         super().__init__()
         
         self._game = game
+        self._enableBezierCurve = enableBezierCurve
         self._mouse_speed = mouse_speed
         self._debug_mode = debug_mode
-
+        
+        self._hc = pyclick.HumanClicker()
+        
     def move_to(self, x: int, y: int, custom_mouse_speed: float = 0.0):
         """Move the cursor to the coordinates on the screen.
 
@@ -42,7 +48,11 @@ class MouseUtils:
             custom_mouse_speed = self._mouse_speed
             
         try:
-            pyautogui.moveTo(x, y, custom_mouse_speed, pyautogui.easeInOutQuad)
+            if(self._enableBezierCurve):
+                self._hc.move((x, y), duration=custom_mouse_speed, humanCurve=pyclick.HumanCurve(pyautogui.position(), (x, y)))
+            else:
+                pyautogui.PAUSE = 0.25
+                pyautogui.moveTo(x, y, duration=custom_mouse_speed, tween=pyautogui.easeInOutQuad)
             return None
         except Exception:
             self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to move the mouse cursor to Point({x}, {y}): \n{traceback.format_exc()}")
@@ -66,18 +76,20 @@ class MouseUtils:
         try:
             new_x, new_y = self._randomize_point(x, y, image_name)
             
-            pyautogui.moveTo(new_x, new_y, custom_mouse_speed, pyautogui.easeInOutQuad)
+            if(self._enableBezierCurve):
+                self._hc.move((new_x, new_y), duration=custom_mouse_speed, humanCurve=pyclick.HumanCurve(pyautogui.position(), (new_x, new_y)))
+            else:
+                pyautogui.PAUSE = 0.25
+                pyautogui.moveTo(x, y, duration=custom_mouse_speed, tween=pyautogui.easeInOutQuad)
+            
             pyautogui.click(clicks=mouse_clicks)
+            
+            # This delay is necessary as ImageUtils will take the screenshot too fast and the bot will use the last frame before clicking to navigate.
+            self._game.wait(0.5)
+            
             return None
         except Exception:
             self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to move the mouse cursor to Point({x}, {y}) and clicking it: \n{traceback.format_exc()}")
-
-    def click_point_instantly(self, x: int, y: int, image_name: str, mouse_clicks: int = 1):
-        """Click the specified point on the screen instantly.
-
-            return None
-        except Exception:
-            self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to instantly click the Point({x}, {y}): \n{traceback.format_exc()}")
 
     def _randomize_point(self, x: int, y: int, image_name: str):
         """Randomize the clicking location in an attempt to avoid clicking the same location that may make the bot look suspicious.
@@ -133,6 +145,10 @@ class MouseUtils:
             
         try:
             self.move_to(x, y)
+            
+            # Reset the pause delay back to 0.25, primarily for ImageUtils' methods using pyautogui.
+            pyautogui.PAUSE = 0.25
+            
             pyautogui.scroll(scroll_clicks, x=x, y=y)
             return None
         except Exception:
@@ -155,6 +171,10 @@ class MouseUtils:
                 self._game.print_and_save(f"{self._game.printtime()} [DEBUG] Now scrolling the screen from the \"Home\" button's coordinates at ({x}, {y}) by {scroll_clicks} clicks...")
                 
             self.move_to(x, y)
+            
+            # Reset the pause delay back to 0.25, primarily for ImageUtils' methods using pyautogui.
+            pyautogui.PAUSE = 0.25
+            
             pyautogui.scroll(scroll_clicks, x=x, y=y)
             return None
         except Exception:

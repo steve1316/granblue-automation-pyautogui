@@ -44,6 +44,7 @@ class Game:
         config.read("config.ini")
         keys_tokens = [config.get("twitter", "api_key"), config.get("twitter", "api_key_secret"), config.get("twitter", "access_token"), config.get("twitter", "access_token_secret")]
         custom_mouse_speed = float(config.get("configuration", "mouse_speed"))
+        enable_bezier_curve_mouse_movement = config.getboolean("configuration", "enable_bezier_curve_mouse_movement")
         
         # Grab the delays between runs from config.ini if the user enabled them.
         self._enable_delay_between_runs = config.getboolean("configuration", "enable_delay_between_runs")
@@ -138,7 +139,7 @@ class Game:
         self._map_selection = MapSelection(self, isBotRunning)
         self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3], debug_mode=self._debug_mode)
         self.image_tools = ImageUtils(game=self, debug_mode=self._debug_mode)
-        self.mouse_tools = MouseUtils(game=self, mouse_speed=custom_mouse_speed, debug_mode=self._debug_mode)
+        self.mouse_tools = MouseUtils(game=self, enableBezierCurve=enable_bezier_curve_mouse_movement, mouse_speed=custom_mouse_speed, debug_mode=self._debug_mode)
         
         # Save the locations of the "Home", "Attack", and "Back" buttons for use in other classes.
         self.home_button_location = None
@@ -164,9 +165,6 @@ class Game:
         
         # Enable checking for Skyscope mission popups.
         self.enable_skyscope = True
-        
-        # The amount of time to pause after each call to PyAutoGUI. This applies to calls inside mouse_utils and image_utils.
-        pyautogui.PAUSE = 0.25
         
         # Calibrate the dimensions of the game window on bot launch.
         self.go_back_home(confirm_location_check=True, display_info_check=True)
