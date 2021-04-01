@@ -445,6 +445,8 @@ class Game:
                                 "seconds as a resting period. Please do not navigate from the current screen.")
             
             self.wait(new_seconds)
+        
+        self.print_and_save(f"\n{self.printtime()} [INFO] Resting period complete.")
         return None
 
     def _select_summon(self, summon_list: Iterable[str], summon_element_list: Iterable[str]):
