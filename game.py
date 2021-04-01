@@ -541,7 +541,7 @@ class Game:
             x = set_location[0] + 10
         
         y = set_location[1] + 50
-        self.mouse_tools.move_and_click_point(x, y, "template_group")
+        self.mouse_tools.move_and_click_point(x, y, "template_group", mouse_clicks=2)
         
         # Now select the correct Party.
         if(self._debug_mode):
@@ -562,7 +562,7 @@ class Game:
             x = set_location[0] - 24
             
         y = set_location[1] + 325
-        self.mouse_tools.move_and_click_point(x, y, "template_party")
+        self.mouse_tools.move_and_click_point(x, y, "template_party", mouse_clicks=2)
         
         if(self._debug_mode):
             self.print_and_save(f"{self.printtime()} [DEBUG] Successfully selected Party {party_number}. Now starting the mission.")
