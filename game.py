@@ -465,7 +465,7 @@ class Game:
             
         summon_location = self.image_tools.find_summon(summon_list, summon_element_list, self.home_button_location[0], self.home_button_location[1])
         if (summon_location != None):
-            self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1], "template_summon")
+            self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1], "template_support_summon")
             
             # Check for CAPTCHA here. If detected, stop the bot and alert the user.
             self.check_for_captcha()
@@ -1337,7 +1337,7 @@ class Game:
                                             self.find_and_click_button("cancel")
                                         
                             # Now click the "Back" button.
-                            self.mouse_tools.move_and_click_point(self._back_button_location[0], self._back_button_location[1])
+                            self.mouse_tools.move_and_click_point(self._back_button_location[0], self._back_button_location[1], "back")
                             
                             # Attempt to wait to see if the character one-shot the enemy or not. This is user-defined in the config.ini.
                             self.wait(self._idle_seconds_after_skill)
@@ -1368,23 +1368,23 @@ class Game:
                                 
                                 # Click on the specified Summon.
                                 if(j == 1):
-                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 317, self._attack_button_location[1] + 138, mouse_clicks=2)
+                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 317, self._attack_button_location[1] + 138, "template_summon", mouse_clicks=2)
                                 elif(j == 2):
-                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 243, self._attack_button_location[1] + 138, mouse_clicks=2)
+                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 243, self._attack_button_location[1] + 138, "template_summon", mouse_clicks=2)
                                 elif(j == 3):
-                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 165, self._attack_button_location[1] + 138, mouse_clicks=2)
+                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 165, self._attack_button_location[1] + 138, "template_summon", mouse_clicks=2)
                                 elif(j == 4):
-                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 89, self._attack_button_location[1] + 138, mouse_clicks=2)
+                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 89, self._attack_button_location[1] + 138, "template_summon", mouse_clicks=2)
                                 elif(j == 5):
-                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 12, self._attack_button_location[1] + 138, mouse_clicks=2)
+                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] - 12, self._attack_button_location[1] + 138, "template_summon", mouse_clicks=2)
                                 else:
-                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] + 63, self._attack_button_location[1] + 138, mouse_clicks=2)
+                                    self.mouse_tools.move_and_click_point(self._attack_button_location[0] + 63, self._attack_button_location[1] + 138, "template_summon", mouse_clicks=2)
                                     
                                 # Check if it is able to be summoned.
                                 if(self.image_tools.confirm_location("summon_details", tries=2)):
                                     ok_button_location = self.image_tools.find_button("ok", tries=1)
                                     if(ok_button_location != None):
-                                        self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1])
+                                        self.mouse_tools.move_and_click_point(ok_button_location[0], ok_button_location[1], "ok")
                                         
                                         # Wait for the Summon animation to complete. This is user-defined in the config.ini.
                                         self.wait(self._idle_seconds_after_summon)
@@ -1393,7 +1393,7 @@ class Game:
                                         self.find_and_click_button("cancel")
                                         
                                         # Click the "Back" button.
-                                        self.mouse_tools.move_and_click_point(self._back_button_location[0], self._back_button_location[1])
+                                        self.mouse_tools.move_and_click_point(self._back_button_location[0], self._back_button_location[1], "back")
                                         
                                 if(self._retreat_check or self.image_tools.confirm_location("exp_gained", tries=1) or self.image_tools.confirm_location("no_loot", tries=1)):
                                     self.print_and_save("\n################################################################################")
@@ -1493,12 +1493,12 @@ class Game:
                     next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=True)
                     if(next_button_location != None):
                         self.print_and_save(f"{self.printtime()} [COMBAT] All enemies on screen have been eliminated before attacking. Preserving Turn {turn_number} by moving to the next Wave...")
-                        self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
+                        self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1], "next")
                         self.wait(3)
                     else:
                         self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
                         number_of_charge_attacks = self._find_charge_attacks()
-                        self.mouse_tools.move_and_click_point(self._attack_button_location[0], self._attack_button_location[1])
+                        self.mouse_tools.move_and_click_point(self._attack_button_location[0], self._attack_button_location[1], "attack")
                         
                         # Peek ahead of the script while the Party is currently attacking and see if it detects the command "enableSemiAuto" outside of a Turn block.
                         temp_index = i
@@ -1529,7 +1529,7 @@ class Game:
                         
                         next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=True)
                         if(next_button_location != None):
-                            self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
+                            self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1], "next")
                             self.wait(3)
                         
                 if("exit" in line.lower() and not semi_auto and not full_auto):
@@ -1555,7 +1555,7 @@ class Game:
                     self.print_and_save(f"\n{self.printtime()} [COMBAT] Starting Turn {turn_number}.")
                     self.print_and_save(f"{self.printtime()} [COMBAT] Ending Turn {turn_number} by attacking now...")
                     number_of_charge_attacks = self._find_charge_attacks()
-                    self.mouse_tools.move_and_click_point(self._attack_button_location[0], self._attack_button_location[1])
+                    self.mouse_tools.move_and_click_point(self._attack_button_location[0], self._attack_button_location[1], "attack")
                     self.wait(3 + number_of_charge_attacks)
                     self._wait_for_attack()
                     self.print_and_save(f"{self.printtime()} [COMBAT] Turn {turn_number} has ended.")
@@ -1564,7 +1564,7 @@ class Game:
                     
                 next_button_location = self.image_tools.find_button("next", tries=1, suppress_error=True)
                 if(next_button_location != None):
-                    self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1])
+                    self.mouse_tools.move_and_click_point(next_button_location[0], next_button_location[1], "next")
                     self.wait(3)
                     
             
@@ -1896,11 +1896,11 @@ class Game:
                                     if(self._enable_unparalleled_foe_level_95 and not self._enable_unparalleled_foe_level_175):
                                         # Start the Level 95 Unparalleled Foe.
                                         self.print_and_save(f"\n{self.printtime()} [INFO] Starting Level 95 Unparalleled Foe...")
-                                        self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1])
+                                        self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1], "ap_0")
                                     elif(self._enable_unparalleled_foe_level_175 and not self._enable_unparalleled_foe_level_95):
                                         # Start the Level 175 Unparalleled Foe.
                                         self.print_and_save(f"\n{self.printtime()} [INFO] Starting Level 175 Unparalleled Foe...")
-                                        self.mouse_tools.move_and_click_point(ap_0_locations[1][0], ap_0_locations[1][1])
+                                        self.mouse_tools.move_and_click_point(ap_0_locations[1][0], ap_0_locations[1][1], "ap_0")
                                     elif(not self._enable_unparalleled_foe_level_95 and not self._enable_unparalleled_foe_level_175):
                                         # Close the popup.
                                         self.print_and_save(f"\n{self.printtime()} [INFO] Closing Dread Barrage Unparalleled Foes popup...")
@@ -1908,7 +1908,7 @@ class Game:
                                     else:
                                         # Every other case will default to the Level 95 Unparalleled Foe.
                                         self.print_and_save(f"\n{self.printtime()} [INFO] Defaulting to Level 95 Unparalleled Foe. Starting it now...")
-                                        self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1])
+                                        self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1], "ap_0")
                                 
                                 # Check for "Trophy Achieved" popup.
                                 if(self.image_tools.confirm_location("trophy_achieved", tries=1)):
