@@ -93,6 +93,7 @@ pip install -r requirements.txt
 - [PyYAML 5.3.1+](https://pypi.org/project/PyYAML/)
 - [autopy 4.0.0+](https://pypi.org/project/autopy/)
 - [tweepy 3.10.0+](https://pypi.org/project/tweepy)
+- [pyclick 0.0.2+](https://pypi.org/project/pyclick/)
 
 # Instructions
 1. Download the entire project folder.
@@ -157,9 +158,10 @@ Visit https://github.com/steve1316/granblue-automation-pyautogui/wiki for detail
 1. [Python - The main language](https://www.python.org/)
 2. [Qt - Application development framework for the GUI](https://www.qt.io/product/development-tools)
 3. [PyAutoGUI - For image template matching and mouse control](https://pyautogui.readthedocs.io/en/latest/)
-4. [GuiBot - For image template matching if PyAutoGui fails](https://guibot.readthedocs.io/en/latest/README.html)
-5. [OpenCV-Python - Provides the confidence (accuracy) argument for PyAutoGUI](https://pypi.org/project/opencv-python/)
-6. [EasyOCR - For text recognition and detection](https://github.com/JaidedAI/EasyOCR)
-7. [Twitter Standard API 1.1 - For searching and parsing texts for Raid room codes to join](https://developer.twitter.com/en/docs/twitter-api/v1)
-8. [VMWare Workstation Player - For virtualizing the program to circumvent control of the main cursor](https://www.vmware.com/products/workstation-player.html)
+4. [pyclick - For making mouse movements human-like via Bezier Curves](https://pypi.org/project/pyclick/)
+5. [GuiBot - For image template matching if PyAutoGui fails](https://guibot.readthedocs.io/en/latest/README.html)
+6. [OpenCV-Python - Provides the confidence (accuracy) argument for PyAutoGUI](https://pypi.org/project/opencv-python/)
+7. [EasyOCR - For text recognition and detection](https://github.com/JaidedAI/EasyOCR)
+8. [Twitter Standard API 1.1 - For searching and parsing texts for Raid room codes to join](https://developer.twitter.com/en/docs/twitter-api/v1)
+9. [VMWare Workstation Player - For virtualizing the program to circumvent control of the main cursor](https://www.vmware.com/products/workstation-player.html)
 
