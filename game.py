@@ -1,6 +1,7 @@
 import datetime
 import multiprocessing
 import os
+import random
 import sys
 import time
 import traceback
@@ -43,6 +44,13 @@ class Game:
         config.read("config.ini")
         keys_tokens = [config.get("twitter", "api_key"), config.get("twitter", "api_key_secret"), config.get("twitter", "access_token"), config.get("twitter", "access_token_secret")]
         custom_mouse_speed = float(config.get("configuration", "mouse_speed"))
+        
+        # Grab the delays between runs from config.ini if the user enabled them.
+        self._enable_delay_between_runs = config.getboolean("configuration", "enable_delay_between_runs")
+        self._delay_in_seconds = config.get("configuration", "delay_in_seconds")
+        self._enable_randomized_delay_between_runs = config.getboolean("configuration", "enable_randomized_delay_between_runs")
+        self._delay_in_seconds_lower_bound = config.get("configuration", "delay_in_seconds_lower_bound")
+        self._delay_in_seconds_upper_bound = config.get("configuration", "delay_in_seconds_upper_bound")
         
         # Grab the timings between various actions during Combat Mode from config.ini as well.
         self._idle_seconds_after_skill = float(config.get("configuration", "idle_seconds_after_skill"))
@@ -407,6 +415,37 @@ class Game:
             self.image_tools.generate_alert_for_captcha()
             self._isBotRunning.value = 1
             self.wait(1)
+            
+    def _delay_between_runs(self):
+        """Execute a delay after every run completed based on user settings from config.ini.
+
+        Returns:
+            None
+        """
+        if(self._enable_delay_between_runs):
+            # Check if the provided delay is valid.
+            if(int(self._delay_in_seconds) < 0):
+                self.print_and_save(f"\n{self.printtime()} [INFO] Provided delay in seconds for the resting period is not valid. Defaulting to 15 seconds.")
+                self._delay_in_seconds = 15
+            
+            self.print_and_save(f"\n{self.printtime()} [INFO] Now waiting for {self._delay_in_seconds} seconds as the resting period. Please do not navigate from the current screen.")
+            
+            self.wait(int(self._delay_in_seconds))
+        elif(not self._enable_delay_between_runs and self._enable_randomized_delay_between_runs):
+            # Check if the lower and upper bounds are valid.
+            if(int(self._delay_in_seconds_lower_bound) < 0 or int(self._delay_in_seconds_lower_bound) > int(self._delay_in_seconds_upper_bound)):
+                self.print_and_save(f"\n{self.printtime()} [INFO] Provided lower bound delay in seconds for the resting period is not valid. Defaulting to 15 seconds.")
+                self._delay_in_seconds_lower_bound = 15
+            if(int(self._delay_in_seconds_upper_bound) < 0 or int(self._delay_in_seconds_upper_bound) < int(self._delay_in_seconds_lower_bound)):
+                self.print_and_save(f"\n{self.printtime()} [INFO] Provided upper bound delay in seconds for the resting period is not valid. Defaulting to 60 seconds.")
+                self._delay_in_seconds_upper_bound = 60
+            
+            new_seconds = random.randrange(int(self._delay_in_seconds_lower_bound), int(self._delay_in_seconds_upper_bound))
+            self.print_and_save(f"\n{self.printtime()} [INFO] Given the bounds of ({self._delay_in_seconds_lower_bound}, {self._delay_in_seconds_upper_bound}), bot will now wait for {new_seconds} " +
+                                "seconds as a resting period. Please do not navigate from the current screen.")
+            
+            self.wait(new_seconds)
+        return None
 
     def _select_summon(self, summon_list: Iterable[str], summon_element_list: Iterable[str]):
         """Finds and selects the specified Summon based on the current index on the Summon Selection screen and then checks for CAPTCHA right afterwards. 
@@ -1818,9 +1857,15 @@ class Game:
                             if(self._item_amount_farmed < self._item_amount_to_farm):
                                 # Click the Play Again button or the Room button if its Coop.
                                 if(farming_mode.lower() != "coop"):
+                                    # Generate a resting period if the user enabled it.
+                                    self._delay_between_runs()
+                                    
                                     if(not self.find_and_click_button("play_again")):
                                         # Clear away any Pending Battles.
                                         self._map_selection.check_for_pending(farming_mode)
+                                        
+                                        # Generate a resting period if the user enabled it.
+                                        self._delay_between_runs()
                                         
                                         # Start the mission again.
                                         self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
@@ -1831,6 +1876,9 @@ class Game:
                                     # Check for the "Daily Missions" popup for Coop.
                                     if(self.image_tools.confirm_location("coop_daily_missions", tries=1)):
                                         self.find_and_click_button("close")
+                                    
+                                    # Generate a resting period if the user enabled it.
+                                    self._delay_between_runs()
                                     
                                     # Now click the "Start" button.
                                     self.find_and_click_button("coop_start")
@@ -1893,10 +1941,16 @@ class Game:
                                 # Check for Dimensional Halo and Event Nightmare.
                                 if(self.farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons")):
                                     if(self._check_for_dimensional_halo()):
+                                        # Generate a resting period if the user enabled it.
+                                        self._delay_between_runs()
+                                        
                                         # Make sure the bot goes back to the Home screen when completing a Dimensional Halo so that the "Play Again" functionality comes back.
                                         self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 elif((self.farming_mode.lower() == "event" or self.farming_mode.lower() == "event (token drawboxes)")):
                                     if(self._check_for_event_nightmare()):
+                                        # Generate a resting period if the user enabled it.
+                                        self._delay_between_runs()
+                                        
                                         # Make sure the bot goes back to the Home screen when completing a Event Nightmare so that the "Play Again" functionality comes back.
                                         self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 
@@ -1911,6 +1965,10 @@ class Game:
                                 # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select_map().
                                 if(self.farming_mode.lower() == "event (token drawboxes)" and self.image_tools.confirm_location("not_enough_treasure")):
                                     self.find_and_click_button("ok")
+                                    
+                                    # Generate a resting period if the user enabled it.
+                                    self._delay_between_runs()
+                                    
                                     self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                         else:
                             # Start the mission again if the Party wiped or exited prematurely during Combat Mode.
@@ -1932,6 +1990,9 @@ class Game:
                                 if(self._item_amount_farmed < self._item_amount_to_farm):
                                     # Clear away any Pending Battles.
                                     self._map_selection.check_for_pending(farming_mode)
+                                    
+                                    # Generate a resting period if the user enabled it.
+                                    self._delay_between_runs()
                                     
                                     # Join a new raid.
                                     self._map_selection.join_raid(item_name, mission_name)
