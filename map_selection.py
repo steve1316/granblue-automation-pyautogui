@@ -544,7 +544,7 @@ class MapSelection:
                 self._game.wait(1)
                 if(self._game.image_tools.confirm_location("event_daily_missions", tries=1)):
                     self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Detected \"Daily Missions\" popup. Clicking it away...")
-                    self._game.find_and_click_button("cancel")
+                    self._game.find_and_click_button("close")
                 
                 # Remove the difficulty prefix from the mission name.
                 temp_mission_name = mission_name
@@ -986,7 +986,7 @@ class MapSelection:
                     self._game.mouse_tools.paste_from_clipboard()
                     
                     # Now click on the "Join Room" button.
-                    self._game.mouse_tools.click_point_instantly(join_room_button[0], join_room_button[1], "join_a_room")
+                    self._game.mouse_tools.move_and_click_point(join_room_button[0], join_room_button[1], "join_a_room")
                     
                     # If the room code is valid and the raid is able to be joined, break out and head to the Summon Selection screen.
                     if(not self.check_for_pending("raid") and not self._game.image_tools.confirm_location("raid_already_ended", tries=1) and not self._game.image_tools.confirm_location("already_taking_part", tries=1) and not self._game.image_tools.confirm_location("invalid_code", tries=1)):
