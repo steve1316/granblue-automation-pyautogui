@@ -47,22 +47,6 @@ class MouseUtils:
         except Exception:
             self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to move the mouse cursor to Point({x}, {y}): \n{traceback.format_exc()}")
 
-    def move_to_instantly(self, x: int, y: int):
-        """Move the cursor instantly to the coordinates on the screen.
-
-        Args:
-            x (int): X coordinate on the screen.
-            y (int): Y coordinate on the screen.
-
-        Returns:
-            None
-        """
-        try:
-            pyautogui.moveTo(x, y)
-            return None
-        except Exception:
-            self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to instantly move the mouse cursor to Point({x}, {y}): \n{traceback.format_exc()}")
-
     def move_and_click_point(self, x: int, y: int, image_name: str, custom_mouse_speed: float = 0.0, mouse_clicks: int = 1):
         """Move the cursor to the specified point on the screen and clicks it.
 
@@ -91,19 +75,6 @@ class MouseUtils:
     def click_point_instantly(self, x: int, y: int, image_name: str, mouse_clicks: int = 1):
         """Click the specified point on the screen instantly.
 
-        Args:
-            x (int): X coordinate on the screen.
-            y (int): Y coordinate on the screen.
-            image_name (str): File name of the image in /images/buttons/ folder.
-            mouse_clicks (int, optional): Number of mouse clicks. Defaults to 1.
-
-        Returns:
-            None
-        """
-        try:
-            new_x, new_y = self._randomize_point(x, y, image_name)
-            
-            pyautogui.click(new_x, new_y, clicks=mouse_clicks)
             return None
         except Exception:
             self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to instantly click the Point({x}, {y}): \n{traceback.format_exc()}")
