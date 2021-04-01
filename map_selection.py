@@ -348,9 +348,7 @@ class MapSelection:
                 if(self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries=1)):
                     self._game.find_and_click_button("ok")
                 
-                # Scroll down the screen to see the "Select Party" button just in case of smaller screens.
                 self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Selecting a Party for \"{mission_name}\".")
-                self._game.mouse_tools.scroll_screen_from_home_button(-400)
                 self._game.find_and_click_button("coop_select_party")
                 
             elif(map_mode.lower() == "special"):
