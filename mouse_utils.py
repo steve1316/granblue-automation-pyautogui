@@ -31,7 +31,12 @@ class MouseUtils:
         self._mouse_speed = mouse_speed
         self._debug_mode = debug_mode
         
-        self._hc = pyclick.HumanClicker()
+        if(enableBezierCurve):
+            self._hc = pyclick.HumanClicker()
+        else:
+            pyautogui.MINIMUM_DURATION = 0.1
+            pyautogui.MINIMUM_SLEEP = 0.05
+            pyautogui.PAUSE = 0.25
         
     def move_to(self, x: int, y: int, custom_mouse_speed: float = 0.0):
         """Move the cursor to the coordinates on the screen.
@@ -51,7 +56,6 @@ class MouseUtils:
             if(self._enableBezierCurve):
                 self._hc.move((x, y), duration=custom_mouse_speed, humanCurve=pyclick.HumanCurve(pyautogui.position(), (x, y)))
             else:
-                pyautogui.PAUSE = 0.25
                 pyautogui.moveTo(x, y, duration=custom_mouse_speed, tween=pyautogui.easeInOutQuad)
             return None
         except Exception:
@@ -79,7 +83,6 @@ class MouseUtils:
             if(self._enableBezierCurve):
                 self._hc.move((new_x, new_y), duration=custom_mouse_speed, humanCurve=pyclick.HumanCurve(pyautogui.position(), (new_x, new_y)))
             else:
-                pyautogui.PAUSE = 0.25
                 pyautogui.moveTo(x, y, duration=custom_mouse_speed, tween=pyautogui.easeInOutQuad)
             
             pyautogui.click(clicks=mouse_clicks)
@@ -146,8 +149,9 @@ class MouseUtils:
         try:
             self.move_to(x, y)
             
-            # Reset the pause delay back to 0.25, primarily for ImageUtils' methods using pyautogui.
-            pyautogui.PAUSE = 0.25
+            if(self._enableBezierCurve):
+                # Reset the pause delay back to 0.25, primarily for ImageUtils' methods using pyautogui.
+                pyautogui.PAUSE = 0.25
             
             pyautogui.scroll(scroll_clicks, x=x, y=y)
             return None
@@ -172,8 +176,9 @@ class MouseUtils:
                 
             self.move_to(x, y)
             
-            # Reset the pause delay back to 0.25, primarily for ImageUtils' methods using pyautogui.
-            pyautogui.PAUSE = 0.25
+            if(self._enableBezierCurve):
+                # Reset the pause delay back to 0.25, primarily for ImageUtils' methods using pyautogui.
+                pyautogui.PAUSE = 0.25
             
             pyautogui.scroll(scroll_clicks, x=x, y=y)
             return None
