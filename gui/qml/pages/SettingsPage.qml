@@ -1198,6 +1198,39 @@ Item{
                         ]
                     }
 
+                    // Six Dragon Weapons
+                    else if(itemSelectionButton.text === "Wilnas's Finger") {
+                        missionSelectionComboBox.model = [
+                            { text: "Wilnas", enabled: false },
+                            { text: "Lvl 200 Wilnas", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Wamdus's Cnidocyte") {
+                        missionSelectionComboBox.model = [
+                            { text: "Wamdus", enabled: false },
+                            { text: "Lvl 200 Wamdus", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Galleon's Jaw") {
+                        missionSelectionComboBox.model = [
+                            { text: "Galleon", enabled: false },
+                            { text: "Lvl 200 Galleon", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Ewiyar's Beak") {
+                        missionSelectionComboBox.model = [
+                            { text: "Ewiyar", enabled: false },
+                            { text: "Lvl 200 Ewiyar", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Lu Woh's Horn") {
+                        missionSelectionComboBox.model = [
+                            { text: "Lu Woh", enabled: false },
+                            { text: "Lvl 200 Lu Woh", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Fediel's Spine") {
+                        missionSelectionComboBox.model = [
+                            { text: "Fediel", enabled: false },
+                            { text: "Lvl 200 Fediel", map: "", enabled: true },
+                        ]
+                    }
+
                     // Malice Weapons
                     else if(itemSelectionButton.text === "Tiamat Malice Anima" || itemSelectionButton.text === "Hatsoiiłhał" || itemSelectionButton.text === "Majestas") {
                         missionSelectionComboBox.model = [
