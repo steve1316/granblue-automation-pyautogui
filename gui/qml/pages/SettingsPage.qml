@@ -1237,6 +1237,26 @@ Item{
                             { text: "Rose Queen", enabled: false },
                             { text: "Lvl 110 Rose Queen", map: "", enabled: true },
                         ]
+                    } else if(itemSelectionButton.text === "Michael Anima") {
+                        missionSelectionComboBox.model = [
+                            { text: "Michael", enabled: false },
+                            { text: "Lvl 100 Michael", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Gabriel Anima") {
+                        missionSelectionComboBox.model = [
+                            { text: "Gabriel", enabled: false },
+                            { text: "Lvl 100 Gabriel", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Uriel Anima") {
+                        missionSelectionComboBox.model = [
+                            { text: "Uriel", enabled: false },
+                            { text: "Lvl 100 Uriel", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Raphael Anima") {
+                        missionSelectionComboBox.model = [
+                            { text: "Raphael", enabled: false },
+                            { text: "Lvl 100 Raphael", map: "", enabled: true },
+                        ]
                     }
                 }
 
