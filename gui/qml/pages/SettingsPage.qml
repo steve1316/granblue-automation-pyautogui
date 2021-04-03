@@ -1247,6 +1247,11 @@ Item{
                             { text: "Phronesis", enabled: false },
                             { text: "Lvl 150 Phronesis", map: "", enabled: true },
                         ]
+                    } else if(itemSelectionButton.text === "Luminiera Malice Anima" || itemSelectionButton.text === "Colomba" || itemSelectionButton.text === "Seyfert") {
+                        missionSelectionComboBox.model = [
+                            { text: "Luminiera Malice", enabled: false },
+                            { text: "Lvl 150 Luminiera Malice", map: "", enabled: true },
+                        ]
                     }
 
                     // Misc Items
