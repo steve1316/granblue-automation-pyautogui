@@ -630,10 +630,10 @@ class MapSelection:
                         # If the user does not have enough Treasures to host a Extreme or an Impossible Raid, host a Very Hard Raid instead.
                         if(difficulty == "Extreme" and not self._game.image_tools.wait_vanish("event_raid_extreme", timeout=3)):
                             self._game.print_and_save(f"{self._game.printtime()} [INFO] Not enough materials to host Extreme. Hosting Very Hard instead...")
-                            self._game.find_and_click_button("event_very_hard_raid")
+                            self._game.find_and_click_button("event_raid_very_hard")
                         elif(difficulty == "Impossible" and not self._game.image_tools.wait_vanish("event_raid_impossible", timeout=3)):
                             self._game.print_and_save(f"{self._game.printtime()} [INFO] Not enough materials to host Impossible. Hosting Very Hard instead...")
-                            self._game.find_and_click_button("event_very_hard_raid")
+                            self._game.find_and_click_button("event_raid_very_hard")
                     elif(temp_mission_name.lower() == "event quest"):
                         self._game.print_and_save(f"{self._game.printtime()} [INFO] Now hosting Event Quest...")
                         self._game.find_and_click_button("event_quests")
