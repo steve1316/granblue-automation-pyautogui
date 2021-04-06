@@ -11,10 +11,10 @@ from typing import Iterable
 
 import pyautogui
 
-from image_utils import ImageUtils
-from map_selection import MapSelection
-from mouse_utils import MouseUtils
-from twitter_room_finder import TwitterRoomFinder
+from game.map_selection import MapSelection
+from utils.image_utils import ImageUtils
+from utils.mouse_utils import MouseUtils
+from utils.twitter_room_finder import TwitterRoomFinder
 
 
 class Game:
@@ -483,7 +483,7 @@ class Game:
                     if (set_location == None):
                         tries -= 1
                         if (tries <= 0):
-                            raise NotFoundException("Could not find Set A.")
+                            raise Exception("Could not find Set A.")
                         
                         # See if the user had Set B active instead of Set A if matching failed.
                         set_location = self.image_tools.find_button("party_set_b", tries=1)
@@ -493,7 +493,7 @@ class Game:
                     if (set_location == None):
                         tries -= 1
                         if (tries <= 0):
-                            raise NotFoundException("Could not find Set B.")
+                            raise Exception("Could not find Set B.")
                         
                         # See if the user had Set A active instead of Set B if matching failed.
                         set_location = self.image_tools.find_button("party_set_a", tries=1)
@@ -1014,7 +1014,7 @@ class Game:
                     self.print_and_save(f"{self.printtime()} [INFO] Group Number for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
                     self._unparalleled_foe_group_number = self._group_number
                 else:
-                    unparalleled_foe_group_number = int(unparalleled_foe_group_number)
+                    self._unparalleled_foe_group_number = int(self._unparalleled_foe_group_number)
                     
                 if(self._unparalleled_foe_party_number == ""):
                     self.print_and_save(f"{self.printtime()} [INFO] Party Number for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")

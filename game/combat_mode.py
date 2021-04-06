@@ -1,9 +1,15 @@
-class Combat_Mode:
-    def __init__(self, game: Game, isBotRunning: int, combat_script: str = "", debug_mode: bool = False):
+import os
+import traceback
+
+from game.game import Game
+
+
+class CombatMode:
+    def __init__(self, game: Game, is_bot_running: int, combat_script: str = "", debug_mode: bool = False):
         super().__init__()
         
         self._game = game
-        self._isBotRunning = isBotRunning
+        self._is_bot_running = is_bot_running
         self._combat_script = combat_script
         self._debug_mode = debug_mode
     
