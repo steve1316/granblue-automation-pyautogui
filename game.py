@@ -1864,21 +1864,18 @@ class Game:
                                         # Clear away any Pending Battles.
                                         self._map_selection.check_for_pending(farming_mode)
                                         
-                                        # Generate a resting period if the user enabled it.
-                                        self._delay_between_runs()
-                                        
                                         # Start the mission again.
                                         self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 else:
+                                    # Generate a resting period if the user enabled it.
+                                    self._delay_between_runs()
+                                    
                                     self.find_and_click_button("coop_room")
                                     self.wait(1)
                                     
                                     # Check for the "Daily Missions" popup for Coop.
                                     if(self.image_tools.confirm_location("coop_daily_missions", tries=1)):
                                         self.find_and_click_button("close")
-                                    
-                                    # Generate a resting period if the user enabled it.
-                                    self._delay_between_runs()
                                     
                                     # Now click the "Start" button.
                                     self.find_and_click_button("coop_start")
@@ -1941,16 +1938,10 @@ class Game:
                                 # Check for Dimensional Halo and Event Nightmare.
                                 if(self.farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons")):
                                     if(self._check_for_dimensional_halo()):
-                                        # Generate a resting period if the user enabled it.
-                                        self._delay_between_runs()
-                                        
                                         # Make sure the bot goes back to the Home screen when completing a Dimensional Halo so that the "Play Again" functionality comes back.
                                         self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 elif((self.farming_mode.lower() == "event" or self.farming_mode.lower() == "event (token drawboxes)")):
                                     if(self._check_for_event_nightmare()):
-                                        # Generate a resting period if the user enabled it.
-                                        self._delay_between_runs()
-                                        
                                         # Make sure the bot goes back to the Home screen when completing a Event Nightmare so that the "Play Again" functionality comes back.
                                         self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                                 
@@ -1965,9 +1956,6 @@ class Game:
                                 # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select_map().
                                 if(self.farming_mode.lower() == "event (token drawboxes)" and self.image_tools.confirm_location("not_enough_treasure")):
                                     self.find_and_click_button("ok")
-                                    
-                                    # Generate a resting period if the user enabled it.
-                                    self._delay_between_runs()
                                     
                                     self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
                         else:
@@ -1988,11 +1976,11 @@ class Game:
                                 self.collect_loot()
                                 
                                 if(self._item_amount_farmed < self._item_amount_to_farm):
-                                    # Clear away any Pending Battles.
-                                    self._map_selection.check_for_pending(farming_mode)
-                                    
                                     # Generate a resting period if the user enabled it.
                                     self._delay_between_runs()
+                                    
+                                    # Clear away any Pending Battles.
+                                    self._map_selection.check_for_pending(farming_mode)
                                     
                                     # Join a new raid.
                                     self._map_selection.join_raid(item_name, mission_name)
