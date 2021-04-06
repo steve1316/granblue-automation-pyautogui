@@ -5,12 +5,21 @@ from game.game import Game
 
 
 class CombatMode:
-    def __init__(self, game: Game, is_bot_running: int, combat_script: str = "", debug_mode: bool = False):
+    def __init__(self, game: Game, idle_seconds_after_skill: int, idle_seconds_after_summon: int, is_bot_running: int, debug_mode: bool = False):
         super().__init__()
 
         self._game = game
+
+        # Save a reference to the original current working directory.
+        self._owd = os.getcwd()
+
+        # Save some variables for use throughout the class.
+        self._idle_seconds_after_skill = idle_seconds_after_skill
+        self._idle_seconds_after_summon = idle_seconds_after_summon
+        self._attack_button_location = None
+        self._back_button_location = None
+        self._retreat_check = False
         self._is_bot_running = is_bot_running
-        self._combat_script = combat_script
         self._debug_mode = debug_mode
 
     def _party_wipe_check(self):

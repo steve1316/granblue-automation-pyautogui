@@ -10,6 +10,7 @@ from typing import Iterable
 
 import pyautogui
 
+from game.combat_mode import CombatMode
 from game.map_selection.map_selection import MapSelection
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
@@ -34,9 +35,6 @@ class Game:
 
     def __init__(self, queue: multiprocessing.Queue, is_bot_running: int, combat_script: str = "", debug_mode: bool = False):
         super().__init__()
-
-        # Save a reference to the original current working directory.
-        self._owd = os.getcwd()
 
         # ######### config.ini ##########
         # Grab the Twitter API keys and tokens from config.ini. The list order is: [consumer key, consumer secret key, access token, access secret token].
@@ -141,6 +139,7 @@ class Game:
         self._debug_mode = debug_mode
 
         # Initialize the objects of helper classes.
+        self._combat_mode = CombatMode(self, is_bot_running, debug_mode = self._debug_mode)
         self._map_selection = MapSelection(self, is_bot_running)
         self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3], debug_mode = self._debug_mode)
         self.image_tools = ImageUtils(game = self, debug_mode = self._debug_mode)
