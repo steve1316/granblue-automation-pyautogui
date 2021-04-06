@@ -1,7 +1,5 @@
-import datetime
 import random
 import traceback
-from timeit import default_timer as timer
 
 import pyautogui
 import pyclick
@@ -16,22 +14,22 @@ class MouseUtils:
     ----------
     game (game.Game): The Game object.
     
-    enableBezierCruve (bool): Enables the usage of the Bezier Curve to allow the bot to utilize human-like but slow mouse movement.
+    enable_bezier_curve (bool): Enables the usage of the Bezier Curve to allow the bot to utilize human-like but slow mouse movement.
 
     mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.2.
 
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
 
     """
-    def __init__(self, game, enableBezierCurve: bool, mouse_speed: float = 0.2, debug_mode: bool = False):
+    def __init__(self, game, enable_bezier_curve: bool, mouse_speed: float = 0.2, debug_mode: bool = False):
         super().__init__()
         
         self._game = game
-        self._enableBezierCurve = enableBezierCurve
+        self._enable_bezier_curve = enable_bezier_curve
         self._mouse_speed = mouse_speed
         self._debug_mode = debug_mode
         
-        if(enableBezierCurve):
+        if enable_bezier_curve:
             self._hc = pyclick.HumanClicker()
         else:
             pyautogui.MINIMUM_DURATION = 0.1
@@ -49,11 +47,11 @@ class MouseUtils:
         Returns:
             None
         """
-        if (custom_mouse_speed <= 0.0):
+        if custom_mouse_speed <= 0.0:
             custom_mouse_speed = self._mouse_speed
             
         try:
-            if(self._enableBezierCurve):
+            if self._enable_bezier_curve:
                 self._hc.move((x, y), duration=custom_mouse_speed, humanCurve=pyclick.HumanCurve(pyautogui.position(), (x, y)))
             else:
                 pyautogui.moveTo(x, y, duration=custom_mouse_speed, tween=pyautogui.easeInOutQuad)
@@ -74,13 +72,13 @@ class MouseUtils:
         Returns:
             None
         """
-        if (custom_mouse_speed <= 0.0):
+        if custom_mouse_speed <= 0.0:
             custom_mouse_speed = self._mouse_speed
             
         try:
             new_x, new_y = self._randomize_point(x, y, image_name)
             
-            if(self._enableBezierCurve):
+            if self._enable_bezier_curve:
                 self._hc.move((new_x, new_y), duration=custom_mouse_speed, humanCurve=pyclick.HumanCurve(pyautogui.position(), (new_x, new_y)))
             else:
                 pyautogui.moveTo(x, y, duration=custom_mouse_speed, tween=pyautogui.easeInOutQuad)
@@ -114,10 +112,7 @@ class MouseUtils:
             dimensions_y0 = y - (height // 2)
             dimensions_y1 = y + (height // 2)
             
-            new_x = 0
-            new_y = 0
-            
-            while(True):
+            while True:
                 new_width = random.randint(1, width - 10)
                 new_height = random.randint(1, height - 10)
                 
@@ -125,10 +120,10 @@ class MouseUtils:
                 new_y = dimensions_y0 + new_height
                 
                 # If the new coordinates are within the bounds of the template image, break out of the loop and return the coordinates.
-                if(new_x > dimensions_x0 or new_x < dimensions_x1 or new_y > dimensions_y0 or new_y < dimensions_y1):
+                if new_x > dimensions_x0 or new_x < dimensions_x1 or new_y > dimensions_y0 or new_y < dimensions_y1:
                     break
             
-            return (new_x, new_y)
+            return new_x, new_y
         except Exception:
             self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to randomize point: \n{traceback.format_exc()}")
     
@@ -143,13 +138,13 @@ class MouseUtils:
         Returns:
             None
         """
-        if(self._debug_mode):
+        if self._debug_mode:
             self._game.print_and_save(f"{self._game.printtime()} [DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
             
         try:
             self.move_to(x, y)
             
-            if(self._enableBezierCurve):
+            if self._enable_bezier_curve:
                 # Reset the pause delay back to 0.25, primarily for ImageUtils' methods using pyautogui.
                 pyautogui.PAUSE = 0.25
             
@@ -171,12 +166,12 @@ class MouseUtils:
             x = self._game.home_button_location[0]
             y = self._game.home_button_location[1] - 50
             
-            if(self._debug_mode):
+            if self._debug_mode:
                 self._game.print_and_save(f"{self._game.printtime()} [DEBUG] Now scrolling the screen from the \"Home\" button's coordinates at ({x}, {y}) by {scroll_clicks} clicks...")
                 
             self.move_to(x, y)
             
-            if(self._enableBezierCurve):
+            if self._enable_bezier_curve:
                 # Reset the pause delay back to 0.25, primarily for ImageUtils' methods using pyautogui.
                 pyautogui.PAUSE = 0.25
             
