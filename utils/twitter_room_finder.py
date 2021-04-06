@@ -157,7 +157,7 @@ class TwitterRoomFinder:
         """
         # Connect to Twitter's API if this is the first run.
         if self._api is None:
-            self._game.print_and_save(f"\n{self._game.printtime()} [TWITTER] Authenticating...")
+            self._game.print_and_save(f"\n[TWITTER] Authenticating...")
             auth = tweepy.OAuthHandler(self._consumer_key, self._consumer_secret)
             auth.set_access_token(self._access_token, self._access_token_secret)
             self._api = tweepy.API(auth)
@@ -165,12 +165,12 @@ class TwitterRoomFinder:
             # Check to see if connection to Twitter's API was successful.
             try:
                 self._api.home_timeline()
-                self._game.print_and_save(f"{self._game.printtime()} [TWITTER] Successfully connected to the Twitter API.")
+                self._game.print_and_save(f"[TWITTER] Successfully connected to the Twitter API.")
             except Exception:
                 self._game.print_and_save(
-                    f"\n{self._game.printtime()} [ERROR] Connection to the Twitter API failed. Check the config.ini and verify that the keys and tokens are correct. Exact error is: \n{traceback.format_exc()}")
+                    f"\n[ERROR] Connection to the Twitter API failed. Check the config.ini and verify that the keys and tokens are correct. Exact error is: \n{traceback.format_exc()}")
 
-        self._game.print_and_save(f"\n{self._game.printtime()} [TWITTER] Now finding the {count} most recent tweets for {raid_name}.")
+        self._game.print_and_save(f"\n[TWITTER] Now finding the {count} most recent tweets for {raid_name}.")
         today = datetime.datetime.today()
         query_en = f"+(:Battle ID) AND +({raid_name})"
         query_jp = f"+(:参戦ID) AND +({self._list_of_raids[raid_name]})"
@@ -204,7 +204,7 @@ class TwitterRoomFinder:
 
             return tweets
         except Exception:
-            self._game.print_and_save(f"{self._game.printtime()} [ERROR] Bot got rate-limited or Twitter failed to respond after a certain amount of time. Exact error is: \n{traceback.format_exc()}")
+            self._game.print_and_save(f"[ERROR] Bot got rate-limited or Twitter failed to respond after a certain amount of time. Exact error is: \n{traceback.format_exc()}")
             self._game.isBotRunning.value = 1
 
     def clean_tweets(self, tweets: Iterable[str]):
@@ -217,7 +217,7 @@ class TwitterRoomFinder:
             room_codes (Iterable[str]): List of room codes cleaned of all other text.
         """
         try:
-            self._game.print_and_save(f"\n{self._game.printtime()} [TWITTER] Now cleaning up the tweets and parsing for room codes...\n")
+            self._game.print_and_save(f"\n[TWITTER] Now cleaning up the tweets and parsing for room codes...\n")
             room_codes = []
             for tweet in tweets:
                 if len(self._already_visited) > 50:
@@ -231,15 +231,14 @@ class TwitterRoomFinder:
                     if (":Battle" in identifier) or (":参戦ID" in identifier):
                         parsed_code = split_text[i - 1]
                         if parsed_code not in self._already_visited:
-                            self._game.print_and_save(f"{self._game.printtime()} [TWITTER] Found {parsed_code} created at {tweet.created_at}")
+                            self._game.print_and_save(f"[TWITTER] Found {parsed_code} created at {tweet.created_at}")
                             room_codes.append(parsed_code)
                             self._already_visited.append(parsed_code)
                             break
                         else:
-                            self._game.print_and_save(
-                                f"{self._game.printtime()} [TWITTER] Already visited {parsed_code} before in this session. Skipping this code...")
+                            self._game.print_and_save(f"[TWITTER] Already visited {parsed_code} before in this session. Skipping this code...")
 
             return room_codes
         except Exception:
-            self._game.print_and_save(f"{self._game.printtime()} [ERROR] Bot cannot parse given tweets. Exact error is: \n{traceback.format_exc()} \nTweets given to it was: \n{tweets}")
+            self._game.print_and_save(f"[ERROR] Bot cannot parse given tweets. Exact error is: \n{traceback.format_exc()} \nTweets given to it was: \n{tweets}")
             self._game.isBotRunning.value = 1

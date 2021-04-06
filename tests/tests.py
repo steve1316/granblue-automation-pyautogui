@@ -29,18 +29,18 @@ class Debug:
             None
         """
         self._game.print_and_save("\n################################################################################")
-        self._game.print_and_save(f"{self._game.printtime()} [TEST] Testing Finding 10 Most Recent Grimnir Room Codes...")
+        self._game.print_and_save(f"[TEST] Testing Finding 10 Most Recent Grimnir Room Codes...")
         self._game.print_and_save("################################################################################")
 
         tweets = self._game.room_finder.find_most_recent("Lvl 120 Grimnir")
         room_codes = self._game.room_finder.clean_tweets(tweets)
-        self._game.print_and_save(f"\n{self._game.printtime()} [TEST_INFO] # of Tweets found: {len(tweets)}")
-        self._game.print_and_save(f"{self._game.printtime()} [TEST_INFO] # of Room Codes detected: {len(room_codes)}")
+        self._game.print_and_save(f"\n[TEST_INFO] # of Tweets found: {len(tweets)}")
+        self._game.print_and_save(f"[TEST_INFO] # of Room Codes detected: {len(room_codes)}")
         for i, room_code in enumerate(room_codes):
-            self._game.print_and_save(f"\n{self._game.printtime()} [TEST] {tweets[i].lang.upper()} Tweet created at {tweets[i].created_at}: \n" + tweets[i].text)
-            self._game.print_and_save(f"{self._game.printtime()} [TEST] Detected Room Code is: {room_codes[i]}")
+            self._game.print_and_save(f"\n[TEST] {tweets[i].lang.upper()} Tweet created at {tweets[i].created_at}: \n" + tweets[i].text)
+            self._game.print_and_save(f"[TEST] Detected Room Code is: {room_codes[i]}")
 
-        self._game.print_and_save(f"\n{self._game.printtime()} [TEST_SUCCESS] Testing Finding 10 Most Recent Grimnir Room Codes was successful.")
+        self._game.print_and_save(f"\n[TEST_SUCCESS] Testing Finding 10 Most Recent Grimnir Room Codes was successful.")
         self._is_bot_running.value = 1
         return None
 
@@ -51,13 +51,13 @@ class Debug:
             None
         """
         self._game.print_and_save("\n################################################################################")
-        self._game.print_and_save(f"{self._game.printtime()} [TEST] Testing Farming Mode for 10x Fine Sand Bottles from Special Op's Request on Valtz Duchy...")
+        self._game.print_and_save(f"[TEST] Testing Farming Mode for 10x Fine Sand Bottles from Special Op's Request on Valtz Duchy...")
         self._game.print_and_save("################################################################################")
 
         self._game.start_farming_mode(summon_element_name = "water", summon_name = "leviathan_omega", group_number = 1, party_number = 3, map_mode = "quest", map_name = "Valtz Duchy",
                                       item_name = "Fine Sand Bottle", item_amount_to_farm = 10, mission_name = "Special Op's Request")
 
-        self._game.print_and_save(f"\n{self._game.printtime()} [TEST_SUCCESS] Testing Farming Mode was successful.")
+        self._game.print_and_save(f"\n[TEST_SUCCESS] Testing Farming Mode was successful.")
         self._is_bot_running.value = 1
         return None
 
@@ -71,7 +71,7 @@ class Debug:
             None
         """
         self._game.print_and_save("\n################################################################################")
-        self._game.print_and_save(f"{self._game.printtime()} [TEST] Testing finding amounts of all items on screen...")
+        self._game.print_and_save(f"[TEST] Testing finding amounts of all items on screen...")
         self._game.print_and_save("################################################################################")
 
         item_list = {
@@ -114,9 +114,9 @@ class Debug:
 
         for item in item_list[items_to_test]:
             result = self._game.image_tools.find_farmed_items([item])
-            self._game.print_and_save(f"\n{self._game.printtime()} [TEST] {item} farmed: {result}")
+            self._game.print_and_save(f"\n[TEST] {item} farmed: {result}")
 
-        self._game.print_and_save(f"\n{self._game.printtime()} [TEST_SUCCESS] Testing Item Detection was successful.")
+        self._game.print_and_save(f"\n[TEST_SUCCESS] Testing Item Detection was successful.")
         self._is_bot_running.value = 1
         return None
 
@@ -127,7 +127,7 @@ class Debug:
             None
         """
         self._game.print_and_save("\n################################################################################")
-        self._game.print_and_save(f"{self._game.printtime()} [TEST] Testing Combat Mode on the Old Lignoid trial battle mission now...")
+        self._game.print_and_save(f"[TEST] Testing Combat Mode on the Old Lignoid trial battle mission now...")
         self._game.print_and_save("################################################################################")
 
         self._game.go_back_home(confirm_location_check = True, display_info_check = True)
@@ -162,12 +162,12 @@ class Debug:
             None
         """
         self._game.print_and_save("\n################################################################################")
-        self._game.print_and_save(f"{self._game.printtime()} [TEST] Testing Combat Mode on Very Hard Difficulty Angel Halo mission now...")
+        self._game.print_and_save(f"[TEST] Testing Combat Mode on Very Hard Difficulty Angel Halo mission now...")
         self._game.print_and_save("################################################################################")
 
         self._game.start_farming_mode("dark", "Celeste Omega", 6, 1, "special", "Angel Halo", "EXP", 1, "VH Angel Halo")
 
-        self._game.print_and_save(f"\n{self._game.printtime()} [TEST_SUCCESS] Testing Combat Mode was successful.")
+        self._game.print_and_save(f"\n[TEST_SUCCESS] Testing Combat Mode was successful.")
 
         self._is_bot_running.value = 1
         return None

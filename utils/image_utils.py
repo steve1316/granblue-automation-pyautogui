@@ -44,9 +44,9 @@ class ImageUtils:
         self._file_resolver = FileResolver()
 
         # Initialize EasyOCR for text detection.
-        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Initializing EasyOCR reader...")
+        self._game.print_and_save(f"\n[INFO] Initializing EasyOCR reader...")
         self._reader = easyocr.Reader(["en"], gpu = True)
-        self._game.print_and_save(f"{self._game.printtime()} [INFO] EasyOCR reader initialized.")
+        self._game.print_and_save(f"[INFO] EasyOCR reader initialized.")
 
     def update_window_dimensions(self, window_left: int, window_top: int, window_width: int, window_height: int):
         """Updates the window dimensions for PyAutoGUI to perform faster operations in.
@@ -120,11 +120,11 @@ class ImageUtils:
                     tries -= 1
                     if tries <= 0:
                         if not suppress_error:
-                            self._game.print_and_save(f"{self._game.printtime()} [WARNING] Failed to find the {button_name.upper()} button.")
+                            self._game.print_and_save(f"[WARNING] Failed to find the {button_name.upper()} button.")
                         return None
 
                     if self._debug_mode:
-                        self._game.print_and_save(f"{self._game.printtime()} [WARNING] Could not locate the {button_name.upper()} button. Trying again in {sleep_time} seconds...")
+                        self._game.print_and_save(f"[WARNING] Could not locate the {button_name.upper()} button. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
                 else:
@@ -135,7 +135,7 @@ class ImageUtils:
             button_location = (button_location.target.x, button_location.target.y)
 
         if self._debug_mode:
-            self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] Found the {button_name.upper()} button at {button_location}.")
+            self._game.print_and_save(f"[SUCCESS] Found the {button_name.upper()} button at {button_location}.")
 
         if confirm_location_check:
             self.confirm_location(button_name)
@@ -173,16 +173,16 @@ class ImageUtils:
                     if tries <= 0:
                         # If tries ran out, return False.
                         if self._debug_mode:
-                            self._game.print_and_save(f"{self._game.printtime()} [WARNING] Failed to confirm the bot's location at {location_name.upper()}.")
+                            self._game.print_and_save(f"[WARNING] Failed to confirm the bot's location at {location_name.upper()}.")
                         return False
 
                     if self._debug_mode:
-                        self._game.print_and_save(f"{self._game.printtime()} [WARNING] Could not confirm the bot's location at {location_name.upper()}. Trying again in {sleep_time} seconds...")
+                        self._game.print_and_save(f"[WARNING] Could not confirm the bot's location at {location_name.upper()}. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
 
         if self._debug_mode:
-            self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] Bot's current location is at {location_name.upper()}.")
+            self._game.print_and_save(f"[SUCCESS] Bot's current location is at {location_name.upper()}.")
 
         return True
 
@@ -203,8 +203,8 @@ class ImageUtils:
             summon_location (int, int): Tuple of coordinates of where the center of the Summon is located if image matching was successful. Otherwise, return None.
         """
         if self._debug_mode:
-            self._game.print_and_save(f"{self._game.printtime()} [DEBUG] Received the following list of Summons to search for: {str(summon_list)}")
-            self._game.print_and_save(f"{self._game.printtime()} [DEBUG] Received the following list of Elements: {str(summon_element_list)}")
+            self._game.print_and_save(f"[DEBUG] Received the following list of Summons to search for: {str(summon_list)}")
+            self._game.print_and_save(f"[DEBUG] Received the following list of Elements: {str(summon_element_list)}")
 
         summon_location = None
         guibot_check = False
@@ -212,7 +212,7 @@ class ImageUtils:
 
         while summon_location is None and summon_index <= len(summon_list):
             # First select the Summon Element tab at the current index.
-            self._game.print_and_save(f"{self._game.printtime()} [INFO] Now attempting to find: {summon_list[summon_index].upper()}")
+            self._game.print_and_save(f"[INFO] Now attempting to find: {summon_list[summon_index].upper()}")
             current_summon_element = summon_element_list[summon_index]
             self._game.find_and_click_button(f"summon_{current_summon_element}")
 
@@ -231,7 +231,7 @@ class ImageUtils:
                     summon_location = self._guibot.exists(f"{summon_list[summon_index]}")
                     if summon_location is None:
                         if self._debug_mode:
-                            self._game.print_and_save(f"{self._game.printtime()} [WARNING] Could not locate {summon_list[summon_index].upper()} Summon. Trying again...")
+                            self._game.print_and_save(f"[WARNING] Could not locate {summon_list[summon_index].upper()} Summon. Trying again...")
 
                         # If the bot reached the bottom of the page, scroll back up to the top and start searching for the next Summon.
                         if ((self._game.farming_mode.lower() != "event" or self._game.farming_mode.lower() != "event (token drawboxes)") and self.find_button("bottom_of_summon_selection", tries = 1,
@@ -250,14 +250,14 @@ class ImageUtils:
 
             if summon_location is None and (summon_index + 1) > len(summon_list):
                 if not suppress_error:
-                    self._game.print_and_save(f"{self._game.printtime()} [WARNING] Could not find any of the specified Summons.")
+                    self._game.print_and_save(f"[WARNING] Could not find any of the specified Summons.")
                 return None
 
         # If the location was successfully found using GuiBot, convert the Match object to a Location object.
         if guibot_check:
             summon_location = (summon_location.target.x, summon_location.target.y)
 
-        self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] Found {summon_list[summon_index].upper()} Summon at {summon_location}.")
+        self._game.print_and_save(f"[SUCCESS] Found {summon_list[summon_index].upper()} Summon at {summon_location}.")
 
         return summon_location
 
@@ -299,11 +299,11 @@ class ImageUtils:
                     tries -= 1
                     if tries <= 0:
                         if self._debug_mode:
-                            self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] There are no Lyria/Vyrn dialog popups detected.")
+                            self._game.print_and_save(f"[SUCCESS] There are no Lyria/Vyrn dialog popups detected.")
                         return None
 
                     if self._debug_mode:
-                        self._game.print_and_save(f"{self._game.printtime()} [WARNING] Could not locate any Lyria/Vyrn dialog popups failed. Trying again in {sleep_time} seconds...")
+                        self._game.print_and_save(f"[WARNING] Could not locate any Lyria/Vyrn dialog popups failed. Trying again in {sleep_time} seconds...")
 
                     time.sleep(sleep_time)
                 else:
@@ -318,9 +318,9 @@ class ImageUtils:
 
         if self._debug_mode:
             if lyria_dialog_location is not None:
-                self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] Found a Lyria dialog popup at {lyria_dialog_location}.")
+                self._game.print_and_save(f"[SUCCESS] Found a Lyria dialog popup at {lyria_dialog_location}.")
             else:
-                self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] Found a Vyrn dialog popup at {vyrn_dialog_location}.")
+                self._game.print_and_save(f"[SUCCESS] Found a Vyrn dialog popup at {vyrn_dialog_location}.")
 
         if lyria_dialog_location is not None:
             return lyria_dialog_location
@@ -370,14 +370,14 @@ class ImageUtils:
 
                         if not hide_info:
                             for location in centered_locations:
-                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Occurrence for {image_name.upper()} found at: " + str(location))
+                                self._game.print_and_save(f"[INFO] Occurrence for {image_name.upper()} found at: " + str(location))
                     else:
                         if self._debug_mode:
-                            self._game.print_and_save(f"{self._game.printtime()} [DEBUG] Failed to detect any occurrences of {image_name.upper()} images.")
+                            self._game.print_and_save(f"[DEBUG] Failed to detect any occurrences of {image_name.upper()} images.")
 
                     return centered_locations
 
-        self._game.print_and_save(f"{self._game.printtime()} [ERROR] Specified file does not exist inside the /images/ folder or its subfolders.")
+        self._game.print_and_save(f"[ERROR] Specified file does not exist inside the /images/ folder or its subfolders.")
         return None
 
     def find_farmed_items(self, item_list: Iterable[str]):
@@ -426,7 +426,7 @@ class ImageUtils:
                                   "Huanglong Anima", "Huanglong Omega Anima", "Qilin Anima", "Qilin Omega Anima", "Tiamat Malice Anima",
                                   "Leviathan Malice Anima", "Phronesis Anima"]
 
-        self._game.print_and_save(f"{self._game.printtime()} [INFO] Now detecting item rewards...")
+        self._game.print_and_save(f"[INFO] Now detecting item rewards...")
         amounts_farmed = []
         guibot_check = False
         for item in item_list:
@@ -458,7 +458,7 @@ class ImageUtils:
                         location = (location.target.x, location.target.y)
 
                     if guibot_check:
-                        self._game.print_and_save(f"{self._game.printtime()} [INFO] Occurrence for {item.upper()} found at: {location} using GuiBot.")
+                        self._game.print_and_save(f"[INFO] Occurrence for {item.upper()} found at: {location} using GuiBot.")
 
                     # Adjust the width and height variables if EasyOCR cannot detect the numbers correctly.
                     left = location[0] + 10
@@ -492,7 +492,7 @@ class ImageUtils:
 
                     total_amount_farmed += result_cleaned
                 else:
-                    self._game.print_and_save(f"{self._game.printtime()} [INFO] Duplicate location detected. Removing it...")
+                    self._game.print_and_save(f"[INFO] Duplicate location detected. Removing it...")
 
             amounts_farmed.append(total_amount_farmed)
 
@@ -500,7 +500,7 @@ class ImageUtils:
         if len(amounts_farmed) > 0 and amounts_farmed[0] != 0:
             self._take_screenshot()
 
-        self._game.print_and_save(f"{self._game.printtime()} [INFO] Detection of item rewards finished.")
+        self._game.print_and_save(f"[INFO] Detection of item rewards finished.")
         return amounts_farmed
 
     def wait_vanish(self, image_name: str, timeout: int = 30):
@@ -513,18 +513,18 @@ class ImageUtils:
         Returns:
             (bool): True if the image vanishes from the screen within the allotted time or False if timeout was reached.
         """
-        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now waiting for {image_name} to vanish from screen...")
+        self._game.print_and_save(f"\n[INFO] Now waiting for {image_name} to vanish from screen...")
         self._file_resolver.add_path("images/buttons/")
         try:
             self._clear_memory_guibot()
             if self._guibot.wait_vanish(image_name, timeout = timeout):
-                self._game.print_and_save(f"{self._game.printtime()} [SUCCESS] Image successfully vanished from screen...")
+                self._game.print_and_save(f"[SUCCESS] Image successfully vanished from screen...")
                 return True
             else:
-                self._game.print_and_save(f"{self._game.printtime()} [WARNING] Image did not vanish from screen...")
+                self._game.print_and_save(f"[WARNING] Image did not vanish from screen...")
                 return False
         except Exception as e:
-            self._game.print_and_save(f"{self._game.printtime()} [ERROR] {image_name} should have vanished from the screen after {timeout} seconds but did not. Exact error is: \n{e}")
+            self._game.print_and_save(f"[ERROR] {image_name} should have vanished from the screen after {timeout} seconds but did not. Exact error is: \n{e}")
 
     def get_button_dimensions(self, image_name: str):
         """Get the dimensions of a image in images/buttons/ folder.
@@ -545,7 +545,7 @@ class ImageUtils:
         Returns:
             None
         """
-        self._game.print_and_save(f"{self._game.printtime()} [INFO] Taking a screenshot of the Quest Results screen...")
+        self._game.print_and_save(f"[INFO] Taking a screenshot of the Quest Results screen...")
 
         # Construct the image file and folder name from the current date, time, and image number.
         current_time = datetime.datetime.now().strftime("%H-%M-%S")
@@ -571,7 +571,7 @@ class ImageUtils:
 
         # Finally, save the new image into the results directory with its new file name.
         new_image.save(f"./results/{self._new_folder_name}/{new_file_name}.jpg")
-        self._game.print_and_save(f"{self._game.printtime()} [INFO] Results image saved as \"{new_file_name}.jpg\" in \"{self._new_folder_name}\" folder...")
+        self._game.print_and_save(f"[INFO] Results image saved as \"{new_file_name}.jpg\" in \"{self._new_folder_name}\" folder...")
         return None
 
     def generate_alert_for_captcha(self):

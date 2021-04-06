@@ -57,7 +57,7 @@ class MouseUtils:
                 pyautogui.moveTo(x, y, duration=custom_mouse_speed, tween=pyautogui.easeInOutQuad)
             return None
         except Exception:
-            self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to move the mouse cursor to Point({x}, {y}): \n{traceback.format_exc()}")
+            self._game.print_and_save(f"\n[ERROR] Bot encountered exception attempting to move the mouse cursor to Point({x}, {y}): \n{traceback.format_exc()}")
 
     def move_and_click_point(self, x: int, y: int, image_name: str, custom_mouse_speed: float = 0.0, mouse_clicks: int = 1):
         """Move the cursor to the specified point on the screen and clicks it.
@@ -90,7 +90,7 @@ class MouseUtils:
             
             return None
         except Exception:
-            self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to move the mouse cursor to Point({x}, {y}) and clicking it: \n{traceback.format_exc()}")
+            self._game.print_and_save(f"\n[ERROR] Bot encountered exception attempting to move the mouse cursor to Point({x}, {y}) and clicking it: \n{traceback.format_exc()}")
 
     def _randomize_point(self, x: int, y: int, image_name: str):
         """Randomize the clicking location in an attempt to avoid clicking the same location that may make the bot look suspicious.
@@ -125,7 +125,7 @@ class MouseUtils:
             
             return new_x, new_y
         except Exception:
-            self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to randomize point: \n{traceback.format_exc()}")
+            self._game.print_and_save(f"\n[ERROR] Bot encountered exception attempting to randomize point: \n{traceback.format_exc()}")
     
     def scroll_screen(self, x: int, y: int, scroll_clicks: int):
         """Attempt to scroll the screen to reveal more UI elements from the provided x and y coordinates.
@@ -139,7 +139,7 @@ class MouseUtils:
             None
         """
         if self._debug_mode:
-            self._game.print_and_save(f"{self._game.printtime()} [DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
+            self._game.print_and_save(f"[DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
             
         try:
             self.move_to(x, y)
@@ -151,7 +151,7 @@ class MouseUtils:
             pyautogui.scroll(scroll_clicks, x=x, y=y)
             return None
         except Exception:
-            self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to scroll the screen at Point({x}, {y}) by {scroll_clicks} clicks: \n{traceback.format_exc()}")
+            self._game.print_and_save(f"\n[ERROR] Bot encountered exception attempting to scroll the screen at Point({x}, {y}) by {scroll_clicks} clicks: \n{traceback.format_exc()}")
     
     def scroll_screen_from_home_button(self, scroll_clicks: int):
         """Attempt to scroll the screen using the "Home" button coordinates to reveal more UI elements.
@@ -167,7 +167,7 @@ class MouseUtils:
             y = self._game.home_button_location[1] - 50
             
             if self._debug_mode:
-                self._game.print_and_save(f"{self._game.printtime()} [DEBUG] Now scrolling the screen from the \"Home\" button's coordinates at ({x}, {y}) by {scroll_clicks} clicks...")
+                self._game.print_and_save(f"[DEBUG] Now scrolling the screen from the \"Home\" button's coordinates at ({x}, {y}) by {scroll_clicks} clicks...")
                 
             self.move_to(x, y)
             
@@ -178,7 +178,7 @@ class MouseUtils:
             pyautogui.scroll(scroll_clicks, x=x, y=y)
             return None
         except Exception:
-            self._game.print_and_save(f"\n{self._game.printtime()} [ERROR] Bot encountered exception attempting to scroll the screen from the \"Home\" button: \n{traceback.format_exc()}")
+            self._game.print_and_save(f"\n[ERROR] Bot encountered exception attempting to scroll the screen from the \"Home\" button: \n{traceback.format_exc()}")
     
     def clear_textbox(self):
         """Clear the selected textbox of all text by selecting all text by CTRL + A and then pressing DEL.
