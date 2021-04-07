@@ -10,7 +10,7 @@ from typing import Iterable
 import pyautogui
 
 from bot.combat_mode import CombatMode
-from bot.map_selection.map_selection import MapSelection
+from bot.map_selection import MapSelection
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
 from utils.twitter_room_finder import TwitterRoomFinder
