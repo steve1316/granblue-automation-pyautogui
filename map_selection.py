@@ -781,6 +781,93 @@ class MapSelection:
                                 self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1], "play_round_button")
                             elif(difficulty == "Very Hard"):
                                 self._game.mouse_tools.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1], "play_round_button")
+                
+            elif map_mode.lower() == "guild wars":
+                # Go to the Home screen.
+                self._game.go_back_home(confirm_location_check=True)
+                
+                self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now navigating to Guild Wars...")
+                
+                # Go to the Event by clicking on the "Menu" button and then click the very first banner.
+                self._game.find_and_click_button("home_menu")
+                banner_locations = self._game.image_tools.find_all("event_banner")
+                if len(banner_locations) == 0:
+                    banner_locations = self._game.image_tools.find_all("event_banner_blue")
+                self._game.mouse_tools.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
+                
+                self._game.wait(1)
+                
+                if self._game.image_tools.confirm_location("guild_wars"):
+                    # Scroll the screen down a tiny bit.
+                    self._game.mouse_tools.scroll_screen_from_home_button(-200)
+                    
+                    if difficulty == "Very Hard" or difficulty == "Extreme" or difficulty == "Extreme+":
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now proceeding to farm meat.")
+                        
+                        # Click on the banner to farm meat.
+                        self._game.find_and_click_button("guild_wars_meat")
+                        
+                        if self._game.image_tools.confirm_location("guild_wars_meat"):
+                            # Now click on the specified Mission to start.
+                            if difficulty == "Very Hard":
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting Very Hard now.")
+                                self._game.find_and_click_button("guild_wars_meat_very_hard")
+                            elif difficulty == "Extreme":
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting Extreme now.")
+                                self._game.find_and_click_button("guild_wars_meat_extreme")
+                            elif difficulty == "Extreme+":
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting Extreme+ now.")
+                                self._game.find_and_click_button("guild_wars_meat_extreme+")
+                                
+                                # Alert the user if they lack the meat to host this and stop the bot.
+                                if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 5):
+                                    self._game.image_tools.generate_alert("You did not unlock Extreme+ yet!")
+                                    self._isBotRunning.value = 1
+                                    raise("You did not unlock Extreme+ yet!")
+                    else:
+                        self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now proceeding to farm Nightmares.")
+                        
+                        # Click on the banner to farm Nightmares.
+                        self._game.find_and_click_button("guild_wars_nightmare")
+                        
+                        if self._game.image_tools.confirm_location("guild_wars_nightmare"):
+                            # If today is the first day of Guild Wars, only NM90 will be available.
+                            if self._game.image_tools.confirm_location("guild_wars_nightmare_first_day", tries = 1):
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Today is the first day so hosting NM90.")
+                                self._game.find_and_click_button("ok")
+                                
+                                # Alert the user if they lack the meat to host this and stop the bot.
+                                if not self._game.image_tools.wait_vanish("ok", 5):
+                                    self._game.image_tools.generate_alert("You do not have enough meat to host this NM90!")
+                                    self._isBotRunning.value = 1
+                                    raise("You do not have enough meat to host this NM90!")
+                            
+                            # Now click on the specified Mission to start.
+                            elif difficulty == "NM90":
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting NM90 now.")
+                                self._game.find_and_click_button("guild_wars_nightmare_90")
+                            elif difficulty == "NM95":
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting NM95 now.")
+                                self._game.find_and_click_button("guild_wars_nightmare_95")
+                            elif difficulty == "NM100":
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting NM100 now.")
+                                self._game.find_and_click_button("guild_wars_nightmare_100")
+                            elif difficulty == "NM150":
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting NM150 now.")
+                                self._game.find_and_click_button("guild_wars_nightmare_150")
+                        else:
+                            # If there is not enough meat to host, host Extreme+ instead.
+                            self._game.print_and_save(f"\n{self._game.printtime()} [WARNING] User lacks the meat to host any Nightmares. Farming Extreme+ instead.")
+                            
+                            self._game.find_and_click_button("close")
+                            
+                            self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting Extreme+ now.")
+                            self._game.find_and_click_button("guild_wars_meat_extreme+")
+                            
+                            if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 5):
+                                self._game.image_tools.generate_alert("You did not unlock Extreme+ yet!")
+                                self._isBotRunning.value = 1
+                                raise("You did not unlock Extreme+ yet!")
                     
             # Check for available AP.
             self._game.check_for_ap(use_full_elixir=self._game.use_full_elixir)

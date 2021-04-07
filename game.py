@@ -1685,6 +1685,21 @@ class Game:
                     difficulty = "4 Star"
                 elif(mission_name.find("5 Star") == 0):
                     difficulty = "5 Star"
+            elif farming_mode.lower() == "guild wars":
+                if mission_name == "Very Hard":
+                    difficulty = "Very Hard"
+                elif mission_name == "Extreme":
+                    difficulty = "Extreme"
+                elif mission_name == "Extreme+":
+                    difficulty = "Extreme+"
+                elif mission_name == "NM90":
+                    difficulty = "NM90"
+                elif mission_name == "NM95":
+                    difficulty = "NM95"
+                elif mission_name == "NM100":
+                    difficulty = "NM100"
+                elif mission_name == "NM150":
+                    difficulty = "NM150"
             
             self._item_amount_farmed = 0
             self._amount_of_runs_finished = 0
@@ -1964,18 +1979,21 @@ class Game:
                                 if(self.enable_skyscope and self.image_tools.confirm_location("skyscope", tries=1)):
                                     self.find_and_click_button("close")
                                 
-                                # Check for available AP and then reset the Summon check flag.
-                                self.check_for_ap(use_full_elixir=self.use_full_elixir)
-                                summon_check = False
+                                if(self.image_tools.confirm_location("guild_wars_missions", tries = 1)):
+                                    self.find_and_click_button("close")
                                 
-                                # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select_map().
-                                if(self.farming_mode.lower() == "event (token drawboxes)" and self.image_tools.confirm_location("not_enough_treasure")):
+                                # If the bot tried to repeat a Extreme/Impossible/Nightmare difficulty Event Raid and it lacked the treasures to host it, go back to select_map().
+                                if((self.farming_mode.lower() == "event (token drawboxes)" or self.farming_mode.lower() == "guild wars") and self.image_tools.confirm_location("not_enough_treasure")):
                                     self.find_and_click_button("ok")
                                     
                                     # Generate a resting period if the user enabled it.
                                     self._delay_between_runs()
                                     
                                     self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                
+                                # Check for available AP and then reset the Summon check flag.
+                                self.check_for_ap(use_full_elixir=self.use_full_elixir)
+                                summon_check = False
                         else:
                             # Start the mission again if the Party wiped or exited prematurely during Combat Mode.
                             self.print_and_save(f"\n{self.printtime()} [INFO] Selecting mission again due to retreating...")
