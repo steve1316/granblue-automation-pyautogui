@@ -651,6 +651,8 @@ class Game:
         Returns:
             None
         """
+        tries = 3
+        
         # Loop until the user gets to the Summon Selection screen.
         while((self.farming_mode.lower() != "coop" and not self.image_tools.confirm_location("select_summon", tries=2)) or 
               (self.farming_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries=2))):
@@ -673,6 +675,10 @@ class Game:
                 break
             else:
                 self.wait(1)
+                
+                tries -= 1
+                if tries <= 0:
+                    break
             
         self.print_and_save(f"{self.printtime()} [INFO] AP is available. Continuing...")
         return None
