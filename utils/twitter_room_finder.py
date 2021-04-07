@@ -4,6 +4,8 @@ from typing import Iterable
 
 import tweepy
 
+from bot.game import Game
+
 
 class TwitterRoomFinder:
     """
@@ -11,21 +13,21 @@ class TwitterRoomFinder:
 
     Attributes
     ----------
-    game (game.Game): The Game object.
-    
-    consumer_key (str): Consumer API key from the user's personal Twitter Developer app.
-    
-    consumer_secret (str): Consumer Secret API key from the user's personal Twitter Developer app.
-    
-    access_token (str): Access token from the user's personal Twitter Developer app.
-    
-    access_token_secret (str): Secret Access token from the user's personal Twitter Developer app.
-    
-    debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
+        bot (bot.Game): The Game object.
+
+        consumer_key (str): Consumer API key from the user's personal Twitter Developer app.
+
+        consumer_secret (str): Consumer Secret API key from the user's personal Twitter Developer app.
+
+        access_token (str): Access token from the user's personal Twitter Developer app.
+
+        access_token_secret (str): Secret Access token from the user's personal Twitter Developer app.
+
+        debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
 
     """
 
-    def __init__(self, game, consumer_key: str, consumer_secret: str, access_token: str, access_token_secret: str, debug_mode: bool = False):
+    def __init__(self, game: Game, consumer_key: str, consumer_secret: str, access_token: str, access_token_secret: str, debug_mode: bool = False):
         super().__init__()
 
         self._game = game

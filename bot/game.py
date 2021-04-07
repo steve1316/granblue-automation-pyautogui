@@ -1,6 +1,5 @@
 import datetime
 import multiprocessing
-import os
 import random
 import time
 import traceback
@@ -10,8 +9,8 @@ from typing import Iterable
 
 import pyautogui
 
-from game.combat_mode import CombatMode
-from game.map_selection.map_selection import MapSelection
+from bot.combat_mode import CombatMode
+from bot.map_selection.map_selection import MapSelection
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
 from utils.twitter_room_finder import TwitterRoomFinder
@@ -19,7 +18,7 @@ from utils.twitter_room_finder import TwitterRoomFinder
 
 class Game:
     """
-    Main driver for bot activity and navigation for the web browser game, Granblue Fantasy.
+    Main driver for bot activity and navigation for the web browser bot, Granblue Fantasy.
 
     Attributes
     ----------
@@ -36,114 +35,120 @@ class Game:
     def __init__(self, queue: multiprocessing.Queue, is_bot_running: int, combat_script: str = "", debug_mode: bool = False):
         super().__init__()
 
-        # ######### config.ini ##########
+        # ################## config.ini ###################
         # Grab the Twitter API keys and tokens from config.ini. The list order is: [consumer key, consumer secret key, access token, access secret token].
         config = ConfigParser()
         config.read("config.ini")
 
+        # #### twitter ####
         keys_tokens = [config.get("twitter", "api_key"), config.get("twitter", "api_key_secret"), config.get("twitter", "access_token"), config.get("twitter", "access_token_secret")]
+        # #### end of twitter ####
 
+        # #### refill ####
+        self.use_full_elixir = config.getboolean("refill", "refill_using_full_elixir")
+        self.use_soul_balm = config.getboolean("refill", "refill_using_soul_balms")
+        # #### end of refill ####
+
+        # #### configuration ####
         custom_mouse_speed = float(config.get("configuration", "mouse_speed"))
 
         enable_bezier_curve_mouse_movement = config.getboolean("configuration", "enable_bezier_curve_mouse_movement")
 
-        # Grab the delays between runs from config.ini if the user enabled them.
         self._enable_delay_between_runs = config.getboolean("configuration", "enable_delay_between_runs")
-        self._delay_in_seconds = config.get("configuration", "delay_in_seconds")
+        self._delay_in_seconds = config.getint("configuration", "delay_in_seconds")
         self._enable_randomized_delay_between_runs = config.getboolean("configuration", "enable_randomized_delay_between_runs")
-        self._delay_in_seconds_lower_bound = config.get("configuration", "delay_in_seconds_lower_bound")
-        self._delay_in_seconds_upper_bound = config.get("configuration", "delay_in_seconds_upper_bound")
+        self._delay_in_seconds_lower_bound = config.getint("configuration", "delay_in_seconds_lower_bound")
+        self._delay_in_seconds_upper_bound = config.getint("configuration", "delay_in_seconds_upper_bound")
 
-        # Grab the timings between various actions during Combat Mode from config.ini as well.
-        self._idle_seconds_after_skill = float(config.get("configuration", "idle_seconds_after_skill"))
-        self._idle_seconds_after_summon = float(config.get("configuration", "idle_seconds_after_summon"))
+        self._idle_seconds_after_skill = config.getint("configuration", "idle_seconds_after_skill")
+        self._idle_seconds_after_summon = config.getint("configuration", "idle_seconds_after_summon")
+        # #### end of configuration ####
 
-        # Determine whether or not the user wants to refill using Full Elixir/Soul Balm.
-        self.use_full_elixir = config.getboolean("refill", "refill_using_full_elixir")
-        self.use_soul_balm = config.getboolean("refill", "refill_using_soul_balms")
-
-        # Keep track of the following for Events.
-        self._enable_event_nightmare = config.getboolean("event", "enable_event_nightmare")
-        self._event_nightmare_combat_script = config.get("event", "event_nightmare_combat_script")
-
-        self._event_nightmare_summon_list = config.get("event", "event_nightmare_summon_list")
-        self._event_nightmare_summon_list = self._event_nightmare_summon_list.replace(" ", "_").split(",")
-        if len(self._event_nightmare_summon_list) == 1 and self._event_nightmare_summon_list[0] == "":
-            self._event_nightmare_summon_list.clear()
-
-        self._event_nightmare_summon_element_list = config.get("event", "event_nightmare_summon_element_list")
-        self._event_nightmare_summon_element_list = self._event_nightmare_summon_element_list.replace(" ", "_").split(",")
-        if len(self._event_nightmare_summon_element_list) == 1 and self._event_nightmare_summon_element_list[0] == "":
-            self._event_nightmare_summon_element_list.clear()
-
-        self._event_nightmare_group_number = config.get("event", "event_nightmare_group_number")
-        self._event_nightmare_party_number = config.get("event", "event_nightmare_party_number")
-
-        # Keep track of the following for Dimensional Halo.
+        # #### dimensional_halo ####
         self._enable_dimensional_halo = config.getboolean("dimensional_halo", "enable_dimensional_halo")
         self._dimensional_halo_combat_script = config.get("dimensional_halo", "dimensional_halo_combat_script")
 
-        self._dimensional_halo_summon_list = config.get("dimensional_halo", "dimensional_halo_summon_list")
-        self._dimensional_halo_summon_list = self._dimensional_halo_summon_list.replace(" ", "_").split(",")
+        self._dimensional_halo_summon_list = config.get("dimensional_halo", "dimensional_halo_summon_list").replace(" ", "_").split(",")
         if len(self._dimensional_halo_summon_list) == 1 and self._dimensional_halo_summon_list[0] == "":
             self._dimensional_halo_summon_list.clear()
 
-        self._dimensional_halo_summon_element_list = config.get("dimensional_halo", "dimensional_halo_summon_element_list")
-        self._dimensional_halo_summon_element_list = self._dimensional_halo_summon_element_list.replace(" ", "_").split(",")
+        self._dimensional_halo_summon_element_list = config.get("dimensional_halo", "dimensional_halo_summon_element_list").replace(" ", "_").split(",")
         if len(self._dimensional_halo_summon_element_list) == 1 and self._dimensional_halo_summon_element_list[0] == "":
             self._dimensional_halo_summon_element_list.clear()
 
-        self._dimensional_halo_group_number = config.get("dimensional_halo", "dimensional_halo_group_number")
-        self._dimensional_halo_party_number = config.get("dimensional_halo", "dimensional_halo_party_number")
+        self._dimensional_halo_group_number = config.getint("dimensional_halo", "dimensional_halo_group_number")
+        self._dimensional_halo_party_number = config.getint("dimensional_halo", "dimensional_halo_party_number")
         self._dimensional_halo_amount = 0
+        # #### end of dimensional_halo ####
 
-        # Keep track of the following for Rise of the Beasts.
+        # #### event ####
+        self._enable_event_nightmare = config.getboolean("event", "enable_event_nightmare")
+        self._event_nightmare_combat_script = config.get("event", "event_nightmare_combat_script")
+
+        self._event_nightmare_summon_list = config.get("event", "event_nightmare_summon_list").replace(" ", "_").split(",")
+        if len(self._event_nightmare_summon_list) == 1 and self._event_nightmare_summon_list[0] == "":
+            self._event_nightmare_summon_list.clear()
+
+        self._event_nightmare_summon_element_list = config.get("event", "event_nightmare_summon_element_list").replace(" ", "_").split(",")
+        if len(self._event_nightmare_summon_element_list) == 1 and self._event_nightmare_summon_element_list[0] == "":
+            self._event_nightmare_summon_element_list.clear()
+
+        self._event_nightmare_group_number = config.getint("event", "event_nightmare_group_number")
+        self._event_nightmare_party_number = config.getint("event", "event_nightmare_party_number")
+        # #### end of event ####
+
+        # #### rise_of_the_beasts ####
         self._enable_rotb_extreme_plus = config.getboolean("rise_of_the_beasts", "enable_rotb_extreme_plus")
         self._rotb_extreme_plus_combat_script = config.get("rise_of_the_beasts", "rotb_extreme_plus_combat_script")
-        self._rotb_extreme_plus_summon_list = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_list")
-        self._rotb_extreme_plus_summon_element_list = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_element_list")
-        self._rotb_extreme_plus_group_number = config.get("rise_of_the_beasts", "rotb_extreme_plus_group_number")
-        self._rotb_extreme_plus_party_number = config.get("rise_of_the_beasts", "rotb_extreme_plus_party_number")
-        self._rotb_extreme_plus_amount = 0
 
-        # Keep track of the following for Dread Barrage Unparalleled Foes.
+        self._rotb_extreme_plus_summon_list = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_list").replace(" ", "_").split(",")
+        if len(self._rotb_extreme_plus_summon_list) == 1 and self._rotb_extreme_plus_summon_list[0] == "":
+            self._rotb_extreme_plus_summon_list.clear()
+
+        self._rotb_extreme_plus_summon_element_list = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_element_list").replace(" ", "_").split(",")
+        if len(self._rotb_extreme_plus_summon_element_list) == 1 and self._rotb_extreme_plus_summon_element_list[0] == "":
+            self._rotb_extreme_plus_summon_element_list.clear()
+
+        self._rotb_extreme_plus_group_number = config.getint("rise_of_the_beasts", "rotb_extreme_plus_group_number")
+        self._rotb_extreme_plus_party_number = config.getint("rise_of_the_beasts", "rotb_extreme_plus_party_number")
+        self._rotb_extreme_plus_amount = 0
+        # #### end of rise_of_the_beasts ####
+
+        # #### dread_barrage ####
         self._enable_unparalleled_foe = config.getboolean("dread_barrage", "enable_unparalleled_foe")
         self._enable_unparalleled_foe_level_95 = config.getboolean("dread_barrage", "enable_unparalleled_foe_level_95")
         self._enable_unparalleled_foe_level_175 = config.getboolean("dread_barrage", "enable_unparalleled_foe_level_175")
         self.unparalleled_foe_combat_script = config.get("dread_barrage", "unparalleled_foe_combat_script")
 
-        self._unparalleled_foe_summon_list = config.get("dread_barrage", "unparalleled_foe_summon_list")
-        self._unparalleled_foe_summon_list = self._unparalleled_foe_summon_list.replace(" ", "_").split(",")
+        self._unparalleled_foe_summon_list = config.get("dread_barrage", "unparalleled_foe_summon_list").replace(" ", "_").split(",")
         if len(self._unparalleled_foe_summon_list) == 1 and self._unparalleled_foe_summon_list[0] == "":
             self._unparalleled_foe_summon_list.clear()
 
-        self._unparalleled_foe_summon_element_list = config.get("dread_barrage", "unparalleled_foe_summon_element_list")
-        self._unparalleled_foe_summon_element_list = self._unparalleled_foe_summon_element_list.replace(" ", "_").split(",")
+        self._unparalleled_foe_summon_element_list = config.get("dread_barrage", "unparalleled_foe_summon_element_list").replace(" ", "_").split(",")
         if len(self._unparalleled_foe_summon_element_list) == 1 and self._unparalleled_foe_summon_element_list[0] == "":
             self._unparalleled_foe_summon_element_list.clear()
 
-        self._unparalleled_foe_group_number = config.get("dread_barrage", "unparalleled_foe_group_number")
-        self._unparalleled_foe_party_number = config.get("dread_barrage", "unparalleled_foe_party_number")
-        # ######### config.ini ##########
+        self._unparalleled_foe_group_number = config.getint("dread_barrage", "unparalleled_foe_group_number")
+        self._unparalleled_foe_party_number = config.getint("dread_barrage", "unparalleled_foe_party_number")
+        # #### end of dread_barrage ####
+        # ################## end of config.ini ###################
 
-        # Start a timer signaling bot start in order to keep track of elapsed time and create a Queue to share logging messages between backend and
-        # frontend.
+        # Start a timer signaling bot start in order to keep track of elapsed time and create a Queue to share logging messages between backend and frontend.
         self._starting_time = timer()
         self._queue = queue
 
-        # Keep track of a bot running status flag shared in memory. Value of 0 means the bot is currently running and a value of 1 means that the
-        # bot has stopped.
+        # Keep track of a bot running status flag shared in memory. Value of 0 means the bot is currently running and a value of 1 means that the bot has stopped.
         self._is_bot_running = is_bot_running
 
         # Set a debug flag to determine whether or not to print debugging messages.
         self._debug_mode = debug_mode
 
         # Initialize the objects of helper classes.
-        self._combat_mode = CombatMode(self, is_bot_running, debug_mode = self._debug_mode)
+        self.combat_mode = CombatMode(self, self._idle_seconds_after_skill, self._idle_seconds_after_summon, is_bot_running, debug_mode = self._debug_mode)
         self._map_selection = MapSelection(self, is_bot_running)
         self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3], debug_mode = self._debug_mode)
-        self.image_tools = ImageUtils(game = self, debug_mode = self._debug_mode)
-        self.mouse_tools = MouseUtils(game = self, enable_bezier_curve = enable_bezier_curve_mouse_movement, mouse_speed = custom_mouse_speed, debug_mode = self._debug_mode)
+        self.image_tools = ImageUtils(self, debug_mode = self._debug_mode)
+        self.mouse_tools = MouseUtils(self, enable_bezier_curve = enable_bezier_curve_mouse_movement, mouse_speed = custom_mouse_speed, debug_mode = self._debug_mode)
 
         # Save the locations of the "Home", "Attack", and "Back" buttons for use in other classes.
         self.home_button_location = None
@@ -170,7 +175,7 @@ class Game:
         # Enable checking for Skyscope mission popups.
         self.enable_skyscope = True
 
-        # Calibrate the dimensions of the game window on bot launch.
+        # Calibrate the dimensions of the bot window on bot launch.
         self.go_back_home(confirm_location_check = True, display_info_check = True)
 
     def _print_time(self):
@@ -200,26 +205,26 @@ class Game:
         return None
 
     def _calibrate_game_window(self, display_info_check: bool = False):
-        """Recalibrate the dimensions of the game window for fast and accurate image matching.
+        """Recalibrate the dimensions of the bot window for fast and accurate image matching.
 
         Args:
-            display_info_check (bool, optional): Displays the screen size and the dimensions of the game window. Defaults to False.
+            display_info_check (bool, optional): Displays the screen size and the dimensions of the bot window. Defaults to False.
 
         Returns:
             None
         """
         if self._debug_mode:
-            self.print_and_save("\n[DEBUG] Recalibrating the dimensions of the game window...")
+            self.print_and_save("\n[DEBUG] Recalibrating the dimensions of the bot window...")
 
         try:
-            # Save the location of the "Home" button at the bottom of the game window.
+            # Save the location of the "Home" button at the bottom of the bot window.
             self.home_button_location = self.image_tools.find_button("home")
 
-            # Set the dimensions of the game window and save it in ImageUtils so that future operations do not go out of bounds.
+            # Set the dimensions of the bot window and save it in ImageUtils so that future operations do not go out of bounds.
             home_news_button = self.image_tools.find_button("home_news")
             home_menu_button = self.image_tools.find_button("home_menu")
 
-            # Use the locations of the "News" and "Menu" buttons on the Home screen to calculate the dimensions of the game window in the following
+            # Use the locations of the "News" and "Menu" buttons on the Home screen to calculate the dimensions of the bot window in the following
             # format:
             window_left = home_news_button[0] - 35  # The x-coordinate of the left edge.
             window_top = home_menu_button[1] - 24  # The y-coordinate of the top edge.
@@ -228,11 +233,11 @@ class Game:
 
             self.image_tools.update_window_dimensions(window_left, window_top, window_width, window_height)
         except Exception:
-            self.print_and_save(f"\n[ERROR] Bot encountered exception while calibrating game window dimensions: \n{traceback.format_exc()}")
+            self.print_and_save(f"\n[ERROR] Bot encountered exception while calibrating bot window dimensions: \n{traceback.format_exc()}")
             self._is_bot_running.value = 1
 
         if self._debug_mode:
-            self.print_and_save("[SUCCESS] Dimensions of the game window has been successfully recalibrated.")
+            self.print_and_save("[SUCCESS] Dimensions of the bot window has been successfully recalibrated.")
 
         if display_info_check:
             window_dimensions = self.image_tools.get_window_dimensions()
@@ -246,12 +251,12 @@ class Game:
         return None
 
     def go_back_home(self, confirm_location_check: bool = False, display_info_check: bool = False):
-        """Go back to the Home screen to reset the position of the bot. Also able to recalibrate the region dimensions of the game window if
+        """Go back to the Home screen to reset the position of the bot. Also able to recalibrate the region dimensions of the bot window if
         display_info_check is True.
 
         Args:
             confirm_location_check (bool, optional): Check to see if the current location is confirmed to be at the Home screen. Defaults to False.
-            display_info_check (bool, optional): Recalibrate the game window dimensions and displays the info. Defaults to False.
+            display_info_check (bool, optional): Recalibrate the bot window dimensions and displays the info. Defaults to False.
 
         Returns:
             None
@@ -262,7 +267,7 @@ class Game:
         else:
             self.print_and_save("[INFO] Bot is at the Home screen.")
 
-        # Recalibrate the dimensions of the game window.
+        # Recalibrate the dimensions of the bot window.
         if display_info_check:
             self._calibrate_game_window(display_info_check = True)
 
@@ -514,7 +519,6 @@ class Game:
         if self._debug_mode:
             self.print_and_save(f"\n[DEBUG] Successfully selected the correct Set. Now selecting Group {group_number}...")
 
-        x = None
         if group_number == 1:
             x = set_location[0] - 350
         elif group_number == 2:
@@ -537,7 +541,6 @@ class Game:
         if self._debug_mode:
             self.print_and_save(f"[DEBUG] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
 
-        x = None
         if party_number == 1:
             x = set_location[0] - 309
         elif party_number == 2:
@@ -741,7 +744,7 @@ class Game:
                     start_check = self._find_party_and_start_mission(self._event_nightmare_group_number, self._event_nightmare_party_number)
 
                     # Once preparations are completed, start Combat Mode.
-                    if start_check and self.start_combat_mode(self._event_nightmare_combat_script, isNightmare = True):
+                    if start_check and self.combat_mode.start_combat_mode(self._event_nightmare_combat_script, is_nightmare = True):
                         self.collect_loot(is_event_nightmare = True)
                         return True
 
@@ -792,7 +795,7 @@ class Game:
                 start_check = self._find_party_and_start_mission(self._dimensional_halo_group_number, self._dimensional_halo_party_number)
 
                 # Once preparations are completed, start Combat Mode.
-                if start_check and self.start_combat_mode(self._dimensional_halo_combat_script, isNightmare = True):
+                if start_check and self.combat_mode.start_combat_mode(self._dimensional_halo_combat_script, is_nightmare = True):
                     self.collect_loot()
                     return True
 
@@ -834,7 +837,7 @@ class Game:
                 start_check = self._find_party_and_start_mission(self._rotb_extreme_plus_group_number, self._rotb_extreme_plus_party_number)
 
                 # Once preparations are completed, start Combat mode.
-                if start_check and self.start_combat_mode(self._rotb_extreme_plus_combat_script, isNightmare = True):
+                if start_check and self.combat_mode.start_combat_mode(self._rotb_extreme_plus_combat_script, is_nightmare = True):
                     self.collect_loot()
                     return True
 
@@ -852,7 +855,7 @@ class Game:
 
         Args:
             item_name (str): Name of the item to farm.
-            item_amount_to_farm (str): Amount of the item to farm.
+            item_amount_to_farm (int): Amount of the item to farm.
             farming_mode (str): Mode to look for the specified item and map in.
             location_name (str): Name of the map to look for the specified mission in.
             mission_name (str): Name of the mission to farm the item in.
@@ -1078,7 +1081,7 @@ class Game:
                             self.find_and_click_button("ok")
 
                         # Start Combat Mode for this mission.
-                        if self.start_combat_mode(self._combat_script):
+                        if self.combat_mode.start_combat_mode(self._combat_script):
                             # If Combat Mode finished successfully without retreating or exiting prematurely, start loot detection.
                             self.collect_loot()
 
@@ -1204,7 +1207,7 @@ class Game:
                             summon_check = False
                         else:
                             # Start Combat Mode for this Raid.
-                            if self.start_combat_mode(self._combat_script):
+                            if self.combat_mode.start_combat_mode(self._combat_script):
                                 # If Combat Mode finished successfully without retreating or exiting prematurely, start loot detection.
                                 self.collect_loot()
 

@@ -1,7 +1,7 @@
 import os
 import traceback
 
-from game.game import Game
+from bot.game import Game
 
 
 class CombatMode:
@@ -784,7 +784,7 @@ class CombatMode:
                     else:
                         self._game.print_and_save("[COMBAT] Semi Auto is now enabled.")
 
-            # Main workflow loop for Semi Auto. The game will progress the Quest/Raid until it ends or the Party wipes.
+            # Main workflow loop for Semi Auto. The bot will progress the Quest/Raid until it ends or the Party wipes.
             while not self._retreat_check and semi_auto and not full_auto and not self._game.image_tools.confirm_location("exp_gained", tries = 1) and not self._game.image_tools.confirm_location(
                     "no_loot", tries = 1):
                 if self._game.image_tools.confirm_location("battle_concluded", tries = 1):
@@ -794,7 +794,7 @@ class CombatMode:
                 self._party_wipe_check()
                 self._game.wait(3)
 
-            # Main workflow loop for Full Auto. The game will progress the Quest/Raid until it ends or the Party wipes.
+            # Main workflow loop for Full Auto. The bot will progress the Quest/Raid until it ends or the Party wipes.
             while not self._retreat_check and not semi_auto and full_auto and not self._game.image_tools.confirm_location("exp_gained", tries = 1) and not self._game.image_tools.confirm_location(
                     "no_loot", tries = 1):
                 if self._game.image_tools.confirm_location("battle_concluded", tries = 1):

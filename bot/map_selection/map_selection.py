@@ -1,19 +1,21 @@
 import traceback
 
+from bot.game import Game
+
 
 class MapSelection:
-    """Provides the utility functions needed to perform navigation across the game.
+    """Provides the utility functions needed to perform navigation across the bot.
 
     Attributes
     ----------
-    game (game.Game): The Game object.
+    bot (bot.Game): The Game object.
     
     isBotRunning (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
     
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
     """
 
-    def __init__(self, game, is_bot_running: int, debug_mode: bool = False):
+    def __init__(self, game: Game, is_bot_running: int, debug_mode: bool = False):
         super().__init__()
 
         self._game = game
