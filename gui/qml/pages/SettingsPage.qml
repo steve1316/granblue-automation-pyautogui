@@ -125,6 +125,7 @@ Item{
                 { text: "Event", enabled: true},
                 { text: "Event (Token Drawboxes)", enabled: true},
                 { text: "Rise of the Beasts", enabled: true},
+                { text: "Guild Wars", enabled: true},
                 { text: "Dread Barrage", enabled: true},
             ]
 
@@ -134,7 +135,7 @@ Item{
                 farmingModeStatusMessage.visible = true
 
                 // Display either the Item Selection button or ComboBox depending on the Farming Mode selected.
-                if(farmingModeComboBox.displayText === "Event" || farmingModeComboBox.displayText === "Event (Token Drawboxes)" || farmingModeComboBox.displayText === "Dread Barrage" || farmingModeComboBox.displayText === "Rise of the Beasts") {
+                if(farmingModeComboBox.displayText === "Event" || farmingModeComboBox.displayText === "Event (Token Drawboxes)" || farmingModeComboBox.displayText === "Dread Barrage" || farmingModeComboBox.displayText === "Rise of the Beasts" || farmingModeComboBox.displayText === "Guild Wars") {
                     // Set the contents of the Item Selection ComboBox.
                     if(farmingModeComboBox.displayText !== "Dread Barrage") {
                         itemSelectionComboBox.model = [
@@ -1544,6 +1545,18 @@ Item{
                             { text: "N Qinglong", map: "", enabled: true },
                             { text: "H Qinglong", map: "", enabled: true },
                             { text: "VH Qinglong", map: "", enabled: true },
+                        ]
+                    } else if(farmingModeComboBox.displayText === "Guild Wars" && itemSelectionComboBox.displayText === "Repeated Runs") {
+                        missionSelectionComboBox.model = [
+                            { text: "Meat", enabled: false },
+                            { text: "Very Hard", enabled: true },
+                            { text: "Extreme", enabled: true },
+                            { text: "Extreme+", enabled: true },
+                            { text: "Nightmare", enabled: false },
+                            { text: "NM90", enabled: true },
+                            { text: "NM95", enabled: true },
+                            { text: "NM100", enabled: true },
+                            { text: "NM150", enabled: true },
                         ]
                     }
 
