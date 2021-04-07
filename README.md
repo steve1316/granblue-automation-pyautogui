@@ -68,7 +68,7 @@ By downloading this program, you consent to your account potentially getting fla
   - [x] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
   - [x] Alert for when anti-bot CAPTCHA pops up.
 - [x] Support for Event farming.
-- [ ] Support for Guild Wars farming. (IN-PROGRESS)
+- [x] Support for Guild Wars farming.
 - [x] Support for Rise of the Beasts farming.
 - [x] Support for Dread Barrage farming.
 
