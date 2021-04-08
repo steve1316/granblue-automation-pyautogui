@@ -1043,8 +1043,8 @@ class Game:
                 self.print_and_save("[INFO] Settings initialized for Dread Barrage Unparalleled Foes...")
 
             # Main workflow for Farming Mode.
-            if (farming_mode.lower() != "raid" and self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)) or (
-                    farming_mode.lower() == "raid" and self._map_selection.join_raid(item_name, mission_name)):
+            if (farming_mode.lower() != "raid" and self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)) or (
+                    farming_mode.lower() == "raid" and self._map_selection.join_raid(mission_name)):
                 while self._item_amount_farmed < self._item_amount_to_farm:
                     # Loop until the specified Summon has been selected successfully.
                     self.print_and_save("\n[INFO] Selecting Summon before starting mission for Farming Mode...")
@@ -1056,10 +1056,10 @@ class Game:
                         if summon_check is False:
                             if farming_mode.lower() != "raid":
                                 self.print_and_save("\n[INFO] Selecting mission again after resetting Summons...")
-                                self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
                             else:
                                 self.print_and_save("\n[INFO] Joining raids again after resetting Summons...")
-                                self._map_selection.join_raid(item_name, mission_name)
+                                self._map_selection.join_raid(mission_name)
 
                     # Select the specified Party and then start the mission.
                     if farming_mode.lower() != "coop":
@@ -1096,7 +1096,7 @@ class Game:
                                         self._map_selection.check_for_pending(farming_mode)
 
                                         # Start the mission again.
-                                        self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                        self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
                                 else:
                                     # Generate a resting period if the user enabled it.
                                     self._delay_between_runs()
@@ -1165,19 +1165,19 @@ class Game:
                                     if self._check_for_rotb_extreme_plus():
                                         # Make sure the bot goes back to the Home screen when completing a Extreme+ so that the "Play Again"
                                         # functionality comes back.
-                                        self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                        self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
 
                                 # Check for Dimensional Halo and Event Nightmare.
                                 if self.farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons"):
                                     if self._check_for_dimensional_halo():
                                         # Make sure the bot goes back to the Home screen when completing a Dimensional Halo so that the "Play Again"
                                         # functionality comes back.
-                                        self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                        self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
                                 elif self.farming_mode.lower() == "event" or self.farming_mode.lower() == "event (token drawboxes)":
                                     if self._check_for_event_nightmare():
                                         # Make sure the bot goes back to the Home screen when completing a Event Nightmare so that the "Play Again"
                                         # functionality comes back.
-                                        self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                        self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
 
                                 # Check for any Skyscope popups.
                                 if self.enable_skyscope and self.image_tools.confirm_location("skyscope", tries = 1):
@@ -1192,11 +1192,11 @@ class Game:
                                 if self.farming_mode.lower() == "event (token drawboxes)" and self.image_tools.confirm_location("not_enough_treasure"):
                                     self.find_and_click_button("ok")
 
-                                    self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                                    self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
                         else:
                             # Start the mission again if the Party wiped or exited prematurely during Combat Mode.
                             self.print_and_save("\n[INFO] Selecting mission again due to retreating...")
-                            self._map_selection.select_map(farming_mode, location_name, item_name, mission_name, difficulty)
+                            self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
 
                     elif start_check and farming_mode.lower() == "raid":
                         # Cover the occasional case where joining the raid after selecting the Summon and Party led to the Quest Results screen with
@@ -1219,16 +1219,16 @@ class Game:
                                     self._map_selection.check_for_pending(farming_mode)
 
                                     # Join a new raid.
-                                    self._map_selection.join_raid(item_name, mission_name)
+                                    self._map_selection.join_raid(mission_name)
                                     summon_check = False
                             else:
                                 # Join a new raid.
-                                self._map_selection.join_raid(item_name, mission_name)
+                                self._map_selection.join_raid(mission_name)
                                 summon_check = False
                     elif not start_check and farming_mode.lower() == "raid":
                         # If the bot reached here, it means that the Raid ended before the bot could start the mission after selecting the Summon and Party.
                         self.print_and_save("[INFO] Seems that the raid ended before the bot was able to join. Now looking for another raid to join...")
-                        self._map_selection.join_raid(item_name, mission_name)
+                        self._map_selection.join_raid(mission_name)
                         summon_check = False
             else:
                 raise Exception("Confirming the location of the Summon Selection screen after selecting the mission returned False.")

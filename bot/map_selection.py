@@ -1002,22 +1002,22 @@ class MapSelection:
             else:
                 # If its Coop, check to see if the bot is at the Party Selection screen.
                 self._game.print_and_save(f"[INFO] Now checking if bot is currently at Coop Party Selection screen...")
-                check = self._game.image_tools.confirm_location("coop_without_support_summon", tries = 5)
-                if check:
+
+                if self._game.image_tools.confirm_location("coop_without_support_summon", tries = 5):
                     self._game.print_and_save(f"[INFO] Bot is currently at Coop Party Selection screen.")
                     return True
                 else:
                     self._game.print_and_save(f"[INFO] Bot is not at Coop Party Selection screen.")
                     return False
+
         except Exception:
             self._game.print_and_save(f"\n[ERROR] Bot encountered exception in MapSelection select_map(): \n{traceback.format_exc()}")
             self._is_bot_running.value = 1
 
-    def join_raid(self, item_name: str, mission_name: str):
+    def join_raid(self, mission_name: str):
         """Attempt to join the specified raid.
 
         Args:
-            item_name (str): Name of the item to farm.
             mission_name (str): Name of the mission to farm the item in.
 
         Returns:
