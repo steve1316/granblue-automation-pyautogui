@@ -626,13 +626,13 @@ class MapSelection:
         Returns:
             (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
-        if farming_mode.lower() == "quest":
+        if farming_mode == "Quest":
             self._navigate_to_quest(map_name, mission_name)
-        elif farming_mode.lower() == "special":
+        elif farming_mode == "Special":
             self._navigate_to_special(map_name, mission_name, difficulty)
-        elif farming_mode.lower() == "coop":
+        elif farming_mode == "Coop":
             self._navigate_to_coop(map_name)
-        elif farming_mode.lower() == "event" or farming_mode.lower() == "event (token drawboxes)":
+        elif farming_mode == "Event" or farming_mode == "Event (Token Drawboxes)":
             self._navigate_to_event(farming_mode, mission_name, difficulty)
 
 elif map_mode.lower() == "dread barrage":
