@@ -382,7 +382,7 @@ class MapSelection:
 
         return None
 
-    def _navigate_to_coop(self, map_name: str, mission_name: str):
+    def _navigate_to_coop(self, mission_name: str):
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
