@@ -382,7 +382,110 @@ class MapSelection:
 
         return None
 
+    def _navigate_to_coop(self, map_name: str, mission_name: str):
+        # Go to the Home screen.
+        self._game.go_back_home(confirm_location_check = True)
 
+        # Click the "Menu" button on the Home screen and then go to the Coop screen.
+        self._game.find_and_click_button("home_menu")
+        self._game.find_and_click_button("coop")
+
+        if self._game.image_tools.confirm_location("coop"):
+            # Scroll down the screen to see more of the Coop missions on smaller screens.
+            self._game.mouse_tools.scroll_screen_from_home_button(-400)
+
+            # Find the locations of all of the "Host Quest" buttons.
+            host_quest_button_locations = self._game.image_tools.find_all("coop_host_quest")
+
+            # Select the difficulty of the mission that it is under.
+            if mission_name == "In a Dusk Dream":
+                # Check if Hard difficulty is already selected. If not, make it active.
+                if self._game.image_tools.find_button("coop_hard_selected") is None:
+                    self._game.find_and_click_button("coop_hard")
+
+                self._game.print_and_save(f"\n[INFO] Hard difficulty for Coop is now selected.")
+
+                # Select the category, "Save the Oceans", which should be the 3rd category.
+                self._game.print_and_save(f"[INFO] Now navigating to \"{mission_name}\" for Hard difficulty.")
+                self._game.mouse_tools.move_and_click_point(host_quest_button_locations[2][0], host_quest_button_locations[2][1], "coop_host_quest")
+
+                if self._game.image_tools.confirm_location("coop_save_the_oceans"):
+                    # Now click "In a Dusk Dream".
+                    host_quests_circle_buttons = self._game.image_tools.find_all("coop_host_quest_circle")
+                    self._game.mouse_tools.move_and_click_point(host_quests_circle_buttons[0][0], host_quests_circle_buttons[0][1], "coop_host_quest")
+
+            else:
+                # Check if Extra difficulty is already selected. If not, make it active.
+                if self._game.image_tools.find_button("coop_extra_selected") is None:
+                    self._game.find_and_click_button("coop_extra")
+
+                self._game.print_and_save(f"\n[INFO] Extra difficulty for Coop is now selected.")
+
+                # The 2nd element of the list of EX1 missions is designated "empty" because it is used to navigate properly to "Lost in the Dark" from "Corridor of Puzzles".
+                coop_ex1_list = ["Corridor of Puzzles", "empty", "Lost in the Dark"]
+                coop_ex2_list = ["Time of Judgement", "Time of Revelation", "Time of Eminence"]
+                coop_ex3_list = ["Rule of the Tundra", "Rule of the Plains", "Rule of the Twilight"]
+                coop_ex4_list = ["Amidst the Waves", "Amidst the Petals", "Amidst Severe Cliffs", "Amidst the Flames"]
+
+                # Make the specified EX category active. Then click the mission's button while making sure that the first mission in each category is skipped.
+                if mission_name in coop_ex1_list:
+                    self._game.print_and_save(f"\n[INFO] Now navigating to \"{mission_name}\" from EX1...")
+                    self._game.mouse_tools.move_and_click_point(host_quest_button_locations[0][0], host_quest_button_locations[0][1], "coop_host_quest")
+
+                    if self._game.image_tools.confirm_location("coop_ex1"):
+                        self._game.print_and_save(f"\n[INFO] Now selecting Coop mission: \"{mission_name}\"")
+                        coop_host_locations = self._game.image_tools.find_all("coop_host_quest_circle")
+                        self._game.mouse_tools.move_and_click_point(coop_host_locations[coop_ex1_list.index(mission_name)][0], coop_host_locations[coop_ex1_list.index(mission_name)][1],
+                                                                    "coop_host_quest")
+
+                elif mission_name in coop_ex2_list:
+                    self._game.print_and_save(f"\n[INFO] Now navigating to \"{mission_name}\" from EX2...")
+                    self._game.mouse_tools.move_and_click_point(host_quest_button_locations[1][0], host_quest_button_locations[1][1], "coop_host_quest")
+
+                    if self._game.image_tools.confirm_location("coop_ex2"):
+                        self._game.print_and_save(f"\n[INFO] Now selecting Coop mission: \"{mission_name}\"")
+                        coop_host_locations = self._game.image_tools.find_all("coop_host_quest_circle")
+                        self._game.mouse_tools.move_and_click_point(coop_host_locations[coop_ex2_list.index(mission_name) + 1][0], coop_host_locations[coop_ex2_list.index(mission_name) + 1][1],
+                                                                    "coop_host_quest")
+
+                elif mission_name in coop_ex3_list:
+                    self._game.print_and_save(f"\n[INFO] Now navigating to \"{mission_name}\" from EX3.")
+                    self._game.mouse_tools.move_and_click_point(host_quest_button_locations[2][0], host_quest_button_locations[2][1], "coop_host_quest")
+
+                    if self._game.image_tools.confirm_location("coop_ex3"):
+                        self._game.print_and_save(f"\n[INFO] Now selecting Coop mission: \"{mission_name}\"")
+                        coop_host_locations = self._game.image_tools.find_all("coop_host_quest_circle")
+                        self._game.mouse_tools.move_and_click_point(coop_host_locations[coop_ex3_list.index(mission_name) + 1][0], coop_host_locations[coop_ex3_list.index(mission_name) + 1][1],
+                                                                    "coop_host_quest")
+
+                elif mission_name in coop_ex4_list:
+                    self._game.print_and_save(f"\n[INFO] Now navigating to \"{mission_name}\" from EX4.")
+                    self._game.mouse_tools.move_and_click_point(host_quest_button_locations[3][0], host_quest_button_locations[3][1], "coop_host_quest")
+
+                    if self._game.image_tools.confirm_location("coop_ex4"):
+                        self._game.print_and_save(f"\n[INFO] Now selecting Coop mission: \"{mission_name}\"")
+                        coop_host_locations = self._game.image_tools.find_all("coop_host_quest_circle")
+                        self._game.mouse_tools.move_and_click_point(coop_host_locations[coop_ex4_list.index(mission_name) + 1][0], coop_host_locations[coop_ex4_list.index(mission_name) + 1][1],
+                                                                    "coop_host_quest")
+
+            # After clicking on the Coop mission, create a new Room.
+            self._game.print_and_save(f"\n[INFO] Opening up a new Coop room...")
+            self._game.find_and_click_button("coop_post_to_crew_chat")
+
+            # Scroll down the screen to see the "OK" button just in case of smaller screens.
+            self._game.mouse_tools.scroll_screen_from_home_button(-400)
+            self._game.find_and_click_button("ok")
+
+            self._game.wait(1)
+
+            # Just in case, check for the "You retreated from the raid battle" popup.
+            if self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries = 1):
+                self._game.find_and_click_button("ok")
+
+            self._game.print_and_save(f"\n[INFO] Selecting a Party for Coop mission: \"{mission_name}\".")
+            self._game.find_and_click_button("coop_select_party")
+
+        return None
 
     def select_map(self, farming_mode: str, map_name: str, mission_name: str, difficulty: str):
         """Navigates the bot to the specified map and preps the bot for Summon/Party selection.
@@ -400,7 +503,8 @@ class MapSelection:
             self._navigate_to_quest(map_name, mission_name)
         elif farming_mode.lower() == "special":
             self._navigate_to_special(map_name, mission_name, difficulty)
-
+        elif farming_mode.lower() == "coop":
+            self._navigate_to_coop(map_name, mission_name)
 
     elif map_mode.lower() == "event" or map_mode.lower() == "event (token drawboxes)":
     # Go to the Home screen.
