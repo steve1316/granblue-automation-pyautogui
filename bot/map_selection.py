@@ -614,6 +614,64 @@ class MapSelection:
 
         return None
 
+    def _navigate_to_dread_barrage(self, difficulty: str):
+        # Go to the Home screen.
+        self._game.go_back_home(confirm_location_check = True)
+
+        # Scroll down the screen a little bit and then click the Dread Barrage banner.
+        self._game.print_and_save(f"\n[INFO] Now navigating to Dread Barrage...")
+        self._game.mouse_tools.scroll_screen_from_home_button(-400)
+        self._game.find_and_click_button("dread_barrage")
+
+        self._game.wait(2)
+
+        if self._game.image_tools.confirm_location("dread_barrage"):
+            # Check if there is already a hosted Dread Barrage mission.
+            if self._game.image_tools.confirm_location("resume_quests", tries = 1):
+                self._game.print_and_save(f"\n[WARNING] Detected that there is already a hosted Dread Barrage mission.")
+                expiry_time_in_seconds = 0
+
+                while self._game.image_tools.confirm_location("resume_quests", tries = 1):
+                    # If there is already a hosted Dread Barrage mission, the bot will wait for a total of 1 hour and 30 minutes
+                    # for either the raid to expire or for anyone in the room to clear it.
+                    self._game.print_and_save(f"\n[WARNING] The bot will now either wait for the expiry time of 1 hour and 30 minutes or for someone else in the room to clear it.")
+                    self._game.print_and_save(f"[WARNING] The bot will now refresh the page every 30 seconds to check if it is still there before proceeding.")
+                    self._game.print_and_save(f"[WARNING] User can either wait it out, revive and fight it to completion, or retreat from the mission manually.")
+                    self._game.wait(30)
+
+                    self._game.find_and_click_button("reload")
+                    self._game.wait(2)
+
+                    expiry_time_in_seconds += 30
+                    if expiry_time_in_seconds >= 5400:
+                        break
+
+                self._game.print_and_save(f"\n[SUCCESS] Hosted Dread Barrage mission is now gone either because of timeout or someone else in the room killed it. Moving on...\n")
+
+            # Find all the "Play" buttons at the top of the window.
+            dread_barrage_play_button_locations = self._game.image_tools.find_all("dread_barrage_play")
+
+            # Navigate to the specified difficulty.
+            if difficulty == "1 Star":
+                self._game.print_and_save(f"[INFO] Now starting 1 Star Dread Barrage Raid...")
+                self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[0][0], dread_barrage_play_button_locations[0][1], "dread_barrage_play")
+            elif difficulty == "2 Star":
+                self._game.print_and_save(f"[INFO] Now starting 2 Star Dread Barrage Raid...")
+                self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[1][0], dread_barrage_play_button_locations[1][1], "dread_barrage_play")
+            elif difficulty == "3 Star":
+                self._game.print_and_save(f"[INFO] Now starting 3 Star Dread Barrage Raid...")
+                self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[2][0], dread_barrage_play_button_locations[2][1], "dread_barrage_play")
+            elif difficulty == "4 Star":
+                self._game.print_and_save(f"[INFO] Now starting 4 Star Dread Barrage Raid...")
+                self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[3][0], dread_barrage_play_button_locations[3][1], "dread_barrage_play")
+            elif difficulty == "5 Star":
+                self._game.print_and_save(f"[INFO] Now starting 5 Star Dread Barrage Raid...")
+                self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[4][0], dread_barrage_play_button_locations[4][1], "dread_barrage_play")
+
+            self._game.wait(2)
+
+        return None
+
     def select_map(self, farming_mode: str, map_name: str, mission_name: str, difficulty: str):
         """Navigates the bot to the specified map and preps the bot for Summon/Party selection.
 
@@ -634,62 +692,8 @@ class MapSelection:
             self._navigate_to_coop(map_name)
         elif farming_mode == "Event" or farming_mode == "Event (Token Drawboxes)":
             self._navigate_to_event(farming_mode, mission_name, difficulty)
-
-elif map_mode.lower() == "dread barrage":
-# Go to the Home screen.
-self._game.go_back_home(confirm_location_check = True)
-
-# Scroll down the screen a little bit and then click the Dread Barrage banner.
-self._game.print_and_save(f"\n[INFO] Now navigating to Dread Barrage...")
-self._game.mouse_tools.scroll_screen_from_home_button(-400)
-self._game.find_and_click_button("dread_barrage")
-self._game.wait(2)
-
-if self._game.image_tools.confirm_location("dread_barrage"):
-    # Check if there is already a hosted Dread Barrage mission.
-    if self._game.image_tools.confirm_location("resume_quests", tries = 1):
-        self._game.print_and_save(f"\n[WARNING] Detected that there is already a hosted Dread Barrage mission.")
-        expiry_time_in_seconds = 0
-
-        while self._game.image_tools.confirm_location("resume_quests", tries = 1):
-            # If there is already a hosted Dread Barrage mission, the bot will wait for a total of 1 hour and 30 minutes
-            # for either the raid to expire or for anyone in the room to clear it.
-            self._game.print_and_save(f"\n[WARNING] The bot will now either wait for the expiry time of 1 hour and 30 minutes or for someone else in the room to clear it.")
-            self._game.print_and_save(f"[WARNING] The bot will now refresh the page every 30 seconds to check if it is still there before proceeding.")
-            self._game.print_and_save(f"[WARNING] User can either wait it out, revive and fight it to completion, or retreat from the mission manually.")
-            self._game.wait(30)
-
-            self._game.find_and_click_button("reload")
-            self._game.wait(2)
-
-            expiry_time_in_seconds += 30
-            if expiry_time_in_seconds >= 5400:
-                break
-
-        self._game.print_and_save(
-            f"\n[SUCCESS] Hosted Dread Barrage mission is now gone either because of timeout or someone else in the room killed it. Moving on...\n")
-
-    # Find all the "Play" buttons at the top of the window.
-    dread_barrage_play_button_locations = self._game.image_tools.find_all("dread_barrage_play")
-
-    # Navigate to the specified difficulty.
-    if difficulty == "1 Star":
-        self._game.print_and_save(f"[INFO] Now starting 1 Star Dread Barrage Raid...")
-        self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[0][0], dread_barrage_play_button_locations[0][1], "dread_barrage_play")
-    elif difficulty == "2 Star":
-        self._game.print_and_save(f"[INFO] Now starting 2 Star Dread Barrage Raid...")
-        self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[1][0], dread_barrage_play_button_locations[1][1], "dread_barrage_play")
-    elif difficulty == "3 Star":
-        self._game.print_and_save(f"[INFO] Now starting 3 Star Dread Barrage Raid...")
-        self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[2][0], dread_barrage_play_button_locations[2][1], "dread_barrage_play")
-    elif difficulty == "4 Star":
-        self._game.print_and_save(f"[INFO] Now starting 4 Star Dread Barrage Raid...")
-        self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[3][0], dread_barrage_play_button_locations[3][1], "dread_barrage_play")
-    elif difficulty == "5 Star":
-        self._game.print_and_save(f"[INFO] Now starting 5 Star Dread Barrage Raid...")
-        self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[4][0], dread_barrage_play_button_locations[4][1], "dread_barrage_play")
-
-    self._game.wait(2)
+        elif farming_mode == "Dread Barrage":
+            self._navigate_to_dread_barrage(difficulty)
 
 elif map_mode.lower() == "rise of the beasts":
 # Go to the Home screen.
