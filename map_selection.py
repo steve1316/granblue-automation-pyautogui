@@ -861,13 +861,18 @@ class MapSelection:
                             
                             self._game.find_and_click_button("close")
                             
-                            self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting Extreme+ now.")
-                            self._game.find_and_click_button("guild_wars_meat_extreme+")
+                            # Click on the banner to farm meat.
+                            self._game.find_and_click_button("guild_wars_meat")
                             
-                            if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 5):
-                                self._game.image_tools.generate_alert("You did not unlock Extreme+ yet!")
-                                self._isBotRunning.value = 1
-                                raise("You did not unlock Extreme+ yet!")
+                            if self._game.image_tools.confirm_location("guild_wars_meat"):
+                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting Extreme+ now.")
+                                self._game.find_and_click_button("guild_wars_meat_extreme+")
+                                
+                                # Alert the user if they did not unlock Extreme+ and stop the bot.
+                                if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 5):
+                                    self._game.image_tools.generate_alert("You did not unlock Extreme+ yet!")
+                                    self._isBotRunning.value = 1
+                                    raise("You did not unlock Extreme+ yet!")
                     
             # Check for available AP.
             self._game.check_for_ap(use_full_elixir=self._game.use_full_elixir)
