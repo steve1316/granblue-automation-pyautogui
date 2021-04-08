@@ -57,7 +57,7 @@ class MapSelection:
                     self._game.mouse_tools.move_and_click_point(arrow_location[0] - 374, arrow_location[1] - 5, "world_right_arrow")
                 elif map_name == "Lumacie Archipelago":
                     self._game.mouse_tools.move_and_click_point(arrow_location[0] - 84, arrow_location[1] + 39, "world_right_arrow")
-                elif map_name == "Albion Citadel"
+                elif map_name == "Albion Citadel":
                     self._game.mouse_tools.move_and_click_point(arrow_location[0] - 267, arrow_location[1] + 121, "world_right_arrow")
 
             return True
@@ -98,6 +98,8 @@ class MapSelection:
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
+        current_location = ""
+
         # Check which island the bot is at.
         if self._game.image_tools.confirm_location(f"map_{map_name}", tries = 2):
             self._game.print_and_save(f"\n[INFO] Bot is currently on the correct island.")
@@ -127,193 +129,74 @@ class MapSelection:
         if self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries = 1):
             self._game.find_and_click_button("ok")
 
-        self._game.image_tools.confirm_location("quest")
+        if self._game.image_tools.confirm_location("quest"):
+            # If the bot is currently not at the correct island, move to it.
+            if not check_location:
+                # Click the "World" button.
+                self._game.find_and_click_button("world")
 
-        # If the bot is currently not at the correct island, move to it.
-        if not check_location:
-            # Click the "World" button.
-            self._game.find_and_click_button("world")
+                # On the World screen, click the specified coordinates on the window to move to the island. If the island is on a different world page, switch pages as necessary.
+                self._navigate_to_map(map_name, current_location)
 
-            # On the World screen, click the specified coordinates on the window to move to the island. If the island is on a different world page, switch pages as necessary.
-            self._navigate_to_map(self, map_name, current_location)
+                # Click "Go" on the popup after clicking on the map node.
+                self._game.find_and_click_button("go")
 
-            # Click "Go" on the popup after clicking on the map node.
-            self._game.find_and_click_button("go")
+            # Grab the location of the "World" button.
+            world_location = self._game.image_tools.find_button("world", tries = 2)
+            if world_location is None:
+                world_location = self._game.image_tools.find_button("world2", tries = 2)
 
+            # Now that the bot is on the correct island and is at the Quest screen, click the correct chapter node.
+            if mission_name == "Scattered Cargo":
+                self._game.print_and_save(f"\n[INFO] Moving to Chapter 1 (115) node at ({world_location[0] + 97}, {world_location[1] + 97})...")
+                self._game.mouse_tools.move_and_click_point(world_location[0] + 97, world_location[1] + 97, "template_node")
+            elif mission_name == "Lucky Charm Hunt":
+                self._game.print_and_save(f"\n[INFO] Moving to Chapter 6 (122) node...")
+                self._game.mouse_tools.move_and_click_point(world_location[0] + 332, world_location[1] + 16, "template_node")
+            elif mission_name == "Special Op's Request":
+                self._game.print_and_save(f"\n[INFO] Moving to Chapter 8 node...")
+                self._game.mouse_tools.move_and_click_point(world_location[0] + 258, world_location[1] + 151, "template_node")
+            elif mission_name == "Threat to the Fisheries":
+                self._game.print_and_save(f"\n[INFO] Moving to Chapter 9 node...")
+                self._game.mouse_tools.move_and_click_point(world_location[0] + 216, world_location[1] + 113, "template_node")
+            elif mission_name == "The Fruit of Lumacie" or mission_name == "Whiff of Danger":
+                self._game.print_and_save(f"\n[INFO] Moving to Chapter 13 (39/52) node...")
+                self._game.mouse_tools.move_and_click_point(world_location[0] + 78, world_location[1] + 92, "template_node")
+            elif mission_name == "I Challenge You!":
+                self._game.print_and_save(f"\n[INFO] Moving to Chapter 17 node...")
+                self._game.mouse_tools.move_and_click_point(world_location[0] + 119, world_location[1] + 121, "template_node")
+            elif mission_name == "For Whom the Bell Tolls":
+                self._game.print_and_save(f"\n[INFO] Moving to Chapter 22 node...")
+                self._game.mouse_tools.move_and_click_point(world_location[0] + 178, world_location[1] + 33, "template_node")
+            elif mission_name == "Golonzo's Battles of Old":
+                self._game.print_and_save(f"\n[INFO] Moving to Chapter 25 node...")
+                self._game.mouse_tools.move_and_click_point(world_location[0] + 196, world_location[1] + 5, "template_node")
+            elif mission_name == "The Dungeon Diet":
+                self._game.print_and_save(f"\n[INFO] Moving to Chapter 30 (44/65) node...")
+                self._game.mouse_tools.move_and_click_point(world_location[0] + 242, world_location[1] + 24, "template_node")
+            elif mission_name == "Trust Busting Dustup":
+                self._game.print_and_save(f"\n[INFO] Moving to Chapter 36 (123) node...")
+                self._game.mouse_tools.move_and_click_point(world_location[0] + 319, world_location[1] + 13, "template_node")
+            elif mission_name == "Erste Kingdom Episode 4":
+                self._game.print_and_save(f"\n[INFO] Moving to Chapter 70 node...")
+                self._game.mouse_tools.move_and_click_point(world_location[0] + 253, world_location[1] + 136, "template_node")
+            elif mission_name == "Imperial Wanderer's Soul":
+                self._game.print_and_save(f"\n[INFO] Moving to Chapter 55 node...")
+                self._game.mouse_tools.move_and_click_point(world_location[0] + 162, world_location[1] + 143, "template_node")
 
+            # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
+            self._game.print_and_save(f"\n[INFO] Now bringing up Summon Selection screen for \"{mission_name}\"...")
+            self._game.mouse_tools.scroll_screen(self._game.home_button_location[0], self._game.home_button_location[1] - 50, -1000)
+            self._game.find_and_click_button(mission_name.replace(" ", "_"))
 
-        # Grab the location of the "World" button.
-        world_location = self._game.image_tools.find_button("world", tries = 2)
-        if world_location is None:
-            world_location = self._game.image_tools.find_button("world2", tries = 2)
-
-        # Now that the bot is on the correct island and is at the Quest screen, click the correct chapter node.
-        if mission_name == "Scattered Cargo":
-            self._game.print_and_save(f"\n[INFO] Moving to Chapter 1 (115) node at ({world_location[0] + 97}, {world_location[1] + 97})...")
-            self._game.mouse_tools.move_and_click_point(world_location[0] + 97, world_location[1] + 97, "template_node")
-        elif mission_name == "Lucky Charm Hunt":
-            self._game.print_and_save(f"\n[INFO] Moving to Chapter 6 (122) node...")
-            self._game.mouse_tools.move_and_click_point(world_location[0] + 332, world_location[1] + 16, "template_node")
-        elif mission_name == "Special Op's Request":
-            self._game.print_and_save(f"\n[INFO] Moving to Chapter 8 node...")
-            self._game.mouse_tools.move_and_click_point(world_location[0] + 258, world_location[1] + 151, "template_node")
-        elif mission_name == "Threat to the Fisheries":
-            self._game.print_and_save(f"\n[INFO] Moving to Chapter 9 node...")
-            self._game.mouse_tools.move_and_click_point(world_location[0] + 216, world_location[1] + 113, "template_node")
-        elif mission_name == "The Fruit of Lumacie" or mission_name == "Whiff of Danger":
-            self._game.print_and_save(f"\n[INFO] Moving to Chapter 13 (39/52) node...")
-            self._game.mouse_tools.move_and_click_point(world_location[0] + 78, world_location[1] + 92, "template_node")
-        elif mission_name == "I Challenge You!":
-            self._game.print_and_save(f"\n[INFO] Moving to Chapter 17 node...")
-            self._game.mouse_tools.move_and_click_point(world_location[0] + 119, world_location[1] + 121, "template_node")
-        elif mission_name == "For Whom the Bell Tolls":
-            self._game.print_and_save(f"\n[INFO] Moving to Chapter 22 node...")
-            self._game.mouse_tools.move_and_click_point(world_location[0] + 178, world_location[1] + 33, "template_node")
-        elif mission_name == "Golonzo's Battles of Old":
-            self._game.print_and_save(f"\n[INFO] Moving to Chapter 25 node...")
-            self._game.mouse_tools.move_and_click_point(world_location[0] + 196, world_location[1] + 5, "template_node")
-        elif mission_name == "The Dungeon Diet":
-            self._game.print_and_save(f"\n[INFO] Moving to Chapter 30 (44/65) node...")
-            self._game.mouse_tools.move_and_click_point(world_location[0] + 242, world_location[1] + 24, "template_node")
-        elif mission_name == "Trust Busting Dustup":
-            self._game.print_and_save(f"\n[INFO] Moving to Chapter 36 (123) node...")
-            self._game.mouse_tools.move_and_click_point(world_location[0] + 319, world_location[1] + 13, "template_node")
-        elif mission_name == "Erste Kingdom Episode 4":
-            self._game.print_and_save(f"\n[INFO] Moving to Chapter 70 node...")
-            self._game.mouse_tools.move_and_click_point(world_location[0] + 253, world_location[1] + 136, "template_node")
-        elif mission_name == "Imperial Wanderer's Soul":
-            self._game.print_and_save(f"\n[INFO] Moving to Chapter 55 node...")
-            self._game.mouse_tools.move_and_click_point(world_location[0] + 162, world_location[1] + 143, "template_node")
-
-        # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
-        self._game.print_and_save(f"\n[INFO] Now bringing up Summon Selection screen for \"{mission_name}\"...")
-        self._game.mouse_tools.scroll_screen(self._game.home_button_location[0], self._game.home_button_location[1] - 50, -1000)
-        temp_mission_name = mission_name.replace(" ", "_")
-
-        self._game.find_and_click_button(temp_mission_name)
-
-        # Navigate to Episode 4 for the mission "Ch. 70 - Erste Kingdom".
-        if mission_name == "Erste Kingdom Episode 4":
-            self._game.find_and_click_button("episode_4")
-            self._game.find_and_click_button("ok")
-
-    def select_map(self, map_mode: str, map_name: str, mission_name: str, difficulty: str):
-        """Navigates the bot to the specified map and preps the bot for Summon/Party selection.
-
-        Args:
-            map_mode (str): Mode to look for the specified item and map in.
-            map_name (str): Name of the map to look for the specified mission in.
-            mission_name (str): Name of the mission to farm the item in.
-            difficulty (str): Selected difficulty for Special missions.
-
-        Returns:
-            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
-        """
-        try:
-            # Format the map name string to be used to look for the correct image file.
-            current_location = ""
-            temp_map_name = map_name.replace(" ", "_")
-            temp_map_name = temp_map_name.replace("-", "_")
-
-            elif map_mode.lower() == "coop":
-            # Go to the Home screen.
-            self._game.go_back_home(confirm_location_check = True)
-
-            # Click the "Menu" button on the Home screen, go to Coop screen, and then confirm that the bot arrived.
-            self._game.find_and_click_button("home_menu")
-            self._game.find_and_click_button("coop")
-            self._game.image_tools.confirm_location("coop")
-
-            # Scroll down the screen to see more of the Coop missions on smaller screens.
-            self._game.mouse_tools.scroll_screen_from_home_button(-400)
-
-            # Find the locations of all of the "Host Quest" buttons.
-            host_quest_button_locations = self._game.image_tools.find_all("coop_host_quest")
-
-            # Select the difficulty of the mission that it is under.
-            if mission_name == "In a Dusk Dream":
-                # Check if the difficulty is already selected. If not, make it active.
-                if self._game.image_tools.find_button("coop_hard_selected") is None:
-                    self._game.find_and_click_button("coop_hard")
-
-                self._game.print_and_save(f"\n[INFO] Hard difficulty for Coop is now selected.")
-
-                # Select the category, "Save the Oceans", which should be the 3rd category.
-                self._game.print_and_save(f"[INFO] Now navigating to \"{mission_name}\" for Hard difficulty.")
-                self._game.mouse_tools.move_and_click_point(host_quest_button_locations[2][0], host_quest_button_locations[2][1], "coop_host_quest")
-                self._game.image_tools.confirm_location("coop_save_the_oceans")
-
-                # Now click "In a Dusk Dream".
-                host_quests_circle_buttons = self._game.image_tools.find_all("coop_host_quest_circle")
-                self._game.mouse_tools.move_and_click_point(host_quests_circle_buttons[0][0], host_quests_circle_buttons[0][1], "coop_host_quest")
-            else:
-                # Check if the difficulty is already selected. If not, make it active.
-                if self._game.image_tools.find_button("coop_extra_selected") is None:
-                    self._game.find_and_click_button("coop_extra")
-
-                self._game.print_and_save(f"\n[INFO] Extra difficulty for Coop is now selected.")
-
-                coop_ex1_list = ["Corridor of Puzzles", "empty", "Lost in the Dark"]
-                coop_ex2_list = ["Time of Judgement", "Time of Revelation", "Time of Eminence"]
-                coop_ex3_list = ["Rule of the Tundra", "Rule of the Plains", "Rule of the Twilight"]
-                coop_ex4_list = ["Amidst the Waves", "Amidst the Petals", "Amidst Severe Cliffs", "Amidst the Flames"]
-
-                # Make the specified EX category active. Then click the mission's button while making sure that the first mission in each category is skipped.
-                if mission_name in coop_ex1_list:
-                    self._game.print_and_save(f"\n[INFO] Now navigating to \"{mission_name}\" from EX1...")
-                    self._game.mouse_tools.move_and_click_point(host_quest_button_locations[0][0], host_quest_button_locations[0][1], "coop_host_quest")
-                    self._game.image_tools.confirm_location("coop_ex1")
-
-                    self._game.print_and_save(f"\n[INFO] Now selecting \"{mission_name}\"...")
-                    host_quests_circle_buttons = self._game.image_tools.find_all("coop_host_quest_circle")
-                    self._game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex1_list.index(mission_name)][0], host_quests_circle_buttons[coop_ex1_list.index(mission_name)][1],
-                                                                "coop_host_quest")
-                elif mission_name in coop_ex2_list:
-                    self._game.print_and_save(f"\n[INFO] Now navigating to \"{mission_name}\" from EX2...")
-                    self._game.mouse_tools.move_and_click_point(host_quest_button_locations[1][0], host_quest_button_locations[1][1],
-                                                                "coop_host_quest")
-                    self._game.image_tools.confirm_location("coop_ex2")
-
-                    self._game.print_and_save(f"\n[INFO] Now selecting \"{mission_name}\"...")
-                    host_quests_circle_buttons = self._game.image_tools.find_all("coop_host_quest_circle")
-                    self._game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex2_list.index(mission_name) + 1][0],
-                                                                host_quests_circle_buttons[coop_ex2_list.index(mission_name) + 1][1], "coop_host_quest")
-                elif mission_name in coop_ex3_list:
-                    self._game.print_and_save(f"\n[INFO] Now navigating to \"{mission_name}\" from EX3.")
-                    self._game.mouse_tools.move_and_click_point(host_quest_button_locations[2][0], host_quest_button_locations[2][1], "coop_host_quest")
-                    self._game.image_tools.confirm_location("coop_ex3")
-
-                    self._game.print_and_save(f"\n[INFO] Now selecting \"{mission_name}\"...")
-                    host_quests_circle_buttons = self._game.image_tools.find_all("coop_host_quest_circle")
-                    self._game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex3_list.index(mission_name) + 1][0],
-                                                                host_quests_circle_buttons[coop_ex3_list.index(mission_name) + 1][1], "coop_host_quest")
-                elif mission_name in coop_ex4_list:
-                    self._game.print_and_save(f"\n[INFO] Now navigating to \"{mission_name}\" from EX4.")
-                    self._game.mouse_tools.move_and_click_point(host_quest_button_locations[3][0], host_quest_button_locations[3][1], "coop_host_quest")
-                    self._game.image_tools.confirm_location("coop_ex4")
-
-                    self._game.print_and_save(f"\n[INFO] Now selecting \"{mission_name}\"...")
-                    host_quests_circle_buttons = self._game.image_tools.find_all("coop_host_quest_circle")
-                    self._game.mouse_tools.move_and_click_point(host_quests_circle_buttons[coop_ex4_list.index(mission_name) + 1][0],
-                                                                host_quests_circle_buttons[coop_ex4_list.index(mission_name) + 1][1], "coop_host_quest")
-
-            # After clicking on the mission, create a new Room.
-            self._game.print_and_save(f"\n[INFO] Opening up a new Coop room...")
-            self._game.find_and_click_button("coop_post_to_crew_chat")
-
-            # Scroll down the screen to see the "OK" button just in case of smaller screens.
-            self._game.mouse_tools.scroll_screen_from_home_button(-400)
-            self._game.find_and_click_button("ok")
-
-            # Just in case, check for the "You retreated from the raid battle" popup.
-            self._game.wait(1)
-            if self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries = 1):
+            # Apply special navigation for mission "Ch. 70 - Erste Kingdom".
+            if mission_name == "Erste Kingdom Episode 4":
+                self._game.find_and_click_button("episode_4")
                 self._game.find_and_click_button("ok")
 
-            self._game.print_and_save(f"\n[INFO] Selecting a Party for \"{mission_name}\".")
-            self._game.find_and_click_button("coop_select_party")
+        return None
 
-        elif map_mode.lower() == "special":
+    def _navigate_to_special(self, map_name: str, mission_name: str, difficulty: str):
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
@@ -325,171 +208,199 @@ class MapSelection:
         if self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries = 1):
             self._game.find_and_click_button("ok")
 
-        self._game.image_tools.confirm_location("quest")
+        if self._game.image_tools.confirm_location("quest"):
+            # Go to the Special screen.
+            self._game.find_and_click_button("special")
 
-        # Go to the Special screen.
-        self._game.find_and_click_button("special")
+            # Remove the difficulty prefix from the mission name.
+            formatted_mission_name = mission_name
+            if difficulty == "Normal":
+                formatted_mission_name = mission_name[2:]
+            elif difficulty == "Hard":
+                formatted_mission_name = mission_name[2:]
+            elif difficulty == "Very Hard":
+                formatted_mission_name = mission_name[3:]
+            elif difficulty == "Extreme":
+                formatted_mission_name = mission_name[3:]
 
-        # Format the map and mission name strings.
-        temp_map_name = map_name.lower().replace(" ", "_")
-        temp_mission_name = mission_name
-        if difficulty == "Normal":
-            temp_mission_name = mission_name[1:]
-        elif difficulty == "Hard":
-            temp_mission_name = mission_name[1:]
-        elif difficulty == "Very Hard":
-            temp_mission_name = mission_name[3:]
-        elif difficulty == "Extreme":
-            temp_mission_name = mission_name[3:]
+            if self._game.image_tools.confirm_location("special"):
+                tries = 2
 
-        # If the first character is a whitespace after processing the string, remove it.
-        if temp_mission_name[0] == " ":
-            temp_mission_name = temp_mission_name[1:]
+                # Try to select the specified Special mission for a number of tries.
+                while tries != 0:
+                    # Scroll the screen down if its any of the Special Quests that are more towards the bottom of the page to alleviate problems for smaller screens.
+                    if map_name != "Campaign-Exclusive Quest" and map_name != "Basic Treasure Quests" and map_name != "Shiny Slime Search!" and map_name != "Six Dragon Trial":
+                        self._game.mouse_tools.scroll_screen_from_home_button(-500)
 
-        if self._game.image_tools.confirm_location("special"):
-            tries = 2
-            while tries != 0:
-                # Scroll the screen down if its any of the Special Quests that are more towards the bottom of the page to alleviate problems for smaller screens.
-                if map_name != "Campaign-Exclusive Quest" and map_name != "Basic Treasure Quests" and map_mode != "Shiny Slime Search!" and map_mode != "Six Dragon Trial":
-                    self._game.mouse_tools.scroll_screen(self._game.home_button_location[0], self._game.home_button_location[1] - 50, -500)
+                    mission_select_button = self._game.image_tools.find_button(map_name.lower().replace(" ", "_"))
+                    if mission_select_button is not None:
+                        self._game.print_and_save(f"\n[INFO] Navigating to {map_name}...")
 
-                # Bring up the mission's difficulty screen. If it cannot find it, loop for a maximum of 2 times while
-                # scrolling the screen down to see more in order to find the Special mission.
-                mission_select_button = self._game.image_tools.find_button(temp_map_name)
-                if mission_select_button is not None:
-                    self._game.print_and_save(f"\n[INFO] Navigating to {map_name}...")
+                        # Move to the specified Special by clicking its "Select" button.
+                        special_quest_select_button = (mission_select_button[0] + 145, mission_select_button[1] + 75)
+                        self._game.mouse_tools.move_and_click_point(special_quest_select_button[0], special_quest_select_button[1], "select")
 
-                    # Move to the specified Special location by clicking its "Select" button.
-                    special_quest_select_button = (mission_select_button[0] + 145, mission_select_button[1] + 75)
-                    self._game.mouse_tools.move_and_click_point(special_quest_select_button[0], special_quest_select_button[1], "select")
-                    self._game.wait(1)
-
-                    if map_name == "Basic Treasure Quests":
-                        round_play_button_locations = self._game.image_tools.find_all("play_round_button")
-                        if temp_mission_name == "Scarlet Trial":
-                            # Navigate to Scarlet Trial.
-                            self._game.print_and_save(f"[INFO] Selecting Scarlet Trial...")
-                            self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1], "play_round_button")
-                        elif temp_mission_name == "Cerulean Trial":
-                            # Navigate to Cerulean Trial.
-                            self._game.print_and_save(f"[INFO] Selecting Cerulean Trial...")
-                            self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1], "play_round_button")
-                        elif temp_mission_name == "Violet Trial":
-                            # Navigate to Violet Trial.
-                            self._game.print_and_save(f"[INFO] Selecting Violet Trial...")
-                            self._game.mouse_tools.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1], "play_round_button")
-
-                        # Now start the Trial with the specified difficulty.
                         self._game.wait(1)
-                        self._game.print_and_save(f"[INFO] Now navigating to {difficulty}...")
-                        round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
-                        if difficulty == "Normal":
-                            difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
-                        elif difficulty == "Hard":
-                            difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
+
+                        if map_name == "Basic Treasure Quests":
+                            special_play_round_button_locations = self._game.image_tools.find_all("play_round_button")
+
+                            if formatted_mission_name == "Scarlet Trial":
+                                # Navigate to Scarlet Trial.
+                                self._game.print_and_save(f"[INFO] Selecting Scarlet Trial...")
+                                self._game.mouse_tools.move_and_click_point(special_play_round_button_locations[0][0], special_play_round_button_locations[0][1], "play_round_button")
+                            elif formatted_mission_name == "Cerulean Trial":
+                                # Navigate to Cerulean Trial.
+                                self._game.print_and_save(f"[INFO] Selecting Cerulean Trial...")
+                                self._game.mouse_tools.move_and_click_point(special_play_round_button_locations[1][0], special_play_round_button_locations[1][1], "play_round_button")
+                            elif formatted_mission_name == "Violet Trial":
+                                # Navigate to Violet Trial.
+                                self._game.print_and_save(f"[INFO] Selecting Violet Trial...")
+                                self._game.mouse_tools.move_and_click_point(special_play_round_button_locations[2][0], special_play_round_button_locations[2][1], "play_round_button")
+
+                            self._game.wait(1)
+
+                            # Now start the Trial with the specified difficulty.
+                            self._game.print_and_save(f"[INFO] Now navigating to {difficulty}...")
+                            round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
+
+                            if difficulty == "Normal":
+                                difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
+                            elif difficulty == "Hard":
+                                difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
+                            else:
+                                difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
+
+                        elif map_name == "Shiny Slime Search!":
+                            # Start up the Shiny Slime Search! mission by selecting its difficulty.
+                            self._game.print_and_save(f"[INFO] Selecting {difficulty} Shiny Slime Search!...")
+                            round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
+
+                            if difficulty == "Normal":
+                                difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
+                            elif difficulty == "Hard":
+                                difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
+                            else:
+                                difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
+
+                        elif map_name == "Six Dragon Trial":
+                            # Start up the Six Dragon Trial mission by selecting its difficulty.
+                            self._game.print_and_save(f"[INFO] Selecting {difficulty} Six Dragon Trial...")
+                            round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
+
+                            if difficulty == "Normal":
+                                difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
+                            elif difficulty == "Hard":
+                                difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
+                            else:
+                                difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
+
+                        elif map_name == "Elemental Treasure Quests":
+                            # Start up the specified Elemental Treasure Quest mission.
+                            self._game.print_and_save(f"[INFO] Selecting {mission_name}...")
+                            round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
+
+                            if formatted_mission_name == "The Hellfire Trial":
+                                difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
+                            elif formatted_mission_name == "The Deluge Trial":
+                                difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
+                            elif formatted_mission_name == "The Wasteland Trial":
+                                difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
+                            elif formatted_mission_name == "The Typhoon Trial":
+                                difficulty_play_button = (round_difficulty_play_button_locations[3][0], round_difficulty_play_button_locations[3][1], "play_round_button")
+                            elif formatted_mission_name == "The Aurora Trial":
+                                difficulty_play_button = (round_difficulty_play_button_locations[4][0], round_difficulty_play_button_locations[4][1], "play_round_button")
+                            elif formatted_mission_name == "The Oblivion Trial":
+                                difficulty_play_button = (round_difficulty_play_button_locations[5][0], round_difficulty_play_button_locations[5][1], "play_round_button")
+
+                        elif map_name == "Showdowns":
+                            special_play_round_button_locations = self._game.image_tools.find_all("play_round_button")
+
+                            if formatted_mission_name == "Ifrit Showdown":
+                                # Navigate to Ifrit Showdown.
+                                self._game.print_and_save(f"[INFO] Selecting Ifrit Showdown...")
+                                self._game.mouse_tools.move_and_click_point(special_play_round_button_locations[0][0], special_play_round_button_locations[0][1], "play_round_button")
+                            elif formatted_mission_name == "Cocytus Showdown":
+                                # Navigate to Cocytus Showdown.
+                                self._game.print_and_save(f"[INFO] Selecting Cocytus Showdown...")
+                                self._game.mouse_tools.move_and_click_point(special_play_round_button_locations[1][0], special_play_round_button_locations[1][1], "play_round_button")
+                            elif formatted_mission_name == "Vohu Manah Showdown":
+                                # Navigate to Vohu Manah Showdown.
+                                self._game.print_and_save(f"[INFO] Selecting Vohu Manah Showdown...")
+                                self._game.mouse_tools.move_and_click_point(special_play_round_button_locations[2][0], special_play_round_button_locations[2][1], "play_round_button")
+                            elif formatted_mission_name == "Sagittarius Showdown":
+                                # Navigate to Sagittarius Showdown.
+                                self._game.print_and_save(f"[INFO] Selecting Sagittarius Showdown...")
+                                self._game.mouse_tools.move_and_click_point(special_play_round_button_locations[3][0], special_play_round_button_locations[3][1], "play_round_button")
+                            elif formatted_mission_name == "Corow Showdown":
+                                # Navigate to Corow Showdown.
+                                self._game.print_and_save(f"[INFO] Selecting Corow Showdown...")
+                                self._game.mouse_tools.move_and_click_point(special_play_round_button_locations[4][0], special_play_round_button_locations[4][1], "play_round_button")
+                            elif formatted_mission_name == "Diablo Showdown":
+                                # Navigate to Diablo Showdown.
+                                self._game.print_and_save(f"[INFO] Selecting Diablo Showdown...")
+                                self._game.mouse_tools.move_and_click_point(special_play_round_button_locations[5][0], special_play_round_button_locations[5][1], "play_round_button")
+
+                            # Now start the Showdown with the specified difficulty.
+                            self._game.wait(1)
+                            self._game.print_and_save(f"[INFO] Now navigating to {difficulty}...")
+                            round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
+
+                            if difficulty == "Hard":
+                                difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
+                            elif difficulty == "Very Hard":
+                                difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
+                            elif difficulty == "Extreme":
+                                difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
+
+                        elif map_name == "Campaign-Exclusive Quest":
+                            self._game.print_and_save(f"[INFO] Selecting Campaign-Exclusive Quest...")
+                            round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
+
+                            # There is only one round "Play" button for this time-limited quest.
+                            difficulty_play_button = round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1]
+
                         else:
-                            difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
-                    elif map_name == "Shiny Slime Search!":
-                        # Start up the Shiny Slime Search! mission by selecting its difficulty.
-                        self._game.print_and_save(f"[INFO] Selecting {difficulty} Shiny Slime Search!...")
-                        round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
-                        if difficulty == "Normal":
-                            difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
-                        elif difficulty == "Hard":
-                            difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
-                        else:
-                            difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
-                    elif map_name == "Six Dragon Trial":
-                        # Start up the Six Dragon Trial mission by selecting its difficulty.
-                        self._game.print_and_save(f"[INFO] Selecting {difficulty} Six Dragon Trial...")
-                        round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
-                        if difficulty == "Normal":
-                            difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
-                        elif difficulty == "Hard":
-                            difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
-                        else:
-                            difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
-                    elif map_name == "Elemental Treasure Quests":
-                        # Start up the specified Elemental Treasure Quest mission.
-                        self._game.print_and_save(f"[INFO] Selecting {mission_name}...")
-                        round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
-                        if temp_mission_name == "The Hellfire Trial":
-                            difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
-                        elif temp_mission_name == "The Deluge Trial":
-                            difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
-                        elif temp_mission_name == "The Wasteland Trial":
-                            difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
-                        elif temp_mission_name == "The Typhoon Trial":
-                            difficulty_play_button = (round_difficulty_play_button_locations[3][0], round_difficulty_play_button_locations[3][1], "play_round_button")
-                        elif temp_mission_name == "The Aurora Trial":
-                            difficulty_play_button = (round_difficulty_play_button_locations[4][0], round_difficulty_play_button_locations[4][1], "play_round_button")
-                        elif temp_mission_name == "The Oblivion Trial":
-                            difficulty_play_button = (round_difficulty_play_button_locations[5][0], round_difficulty_play_button_locations[5][1], "play_round_button")
-                    elif map_name == "Showdowns":
-                        round_play_button_locations = self._game.image_tools.find_all("play_round_button")
-                        if temp_mission_name == "Ifrit Showdown":
-                            # Navigate to Ifrit Showdown.
-                            self._game.print_and_save(f"[INFO] Selecting Ifrit Showdown...")
-                            self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1], "play_round_button")
-                        elif temp_mission_name == "Cocytus Showdown":
-                            # Navigate to Cocytus Showdown.
-                            self._game.print_and_save(f"[INFO] Selecting Cocytus Showdown...")
-                            self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1], "play_round_button")
-                        elif temp_mission_name == "Vohu Manah Showdown":
-                            # Navigate to Vohu Manah Showdown.
-                            self._game.print_and_save(f"[INFO] Selecting Vohu Manah Showdown...")
-                            self._game.mouse_tools.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1], "play_round_button")
-                        elif temp_mission_name == "Sagittarius Showdown":
-                            # Navigate to Sagittarius Showdown.
-                            self._game.print_and_save(f"[INFO] Selecting Sagittarius Showdown...")
-                            self._game.mouse_tools.move_and_click_point(round_play_button_locations[3][0], round_play_button_locations[3][1], "play_round_button")
-                        elif temp_mission_name == "Corow Showdown":
-                            # Navigate to Corow Showdown.
-                            self._game.print_and_save(f"[INFO] Selecting Corow Showdown...")
-                            self._game.mouse_tools.move_and_click_point(round_play_button_locations[4][0], round_play_button_locations[4][1], "play_round_button")
-                        elif temp_mission_name == "Diablo Showdown":
-                            # Navigate to Diablo Showdown.
-                            self._game.print_and_save(f"[INFO] Selecting Diablo Showdown...")
-                            self._game.mouse_tools.move_and_click_point(round_play_button_locations[5][0], round_play_button_locations[5][1], "play_round_button")
+                            # Start up the Angel Halo mission by selecting its difficulty.
+                            self._game.print_and_save(f"[INFO] Selecting {difficulty} Angel Halo...")
+                            round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
 
-                        # Now start the Showdown with the specified difficulty.
-                        self._game.wait(1)
-                        self._game.print_and_save(f"[INFO] Now navigating to {difficulty}...")
-                        round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
+                            if difficulty == "Normal":
+                                difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
+                            elif difficulty == "Hard":
+                                difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
+                            else:
+                                difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
 
-                        if difficulty == "Hard":
-                            difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
-                        elif difficulty == "Very Hard":
-                            difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
-                        elif difficulty == "Extreme":
-                            difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
-
-                    elif map_name == "Campaign-Exclusive Quest":
-                        self._game.print_and_save(f"[INFO] Selecting Campaign-Exclusive Quest...")
-                        round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
-
-                        # There is only one round "Play" button for this time-limited quest.
-                        difficulty_play_button = round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1]
-
+                        # Finally, click the "Play" button and that should put the bot at the Summon Selection screen.
+                        self._game.mouse_tools.move_and_click_point(difficulty_play_button[0], difficulty_play_button[1], "play_round_button")
+                        break
                     else:
-                        # Start up the Angel Halo mission by selecting its difficulty.
-                        self._game.print_and_save(f"[INFO] Selecting {difficulty} Angel Halo...")
-                        round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
-                        if difficulty == "Normal":
-                            difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
-                        elif difficulty == "Hard":
-                            difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
-                        else:
-                            difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
+                        # Scroll the screen down more if on a smaller screen and it obscures the targeted mission.
+                        self._game.mouse_tools.scroll_screen(self._game.home_button_location[0], self._game.home_button_location[1] - 50, -500)
+                        tries -= 1
 
-                    # Now click the "Play" button for the specified difficulty and that should put the bot at the Summon Selection screen.
-                    self._game.mouse_tools.move_and_click_point(difficulty_play_button[0], difficulty_play_button[1], "play_round_button")
-                    break
-                else:
-                    self._game.mouse_tools.scroll_screen(self._game.home_button_location[0], self._game.home_button_location[1] - 50, -500)
-                    tries -= 1
-        else:
-            raise Exception("Cannot find the Special Missions.")
+        return None
+
+
+
+    def select_map(self, farming_mode: str, map_name: str, mission_name: str, difficulty: str):
+        """Navigates the bot to the specified map and preps the bot for Summon/Party selection.
+
+        Args:
+            farming_mode (str): Mode to look for the specified item and map in.
+            map_name (str): Name of the map to look for the specified mission in.
+            mission_name (str): Name of the mission to farm the item in.
+            difficulty (str): Selected difficulty for certain missions that require it.
+
+        Returns:
+            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
+        """
+        if farming_mode.lower() == "quest":
+            self._navigate_to_quest(map_name, mission_name)
+        elif farming_mode.lower() == "special":
+            self._navigate_to_special(map_name, mission_name, difficulty)
+
 
     elif map_mode.lower() == "event" or map_mode.lower() == "event (token drawboxes)":
     # Go to the Home screen.
