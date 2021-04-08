@@ -487,6 +487,133 @@ class MapSelection:
 
         return None
 
+    def _navigate_to_event(self, farming_mode: str, mission_name: str, difficulty: str):
+        # Go to the Home screen.
+        self._game.go_back_home(confirm_location_check = True)
+
+        # Go to the Event by clicking on the "Menu" button and then click the very first banner.
+        self._game.find_and_click_button("home_menu")
+        event_banner_locations = self._game.image_tools.find_all("event_banner")
+        if len(event_banner_locations) == 0:
+            event_banner_locations = self._game.image_tools.find_all("event_banner_blue")
+        self._game.mouse_tools.move_and_click_point(event_banner_locations[0][0], event_banner_locations[0][1], "event_banner")
+
+        self._game.wait(1)
+
+        # Check and click away the "Daily Missions" popup.
+        if self._game.image_tools.confirm_location("event_daily_missions", tries = 1):
+            self._game.print_and_save(f"\n[INFO] Detected \"Daily Missions\" popup. Clicking it away...")
+            self._game.find_and_click_button("close")
+
+        # Remove the difficulty prefix from the mission name.
+        if difficulty == "Normal":
+            formatted_mission_name = mission_name[2:]
+        elif difficulty == "Hard":
+            formatted_mission_name = mission_name[2:]
+        elif difficulty == "Very Hard":
+            formatted_mission_name = mission_name[3:]
+        elif difficulty == "Extreme":
+            formatted_mission_name = mission_name[3:]
+        elif difficulty == "Impossible":
+            formatted_mission_name = mission_name[3:]
+        else:
+            formatted_mission_name = mission_name
+
+        # Perform different navigation actions depending on if this is a "Event" or "Event (Token Drawboxes)".
+        if farming_mode == "Event":
+            # Click on the "Special Quest" button to head to the Special screen.
+            if not self._game.find_and_click_button("event_special_quest"):
+                self._game.image_tools.generate_alert(
+                    "Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
+                self._is_bot_running.value = 1
+                raise Exception("Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
+
+            if self._game.image_tools.confirm_location("special"):
+                # Check to see if the user already has a Nightmare available.
+                nightmare_is_available = 0
+                if self._game.image_tools.find_button("event_nightmare", tries = 1) is not None:
+                    nightmare_is_available = 1
+
+                # Find all the "Select" buttons.
+                select_button_locations = self._game.image_tools.find_all("select")
+
+                if formatted_mission_name == "Event Quest":
+                    # Select the Event Quests. Additionally, offset the locations by 1 if there is a Nightmare available.
+                    self._game.print_and_save(f"[INFO] Now hosting Event Quest...")
+                    self._game.mouse_tools.move_and_click_point(select_button_locations[0 + nightmare_is_available][0], select_button_locations[0 + nightmare_is_available][1], "select")
+
+                    self._game.wait(1)
+
+                    # Find all the round "Play" buttons.
+                    round_play_button_locations = self._game.image_tools.find_all("play_round_button")
+
+                    if difficulty == "Very Hard":
+                        self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1], "play_round_button")
+                    elif difficulty == "Extreme":
+                        self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1], "play_round_button")
+
+                elif formatted_mission_name == "Event Raid":
+                    # Select the Event Raids. Additionally, offset the locations by 1 if there is a Nightmare available.
+                    self._game.print_and_save(f"[INFO] Now hosting Event Raid...")
+                    self._game.mouse_tools.move_and_click_point(select_button_locations[1 + nightmare_is_available][0], select_button_locations[1 + nightmare_is_available][1], "play_round_button")
+
+                    self._game.wait(1)
+
+                    # Find all the round "Play" buttons.
+                    round_play_button_locations = self._game.image_tools.find_all("play_round_button")
+
+                    if difficulty == "Very Hard":
+                        self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1], "play_round_button")
+                    elif difficulty == "Extreme":
+                        self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1], "play_round_button")
+
+        else:
+            # Scroll down the screen a little bit for this UI layout that has Token Drawboxes.
+            self._game.mouse_tools.scroll_screen_from_home_button(-200)
+
+            if formatted_mission_name == "Event Quest":
+                self._game.print_and_save(f"[INFO] Now hosting Event Quest...")
+                self._game.find_and_click_button("event_quests")
+
+                self._game.wait(1)
+
+                # Find all the round "Play" buttons.
+                quest_play_locations = self._game.image_tools.find_all("play_round_button")
+
+                if difficulty == "Normal":
+                    self._game.mouse_tools.move_and_click_point(quest_play_locations[0][0], quest_play_locations[0][1], "play_round_button")
+                elif difficulty == "Hard":
+                    self._game.mouse_tools.move_and_click_point(quest_play_locations[1][0], quest_play_locations[1][1], "play_round_button")
+                elif difficulty == "Very Hard":
+                    self._game.mouse_tools.move_and_click_point(quest_play_locations[2][0], quest_play_locations[2][1], "play_round_button")
+                elif difficulty == "Extreme":
+                    self._game.mouse_tools.move_and_click_point(quest_play_locations[3][0], quest_play_locations[3][1], "play_round_button")
+
+            elif formatted_mission_name == "Event Raid":
+                # Bring up the "Raid Battle" popup. Then scroll down the screen a bit for screens less than 1440p to see the entire popup.
+                self._game.print_and_save(f"[INFO] Now hosting Event Raid...")
+                if not self._game.find_and_click_button("event_raid_battle"):
+                    self._game.image_tools.generate_alert(
+                        "Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
+                    self._is_bot_running.value = 1
+                    raise Exception("Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
+                self._game.mouse_tools.scroll_screen_from_home_button(-400)
+
+                if difficulty == "Very Hard":
+                    self._game.find_and_click_button("event_raid_very_hard")
+                elif difficulty == "Extreme":
+                    self._game.find_and_click_button("event_raid_extreme")
+                elif difficulty == "Impossible":
+                    self._game.find_and_click_button("event_raid_impossible")
+
+                # If the user does not have enough Treasures to host a Extreme or an Impossible Raid, host a Very Hard Raid instead.
+                if (difficulty == "Extreme" and not self._game.image_tools.wait_vanish("event_raid_extreme", timeout = 3)) or (
+                        difficulty == "Impossible" and not self._game.image_tools.wait_vanish("event_raid_impossible", timeout = 3)):
+                    self._game.print_and_save(f"[INFO] Not enough materials to host ${difficulty}. Hosting Very Hard instead...")
+                    self._game.find_and_click_button("event_raid_very_hard")
+
+        return None
+
     def select_map(self, farming_mode: str, map_name: str, mission_name: str, difficulty: str):
         """Navigates the bot to the specified map and preps the bot for Summon/Party selection.
 
@@ -504,129 +631,9 @@ class MapSelection:
         elif farming_mode.lower() == "special":
             self._navigate_to_special(map_name, mission_name, difficulty)
         elif farming_mode.lower() == "coop":
-            self._navigate_to_coop(map_name, mission_name)
-
-    elif map_mode.lower() == "event" or map_mode.lower() == "event (token drawboxes)":
-    # Go to the Home screen.
-    self._game.go_back_home(confirm_location_check = True)
-
-    # Go to the Event by clicking on the "Menu" button and then click the very first banner.
-    self._game.find_and_click_button("home_menu")
-    banner_locations = self._game.image_tools.find_all("event_banner")
-    if len(banner_locations) == 0:
-        banner_locations = self._game.image_tools.find_all("event_banner_blue")
-    self._game.mouse_tools.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
-
-    # Check and click away the "Daily Missions" popup.
-    self._game.wait(1)
-    if self._game.image_tools.confirm_location("event_daily_missions", tries = 1):
-        self._game.print_and_save(f"\n[INFO] Detected \"Daily Missions\" popup. Clicking it away...")
-        self._game.find_and_click_button("close")
-
-    # Remove the difficulty prefix from the mission name.
-    temp_mission_name = mission_name
-    if difficulty == "Normal":
-        temp_mission_name = mission_name[1:]
-    elif difficulty == "Hard":
-        temp_mission_name = mission_name[1:]
-    elif difficulty == "Very Hard":
-        temp_mission_name = mission_name[3:]
-    elif difficulty == "Extreme":
-        temp_mission_name = mission_name[3:]
-    elif difficulty == "Impossible":
-        temp_mission_name = mission_name[3:]
-
-    # If the first character is a whitespace after processing the string, remove it.
-    if temp_mission_name[0] == " ":
-        temp_mission_name = temp_mission_name[1:]
-
-    if map_mode.lower() == "event":
-        # Click on the "Special Quest" button to head to the Special screen.
-        if not self._game.find_and_click_button("event_special_quest"):
-            self._game.image_tools.generate_alert(
-                "Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
-            self._is_bot_running.value = 1
-            raise Exception("Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
-        self._game.image_tools.confirm_location("special")
-
-        # Check to see if the user already had a Nightmare available.
-        nightmare_is_available = 0
-        if self._game.image_tools.find_button("event_nightmare", tries = 1) is not None:
-            nightmare_is_available = 1
-
-        # Find all the "Select" buttons.
-        select_button_locations = self._game.image_tools.find_all("select")
-
-        if temp_mission_name.lower() == "event quest":
-            # Select the Event Quests. Offset by 1 if there is a Nightmare available.
-            self._game.print_and_save(f"[INFO] Now hosting Event Quest...")
-            self._game.mouse_tools.move_and_click_point(select_button_locations[0 + nightmare_is_available][0], select_button_locations[0 + nightmare_is_available][1], "select")
-            self._game.wait(1)
-
-            # Find all the round "Play" buttons.
-            round_play_button_locations = self._game.image_tools.find_all("play_round_button")
-
-            if difficulty == "Very Hard":
-                self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1], "play_round_button")
-            elif difficulty == "Extreme":
-                self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1], "play_round_button")
-        elif temp_mission_name.lower() == "event raid":
-            # Select the Event Raids. Offset by 1 if there is a Nightmare available.
-            self._game.print_and_save(f"[INFO] Now hosting Event Raid...")
-            self._game.mouse_tools.move_and_click_point(select_button_locations[1 + nightmare_is_available][0], select_button_locations[1 + nightmare_is_available][1], "play_round_button")
-            self._game.wait(1)
-
-            # Find all the round "Play" buttons.
-            round_play_button_locations = self._game.image_tools.find_all("play_round_button")
-
-            if difficulty == "Very Hard":
-                self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1], "play_round_button")
-            elif difficulty == "Extreme":
-                self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1], "play_round_button")
-
-        self._game.wait(1)
-    else:
-        # Scroll down the screen a little bit for this UI layout that has Token Drawboxes.
-        self._game.mouse_tools.scroll_screen_from_home_button(-200)
-
-        if temp_mission_name.lower() == "event raid":
-            # Bring up the "Raid Battle" popup. Then scroll down the screen a bit for screens less than 1440p to see the entire popup.
-            self._game.print_and_save(f"[INFO] Now hosting Event Raid...")
-            if not self._game.find_and_click_button("event_raid_battle"):
-                self._game.image_tools.generate_alert(
-                    "Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
-                self._is_bot_running.value = 1
-                raise Exception("Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
-            self._game.mouse_tools.scroll_screen_from_home_button(-400)
-
-            if difficulty == "Very Hard":
-                self._game.find_and_click_button("event_raid_very_hard")
-            elif difficulty == "Extreme":
-                self._game.find_and_click_button("event_raid_extreme")
-            elif difficulty == "Impossible":
-                self._game.find_and_click_button("event_raid_impossible")
-
-            # If the user does not have enough Treasures to host a Extreme or an Impossible Raid, host a Very Hard Raid instead.
-            if difficulty == "Extreme" and not self._game.image_tools.wait_vanish("event_raid_extreme", timeout = 3):
-                self._game.print_and_save(f"[INFO] Not enough materials to host Extreme. Hosting Very Hard instead...")
-                self._game.find_and_click_button("event_raid_very_hard")
-            elif difficulty == "Impossible" and not self._game.image_tools.wait_vanish("event_raid_impossible", timeout = 3):
-                self._game.print_and_save(f"[INFO] Not enough materials to host Impossible. Hosting Very Hard instead...")
-                self._game.find_and_click_button("event_raid_very_hard")
-        elif temp_mission_name.lower() == "event quest":
-            self._game.print_and_save(f"[INFO] Now hosting Event Quest...")
-            self._game.find_and_click_button("event_quests")
-            self._game.wait(1)
-            quest_play_locations = self._game.image_tools.find_all("play_round_button")
-
-            if difficulty == "Normal":
-                self._game.mouse_tools.move_and_click_point(quest_play_locations[0][0], quest_play_locations[0][1], "play_round_button")
-            elif difficulty == "Hard":
-                self._game.mouse_tools.move_and_click_point(quest_play_locations[1][0], quest_play_locations[1][1], "play_round_button")
-            elif difficulty == "Very Hard":
-                self._game.mouse_tools.move_and_click_point(quest_play_locations[2][0], quest_play_locations[2][1], "play_round_button")
-            elif difficulty == "Extreme":
-                self._game.mouse_tools.move_and_click_point(quest_play_locations[3][0], quest_play_locations[3][1], "play_round_button")
+            self._navigate_to_coop(map_name)
+        elif farming_mode.lower() == "event" or farming_mode.lower() == "event (token drawboxes)":
+            self._navigate_to_event(farming_mode, mission_name, difficulty)
 
 elif map_mode.lower() == "dread barrage":
 # Go to the Home screen.
