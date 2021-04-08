@@ -819,7 +819,7 @@ class MapSelection:
                                 self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting Extreme+ now.")
                                 self._game.find_and_click_button("guild_wars_meat_extreme+")
                                 
-                                # Alert the user if they lack the meat to host this and stop the bot.
+                                # Alert the user if they did not unlock Extreme+ and stop the bot.
                                 if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 5):
                                     self._game.image_tools.generate_alert("You did not unlock Extreme+ yet!")
                                     self._isBotRunning.value = 1
