@@ -767,46 +767,46 @@ class MapSelection:
         Returns:
             (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
-        if farming_mode == "Quest":
-            self._navigate_to_quest(map_name, mission_name)
-        elif farming_mode == "Special":
-            self._navigate_to_special(map_name, mission_name, difficulty)
-        elif farming_mode == "Coop":
-            self._navigate_to_coop(map_name)
-        elif farming_mode == "Event" or farming_mode == "Event (Token Drawboxes)":
-            self._navigate_to_event(farming_mode, mission_name, difficulty)
-        elif farming_mode == "Dread Barrage":
-            self._navigate_to_dread_barrage(difficulty)
-        elif farming_mode == "Rise of the Beasts":
-            self._navigate_to_rotb(mission_name, difficulty)
+        try:
+            if farming_mode == "Quest":
+                self._navigate_to_quest(map_name, mission_name)
+            elif farming_mode == "Special":
+                self._navigate_to_special(map_name, mission_name, difficulty)
+            elif farming_mode == "Coop":
+                self._navigate_to_coop(map_name)
+            elif farming_mode == "Event" or farming_mode == "Event (Token Drawboxes)":
+                self._navigate_to_event(farming_mode, mission_name, difficulty)
+            elif farming_mode == "Dread Barrage":
+                self._navigate_to_dread_barrage(difficulty)
+            elif farming_mode == "Rise of the Beasts":
+                self._navigate_to_rotb(mission_name, difficulty)
 
+            # Check for available AP.
+            self._game.check_for_ap(use_full_elixir = self._game.use_full_elixir)
 
-# Check for available AP.
-self._game.check_for_ap(use_full_elixir = self._game.use_full_elixir)
-
-# Check to see if the bot is at the Summon Selection screen.
-if map_mode.lower() != "coop":
-    self._game.print_and_save(f"[INFO] Now checking if bot is currently at Summon Selection screen...")
-    check = self._game.image_tools.confirm_location("select_summon", tries = 5)
-    if check:
-        self._game.print_and_save(f"[INFO] Bot is currently at Summon Selection screen.")
-        return True
-    else:
-        self._game.print_and_save(f"[INFO] Bot is not at Summon Selection screen.")
-        return False
-else:
-    # If its Coop, check to see if the bot is at the Party Selection screen.
-    self._game.print_and_save(f"[INFO] Now checking if bot is currently at Coop Party Selection screen...")
-    check = self._game.image_tools.confirm_location("coop_without_support_summon", tries = 5)
-    if check:
-        self._game.print_and_save(f"[INFO] Bot is currently at Coop Party Selection screen.")
-        return True
-    else:
-        self._game.print_and_save(f"[INFO] Bot is not at Coop Party Selection screen.")
-        return False
-except Exception:
-self._game.print_and_save(f"\n[ERROR] Bot encountered exception in MapSelection select_map(): \n{traceback.format_exc()}")
-self._is_bot_running.value = 1
+            # Check to see if the bot is at the Summon Selection screen.
+            if map_mode.lower() != "coop":
+                self._game.print_and_save(f"[INFO] Now checking if bot is currently at Summon Selection screen...")
+                check = self._game.image_tools.confirm_location("select_summon", tries = 5)
+                if check:
+                    self._game.print_and_save(f"[INFO] Bot is currently at Summon Selection screen.")
+                    return True
+                else:
+                    self._game.print_and_save(f"[INFO] Bot is not at Summon Selection screen.")
+                    return False
+            else:
+                # If its Coop, check to see if the bot is at the Party Selection screen.
+                self._game.print_and_save(f"[INFO] Now checking if bot is currently at Coop Party Selection screen...")
+                check = self._game.image_tools.confirm_location("coop_without_support_summon", tries = 5)
+                if check:
+                    self._game.print_and_save(f"[INFO] Bot is currently at Coop Party Selection screen.")
+                    return True
+                else:
+                    self._game.print_and_save(f"[INFO] Bot is not at Coop Party Selection screen.")
+                    return False
+        except Exception:
+            self._game.print_and_save(f"\n[ERROR] Bot encountered exception in MapSelection select_map(): \n{traceback.format_exc()}")
+            self._is_bot_running.value = 1
 
 
 def _clear_pending_battle(self):
