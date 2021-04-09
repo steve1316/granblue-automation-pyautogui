@@ -45,8 +45,8 @@ class Game:
         # #### end of twitter ####
 
         # #### refill ####
-        self.use_full_elixir = config.getboolean("refill", "refill_using_full_elixir")
-        self.use_soul_balm = config.getboolean("refill", "refill_using_soul_balms")
+        self._use_full_elixir = config.getboolean("refill", "refill_using_full_elixir")
+        self._use_soul_balm = config.getboolean("refill", "refill_using_soul_balms")
         # #### end of refill ####
 
         # #### configuration ####
@@ -571,11 +571,8 @@ class Game:
 
         return True
 
-    def check_for_ap(self, use_full_elixir: bool = False):
+    def check_for_ap(self):
         """Check if the user encountered the "Not Enough AP" popup and it will refill using either Half or Full Elixir.
-
-        Args:
-            use_full_elixir (bool, optional): Will use Full Elixir instead of Half Elixir based on whether this is True or not. Defaults to False.
 
         Returns:
             None
@@ -585,7 +582,7 @@ class Game:
                 self.farming_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries = 2)):
             if self.image_tools.confirm_location("not_enough_ap", tries = 2):
                 # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full Elixir.
-                if use_full_elixir is False:
+                if self._use_full_elixir is False:
                     self.print_and_save("\n[INFO] AP ran out! Using Half Elixir...")
                     half_ap_location = self.image_tools.find_button("refill_half_ap")
                     self.mouse_tools.move_and_click_point(half_ap_location[0], half_ap_location[1] + 175, "use")
@@ -606,18 +603,15 @@ class Game:
         self.print_and_save("[INFO] AP is available. Continuing...")
         return None
 
-    def check_for_ep(self, use_soul_balm: bool = False):
+    def check_for_ep(self):
         """Check if the user encountered the "Not Enough EP" popup and it will refill using either Soul Berry or Soul Balm.
-
-        Args:
-            use_soul_balm (bool, optional): Will use Soul Balm instead of Soul Berry based on whether this is True or not. Defaults to False.
 
         Returns:
             None
         """
         if self.farming_mode.lower() == "raid" and self.image_tools.confirm_location("not_enough_ep", tries = 2):
             # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
-            if use_soul_balm is False:
+            if self._use_soul_balm is False:
                 self.print_and_save("\n[INFO] EP ran out! Using Soul Berries...")
                 half_ep_location = self.image_tools.find_button("refill_soul_berry")
                 self.mouse_tools.move_and_click_point(half_ep_location[0], half_ep_location[1] + 175, "use")
@@ -1184,7 +1178,7 @@ class Game:
                                     self.find_and_click_button("close")
 
                                 # Check for available AP and then reset the Summon check flag.
-                                self.check_for_ap(use_full_elixir = self.use_full_elixir)
+                                self.check_for_ap()
                                 summon_check = False
 
                                 # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go

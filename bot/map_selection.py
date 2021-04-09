@@ -1047,7 +1047,7 @@ class MapSelection:
                 self._navigate_to_guild_wars(difficulty)
 
             # Check for available AP.
-            self._game.check_for_ap(use_full_elixir = self._game.use_full_elixir)
+            self._game.check_for_ap()
 
             # Check to see if the bot is at the Summon Selection screen.
             if farming_mode != "Coop":
@@ -1147,7 +1147,7 @@ class MapSelection:
                         if not self._game.image_tools.confirm_location("raid_already_ended", tries = 1) and not self.check_for_pending("raid") and not self._game.image_tools.confirm_location(
                                 "invalid_code", tries = 1):
                             # Check for EP.
-                            self._game.check_for_ep(use_soul_balm = self._game.use_soul_balm)
+                            self._game.check_for_ep()
 
                             self._game.print_and_save(f"[SUCCESS] Joining {room_code} was successful.")
                             self._raids_joined += 1
