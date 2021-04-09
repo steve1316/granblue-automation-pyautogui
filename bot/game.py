@@ -285,11 +285,12 @@ class Game:
         time.sleep(seconds)
         return None
 
-    def find_and_click_button(self, button_name: str, tries: int = 2, suppress_error: bool = False):
+    def find_and_click_button(self, button_name: str, clicks: int = 1, tries: int = 2, suppress_error: bool = False):
         """Find the center point of a button image and click it.
 
         Args:
             button_name (str): Name of the button image file in the /images/buttons/ folder.
+            clicks (int): Number of mouse clicks when clicking the button image location. Defaults to 1.
             tries (int): Number of tries to attempt to find the specified button image. Defaults to 2.
             suppress_error (bool): Suppresses template matching error depending on boolean. Defaults to False.
 
@@ -309,7 +310,7 @@ class Game:
                 temp_location = self.image_tools.find_button("quest_red_strike_time", tries = tries, suppress_error = suppress_error)
 
             if temp_location is not None:
-                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "quest_blue")
+                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "quest_blue", mouse_clicks = clicks)
                 return True
         elif button_name.lower() == "raid":
             temp_location = self.image_tools.find_button("raid_flat", tries = tries, suppress_error = suppress_error)
@@ -317,7 +318,7 @@ class Game:
                 temp_location = self.image_tools.find_button("raid_bouncing", tries = tries, suppress_error = suppress_error)
 
             if temp_location is not None:
-                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "raid_flat")
+                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "raid_flat", mouse_clicks = clicks)
                 return True
         elif button_name.lower() == "coop_start":
             temp_location = self.image_tools.find_button("coop_start_flat", tries = tries, suppress_error = suppress_error)
@@ -325,7 +326,7 @@ class Game:
                 temp_location = self.image_tools.find_button("coop_start_faded", tries = tries, suppress_error = suppress_error)
 
             if temp_location is not None:
-                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "coop_start_flat")
+                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "coop_start_flat", mouse_clicks = clicks)
                 return True
         elif button_name.lower() == "event_special_quest":
             temp_location = self.image_tools.find_button("event_special_quest", tries = tries, suppress_error = suppress_error)
@@ -335,12 +336,12 @@ class Game:
                 temp_location = self.image_tools.find_button("event_special_quest_bouncing", tries = tries, suppress_error = suppress_error)
 
             if temp_location is not None:
-                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "event_special_quest")
+                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "event_special_quest", mouse_clicks = clicks)
                 return True
         else:
             temp_location = self.image_tools.find_button(button_name.lower(), tries = tries, suppress_error = suppress_error)
             if temp_location is not None:
-                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], button_name)
+                self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], button_name, mouse_clicks = clicks)
                 return True
 
         return False
