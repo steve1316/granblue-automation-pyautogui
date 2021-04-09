@@ -272,7 +272,8 @@ class Game:
 
         return None
 
-    def wait(self, seconds: int = 3):
+    @staticmethod
+    def wait(seconds: int = 3):
         """Wait the specified seconds to account for ping or loading.
 
         Args:
