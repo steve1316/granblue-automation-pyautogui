@@ -164,7 +164,9 @@ class Game:
         self._item_amount_to_farm = 0
         self._item_amount_farmed = 0
         self.farming_mode = ""
+        self._location_name = ""
         self._mission_name = ""
+        self._difficulty = ""
         self._summon_element_list = []
         self._summon_list = []
         self._group_number = 0
@@ -684,15 +686,40 @@ class Game:
 
         return None
 
-    def check_for_friend_request(self):
-        """Detect any "Friend Request" popups and click them away.
+    def check_for_popups(self):
+        """Detect any popups and attempt to close them all with the final destination being the Summon Selection screen.
 
         Returns:
             None
         """
-        if self.image_tools.confirm_location("friend_request", tries = 1):
-            self.print_and_save("\n[INFO] Detected \"Friend Request\" popup. Closing it now...")
-            self.find_and_click_button("cancel")
+        while self.image_tools.confirm_location("select_a_summon", tries = 1) is False:
+            # Break out of the loop if the bot detected the "Not Enough AP" popup.
+            if self.image_tools.confirm_location("not_enough_ap", tries = 1):
+                break
+
+            if self.farming_mode == "Rise of the Beasts" and self.image_tools.confirm_location("proud_solo_quest", tries = 1):
+                # Scroll down the screen a little bit because the popup itself is too long for screen sizes around 1080p.
+                self.mouse_tools.scroll_screen_from_home_button(-400)
+
+            # Check for certain popups for certain Farming Modes.
+            if (self.farming_mode == "Rise of the Beasts" and self._check_for_rotb_extreme_plus()) or (
+                    self.farming_mode == "Special" and self._mission_name == "VH Angel Halo" and self._item_name == "Angel Halo Weapons" and self._check_for_dimensional_halo()) or (
+                    (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._check_for_event_nightmare()):
+                # Make sure the bot goes back to the Home screen so that the "Play Again" functionality comes back.
+                self._map_selection.select_map(self.farming_mode, self._location_name, self._mission_name, self._difficulty)
+                break
+
+            # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select the Mission again.
+            if self.farming_mode == "Event (Token Drawboxes)" and self.image_tools.confirm_location("not_enough_treasure", tries = 1):
+                self.find_and_click_button("ok")
+                self._map_selection.select_map(self.farming_mode, self._location_name, self._mission_name, self._difficulty)
+                break
+
+            # Attempt to close the popup by clicking on any detected "Close" and "Cancel" buttons.
+            if self.find_and_click_button("close", tries = 1, suppress_error = True) is False:
+                self.find_and_click_button("cancel", tries = 1, suppress_error = True)
+
+            self.wait(1)
 
         return None
 
@@ -907,7 +934,9 @@ class Game:
             self._item_name = item_name
             self._item_amount_to_farm = item_amount_to_farm
             self.farming_mode = farming_mode
+            self._location_name = location_name
             self._mission_name = mission_name
+            self._difficulty = difficulty
             self._summon_element_list = summon_element_list
             self._summon_list = summon_list
             self._group_number = group_number
@@ -1100,11 +1129,6 @@ class Game:
                                     # Now click the "Start" button.
                                     self.find_and_click_button("coop_start")
 
-                                # Check for "Missions" popup for Dread Barrage.
-                                if farming_mode.lower() == "dread barrage" and self.image_tools.confirm_location("dread_barrage_missions", tries = 1):
-                                    self.print_and_save("[INFO] Found \"Missions\" popup for Dread Barrage. Closing it now...")
-                                    self.find_and_click_button("close")
-
                                 # If the user wants to fight Unparalleled Foes during Dread Barrage, then start it.
                                 if farming_mode.lower() == "dread barrage" and self.image_tools.confirm_location("dread_barrage_unparalleled_foe", tries = 1):
                                     # Find the locations of the "AP 0" text underneath each Unparalleled Foe.
@@ -1127,61 +1151,13 @@ class Game:
                                         self.print_and_save("\n[INFO] Defaulting to Level 95 Unparalleled Foe. Starting it now...")
                                         self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1], "ap_0")
 
-                                # Check for "Trophy Achieved" popup.
-                                if self.image_tools.confirm_location("trophy_achieved", tries = 1):
-                                    self.print_and_save("[INFO] Detected \"Trophy Achieved\" popup. Closing it now...")
-                                    self.find_and_click_button("close")
-
-                                # Check for any Skyscope popups.
-                                if self.enable_skyscope and self.image_tools.confirm_location("skyscope", tries = 1):
-                                    self.find_and_click_button("close")
-
-                                # Check for "Daily Missions" popup for Rise of the Beasts.
-                                if farming_mode.lower() == "rise of the beasts" and self.image_tools.confirm_location("event_daily_missions", tries = 1):
-                                    self.find_and_click_button("close")
-
-                                # Check for "Friend Request" popup.
-                                self.check_for_friend_request()
-
-                                # Check for "Proud Solo Quest" popup for Rise of the Beasts.
-                                if farming_mode.lower() == "rise of the beasts" and self.image_tools.confirm_location("proud_solo_quest", tries = 1):
-                                    # Scroll down the screen a little bit because the popup itself is too long for screen sizes around 1080p.
-                                    self.mouse_tools.scroll_screen_from_home_button(-400)
-                                    self.find_and_click_button("close")
-
-                                # Check for "Extreme+" popup for Rise of the Beasts.
-                                if farming_mode.lower() == "rise of the beasts":
-                                    if self._check_for_rotb_extreme_plus():
-                                        # Make sure the bot goes back to the Home screen when completing a Extreme+ so that the "Play Again"
-                                        # functionality comes back.
-                                        self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
-
-                                # Check for Dimensional Halo and Event Nightmare.
-                                if self.farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons"):
-                                    if self._check_for_dimensional_halo():
-                                        # Make sure the bot goes back to the Home screen when completing a Dimensional Halo so that the "Play Again"
-                                        # functionality comes back.
-                                        self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
-                                elif self.farming_mode.lower() == "event" or self.farming_mode.lower() == "event (token drawboxes)":
-                                    if self._check_for_event_nightmare():
-                                        # Make sure the bot goes back to the Home screen when completing a Event Nightmare so that the "Play Again"
-                                        # functionality comes back.
-                                        self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
-
-                                # Check for any Skyscope popups.
-                                if self.enable_skyscope and self.image_tools.confirm_location("skyscope", tries = 1):
-                                    self.find_and_click_button("close")
+                                # Close any detected popups except certain popups that need to be handled separately.
+                                self.check_for_popups()
 
                                 # Check for available AP and then reset the Summon check flag.
                                 self.check_for_ap()
                                 summon_check = False
 
-                                # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go
-                                # back to select_map().
-                                if self.farming_mode.lower() == "event (token drawboxes)" and self.image_tools.confirm_location("not_enough_treasure"):
-                                    self.find_and_click_button("ok")
-
-                                    self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
                         else:
                             # Start the mission again if the Party wiped or exited prematurely during Combat Mode.
                             self.print_and_save("\n[INFO] Selecting mission again due to retreating...")

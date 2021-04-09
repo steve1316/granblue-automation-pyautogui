@@ -97,7 +97,8 @@ class MapSelection:
                             self._game.find_and_click_button("close")
                             self._game.wait(1)
 
-                        self._game.check_for_friend_request()
+                        if self._game.image_tools.confirm_location("friend_request", tries = 1):
+                            self._game.find_and_click_button("cancel")
 
                         self._game.wait(1)
                     else:
