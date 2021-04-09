@@ -517,16 +517,13 @@ class ImageUtils:
         """
         self._game.print_and_save(f"\n[INFO] Now waiting for {image_name} to vanish from screen...")
         self._file_resolver.add_path("images/buttons/")
-        try:
-            self._clear_memory_guibot()
-            if self._guibot.wait_vanish(image_name, timeout = timeout):
-                self._game.print_and_save(f"[SUCCESS] Image successfully vanished from screen...")
-                return True
-            else:
-                self._game.print_and_save(f"[WARNING] Image did not vanish from screen...")
-                return False
-        except Exception as e:
-            self._game.print_and_save(f"[ERROR] {image_name} should have vanished from the screen after {timeout} seconds but did not. Exact error is: \n{e}")
+        self._clear_memory_guibot()
+        if self._guibot.wait_vanish(image_name, timeout = timeout):
+            self._game.print_and_save(f"[SUCCESS] Image successfully vanished from screen...")
+            return True
+        else:
+            self._game.print_and_save(f"[WARNING] Image did not vanish from screen...")
+            return False
 
     def get_button_dimensions(self, image_name: str):
         """Get the dimensions of a image in images/buttons/ folder.

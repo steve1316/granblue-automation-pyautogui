@@ -171,6 +171,7 @@ class TwitterRoomFinder:
             except Exception:
                 self._game.print_and_save(
                     f"\n[ERROR] Connection to the Twitter API failed. Check the config.ini and verify that the keys and tokens are correct. Exact error is: \n{traceback.format_exc()}")
+                self._game.isBotRunning.value = 1
 
         self._game.print_and_save(f"\n[TWITTER] Now finding the {count} most recent tweets for {raid_name}.")
         today = datetime.datetime.today()

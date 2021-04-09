@@ -28,57 +28,53 @@ class CombatMode:
         Returns:
             None
         """
-        try:
-            # Check to see if Party has wiped.
+        # Check to see if Party has wiped.
+        if self._debug_mode:
+            self._game.print_and_save(f"\n[DEBUG] Checking to see if the Party wiped...")
+
+        party_wipe_indicator = self._game.image_tools.find_button("party_wipe_indicator", tries = 1, suppress_error = True)
+        if party_wipe_indicator is not None:
+            # Click on the blue indicator to get rid of the overlay.
+            self._game.wait(2)
+            self._game.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1], "party_wipe_indicator")
+
+            if (self._game.farming_mode.lower() != "raid" and self._game.farming_mode.lower() != "dread barrage") and self._game.image_tools.confirm_location("continue"):
+                # Cancel the popup that asks you if you want to use a Full Elixir to come back. Then click the red "Retreat" button.
+                self._game.print_and_save(f"[COMBAT] Party has unfortunately wiped during Combat Mode. Retreating now...")
+                self._game.find_and_click_button("cancel")
+                self._game.find_and_click_button("retreat_confirmation")
+                self._retreat_check = True
+            elif (self._game.farming_mode.lower() == "raid" or self._game.farming_mode.lower() == "dread barrage") and self._game.image_tools.confirm_location("salute_participants"):
+                # Salute the participants.
+                self._game.print_and_save(f"[COMBAT] Party has unfortunately wiped during Combat Mode. Backing out now without retreating...")
+                self._game.find_and_click_button("salute")
+                self._game.find_and_click_button("ok")
+
+                # Then cancel the popup that asks you if you want to use a Full Elixir to come back.
+                self._game.find_and_click_button("cancel")
+
+                # Then click the "Home" button.
+                self._game.find_and_click_button("raid_retreat_home")
+
+                self._retreat_check = True
+            elif self._game.farming_mode.lower() == "coop" and self._game.image_tools.confirm_location("salute_participants"):
+                # Salute the participants.
+                self._game.print_and_save(f"[COMBAT] Party has unfortunately wiped during Combat Mode. Leaving the Coop room...")
+                self._game.find_and_click_button("salute")
+                self._game.find_and_click_button("ok")
+
+                # Then cancel the popup that asks you if you want to use a Full Elixir to come back.
+                self._game.find_and_click_button("cancel")
+
+                # Then click the "Leave" button.
+                self._game.find_and_click_button("leave")
+
+                self._retreat_check = True
+        else:
             if self._debug_mode:
-                self._game.print_and_save(f"\n[DEBUG] Checking to see if the Party wiped...")
+                self._game.print_and_save(f"[DEBUG] Party has not wiped.")
 
-            party_wipe_indicator = self._game.image_tools.find_button("party_wipe_indicator", tries = 1, suppress_error = True)
-            if party_wipe_indicator is not None:
-                # Click on the blue indicator to get rid of the overlay.
-                self._game.wait(2)
-                self._game.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1], "party_wipe_indicator")
-
-                if (self._game.farming_mode.lower() != "raid" and self._game.farming_mode.lower() != "dread barrage") and self._game.image_tools.confirm_location("continue"):
-                    # Cancel the popup that asks you if you want to use a Full Elixir to come back. Then click the red "Retreat" button.
-                    self._game.print_and_save(f"[COMBAT] Party has unfortunately wiped during Combat Mode. Retreating now...")
-                    self._game.find_and_click_button("cancel")
-                    self._game.find_and_click_button("retreat_confirmation")
-                    self._retreat_check = True
-                elif (self._game.farming_mode.lower() == "raid" or self._game.farming_mode.lower() == "dread barrage") and self._game.image_tools.confirm_location("salute_participants"):
-                    # Salute the participants.
-                    self._game.print_and_save(f"[COMBAT] Party has unfortunately wiped during Combat Mode. Backing out now without retreating...")
-                    self._game.find_and_click_button("salute")
-                    self._game.find_and_click_button("ok")
-
-                    # Then cancel the popup that asks you if you want to use a Full Elixir to come back.
-                    self._game.find_and_click_button("cancel")
-
-                    # Then click the "Home" button.
-                    self._game.find_and_click_button("raid_retreat_home")
-
-                    self._retreat_check = True
-                elif self._game.farming_mode.lower() == "coop" and self._game.image_tools.confirm_location("salute_participants"):
-                    # Salute the participants.
-                    self._game.print_and_save(f"[COMBAT] Party has unfortunately wiped during Combat Mode. Leaving the Coop room...")
-                    self._game.find_and_click_button("salute")
-                    self._game.find_and_click_button("ok")
-
-                    # Then cancel the popup that asks you if you want to use a Full Elixir to come back.
-                    self._game.find_and_click_button("cancel")
-
-                    # Then click the "Leave" button.
-                    self._game.find_and_click_button("leave")
-
-                    self._retreat_check = True
-            else:
-                if self._debug_mode:
-                    self._game.print_and_save(f"[DEBUG] Party has not wiped.")
-
-            return None
-        except Exception:
-            self._game.print_and_save(f"\n[ERROR] Bot encountered exception while checking if Party wiped during Combat Mode: \n{traceback.format_exc()}")
-            self._is_bot_running.value = 1
+        return None
 
     def _find_charge_attacks(self):
         """Find total number of characters ready to Charge Attack.

@@ -1,5 +1,3 @@
-import traceback
-
 from bot.game import Game
 
 
@@ -70,58 +68,54 @@ class MapSelection:
         Returns:
             (bool): Return True if Pending Battles were detected. Otherwise, return False.
         """
-        try:
-            self._game.wait(1)
+        self._game.wait(1)
 
-            # Check for the "Check your Pending Battles" popup when navigating to the Quest screen or attempting to join a raid when there are 6 Pending Battles
-            # or check if the "Play Again" button is covered by the "Pending Battles" button for any other Farming Mode.
-            if (map_mode.lower() == "raid" and self._game.image_tools.confirm_location("check_your_pending_battles", tries = 1)) or (
-                    map_mode.lower() != "raid" and self._game.image_tools.find_button("quest_results_pending_battles", tries = 1, suppress_error = True)):
-                self._game.print_and_save(f"\n[INFO] Found Pending Battles that need collecting from.")
+        # Check for the "Check your Pending Battles" popup when navigating to the Quest screen or attempting to join a raid when there are 6 Pending Battles
+        # or check if the "Play Again" button is covered by the "Pending Battles" button for any other Farming Mode.
+        if (map_mode.lower() == "raid" and self._game.image_tools.confirm_location("check_your_pending_battles", tries = 1)) or (
+                map_mode.lower() != "raid" and self._game.image_tools.find_button("quest_results_pending_battles", tries = 1, suppress_error = True)):
+            self._game.print_and_save(f"\n[INFO] Found Pending Battles that need collecting from.")
 
-                if map_mode.lower() == "raid":
-                    self._game.find_and_click_button("ok")
-                    self._game.wait(1)
-                else:
-                    self._game.find_and_click_button("quest_results_pending_battles")
-                    self._game.wait(1)
+            if map_mode.lower() == "raid":
+                self._game.find_and_click_button("ok")
+                self._game.wait(1)
+            else:
+                self._game.find_and_click_button("quest_results_pending_battles")
+                self._game.wait(1)
 
-                if self._game.image_tools.confirm_location("pending_battles", tries = 1):
-                    # Process the current Pending Battle.
-                    while self._clear_pending_battle():
-                        # While on the Loot Collected screen, if there are more Pending Battles then head back to the Pending Battles screen.
-                        if self._game.image_tools.find_button("quest_results_pending_battles", tries = 1):
-                            self._game.find_and_click_button("quest_results_pending_battles")
+            if self._game.image_tools.confirm_location("pending_battles", tries = 1):
+                # Process the current Pending Battle.
+                while self._clear_pending_battle():
+                    # While on the Loot Collected screen, if there are more Pending Battles then head back to the Pending Battles screen.
+                    if self._game.image_tools.find_button("quest_results_pending_battles", tries = 1):
+                        self._game.find_and_click_button("quest_results_pending_battles")
 
+                        self._game.wait(1)
+
+                        # Close the Skyscope mission popup.
+                        if self._game.enable_skyscope and self._game.image_tools.confirm_location("skyscope"):
+                            self._game.find_and_click_button("close")
                             self._game.wait(1)
 
-                            # Close the Skyscope mission popup.
-                            if self._game.enable_skyscope and self._game.image_tools.confirm_location("skyscope"):
-                                self._game.find_and_click_button("close")
-                                self._game.wait(1)
+                        self._game.check_for_friend_request()
 
-                            self._game.check_for_friend_request()
+                        self._game.wait(1)
+                    else:
+                        # When there are no more Pending Battles, go back to the Quests screen.
+                        self._game.find_and_click_button("quests", suppress_error = True)
 
+                        # Close the Skyscope mission popup.
+                        if self._game.enable_skyscope and self._game.image_tools.confirm_location("skyscope"):
+                            self._game.find_and_click_button("close")
                             self._game.wait(1)
-                        else:
-                            # When there are no more Pending Battles, go back to the Quests screen.
-                            self._game.find_and_click_button("quests", suppress_error = True)
 
-                            # Close the Skyscope mission popup.
-                            if self._game.enable_skyscope and self._game.image_tools.confirm_location("skyscope"):
-                                self._game.find_and_click_button("close")
-                                self._game.wait(1)
+                        break
 
-                            break
+            self._game.print_and_save(f"[INFO] Pending battles have been cleared.")
+            return True
 
-                self._game.print_and_save(f"[INFO] Pending battles have been cleared.")
-                return True
-
-            self._game.print_and_save(f"[INFO] No Pending Battles needed to be cleared.")
-            return False
-        except Exception:
-            self._game.print_and_save(f"\n[ERROR] Bot encountered exception in MapSelection check_for_pending(): \n{traceback.format_exc()}")
-            self._is_bot_running.value = 1
+        self._game.print_and_save(f"[INFO] No Pending Battles needed to be cleared.")
+        return False
 
     def _check_for_joined(self):
         """Check and update the number of raids currently joined.
@@ -129,19 +123,15 @@ class MapSelection:
         Returns:
             None
         """
-        try:
-            # Find out the number of currently joined raids.
-            self._game.wait(1)
-            joined_locations = self._game.image_tools.find_all("joined")
+        # Find out the number of currently joined raids.
+        self._game.wait(1)
+        joined_locations = self._game.image_tools.find_all("joined")
 
-            if joined_locations is not None:
-                self._raids_joined = len(joined_locations)
-                self._game.print_and_save(f"\n[INFO] There are currently {self._raids_joined} raids joined.")
+        if joined_locations is not None:
+            self._raids_joined = len(joined_locations)
+            self._game.print_and_save(f"\n[INFO] There are currently {self._raids_joined} raids joined.")
 
-            return None
-        except Exception:
-            self._game.print_and_save(f"\n[ERROR] Bot encountered exception in MapSelection _check_for_joined(): \n{traceback.format_exc()}")
-            self._is_bot_running.value = 1
+        return None
 
     def _navigate_to_map(self, map_name: str, current_location: str):
         """Navigates the bot to the specified Map for Quest Farming Mode.
@@ -1035,50 +1025,45 @@ class MapSelection:
         Returns:
             (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
-        try:
-            # Perform different navigation actions based on the selected Farming Mode.
-            if farming_mode == "Quest":
-                self._navigate_to_quest(map_name, mission_name)
-            elif farming_mode == "Special":
-                self._navigate_to_special(map_name, mission_name, difficulty)
-            elif farming_mode == "Coop":
-                self._navigate_to_coop(map_name)
-            elif farming_mode == "Event" or farming_mode == "Event (Token Drawboxes)":
-                self._navigate_to_event(farming_mode, mission_name, difficulty)
-            elif farming_mode == "Dread Barrage":
-                self._navigate_to_dread_barrage(difficulty)
-            elif farming_mode == "Rise of the Beasts":
-                self._navigate_to_rotb(mission_name, difficulty)
-            elif farming_mode == "Guild Wars":
-                self._navigate_to_guild_wars(difficulty)
+        # Perform different navigation actions based on the selected Farming Mode.
+        if farming_mode == "Quest":
+            self._navigate_to_quest(map_name, mission_name)
+        elif farming_mode == "Special":
+            self._navigate_to_special(map_name, mission_name, difficulty)
+        elif farming_mode == "Coop":
+            self._navigate_to_coop(map_name)
+        elif farming_mode == "Event" or farming_mode == "Event (Token Drawboxes)":
+            self._navigate_to_event(farming_mode, mission_name, difficulty)
+        elif farming_mode == "Dread Barrage":
+            self._navigate_to_dread_barrage(difficulty)
+        elif farming_mode == "Rise of the Beasts":
+            self._navigate_to_rotb(mission_name, difficulty)
+        elif farming_mode == "Guild Wars":
+            self._navigate_to_guild_wars(difficulty)
 
-            # Check for available AP.
-            self._game.check_for_ap()
+        # Check for available AP.
+        self._game.check_for_ap()
 
-            # Check to see if the bot is at the Summon Selection screen.
-            if farming_mode != "Coop":
-                self._game.print_and_save(f"[INFO] Now checking if bot is currently at Summon Selection screen...")
+        # Check to see if the bot is at the Summon Selection screen.
+        if farming_mode != "Coop":
+            self._game.print_and_save(f"[INFO] Now checking if bot is currently at Summon Selection screen...")
 
-                if self._game.image_tools.confirm_location("select_summon", tries = 5):
-                    self._game.print_and_save(f"[INFO] Bot is currently at Summon Selection screen.")
-                    return True
-                else:
-                    self._game.print_and_save(f"[WARNING] Bot is not at Summon Selection screen.")
-                    return False
+            if self._game.image_tools.confirm_location("select_summon", tries = 5):
+                self._game.print_and_save(f"[INFO] Bot is currently at Summon Selection screen.")
+                return True
             else:
-                # If its Coop, check to see if the bot is at the Party Selection screen.
-                self._game.print_and_save(f"[INFO] Now checking if bot is currently at Coop Party Selection screen...")
+                self._game.print_and_save(f"[WARNING] Bot is not at Summon Selection screen.")
+                return False
+        else:
+            # If its Coop, check to see if the bot is at the Party Selection screen.
+            self._game.print_and_save(f"[INFO] Now checking if bot is currently at Coop Party Selection screen...")
 
-                if self._game.image_tools.confirm_location("coop_without_support_summon", tries = 5):
-                    self._game.print_and_save(f"[INFO] Bot is currently at Coop Party Selection screen.")
-                    return True
-                else:
-                    self._game.print_and_save(f"[INFO] Bot is not at Coop Party Selection screen.")
-                    return False
-
-        except Exception:
-            self._game.print_and_save(f"\n[ERROR] Bot encountered exception in MapSelection select_map(): \n{traceback.format_exc()}")
-            self._is_bot_running.value = 1
+            if self._game.image_tools.confirm_location("coop_without_support_summon", tries = 5):
+                self._game.print_and_save(f"[INFO] Bot is currently at Coop Party Selection screen.")
+                return True
+            else:
+                self._game.print_and_save(f"[INFO] Bot is not at Coop Party Selection screen.")
+                return False
 
     def join_raid(self, mission_name: str):
         """Attempt to join the specified raid.
@@ -1089,86 +1074,81 @@ class MapSelection:
         Returns:
             (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
-        try:
-            # Head to the Home screen.
-            self._game.go_back_home(confirm_location_check = True)
+        # Head to the Home screen.
+        self._game.go_back_home(confirm_location_check = True)
 
-            # Then navigate to the Quest screen.
-            self._game.find_and_click_button("quest", suppress_error = True)
+        # Then navigate to the Quest screen.
+        self._game.find_and_click_button("quest", suppress_error = True)
 
-            # Check for the "You retreated from the raid battle" popup.
-            self._game.wait(1)
-            if self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries = 1):
-                self._game.find_and_click_button("ok")
+        # Check for the "You retreated from the raid battle" popup.
+        self._game.wait(1)
+        if self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries = 1):
+            self._game.find_and_click_button("ok")
 
-            # Check for any Pending Battles popup.
-            self.check_for_pending("raid")
+        # Check for any Pending Battles popup.
+        self.check_for_pending("raid")
 
-            # Now navigate to the Raid screen.
-            self._game.find_and_click_button("raid", suppress_error = True)
+        # Now navigate to the Raid screen.
+        self._game.find_and_click_button("raid", suppress_error = True)
 
-            if self._game.image_tools.confirm_location("raid"):
-                # Check for any joined raids.
-                self._check_for_joined()
+        if self._game.image_tools.confirm_location("raid"):
+            # Check for any joined raids.
+            self._check_for_joined()
 
-                if self._raids_joined >= 3:
-                    # If the maximum number of raids has been joined, collect any pending rewards with a interval of 60 seconds in between until the number of joined raids is below 3.
-                    while self._raids_joined >= 3:
-                        self._game.print_and_save(f"\n[INFO] Maximum raids of 3 has been joined. Waiting 60 seconds to see if any finish.")
-                        self._game.go_back_home(confirm_location_check = True)
+            if self._raids_joined >= 3:
+                # If the maximum number of raids has been joined, collect any pending rewards with a interval of 60 seconds in between until the number of joined raids is below 3.
+                while self._raids_joined >= 3:
+                    self._game.print_and_save(f"\n[INFO] Maximum raids of 3 has been joined. Waiting 60 seconds to see if any finish.")
+                    self._game.go_back_home(confirm_location_check = True)
 
-                        self._game.wait(60)
-
-                        self._game.find_and_click_button("quest", suppress_error = True)
-                        self.check_for_pending("raid")
-
-                # Click on the "Enter ID" button.
-                self._game.print_and_save(f"\n[INFO] Now moving to the \"Enter ID\" screen.")
-                self._game.find_and_click_button("enter_id")
-
-                # Make preparations for farming raids by saving the location of the "Join Room" button and the "Room Code" textbox.
-                join_room_button = self._game.image_tools.find_button("join_a_room")
-                room_code_textbox = (join_room_button[0] - 185, join_room_button[1])
-
-                # Loop and try to join a raid from a parsed list of room codes. If none of the room codes worked, wait 60 seconds before trying again with a new set of room codes for a maximum of 10 tries.
-                tries = 10
-                while tries > 0:
-                    # Find 5 most recent tweets for the specified raid and then parse for room codes.
-                    tweets = self._game.room_finder.find_most_recent(mission_name, 5)
-                    room_codes = self._game.room_finder.clean_tweets(tweets)
-
-                    for room_code in room_codes:
-                        # Select the "Room Code" textbox and then clear all text from it.
-                        self._game.mouse_tools.move_and_click_point(room_code_textbox[0], room_code_textbox[1], "template_room_code_textbox", mouse_clicks = 2)
-                        self._game.mouse_tools.clear_textbox()
-
-                        # Copy the room code to the clipboard and then paste it into the "Room Code" textbox.
-                        self._game.mouse_tools.copy_to_clipboard(room_code)
-                        self._game.mouse_tools.paste_from_clipboard()
-
-                        # Now click on the "Join Room" button.
-                        self._game.mouse_tools.move_and_click_point(join_room_button[0], join_room_button[1], "join_a_room")
-
-                        # If the room code is valid and the raid is able to be joined, break out and head to the Summon Selection screen.
-                        if not self._game.image_tools.confirm_location("raid_already_ended", tries = 1) and not self.check_for_pending("raid") and not self._game.image_tools.confirm_location(
-                                "invalid_code", tries = 1):
-                            # Check for EP.
-                            self._game.check_for_ep()
-
-                            self._game.print_and_save(f"[SUCCESS] Joining {room_code} was successful.")
-                            self._raids_joined += 1
-
-                            return self._game.image_tools.confirm_location("select_summon")
-                        else:
-                            self._game.print_and_save(f"[WARNING] {room_code} already ended or invalid.")
-                            self._game.find_and_click_button("ok")
-
-                    tries -= 1
-                    self._game.print_and_save(f"\n[WARNING] Could not find any valid room codes. \nWaiting 60 seconds and then trying again with {tries} tries left before exiting.")
                     self._game.wait(60)
 
-            return False
+                    self._game.find_and_click_button("quest", suppress_error = True)
+                    self.check_for_pending("raid")
 
-        except Exception:
-            self._game.print_and_save(f"\n[ERROR] Bot encountered exception in MapSelection join_raid(): \n{traceback.format_exc()}")
-            self._is_bot_running.value = 1
+            # Click on the "Enter ID" button.
+            self._game.print_and_save(f"\n[INFO] Now moving to the \"Enter ID\" screen.")
+            self._game.find_and_click_button("enter_id")
+
+            # Make preparations for farming raids by saving the location of the "Join Room" button and the "Room Code" textbox.
+            join_room_button = self._game.image_tools.find_button("join_a_room")
+            room_code_textbox = (join_room_button[0] - 185, join_room_button[1])
+
+            # Loop and try to join a raid from a parsed list of room codes. If none of the room codes worked, wait 60 seconds before trying again with a new set of room codes for a maximum of 10 tries.
+            tries = 10
+            while tries > 0:
+                # Find 5 most recent tweets for the specified raid and then parse for room codes.
+                tweets = self._game.room_finder.find_most_recent(mission_name, 5)
+                room_codes = self._game.room_finder.clean_tweets(tweets)
+
+                for room_code in room_codes:
+                    # Select the "Room Code" textbox and then clear all text from it.
+                    self._game.mouse_tools.move_and_click_point(room_code_textbox[0], room_code_textbox[1], "template_room_code_textbox", mouse_clicks = 2)
+                    self._game.mouse_tools.clear_textbox()
+
+                    # Copy the room code to the clipboard and then paste it into the "Room Code" textbox.
+                    self._game.mouse_tools.copy_to_clipboard(room_code)
+                    self._game.mouse_tools.paste_from_clipboard()
+
+                    # Now click on the "Join Room" button.
+                    self._game.mouse_tools.move_and_click_point(join_room_button[0], join_room_button[1], "join_a_room")
+
+                    # If the room code is valid and the raid is able to be joined, break out and head to the Summon Selection screen.
+                    if not self._game.image_tools.confirm_location("raid_already_ended", tries = 1) and not self.check_for_pending("raid") and not self._game.image_tools.confirm_location(
+                            "invalid_code", tries = 1):
+                        # Check for EP.
+                        self._game.check_for_ep()
+
+                        self._game.print_and_save(f"[SUCCESS] Joining {room_code} was successful.")
+                        self._raids_joined += 1
+
+                        return self._game.image_tools.confirm_location("select_summon")
+                    else:
+                        self._game.print_and_save(f"[WARNING] {room_code} already ended or invalid.")
+                        self._game.find_and_click_button("ok")
+
+                tries -= 1
+                self._game.print_and_save(f"\n[WARNING] Could not find any valid room codes. \nWaiting 60 seconds and then trying again with {tries} tries left before exiting.")
+                self._game.wait(60)
+
+        return False
