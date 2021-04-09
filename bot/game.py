@@ -437,42 +437,43 @@ class Game:
         """
         self.print_and_save("\n[INFO] Now refreshing Summons...")
         self.go_back_home(confirm_location_check = True)
+
+        # Scroll down the screen to see the "Gameplay Extra" button on smaller screen sizes.
         self.mouse_tools.scroll_screen_from_home_button(-600)
 
-        try:
-            list_of_steps_in_order = ["gameplay_extras", "trial_battles", "trial_battles_old_lignoid", "play_round_button", "choose_a_summon", "party_selection_ok", "close", "menu", "retreat",
-                                      "retreat_confirmation", "next"]
-
-            # Go through each step in order from left to right from the list of steps.
-            while len(list_of_steps_in_order) > 0:
-                step = list_of_steps_in_order.pop(0)
-                if step == "trial_battles_old_lignoid":
-                    self.image_tools.confirm_location("trial_battles")
-                elif step == "close":
-                    self.wait(2)
-                    self.image_tools.confirm_location("trial_battles_description")
-
-                # Find the location of the specified button.
-                image_location = self.image_tools.find_button(step)
-
-                # If the bot cannot find the "Trial Battles" button under the "Gameplay Extras" section,
-                # keep scrolling down until it does.
-                while step == "trial_battles" and image_location is None:
-                    self.mouse_tools.scroll_screen_from_home_button(-300)
-                    image_location = self.image_tools.find_button(step)
-
-                if step == "choose_a_summon":
-                    self.mouse_tools.move_and_click_point(image_location[0], image_location[1] + 187, step)
-                else:
-                    self.mouse_tools.move_and_click_point(image_location[0], image_location[1], step)
+        if self.find_and_click_button("gameplay_extras"):
+            # If the bot cannot find the "Trial Battles" button, keep scrolling down until it does. It should not take more than 2 loops to see it for any reasonable screen size.
+            while self.find_and_click_button("trial_battles") is False:
+                self.mouse_tools.scroll_screen_from_home_button(-300)
 
             if self.image_tools.confirm_location("trial_battles"):
-                self.print_and_save("[SUCCESS] Summons have now been refreshed.")
+                # Click on the "Old Lignoid" button.
+                self.find_and_click_button("trial_battles_old_lignoid")
 
-            return None
-        except Exception:
-            self.print_and_save(f"\n[ERROR] Bot encountered exception while resetting Summons: \n{traceback.format_exc()}")
-            self._is_bot_running.value = 1
+                # Select any detected "Play" button.
+                self.find_and_click_button("play_round_button")
+
+                # Now select the first Summon.
+                choose_a_summon_location = self.image_tools.find_button("choose_a_summon")
+                self.mouse_tools.move_and_click_point(choose_a_summon_location[0], choose_a_summon_location[1] + 187, "choose_a_summon")
+
+                # Now start the Old Lignoid Trial Battle right away and then wait a few seconds.
+                self.find_and_click_button("party_selection_ok")
+                self.wait(3)
+
+                # Close the popup and then retreat from this Trial Battle.
+                if self.image_tools.confirm_location("trial_battles_description"):
+                    self.find_and_click_button("close")
+
+                    self.find_and_click_button("menu")
+                    self.find_and_click_button("retreat")
+                    self.find_and_click_button("retreat_confirmation")
+                    self.find_and_click_button("next")
+
+        if self.image_tools.confirm_location("trial_battles"):
+            self.print_and_save("[SUCCESS] Summons have now been refreshed.")
+
+        return None
 
     def _find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 3):
         """Select the specified Group and Party. It will then start the mission.
@@ -1219,8 +1220,8 @@ class Game:
                         self._map_selection.join_raid(mission_name)
                         summon_check = False
             else:
-                raise Exception("Confirming the location of the Summon Selection screen after selecting the mission returned False.")
-        except Exception:
+                raise RuntimeError("Confirming the location of the Summon Selection screen after selecting the mission returned False.")
+        except RuntimeError:
             self.print_and_save(f"\n[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
 
         self.print_and_save("\n################################################################################")
