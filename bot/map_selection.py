@@ -198,7 +198,7 @@ class MapSelection:
         return False
 
     def _navigate_to_quest(self, map_name: str, mission_name: str):
-        """Navigates the bot to the specified Quest.
+        """Navigates the bot to the specified Quest mission.
 
         Args:
             map_name (str): Name of the Map to look for the specified Mission.
@@ -309,6 +309,16 @@ class MapSelection:
         return None
 
     def _navigate_to_special(self, map_name: str, mission_name: str, difficulty: str):
+        """Navigates the bot to the specified Special mission.
+
+        Args:
+            map_name (str): Name of the Map to look for the specified Mission.
+            mission_name (str): Name of the Mission to farm.
+            difficulty (str): Difficulty of the specified Mission.
+
+        Returns:
+            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
+        """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
@@ -495,6 +505,14 @@ class MapSelection:
         return None
 
     def _navigate_to_coop(self, mission_name: str):
+        """Navigates the bot to the specified Coop mission.
+
+        Args:
+            mission_name (str): Name of the Mission to farm.
+
+        Returns:
+            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
+        """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
@@ -600,6 +618,16 @@ class MapSelection:
         return None
 
     def _navigate_to_event(self, farming_mode: str, mission_name: str, difficulty: str):
+        """Navigates the bot to the specified Event or Event (Token Drawboxes) mission.
+
+        Args:
+            farming_mode (str): The specified Farming Mode, Event or Event (Token Drawboxes).
+            mission_name (str): Name of the Mission to farm.
+            difficulty (str): Difficulty of the specified Mission.
+
+        Returns:
+            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
+        """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
@@ -727,6 +755,14 @@ class MapSelection:
         return None
 
     def _navigate_to_dread_barrage(self, difficulty: str):
+        """Navigates the bot to the specified Dread Barrage mission.
+
+        Args:
+            difficulty (str): Difficulty of the specified Mission.
+
+        Returns:
+            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
+        """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
@@ -785,6 +821,15 @@ class MapSelection:
         return None
 
     def _navigate_to_rotb(self, mission_name: str, difficulty: str):
+        """Navigates the bot to the specified Rise of the Beasts mission.
+
+        Args:
+            mission_name (str): Name of the Mission to farm.
+            difficulty (str): Difficulty of the specified Mission.
+
+        Returns:
+            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
+        """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
@@ -868,6 +913,14 @@ class MapSelection:
         return None
 
     def _navigate_to_guild_wars(self, difficulty: str):
+        """Navigates the bot to the specified Guild Wars mission.
+
+        Args:
+            difficulty (str): Difficulty of the specified Mission.
+
+        Returns:
+            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
+        """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
