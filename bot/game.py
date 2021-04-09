@@ -216,25 +216,21 @@ class Game:
         if self._debug_mode:
             self.print_and_save("\n[DEBUG] Recalibrating the dimensions of the bot window...")
 
-        try:
-            # Save the location of the "Home" button at the bottom of the bot window.
-            self.home_button_location = self.image_tools.find_button("home")
+        # Save the location of the "Home" button at the bottom of the bot window.
+        self.home_button_location = self.image_tools.find_button("home")
 
-            # Set the dimensions of the bot window and save it in ImageUtils so that future operations do not go out of bounds.
-            home_news_button = self.image_tools.find_button("home_news")
-            home_menu_button = self.image_tools.find_button("home_menu")
+        # Set the dimensions of the bot window and save it in ImageUtils so that future operations do not go out of bounds.
+        home_news_button = self.image_tools.find_button("home_news")
+        home_menu_button = self.image_tools.find_button("home_menu")
 
-            # Use the locations of the "News" and "Menu" buttons on the Home screen to calculate the dimensions of the bot window in the following
-            # format:
-            window_left = home_news_button[0] - 35  # The x-coordinate of the left edge.
-            window_top = home_menu_button[1] - 24  # The y-coordinate of the top edge.
-            window_width = window_left + 410  # The width of the region.
-            window_height = (self.home_button_location[1] + 24) - window_top  # The height of the region.
+        # Use the locations of the "News" and "Menu" buttons on the Home screen to calculate the dimensions of the bot window in the following
+        # format:
+        window_left = home_news_button[0] - 35  # The x-coordinate of the left edge.
+        window_top = home_menu_button[1] - 24  # The y-coordinate of the top edge.
+        window_width = window_left + 410  # The width of the region.
+        window_height = (self.home_button_location[1] + 24) - window_top  # The height of the region.
 
-            self.image_tools.update_window_dimensions(window_left, window_top, window_width, window_height)
-        except Exception:
-            self.print_and_save(f"\n[ERROR] Bot encountered exception while calibrating bot window dimensions: \n{traceback.format_exc()}")
-            self._is_bot_running.value = 1
+        self.image_tools.update_window_dimensions(window_left, window_top, window_width, window_height)
 
         if self._debug_mode:
             self.print_and_save("[SUCCESS] Dimensions of the bot window has been successfully recalibrated.")
@@ -357,12 +353,12 @@ class Game:
         try:
             self.wait(2)
             if self.image_tools.confirm_location("captcha", tries = 1):
-                raise Exception("CAPTCHA DETECTED!")
+                raise RuntimeError("CAPTCHA DETECTED!")
             else:
                 self.print_and_save("\n[CAPTCHA] CAPTCHA not detected. Moving on to Party Selection...")
 
             return None
-        except Exception:
+        except RuntimeError:
             self.print_and_save(f"\n[ERROR] Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
             self.image_tools.generate_alert_for_captcha()
             self._is_bot_running.value = 1
@@ -490,30 +486,26 @@ class Game:
         # Find the Group that the Party is in first. If the specified Group number is less than 8, it is in Set A. Otherwise, it is in Set B. If failed, alternate searching for Set A / Set B until
         # found or tries are depleted.
         set_location = None
-        try:
-            if group_number < 8:
-                while set_location is None:
-                    set_location = self.image_tools.find_button("party_set_a", tries = 1)
-                    if set_location is None:
-                        tries -= 1
-                        if tries <= 0:
-                            raise Exception("Could not find Set A.")
+        if group_number < 8:
+            while set_location is None:
+                set_location = self.image_tools.find_button("party_set_a", tries = 1)
+                if set_location is None:
+                    tries -= 1
+                    if tries <= 0:
+                        raise Exception("Could not find Set A.")
 
-                        # See if the user had Set B active instead of Set A if matching failed.
-                        set_location = self.image_tools.find_button("party_set_b", tries = 1)
-            else:
-                while set_location is None:
+                    # See if the user had Set B active instead of Set A if matching failed.
                     set_location = self.image_tools.find_button("party_set_b", tries = 1)
-                    if set_location is None:
-                        tries -= 1
-                        if tries <= 0:
-                            raise Exception("Could not find Set B.")
+        else:
+            while set_location is None:
+                set_location = self.image_tools.find_button("party_set_b", tries = 1)
+                if set_location is None:
+                    tries -= 1
+                    if tries <= 0:
+                        raise Exception("Could not find Set B.")
 
-                        # See if the user had Set A active instead of Set B if matching failed.
-                        set_location = self.image_tools.find_button("party_set_a", tries = 1)
-        except Exception:
-            self.print_and_save(f"\n[ERROR] Bot encountered exception while selecting A or B Set: \n{traceback.format_exc()}")
-            self._is_bot_running.value = 1
+                    # See if the user had Set A active instead of Set B if matching failed.
+                    set_location = self.image_tools.find_button("party_set_a", tries = 1)
 
         # Center the mouse on the "Set A" / "Set B" button and then click the correct Group tab.
         if self._debug_mode:
