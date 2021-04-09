@@ -25,8 +25,11 @@ class MapSelection:
         # Makes sure that the number of raids currently joined does not exceed 3.
         self._raids_joined = 0
 
-    def _clear_pending_battle(self):
+    def _clear_pending_battle(self, farming_mode: str):
         """Process a Pending Battle.
+
+        Args:
+            farming_mode (str): The current Farming Mode to determine whether or not to increment amount of attempted runs.
 
         Returns:
             (bool): Return True if a Pending Battle was successfully processed. Otherwise, return False.
@@ -46,7 +49,10 @@ class MapSelection:
 
                 return True
             else:
-                self._game.collect_loot(is_pending_battle = True)
+                if farming_mode == "Raid":
+                    self._game.collect_loot()
+                else:
+                    self._game.collect_loot(is_pending_battle = True)
 
                 if self._raids_joined > 0:
                     self._raids_joined -= 1
