@@ -865,15 +865,140 @@ class Game:
 
         return False
 
-    def start_farming_mode(self, item_name: str, item_amount_to_farm: int, farming_mode: str, location_name: str, mission_name: str,
-                           summon_element_list: Iterable[str], summon_list: Iterable[str], group_number: int, party_number: int):
+    def _advanced_setup(self):
+        """Performs additional setup for special fights outlined in config.ini like Dimensional Halo and Event Nightmares.
+
+        Returns:
+            None
+        """
+        # If Dimensional Halo is enabled, save settings for it based on conditions.
+        if self.farming_mode == "Special" and self._mission_name == "VH Angel Halo" and self._enable_dimensional_halo and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons"):
+            self.print_and_save("\n[INFO] Initializing settings for Dimensional Halo...")
+
+            if self._dimensional_halo_combat_script == "":
+                self.print_and_save("[INFO] Combat Script for Dimensional Halo will reuse the one for Farming Mode.")
+                self._dimensional_halo_combat_script = self._combat_script
+
+            if len(self._dimensional_halo_summon_element_list) == 0:
+                self.print_and_save("[INFO] Summon Elements for Dimensional Halo will reuse the ones for Farming Mode.")
+                self._dimensional_halo_summon_element_list = self._summon_element_list
+
+            if len(self._dimensional_halo_summon_list) == 0:
+                self.print_and_save("[INFO] Summons for Dimensional Halo will reuse the ones for Farming Mode.")
+                self._dimensional_halo_summon_list = self._summon_list
+
+            if self._dimensional_halo_group_number == "":
+                self.print_and_save("[INFO] Group Number for Dimensional Halo will reuse the one for Farming Mode.")
+                self._dimensional_halo_group_number = self._group_number
+            else:
+                self._dimensional_halo_group_number = int(self._dimensional_halo_group_number)
+
+            if self._dimensional_halo_party_number == "":
+                self.print_and_save("[INFO] Party Number for Dimensional Halo will reuse the one for Farming Mode.")
+                self._dimensional_halo_party_number = self._party_number
+            else:
+                self._dimensional_halo_party_number = int(self._dimensional_halo_party_number)
+
+            self.print_and_save("[INFO] Settings initialized for Dimensional Halo...")
+        elif (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._item_name == "Repeated Runs" and self._enable_event_nightmare:
+            # Do the same for Event Nightmare if enabled.
+            self.print_and_save("\n[INFO] Initializing settings for Event...")
+
+            if self._event_nightmare_combat_script == "":
+                self.print_and_save("[INFO] Combat Script for Event will reuse the one for Farming Mode.")
+                self._event_nightmare_combat_script = self._combat_script
+
+            if len(self._event_nightmare_summon_element_list) == 0:
+                self.print_and_save("[INFO] Summon Elements for Event will reuse the ones for Farming Mode.")
+                self._event_nightmare_summon_element_list = self._summon_element_list
+
+            if len(self._event_nightmare_summon_list) == 0:
+                self.print_and_save("[INFO] Summons for Event will reuse the ones for Farming Mode.")
+                self._event_nightmare_summon_list = self._summon_list
+
+            if self._event_nightmare_group_number == "":
+                self.print_and_save("[INFO] Group Number for Event will reuse the one for Farming Mode.")
+                self._event_nightmare_group_number = self._group_number
+            else:
+                self._event_nightmare_group_number = int(self._event_nightmare_group_number)
+
+            if self._event_nightmare_party_number == "":
+                self.print_and_save("[INFO] Party Number for Event will reuse the one for Farming Mode.")
+                self._event_nightmare_party_number = self._party_number
+            else:
+                self._event_nightmare_party_number = int(self._event_nightmare_party_number)
+
+            self.print_and_save("[INFO] Settings initialized for Event...")
+        elif self.farming_mode == "Rise of the Beasts" and self._item_name == "Repeated Runs" and self._enable_rotb_extreme_plus:
+            # Do the same for Rise of the Beasts Extreme+ if enabled.
+            self.print_and_save("\n[INFO] Initializing settings for Rise of the Beasts Extreme+...")
+
+            if self._rotb_extreme_plus_combat_script == "":
+                self.print_and_save("[INFO] Combat Script for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
+                self._event_nightmare_combat_script = self._combat_script
+
+            if len(self._rotb_extreme_plus_summon_element_list) == 0:
+                self.print_and_save("[INFO] Summon Elements for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
+                self._rotb_extreme_plus_summon_element_list = self._summon_element_list
+
+            if len(self._rotb_extreme_plus_summon_list) == 0:
+                self.print_and_save("[INFO] Summons for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
+                self._rotb_extreme_plus_summon_list = self._summon_list
+
+            if self._rotb_extreme_plus_group_number == "":
+                self.print_and_save("[INFO] Group Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
+                self._rotb_extreme_plus_group_number = self._group_number
+            else:
+                self._rotb_extreme_plus_group_number = int(self._rotb_extreme_plus_group_number)
+
+            if self._rotb_extreme_plus_party_number == "":
+                self.print_and_save("[INFO] Party Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
+                self._rotb_extreme_plus_party_number = self._party_number
+            else:
+                self._rotb_extreme_plus_party_number = int(self._rotb_extreme_plus_party_number)
+
+            self.print_and_save("[INFO] Settings initialized for Rise of the Beasts Extreme+...")
+        elif self.farming_mode == "Dread Barrage" and self._item_name == "Repeated Runs" and self._enable_unparalleled_foe:
+            # Do the same for Dread Barrage Unparalleled Foes if enabled.
+            self.print_and_save("\n[INFO] Initializing settings for Dread Barrage Unparalleled Foes...")
+
+            if self.unparalleled_foe_combat_script == "":
+                self.print_and_save("[INFO] Combat Script for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
+                self.unparalleled_foe_combat_script = self._combat_script
+
+            if len(self._unparalleled_foe_summon_element_list) == 0:
+                self.print_and_save("[INFO] Summon Elements for Dread Barrage Unparalleled Foes will reuse the ones for Farming Mode.")
+                self._unparalleled_foe_summon_element_list = self._summon_element_list
+
+            if len(self._unparalleled_foe_summon_list) == 0:
+                self.print_and_save("[INFO] Summons for Dread Barrage Unparalleled Foes will reuse the ones for Farming Mode.")
+                self._unparalleled_foe_summon_list = self._summon_list
+
+            if self._unparalleled_foe_group_number == "":
+                self.print_and_save("[INFO] Group Number for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
+                self._unparalleled_foe_group_number = self._group_number
+            else:
+                self._unparalleled_foe_group_number = int(self._unparalleled_foe_group_number)
+
+            if self._unparalleled_foe_party_number == "":
+                self.print_and_save("[INFO] Party Number for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
+                self._unparalleled_foe_party_number = self._party_number
+            else:
+                self._unparalleled_foe_party_number = int(self._unparalleled_foe_party_number)
+
+            self.print_and_save("[INFO] Settings initialized for Dread Barrage Unparalleled Foes...")
+
+        return None
+
+    def start_farming_mode(self, item_name: str, item_amount_to_farm: int, farming_mode: str, map_name: str, mission_name: str, summon_element_list: Iterable[str], summon_list: Iterable[str],
+                           group_number: int, party_number: int):
         """Start the Farming Mode using the given parameters.
 
         Args:
             item_name (str): Name of the item to farm.
             item_amount_to_farm (int): Amount of the item to farm.
             farming_mode (str): Mode to look for the specified item and map in.
-            location_name (str): Name of the map to look for the specified mission in.
+            map_name (str): Name of the map to look for the specified mission in.
             mission_name (str): Name of the mission to farm the item in.
             summon_element_list (Iterable[str]): List of names of the Summon element image file in the /images/buttons/ folder.
             summon_list (Iterable[str]): List of names of the Summon image's file name in /images/summons/ folder.
@@ -893,7 +1018,6 @@ class Game:
                 self.print_and_save("################################################################################\n")
             else:
                 self.print_and_save("\n\n################################################################################")
-
                 self.print_and_save("################################################################################")
                 self.print_and_save(f"[FARM] Starting Farming Mode for {farming_mode}.")
                 self.print_and_save(f"[FARM] Doing {item_amount_to_farm}x runs for {item_name} at {mission_name}.")
@@ -902,7 +1026,7 @@ class Game:
 
             # Parse the difficulty for the chosen mission.
             difficulty = ""
-            if farming_mode.lower() == "special" or farming_mode.lower() == "event" or farming_mode.lower() == "event (token drawboxes)" or farming_mode.lower() == "rise of the beasts":
+            if farming_mode == "Special" or farming_mode == "Event" or farming_mode == "Event (Token Drawboxes)" or farming_mode == "Rise of the Beasts":
                 if mission_name.find("N ") == 0:
                     difficulty = "Normal"
                 elif mission_name.find("H ") == 0:
@@ -934,7 +1058,7 @@ class Game:
             self._item_name = item_name
             self._item_amount_to_farm = item_amount_to_farm
             self.farming_mode = farming_mode
-            self._location_name = location_name
+            self._map_name = map_name
             self._mission_name = mission_name
             self._difficulty = difficulty
             self._summon_element_list = summon_element_list
@@ -942,261 +1066,153 @@ class Game:
             self._group_number = group_number
             self._party_number = party_number
 
-            # If Dimensional Halo is enabled, save settings for it based on conditions.
-            if self.farming_mode.lower() == "special" and self._mission_name == "VH Angel Halo" and self._enable_dimensional_halo and (
-                    self._item_name == "EXP" or self._item_name == "Angel Halo Weapons"):
-                self.print_and_save("\n[INFO] Initializing settings for Dimensional Halo...")
+            event_quests = ["N Event Quest", "H Event Quest", "VH Event Quest", "EX Event Quest"]
 
-                if self._dimensional_halo_combat_script == "":
-                    self.print_and_save("[INFO] Combat Script for Dimensional Halo will reuse the one for Farming Mode.")
-                    self._dimensional_halo_combat_script = self._combat_script
+            # Perform advanced setup for the special fights like Dimensional Halo, Event Nightmares, and Dread Barrage's Unparalleled Foes.
+            self._advanced_setup()
 
-                if len(self._dimensional_halo_summon_element_list) == 0:
-                    self.print_and_save("[INFO] Summon Elements for Dimensional Halo will reuse the ones for Farming Mode.")
-                    self._dimensional_halo_summon_element_list = self._summon_element_list
+            if farming_mode != "Raid":
+                self._map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+            else:
+                self._map_selection.join_raid(mission_name)
 
-                if len(self._dimensional_halo_summon_list) == 0:
-                    self.print_and_save("[INFO] Summons for Dimensional Halo will reuse the ones for Farming Mode.")
-                    self._dimensional_halo_summon_list = self._summon_list
+            while item_amount_to_farm < item_amount_to_farm:
+                # Reset the Summon Selection flag.
+                summon_check = False
 
-                if self._dimensional_halo_group_number == "":
-                    self.print_and_save("[INFO] Group Number for Dimensional Halo will reuse the one for Farming Mode.")
-                    self._dimensional_halo_group_number = self._group_number
-                else:
-                    self._dimensional_halo_group_number = int(self._dimensional_halo_group_number)
+                # Loop and attempt to select a Summon. Reset Summons if needed.
+                while summon_check is False and farming_mode != "Coop":
+                    summon_check = self._select_summon(self._summon_list, self._summon_element_list)
 
-                if self._dimensional_halo_party_number == "":
-                    self.print_and_save("[INFO] Party Number for Dimensional Halo will reuse the one for Farming Mode.")
-                    self._dimensional_halo_party_number = self._party_number
-                else:
-                    self._dimensional_halo_party_number = int(self._dimensional_halo_party_number)
+                    # If the Summon Selection flag is False, that means the Summons were reset.
+                    if summon_check is False and farming_mode != "Raid":
+                        self.print_and_save("\n[INFO] Selecting Mission again after resetting Summons.")
+                        self._map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+                    elif summon_check is False and farming_mode == "Raid":
+                        self.print_and_save("\n[INFO] Joining Raids again after resetting Summons.")
+                        self._map_selection.join_raid(mission_name)
 
-                self.print_and_save("[INFO] Settings initialized for Dimensional Halo...")
-            elif self._item_name == "Repeated Runs" and self._enable_event_nightmare:
-                # Do the same for Event Nightmare if enabled.
-                self.print_and_save("\n[INFO] Initializing settings for Event...")
+                # Perform Party Selection and then start the Mission. If Farming Mode is Coop, skip this as Coop reuses the same Party.
+                if farming_mode != "Coop":
+                    start_check = self._find_party_and_start_mission(self._group_number, self._party_number)
+                elif farming_mode == "Coop" and self._coop_first_run:
+                    start_check = self._find_party_and_start_mission(self._group_number, self._party_number)
+                    self._coop_first_run = False
 
-                if self._event_nightmare_combat_script == "":
-                    self.print_and_save("[INFO] Combat Script for Event will reuse the one for Farming Mode.")
-                    self._event_nightmare_combat_script = self._combat_script
+                    # Now click the "Start" button to start the Coop Mission.
+                    self.find_and_click_button("coop_start")
+                elif farming_mode == "Coop" and self._coop_first_run is False:
+                    self.print_and_save("\n[INFO] Starting Coop Mission again.")
+                    start_check = True
 
-                if len(self._event_nightmare_summon_element_list) == 0:
-                    self.print_and_save("[INFO] Summon Elements for Event will reuse the ones for Farming Mode.")
-                    self._event_nightmare_summon_element_list = self._summon_element_list
+                if start_check and farming_mode != "Raid":
+                    self.wait(3)
 
-                if len(self._event_nightmare_summon_list) == 0:
-                    self.print_and_save("[INFO] Summons for Event will reuse the ones for Farming Mode.")
-                    self._event_nightmare_summon_list = self._summon_list
+                    # Check for the "Items Picked Up" popup for Quest Farming Mode.
+                    if farming_mode == "Quest" and self.image_tools.confirm_location("items_picked_up", tries = 1):
+                        self.find_and_click_button("ok")
 
-                if self._event_nightmare_group_number == "":
-                    self.print_and_save("[INFO] Group Number for Event will reuse the one for Farming Mode.")
-                    self._event_nightmare_group_number = self._group_number
-                else:
-                    self._event_nightmare_group_number = int(self._event_nightmare_group_number)
+                    # Finally, start Combat Mode.
+                    if self.combat_mode.start_combat_mode(self._combat_script):
+                        # If it ended successfully, detect loot and repeat if acquired item amount has not been reached.
+                        self.collect_loot()
 
-                if self._event_nightmare_party_number == "":
-                    self.print_and_save("[INFO] Party Number for Event will reuse the one for Farming Mode.")
-                    self._event_nightmare_party_number = self._party_number
-                else:
-                    self._event_nightmare_party_number = int(self._event_nightmare_party_number)
+                        if self._item_amount_farmed < item_amount_to_farm:
+                            # Generate a resting period if the user enabled it.
+                            self._delay_between_runs()
 
-                self.print_and_save("[INFO] Settings initialized for Event...")
-            elif self._item_name == "Repeated Runs" and self._enable_rotb_extreme_plus:
-                # Do the same for Rise of the Beasts Extreme+ if enabled.
-                self.print_and_save("\n[INFO] Initializing settings for Rise of the Beasts Extreme+...")
+                            # Handle special situations for certain Farming Modes.
+                            if farming_mode != "Coop" and not self.find_and_click_button("play_again"):
+                                # Clear away any Pending Battles.
+                                self._map_selection.check_for_pending(farming_mode)
 
-                if self._rotb_extreme_plus_combat_script == "":
-                    self.print_and_save("[INFO] Combat Script for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
-                    self._event_nightmare_combat_script = self._combat_script
+                                # Now repeat the Mission.
+                                self._map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+                            elif farming_mode == "Event (Token Drawboxes)" and event_quests.__contains__(mission_name):
+                                # Select the Mission again since Event Quests do not have "Play Again" functionality.
+                                self._map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+                            elif farming_mode == "Coop":
+                                # Head back to the Coop Room.
+                                self.find_and_click_button("coop_room")
 
-                if len(self._rotb_extreme_plus_summon_element_list) == 0:
-                    self.print_and_save("[INFO] Summon Elements for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
-                    self._rotb_extreme_plus_summon_element_list = self._summon_element_list
+                                self.wait(1)
 
-                if len(self._rotb_extreme_plus_summon_list) == 0:
-                    self.print_and_save("[INFO] Summons for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
-                    self._rotb_extreme_plus_summon_list = self._summon_list
+                                # Check for "Daily Missions" popup for Coop.
+                                if self.image_tools.confirm_location("coop_daily_missions", tries = 1):
+                                    self.find_and_click_button("close")
 
-                if self._rotb_extreme_plus_group_number == "":
-                    self.print_and_save("[INFO] Group Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
-                    self._rotb_extreme_plus_group_number = self._group_number
-                else:
-                    self._rotb_extreme_plus_group_number = int(self._rotb_extreme_plus_group_number)
+                                self.wait(1)
 
-                if self._rotb_extreme_plus_party_number == "":
-                    self.print_and_save("[INFO] Party Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
-                    self._rotb_extreme_plus_party_number = self._party_number
-                else:
-                    self._rotb_extreme_plus_party_number = int(self._rotb_extreme_plus_party_number)
+                                # Now that the bot is back at the Coop Room/Lobby, check if it closed due to time running out.
+                                if self.image_tools.confirm_location("coop_room_closed", tries = 1):
+                                    self.print_and_save("\n[INFO] Coop room has closed due to time running out.")
+                                    break
 
-                self.print_and_save("[INFO] Settings initialized for Rise of the Beasts Extreme+...")
-            elif self._item_name == "Repeated Runs" and self._enable_unparalleled_foe:
-                # Do the same for Dread Barrage Unparalleled Foes if enabled.
-                self.print_and_save("\n[INFO] Initializing settings for Dread Barrage Unparalleled Foes...")
+                                # Start the Coop Mission again.
+                                self.find_and_click_button("coop_start")
 
-                if self.unparalleled_foe_combat_script == "":
-                    self.print_and_save("[INFO] Combat Script for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
-                    self.unparalleled_foe_combat_script = self._combat_script
+                                self.wait(1)
 
-                if len(self._unparalleled_foe_summon_element_list) == 0:
-                    self.print_and_save("[INFO] Summon Elements for Dread Barrage Unparalleled Foes will reuse the ones for Farming Mode.")
-                    self._unparalleled_foe_summon_element_list = self._summon_element_list
+                                self.check_for_ap()
+                            elif farming_mode == "Dread Barrage" and self.image_tools.confirm_location("dread_barrage_unparalleled_foes", tries = 1):
+                                # Find the locations of the "AP 0" text underneath each Unparalleled Foe.
+                                ap_0_locations = self.image_tools.find_all("ap_0")
 
-                if len(self._unparalleled_foe_summon_list) == 0:
-                    self.print_and_save("[INFO] Summons for Dread Barrage Unparalleled Foes will reuse the ones for Farming Mode.")
-                    self._unparalleled_foe_summon_list = self._summon_list
+                                # Start the Level 95 Unparalleled Foe.
+                                if self._enable_unparalleled_foe_level_95 and not self._enable_unparalleled_foe_level_175:
+                                    self.print_and_save("\n[INFO] Starting Level 95 Unparalleled Foe...")
+                                    self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1], "ap_0")
 
-                if self._unparalleled_foe_group_number == "":
-                    self.print_and_save("[INFO] Group Number for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
-                    self._unparalleled_foe_group_number = self._group_number
-                else:
-                    self._unparalleled_foe_group_number = int(self._unparalleled_foe_group_number)
+                                # Start the Level 175 Unparalleled Foe.
+                                elif self._enable_unparalleled_foe_level_175 and not self._enable_unparalleled_foe_level_95:
+                                    self.print_and_save("\n[INFO] Starting Level 175 Unparalleled Foe...")
+                                    self.mouse_tools.move_and_click_point(ap_0_locations[1][0], ap_0_locations[1][1], "ap_0")
 
-                if self._unparalleled_foe_party_number == "":
-                    self.print_and_save("[INFO] Party Number for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
-                    self._unparalleled_foe_party_number = self._party_number
-                else:
-                    self._unparalleled_foe_party_number = int(self._unparalleled_foe_party_number)
+                                # Close the popup if the user does not want to fight any of them.
+                                elif not self._enable_unparalleled_foe_level_95 and not self._enable_unparalleled_foe_level_175:
+                                    self.print_and_save("\n[INFO] User did not opt to fight any Unparalleled Foes. Closing Unparalleled Foes popup...")
+                                    self.find_and_click_button("close")
 
-                self.print_and_save("[INFO] Settings initialized for Dread Barrage Unparalleled Foes...")
+                                # Every other case will default to the Level 95 Unparalleled Foe.
+                                else:
+                                    self.print_and_save("\n[INFO] Defaulting to Level 95 Unparalleled Foe due to incorrect config.ini settings. Starting it now...")
+                                    self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1], "ap_0")
 
-            # Main workflow for Farming Mode.
-            if (farming_mode.lower() != "raid" and self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)) or (
-                    farming_mode.lower() == "raid" and self._map_selection.join_raid(mission_name)):
-                while self._item_amount_farmed < self._item_amount_to_farm:
-                    # Loop until the specified Summon has been selected successfully.
-                    self.print_and_save("\n[INFO] Selecting Summon before starting mission for Farming Mode...")
-                    while summon_check is False and farming_mode.lower() != "coop":
-                        # Select the Summon element and the Summon itself.
-                        summon_check = self._select_summon(summon_list, summon_element_list)
+                            # For every other Farming Mode other than Coop, handle all popups until the bot reaches the Summon Selection screen.
+                            self.check_for_popups()
 
-                        # If the Summons were reset, select the mission again.
-                        if summon_check is False:
-                            if farming_mode.lower() != "raid":
-                                self.print_and_save("\n[INFO] Selecting mission again after resetting Summons...")
-                                self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
-                            else:
-                                self.print_and_save("\n[INFO] Joining raids again after resetting Summons...")
-                                self._map_selection.join_raid(mission_name)
-
-                    # Select the specified Party and then start the mission.
-                    if farming_mode.lower() != "coop":
-                        start_check = self._find_party_and_start_mission(group_number, party_number)
                     else:
-                        # Only select the Party for this Coop mission once. After that, subsequent runs always has that Party selected.
-                        if self._coop_first_run:
-                            start_check = self._find_party_and_start_mission(group_number, party_number)
-                            self._coop_first_run = False
-                            self.find_and_click_button("coop_start")
+                        # Select the Mission again if the Party wiped or exited prematurely during Combat Mode.
+                        self.print_and_save("\n[INFO] Restarting the Mission due to Combat Mode returning False...")
+                        self._map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
 
-                        self.print_and_save("[INFO] Starting Coop mission.")
-
-                    # After Party has been successfully selected, start Combat Mode.
-                    if start_check and farming_mode.lower() != "raid":
-                        # Check for the "Items Picked Up" popup that appears after starting a Quest mission.
-                        self.wait(2)
-                        if farming_mode.lower() == "quest" and self.image_tools.confirm_location("items_picked_up", tries = 5):
-                            self.find_and_click_button("ok")
-
-                        # Start Combat Mode for this mission.
+                elif start_check and farming_mode == "Raid":
+                    # Handle the rare case where joining the Raid after selecting the Summon and Party led the bot to the Quest Results screen with no loot to collect.
+                    if self.image_tools.confirm_location("no_loot", tries = 1):
+                        self.print_and_save("\n[INFO] Seems that the Raid just ended. Moving back to the Home screen and joining another Raid...")
+                        self.go_back_home(confirm_location_check = True)
+                    else:
+                        # At this point, the Summon and Party have already been selected and the Mission has started. Now commence Combat Mode.
                         if self.combat_mode.start_combat_mode(self._combat_script):
-                            # If Combat Mode finished successfully without retreating or exiting prematurely, start loot detection.
                             self.collect_loot()
 
-                            if self._item_amount_farmed < self._item_amount_to_farm:
-                                # Click the Play Again button or the Room button if its Coop.
-                                if farming_mode.lower() != "coop":
-                                    # Generate a resting period if the user enabled it.
-                                    self._delay_between_runs()
+                            if self._item_amount_farmed < item_amount_to_farm:
+                                # Generate a resting period if the user enabled it.
+                                self._delay_between_runs()
 
-                                    if not self.find_and_click_button("play_again"):
-                                        # Clear away any Pending Battles.
-                                        self._map_selection.check_for_pending(farming_mode)
+                                # Clear away any Pending Battles.
+                                self._map_selection.check_for_pending(farming_mode)
 
-                                        # Start the mission again.
-                                        self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
-                                else:
-                                    # Generate a resting period if the user enabled it.
-                                    self._delay_between_runs()
-
-                                    self.find_and_click_button("coop_room")
-                                    self.wait(1)
-
-                                    # Check for the "Daily Missions" popup for Coop.
-                                    if self.image_tools.confirm_location("coop_daily_missions", tries = 1):
-                                        self.find_and_click_button("close")
-
-                                    # Now click the "Start" button.
-                                    self.find_and_click_button("coop_start")
-
-                                # If the user wants to fight Unparalleled Foes during Dread Barrage, then start it.
-                                if farming_mode.lower() == "dread barrage" and self.image_tools.confirm_location("dread_barrage_unparalleled_foe", tries = 1):
-                                    # Find the locations of the "AP 0" text underneath each Unparalleled Foe.
-                                    ap_0_locations = self.image_tools.find_all("ap_0")
-
-                                    if self._enable_unparalleled_foe_level_95 and not self._enable_unparalleled_foe_level_175:
-                                        # Start the Level 95 Unparalleled Foe.
-                                        self.print_and_save("\n[INFO] Starting Level 95 Unparalleled Foe...")
-                                        self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1], "ap_0")
-                                    elif self._enable_unparalleled_foe_level_175 and not self._enable_unparalleled_foe_level_95:
-                                        # Start the Level 175 Unparalleled Foe.
-                                        self.print_and_save("\n[INFO] Starting Level 175 Unparalleled Foe...")
-                                        self.mouse_tools.move_and_click_point(ap_0_locations[1][0], ap_0_locations[1][1], "ap_0")
-                                    elif not self._enable_unparalleled_foe_level_95 and not self._enable_unparalleled_foe_level_175:
-                                        # Close the popup.
-                                        self.print_and_save("\n[INFO] Closing Dread Barrage Unparalleled Foes popup...")
-                                        self.find_and_click_button("close")
-                                    else:
-                                        # Every other case will default to the Level 95 Unparalleled Foe.
-                                        self.print_and_save("\n[INFO] Defaulting to Level 95 Unparalleled Foe. Starting it now...")
-                                        self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1], "ap_0")
-
-                                # Close any detected popups except certain popups that need to be handled separately.
-                                self.check_for_popups()
-
-                                # Check for available AP and then reset the Summon check flag.
-                                self.check_for_ap()
-                                summon_check = False
-
-                        else:
-                            # Start the mission again if the Party wiped or exited prematurely during Combat Mode.
-                            self.print_and_save("\n[INFO] Selecting mission again due to retreating...")
-                            self._map_selection.select_map(farming_mode, location_name, mission_name, difficulty)
-
-                    elif start_check and farming_mode.lower() == "raid":
-                        # Cover the occasional case where joining the raid after selecting the Summon and Party led to the Quest Results screen with
-                        # no loot to collect.
-                        if self.image_tools.confirm_location("no_loot"):
-                            self.print_and_save("\n[INFO] Seems that the raid just ended. Moving back to the Home screen and joining another raid...")
-                            self.go_back_home(confirm_location_check = True)
-                            summon_check = False
-                        else:
-                            # Start Combat Mode for this Raid.
-                            if self.combat_mode.start_combat_mode(self._combat_script):
-                                # If Combat Mode finished successfully without retreating or exiting prematurely, start loot detection.
-                                self.collect_loot()
-
-                                if self._item_amount_farmed < self._item_amount_to_farm:
-                                    # Generate a resting period if the user enabled it.
-                                    self._delay_between_runs()
-
-                                    # Clear away any Pending Battles.
-                                    self._map_selection.check_for_pending(farming_mode)
-
-                                    # Join a new raid.
-                                    self._map_selection.join_raid(mission_name)
-                                    summon_check = False
-                            else:
-                                # Join a new raid.
+                                # Now join a new Raid.
                                 self._map_selection.join_raid(mission_name)
-                                summon_check = False
-                    elif not start_check and farming_mode.lower() == "raid":
-                        # If the bot reached here, it means that the Raid ended before the bot could start the mission after selecting the Summon and Party.
-                        self.print_and_save("[INFO] Seems that the raid ended before the bot was able to join. Now looking for another raid to join...")
-                        self._map_selection.join_raid(mission_name)
-                        summon_check = False
-            else:
-                raise RuntimeError("Confirming the location of the Summon Selection screen after selecting the mission returned False.")
+
+                elif start_check is False and farming_mode == "Raid":
+                    # If the bot reaches here, that means the Raid ended before the bot could start the Mission after selecting the Summon and Party.
+                    self.print_and_save("\n[INFO] Seems that the Raid ended before the bot was able to join. Now looking for another Raid to join...")
+                    self._map_selection.join_raid(mission_name)
+
+                elif start_check is False:
+                    raise RuntimeError("Confirming the location of the Summon Selection screen after selecting the mission returned False.")
         except RuntimeError:
             self.print_and_save(f"\n[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
 
