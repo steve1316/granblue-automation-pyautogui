@@ -1,5 +1,6 @@
 import os
 import traceback
+from typing import List
 
 from bot.game import Game
 
@@ -124,7 +125,7 @@ class CombatMode:
         self._game.find_and_click_button("heal")
 
         # Format the item name from the command.
-        formatted_command = command.lower().replace(" ", "_")
+        formatted_command = command.replace(" ", "_")
 
         # Click the specified item.
         if formatted_command == "usebluepotion" or formatted_command == "usesupportpotion":
@@ -185,17 +186,21 @@ class CombatMode:
         self._game.mouse_tools.scroll_screen_from_home_button(-400)
         self._game.find_and_click_button("request_backup")
 
-        # Find the location of the "Cancel" button and then click the button right next to it.
-        # This is to ensure that no matter what the blue "Request Backup" button's appearance, it is ensured to be pressed.
         self._game.wait(1)
+
+        # Find the location of the "Cancel" button and then click the button right next to it. This is to ensure that no matter what the blue "Request Backup" button's appearance, it is ensured to be pressed.
         cancel_button_location = self._game.image_tools.find_button("cancel")
         self._game.mouse_tools.move_and_click_point(cancel_button_location[0] + 200, cancel_button_location[1], "cancel")
 
-        # If requesting backup was successful, click "OK" to close the popup.
         self._game.wait(1)
+
+        # If requesting backup was successful, click "OK" to close the popup.
         if self._game.image_tools.confirm_location("request_backup_success", tries = 1):
-            self._game.print_and_save(f"[COMBAT] Finished requesting Backup.")
+            self._game.print_and_save(f"[COMBAT] Successfully requested Backup.")
             self._game.find_and_click_button("ok")
+        else:
+            self._game.print_and_save(f"[COMBAT] Unable to request Backup. Possibly because it is still on cooldown.")
+            self._game.find_and_click_button("cancel")
 
         # Move the view back up to the top of the page to ensure all elements are visible.
         self._game.mouse_tools.scroll_screen_from_home_button(400)
@@ -214,14 +219,17 @@ class CombatMode:
         self._game.mouse_tools.scroll_screen_from_home_button(-400)
         self._game.find_and_click_button("request_backup")
 
+        self._game.wait(1)
+
         # Then click the "Tweet" button.
         self._game.find_and_click_button("request_backup_tweet")
         self._game.find_and_click_button("ok")
 
-        # If requesting backup via Twitter was successful, click "OK" to close the popup. Otherwise, click "Cancel".
         self._game.wait(1)
+
+        # If requesting backup via Twitter was successful, click "OK" to close the popup. Otherwise, click "Cancel".
         if self._game.image_tools.confirm_location("request_backup_tweet_success", tries = 1):
-            self._game.print_and_save(f"[COMBAT] Finished requesting Backup via Twitter.")
+            self._game.print_and_save(f"[COMBAT] Successfully requested Backup via Twitter.")
             self._game.find_and_click_button("ok")
         else:
             self._game.print_and_save(f"[COMBAT] Failed requesting Backup via Twitter as there is still a cooldown from the last tweet.")
@@ -241,7 +249,6 @@ class CombatMode:
         Returns:
             None
         """
-        x = None
         if character_number == 1:
             x = self._attack_button_location[0] - 317
         elif character_number == 2:
@@ -250,6 +257,9 @@ class CombatMode:
             x = self._attack_button_location[0] - 158
         elif character_number == 4:
             x = self._attack_button_location[0] - 76
+        else:
+            self._game.print_and_save(f"[WARNING] Invalid command received for selecting a Character. User wanted to select Character #${character_number}.")
+            return
 
         y = self._attack_button_location[1] + 123
 
@@ -257,35 +267,75 @@ class CombatMode:
         self._game.mouse_tools.move_and_click_point(x, y, "template_character", mouse_clicks = 2)
         return None
 
-    def _use_character_skill(self, character_selected: int, skill: str):
-        """Activate the specified skill for the already selected character.
+    def _use_character_skill(self, character_selected: int, skill_command_list: List[str]):
+        """Activate the specified skill(s) for the already selected character.
 
         Args:
-            character_selected (int): The selected character whose skill needs to be used.
-            skill (str): The skill command that needs to be used.
+            character_selected (int): The selected character whose skill(s) needs to be used.
+            skill_command_list (List[str]): The commands to be executed.
 
         Returns:
             None
         """
-        # Determine which skill to use.
-        x = None
-        if "useskill(1)" in skill.lower():
-            self._game.print_and_save(f"[COMBAT] Character {character_selected} uses Skill 1.")
-            x = self._attack_button_location[0] - 213
-        elif "useskill(2)" in skill.lower():
-            self._game.print_and_save(f"[COMBAT] Character {character_selected} uses Skill 2.")
-            x = self._attack_button_location[0] - 132
-        elif "useskill(3)" in skill.lower():
-            self._game.print_and_save(f"[COMBAT] Character {character_selected} uses Skill 3.")
-            x = self._attack_button_location[0] - 51
-        elif "useskill(4)" in skill.lower():
-            self._game.print_and_save(f"[COMBAT] Character {character_selected} uses Skill 4.")
-            x = self._attack_button_location[0] + 39
+        # Execute every skill command in the list.
+        while len(skill_command_list) > 0:
+            skill = skill_command_list.pop(0)
 
-        y = self._attack_button_location[1] + 171
+            if skill == "useskill(1)":
+                self._game.print_and_save(f"[COMBAT] Character {character_selected} uses Skill 1.")
+                x = self._attack_button_location[0] - 213
+            elif skill == "useskill(2)":
+                self._game.print_and_save(f"[COMBAT] Character {character_selected} uses Skill 2.")
+                x = self._attack_button_location[0] - 132
+            elif skill == "useskill(3)":
+                self._game.print_and_save(f"[COMBAT] Character {character_selected} uses Skill 3.")
+                x = self._attack_button_location[0] - 51
+            elif skill == "useskill(4)":
+                self._game.print_and_save(f"[COMBAT] Character {character_selected} uses Skill 4.")
+                x = self._attack_button_location[0] + 39
+            else:
+                self._game.print_and_save(f"[WARNING] Invalid command received for using the Character's Skill. User wanted: ${skill}.")
+                return
 
-        # Double-clicking the skill to avoid any non-invasive popups from other Raid participants.
-        self._game.mouse_tools.move_and_click_point(x, y, "template_skill", mouse_clicks = 2)
+            y = self._attack_button_location[1] + 171
+
+            # Double-clicking the skill to avoid any non-invasive popups from other Raid participants.
+            self._game.mouse_tools.move_and_click_point(x, y, "template_skill", mouse_clicks = 2)
+
+            # Check if the skill requires a target.
+            if len(skill_command_list) > 0 and self._game.image_tools.confirm_location("use_skill", tries = 1):
+                self._game.print_and_save(f"[COMBAT] Skill is awaiting a target...")
+                target = skill_command_list.pop(0)
+
+                select_a_character_location = self._game.image_tools.find_button("select_a_character")
+                if target == "target(1)":
+                    self._game.print_and_save("[COMBAT] Targeting Character 1 for Skill.")
+                    self._game.mouse_tools.move_and_click_point(select_a_character_location[0] - 90, select_a_character_location[1] + 85, "template_target")
+                elif "target(2)" in target:
+                    self._game.print_and_save("[COMBAT] Targeting Character 2 for Skill.")
+                    self._game.mouse_tools.move_and_click_point(select_a_character_location[0], select_a_character_location[1] + 85, "template_target")
+                elif "target(3)" in target:
+                    self._game.print_and_save("[COMBAT] Targeting Character 3 for Skill.")
+                    self._game.mouse_tools.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 85, "template_target")
+                elif "target(4)" in target:
+                    self._game.print_and_save("[COMBAT] Targeting Character 4 for Skill.")
+                    self._game.mouse_tools.move_and_click_point(select_a_character_location[0] - 90, select_a_character_location[1] + 250, "template_target")
+                elif "target(5)" in target:
+                    self._game.print_and_save("[COMBAT] Targeting Character 5 for Skill.")
+                    self._game.mouse_tools.move_and_click_point(select_a_character_location[0], select_a_character_location[1] + 250, "template_target")
+                elif "target(6)" in target:
+                    self._game.print_and_save("[COMBAT] Targeting Character 6 for Skill.")
+                    self._game.mouse_tools.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 250, "template_target")
+
+            # Else, check if the character is skill-sealed.
+            elif self._game.image_tools.confirm_location("skill_unusable", tries = 1):
+                self._game.print_and_save("[COMBAT] Character is currently skill-sealed. Unable to execute command.")
+                self._game.find_and_click_button("cancel")
+
+        # Once all the commands for the selected Character have been processed, click the "Back" button to return.
+        self._game.find_and_click_button("back")
+
+        return None
         return None
 
     def _wait_for_attack(self):
@@ -304,12 +354,13 @@ class CombatMode:
             self._game.wait(1)
 
             tries -= 1
-            if tries < 0 or self._game.image_tools.find_button("attack", tries = 1, suppress_error = True) is not None or self._game.image_tools.find_button("next", tries = 1,
-                                                                                                                                                             suppress_error = True) is not None:
+            if tries <= 0 or self._game.image_tools.find_button("attack", tries = 1, suppress_error = True) is not None or \
+                    self._game.image_tools.find_button("next", tries = 1, suppress_error = True) is not None:
                 break
 
             # Check if the Party wiped after attacking.
             self._party_wipe_check()
+
             self._game.wait(1)
 
         return None
