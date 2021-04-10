@@ -164,7 +164,7 @@ class Game:
         self._item_amount_to_farm = 0
         self._item_amount_farmed = 0
         self.farming_mode = ""
-        self._location_name = ""
+        self._map_name = ""
         self._mission_name = ""
         self._difficulty = ""
         self._summon_element_list = []
@@ -706,13 +706,13 @@ class Game:
                     self.farming_mode == "Special" and self._mission_name == "VH Angel Halo" and self._item_name == "Angel Halo Weapons" and self._check_for_dimensional_halo()) or (
                     (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._check_for_event_nightmare()):
                 # Make sure the bot goes back to the Home screen so that the "Play Again" functionality comes back.
-                self._map_selection.select_map(self.farming_mode, self._location_name, self._mission_name, self._difficulty)
+                self._map_selection.select_map(self.farming_mode, self._map_name, self._mission_name, self._difficulty)
                 break
 
             # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select the Mission again.
             if self.farming_mode == "Event (Token Drawboxes)" and self.image_tools.confirm_location("not_enough_treasure", tries = 1):
                 self.find_and_click_button("ok")
-                self._map_selection.select_map(self.farming_mode, self._location_name, self._mission_name, self._difficulty)
+                self._map_selection.select_map(self.farming_mode, self._map_name, self._mission_name, self._difficulty)
                 break
 
             # Attempt to close the popup by clicking on any detected "Close" and "Cancel" buttons.
@@ -729,7 +729,7 @@ class Game:
         Returns:
             (bool): Return True if Event Nightmare was detected and successfully completed. Otherwise, return False.
         """
-        if self._enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests"):
+        if self._enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests", tries = 1):
             # First check if the Event Nightmare is skippable.
             event_claim_loot_location = self.image_tools.find_button("event_claim_loot", tries = 1, suppress_error = True)
             if event_claim_loot_location is not None:
@@ -751,10 +751,12 @@ class Game:
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
 
+                # Click the "Play Next" button to head to the Summon Selection screen.
                 self.find_and_click_button("play_next")
 
-                # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
                 self.wait(1)
+
+                # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
                 if self.image_tools.confirm_location("select_summon"):
                     self._select_summon(self._event_nightmare_summon_list, self._event_nightmare_summon_element_list)
                     start_check = self._find_party_and_start_mission(self._event_nightmare_group_number, self._event_nightmare_party_number)
@@ -802,10 +804,12 @@ class Game:
             self.print_and_save("********************************************************************************")
             self.print_and_save("********************************************************************************\n")
 
+            # Click the "Play Next" button to head to the Summon Selection screen.
             self.find_and_click_button("play_next")
 
-            # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             self.wait(1)
+
+            # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             if self.image_tools.confirm_location("select_summon"):
                 self._select_summon(self._dimensional_halo_summon_list, self._dimensional_halo_summon_element_list)
                 start_check = self._find_party_and_start_mission(self._dimensional_halo_group_number, self._dimensional_halo_party_number)
@@ -829,7 +833,7 @@ class Game:
         Returns:
             (bool): Return True if Extreme+ was detected and successfully completed. Otherwise, return False.
         """
-        if self._enable_rotb_extreme_plus and self.image_tools.confirm_location("rotb_extreme_plus", tries = 2):
+        if self._enable_rotb_extreme_plus and self.image_tools.confirm_location("rotb_extreme_plus", tries = 1):
             self.print_and_save("\n[ROTB] Detected Extreme+. Starting it now...")
 
             self.print_and_save("\n\n********************************************************************************")
@@ -844,10 +848,12 @@ class Game:
             self.print_and_save("********************************************************************************")
             self.print_and_save("********************************************************************************\n")
 
+            # Click the "Play Next" button to head to the Summon Selection screen.
             self.find_and_click_button("play_next")
 
-            # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             self.wait(1)
+
+            # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             if self.image_tools.confirm_location("select_summon"):
                 self._select_summon(self._rotb_extreme_plus_summon_list, self._rotb_extreme_plus_summon_element_list)
                 start_check = self._find_party_and_start_mission(self._rotb_extreme_plus_group_number, self._rotb_extreme_plus_party_number)

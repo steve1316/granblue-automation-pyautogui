@@ -54,7 +54,7 @@ class Debug:
         self._game.print_and_save(f"[TEST] Testing Farming Mode for 10x Fine Sand Bottles from Special Op's Request on Valtz Duchy...")
         self._game.print_and_save("################################################################################")
 
-        self._game.start_farming_mode(item_name = "Fine Sand Bottle", item_amount_to_farm = 10, farming_mode = "Quest", location_name = "Valtz Duchy", mission_name = "Special Op's Request",
+        self._game.start_farming_mode(item_name = "Fine Sand Bottle", item_amount_to_farm = 10, farming_mode = "Quest", map_name = "Valtz Duchy", mission_name = "Special Op's Request",
                                       summon_list = ["leviathan_omega"], summon_element_list = ["water"], group_number = 1, party_number = 3)
 
         self._game.print_and_save(f"\n[TEST_SUCCESS] Testing Farming Mode was successful.")
@@ -165,7 +165,7 @@ class Debug:
         self._game.print_and_save(f"[TEST] Testing Combat Mode on Very Hard Difficulty Angel Halo mission now...")
         self._game.print_and_save("################################################################################")
 
-        self._game.start_farming_mode(item_name = "Angel Halo Weapons", item_amount_to_farm = 1, farming_mode = "Special", location_name = "Angel Halo", mission_name = "VH Angel Halo",
+        self._game.start_farming_mode(item_name = "Angel Halo Weapons", item_amount_to_farm = 1, farming_mode = "Special", map_name = "Angel Halo", mission_name = "VH Angel Halo",
                                       summon_list = ["celeste_omega"], summon_element_list = ["dark"], group_number = 6, party_number = 1)
 
         self._game.print_and_save(f"\n[TEST_SUCCESS] Testing Combat Mode was successful.")

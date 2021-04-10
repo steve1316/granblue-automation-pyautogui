@@ -46,7 +46,7 @@ class ImageUtils:
         self._file_resolver = FileResolver()
 
         # Initialize EasyOCR for text detection.
-        self._game.print_and_save(f"\n[INFO] Initializing EasyOCR reader...")
+        self._game.print_and_save(f"\n[INFO] Initializing EasyOCR reader. This may take a few seconds...")
         self._reader = easyocr.Reader(["en"], gpu = True)
         self._game.print_and_save(f"[INFO] EasyOCR reader initialized.")
 
@@ -62,10 +62,12 @@ class ImageUtils:
         Returns:
             None
         """
+        self._game.print_and_save(f"\n[INFO] Optimizing window dimensions...")
         self._window_left = window_left
         self._window_top = window_top
         self._window_width = window_width
         self._window_height = window_height
+        self._game.print_and_save(f"[INFO] Optimizing window dimensions complete.")
 
         return None
 
@@ -236,11 +238,10 @@ class ImageUtils:
                             self._game.print_and_save(f"[WARNING] Could not locate {summon_list[summon_index].upper()} Summon. Trying again...")
 
                         # If the bot reached the bottom of the page, scroll back up to the top and start searching for the next Summon.
-                        if ((self._game.farming_mode.lower() != "event" or self._game.farming_mode.lower() != "event (token drawboxes)") and self.find_button("bottom_of_summon_selection", tries = 1,
-                                                                                                                                                              suppress_error = True) is not None) or (
-                                (self._game.farming_mode.lower() == "event" or self._game.farming_mode.lower() == "event (token drawboxes)") and self.find_button("bottom_of_event_summon_selection",
-                                                                                                                                                                  tries = 1,
-                                                                                                                                                                  suppress_error = True) is not None):
+                        if ((self._game.farming_mode.lower() != "event" or self._game.farming_mode.lower() != "event (token drawboxes)") and
+                            self.find_button("bottom_of_summon_selection", tries = 1, suppress_error = True) is not None) or (
+                                (self._game.farming_mode.lower() == "event" or self._game.farming_mode.lower() == "event (token drawboxes)") and
+                                self.find_button("bottom_of_event_summon_selection", tries = 1, suppress_error = True) is not None):
                             self._game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, 10000)
                             summon_index += 1
                             break
@@ -525,7 +526,8 @@ class ImageUtils:
             self._game.print_and_save(f"[WARNING] Image did not vanish from screen...")
             return False
 
-    def get_button_dimensions(self, image_name: str):
+    @staticmethod
+    def get_button_dimensions(image_name: str):
         """Get the dimensions of a image in images/buttons/ folder.
 
         Args:
@@ -573,7 +575,8 @@ class ImageUtils:
         self._game.print_and_save(f"[INFO] Results image saved as \"{new_file_name}.jpg\" in \"{self._new_folder_name}\" folder...")
         return None
 
-    def generate_alert_for_captcha(self):
+    @staticmethod
+    def generate_alert_for_captcha():
         """Displays a alert that will inform users that a CAPTCHA was detected.
 
         Returns:
@@ -585,7 +588,8 @@ class ImageUtils:
             title = "CAPTCHA Detected!", button = "OK")
         return None
 
-    def generate_alert(self, message: str):
+    @staticmethod
+    def generate_alert(message: str):
         """Displays a alert that will inform users about various user errors that may occur.
 
         Args:
