@@ -38,8 +38,8 @@ class TwitterRoomFinder:
         self._access_token = access_token
         self._access_token_secret = access_token_secret
 
-        # self.request_limit = 900
-        # self.rate_limit = 900 # A maximum of 900 requests per 15 minutes or 900 seconds before getting rate-limited.
+        self._debug_mode = debug_mode
+        self._api = None
 
         self._already_visited = []
         self._list_of_id = []
@@ -143,23 +143,15 @@ class TwitterRoomFinder:
             "Lvl 250 Beelzebub": "Lv250 ベルゼバブ"
         }
 
-        self._debug_mode = debug_mode
-
-        self._api = None
-
-    def find_most_recent(self, raid_name: str, count: int = 10):
-        """Start listening to tweets containing room codes starting with JP and then listens for EN tweets if there was not enough collected tweets.
-
-        Args:
-            raid_name (str): Name and level of the raid that appears in tweets containing the room code to it.
-            count (int): Number of most recent tweets to grab. Defaults to 10.
+    def _connect_to_twitter_api(self):
+        """Connect to Twitter API using provided consumer keys and tokens.
 
         Returns:
-            tweets (Iterable[str]): List of most recent tweets that match the query.
+            None
         """
         # Connect to Twitter's API if this is the first run.
         if self._api is None:
-            self._game.print_and_save(f"\n[TWITTER] Authenticating...")
+            self._game.print_and_save(f"\n[TWITTER] Authenticating provided consumer keys and tokens with the Twitter API...")
             auth = tweepy.OAuthHandler(self._consumer_key, self._consumer_secret)
             auth.set_access_token(self._access_token, self._access_token_secret)
             self._api = tweepy.API(auth)
@@ -173,7 +165,21 @@ class TwitterRoomFinder:
                     f"\n[ERROR] Connection to the Twitter API failed. Check the config.ini and verify that the keys and tokens are correct. Exact error is: \n{traceback.format_exc()}")
                 self._game.isBotRunning.value = 1
 
+    def find_most_recent(self, raid_name: str, count: int = 10):
+        """Start listening to tweets containing room codes starting with JP and then EN tweets if there was not enough collected tweets from JP.
+
+        Args:
+            raid_name (str): Name and level of the raid that appears in tweets containing the room code to it.
+            count (int): Number of most recent tweets to grab. Defaults to 10.
+
+        Returns:
+            tweets (Iterable[str]): List of most recent tweets that match the query.
+        """
+        # Connect to Twitter API if bot has not already done so.
+        self._connect_to_twitter_api()
+
         self._game.print_and_save(f"\n[TWITTER] Now finding the {count} most recent tweets for {raid_name}.")
+
         today = datetime.datetime.today()
         query_en = f"+(:Battle ID) AND +({raid_name})"
         query_jp = f"+(:参戦ID) AND +({self._list_of_raids[raid_name]})"
@@ -184,10 +190,6 @@ class TwitterRoomFinder:
         #   LEVEL and NAME OF RAID
 
         tweets = []
-
-        # Clear list of tweet IDs if it exceeds 50.
-        if len(self._list_of_id) > 50:
-            self._list_of_id = []
 
         try:
             # Search JP tweets first and filter for tweets that the bot has not processed yet.
@@ -222,10 +224,8 @@ class TwitterRoomFinder:
         try:
             self._game.print_and_save(f"\n[TWITTER] Now cleaning up the tweets and parsing for room codes...\n")
             room_codes = []
-            for tweet in tweets:
-                if len(self._already_visited) > 50:
-                    self._already_visited = []
 
+            for tweet in tweets:
                 # Split up the tweet's text by whitespaces.
                 split_text = tweet.text.split(" ")
 
