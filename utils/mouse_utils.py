@@ -49,13 +49,17 @@ class MouseUtils:
         Returns:
             None
         """
-        if custom_mouse_speed <= 0.0:
-            custom_mouse_speed = self._mouse_speed
-            
         try:
             if self._enable_bezier_curve:
+                # HumanClicker only accepts int as the mouse speed.
+                if int(custom_mouse_speed) < 1:
+                    custom_mouse_speed = 1
+
                 self._hc.move((x, y), duration=custom_mouse_speed, humanCurve=pyclick.HumanCurve(pyautogui.position(), (x, y)))
             else:
+                if custom_mouse_speed <= 0.0:
+                    custom_mouse_speed = self._mouse_speed
+
                 pyautogui.moveTo(x, y, duration=custom_mouse_speed, tween=pyautogui.easeInOutQuad)
             return None
         except Exception:
@@ -68,27 +72,32 @@ class MouseUtils:
             x (int): X coordinate on the screen.
             y (int): Y coordinate on the screen.
             image_name (str): File name of the image in /images/buttons/ folder.
-            custom_mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.
+            custom_mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.0.
             mouse_clicks (int, optional): Number of mouse clicks. Defaults to 1.
 
         Returns:
             None
         """
-        if custom_mouse_speed <= 0.0:
-            custom_mouse_speed = self._mouse_speed
-            
         try:
             new_x, new_y = self._randomize_point(x, y, image_name)
-            
+
+            # Move the mouse to the specified coordinates.
             if self._enable_bezier_curve:
+                # HumanClicker only accepts int as the mouse speed.
+                if int(custom_mouse_speed) < 1:
+                    custom_mouse_speed = 1
+
                 self._hc.move((new_x, new_y), duration=custom_mouse_speed, humanCurve=pyclick.HumanCurve(pyautogui.position(), (new_x, new_y)))
             else:
+                if custom_mouse_speed <= 0.0:
+                    custom_mouse_speed = self._mouse_speed
+
                 pyautogui.moveTo(x, y, duration=custom_mouse_speed, tween=pyautogui.easeInOutQuad)
-            
+
             pyautogui.click(clicks=mouse_clicks)
             
             # This delay is necessary as ImageUtils will take the screenshot too fast and the bot will use the last frame before clicking to navigate.
-            self._game.wait(0.5)
+            self._game.wait(1)
             
             return None
         except Exception:
@@ -106,8 +115,9 @@ class MouseUtils:
             (int, int): Tuple of the newly randomized location to click.
         """
         try:
+            # Get the width and height of the template image.
             width, height = self._game.image_tools.get_button_dimensions(image_name)
-            
+
             dimensions_x0 = x - (width // 2)
             dimensions_x1 = x + (width // 2)
             
@@ -182,7 +192,8 @@ class MouseUtils:
         except Exception:
             self._game.print_and_save(f"\n[ERROR] Bot encountered exception attempting to scroll the screen from the \"Home\" button: \n{traceback.format_exc()}")
     
-    def clear_textbox(self):
+    @staticmethod
+    def clear_textbox():
         """Clear the selected textbox of all text by selecting all text by CTRL + A and then pressing DEL.
 
         Returns:
@@ -194,7 +205,8 @@ class MouseUtils:
         pyautogui.press("del")
         return None
 
-    def copy_to_clipboard(self, message: str):
+    @staticmethod
+    def copy_to_clipboard(message: str):
         """Copy the message to the clipboard.
 
         Args:
@@ -206,7 +218,8 @@ class MouseUtils:
         pyperclip.copy(message)
         return None
     
-    def paste_from_clipboard(self):
+    @staticmethod
+    def paste_from_clipboard():
         """Paste from the clipboard. Make sure that the textbox is already selected.
 
         Returns:
