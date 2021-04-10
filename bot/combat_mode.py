@@ -336,6 +336,48 @@ class CombatMode:
         self._game.find_and_click_button("back")
 
         return None
+
+    def _use_summon(self, command: str):
+        """Activate the specified Summon.
+
+        Args:
+            command (str): The command to be executed.
+
+        Returns:
+            None
+        """
+        for summon_index in range(1, 7):
+            if command == f"summon(${summon_index})":
+                # Click the "Summon" button to bring up the available Summons.
+                self._game.print_and_save(f"[COMBAT] Invoking Summon #{summon_index}.")
+                self._game.find_and_click_button("summon")
+
+                # Click on the specified Summon.
+                if summon_index == 1:
+                    self._game.mouse_tools.move_and_click_point(self._attack_button_location[0] - 317, self._attack_button_location[1] + 138, "template_summon", mouse_clicks = 2)
+                elif summon_index == 2:
+                    self._game.mouse_tools.move_and_click_point(self._attack_button_location[0] - 243, self._attack_button_location[1] + 138, "template_summon", mouse_clicks = 2)
+                elif summon_index == 3:
+                    self._game.mouse_tools.move_and_click_point(self._attack_button_location[0] - 165, self._attack_button_location[1] + 138, "template_summon", mouse_clicks = 2)
+                elif summon_index == 4:
+                    self._game.mouse_tools.move_and_click_point(self._attack_button_location[0] - 89, self._attack_button_location[1] + 138, "template_summon", mouse_clicks = 2)
+                elif summon_index == 5:
+                    self._game.mouse_tools.move_and_click_point(self._attack_button_location[0] - 12, self._attack_button_location[1] + 138, "template_summon", mouse_clicks = 2)
+                else:
+                    self._game.mouse_tools.move_and_click_point(self._attack_button_location[0] + 63, self._attack_button_location[1] + 138, "template_summon", mouse_clicks = 2)
+
+                # Check if it is able to be summoned.
+                if self._game.image_tools.confirm_location("summon_details"):
+                    if self._game.find_and_click_button("ok"):
+                        # Wait for the Summon animation to complete. This is user-defined in the config.ini.
+                        self._game.wait(self._idle_seconds_after_summon)
+                    else:
+                        self._game.print_and_save("[COMBAT] Summon #{j} cannot be invoked due to current restrictions.")
+                        self._game.find_and_click_button("cancel")
+
+                        # Click the "Back" button to return.
+                        self._game.mouse_tools.move_and_click_point(self._back_button_location[0], self._back_button_location[1], "back")
+
         return None
 
     def _wait_for_attack(self):
