@@ -77,8 +77,7 @@ class CombatMode:
         list_of_charge_attacks = self._game.image_tools.find_all("full_charge", custom_region = (
             self._attack_button_location[0] - 356, self._attack_button_location[1] + 67, self._attack_button_location[0] - 40, self._attack_button_location[1] + 214), hide_info = True)
 
-        number_of_charge_attacks = len(list_of_charge_attacks)
-        return number_of_charge_attacks
+        return len(list_of_charge_attacks)
 
     def _find_dialog_in_combat(self):
         """Check if there are dialog popups from either Lyria or Vyrn and click them away.
@@ -89,6 +88,147 @@ class CombatMode:
         dialog_location = self._game.image_tools.find_dialog(self._attack_button_location[0], self._attack_button_location[1], tries = 1)
         if dialog_location is not None:
             self._game.mouse_tools.move_and_click_point(dialog_location[0] + 180, dialog_location[1] - 51, "template_dialog")
+
+        return None
+
+    def _use_combat_healing_item(self, command: str):
+        """Uses the specified healing item during Combat mode with an optional target if the item needs it.
+
+        Args:
+            command (str): The command for the healing item to use.
+
+        Returns:
+            None
+        """
+        if self._debug_mode:
+            self._game.print_and_save(f"\n[DEBUG] Using item: {command}.")
+
+        target = 0
+
+        # Grab the healing command.
+        healing_item_command_list = command.split(".")
+        healing_item_command = healing_item_command_list.pop(0)
+
+        # Parse the target if the user is using a Green Potion or a Clarity Herb.
+        if (healing_item_command == "usegreenpotion" or healing_item_command == "useclarityherb") and healing_item_command_list[0].__contains__("target"):
+            if healing_item_command_list[0] == "target(1)":
+                target = 1
+            elif healing_item_command_list[0] == "target(2)":
+                target = 2
+            elif healing_item_command_list[0] == "target(3)":
+                target = 3
+            elif healing_item_command_list[0] == "target(4)":
+                target = 4
+
+        # Click on the green "Heal" button.
+        self._game.find_and_click_button("heal")
+
+        # Format the item name from the command.
+        formatted_command = command.lower().replace(" ", "_")
+
+        # Click the specified item.
+        if formatted_command == "usebluepotion" or formatted_command == "usesupportpotion":
+            # Blue and Support Potions share the same image but are at different positions on the screen.
+            potion_locations = self._game.image_tools.find_all(formatted_command)
+
+            if command == "usebluepotion":
+                self._game.mouse_tools.move_and_click_point(potion_locations[0][0], potion_locations[0][1], "usebluepotion")
+            elif command == "usesupportpotion":
+                self._game.mouse_tools.move_and_click_point(potion_locations[1][0], potion_locations[1][1], "usesupportpotion")
+        else:
+            self._game.find_and_click_button(formatted_command)
+
+        # After the initial popup vanishes to reveal a new popup, either select a Character target or confirm the item usage.
+        if self._game.image_tools.wait_vanish("tap_the_item_to_use", timeout = 5):
+            if command == "usegreenpotion":
+                self._game.print_and_save(f"\n[COMBAT] Using Green Potion on Character {target}...")
+                self._select_character(target)
+            elif command == "usebluepotion":
+                self._game.print_and_save(f"\n[COMBAT] Using Blue Potion on the whole Party...")
+                self._game.find_and_click_button("use")
+            elif command == "usefullelixir":
+                self._game.print_and_save(f"\n[COMBAT] Using Full Elixir to revive and gain Full Charge...")
+                self._game.find_and_click_button("ok")
+            elif command == "usesupportpotion":
+                self._game.print_and_save(f"\n[COMBAT] Using Support Potion on the whole Party...")
+                self._game.find_and_click_button("ok")
+            elif command == "useclaritypotion":
+                self._game.print_and_save(f"\n[COMBAT] Using Clarity Herb on Character {target}...")
+                self._select_character(target)
+            elif command == "userevivalpotion":
+                self._game.print_and_save(f"\n[COMBAT] Using Revival Potion to revive the whole Party...")
+                self._game.find_and_click_button("ok")
+
+            # Wait for the healing animation to finish.
+            self._game.wait(1)
+
+            if not self._game.image_tools.confirm_location("use_item", tries = 1):
+                self._game.print_and_save(f"[SUCCESS] Using healing item was successful.")
+            else:
+                self._game.print_and_save(f"[WARNING] Using healing item was not successful. Canceling it now...")
+                self._game.find_and_click_button("cancel")
+        else:
+            self._game.print_and_save(f"[WARNING] Failed to click on the item. Either it does not exist for this particular mission or you ran out. Canceling it now...")
+            self._game.find_and_click_button("cancel")
+
+        return None
+
+    def _request_backup(self):
+        """Request backup during a Raid.
+
+        Returns:
+            None
+        """
+        self._game.print_and_save(f"\n[COMBAT] Now requesting Backup for this Raid.")
+
+        # Scroll down the screen a little bit to have the "Request Backup" button visible on all screen sizes and then click it.
+        self._game.mouse_tools.scroll_screen_from_home_button(-400)
+        self._game.find_and_click_button("request_backup")
+
+        # Find the location of the "Cancel" button and then click the button right next to it.
+        # This is to ensure that no matter what the blue "Request Backup" button's appearance, it is ensured to be pressed.
+        self._game.wait(1)
+        cancel_button_location = self._game.image_tools.find_button("cancel")
+        self._game.mouse_tools.move_and_click_point(cancel_button_location[0] + 200, cancel_button_location[1], "cancel")
+
+        # If requesting backup was successful, click "OK" to close the popup.
+        self._game.wait(1)
+        if self._game.image_tools.confirm_location("request_backup_success", tries = 1):
+            self._game.print_and_save(f"[COMBAT] Finished requesting Backup.")
+            self._game.find_and_click_button("ok")
+
+        # Move the view back up to the top of the page to ensure all elements are visible.
+        self._game.mouse_tools.scroll_screen_from_home_button(400)
+
+        return None
+
+    def _tweet_backup(self):
+        """Request backup during a Raid using Twitter.
+
+        Returns:
+            None
+        """
+        self._game.print_and_save(f"\n[COMBAT] Now requesting Backup for this Raid via Twitter.")
+
+        # Scroll down the screen a little bit to have the "Request Backup" button visible on all screen sizes and then click it.
+        self._game.mouse_tools.scroll_screen_from_home_button(-400)
+        self._game.find_and_click_button("request_backup")
+
+        # Then click the "Tweet" button.
+        self._game.find_and_click_button("request_backup_tweet")
+        self._game.find_and_click_button("ok")
+
+        # If requesting backup via Twitter was successful, click "OK" to close the popup. Otherwise, click "Cancel".
+        self._game.wait(1)
+        if self._game.image_tools.confirm_location("request_backup_tweet_success", tries = 1):
+            self._game.print_and_save(f"[COMBAT] Finished requesting Backup via Twitter.")
+            self._game.find_and_click_button("ok")
+        else:
+            self._game.print_and_save(f"[COMBAT] Failed requesting Backup via Twitter as there is still a cooldown from the last tweet.")
+            self._game.find_and_click_button("cancel")
+
+        # Move the view back up to the top of the page to ensure all elements are visible.
+        self._game.mouse_tools.scroll_screen_from_home_button(400)
 
         return None
 
@@ -171,130 +311,6 @@ class CombatMode:
             # Check if the Party wiped after attacking.
             self._party_wipe_check()
             self._game.wait(1)
-
-        return None
-
-    def _use_combat_healing_item(self, command: str, target: int = 0):
-        """Uses the specified healing item during Combat mode with an optional target if the item needs it.
-
-        Args:
-            command (str): The command for the healing item to use.
-            target (int, optional): The character target for the item. This depends on what item it is. Defaults to 0.
-
-        Returns:
-            None
-        """
-        if self._debug_mode:
-            self._game.print_and_save(f"\n[DEBUG] Using item: {command}, target: Character {target}.")
-
-        # Click on the green "Heal" button.
-        self._game.find_and_click_button("heal")
-
-        # Format the item name.
-        command = command.lower().replace(" ", "_")
-
-        # Click on the specified healing item.
-        if command == "usebluepotion" or command == "usesupportpotion":
-            # Blue and Support Potions share the same image but they are at different positions on the screen.
-            potion_location = self._game.image_tools.find_all(command)
-            if command == "usebluepotion":
-                self._game.mouse_tools.move_and_click_point(potion_location[0][0], potion_location[0][1], "usebluepotion")
-            elif command == "usesupportpotion":
-                self._game.mouse_tools.move_and_click_point(potion_location[1][0], potion_location[1][1], "usesupportpotion")
-        else:
-            self._game.find_and_click_button(command)
-
-        # After the initial popup vanishes to reveal a new popup, either select a character target or click a button depending on the healing item.
-        if self._game.image_tools.wait_vanish("tap_the_item_to_use", timeout = 5):
-            if command == "usegreenpotion":
-                self._game.print_and_save(f"\n[COMBAT] Using Green Potion on Character {target}...")
-                self._select_character(target)
-            elif command == "usebluepotion":
-                self._game.print_and_save(f"\n[COMBAT] Using Blue Potion on the whole Party...")
-                self._game.find_and_click_button("use")
-            elif command == "usefullelixir":
-                self._game.print_and_save(f"\n[COMBAT] Using Full Elixir to revive and gain Full Charge...")
-                self._game.find_and_click_button("ok")
-            elif command == "usesupportpotion":
-                self._game.print_and_save(f"\n[COMBAT] Using Support Potion on the whole Party...")
-                self._game.find_and_click_button("ok")
-            elif command == "useclaritypotion":
-                self._game.print_and_save(f"\n[COMBAT] Using Clarity Herb on Character {target}...")
-                self._select_character(target)
-            elif command == "userevivalpotion":
-                self._game.print_and_save(f"\n[COMBAT] Using Revival Potion to revive the whole Party...")
-                self._game.find_and_click_button("ok")
-
-            # Wait for the healing animation to finish.
-            self._game.wait(1)
-
-            if not self._game.image_tools.confirm_location("use_item", tries = 1):
-                self._game.print_and_save(f"[SUCCESS] Using item was successful.")
-            else:
-                self._game.print_and_save(f"[WARNING] Using item was not successful. Canceling it now...")
-                self._game.find_and_click_button("cancel")
-        else:
-            self._game.print_and_save(f"[WARNING] Failed to click on the item. Either it does not exist for this particular mission or you ran out. Canceling it now...")
-            self._game.find_and_click_button("cancel")
-
-        return None
-
-    def _request_backup(self):
-        """Request backup during a Raid.
-
-        Returns:
-            None
-        """
-        self._game.print_and_save(f"\n[COMBAT] Now requesting Backup for this Raid.")
-
-        # Scroll down the screen a little bit to have the "Request Backup" button visible on all screen sizes and then click it.
-        self._game.mouse_tools.scroll_screen_from_home_button(-400)
-        self._game.find_and_click_button("request_backup")
-
-        # Find the location of the "Cancel" button and then click the button right next to it.
-        # This is to ensure that no matter what the blue "Request Backup" button's appearance, it is ensured to be pressed.
-        self._game.wait(1)
-        cancel_button_location = self._game.image_tools.find_button("cancel")
-        self._game.mouse_tools.move_and_click_point(cancel_button_location[0] + 200, cancel_button_location[1], "cancel")
-
-        # If requesting backup was successful, click "OK" to close the popup.
-        self._game.wait(1)
-        if self._game.image_tools.confirm_location("request_backup_success", tries = 1):
-            self._game.print_and_save(f"[COMBAT] Finished requesting Backup.")
-            self._game.find_and_click_button("ok")
-
-        # Move the view back up to the top of the page to ensure all elements are visible.
-        self._game.mouse_tools.scroll_screen_from_home_button(400)
-
-        return None
-
-    def _tweet_backup(self):
-        """Request backup during a Raid using Twitter.
-
-        Returns:
-            None
-        """
-        self._game.print_and_save(f"\n[COMBAT] Now requesting Backup for this Raid via Twitter.")
-
-        # Scroll down the screen a little bit to have the "Request Backup" button visible on all screen sizes and then click it.
-        self._game.mouse_tools.scroll_screen_from_home_button(-400)
-        self._game.find_and_click_button("request_backup")
-
-        # Then click the "Tweet" button.
-        self._game.find_and_click_button("request_backup_tweet")
-        self._game.find_and_click_button("ok")
-
-        # If requesting backup via Twitter was successful, click "OK" to close the popup. Otherwise, click "Cancel".
-        self._game.wait(1)
-        if self._game.image_tools.confirm_location("request_backup_tweet_success", tries = 1):
-            self._game.print_and_save(f"[COMBAT] Finished requesting Backup via Twitter.")
-            self._game.find_and_click_button("ok")
-        else:
-            self._game.print_and_save(f"[COMBAT] Failed requesting Backup via Twitter as there is still a cooldown from the last tweet.")
-            self._game.find_and_click_button("cancel")
-
-        # Move the view back up to the top of the page to ensure all elements are visible.
-        self._game.mouse_tools.scroll_screen_from_home_button(400)
 
         return None
 
