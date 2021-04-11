@@ -575,7 +575,7 @@ class Game:
             None
         """
         # Loop until the user gets to the Summon Selection screen.
-        while (self.farming_mode.lower() != "coop" and not self.image_tools.confirm_location("select_summon", tries = 2)) or (
+        while (self.farming_mode.lower() != "coop" and not self.image_tools.confirm_location("select_a_summon", tries = 2)) or (
                 self.farming_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries = 2)):
             if self.image_tools.confirm_location("not_enough_ap", tries = 2):
                 # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full Elixir.
@@ -757,7 +757,7 @@ class Game:
                 self.wait(1)
 
                 # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
-                if self.image_tools.confirm_location("select_summon"):
+                if self.image_tools.confirm_location("select_a_summon"):
                     self._select_summon(self._event_nightmare_summon_list, self._event_nightmare_summon_element_list)
                     start_check = self._find_party_and_start_mission(self._event_nightmare_group_number, self._event_nightmare_party_number)
 
@@ -810,7 +810,7 @@ class Game:
             self.wait(1)
 
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
-            if self.image_tools.confirm_location("select_summon"):
+            if self.image_tools.confirm_location("select_a_summon"):
                 self._select_summon(self._dimensional_halo_summon_list, self._dimensional_halo_summon_element_list)
                 start_check = self._find_party_and_start_mission(self._dimensional_halo_group_number, self._dimensional_halo_party_number)
 
@@ -854,7 +854,7 @@ class Game:
             self.wait(1)
 
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
-            if self.image_tools.confirm_location("select_summon"):
+            if self.image_tools.confirm_location("select_a_summon"):
                 self._select_summon(self._rotb_extreme_plus_summon_list, self._rotb_extreme_plus_summon_element_list)
                 start_check = self._find_party_and_start_mission(self._rotb_extreme_plus_group_number, self._rotb_extreme_plus_party_number)
 
