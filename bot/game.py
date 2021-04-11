@@ -664,7 +664,7 @@ class Game:
 
         if not is_pending_battle and not is_event_nightmare:
             if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
-                self.print_and_save("\n\n********************************************************************************")
+                self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"[FARM] Mission: {self._mission_name}")
@@ -675,7 +675,7 @@ class Game:
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
             else:
-                self.print_and_save("\n\n********************************************************************************")
+                self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"[FARM] Mission: {self._mission_name}")
@@ -740,7 +740,7 @@ class Game:
             else:
                 self.print_and_save("\n[EVENT] Detected Event Nightmare. Starting it now...")
 
-                self.print_and_save("\n\n********************************************************************************")
+                self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("[EVENT] Event Nightmare")
                 self.print_and_save("[EVENT] Event Nightmare Summon Elements: {self._event_nightmare_summon_element_list}")
@@ -792,7 +792,7 @@ class Game:
             self.print_and_save("\n[D.HALO] Detected Dimensional Halo. Starting it now...")
             self._dimensional_halo_amount += 1
 
-            self.print_and_save("\n\n********************************************************************************")
+            self.print_and_save("\n********************************************************************************")
             self.print_and_save("********************************************************************************")
             self.print_and_save(f"[D.HALO] Dimensional Halo")
             self.print_and_save(f"[D.HALO] Dimensional Halo Summon Elements: {self._dimensional_halo_summon_element_list}")
@@ -836,7 +836,7 @@ class Game:
         if self._enable_rotb_extreme_plus and self.image_tools.confirm_location("rotb_extreme_plus", tries = 1):
             self.print_and_save("\n[ROTB] Detected Extreme+. Starting it now...")
 
-            self.print_and_save("\n\n********************************************************************************")
+            self.print_and_save("\n********************************************************************************")
             self.print_and_save("********************************************************************************")
             self.print_and_save(f"[ROTB] Rise of the Beasts Extreme+")
             self.print_and_save(f"[ROTB] Rise of the Beasts Extreme+ Summon Elements: {self._rotb_extreme_plus_summon_element_list}")
@@ -1016,14 +1016,14 @@ class Game:
         """
         try:
             if item_name != "EXP":
-                self.print_and_save("\n\n################################################################################")
+                self.print_and_save("\n################################################################################")
                 self.print_and_save("################################################################################")
                 self.print_and_save(f"[FARM] Starting Farming Mode for {farming_mode}.")
                 self.print_and_save(f"[FARM] Farming {item_amount_to_farm}x {item_name} at {mission_name}.")
                 self.print_and_save("################################################################################")
                 self.print_and_save("################################################################################\n")
             else:
-                self.print_and_save("\n\n################################################################################")
+                self.print_and_save("\n################################################################################")
                 self.print_and_save("################################################################################")
                 self.print_and_save(f"[FARM] Starting Farming Mode for {farming_mode}.")
                 self.print_and_save(f"[FARM] Doing {item_amount_to_farm}x runs for {item_name} at {mission_name}.")
