@@ -328,67 +328,54 @@ class ImageUtils:
         else:
             return vyrn_dialog_location
 
-    def find_all(self, image_name: str, custom_region: Iterable[Tuple[int, int, int, int]] = None, custom_confidence: float = 0.9, grayscale_check: bool = False, hide_info: bool = False):
+    def find_all(self, image_name: str, custom_region: Tuple[int, int, int, int] = None, custom_confidence: float = 0.9, grayscale_check: bool = False, hide_info: bool = False):
         """Find the specified image file by searching through all subfolders and locating all occurrences on the screen.
 
         Args:
-            image_name (str): Name of the image file in the /images/ folder.
+            image_name (str): Name of the image file in the /images/buttons folder.
             custom_region (tuple[int, int, int, int]): Region tuple of integers to look for a occurrence in. Defaults to None.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
             hide_info (bool, optional): Whether or not to print the matches' locations. Defaults to False.
 
         Returns:
-            locations (list[Box]): List of Boxes where each occurrence is found on the screen. If no occurrence was found, return a empty list. Or if the file does not exist, return None.
+            locations (list[Box]): List of Boxes where each occurrence is found on the screen. If no occurrence was found, return a empty list.
         """
-        dir_path = os.path.dirname(os.path.realpath(__file__))
+        if custom_region is None:
+            locations = list(pyautogui.locateAllOnScreen(f"images/buttons/{image_name}.png", confidence = custom_confidence, grayscale = grayscale_check,
+                                                         region = (self._window_left, self._window_top, self._window_width, self._window_height)))
+        elif custom_region is not None:
+            locations = list(pyautogui.locateAllOnScreen(f"images/buttons/{image_name}.png", confidence = custom_confidence, grayscale = grayscale_check, region = custom_region))
+        else:
+            locations = list(pyautogui.locateAllOnScreen(f"images/buttons/{image_name}.png", confidence = custom_confidence, grayscale = grayscale_check))
 
-        # Find the specified image file by searching through the subfolders in the /images/ folder.
-        for root, dirs, files in os.walk(f"{dir_path}/images/"):
-            for file in files:
-                file_name = os.path.splitext(str(file))[0]
-                if file_name.lower() == image_name.lower():
-                    if custom_region is None:
-                        locations = list(
-                            pyautogui.locateAllOnScreen(f"{root}/{image_name}.png", confidence = custom_confidence, grayscale = grayscale_check,
-                                                        region = (self._window_left, self._window_top, self._window_width, self._window_height)))
-                    elif custom_region is not None:
-                        locations = list(
-                            pyautogui.locateAllOnScreen(f"{root}/{image_name}.png", confidence = custom_confidence, grayscale = grayscale_check, region = custom_region))
-                    else:
-                        locations = list(
-                            pyautogui.locateAllOnScreen(f"{root}/{image_name}.png", confidence = custom_confidence, grayscale = grayscale_check))
+        centered_locations = []
+        if len(locations) != 0:
+            for (index, location) in enumerate(locations):
+                if index > 0:
+                    # Filter out duplicate locations where they are 1 pixel away from each other.
+                    if location[0] != (locations[index - 1][0] + 1) and location[1] != (locations[index - 1][1] + 1):
+                        centered_locations.append(pyautogui.center(location))
+                else:
+                    centered_locations.append(pyautogui.center(location))
 
-                    centered_locations = []
-                    if len(locations) != 0:
-                        for (index, location) in enumerate(locations):
-                            if index > 0:
-                                # Filter out duplicate locations where they are 1 pixel away from each other.
-                                if location[0] != (locations[index - 1][0] + 1) and location[1] != (locations[index - 1][1] + 1):
-                                    centered_locations.append(pyautogui.center(location))
-                            else:
-                                centered_locations.append(pyautogui.center(location))
+            if not hide_info:
+                for location in centered_locations:
+                    self._game.print_and_save(f"[INFO] Occurrence for {image_name.upper()} found at: " + str(location))
+        else:
+            if self._debug_mode:
+                self._game.print_and_save(f"[DEBUG] Failed to detect any occurrences of {image_name.upper()} images.")
 
-                        if not hide_info:
-                            for location in centered_locations:
-                                self._game.print_and_save(f"[INFO] Occurrence for {image_name.upper()} found at: " + str(location))
-                    else:
-                        if self._debug_mode:
-                            self._game.print_and_save(f"[DEBUG] Failed to detect any occurrences of {image_name.upper()} images.")
+        return centered_locations
 
-                    return centered_locations
-
-        self._game.print_and_save(f"[ERROR] Specified file does not exist inside the /images/ folder or its subfolders.")
-        return None
-
-    def find_farmed_items(self, item_list: Iterable[str]):
+    def find_farmed_items(self, item_list: List[str]):
         """Detect amounts of items gained according to the desired items specified.
 
         Args:
-            item_list (Iterable[str]): List of items desired to be farmed.
+            item_list (List[str]): List of items desired to be farmed.
 
         Returns:
-            amounts_farmed (Iterable[int]): List of amounts gained for items in order according to the given item_list.
+            amounts_farmed (List[int]): List of amounts gained for items in order according to the given item_list.
         """
         self._file_resolver.add_path("images/items/")
 
