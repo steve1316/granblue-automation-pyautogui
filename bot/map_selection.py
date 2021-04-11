@@ -1047,7 +1047,7 @@ class MapSelection:
         if farming_mode != "Coop":
             self._game.print_and_save(f"[INFO] Now checking if bot is currently at Summon Selection screen...")
 
-            if self._game.image_tools.confirm_location("select_summon", tries = 5):
+            if self._game.image_tools.confirm_location("select_a_summon", tries = 5):
                 self._game.print_and_save(f"[INFO] Bot is currently at Summon Selection screen.")
                 return True
             else:
@@ -1141,7 +1141,7 @@ class MapSelection:
                         self._game.print_and_save(f"[SUCCESS] Joining {room_code} was successful.")
                         self._raids_joined += 1
 
-                        return self._game.image_tools.confirm_location("select_summon")
+                        return self._game.image_tools.confirm_location("select_a_summon")
                     else:
                         self._game.print_and_save(f"[WARNING] {room_code} already ended or invalid.")
                         self._game.find_and_click_button("ok")
