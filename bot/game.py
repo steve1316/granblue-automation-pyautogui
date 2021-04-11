@@ -1057,8 +1057,6 @@ class Game:
 
             self._item_amount_farmed = 0
             self._amount_of_runs_finished = 0
-            start_check = False
-            summon_check = False
 
             # Save the following information to share between the Game class and the MapSelection class.
             self._item_name = item_name
@@ -1082,9 +1080,10 @@ class Game:
             else:
                 self._map_selection.join_raid(mission_name)
 
-            while item_amount_to_farm < item_amount_to_farm:
+            while self._item_amount_farmed < item_amount_to_farm:
                 # Reset the Summon Selection flag.
                 summon_check = False
+                start_check = False
 
                 # Loop and attempt to select a Summon. Reset Summons if needed.
                 while summon_check is False and farming_mode != "Coop":
