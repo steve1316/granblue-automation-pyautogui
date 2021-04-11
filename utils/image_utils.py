@@ -2,7 +2,7 @@ import datetime
 import os
 import time
 from datetime import date
-from typing import Iterable, Tuple
+from typing import List, Tuple
 
 import easyocr
 import pyautogui
@@ -188,13 +188,13 @@ class ImageUtils:
 
         return True
 
-    def find_summon(self, summon_list: Iterable[str], summon_element_list: Iterable[str], home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False,
+    def find_summon(self, summon_list: List[str], summon_element_list: List[str], home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False,
                     suppress_error: bool = False):
         """Find the location of the specified Summon. Will attempt to scroll the screen down to see more Summons if the initial screen position yielded no matches.
 
         Args:
-            summon_list (Iterable[str]): List of names of the Summon image's file name in /images/summons/ folder.
-            summon_element_list (Iterable[str]): List of names of the Summon element image file in the /images/buttons/ folder.
+            summon_list (List[str]): List of names of the Summon image's file name in /images/summons/ folder.
+            summon_element_list (List[str]): List of names of the Summon element image file in the /images/buttons/ folder.
             home_button_x (int): X coordinate of where the center of the Home Button is.
             home_button_y (int): Y coordinate of where the center of the Home Button is.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.

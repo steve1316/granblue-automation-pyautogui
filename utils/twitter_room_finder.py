@@ -1,6 +1,6 @@
 import datetime
 import traceback
-from typing import Iterable
+from typing import List
 
 import tweepy
 
@@ -171,7 +171,7 @@ class TwitterRoomFinder:
             count (int): Number of most recent tweets to grab. Defaults to 10.
 
         Returns:
-            tweets (Iterable[str]): List of most recent tweets that match the query.
+            tweets (List[str]): List of most recent tweets that match the query.
         """
         # Connect to Twitter API if bot has not already done so.
         self._connect_to_twitter_api()
@@ -210,11 +210,11 @@ class TwitterRoomFinder:
             self._game.print_and_save(f"[ERROR] Bot got rate-limited or Twitter failed to respond after a certain amount of time. Exact error is: \n{traceback.format_exc()}")
             self._game.isBotRunning.value = 1
 
-    def clean_tweets(self, tweets: Iterable[str]):
+    def clean_tweets(self, tweets: List[str]):
         """Clean the tweets passed to this function and parse out the room codes from them.
 
         Args:
-            tweets (Iterable[str]): List of tweets with its text unchanged.
+            tweets (List[str]): List of tweets with its text unchanged.
 
         Returns:
             room_codes (Iterable[str]): List of room codes cleaned of all other text.
