@@ -59,77 +59,78 @@ class Game:
         self._enable_randomized_delay_between_runs = config.getboolean("configuration", "enable_randomized_delay_between_runs")
         self._delay_in_seconds_lower_bound = config.getint("configuration", "delay_in_seconds_lower_bound")
         self._delay_in_seconds_upper_bound = config.getint("configuration", "delay_in_seconds_upper_bound")
-
-        self._idle_seconds_after_skill = config.getint("configuration", "idle_seconds_after_skill")
-        self._idle_seconds_after_summon = config.getint("configuration", "idle_seconds_after_summon")
         # #### end of configuration ####
 
         # #### dimensional_halo ####
         self._enable_dimensional_halo = config.getboolean("dimensional_halo", "enable_dimensional_halo")
-        self._dimensional_halo_combat_script = config.get("dimensional_halo", "dimensional_halo_combat_script")
+        if self._enable_dimensional_halo:
+            self._dimensional_halo_combat_script = config.get("dimensional_halo", "dimensional_halo_combat_script")
 
-        self._dimensional_halo_summon_list = config.get("dimensional_halo", "dimensional_halo_summon_list").replace(" ", "_").split(",")
-        if len(self._dimensional_halo_summon_list) == 1 and self._dimensional_halo_summon_list[0] == "":
-            self._dimensional_halo_summon_list.clear()
+            self._dimensional_halo_summon_list = config.get("dimensional_halo", "dimensional_halo_summon_list").replace(" ", "_").split(",")
+            if len(self._dimensional_halo_summon_list) == 1 and self._dimensional_halo_summon_list[0] == "":
+                self._dimensional_halo_summon_list.clear()
 
-        self._dimensional_halo_summon_element_list = config.get("dimensional_halo", "dimensional_halo_summon_element_list").replace(" ", "_").split(",")
-        if len(self._dimensional_halo_summon_element_list) == 1 and self._dimensional_halo_summon_element_list[0] == "":
-            self._dimensional_halo_summon_element_list.clear()
+            self._dimensional_halo_summon_element_list = config.get("dimensional_halo", "dimensional_halo_summon_element_list").replace(" ", "_").split(",")
+            if len(self._dimensional_halo_summon_element_list) == 1 and self._dimensional_halo_summon_element_list[0] == "":
+                self._dimensional_halo_summon_element_list.clear()
 
-        self._dimensional_halo_group_number = config.getint("dimensional_halo", "dimensional_halo_group_number")
-        self._dimensional_halo_party_number = config.getint("dimensional_halo", "dimensional_halo_party_number")
-        self._dimensional_halo_amount = 0
+            self._dimensional_halo_group_number = config.getint("dimensional_halo", "dimensional_halo_group_number")
+            self._dimensional_halo_party_number = config.getint("dimensional_halo", "dimensional_halo_party_number")
+            self._dimensional_halo_amount = 0
         # #### end of dimensional_halo ####
 
         # #### event ####
         self._enable_event_nightmare = config.getboolean("event", "enable_event_nightmare")
-        self._event_nightmare_combat_script = config.get("event", "event_nightmare_combat_script")
+        if self._enable_event_nightmare:
+            self._event_nightmare_combat_script = config.get("event", "event_nightmare_combat_script")
 
-        self._event_nightmare_summon_list = config.get("event", "event_nightmare_summon_list").replace(" ", "_").split(",")
-        if len(self._event_nightmare_summon_list) == 1 and self._event_nightmare_summon_list[0] == "":
-            self._event_nightmare_summon_list.clear()
+            self._event_nightmare_summon_list = config.get("event", "event_nightmare_summon_list").replace(" ", "_").split(",")
+            if len(self._event_nightmare_summon_list) == 1 and self._event_nightmare_summon_list[0] == "":
+                self._event_nightmare_summon_list.clear()
 
-        self._event_nightmare_summon_element_list = config.get("event", "event_nightmare_summon_element_list").replace(" ", "_").split(",")
-        if len(self._event_nightmare_summon_element_list) == 1 and self._event_nightmare_summon_element_list[0] == "":
-            self._event_nightmare_summon_element_list.clear()
+            self._event_nightmare_summon_element_list = config.get("event", "event_nightmare_summon_element_list").replace(" ", "_").split(",")
+            if len(self._event_nightmare_summon_element_list) == 1 and self._event_nightmare_summon_element_list[0] == "":
+                self._event_nightmare_summon_element_list.clear()
 
-        self._event_nightmare_group_number = config.getint("event", "event_nightmare_group_number")
-        self._event_nightmare_party_number = config.getint("event", "event_nightmare_party_number")
+            self._event_nightmare_group_number = config.getint("event", "event_nightmare_group_number")
+            self._event_nightmare_party_number = config.getint("event", "event_nightmare_party_number")
         # #### end of event ####
 
         # #### rise_of_the_beasts ####
         self._enable_rotb_extreme_plus = config.getboolean("rise_of_the_beasts", "enable_rotb_extreme_plus")
-        self._rotb_extreme_plus_combat_script = config.get("rise_of_the_beasts", "rotb_extreme_plus_combat_script")
+        if self._enable_rotb_extreme_plus:
+            self._rotb_extreme_plus_combat_script = config.get("rise_of_the_beasts", "rotb_extreme_plus_combat_script")
 
-        self._rotb_extreme_plus_summon_list = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_list").replace(" ", "_").split(",")
-        if len(self._rotb_extreme_plus_summon_list) == 1 and self._rotb_extreme_plus_summon_list[0] == "":
-            self._rotb_extreme_plus_summon_list.clear()
+            self._rotb_extreme_plus_summon_list = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_list").replace(" ", "_").split(",")
+            if len(self._rotb_extreme_plus_summon_list) == 1 and self._rotb_extreme_plus_summon_list[0] == "":
+                self._rotb_extreme_plus_summon_list.clear()
 
-        self._rotb_extreme_plus_summon_element_list = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_element_list").replace(" ", "_").split(",")
-        if len(self._rotb_extreme_plus_summon_element_list) == 1 and self._rotb_extreme_plus_summon_element_list[0] == "":
-            self._rotb_extreme_plus_summon_element_list.clear()
+            self._rotb_extreme_plus_summon_element_list = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_element_list").replace(" ", "_").split(",")
+            if len(self._rotb_extreme_plus_summon_element_list) == 1 and self._rotb_extreme_plus_summon_element_list[0] == "":
+                self._rotb_extreme_plus_summon_element_list.clear()
 
-        self._rotb_extreme_plus_group_number = config.getint("rise_of_the_beasts", "rotb_extreme_plus_group_number")
-        self._rotb_extreme_plus_party_number = config.getint("rise_of_the_beasts", "rotb_extreme_plus_party_number")
-        self._rotb_extreme_plus_amount = 0
+            self._rotb_extreme_plus_group_number = config.getint("rise_of_the_beasts", "rotb_extreme_plus_group_number")
+            self._rotb_extreme_plus_party_number = config.getint("rise_of_the_beasts", "rotb_extreme_plus_party_number")
+            self._rotb_extreme_plus_amount = 0
         # #### end of rise_of_the_beasts ####
 
         # #### dread_barrage ####
         self._enable_unparalleled_foe = config.getboolean("dread_barrage", "enable_unparalleled_foe")
-        self._enable_unparalleled_foe_level_95 = config.getboolean("dread_barrage", "enable_unparalleled_foe_level_95")
-        self._enable_unparalleled_foe_level_175 = config.getboolean("dread_barrage", "enable_unparalleled_foe_level_175")
-        self.unparalleled_foe_combat_script = config.get("dread_barrage", "unparalleled_foe_combat_script")
+        if self._enable_unparalleled_foe:
+            self._enable_unparalleled_foe_level_95 = config.getboolean("dread_barrage", "enable_unparalleled_foe_level_95")
+            self._enable_unparalleled_foe_level_175 = config.getboolean("dread_barrage", "enable_unparalleled_foe_level_175")
+            self.unparalleled_foe_combat_script = config.get("dread_barrage", "unparalleled_foe_combat_script")
 
-        self._unparalleled_foe_summon_list = config.get("dread_barrage", "unparalleled_foe_summon_list").replace(" ", "_").split(",")
-        if len(self._unparalleled_foe_summon_list) == 1 and self._unparalleled_foe_summon_list[0] == "":
-            self._unparalleled_foe_summon_list.clear()
+            self._unparalleled_foe_summon_list = config.get("dread_barrage", "unparalleled_foe_summon_list").replace(" ", "_").split(",")
+            if len(self._unparalleled_foe_summon_list) == 1 and self._unparalleled_foe_summon_list[0] == "":
+                self._unparalleled_foe_summon_list.clear()
 
-        self._unparalleled_foe_summon_element_list = config.get("dread_barrage", "unparalleled_foe_summon_element_list").replace(" ", "_").split(",")
-        if len(self._unparalleled_foe_summon_element_list) == 1 and self._unparalleled_foe_summon_element_list[0] == "":
-            self._unparalleled_foe_summon_element_list.clear()
+            self._unparalleled_foe_summon_element_list = config.get("dread_barrage", "unparalleled_foe_summon_element_list").replace(" ", "_").split(",")
+            if len(self._unparalleled_foe_summon_element_list) == 1 and self._unparalleled_foe_summon_element_list[0] == "":
+                self._unparalleled_foe_summon_element_list.clear()
 
-        self._unparalleled_foe_group_number = config.getint("dread_barrage", "unparalleled_foe_group_number")
-        self._unparalleled_foe_party_number = config.getint("dread_barrage", "unparalleled_foe_party_number")
+            self._unparalleled_foe_group_number = config.getint("dread_barrage", "unparalleled_foe_group_number")
+            self._unparalleled_foe_party_number = config.getint("dread_barrage", "unparalleled_foe_party_number")
         # #### end of dread_barrage ####
         # ################## end of config.ini ###################
 
@@ -144,7 +145,7 @@ class Game:
         self._debug_mode = debug_mode
 
         # Initialize the objects of helper classes.
-        self.combat_mode = CombatMode(self, self._idle_seconds_after_skill, self._idle_seconds_after_summon, is_bot_running, debug_mode = self._debug_mode)
+        self.combat_mode = CombatMode(self, is_bot_running, debug_mode = self._debug_mode)
         self._map_selection = MapSelection(self, is_bot_running)
         self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3], debug_mode = self._debug_mode)
         self.image_tools = ImageUtils(self, debug_mode = self._debug_mode)
