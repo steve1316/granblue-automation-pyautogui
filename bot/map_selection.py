@@ -141,7 +141,7 @@ class MapSelection:
         Returns:
             (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
-        page_1_list = ["Zinkenstill, Port Breeze Archipelago", "Valtz Duchy", "Auguste Isles", "Lumacie Archipelago", "Albion Citadel"]
+        page_1_list = ["Zinkenstill", "Port Breeze Archipelago", "Valtz Duchy", "Auguste Isles", "Lumacie Archipelago", "Albion Citadel"]
         page_2_list = ["Mist-Shrouded Isle", "Golonzo Island", "Amalthea Island", "Former Capital Mephorash", "Agastia"]
 
         # Phantagrande Skydom Page 1
@@ -205,16 +205,17 @@ class MapSelection:
         self._game.go_back_home(confirm_location_check = True)
 
         current_location = ""
+        formatted_map_name = map_name.lower().replace(" ", "_")
 
         # Check which island the bot is at.
-        if self._game.image_tools.confirm_location(f"map_{map_name}", tries = 2):
+        if self._game.image_tools.confirm_location(f"map_{formatted_map_name}", tries = 2):
             self._game.print_and_save(f"\n[INFO] Bot is currently on the correct island.")
             check_location = True
         else:
             self._game.print_and_save(f"\n[INFO] Bot is currently not on the correct island.")
             check_location = False
 
-            location_list = ["Zinkenstill, Port Breeze Archipelago", "Valtz Duchy", "Auguste Isles", "Lumacie Archipelago", "Albion Citadel", "Mist-Shrouded Isle", "Golonzo Island", "Amalthea Island",
+            location_list = ["Zinkenstill", "Port Breeze Archipelago", "Valtz Duchy", "Auguste Isles", "Lumacie Archipelago", "Albion Citadel", "Mist-Shrouded Isle", "Golonzo Island", "Amalthea Island",
                              "Former Capital Mephorash", "Agastia"]
 
             while len(location_list) > 0:
