@@ -4,8 +4,6 @@ from typing import Iterable
 
 import tweepy
 
-from bot.game import Game
-
 
 class TwitterRoomFinder:
     """
@@ -27,7 +25,7 @@ class TwitterRoomFinder:
 
     """
 
-    def __init__(self, game: Game, consumer_key: str, consumer_secret: str, access_token: str, access_token_secret: str, debug_mode: bool = False):
+    def __init__(self, game, consumer_key: str, consumer_secret: str, access_token: str, access_token_secret: str, debug_mode: bool = False):
         super().__init__()
 
         self._game = game

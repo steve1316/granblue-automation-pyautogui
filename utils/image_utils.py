@@ -10,8 +10,6 @@ from PIL import Image
 from guibot.fileresolver import FileResolver
 from guibot.guibot import GuiBot
 
-from bot.game import Game
-
 
 class ImageUtils:
     """
@@ -25,7 +23,7 @@ class ImageUtils:
 
     """
 
-    def __init__(self, game: Game, debug_mode: bool = False):
+    def __init__(self, game, debug_mode: bool = False):
         super().__init__()
 
         self._game = game

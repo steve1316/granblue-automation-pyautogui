@@ -2,11 +2,9 @@ import os
 import traceback
 from typing import List
 
-from bot.game import Game
-
 
 class CombatMode:
-    def __init__(self, game: Game, idle_seconds_after_skill: int, idle_seconds_after_summon: int, is_bot_running: int, debug_mode: bool = False):
+    def __init__(self, game, is_bot_running: int, debug_mode: bool = False):
         super().__init__()
 
         self._game = game

@@ -5,8 +5,6 @@ import pyautogui
 import pyclick
 import pyperclip
 
-from bot.game import Game
-
 
 class MouseUtils:
     """
@@ -23,7 +21,8 @@ class MouseUtils:
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
 
     """
-    def __init__(self, game: Game, enable_bezier_curve: bool, mouse_speed: float = 0.2, debug_mode: bool = False):
+
+    def __init__(self, game, enable_bezier_curve: bool, mouse_speed: float = 0.2, debug_mode: bool = False):
         super().__init__()
         
         self._game = game
