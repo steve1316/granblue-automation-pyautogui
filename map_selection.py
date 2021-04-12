@@ -828,9 +828,16 @@ class MapSelection:
                         self._game.print_and_save(f"\n{self._game.printtime()} [INFO] Now proceeding to farm Nightmares.")
                         
                         # Click on the banner to farm Nightmares.
-                        self._game.find_and_click_button("guild_wars_nightmare")
+                        if difficulty != "NM150":
+                            self._game.find_and_click_button("guild_wars_nightmare")
+                        else:
+                            self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting NM150 now.")
+                            self._game.find_and_click_button("guild_wars_nightmare_150")
+
+                            if self._game.image_tools.confirm_location("guild_wars_nightmare"):
+                                self._game.find_and_click_button("start")
                         
-                        if self._game.image_tools.confirm_location("guild_wars_nightmare"):
+                        if difficulty != "NM150" and self._game.image_tools.confirm_location("guild_wars_nightmare"):
                             # If today is the first day of Guild Wars, only NM90 will be available.
                             if self._game.image_tools.confirm_location("guild_wars_nightmare_first_day", tries = 1):
                                 self._game.print_and_save(f"{self._game.printtime()} [INFO] Today is the first day so hosting NM90.")
@@ -852,9 +859,7 @@ class MapSelection:
                             elif difficulty == "NM100":
                                 self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting NM100 now.")
                                 self._game.find_and_click_button("guild_wars_nightmare_100")
-                            elif difficulty == "NM150":
-                                self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting NM150 now.")
-                                self._game.find_and_click_button("guild_wars_nightmare_150")
+
                         else:
                             # If there is not enough meat to host, host Extreme+ instead.
                             self._game.print_and_save(f"\n{self._game.printtime()} [WARNING] User lacks the meat to host any Nightmares. Farming Extreme+ instead.")
