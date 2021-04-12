@@ -1030,7 +1030,7 @@ class MapSelection:
         elif farming_mode == "Special":
             self._navigate_to_special(map_name, mission_name, difficulty)
         elif farming_mode == "Coop":
-            self._navigate_to_coop(map_name)
+            self._navigate_to_coop(mission_name)
         elif farming_mode == "Event" or farming_mode == "Event (Token Drawboxes)":
             self._navigate_to_event(farming_mode, mission_name, difficulty)
         elif farming_mode == "Dread Barrage":
