@@ -669,7 +669,7 @@ class CombatMode:
                     self._game.find_and_click_button("ok")
                     break
                 self._party_wipe_check()
-                self._game.wait(3)
+                self._game.wait(1)
 
             # Main workflow loop for Full Auto. The bot will progress the Quest/Raid until it ends or the Party wipes.
             while not self._retreat_check and not semi_auto and full_auto and not self._game.image_tools.confirm_location("exp_gained", tries = 1) and \
@@ -679,7 +679,7 @@ class CombatMode:
                     self._game.find_and_click_button("ok")
                     break
                 self._party_wipe_check()
-                self._game.wait(3)
+                self._game.wait(1)
 
             self._game.print_and_save("\n################################################################################")
             self._game.print_and_save("################################################################################")
