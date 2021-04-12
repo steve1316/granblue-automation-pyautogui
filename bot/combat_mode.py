@@ -531,6 +531,11 @@ class CombatMode:
                             elif command == "exit":
                                 # End Combat Mode by heading back to the Home screen without retreating.
                                 self._game.print_and_save("[COMBAT] Leaving this Raid without retreating.")
+                                self._game.print_and_save("\n################################################################################")
+                                self._game.print_and_save("################################################################################")
+                                self._game.print_and_save("[COMBAT] Ending Combat Mode.")
+                                self._game.print_and_save("################################################################################")
+                                self._game.print_and_save("################################################################################")
                                 self._game.go_back_home(confirm_location_check = True)
                                 return False
 
