@@ -608,6 +608,7 @@ class CombatMode:
                         break
                     elif semi_auto is False and full_auto is False and command == "end":
                         # Click the "Attack" button once every command inside the Turn Block has been processed.
+                        self._game.print_and_save(f"[COMBAT] Ending Turn {turn_number}.")
                         self._game.find_and_click_button("attack", tries = 10)
 
                         # Wait until the "Cancel" button vanishes from the screen.
@@ -622,6 +623,8 @@ class CombatMode:
                             self._game.find_and_click_button("reload")
                         self._wait_for_attack()
 
+                        turn_number += 1
+
             # When the bot reaches here, all the commands in the combat script has been processed.
             self._game.print_and_save("\n[COMBAT] Bot has reached end of script. Automatically attacking until battle ends or Party wipes...")
 
@@ -629,6 +632,7 @@ class CombatMode:
             while not self._retreat_check and not semi_auto and not full_auto and not self._game.image_tools.confirm_location("exp_gained", tries = 1) and \
                     not self._game.image_tools.confirm_location("no_loot", tries = 1):
                 # Click the "Attack" button.
+                self._game.print_and_save(f"[COMBAT] Ending Turn {turn_number}.")
                 self._game.find_and_click_button("attack", tries = 10)
 
                 # Wait until the "Cancel" button vanishes from the screen.
@@ -642,6 +646,8 @@ class CombatMode:
                 if self._game.farming_mode != "Quest" and self._game.farming_mode != "Special":
                     self._game.find_and_click_button("reload")
                 self._wait_for_attack()
+
+                turn_number += 1
 
                 if self._game.find_and_click_button("next", tries = 1, suppress_error = True):
                     self._game.wait(3)
