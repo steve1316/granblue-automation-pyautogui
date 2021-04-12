@@ -151,7 +151,7 @@ class MapSelection:
                 self._game.find_and_click_button("world_left_arrow")
 
             # Click on the Map to move to it.
-            if not self._game.find_and_click_button(map_name.lower().replace(" ", "_")):
+            if not self._game.find_and_click_button(map_name.lower().replace(" ", "_").replace("-", "_")):
                 # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to a manual method.
                 arrow_location = self._game.image_tools.find_button("world_right_arrow")
 
@@ -173,7 +173,7 @@ class MapSelection:
             if page_1_list.__contains__(current_location):
                 self._game.find_and_click_button("world_right_arrow")
 
-            if not self._game.find_and_click_button(map_name.lower().replace(" ", "_")):
+            if not self._game.find_and_click_button(map_name.lower().replace(" ", "_").replace("-", "_")):
                 arrow_location = self._game.image_tools.find_button("world_left_arrow")
 
                 if map_name == "Mist-Shrouded Isle":
@@ -205,7 +205,7 @@ class MapSelection:
         self._game.go_back_home(confirm_location_check = True)
 
         current_location = ""
-        formatted_map_name = map_name.lower().replace(" ", "_")
+        formatted_map_name = map_name.lower().replace(" ", "_").replace("-", "_")
 
         # Check which island the bot is at.
         if self._game.image_tools.confirm_location(f"map_{formatted_map_name}", tries = 2):
@@ -220,7 +220,7 @@ class MapSelection:
 
             while len(location_list) > 0:
                 temp_map_location = location_list.pop(0)
-                temp_formatted_map_location = temp_map_location.lower().replace(" ", "_")
+                temp_formatted_map_location = temp_map_location.lower().replace(" ", "_").replace("-", "_")
 
                 if self._game.image_tools.confirm_location(f"map_{temp_formatted_map_location}", tries = 1):
                     self._game.print_and_save(f"\n[INFO] Bot's current location is at {temp_map_location}. Now moving to {map_name}...")
