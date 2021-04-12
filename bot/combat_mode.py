@@ -491,7 +491,7 @@ class CombatMode:
                             if self._game.image_tools.find_button("attack", tries = 1, suppress_error = True):
                                 self._game.print_and_save(f"[COMBAT] Ending Turn {turn_number} by attacking.")
                                 number_of_charge_attacks = self._find_charge_attacks()
-                                self._game.mouse_tools.move_and_click_point(self._attack_button_location[0], self._attack_button_location[1])
+                                self._game.find_and_click_button("attack", tries = 10)
                                 self._game.wait(3 + number_of_charge_attacks)
                                 self._wait_for_attack()
                                 self._game.print_and_save(f"[COMBAT] Turn {turn_number} has now ended.")
@@ -603,7 +603,7 @@ class CombatMode:
                         break
                     elif semi_auto is False and full_auto is False and command == "end":
                         # Click the "Attack" button once every command inside the Turn Block has been processed.
-                        self._game.mouse_tools.move_and_click_point(self._attack_button_location[0], self._attack_button_location[1], "attack")
+                        self._game.find_and_click_button("attack", tries = 10)
 
                         # Wait until the "Cancel" button vanishes from the screen.
                         if self._game.image_tools.find_button("combat_cancel", suppress_error = True) is not None:
@@ -624,7 +624,7 @@ class CombatMode:
             while not self._retreat_check and not semi_auto and not full_auto and not self._game.image_tools.confirm_location("exp_gained", tries = 1) and \
                     not self._game.image_tools.confirm_location("no_loot", tries = 1):
                 # Click the "Attack" button.
-                self._game.mouse_tools.move_and_click_point(self._attack_button_location[0], self._attack_button_location[1], "attack")
+                self._game.find_and_click_button("attack", tries = 10)
 
                 # Wait until the "Cancel" button vanishes from the screen.
                 if self._game.image_tools.find_button("combat_cancel", suppress_error = True) is not None:
