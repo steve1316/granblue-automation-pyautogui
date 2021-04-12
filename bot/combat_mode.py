@@ -489,13 +489,22 @@ class CombatMode:
                             self._find_dialog_in_combat()
 
                             if self._game.image_tools.find_button("attack", tries = 1, suppress_error = True):
-                                self._game.print_and_save(f"[COMBAT] Ending Turn {turn_number} by attacking.")
-                                number_of_charge_attacks = self._find_charge_attacks()
+                                # Click the "Attack" button once every command inside the Turn Block has been processed.
+                                self._game.print_and_save(f"[COMBAT] Ending Turn {turn_number}.")
                                 self._game.find_and_click_button("attack", tries = 10)
-                                self._game.wait(3 + number_of_charge_attacks)
+
+                                # Wait until the "Cancel" button vanishes from the screen.
+                                if self._game.image_tools.find_button("combat_cancel", suppress_error = True) is not None:
+                                    while self._game.image_tools.wait_vanish("combat_cancel", tries = 5, suppress_error = True) is False:
+                                        if self._debug_mode:
+                                            self._game.print_and_save("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
+                                        self._game.wait(1)
+
+                                # If the "Cancel" button vanishes, that means the attack is in-progress. Now reload the page and wait for either the attack to finish or Battle ended.
+                                if self._game.farming_mode != "Quest" and self._game.farming_mode != "Special":
+                                    self._game.find_and_click_button("reload")
                                 self._wait_for_attack()
-                                self._game.print_and_save(f"[COMBAT] Turn {turn_number} has now ended.")
-                                self._party_wipe_check()
+
                                 turn_number += 1
 
                             if self._game.find_and_click_button("next", tries = 1, suppress_error = True):
