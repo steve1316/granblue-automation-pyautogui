@@ -1211,6 +1211,9 @@ class Game:
 
                                 # Now join a new Raid.
                                 self._map_selection.join_raid(mission_name)
+                        else:
+                            # Join a new Raid.
+                            self._map_selection.join_raid(mission_name)
 
                 elif start_check is False and farming_mode == "Raid":
                     # If the bot reaches here, that means the Raid ended before the bot could start the Mission after selecting the Summon and Party.
