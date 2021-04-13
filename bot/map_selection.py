@@ -999,9 +999,12 @@ class MapSelection:
 
                 else:
                     # If there is not enough meat to host, host Extreme+ instead.
-                        self._game.print_and_save(f"\n[INFO] User lacks meat to host any Nightmares. Hosting Extreme+ instead...")
+                    self._game.print_and_save(f"\n[INFO] User lacks meat to host the Nightmare. Hosting Extreme+ instead...")
 
+                    if difficulty != "NM150":
                         self._game.find_and_click_button("close")
+                    else:
+                        self._game.find_and_click_button("cancel")
 
                     # Click on the banner to farm meat.
                     self._game.find_and_click_button("guild_wars_meat")
