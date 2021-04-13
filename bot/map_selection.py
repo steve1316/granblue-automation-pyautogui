@@ -959,56 +959,60 @@ class MapSelection:
                             self._is_bot_running.value = 1
                             raise Exception("You did not unlock Extreme+ yet!")
 
-                else:
-                    self._game.print_and_save(f"\n[INFO] Now proceeding to farm Nightmares.")
+            else:
+                self._game.print_and_save(f"\n[INFO] Now proceeding to farm Nightmares.")
 
-                    # Click on the banner to farm Nightmares.
+                # Click on the banner to farm Nightmares.
+                if difficulty != "NM150":
                     self._game.find_and_click_button("guild_wars_nightmare")
+                else:
+                    self._game.print_and_save(f"\n[INFO] Now hosting NM150 now...")
+                    self._game.find_and_click_button("guild_wars_nightmare_150")
 
                     if self._game.image_tools.confirm_location("guild_wars_nightmare"):
-                        # If today is the first/second day of Guild Wars, only NM90 will be available.
-                        if self._game.image_tools.confirm_location("guild_wars_nightmare_first_day", tries = 1):
-                            self._game.print_and_save(f"[INFO] Today is the first/second day so hosting NM90.")
-                            self._game.find_and_click_button("ok")
+                        self._game.find_and_click_button("start")
 
-                            # Alert the user if they lack the meat to host this and stop the bot.
-                            if not self._game.image_tools.wait_vanish("ok", 5):
-                                self._game.image_tools.generate_alert("You do not have enough meat to host this NM90!")
-                                self._is_bot_running.value = 1
-                                raise Exception("You do not have enough meat to host this NM90!")
+                if difficulty != "NM150" and self._game.image_tools.confirm_location("guild_wars_nightmare"):
+                    # If today is the first/second day of Guild Wars, only NM90 will be available.
+                    if self._game.image_tools.confirm_location("guild_wars_nightmare_first_day", tries = 1):
+                        self._game.print_and_save(f"[INFO] Today is the first/second day so hosting NM90.")
+                        self._game.find_and_click_button("ok")
 
-                        # If it is not the first/second day of Guild Wars, that means that other difficulties are now available.
-                        elif difficulty == "NM90":
-                            self._game.print_and_save(f"[INFO] Now hosting NM90 now...")
-                            self._game.find_and_click_button("guild_wars_nightmare_90")
-                        elif difficulty == "NM95":
-                            self._game.print_and_save(f"[INFO] Now hosting NM95 now...")
-                            self._game.find_and_click_button("guild_wars_nightmare_95")
-                        elif difficulty == "NM100":
-                            self._game.print_and_save(f"[INFO] Now hosting NM100 now...")
-                            self._game.find_and_click_button("guild_wars_nightmare_100")
-                        elif difficulty == "NM150":
-                            self._game.print_and_save(f"[INFO] Now hosting NM150 now...")
-                            self._game.find_and_click_button("guild_wars_nightmare_150")
+                        # Alert the user if they lack the meat to host this and stop the bot.
+                        if not self._game.image_tools.wait_vanish("ok", 5):
+                            self._game.image_tools.generate_alert("You do not have enough meat to host this NM90!")
+                            self._is_bot_running.value = 1
+                            raise Exception("You do not have enough meat to host this NM90!")
 
-                    else:
-                        # If there is not enough meat to host, host Extreme+ instead.
+                    # If it is not the first/second day of Guild Wars, that means that other difficulties are now available.
+                    elif difficulty == "NM90":
+                        self._game.print_and_save(f"[INFO] Now hosting NM90 now...")
+                        self._game.find_and_click_button("guild_wars_nightmare_90")
+                    elif difficulty == "NM95":
+                        self._game.print_and_save(f"[INFO] Now hosting NM95 now...")
+                        self._game.find_and_click_button("guild_wars_nightmare_95")
+                    elif difficulty == "NM100":
+                        self._game.print_and_save(f"[INFO] Now hosting NM100 now...")
+                        self._game.find_and_click_button("guild_wars_nightmare_100")
+
+                else:
+                    # If there is not enough meat to host, host Extreme+ instead.
                         self._game.print_and_save(f"\n[INFO] User lacks meat to host any Nightmares. Hosting Extreme+ instead...")
 
                         self._game.find_and_click_button("close")
 
-                        # Click on the banner to farm meat.
-                        self._game.find_and_click_button("guild_wars_meat")
+                    # Click on the banner to farm meat.
+                    self._game.find_and_click_button("guild_wars_meat")
 
-                        if self._game.image_tools.confirm_location("guild_wars_meat"):
-                            self._game.print_and_save(f"[INFO] Now hosting Extreme+ now...")
-                            self._game.find_and_click_button("guild_wars_meat_extreme+")
+                    if self._game.image_tools.confirm_location("guild_wars_meat"):
+                        self._game.print_and_save(f"[INFO] Now hosting Extreme+ now...")
+                        self._game.find_and_click_button("guild_wars_meat_extreme+")
 
-                            # Alert the user if they did not unlock Extreme+ and stop the bot.
-                            if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 5):
-                                self._game.image_tools.generate_alert("You did not unlock Extreme+ yet!")
-                                self._is_bot_running.value = 1
-                                raise Exception("You did not unlock Extreme+ yet!")
+                        # Alert the user if they did not unlock Extreme+ and stop the bot.
+                        if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 5):
+                            self._game.image_tools.generate_alert("You did not unlock Extreme+ yet!")
+                            self._is_bot_running.value = 1
+                            raise Exception("You did not unlock Extreme+ yet!")
 
         return None
 

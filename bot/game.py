@@ -575,6 +575,8 @@ class Game:
         Returns:
             None
         """
+        tries = 3
+
         # Loop until the user gets to the Summon Selection screen.
         while (self.farming_mode.lower() != "coop" and not self.image_tools.confirm_location("select_a_summon", tries = 2)) or (
                 self.farming_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries = 2)):
@@ -597,6 +599,10 @@ class Game:
                 break
             else:
                 self.wait(1)
+
+                tries -= 1
+                if tries <= 0:
+                    break
 
         self.print_and_save("[INFO] AP is available. Continuing...")
         return None
@@ -711,8 +717,9 @@ class Game:
                 break
 
             # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select the Mission again.
-            if self.farming_mode == "Event (Token Drawboxes)" and self.image_tools.confirm_location("not_enough_treasure", tries = 1):
+            if (self.farming_mode == "Event (Token Drawboxes)" or self.farming_mode == "Guild Wars") and self.image_tools.confirm_location("not_enough_treasure", tries = 1):
                 self.find_and_click_button("ok")
+                self._delay_between_runs()
                 self._map_selection.select_map(self.farming_mode, self._map_name, self._mission_name, self._difficulty)
                 break
 
@@ -1044,7 +1051,7 @@ class Game:
                     difficulty = "Extreme"
                 elif mission_name.find("IM ") == 0:
                     difficulty = "Impossible"
-            elif farming_mode.lower() == "dread barrage":
+            elif farming_mode == "Dread Barrage":
                 if mission_name.find("1 Star") == 0:
                     difficulty = "1 Star"
                 elif mission_name.find("2 Star") == 0:
@@ -1055,6 +1062,21 @@ class Game:
                     difficulty = "4 Star"
                 elif mission_name.find("5 Star") == 0:
                     difficulty = "5 Star"
+            elif farming_mode == "Guild Wars":
+                if mission_name == "Very Hard":
+                    difficulty = "Very Hard"
+                elif mission_name == "Extreme":
+                    difficulty = "Extreme"
+                elif mission_name == "Extreme+":
+                    difficulty = "Extreme+"
+                elif mission_name == "NM90":
+                    difficulty = "NM90"
+                elif mission_name == "NM95":
+                    difficulty = "NM95"
+                elif mission_name == "NM100":
+                    difficulty = "NM100"
+                elif mission_name == "NM150":
+                    difficulty = "NM150"
 
             self._item_amount_farmed = 0
             self._amount_of_runs_finished = 0
@@ -1159,7 +1181,6 @@ class Game:
 
                                 self.wait(1)
 
-                                self.check_for_ap()
                             elif farming_mode == "Dread Barrage" and self.image_tools.confirm_location("dread_barrage_unparalleled_foes", tries = 1):
                                 # Find the locations of the "AP 0" text underneath each Unparalleled Foe.
                                 ap_0_locations = self.image_tools.find_all("ap_0")
@@ -1186,6 +1207,8 @@ class Game:
 
                             # For every other Farming Mode other than Coop, handle all popups until the bot reaches the Summon Selection screen.
                             self.check_for_popups()
+
+                            self.check_for_ap()
 
                     else:
                         # Select the Mission again if the Party wiped or exited prematurely during Combat Mode.
