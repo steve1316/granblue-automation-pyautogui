@@ -838,6 +838,8 @@ class MapSelection:
                                 self._game.find_and_click_button("start")
                         
                         if difficulty != "NM150" and self._game.image_tools.confirm_location("guild_wars_nightmare"):
+                            nightmare_locations = self._game.image_tools.find_all("guild_wars_nightmares")
+
                             # If today is the first day of Guild Wars, only NM90 will be available.
                             if self._game.image_tools.confirm_location("guild_wars_nightmare_first_day", tries = 1):
                                 self._game.print_and_save(f"{self._game.printtime()} [INFO] Today is the first day so hosting NM90.")
@@ -852,13 +854,13 @@ class MapSelection:
                             # Now click on the specified Mission to start.
                             elif difficulty == "NM90":
                                 self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting NM90 now.")
-                                self._game.find_and_click_button("guild_wars_nightmare_90")
+                                self._game.mouse_tools.move_and_click_point(nightmare_locations[0][0], nightmare_locations[0][1], "guild_wars_nightmares")
                             elif difficulty == "NM95":
                                 self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting NM95 now.")
-                                self._game.find_and_click_button("guild_wars_nightmare_95")
+                                self._game.mouse_tools.move_and_click_point(nightmare_locations[1][0], nightmare_locations[1][1], "guild_wars_nightmares")
                             elif difficulty == "NM100":
                                 self._game.print_and_save(f"{self._game.printtime()} [INFO] Hosting NM100 now.")
-                                self._game.find_and_click_button("guild_wars_nightmare_100")
+                                self._game.mouse_tools.move_and_click_point(nightmare_locations[2][0], nightmare_locations[2][1], "guild_wars_nightmares")
 
                         else:
                             # If there is not enough meat to host, host Extreme+ instead.
