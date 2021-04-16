@@ -328,12 +328,13 @@ class ImageUtils:
         else:
             return vyrn_dialog_location
 
-    def find_all(self, image_name: str, custom_region: Tuple[int, int, int, int] = None, custom_confidence: float = 0.9, grayscale_check: bool = False, hide_info: bool = False):
-        """Find the specified image file by searching through all subfolders and locating all occurrences on the screen.
+    def find_all(self, image_name: str, is_item: bool = False, custom_region: Tuple[int, int, int, int] = None, custom_confidence: float = 0.9, grayscale_check: bool = False, hide_info: bool = False):
+        """Find the specified image file by locating all occurrences on the screen.
 
         Args:
             image_name (str): Name of the image file in the /images/buttons folder.
-            custom_region (tuple[int, int, int, int]): Region tuple of integers to look for a occurrence in. Defaults to None.
+            is_item (bool, optional): Determines whether to search for the image file in the images/buttons/ or images/items/ folder. Defaults to False.
+            custom_region (tuple[int, int, int, int], optional): Region tuple of integers to look for a occurrence in. Defaults to None.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
             grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
             hide_info (bool, optional): Whether or not to print the matches' locations. Defaults to False.
@@ -341,13 +342,15 @@ class ImageUtils:
         Returns:
             locations (list[Box]): List of Boxes where each occurrence is found on the screen. If no occurrence was found, return a empty list.
         """
-        if custom_region is None:
-            locations = list(pyautogui.locateAllOnScreen(f"images/buttons/{image_name}.png", confidence = custom_confidence, grayscale = grayscale_check,
-                                                         region = (self._window_left, self._window_top, self._window_width, self._window_height)))
-        elif custom_region is not None:
-            locations = list(pyautogui.locateAllOnScreen(f"images/buttons/{image_name}.png", confidence = custom_confidence, grayscale = grayscale_check, region = custom_region))
+        if is_item:
+            folder_name = "items"
         else:
-            locations = list(pyautogui.locateAllOnScreen(f"images/buttons/{image_name}.png", confidence = custom_confidence, grayscale = grayscale_check))
+            folder_name = "buttons"
+
+        if custom_region is None:
+            locations = list(pyautogui.locateAllOnScreen(f"images/{folder_name}/{image_name}.png", confidence = custom_confidence, grayscale = grayscale_check))
+        else:
+            locations = list(pyautogui.locateAllOnScreen(f"images/{folder_name}/{image_name}.png", confidence = custom_confidence, grayscale = grayscale_check, region = custom_region))
 
         centered_locations = []
         if len(locations) != 0:
@@ -368,14 +371,15 @@ class ImageUtils:
 
         return centered_locations
 
-    def find_farmed_items(self, item_list: List[str]):
+    def find_farmed_items(self, item_name: str, take_screenshot: bool = True):
         """Detect amounts of items gained according to the desired items specified.
 
         Args:
-            item_list (List[str]): List of items desired to be farmed.
+            item_name (str): Item to be found.
+            take_screenshot (bool, optional): Takes a screenshot whenever matches were detected. Defaults to True.
 
         Returns:
-            amounts_farmed (List[int]): List of amounts gained for items in order according to the given item_list.
+            amount_farmed (int): Amount gained for the item.
         """
         self._file_resolver.add_path("images/items/")
 
@@ -417,79 +421,77 @@ class ImageUtils:
         self._game.print_and_save(f"[INFO] Now detecting item rewards...")
         amounts_farmed = []
         guibot_check = False
-        for item in item_list:
-            total_amount_farmed = 0
 
-            # Detect amounts gained from each item on the Loot Collected screen. If the item is on the blacklist, use my method instead.
-            if item in blacklisted_items:
-                locations = self.find_all(item, custom_confidence = 0.99)
-            elif item in lite_blacklisted_items:
-                locations = self.find_all(item, custom_confidence = 0.85)
-            else:
-                self._clear_memory_guibot()
-                locations = self._guibot.find_all(item, timeout = 1, allow_zero = True)
-                guibot_check = True
+        total_amount_farmed = 0
 
-            for index, location in enumerate(locations):
-                check = False
+        # Detect amounts gained from each item on the Loot Collected screen. If the item is on the blacklist, use my method instead.
+        if item_name in blacklisted_items:
+            locations = self.find_all(item_name, is_item = True, custom_confidence = 0.99)
+        elif item_name in lite_blacklisted_items:
+            locations = self.find_all(item_name, is_item = True, custom_confidence = 0.85)
+        else:
+            self._clear_memory_guibot()
+            locations = self._guibot.find_all(item_name, timeout = 1, allow_zero = True)
+            guibot_check = True
 
-                # Filter out any duplicate locations that are 1 pixels from each other when the item is in either of the blacklists.
-                if item in blacklisted_items or item in lite_blacklisted_items:
-                    for x in range(index):
-                        if (abs(location[0] - locations[x][0]) <= 1 and location[1] == locations[x][1]) or (abs(location[1] - locations[x][1]) and location[0] == locations[x][0]) or (
-                                abs(location[0] - locations[x][0]) and abs(location[1] - locations[x][1])):
-                            check = True
+        for index, location in enumerate(locations):
+            check = False
 
-                if not check:
-                    # Deconstruct the location object into coordinates if found using GuiBot.
-                    if item not in blacklisted_items and item not in lite_blacklisted_items:
-                        location = (location.target.x, location.target.y)
+            # Filter out any duplicate locations that are 1 pixels from each other when the item is in either of the blacklists.
+            if item_name in blacklisted_items or item_name in lite_blacklisted_items:
+                for x in range(index):
+                    if (abs(location[0] - locations[x][0]) <= 1 and location[1] == locations[x][1]) or (abs(location[1] - locations[x][1]) and location[0] == locations[x][0]) or (
+                            abs(location[0] - locations[x][0]) and abs(location[1] - locations[x][1])):
+                        check = True
 
-                    if guibot_check:
-                        self._game.print_and_save(f"[INFO] Occurrence for {item.upper()} found at: {location} using GuiBot.")
+            if not check:
+                # Deconstruct the location object into coordinates if found using GuiBot.
+                if item_name not in blacklisted_items and item_name not in lite_blacklisted_items:
+                    location = (location.target.x, location.target.y)
 
-                    # Adjust the width and height variables if EasyOCR cannot detect the numbers correctly.
-                    left = location[0] + 10
-                    top = location[1] - 5
-                    width = 30
-                    height = 25
+                if guibot_check:
+                    self._game.print_and_save(f"[INFO] Occurrence for {item_name.upper()} found at: {location} using GuiBot.")
 
-                    # Create the /temp/ folder in the /images/ folder to house the taken screenshots.
-                    current_dir = os.getcwd()
-                    temp_dir = os.path.join(current_dir, r"images/temp")
-                    if not os.path.exists(temp_dir):
-                        os.makedirs(temp_dir)
+                # Adjust the width and height variables if EasyOCR cannot detect the numbers correctly.
+                left = location[0] + 10
+                top = location[1] - 5
+                width = 30
+                height = 25
 
-                    # Create a screenshot in the specified region named "test" and save it in the /temp/ folder. Then use EasyOCR to extract text from it into a list.
-                    test_image = pyautogui.screenshot("images/temp/test.png", region = (left, top, width, height))
-                    # test_image.show() # Uncomment this line of code to see what the bot captured for the region of the detected text.  
-                    result = self._reader.readtext("images/temp/test.png", detail = 0)
+                # Create the /temp/ folder in the /images/ folder to house the taken screenshots.
+                current_dir = os.getcwd()
+                temp_dir = os.path.join(current_dir, r"images/temp")
+                if not os.path.exists(temp_dir):
+                    os.makedirs(temp_dir)
 
-                    # Split any unnecessary characters in the extracted text until only the number remains.
-                    result_cleaned = 0
-                    if len(result) != 0:
-                        result_split = [char for char in result[0]]
-                        for char in result_split:
-                            try:
-                                if int(char):
-                                    result_cleaned = int(char)
-                            except ValueError:
-                                continue
-                    else:
-                        result_cleaned = 1
+                # Create a screenshot in the specified region named "test" and save it in the /temp/ folder. Then use EasyOCR to extract text from it into a list.
+                test_image = pyautogui.screenshot("images/temp/test.png", region = (left, top, width, height))
+                # test_image.show() # Uncomment this line of code to see what the bot captured for the region of the detected text.
+                result = self._reader.readtext("images/temp/test.png", detail = 0)
 
-                    total_amount_farmed += result_cleaned
+                # Split any unnecessary characters in the extracted text until only the number remains.
+                result_cleaned = 0
+                if len(result) != 0:
+                    result_split = [char for char in result[0]]
+                    for char in result_split:
+                        try:
+                            if int(char):
+                                result_cleaned = int(char)
+                        except ValueError:
+                            continue
                 else:
-                    self._game.print_and_save(f"[INFO] Duplicate location detected. Removing it...")
+                    result_cleaned = 1
 
-            amounts_farmed.append(total_amount_farmed)
+                total_amount_farmed += result_cleaned
+            else:
+                self._game.print_and_save(f"[INFO] Duplicate location detected. Removing it...")
 
         # If items were detected on the Quest Results screen, take a screenshot and save in the /results/ folder.    
-        if len(amounts_farmed) > 0 and amounts_farmed[0] != 0:
+        if take_screenshot and total_amount_farmed != 0:
             self._take_screenshot()
 
         self._game.print_and_save(f"[INFO] Detection of item rewards finished.")
-        return amounts_farmed
+        return total_amount_farmed
 
     def wait_vanish(self, image_name: str, timeout: int = 30):
         """Use GuiBot to check if the provided image vanishes from the screen after a certain amount of time.

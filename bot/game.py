@@ -661,7 +661,7 @@ class Game:
             if not is_pending_battle and not is_event_nightmare:
                 self.print_and_save("\n[INFO] Detecting if any user-specified loot dropped this run...")
                 if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
-                    temp_amount = self.image_tools.find_farmed_items([self._item_name])[0]
+                    temp_amount = self.image_tools.find_farmed_items(self._item_name)
                 else:
                     temp_amount = 1
 
