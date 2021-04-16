@@ -1,7 +1,6 @@
 import multiprocessing
 import os
 import sys
-import traceback
 from pathlib import Path
 from timeit import default_timer as timer
 from typing import Iterable
@@ -11,7 +10,6 @@ from PySide2.QtGui import QGuiApplication
 from PySide2.QtQml import QQmlApplicationEngine
 
 from bot.game import Game
-from tests.tests import Debug
 
 
 class MainDriver:
@@ -46,25 +44,11 @@ class MainDriver:
         Returns:
             None
         """
-        # Initialize the Game and Debug classes.
+        # Initialize the Game class and start Farming Mode.
         self._game = Game(queue = queue, is_bot_running = is_bot_running, combat_script = combat_script, debug_mode = debug_mode)
-        self._debug = Debug(self._game, is_bot_running = is_bot_running, combat_script = combat_script)
 
         self._game.start_farming_mode(item_name = item_name, item_amount_to_farm = int(item_amount_to_farm), farming_mode = farming_mode, map_name = location_name, mission_name = mission_name,
                                       summon_element_list = summon_element_list, summon_list = summon_list, group_number = group_number, party_number = party_number)
-
-        # Test finding tweets.
-        # self._debug.test_twitter_listener()
-
-        # Test finding amounts of all items on the screen.
-        # self._debug.test_item_detection()
-
-        # Test the Farming Mode.
-        # self._debug.test_farming_mode()
-
-        # Test Combat Mode.
-        # self._debug.test_combat_mode()
-        # self._debug.test_combat_mode2()
 
         is_bot_running.value = 1
         return None
