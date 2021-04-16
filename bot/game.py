@@ -28,11 +28,13 @@ class Game:
 
     combat_script (str, optional): The file path to the combat script to use for Combat Mode. Defaults to empty string.
 
+    test_mode (bool, optional): Prevents the bot from automatically calibrating the window dimensions to facilitate easier testing.
+
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
 
     """
 
-    def __init__(self, queue: multiprocessing.Queue, is_bot_running: int, combat_script: str = "", debug_mode: bool = False):
+    def __init__(self, queue: multiprocessing.Queue, is_bot_running: int, combat_script: str = "", test_mode: bool = False, debug_mode: bool = False):
         super().__init__()
 
         # ################## config.ini ###################
@@ -178,8 +180,9 @@ class Game:
         # Enable checking for Skyscope mission popups.
         self.enable_skyscope = True
 
-        # Calibrate the dimensions of the bot window on bot launch.
-        self.go_back_home(confirm_location_check = True, display_info_check = True)
+        if test_mode is False:
+            # Calibrate the dimensions of the bot window on bot launch.
+            self.go_back_home(confirm_location_check = True, display_info_check = True)
 
     def _print_time(self):
         """Formats the time since the bot started into a readable, printable HH:MM:SS format using timedelta.
