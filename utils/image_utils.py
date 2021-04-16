@@ -525,6 +525,7 @@ class ImageUtils:
         """
         image = Image.open(f"images/buttons/{image_name}.png")
         width, height = image.size
+        image.close()
         return width, height
 
     def _take_screenshot(self):
