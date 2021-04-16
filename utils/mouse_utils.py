@@ -124,8 +124,8 @@ class MouseUtils:
             dimensions_y1 = y + (height // 2)
             
             while True:
-                new_width = random.randint(1, width - 10)
-                new_height = random.randint(1, height - 10)
+                new_width = random.randint(int(width * 0.2), int(width * 0.8))
+                new_height = random.randint(int(height * 0.2), int(height * 0.8))
                 
                 new_x = dimensions_x0 + new_width
                 new_y = dimensions_y0 + new_height
