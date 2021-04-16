@@ -176,7 +176,7 @@ Item{
                 itemSelectionStatusMessage.visible = true
                 itemSelectionStatusMessage.color = "#fc8c03"
                 itemSelectionStatusMessage.text = qsTr("Now select the item to farm")
-                
+
                 // Enable the Mission Selection ComboBox. Then reset its displayText and its currentIndex.
                 missionSelectionComboBox.enabled = false
                 missionSelectionComboBox.displayText = qsTr("Please select a mission")
@@ -191,7 +191,7 @@ Item{
                 amountSelectionComboBox.enabled = false
                 amountSelectionComboBox.displayText = qsTr("# of Item")
                 amountSelectionComboBox.currentIndex = -1
-                
+
                 amountSelectionStatusMessage.visible = false
                 amountSelectionStatusMessage.color = "#fc8c03"
                 amountSelectionStatusMessage.text = qsTr("Now select the amount of items to farm")
@@ -216,7 +216,7 @@ Item{
                 // Update the relevant status message to indicate success.
                 farmingModeStatusMessage.text = qsTr("Farming Mode selected successfully")
                 farmingModeStatusMessage.color = "#00ff00"
-                
+
                 // Reset the values in the backend back to default.
                 backend.reset_values()
 
@@ -1304,7 +1304,7 @@ Item{
                     itemSelectionStatusMessage.visible = true
                     itemSelectionStatusMessage.color = "#00ff00"
                     itemSelectionStatusMessage.text = qsTr("Item selected successfully")
-                    
+
                     // Enable the Mission Selection ComboBox. Then reset its displayText and its currentIndex.
                     missionSelectionComboBox.enabled = true
                     missionSelectionComboBox.displayText = qsTr("Please select a mission")
@@ -1319,7 +1319,7 @@ Item{
                     amountSelectionComboBox.enabled = false
                     amountSelectionComboBox.displayText = qsTr("# of Item")
                     amountSelectionComboBox.currentIndex = -1
-                    
+
                     amountSelectionStatusMessage.visible = false
                     amountSelectionStatusMessage.color = "#fc8c03"
                     amountSelectionStatusMessage.text = qsTr("Now select the amount of items to farm")
@@ -1346,7 +1346,7 @@ Item{
                     backend.check_bot_ready(false)
                 }
             }
-            
+
             // On clicked, open up the overlay containing the selectable items.
             MouseArea {
                 anchors.fill: parent
@@ -1384,7 +1384,7 @@ Item{
                 }
 
                 // This will contain all the Quest Items supported by the bot.
-                CustomFlickableRepeaterForQuestItems { }
+                RepeaterForQuestItems { }
             }
 
             Popup {
@@ -1406,7 +1406,7 @@ Item{
                 }
 
                 // This will contain all the Special Items supported by the bot.
-                CustomFlickableRepeaterForSpecialItems { }
+                RepeaterForSpecialItems { }
             }
 
             Popup {
@@ -1428,7 +1428,7 @@ Item{
                 }
 
                 // This will contain all the Coop Items supported by the bot.
-                CustomFlickableRepeaterForCoopItems { }
+                RepeaterForCoopItems { }
             }
 
             Popup {
@@ -1450,7 +1450,7 @@ Item{
                 }
 
                 // This will contain all the Raid Items supported by the bot.
-                CustomFlickableRepeaterForRaidItems { }
+                RepeaterForRaidItems { }
             }
         }
 
@@ -1886,7 +1886,7 @@ Item{
                 }
 
                 // This will contain all the Summons supported by the bot. It will update the Summon and element names in the backend and then update the text on this button as well.
-                CustomFlickableRepeaterForSummons { }
+                RepeaterForSummons { }
             }
         }
 
