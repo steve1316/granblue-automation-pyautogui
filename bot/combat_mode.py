@@ -444,7 +444,6 @@ class CombatMode:
             command_list = script.readlines()
             script.close()
 
-            line_number = 0  # Current line number the bot is reading.
             turn_number = 1  # Current turn for the script execution.
 
             # Reset the retreat, semi auto, and full auto flags.
@@ -468,7 +467,6 @@ class CombatMode:
             while len(command_list) > 0 and self._retreat_check is False and semi_auto is False and full_auto is False:
                 # All the logic that follows assumes that the command string is lowercase to allow case-insensitive commands.
                 command = command_list.pop(0).strip().lower()
-                line_number += 1
                 if command == "" or command[0] == "#" or command[0] == "/":
                     continue
 
@@ -529,7 +527,6 @@ class CombatMode:
                         # Process each command inside this Turn block until the "end" command is reached to close out the block.
                         while len(command_list) > 0 and command != "end" and command != "end":
                             command = command_list.pop(0).strip().lower()
-                            line_number += 1
                             if command == "" or command[0] == "#" or command[0] == "/":
                                 continue
 
