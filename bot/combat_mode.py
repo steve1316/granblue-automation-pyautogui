@@ -487,7 +487,7 @@ class CombatMode:
                             self._find_dialog_in_combat()
 
                             if self._game.image_tools.find_button("attack", tries = 1, suppress_error = True):
-                                # Click the "Attack" button once every command inside the Turn Block has been processed.
+                                # Click the "Attack" button.
                                 self._game.print_and_save(f"[COMBAT] Ending Turn {turn_number}.")
                                 self._game.find_and_click_button("attack", tries = 10)
 
@@ -501,7 +501,10 @@ class CombatMode:
                                 # If the "Cancel" button vanishes, that means the attack is in-progress. Now reload the page and wait for either the attack to finish or Battle ended.
                                 if self._game.farming_mode != "Quest" and self._game.farming_mode != "Special":
                                     self._game.find_and_click_button("reload")
+
                                 self._wait_for_attack()
+
+                                self._game.print_and_save(f"[COMBAT] Turn {turn_number} has ended.")
 
                                 turn_number += 1
 
@@ -525,7 +528,7 @@ class CombatMode:
                         self._find_dialog_in_combat()
 
                         # Process each command inside this Turn block until the "end" command is reached to close out the block.
-                        while len(command_list) > 0 and command != "end" and command != "end":
+                        while len(command_list) > 0 and command != "exit" and command != "end":
                             command = command_list.pop(0).strip().lower()
                             if command == "" or command[0] == "#" or command[0] == "/":
                                 continue
@@ -569,6 +572,11 @@ class CombatMode:
                                 # Check if the Battle ended suddenly.
                                 if self._game.image_tools.confirm_location("battle_concluded", tries = 1):
                                     self._game.print_and_save("\n[COMBAT] Battle concluded suddenly.")
+                                    self._game.print_and_save("\n################################################################################")
+                                    self._game.print_and_save("################################################################################")
+                                    self._game.print_and_save("[COMBAT] Ending Combat Mode.")
+                                    self._game.print_and_save("################################################################################")
+                                    self._game.print_and_save("################################################################################")
                                     self._game.find_and_click_button("reload")
                                     return True
 
@@ -629,6 +637,8 @@ class CombatMode:
                             self._game.find_and_click_button("reload")
                         self._wait_for_attack()
 
+                        self._game.print_and_save(f"[COMBAT] Turn {turn_number} has ended.")
+
                         turn_number += 1
 
             # When the bot reaches here, all the commands in the combat script has been processed.
@@ -651,6 +661,7 @@ class CombatMode:
                 # If the "Cancel" button vanishes, that means the attack is in-progress. Now reload the page and wait for either the attack to finish or Battle ended.
                 if self._game.farming_mode != "Quest" and self._game.farming_mode != "Special":
                     self._game.find_and_click_button("reload")
+
                 self._wait_for_attack()
 
                 turn_number += 1
