@@ -152,7 +152,7 @@ class CombatMode:
             elif command == "usesupportpotion":
                 self._game.print_and_save(f"\n[COMBAT] Using Support Potion on the whole Party...")
                 self._game.find_and_click_button("ok")
-            elif command == "useclaritypotion":
+            elif command == "useclarityherb":
                 self._game.print_and_save(f"\n[COMBAT] Using Clarity Herb on Character {target}...")
                 self._select_character(target)
             elif command == "userevivalpotion":
