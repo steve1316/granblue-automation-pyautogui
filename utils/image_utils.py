@@ -493,12 +493,13 @@ class ImageUtils:
         self._game.print_and_save(f"[INFO] Detection of item rewards finished.")
         return total_amount_farmed
 
-    def wait_vanish(self, image_name: str, timeout: int = 30):
+    def wait_vanish(self, image_name: str, timeout: int = 30, suppress_error: bool = False):
         """Use GuiBot to check if the provided image vanishes from the screen after a certain amount of time.
 
         Args:
             image_name (str): Name of the image file in the /images/buttons/ folder.
             timeout (int, optional): Timeout in seconds. Defaults to 30.
+            suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
 
         Returns:
             (bool): True if the image vanishes from the screen within the allotted time or False if timeout was reached.
@@ -510,7 +511,8 @@ class ImageUtils:
             self._game.print_and_save(f"[SUCCESS] Image successfully vanished from screen...")
             return True
         else:
-            self._game.print_and_save(f"[WARNING] Image did not vanish from screen...")
+            if suppress_error is False:
+                self._game.print_and_save(f"[WARNING] Image did not vanish from screen...")
             return False
 
     @staticmethod

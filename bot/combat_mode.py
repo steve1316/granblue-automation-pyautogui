@@ -495,7 +495,7 @@ class CombatMode:
 
                                 # Wait until the "Cancel" button vanishes from the screen.
                                 if self._game.image_tools.find_button("combat_cancel", suppress_error = True) is not None:
-                                    while self._game.image_tools.wait_vanish("combat_cancel", tries = 5, suppress_error = True) is False:
+                                    while self._game.image_tools.wait_vanish("combat_cancel", timeout = 5, suppress_error = True) is False:
                                         if self._debug_mode:
                                             self._game.print_and_save("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
                                         self._game.wait(1)
@@ -622,7 +622,7 @@ class CombatMode:
 
                         # Wait until the "Cancel" button vanishes from the screen.
                         if self._game.image_tools.find_button("combat_cancel", suppress_error = True) is not None:
-                            while self._game.image_tools.wait_vanish("combat_cancel", tries = 5, suppress_error = True) is False:
+                            while self._game.image_tools.wait_vanish("combat_cancel", timeout = 5, suppress_error = True) is False:
                                 if self._debug_mode:
                                     self._game.print_and_save("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
                                 self._game.wait(1)
@@ -646,7 +646,7 @@ class CombatMode:
 
                 # Wait until the "Cancel" button vanishes from the screen.
                 if self._game.image_tools.find_button("combat_cancel", suppress_error = True) is not None:
-                    while self._game.image_tools.wait_vanish("combat_cancel", tries = 5, suppress_error = True) is False:
+                    while self._game.image_tools.wait_vanish("combat_cancel", timeout = 5, suppress_error = True) is False:
                         if self._debug_mode:
                             self._game.print_and_save("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
                         self._game.wait(1)
