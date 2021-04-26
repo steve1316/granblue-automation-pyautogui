@@ -3,6 +3,8 @@
 
 > Android version here: https://github.com/steve1316/granblue-automation-android
 
+![Correct Window Size](images/readme_assets/preview.png)
+
 This Python application is designed for educational research purposes on studying how to automate certain workflows via image template matching using PyAutoGUI and GuiBot. PyAutoGUI accomplishes this by taking over the mouse, hence why it is recommended to run this on a separate machine than the one that you use daily. This can be circumvented by running this on a virtual machine like VMWare Workstation Player so you can keep using your main computer without interruption.
 
 Screenshots are taken and cropped for PyAutoGUI to perform image template matching. This will determine where the bot is currently at and will inform the bot on what to do next from there. Should PyAutoGUI fail to template match, GuiBot will take over. I have found that on default settings, GuiBot performs admirably well compared to PyAutoGUI in terms of template matching.
@@ -34,14 +36,8 @@ exit
 
 ```
 
----
-### How to create my own Combat Script?
-- Visit the [Combat Scripting Documentation and Examples wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Combat-Scripting-Documentation-and-Examples) for combat scripting usage and examples.
----
-### What Missions/Items/Summons are supported?
-- Vist the [List of Supported Quests, Special, Coop, Raid, Event, and Dread Barrage Missions and their Farmable Items wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/List-of-Supported-Quests,-Special,-Coop,-Raid,-Event,-and-Dread-Barrage-Missions-and-their-Farmable-Items) for supported content.
-- Vist the [Selectable Summons wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons) for available Summons.
----
+## Disclaimer
+By downloading this program, you consent to your account potentially getting flagged for excessive amounts of farming for multiple hours straight and banned in the next banwave by KMR. I hold no responsibility for how much or how long you use this program for. I trust you have the self-control necessary to only farm in reasonable bursts of time with breaks in between and to always be alert for when the bot encounters the CAPTCHA.
 
 # Table of Contents
 - [Features](<#Features>)
@@ -54,23 +50,23 @@ exit
 - [Wiki](<#Wiki>)
 - [Technologies used](<#Technologies-Used>)
 
-## Disclaimer
-By downloading this program, you consent to your account potentially getting flagged for excessive farming and banned in the next banwave by KMR. I hold no responsibility for how much you use this program for. I trust you have the self-control necessary to only farm in reasonable bursts of time.
-
 # Features
 - [x] Customize what skills to use during each turn in a user-created plan. Users can select which plan to use when starting the bot.
 - [x] A launchable GUI to keep track of logs and selecting what combat script to use.
 - [x] Farm user-defined amounts of specified materials from Quest, Coop, Raid, Event, etc.
 - [x] A user-defined timer for how long the bot should run for.
-- [x] Support for Quest farming.
-- [x] Support for Coop farming.
-- [x] Support for Raid farming.
-  - [x] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
-  - [x] Alert for when anti-bot CAPTCHA pops up.
-- [x] Support for Event farming.
-- [x] Support for Guild Wars farming.
-- [x] Support for Rise of the Beasts farming.
-- [x] Support for Dread Barrage farming.
+- [x] Support for the following game modes:
+    - [x] Quest
+    - [x] Special
+    - [x] Coop
+    - [x] Raid
+      - [x] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
+    - [x] Event
+    - [x] Guild Wars
+    - [x] Rise of the Beasts
+    - [x] Dread Barrage
+    - [x] Proving Grounds
+- [x] Alert for when anti-bot CAPTCHA pops up.
 
 # Requirements
 1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
@@ -98,6 +94,9 @@ pip install -r requirements.txt
 1. Download the entire project folder.
 2. Make sure you installed the project dependencies by having Python 3.8.3+ installed and ran `pip install -r requirements.txt` in a terminal.
 3. Open up the game on a Chromium-based browser and log in if you haven't already done so. Click away any daily log in popups until you are at the Main/Home screen.
+   1. Make sure the window size is set to this or else the bot will not be able to detect the "Home" button:
+    
+        ![Correct Window Size](images/readme_assets/correct_window_size.png)
 4. Now open up the program in the following ways for each OS:
    - For Windows: Open up the terminal in the root of the project folder and type:
 	```
@@ -107,6 +106,15 @@ pip install -r requirements.txt
    - For Mac: I do not have a Mac system so I do not know how they invoke python. Please look online on how to do that for yourself.
 5. Continue by following the instructions that are now shown to you by heading to the Settings and fill out each section. At the end, you will be notified when the program is ready to begin.
 6. (Optional) Check out the config.ini in the root of the project folder and see what internal settings you would like to change before starting.
+
+---
+### How to create my own Combat Script?
+- Visit the [Combat Scripting Documentation and Examples wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Combat-Scripting-Documentation-and-Examples) for combat scripting usage and examples.
+---
+### What Missions/Items/Summons are supported?
+- Vist the [List of Supported Quests, Special, Coop, Raid, Event, and Dread Barrage Missions and their Farmable Items wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/List-of-Supported-Quests,-Special,-Coop,-Raid,-Event,-and-Dread-Barrage-Missions-and-their-Farmable-Items) for supported content.
+- Vist the [Selectable Summons wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons) for available Summons.
+---
 
 ### Instructions for the Raid component of this application (optional, only if you want to farm Raids)
 In order to get a Twitter Developer account, you need a Twitter account. Recommended to use the one bound to your GBF account just to keep it all in one place.
