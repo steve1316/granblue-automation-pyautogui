@@ -1021,6 +1021,46 @@ class MapSelection:
 
         return None
 
+    def _navigate_to_proving_grounds(self, difficulty: str):
+        """Navigates the bot to the specified Proving Grounds mission.
+
+        Args:
+            difficulty (str): Difficulty of the specified Mission.
+
+        Returns:
+            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
+        """
+        # Go to the Home screen.
+        self._game.go_back_home(confirm_location_check = True)
+
+        self._game.print_and_save(f"\n[INFO] Now navigating to Proving Grounds...")
+
+        # Go to the Event by clicking on the "Menu" button and then click the very first banner.
+        self._game.find_and_click_button("home_menu")
+        banner_locations = self._game.image_tools.find_all("event_banner")
+        if len(banner_locations) == 0:
+            banner_locations = self._game.image_tools.find_all("event_banner_blue")
+        self._game.mouse_tools.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
+
+        self._game.wait(1)
+
+        # Select the difficulty.
+        if self._game.image_tools.confirm_location("proving_grounds"):
+            if self._game.find_and_click_button("proving_grounds_missions"):
+                difficulty_button_locations = self._game.image_tools.find_all("play_round_button")
+
+                if difficulty == "Very Hard":
+                    self._game.mouse_tools.move_and_click_point(difficulty_button_locations[0][0], difficulty_button_locations[0][1], "play_round_button")
+                elif difficulty == "Extreme":
+                    self._game.mouse_tools.move_and_click_point(difficulty_button_locations[1][0], difficulty_button_locations[1][1], "play_round_button")
+                elif difficulty == "Extreme+":
+                    self._game.mouse_tools.move_and_click_point(difficulty_button_locations[2][0], difficulty_button_locations[2][1], "play_round_button")
+
+                # After the difficulty has been selected, click "Play" to land the bot at the Proving Grounds' Summon Selections screen.
+                self._game.find_and_click_button("play")
+
+        return None
+
     def select_map(self, farming_mode: str, map_name: str, mission_name: str, difficulty: str):
         """Navigates the bot to the specified map and preps the bot for Summon/Party selection.
 
@@ -1048,16 +1088,22 @@ class MapSelection:
             self._navigate_to_rotb(mission_name, difficulty)
         elif farming_mode == "Guild Wars":
             self._navigate_to_guild_wars(difficulty)
+        elif farming_mode == "Proving Grounds":
+            self._navigate_to_proving_grounds(difficulty)
 
-        # Check for available AP.
-        self._game.check_for_ap()
+        # Check for available AP. Note that Proving Grounds has the AP check after you select your Summon.
+        if farming_mode != "Proving Grounds":
+            self._game.check_for_ap()
 
         # Check to see if the bot is at the Summon Selection screen.
         if farming_mode != "Coop":
             self._game.print_and_save(f"[INFO] Now checking if bot is currently at Summon Selection screen...")
 
-            if self._game.image_tools.confirm_location("select_a_summon", tries = 5):
+            if farming_mode != "Proving Grounds" and self._game.image_tools.confirm_location("select_a_summon", tries = 5):
                 self._game.print_and_save(f"[INFO] Bot is currently at Summon Selection screen.")
+                return True
+            elif farming_mode == "Proving Grounds" and self._game.image_tools.confirm_location("proving_grounds_summon_selection", tries = 5):
+                self._game.print_and_save(f"[INFO] Bot is currently at the Proving Grounds' Summon Selection screen.")
                 return True
             else:
                 self._game.print_and_save(f"[WARNING] Bot is not at Summon Selection screen.")

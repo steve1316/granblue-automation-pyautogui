@@ -239,7 +239,8 @@ class ImageUtils:
                         if ((self._game.farming_mode != "Event" and self._game.farming_mode != "Event (Token Drawboxes)" and self._game.farming_mode != "Guild Wars") and
                             self.find_button("bottom_of_summon_selection", tries = 1) is not None) or (
                                 (self._game.farming_mode == "Event" or self._game.farming_mode == "Event (Token Drawboxes)" or self._game.farming_mode == "Guild Wars") and
-                                self.find_button("bottom_of_event_summon_selection", tries = 1) is not None):
+                                self.find_button("bottom_of_event_summon_selection", tries = 1) is not None) or (
+                                self._game.farming_mode == "Proving Grounds" and self.find_button("bottom_of_proving_grounds_summon_selection", tries = 1) is not None):
                             self._game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, 10000)
                             summon_index += 1
                             break

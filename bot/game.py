@@ -666,7 +666,15 @@ class Game:
                     temp_amount = 1
 
                 self._item_amount_farmed += temp_amount
-                self._amount_of_runs_finished += 1
+
+                # Only increment number of runs for Proving Grounds when the bot acquires the Completion Rewards.
+                # Currently for Proving Grounds, completing 2 battles per difficulty nets you the Completion Rewards.
+                if self.farming_mode == "Proving Grounds":
+                    if self._item_amount_farmed != 0 and self._item_amount_farmed % 2 == 0:
+                        self._item_amount_farmed = 0
+                        self._amount_of_runs_finished += 1
+                else:
+                    self._amount_of_runs_finished += 1
         else:
             # If the bot reached here, that means the raid ended without the bot being able to take action so no loot
             # dropped.
@@ -1065,7 +1073,7 @@ class Game:
                     difficulty = "4 Star"
                 elif mission_name.find("5 Star") == 0:
                     difficulty = "5 Star"
-            elif farming_mode == "Guild Wars":
+            elif farming_mode == "Guild Wars" or farming_mode == "Proving Grounds":
                 if mission_name == "Very Hard":
                     difficulty = "Very Hard"
                 elif mission_name == "Extreme":
@@ -1083,6 +1091,8 @@ class Game:
 
             self._item_amount_farmed = 0
             self._amount_of_runs_finished = 0
+            event_quests = ["N Event Quest", "H Event Quest", "VH Event Quest", "EX Event Quest"]
+            proving_grounds_first_time = True
 
             # Save the following information to share between the Game class and the MapSelection class.
             self._item_name = item_name
@@ -1095,8 +1105,6 @@ class Game:
             self._summon_list = summon_list
             self._group_number = group_number
             self._party_number = party_number
-
-            event_quests = ["N Event Quest", "H Event Quest", "VH Event Quest", "EX Event Quest"]
 
             # Perform advanced setup for the special fights like Dimensional Halo, Event Nightmares, and Dread Barrage's Unparalleled Foes.
             self._advanced_setup()
@@ -1112,7 +1120,8 @@ class Game:
                 start_check = False
 
                 # Loop and attempt to select a Summon. Reset Summons if needed.
-                while summon_check is False and farming_mode != "Coop":
+                while (summon_check is False and farming_mode != "Coop" and farming_mode != "Proving Grounds") or \
+                        (summon_check is False and proving_grounds_first_time is True and farming_mode == "Proving Grounds"):
                     summon_check = self._select_summon(self._summon_list, self._summon_element_list)
 
                     # If the Summon Selection flag is False, that means the Summons were reset.
@@ -1124,7 +1133,7 @@ class Game:
                         self._map_selection.join_raid(mission_name)
 
                 # Perform Party Selection and then start the Mission. If Farming Mode is Coop, skip this as Coop reuses the same Party.
-                if farming_mode != "Coop":
+                if farming_mode != "Coop" and farming_mode != "Proving Grounds":
                     start_check = self._find_party_and_start_mission(self._group_number, self._party_number)
                 elif farming_mode == "Coop" and self._coop_first_run:
                     start_check = self._find_party_and_start_mission(self._group_number, self._party_number)
@@ -1135,6 +1144,14 @@ class Game:
                 elif farming_mode == "Coop" and self._coop_first_run is False:
                     self.print_and_save("\n[INFO] Starting Coop Mission again.")
                     start_check = True
+                elif farming_mode == "Proving Grounds":
+                    # Parties are assumed to have already been formed by the player prior to starting. In addition, no need to select a Summon again as it is reused.
+                    if proving_grounds_first_time:
+                        self.check_for_ap()
+
+                        self.find_and_click_button("ok")
+                        proving_grounds_first_time = False
+                    start_check = True
 
                 if start_check and farming_mode != "Raid":
                     self.wait(3)
@@ -1142,6 +1159,11 @@ class Game:
                     # Check for the "Items Picked Up" popup for Quest Farming Mode.
                     if farming_mode == "Quest" and self.image_tools.confirm_location("items_picked_up", tries = 1):
                         self.find_and_click_button("ok")
+
+                    # Click the "Start" button to start the Proving Grounds Mission.
+                    if farming_mode == "Proving Grounds":
+                        self.print_and_save("\n[INFO] Now starting Mission for Proving Grounds...")
+                        self.find_and_click_button("proving_grounds_start")
 
                     # Finally, start Combat Mode.
                     if self.combat_mode.start_combat_mode(self._combat_script):
@@ -1153,7 +1175,7 @@ class Game:
                             self._delay_between_runs()
 
                             # Handle special situations for certain Farming Modes.
-                            if farming_mode != "Coop" and not self.find_and_click_button("play_again"):
+                            if farming_mode != "Coop" and farming_mode != "Proving Grounds" and not self.find_and_click_button("play_again"):
                                 # Clear away any Pending Battles.
                                 self._map_selection.check_for_pending(farming_mode)
 
@@ -1208,10 +1230,34 @@ class Game:
                                     self.print_and_save("\n[INFO] Defaulting to Level 95 Unparalleled Foe due to incorrect config.ini settings. Starting it now...")
                                     self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1], "ap_0")
 
-                            # For every other Farming Mode other than Coop, handle all popups until the bot reaches the Summon Selection screen.
-                            self.check_for_popups()
+                            elif farming_mode == "Proving Grounds":
+                                # Click the "Next Battle" button if there are any battles left.
+                                if self.find_and_click_button("proving_grounds_next_battle", suppress_error = True):
+                                    self.print_and_save("\n[INFO] Moving onto the next battle for Proving Grounds...")
 
-                            self.check_for_ap()
+                                    # Then click the "OK" button to play the next battle.
+                                    self.find_and_click_button("ok")
+                                else:
+                                    # Otherwise, all battles for the Mission has been completed. Collect the completion rewards at the end.
+                                    self.print_and_save("\n[INFO] Proving Grounds Mission has been completed.")
+                                    self.find_and_click_button("event")
+
+                                    self.wait(2)
+                                    self.find_and_click_button("proving_grounds_open_chest", tries = 5)
+
+                                    if self.image_tools.confirm_location("proving_grounds_completion_loot"):
+                                        self.print_and_save("\n[INFO] Completion rewards has been acquired.")
+
+                                        # Reset the First Time flag so the bot can select a Summon and select the Mission again.
+                                        if self._item_amount_farmed < item_amount_to_farm:
+                                            self.print_and_save("\n[INFO] Starting Proving Grounds Mission again...")
+                                            proving_grounds_first_time = True
+                                            self.find_and_click_button("play_again")
+
+                            # For every other Farming Mode other than Coop and Proving Grounds, handle all popups and perform AP check until the bot reaches the Summon Selection screen.
+                            if farming_mode != "Proving Grounds":
+                                self.check_for_popups()
+                                self.check_for_ap()
 
                     else:
                         # Select the Mission again if the Party wiped or exited prematurely during Combat Mode.
