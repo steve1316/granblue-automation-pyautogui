@@ -52,15 +52,14 @@ By downloading this program, you consent to your account potentially getting fla
 
 # Features
 - [x] Customize what skills to use during each turn in a user-created plan. Users can select which plan to use when starting the bot.
-- [x] A launchable GUI to keep track of logs and selecting what combat script to use.
-- [x] Farm user-defined amounts of specified materials from Quest, Coop, Raid, Event, etc.
+- [x] A launchable GUI to keep track of logs, adjust settings and selecting what combat script to use.
+- [x] Farm user-defined amounts of specified materials from the supported Farming Modes.
 - [x] A user-defined timer for how long the bot should run for.
 - [x] Support for the following game modes:
     - [x] Quest
     - [x] Special
     - [x] Coop
     - [x] Raid
-      - [x] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
     - [x] Event
     - [x] Guild Wars
     - [x] Rise of the Beasts
@@ -105,7 +104,7 @@ pip install -r requirements.txt
 
    - For Mac: I do not have a Mac system so I do not know how they invoke python. Please look online on how to do that for yourself.
 5. Continue by following the instructions that are now shown to you by heading to the Settings and fill out each section. At the end, you will be notified when the program is ready to begin.
-6. (Optional) Check out the config.ini in the root of the project folder and see what internal settings you would like to change before starting.
+6. (Optional) Check out the config.ini in the root of the project folder and see what internal settings you would like to change before starting. Some of these settings include mouse settings (Bezier Curve or non-Bezier Curve), Twitter API settings, Dimensional Halo settings, etc.
 
 ---
 ### How to create my own Combat Script?
