@@ -120,13 +120,14 @@ Item{
                 { text: "Farming Modes", enabled: false },
                 { text: "Quest", enabled: true },
                 { text: "Special", enabled: true },
-                { text: "Coop", enabled: true},
-                { text: "Raid", enabled: true},
-                { text: "Event", enabled: true},
-                { text: "Event (Token Drawboxes)", enabled: true},
-                { text: "Rise of the Beasts", enabled: true},
-                { text: "Guild Wars", enabled: true},
-                { text: "Dread Barrage", enabled: true},
+                { text: "Coop", enabled: true },
+                { text: "Raid", enabled: true },
+                { text: "Event", enabled: true },
+                { text: "Event (Token Drawboxes)", enabled: true },
+                { text: "Rise of the Beasts", enabled: true },
+                { text: "Guild Wars", enabled: true },
+                { text: "Dread Barrage", enabled: true },
+                { text: "Proving Grounds", enabled: true }
             ]
 
             onCurrentIndexChanged: {
@@ -135,16 +136,17 @@ Item{
                 farmingModeStatusMessage.visible = true
 
                 // Display either the Item Selection button or ComboBox depending on the Farming Mode selected.
-                if(farmingModeComboBox.displayText === "Event" || farmingModeComboBox.displayText === "Event (Token Drawboxes)" || farmingModeComboBox.displayText === "Dread Barrage" || farmingModeComboBox.displayText === "Rise of the Beasts" || farmingModeComboBox.displayText === "Guild Wars") {
+                if(farmingModeComboBox.displayText === "Event" || farmingModeComboBox.displayText === "Event (Token Drawboxes)" || farmingModeComboBox.displayText === "Dread Barrage" || 
+                farmingModeComboBox.displayText === "Rise of the Beasts" || farmingModeComboBox.displayText === "Guild Wars" || farmingModeComboBox.displayText === "Proving Grounds") {
                     // Set the contents of the Item Selection ComboBox.
-                    if(farmingModeComboBox.displayText !== "Dread Barrage") {
+                    if(farmingModeComboBox.displayText === "Dread Barrage") {
                         itemSelectionComboBox.model = [
-                            { text: "Event", enabled: false},
+                            { text: "Dread Barrage", enabled: false},
                             { text: "Repeated Runs", enabled: true },
                         ]
                     } else {
                         itemSelectionComboBox.model = [
-                            { text: "Dread Barrage", enabled: false},
+                            { text: "Event", enabled: false},
                             { text: "Repeated Runs", enabled: true },
                         ]
                     }
@@ -1558,6 +1560,13 @@ Item{
                             { text: "NM100", enabled: true },
                             { text: "NM150", enabled: true },
                         ]
+                    } else if(farmingModeComboBox.displayText === "Proving Grounds" && itemSelectionComboBox.displayText === "Repeated Runs") {
+                        missionSelectionComboBox.model = [
+                            { text: "Proving Ground Missions", enabled: false },
+                            { text: "Very Hard", enabled: true },
+                            { text: "Extreme", enabled: true },
+                            { text: "Extreme+", enabled: true },
+                        ]
                     }
 
                     // Update the status message for this ComboBox to indicate success.
@@ -1844,9 +1853,11 @@ Item{
                 }
 
                 if(summonSelectionButton.text !== qsTr("Select Summon")) {
-                    // Now enable the Group and Party ComboBoxes.
-                    groupSelectionComboBox.enabled = true
-                    partySelectionComboBox.enabled = true
+                    if(farmingModeComboBox.displayText !== "Proving Grounds") {
+                        // Now enable the Group and Party ComboBoxes.
+                        groupSelectionComboBox.enabled = true
+                        partySelectionComboBox.enabled = true
+                    }
 
                     // Finally, enable the Start Button on the Home page.
                     backend.check_bot_ready(true)
