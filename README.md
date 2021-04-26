@@ -104,7 +104,7 @@ pip install -r requirements.txt
 
    - For Mac: I do not have a Mac system so I do not know how they invoke python. Please look online on how to do that for yourself.
 5. Continue by following the instructions that are now shown to you by heading to the Settings and fill out each section. At the end, you will be notified when the program is ready to begin.
-6. (Optional) Check out the config.ini in the root of the project folder and see what internal settings you would like to change before starting. Some of these settings include mouse settings (Bezier Curve or non-Bezier Curve), Twitter API settings, Dimensional Halo settings, etc.
+6. (Optional) Check out the ```config.ini``` in the root of the project folder and see what internal settings you would like to change before starting. Some of these settings include mouse settings (Bezier Curve or non-Bezier Curve), Twitter API settings, Dimensional Halo settings, etc.
 
 ---
 ### How to create my own Combat Script?
