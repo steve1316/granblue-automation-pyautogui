@@ -5,7 +5,7 @@ import time
 import traceback
 from configparser import ConfigParser
 from timeit import default_timer as timer
-from typing import Iterable
+from typing import List
 
 import pyautogui
 
@@ -405,13 +405,13 @@ class Game:
         self.print_and_save("\n[INFO] Resting period complete.")
         return None
 
-    def _select_summon(self, summon_list: Iterable[str], summon_element_list: Iterable[str]):
+    def _select_summon(self, summon_list: List[str], summon_element_list: List[str]):
         """Finds and selects the specified Summon based on the current index on the Summon Selection screen and then checks for CAPTCHA right
         afterwards.
 
         Args:
-            summon_list (Iterable[str]): List of names of the Summon image's file name in /images/summons/ folder.
-            summon_element_list (Iterable[str]): List of names of the Summon element image file in the /images/buttons/ folder.
+            summon_list (List[str]): List of names of the Summon image's file name in /images/summons/ folder.
+            summon_element_list (List[str]): List of names of the Summon element image file in the /images/buttons/ folder.
 
         Returns:
             (bool): True if the Summon was found and clicked. Otherwise, return False.
@@ -704,7 +704,7 @@ class Game:
 
         return None
 
-    def check_for_popups(self):
+    def _check_for_popups(self):
         """Detect any popups and attempt to close them all with the final destination being the Summon Selection screen.
 
         Returns:
@@ -1015,7 +1015,7 @@ class Game:
 
         return None
 
-    def start_farming_mode(self, item_name: str, item_amount_to_farm: int, farming_mode: str, map_name: str, mission_name: str, summon_element_list: Iterable[str], summon_list: Iterable[str],
+    def start_farming_mode(self, item_name: str, item_amount_to_farm: int, farming_mode: str, map_name: str, mission_name: str, summon_element_list: List[str], summon_list: List[str],
                            group_number: int, party_number: int):
         """Start the Farming Mode using the given parameters.
 
@@ -1025,8 +1025,8 @@ class Game:
             farming_mode (str): Mode to look for the specified item and map in.
             map_name (str): Name of the map to look for the specified mission in.
             mission_name (str): Name of the mission to farm the item in.
-            summon_element_list (Iterable[str]): List of names of the Summon element image file in the /images/buttons/ folder.
-            summon_list (Iterable[str]): List of names of the Summon image's file name in /images/summons/ folder.
+            summon_element_list (List[str]): List of names of the Summon element image file in the /images/buttons/ folder.
+            summon_list (List[str]): List of names of the Summon image's file name in /images/summons/ folder.
             group_number (int): The Group that the specified Party in in.
             party_number (int): The specified Party to start the mission with.
         
@@ -1256,7 +1256,7 @@ class Game:
 
                             # For every other Farming Mode other than Coop and Proving Grounds, handle all popups and perform AP check until the bot reaches the Summon Selection screen.
                             if farming_mode != "Proving Grounds":
-                                self.check_for_popups()
+                                self._check_for_popups()
                                 self.check_for_ap()
 
                     else:

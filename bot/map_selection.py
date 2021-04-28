@@ -56,11 +56,11 @@ class MapSelection:
 
         return False
 
-    def check_for_pending(self, map_mode: str):
+    def check_for_pending(self, farming_mode: str):
         """Check and collect any pending rewards and free up slots for the bot to join more raids.
 
         Args:
-            map_mode (str): The mode that will dictate what logic to follow next.
+            farming_mode (str): The Farming Mode that will dictate what logic to follow next.
 
         Returns:
             (bool): Return True if Pending Battles were detected. Otherwise, return False.
@@ -69,20 +69,20 @@ class MapSelection:
 
         # Check for the "Check your Pending Battles" popup when navigating to the Quest screen or attempting to join a raid when there are 6 Pending Battles
         # or check if the "Play Again" button is covered by the "Pending Battles" button for any other Farming Mode.
-        if (map_mode.lower() == "raid" and self._game.image_tools.confirm_location("check_your_pending_battles", tries = 1)) or (
-                map_mode.lower() != "raid" and self._game.image_tools.find_button("quest_results_pending_battles", tries = 1, suppress_error = True)):
+        if (farming_mode == "Raid" and self._game.image_tools.confirm_location("check_your_pending_battles", tries = 1)) or (
+                farming_mode != "Raid" and self._game.image_tools.find_button("quest_results_pending_battles", tries = 1, suppress_error = True)):
             self._game.print_and_save(f"\n[INFO] Found Pending Battles that need collecting from.")
 
-            if map_mode.lower() == "raid":
+            if farming_mode == "Raid":
                 self._game.find_and_click_button("ok")
-                self._game.wait(1)
             else:
                 self._game.find_and_click_button("quest_results_pending_battles")
-                self._game.wait(1)
+
+            self._game.wait(1)
 
             if self._game.image_tools.confirm_location("pending_battles", tries = 1):
                 # Process the current Pending Battle.
-                while self._clear_pending_battle():
+                while self._clear_pending_battle(farming_mode):
                     # While on the Loot Collected screen, if there are more Pending Battles then head back to the Pending Battles screen.
                     if self._game.image_tools.find_button("quest_results_pending_battles", tries = 1):
                         self._game.find_and_click_button("quest_results_pending_battles")
@@ -197,9 +197,6 @@ class MapSelection:
         Args:
             map_name (str): Name of the Map to look for the specified Mission.
             mission_name (str): Name of the Mission to farm.
-
-        Returns:
-            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
@@ -310,9 +307,6 @@ class MapSelection:
             map_name (str): Name of the Map to look for the specified Mission.
             mission_name (str): Name of the Mission to farm.
             difficulty (str): Difficulty of the specified Mission.
-
-        Returns:
-            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
@@ -349,7 +343,7 @@ class MapSelection:
                     if map_name != "Campaign-Exclusive Quest" and map_name != "Basic Treasure Quests" and map_name != "Shiny Slime Search!" and map_name != "Six Dragon Trial":
                         self._game.mouse_tools.scroll_screen_from_home_button(-500)
 
-                    mission_select_button = self._game.image_tools.find_button(map_name.lower().replace(" ", "_"))
+                    mission_select_button = self._game.image_tools.find_button(map_name.lower().replace(" ", "_").replace("-", "_"))
                     if mission_select_button is not None:
                         self._game.print_and_save(f"\n[INFO] Navigating to {map_name}...")
 
@@ -382,11 +376,11 @@ class MapSelection:
                             round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
 
                             if difficulty == "Normal":
-                                difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
                             elif difficulty == "Hard":
-                                difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
                             else:
-                                difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
 
                         elif map_name == "Shiny Slime Search!":
                             # Start up the Shiny Slime Search! mission by selecting its difficulty.
@@ -394,11 +388,11 @@ class MapSelection:
                             round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
 
                             if difficulty == "Normal":
-                                difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
                             elif difficulty == "Hard":
-                                difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
                             else:
-                                difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
 
                         elif map_name == "Six Dragon Trial":
                             # Start up the Six Dragon Trial mission by selecting its difficulty.
@@ -406,11 +400,11 @@ class MapSelection:
                             round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
 
                             if difficulty == "Normal":
-                                difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
                             elif difficulty == "Hard":
-                                difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
                             else:
-                                difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
 
                         elif map_name == "Elemental Treasure Quests":
                             # Start up the specified Elemental Treasure Quest mission.
@@ -418,17 +412,17 @@ class MapSelection:
                             round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
 
                             if formatted_mission_name == "The Hellfire Trial":
-                                difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
                             elif formatted_mission_name == "The Deluge Trial":
-                                difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
                             elif formatted_mission_name == "The Wasteland Trial":
-                                difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
                             elif formatted_mission_name == "The Typhoon Trial":
-                                difficulty_play_button = (round_difficulty_play_button_locations[3][0], round_difficulty_play_button_locations[3][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[3][0], round_difficulty_play_button_locations[3][1], "play_round_button")
                             elif formatted_mission_name == "The Aurora Trial":
-                                difficulty_play_button = (round_difficulty_play_button_locations[4][0], round_difficulty_play_button_locations[4][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[4][0], round_difficulty_play_button_locations[4][1], "play_round_button")
                             elif formatted_mission_name == "The Oblivion Trial":
-                                difficulty_play_button = (round_difficulty_play_button_locations[5][0], round_difficulty_play_button_locations[5][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[5][0], round_difficulty_play_button_locations[5][1], "play_round_button")
 
                         elif map_name == "Showdowns":
                             special_play_round_button_locations = self._game.image_tools.find_all("play_round_button")
@@ -464,18 +458,18 @@ class MapSelection:
                             round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
 
                             if difficulty == "Hard":
-                                difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
                             elif difficulty == "Very Hard":
-                                difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
                             elif difficulty == "Extreme":
-                                difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
 
                         elif map_name == "Campaign-Exclusive Quest":
                             self._game.print_and_save(f"[INFO] Selecting Campaign-Exclusive Quest...")
                             round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
 
                             # There is only one round "Play" button for this time-limited quest.
-                            difficulty_play_button = round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1]
+                            self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
 
                         else:
                             # Start up the Angel Halo mission by selecting its difficulty.
@@ -483,14 +477,12 @@ class MapSelection:
                             round_difficulty_play_button_locations = self._game.image_tools.find_all("play_round_button")
 
                             if difficulty == "Normal":
-                                difficulty_play_button = (round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[0][0], round_difficulty_play_button_locations[0][1], "play_round_button")
                             elif difficulty == "Hard":
-                                difficulty_play_button = (round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[1][0], round_difficulty_play_button_locations[1][1], "play_round_button")
                             else:
-                                difficulty_play_button = (round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
+                                self._game.mouse_tools.move_and_click_point(round_difficulty_play_button_locations[2][0], round_difficulty_play_button_locations[2][1], "play_round_button")
 
-                        # Finally, click the "Play" button and that should put the bot at the Summon Selection screen.
-                        self._game.mouse_tools.move_and_click_point(difficulty_play_button[0], difficulty_play_button[1], "play_round_button")
                         break
                     else:
                         # Scroll the screen down more if on a smaller screen and it obscures the targeted mission.
@@ -504,9 +496,6 @@ class MapSelection:
 
         Args:
             mission_name (str): Name of the Mission to farm.
-
-        Returns:
-            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
@@ -619,9 +608,6 @@ class MapSelection:
             farming_mode (str): The specified Farming Mode, Event or Event (Token Drawboxes).
             mission_name (str): Name of the Mission to farm.
             difficulty (str): Difficulty of the specified Mission.
-
-        Returns:
-            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
@@ -672,36 +658,24 @@ class MapSelection:
                 # Find all the "Select" buttons.
                 select_button_locations = self._game.image_tools.find_all("select")
 
+                # Select the Event Quest or Event Raid. Additionally, offset the locations by 1 if there is a Nightmare available.
                 if formatted_mission_name == "Event Quest":
-                    # Select the Event Quests. Additionally, offset the locations by 1 if there is a Nightmare available.
                     self._game.print_and_save(f"[INFO] Now hosting Event Quest...")
                     self._game.mouse_tools.move_and_click_point(select_button_locations[0 + nightmare_is_available][0], select_button_locations[0 + nightmare_is_available][1], "select")
-
-                    self._game.wait(1)
-
-                    # Find all the round "Play" buttons.
-                    round_play_button_locations = self._game.image_tools.find_all("play_round_button")
-
-                    if difficulty == "Very Hard":
-                        self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1], "play_round_button")
-                    elif difficulty == "Extreme":
-                        self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1], "play_round_button")
-
                 elif formatted_mission_name == "Event Raid":
-                    # Select the Event Raids. Additionally, offset the locations by 1 if there is a Nightmare available.
                     self._game.print_and_save(f"[INFO] Now hosting Event Raid...")
                     self._game.mouse_tools.move_and_click_point(select_button_locations[1 + nightmare_is_available][0], select_button_locations[1 + nightmare_is_available][1], "play_round_button")
 
-                    self._game.wait(1)
+                self._game.wait(1)
 
-                    # Find all the round "Play" buttons.
-                    round_play_button_locations = self._game.image_tools.find_all("play_round_button")
+                # Find all the round "Play" buttons.
+                round_play_button_locations = self._game.image_tools.find_all("play_round_button")
 
-                    if difficulty == "Very Hard":
-                        self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1], "play_round_button")
-                    elif difficulty == "Extreme":
-                        self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1], "play_round_button")
-
+                # Now select the chosen difficulty.
+                if difficulty == "Very Hard":
+                    self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1], "play_round_button")
+                elif difficulty == "Extreme":
+                    self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1], "play_round_button")
         else:
             # Scroll down the screen a little bit for this UI layout that has Token Drawboxes.
             self._game.mouse_tools.scroll_screen_from_home_button(-200)
@@ -754,9 +728,6 @@ class MapSelection:
 
         Args:
             difficulty (str): Difficulty of the specified Mission.
-
-        Returns:
-            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
@@ -821,9 +792,6 @@ class MapSelection:
         Args:
             mission_name (str): Name of the Mission to farm.
             difficulty (str): Difficulty of the specified Mission.
-
-        Returns:
-            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
@@ -912,9 +880,6 @@ class MapSelection:
 
         Args:
             difficulty (str): Difficulty of the specified Mission.
-
-        Returns:
-            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
@@ -1026,9 +991,6 @@ class MapSelection:
 
         Args:
             difficulty (str): Difficulty of the specified Mission.
-
-        Returns:
-            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
@@ -1056,7 +1018,7 @@ class MapSelection:
                 elif difficulty == "Extreme+":
                     self._game.mouse_tools.move_and_click_point(difficulty_button_locations[2][0], difficulty_button_locations[2][1], "play_round_button")
 
-                # After the difficulty has been selected, click "Play" to land the bot at the Proving Grounds' Summon Selections screen.
+                # After the difficulty has been selected, click "Play" to land the bot at the Proving Grounds' Summon Selection screen.
                 self._game.find_and_click_button("play")
 
         return None

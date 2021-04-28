@@ -3,7 +3,7 @@ import os
 import sys
 from pathlib import Path
 from timeit import default_timer as timer
-from typing import Iterable
+from typing import List
 
 from PySide2.QtCore import QObject, QUrl, Signal, Slot
 from PySide2.QtGui import QGuiApplication
@@ -22,7 +22,7 @@ class MainDriver:
         self._game = None
         self._debug = None
 
-    def run_bot(self, item_name: str, item_amount_to_farm: str, farming_mode: str, location_name: str, mission_name: str, summon_element_list: Iterable[str], summon_list: Iterable[str],
+    def run_bot(self, item_name: str, item_amount_to_farm: str, farming_mode: str, location_name: str, mission_name: str, summon_element_list: List[str], summon_list: List[str],
                 group_number: int, party_number: int, combat_script: str, queue: multiprocessing.Queue, is_bot_running: int, debug_mode: bool = False):
         """Starts the main bot process on this Thread.
 
@@ -32,8 +32,8 @@ class MainDriver:
             farming_mode (str): Mode to look for the specified item and map in.
             location_name (str): Name of the map to look for the specified mission in.
             mission_name (str): Name of the mission to farm the item in.
-            summon_element_list (Iterable[str]): List of names of the Summon element image file in the /images/buttons/ folder.
-            summon_list (Iterable[str]): List of names of the Summon image's file name in /images/summons/ folder.
+            summon_element_list (List[str]): List of names of the Summon element image file in the /images/buttons/ folder.
+            summon_list (List[str]): List of names of the Summon image's file name in /images/summons/ folder.
             group_number (int): The Group that the specified Party in in.
             party_number (int): The specified Party to start the mission with.
             combat_script (str): The file path to the combat script to use for Combat Mode.
@@ -489,8 +489,8 @@ class MainWindow(QObject):
 
 if __name__ == "__main__":
     app = QGuiApplication(sys.argv)
-    app.setOrganizationName("somename")
-    app.setOrganizationDomain("somename")
+    app.setOrganizationName("steve1316_Organization")
+    app.setOrganizationDomain("steve1316_Domain")
     engine = QQmlApplicationEngine()
 
     # Get the Context.
