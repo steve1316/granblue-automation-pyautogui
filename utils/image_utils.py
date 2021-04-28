@@ -9,6 +9,8 @@ import pyautogui
 from PIL import Image
 from guibot.fileresolver import FileResolver
 from guibot.guibot import GuiBot
+from playsound import playsound
+import multiprocessing
 
 
 class ImageUtils:
@@ -567,16 +569,27 @@ class ImageUtils:
         return None
 
     @staticmethod
+    def _play_captcha_sound():
+        playsound("CAPTCHA.mp3")
+        return None
+
+    @staticmethod
     def generate_alert_for_captcha():
         """Displays a alert that will inform users that a CAPTCHA was detected.
 
         Returns:
             None
         """
+        # Play the CAPTCHA.mp3 using playsound.
+        process = multiprocessing.Process(target = ImageUtils._play_captcha_sound)
+        process.start()
+
         pyautogui.alert(
             text = "Stopping bot. Please enter the CAPTCHA yourself and play this mission manually to its completion. \n\nIt is now highly recommended that you take a break of several hours and "
                    "in the future, please reduce the amount of hours that you use this program consecutively without breaks in between.",
             title = "CAPTCHA Detected!", button = "OK")
+
+        process.terminate()
         return None
 
     @staticmethod
