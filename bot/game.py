@@ -580,32 +580,37 @@ class Game:
         """
         tries = 3
 
-        # Loop until the user gets to the Summon Selection screen.
-        while (self.farming_mode.lower() != "coop" and not self.image_tools.confirm_location("select_a_summon", tries = 2)) or (
-                self.farming_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries = 2)):
-            if self.image_tools.confirm_location("not_enough_ap", tries = 2):
-                # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full Elixir.
-                if self._use_full_elixir is False:
-                    self.print_and_save("\n[INFO] AP ran out! Using Half Elixir...")
-                    half_ap_location = self.image_tools.find_button("refill_half_ap")
-                    self.mouse_tools.move_and_click_point(half_ap_location[0], half_ap_location[1] + 175, "use")
-                else:
-                    self.print_and_save("\n[INFO] AP ran out! Using Full Elixir...")
-                    full_ap_location = self.image_tools.find_button("refill_full_ap")
-                    self.mouse_tools.move_and_click_point(full_ap_location[0], full_ap_location[1] + 175, "use")
+        self.wait(2)
 
-                # Press the "OK" button to move to the Summon Selection screen.
-                self.wait(1)
-                self.find_and_click_button("ok")
-                return None
-            elif self.farming_mode.lower() == "coop" and not self._coop_first_run and self.image_tools.find_button("attack"):
-                break
-            else:
-                self.wait(1)
+        if self.image_tools.confirm_location("auto_ap_recovered", tries = 1) is False:
+            # Loop until the user gets to the Summon Selection screen.
+            while (self.farming_mode.lower() != "coop" and not self.image_tools.confirm_location("select_a_summon", tries = 2)) or (
+                    self.farming_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries = 2)):
+                if self.image_tools.confirm_location("not_enough_ap", tries = 2):
+                    # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full Elixir.
+                    if self._use_full_elixir is False:
+                        self.print_and_save("\n[INFO] AP ran out! Using Half Elixir...")
+                        half_ap_location = self.image_tools.find_button("refill_half_ap")
+                        self.mouse_tools.move_and_click_point(half_ap_location[0], half_ap_location[1] + 175, "use")
+                    else:
+                        self.print_and_save("\n[INFO] AP ran out! Using Full Elixir...")
+                        full_ap_location = self.image_tools.find_button("refill_full_ap")
+                        self.mouse_tools.move_and_click_point(full_ap_location[0], full_ap_location[1] + 175, "use")
 
-                tries -= 1
-                if tries <= 0:
+                    # Press the "OK" button to move to the Summon Selection screen.
+                    self.wait(1)
+                    self.find_and_click_button("ok")
+                    return None
+                elif self.farming_mode.lower() == "coop" and not self._coop_first_run and self.image_tools.find_button("attack"):
                     break
+                else:
+                    self.wait(1)
+
+                    tries -= 1
+                    if tries <= 0:
+                        break
+        else:
+            self.find_and_click_button("ok")
 
         self.print_and_save("[INFO] AP is available. Continuing...")
         return None
@@ -616,23 +621,27 @@ class Game:
         Returns:
             None
         """
-        if self.farming_mode.lower() == "raid" and self.image_tools.confirm_location("not_enough_ep", tries = 2):
-            # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
-            if self._use_soul_balm is False:
-                self.print_and_save("\n[INFO] EP ran out! Using Soul Berries...")
-                half_ep_location = self.image_tools.find_button("refill_soul_berry")
-                self.mouse_tools.move_and_click_point(half_ep_location[0], half_ep_location[1] + 175, "use")
-            else:
-                self.print_and_save("\n[INFO] EP ran out! Using Soul Balm...")
-                full_ep_location = self.image_tools.find_button("refill_soul_balm")
-                self.mouse_tools.move_and_click_point(full_ep_location[0], full_ep_location[1] + 175, "use")
+        self.wait(2)
 
-            # Press the "OK" button to move to the Summon Selection screen.
-            self.wait(1)
-            self.find_and_click_button("ok")
+        if self.image_tools.confirm_location("auto_ep_recovered", tries = 1) is False:
+            if self.farming_mode.lower() == "raid" and self.image_tools.confirm_location("not_enough_ep", tries = 2):
+                # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
+                if self._use_soul_balm is False:
+                    self.print_and_save("\n[INFO] EP ran out! Using Soul Berries...")
+                    half_ep_location = self.image_tools.find_button("refill_soul_berry")
+                    self.mouse_tools.move_and_click_point(half_ep_location[0], half_ep_location[1] + 175, "use")
+                else:
+                    self.print_and_save("\n[INFO] EP ran out! Using Soul Balm...")
+                    full_ep_location = self.image_tools.find_button("refill_soul_balm")
+                    self.mouse_tools.move_and_click_point(full_ep_location[0], full_ep_location[1] + 175, "use")
+
+                # Press the "OK" button to move to the Summon Selection screen.
+                self.wait(1)
+                self.find_and_click_button("ok")
         else:
-            self.print_and_save("[INFO] EP is available. Continuing...")
+            self.find_and_click_button("ok")
 
+        self.print_and_save("[INFO] EP is available. Continuing...")
         return None
 
     def collect_loot(self, is_pending_battle: bool = False, is_event_nightmare: bool = False):
