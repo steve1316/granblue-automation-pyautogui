@@ -137,3 +137,6 @@ images/temp/
 
 # Results folder
 results/
+
+# Config.ini
+config.ini
