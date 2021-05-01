@@ -76,8 +76,8 @@ class Game:
             if len(self._dimensional_halo_summon_element_list) == 1 and self._dimensional_halo_summon_element_list[0] == "":
                 self._dimensional_halo_summon_element_list.clear()
 
-            self._dimensional_halo_group_number = config.getint("dimensional_halo", "dimensional_halo_group_number")
-            self._dimensional_halo_party_number = config.getint("dimensional_halo", "dimensional_halo_party_number")
+            self._dimensional_halo_group_number = config.get("dimensional_halo", "dimensional_halo_group_number")
+            self._dimensional_halo_party_number = config.get("dimensional_halo", "dimensional_halo_party_number")
             self._dimensional_halo_amount = 0
         # #### end of dimensional_halo ####
 
@@ -94,8 +94,8 @@ class Game:
             if len(self._event_nightmare_summon_element_list) == 1 and self._event_nightmare_summon_element_list[0] == "":
                 self._event_nightmare_summon_element_list.clear()
 
-            self._event_nightmare_group_number = config.getint("event", "event_nightmare_group_number")
-            self._event_nightmare_party_number = config.getint("event", "event_nightmare_party_number")
+            self._event_nightmare_group_number = config.get("event", "event_nightmare_group_number")
+            self._event_nightmare_party_number = config.get("event", "event_nightmare_party_number")
         # #### end of event ####
 
         # #### rise_of_the_beasts ####
@@ -111,8 +111,8 @@ class Game:
             if len(self._rotb_extreme_plus_summon_element_list) == 1 and self._rotb_extreme_plus_summon_element_list[0] == "":
                 self._rotb_extreme_plus_summon_element_list.clear()
 
-            self._rotb_extreme_plus_group_number = config.getint("rise_of_the_beasts", "rotb_extreme_plus_group_number")
-            self._rotb_extreme_plus_party_number = config.getint("rise_of_the_beasts", "rotb_extreme_plus_party_number")
+            self._rotb_extreme_plus_group_number = config.get("rise_of_the_beasts", "rotb_extreme_plus_group_number")
+            self._rotb_extreme_plus_party_number = config.get("rise_of_the_beasts", "rotb_extreme_plus_party_number")
             self._rotb_extreme_plus_amount = 0
         # #### end of rise_of_the_beasts ####
 
@@ -131,8 +131,8 @@ class Game:
             if len(self._unparalleled_foe_summon_element_list) == 1 and self._unparalleled_foe_summon_element_list[0] == "":
                 self._unparalleled_foe_summon_element_list.clear()
 
-            self._unparalleled_foe_group_number = config.getint("dread_barrage", "unparalleled_foe_group_number")
-            self._unparalleled_foe_party_number = config.getint("dread_barrage", "unparalleled_foe_party_number")
+            self._unparalleled_foe_group_number = config.get("dread_barrage", "unparalleled_foe_group_number")
+            self._unparalleled_foe_party_number = config.get("dread_barrage", "unparalleled_foe_party_number")
         # #### end of dread_barrage ####
         # ################## end of config.ini ###################
 
@@ -787,7 +787,7 @@ class Game:
                 # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
                 if self.image_tools.confirm_location("select_a_summon"):
                     self._select_summon(self._event_nightmare_summon_list, self._event_nightmare_summon_element_list)
-                    start_check = self._find_party_and_start_mission(self._event_nightmare_group_number, self._event_nightmare_party_number)
+                    start_check = self._find_party_and_start_mission(int(self._event_nightmare_group_number), int(self._event_nightmare_party_number))
 
                     # Once preparations are completed, start Combat Mode.
                     if start_check and self.combat_mode.start_combat_mode(self._event_nightmare_combat_script, is_nightmare = True):
@@ -840,7 +840,7 @@ class Game:
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             if self.image_tools.confirm_location("select_a_summon"):
                 self._select_summon(self._dimensional_halo_summon_list, self._dimensional_halo_summon_element_list)
-                start_check = self._find_party_and_start_mission(self._dimensional_halo_group_number, self._dimensional_halo_party_number)
+                start_check = self._find_party_and_start_mission(int(self._dimensional_halo_group_number), int(self._dimensional_halo_party_number))
 
                 # Once preparations are completed, start Combat Mode.
                 if start_check and self.combat_mode.start_combat_mode(self._dimensional_halo_combat_script, is_nightmare = True):
@@ -884,7 +884,7 @@ class Game:
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             if self.image_tools.confirm_location("select_a_summon"):
                 self._select_summon(self._rotb_extreme_plus_summon_list, self._rotb_extreme_plus_summon_element_list)
-                start_check = self._find_party_and_start_mission(self._rotb_extreme_plus_group_number, self._rotb_extreme_plus_party_number)
+                start_check = self._find_party_and_start_mission(int(self._rotb_extreme_plus_group_number), int(self._rotb_extreme_plus_party_number))
 
                 # Once preparations are completed, start Combat mode.
                 if start_check and self.combat_mode.start_combat_mode(self._rotb_extreme_plus_combat_script, is_nightmare = True):
