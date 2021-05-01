@@ -747,6 +747,10 @@ class Game:
             if self.find_and_click_button("close", tries = 1, suppress_error = True) is False:
                 self.find_and_click_button("cancel", tries = 1, suppress_error = True)
 
+            # Break out of the loop if the bot detected that a AP recovery item was automatically used and let check_for_ap() take care of it.
+            if self.image_tools.confirm_location("auto_ap_recovered", tries = 1):
+                break
+
             self.wait(1)
 
         return None
