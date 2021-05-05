@@ -582,7 +582,7 @@ class Game:
 
         self.wait(2)
 
-        if self.image_tools.confirm_location("auto_ap_recovered", tries = 1) is False:
+        if self.image_tools.confirm_location("auto_ap_recovered", tries = 1) is False and self.image_tools.confirm_location("auto_ap_recovered2", tries = 1) is False:
             # Loop until the user gets to the Summon Selection screen.
             while (self.farming_mode.lower() != "coop" and not self.image_tools.confirm_location("select_a_summon", tries = 2)) or (
                     self.farming_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries = 2)):
@@ -610,6 +610,7 @@ class Game:
                     if tries <= 0:
                         break
         else:
+            self.print_and_save("\n[INFO] AP auto recovered due to in-game settings. Closing the popup now...")
             self.find_and_click_button("ok")
 
         self.print_and_save("[INFO] AP is available. Continuing...")
@@ -639,6 +640,7 @@ class Game:
                 self.wait(1)
                 self.find_and_click_button("ok")
         else:
+            self.print_and_save("\n[INFO] EP auto recovered due to in-game settings. Closing the popup now...")
             self.find_and_click_button("ok")
 
         self.print_and_save("[INFO] EP is available. Continuing...")
@@ -748,7 +750,7 @@ class Game:
                 self.find_and_click_button("cancel", tries = 1, suppress_error = True)
 
             # Break out of the loop if the bot detected that a AP recovery item was automatically used and let check_for_ap() take care of it.
-            if self.image_tools.confirm_location("auto_ap_recovered", tries = 1):
+            if self.image_tools.confirm_location("auto_ap_recovered", tries = 1) or self.image_tools.confirm_location("auto_ap_recovered2", tries = 1):
                 break
 
             self.wait(1)
