@@ -706,7 +706,9 @@ class MapSelection:
                         "Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
                     self._is_bot_running.value = 1
                     raise Exception("Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
-                self._game.mouse_tools.scroll_screen_from_home_button(-400)
+                self._game.mouse_tools.scroll_screen_from_home_button(-200)
+
+                self._game.wait(1)
 
                 if difficulty == "Very Hard":
                     self._game.find_and_click_button("event_raid_very_hard")

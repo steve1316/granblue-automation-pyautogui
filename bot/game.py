@@ -580,7 +580,7 @@ class Game:
         """
         tries = 3
 
-        self.wait(2)
+        self.wait(3)
 
         if self.image_tools.confirm_location("auto_ap_recovered", tries = 1) is False and self.image_tools.confirm_location("auto_ap_recovered2", tries = 1) is False:
             # Loop until the user gets to the Summon Selection screen.
@@ -622,7 +622,7 @@ class Game:
         Returns:
             None
         """
-        self.wait(2)
+        self.wait(3)
 
         if self.image_tools.confirm_location("auto_ep_recovered", tries = 1) is False:
             if self.farming_mode.lower() == "raid" and self.image_tools.confirm_location("not_enough_ep", tries = 2):
@@ -722,6 +722,10 @@ class Game:
             None
         """
         while self.image_tools.confirm_location("select_a_summon", tries = 1) is False:
+            # Break out of the loop if the bot detected that a AP recovery item was automatically used and let check_for_ap() take care of it.
+            if self.image_tools.confirm_location("auto_ap_recovered", tries = 1) or self.image_tools.confirm_location("auto_ap_recovered2", tries = 1):
+                break
+
             # Break out of the loop if the bot detected the "Not Enough AP" popup.
             if self.image_tools.confirm_location("not_enough_ap", tries = 1):
                 break
@@ -748,10 +752,6 @@ class Game:
             # Attempt to close the popup by clicking on any detected "Close" and "Cancel" buttons.
             if self.find_and_click_button("close", tries = 1, suppress_error = True) is False:
                 self.find_and_click_button("cancel", tries = 1, suppress_error = True)
-
-            # Break out of the loop if the bot detected that a AP recovery item was automatically used and let check_for_ap() take care of it.
-            if self.image_tools.confirm_location("auto_ap_recovered", tries = 1) or self.image_tools.confirm_location("auto_ap_recovered2", tries = 1):
-                break
 
             self.wait(1)
 
