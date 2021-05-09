@@ -121,7 +121,7 @@ class Game:
         if self._enable_unparalleled_foe:
             self._enable_unparalleled_foe_level_95 = config.getboolean("dread_barrage", "enable_unparalleled_foe_level_95")
             self._enable_unparalleled_foe_level_175 = config.getboolean("dread_barrage", "enable_unparalleled_foe_level_175")
-            self.unparalleled_foe_combat_script = config.get("dread_barrage", "unparalleled_foe_combat_script")
+            self._unparalleled_foe_combat_script = config.get("dread_barrage", "unparalleled_foe_combat_script")
 
             self._unparalleled_foe_summon_list = config.get("dread_barrage", "unparalleled_foe_summon_list").replace(" ", "_").split(",")
             if len(self._unparalleled_foe_summon_list) == 1 and self._unparalleled_foe_summon_list[0] == "":
@@ -134,6 +134,22 @@ class Game:
             self._unparalleled_foe_group_number = config.get("dread_barrage", "unparalleled_foe_group_number")
             self._unparalleled_foe_party_number = config.get("dread_barrage", "unparalleled_foe_party_number")
         # #### end of dread_barrage ####
+
+        # #### xeno_clash ####
+        self._enable_xeno_clash_nightmare = config.getboolean("xeno_clash", "enable_xeno_clash_nightmare")
+        if self._enable_xeno_clash_nightmare:
+            self._xeno_clash_nightmare_combat_script = config.get("xeno_clash", "xeno_clash_nightmare_combat_script")
+
+            self._xeno_clash_nightmare_summon_list = config.get("xeno_clash", "xeno_clash_nightmare_summon_list").replace(" ", "_").split(",")
+            if len(self._xeno_clash_nightmare_summon_list) == 1 and self._xeno_clash_nightmare_summon_list[0] == "":
+                self._xeno_clash_nightmare_summon_list.clear()
+
+            self._xeno_clash_nightmare_summon_element_list = config.get("xeno_clash", "xeno_clash_nightmare_summon_element_list").replace(" ", "_").split(",")
+            if len(self._xeno_clash_nightmare_summon_element_list) == 1 and self._xeno_clash_nightmare_summon_element_list[0] == "":
+                self._xeno_clash_nightmare_summon_element_list.clear()
+
+            self._xeno_clash_nightmare_group_number = config.get("xeno_clash", "xeno_clash_nightmare_group_number")
+            self._xeno_clash_nightmare_party_number = config.get("xeno_clash", "xeno_clash_nightmare_party_number")
         # ################## end of config.ini ###################
 
         # Start a timer signaling bot start in order to keep track of elapsed time and create a Queue to share logging messages between backend and frontend.
@@ -737,7 +753,8 @@ class Game:
             # Check for certain popups for certain Farming Modes.
             if (self.farming_mode == "Rise of the Beasts" and self._check_for_rotb_extreme_plus()) or (
                     self.farming_mode == "Special" and self._mission_name == "VH Angel Halo" and self._item_name == "Angel Halo Weapons" and self._check_for_dimensional_halo()) or (
-                    (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._check_for_event_nightmare()):
+                    (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._check_for_event_nightmare()) or (
+                    self.farming_mode == "Xeno Clash" and self._check_for_xeno_clash_nightmare()):
                 # Make sure the bot goes back to the Home screen so that the "Play Again" functionality comes back.
                 self._map_selection.select_map(self.farming_mode, self._map_name, self._mission_name, self._difficulty)
                 break
@@ -756,65 +773,6 @@ class Game:
             self.wait(1)
 
         return None
-
-    def _check_for_event_nightmare(self):
-        """Checks for Event Nightmare and if it appears and the user enabled it in config.ini, start it.
-
-        Returns:
-            (bool): Return True if Event Nightmare was detected and successfully completed. Otherwise, return False.
-        """
-        if self._enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests", tries = 1):
-            # First check if the Event Nightmare is skippable.
-            event_claim_loot_location = self.image_tools.find_button("event_claim_loot", tries = 1, suppress_error = True)
-            if event_claim_loot_location is not None:
-                self.print_and_save("\n[EVENT] Skippable Event Nightmare detected. Claiming it now...")
-                self.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
-                self.collect_loot(is_event_nightmare = True)
-                return True
-            else:
-                self.print_and_save("\n[EVENT] Detected Event Nightmare. Starting it now...")
-
-                self.print_and_save("\n********************************************************************************")
-                self.print_and_save("********************************************************************************")
-                self.print_and_save("[EVENT] Event Nightmare")
-                self.print_and_save("[EVENT] Event Nightmare Summon Elements: {self._event_nightmare_summon_element_list}")
-                self.print_and_save("[EVENT] Event Nightmare Summons: {self._event_nightmare_summon_list}")
-                self.print_and_save("[EVENT] Event Nightmare Group Number: {self._event_nightmare_group_number}")
-                self.print_and_save("[EVENT] Event Nightmare Party Number: {self._event_nightmare_party_number}")
-                self.print_and_save("[EVENT] Event Nightmare Combat Script: {self._event_nightmare_combat_script}")
-                self.print_and_save("********************************************************************************")
-                self.print_and_save("********************************************************************************\n")
-
-                # Click the "Play Next" button to head to the Summon Selection screen.
-                self.find_and_click_button("play_next")
-
-                self.wait(1)
-
-                # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
-                if self.image_tools.confirm_location("select_a_summon"):
-                    self._select_summon(self._event_nightmare_summon_list, self._event_nightmare_summon_element_list)
-                    start_check = self._find_party_and_start_mission(int(self._event_nightmare_group_number), int(self._event_nightmare_party_number))
-
-                    # Once preparations are completed, start Combat Mode.
-                    if start_check and self.combat_mode.start_combat_mode(self._event_nightmare_combat_script, is_nightmare = True):
-                        self.collect_loot(is_event_nightmare = True)
-                        return True
-
-        elif not self._enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests"):
-            # First check if the Event Nightmare is skippable.
-            event_claim_loot_location = self.image_tools.find_button("event_claim_loot", tries = 1, suppress_error = True)
-            if event_claim_loot_location is not None:
-                self.print_and_save("\n[EVENT] Skippable Event Nightmare detected but user opted to not run it. Claiming it regardless...")
-                self.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
-                self.collect_loot(is_event_nightmare = True)
-                return True
-            else:
-                self.print_and_save("\n[EVENT] Event Nightmare detected but user opted to not run it. Moving on...")
-                self.find_and_click_button("close")
-        else:
-            self.print_and_save("\n[EVENT] No Event Nightmare detected. Moving on...")
-
-        return False
 
     def _check_for_dimensional_halo(self):
         """Checks for Dimensional Halo and if it appears and the user enabled it in config.ini, start it.
@@ -861,6 +819,65 @@ class Game:
 
         return False
 
+    def _check_for_event_nightmare(self):
+        """Checks for Event Nightmare and if it appears and the user enabled it in config.ini, start it.
+
+        Returns:
+            (bool): Return True if Event Nightmare was detected and successfully completed. Otherwise, return False.
+        """
+        if self._enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests", tries = 1):
+            # First check if the Event Nightmare is skippable.
+            event_claim_loot_location = self.image_tools.find_button("event_claim_loot", tries = 1, suppress_error = True)
+            if event_claim_loot_location is not None:
+                self.print_and_save("\n[EVENT] Skippable Event Nightmare detected. Claiming it now...")
+                self.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
+                self.collect_loot(is_event_nightmare = True)
+                return True
+            else:
+                self.print_and_save("\n[EVENT] Detected Event Nightmare. Starting it now...")
+
+                self.print_and_save("\n********************************************************************************")
+                self.print_and_save("********************************************************************************")
+                self.print_and_save(f"[EVENT] Event Nightmare")
+                self.print_and_save(f"[EVENT] Event Nightmare Summon Elements: {self._event_nightmare_summon_element_list}")
+                self.print_and_save(f"[EVENT] Event Nightmare Summons: {self._event_nightmare_summon_list}")
+                self.print_and_save(f"[EVENT] Event Nightmare Group Number: {self._event_nightmare_group_number}")
+                self.print_and_save(f"[EVENT] Event Nightmare Party Number: {self._event_nightmare_party_number}")
+                self.print_and_save(f"[EVENT] Event Nightmare Combat Script: {self._event_nightmare_combat_script}")
+                self.print_and_save("********************************************************************************")
+                self.print_and_save("********************************************************************************\n")
+
+                # Click the "Play Next" button to head to the Summon Selection screen.
+                self.find_and_click_button("play_next")
+
+                self.wait(1)
+
+                # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
+                if self.image_tools.confirm_location("select_a_summon"):
+                    self._select_summon(self._event_nightmare_summon_list, self._event_nightmare_summon_element_list)
+                    start_check = self._find_party_and_start_mission(int(self._event_nightmare_group_number), int(self._event_nightmare_party_number))
+
+                    # Once preparations are completed, start Combat Mode.
+                    if start_check and self.combat_mode.start_combat_mode(self._event_nightmare_combat_script, is_nightmare = True):
+                        self.collect_loot(is_event_nightmare = True)
+                        return True
+
+        elif not self._enable_event_nightmare and self.image_tools.confirm_location("limited_time_quests", tries = 1):
+            # First check if the Event Nightmare is skippable.
+            event_claim_loot_location = self.image_tools.find_button("event_claim_loot", tries = 1, suppress_error = True)
+            if event_claim_loot_location is not None:
+                self.print_and_save("\n[EVENT] Skippable Event Nightmare detected but user opted to not run it. Claiming it regardless...")
+                self.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
+                self.collect_loot(is_event_nightmare = True)
+                return True
+            else:
+                self.print_and_save("\n[EVENT] Event Nightmare detected but user opted to not run it. Moving on...")
+                self.find_and_click_button("close")
+        else:
+            self.print_and_save("\n[EVENT] No Event Nightmare detected. Moving on...")
+
+        return False
+
     def _check_for_rotb_extreme_plus(self):
         """Checks for Extreme+ for Rise of the Beasts and if it appears and the user enabled it in config.ini, start it.
 
@@ -902,6 +919,65 @@ class Game:
             self.find_and_click_button("close")
         else:
             self.print_and_save("\n[ROTB] No Rise of the Beasts Extreme+ detected. Moving on...")
+
+        return False
+
+    def _check_for_xeno_clash_nightmare(self):
+        """Checks for Xeno Clash Nightmare and if it appears and the user enabled it in config.ini, start it.
+
+        Returns:
+            (bool): Return True if Xeno Clash Nightmare was detected and successfully completed. Otherwise, return False.
+        """
+        if self._enable_xeno_clash_nightmare and self.image_tools.confirm_location("limited_time_quests", tries = 1):
+            # First check if the Xeno Clash Nightmare is skippable.
+            event_claim_loot_location = self.image_tools.find_button("event_claim_loot", tries = 1, suppress_error = True)
+            if event_claim_loot_location is not None:
+                self.print_and_save("\n[XENO] Skippable Xeno Clash Nightmare detected. Claiming it now...")
+                self.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
+                self.collect_loot(is_event_nightmare = True)
+                return True
+            else:
+                self.print_and_save("\n[XENO] Detected Xeno Clash Nightmare. Starting it now...")
+
+                self.print_and_save("\n********************************************************************************")
+                self.print_and_save("********************************************************************************")
+                self.print_and_save(f"[XENO] Xeno Clash Nightmare")
+                self.print_and_save(f"[XENO] Xeno Clash Nightmare Summon Elements: {self._xeno_clash_nightmare_summon_element_list}")
+                self.print_and_save(f"[XENO] Xeno Clash Nightmare Summons: {self._xeno_clash_nightmare_summon_list}")
+                self.print_and_save(f"[XENO] Xeno Clash Nightmare Group Number: {self._xeno_clash_nightmare_group_number}")
+                self.print_and_save(f"[XENO] Xeno Clash Nightmare Party Number: {self._xeno_clash_nightmare_party_number}")
+                self.print_and_save(f"[XENO] Xeno Clash Nightmare Combat Script: {self._xeno_clash_nightmare_combat_script}")
+                self.print_and_save("********************************************************************************")
+                self.print_and_save("********************************************************************************\n")
+
+                # Click the "Play Next" button to head to the Summon Selection screen.
+                self.find_and_click_button("play_next")
+
+                self.wait(1)
+
+                # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
+                if self.image_tools.confirm_location("select_a_summon"):
+                    self._select_summon(self._xeno_clash_nightmare_summon_list, self._xeno_clash_nightmare_summon_element_list)
+                    start_check = self._find_party_and_start_mission(int(self._xeno_clash_nightmare_group_number), int(self._xeno_clash_nightmare_party_number))
+
+                    # Once preparations are completed, start Combat Mode.
+                    if start_check and self.combat_mode.start_combat_mode(self._xeno_clash_nightmare_combat_script, is_nightmare = True):
+                        self.collect_loot(is_event_nightmare = True)
+                        return True
+
+        elif not self._enable_xeno_clash_nightmare and self.image_tools.confirm_location("limited_time_quests", tries = 1):
+            # First check if the Xeno Clash Nightmare is skippable.
+            event_claim_loot_location = self.image_tools.find_button("event_claim_loot", tries = 1, suppress_error = True)
+            if event_claim_loot_location is not None:
+                self.print_and_save("\n[XENO] Skippable Xeno Clash Nightmare detected but user opted to not run it. Claiming it regardless...")
+                self.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
+                self.collect_loot(is_event_nightmare = True)
+                return True
+            else:
+                self.print_and_save("\n[XENO] Xeno Clash Nightmare detected but user opted to not run it. Moving on...")
+                self.find_and_click_button("close")
+        else:
+            self.print_and_save("\n[XENO] No Xeno Clash Nightmare detected. Moving on...")
 
         return False
 
@@ -1002,9 +1078,9 @@ class Game:
             # Do the same for Dread Barrage Unparalleled Foes if enabled.
             self.print_and_save("\n[INFO] Initializing settings for Dread Barrage Unparalleled Foes...")
 
-            if self.unparalleled_foe_combat_script == "":
+            if self._unparalleled_foe_combat_script == "":
                 self.print_and_save("[INFO] Combat Script for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
-                self.unparalleled_foe_combat_script = self._combat_script
+                self._unparalleled_foe_combat_script = self._combat_script
 
             if len(self._unparalleled_foe_summon_element_list) == 0:
                 self.print_and_save("[INFO] Summon Elements for Dread Barrage Unparalleled Foes will reuse the ones for Farming Mode.")
@@ -1027,6 +1103,35 @@ class Game:
                 self._unparalleled_foe_party_number = int(self._unparalleled_foe_party_number)
 
             self.print_and_save("[INFO] Settings initialized for Dread Barrage Unparalleled Foes...")
+        elif self.farming_mode == "Xeno Clash" and self._item_name == "Repeated Runs" and self._enable_xeno_clash_nightmare:
+            # Do the same for Xeno Clash if enabled.
+            self.print_and_save("\n[INFO] Initializing settings for Xeno Clash Nightmare...")
+
+            if self._xeno_clash_nightmare_combat_script == "":
+                self.print_and_save("[INFO] Combat Script for Xeno Clash Nightmare will reuse the one for Farming Mode.")
+                self._xeno_clash_nightmare_combat_script = self._combat_script
+
+            if len(self._xeno_clash_nightmare_summon_element_list) == 0:
+                self.print_and_save("[INFO] Summon Elements for Xeno Clash Nightmare will reuse the ones for Farming Mode.")
+                self._xeno_clash_nightmare_summon_element_list = self._summon_element_list
+
+            if len(self._xeno_clash_nightmare_summon_list) == 0:
+                self.print_and_save("[INFO] Summons for Xeno Clash Nightmare will reuse the ones for Farming Mode.")
+                self._xeno_clash_nightmare_summon_list = self._summon_list
+
+            if self._xeno_clash_nightmare_group_number == "":
+                self.print_and_save("[INFO] Group Number for Xeno Clash Nightmare will reuse the one for Farming Mode.")
+                self._xeno_clash_nightmare_group_number = self._group_number
+            else:
+                self._xeno_clash_nightmare_number = int(self._xeno_clash_nightmare_group_number)
+
+            if self._xeno_clash_nightmare_party_number == "":
+                self.print_and_save("[INFO] Party Number for Xeno Clash Nightmare will reuse the one for Farming Mode.")
+                self._xeno_clash_nightmare_party_number = self._party_number
+            else:
+                self._xeno_clash_nightmare_party_number = int(self._xeno_clash_nightmare_party_number)
+
+            self.print_and_save("[INFO] Settings initialized for Xeno Clash Nightmare...")
 
         return None
 

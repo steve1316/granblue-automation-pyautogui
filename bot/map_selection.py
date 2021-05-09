@@ -1025,6 +1025,51 @@ class MapSelection:
 
         return None
 
+    def _navigate_to_xeno_clash(self, mission_name: str):
+        """Navigates the bot to the specified Xeno Clash mission.
+
+        Args:
+            mission_name (str): Name of the Mission to farm.
+        """
+        # Go to the Home screen.
+        self._game.go_back_home(confirm_location_check = True)
+
+        self._game.print_and_save(f"\n[INFO] Now navigating to Xeno Clash...")
+
+        # Go to the Event by clicking on the "Menu" button and then click the very first banner.
+        self._game.find_and_click_button("home_menu")
+        event_banner_locations = self._game.image_tools.find_all("event_banner")
+        if len(event_banner_locations) == 0:
+            event_banner_locations = self._game.image_tools.find_all("event_banner_blue")
+        self._game.mouse_tools.move_and_click_point(event_banner_locations[0][0], event_banner_locations[0][1], "event_banner")
+
+        self._game.wait(1)
+
+        if self._game.find_and_click_button("xeno_special"):
+            # Check to see if the user already has a Nightmare available.
+            nightmare_is_available = 0
+            if self._game.image_tools.find_button("event_nightmare", tries = 1) is not None:
+                nightmare_is_available = 1
+
+            # Find all the "Select" buttons.
+            select_button_locations = self._game.image_tools.find_all("select")
+
+            if mission_name == "Xeno Clash Extreme":
+                self._game.print_and_save(f"[INFO] Now hosting Xeno Clash Extreme...")
+                self._game.mouse_tools.move_and_click_point(select_button_locations[1 + nightmare_is_available][0], select_button_locations[1 + nightmare_is_available][1], "select")
+
+                difficulty_button_locations = self._game.image_tools.find_all("play_round_button")
+                self._game.mouse_tools.move_and_click_point(difficulty_button_locations[0][0], difficulty_button_locations[0][1], "play_round_button")
+            elif mission_name == "Xeno Clash Raid":
+                self._game.print_and_save(f"[INFO] Now hosting Xeno Clash Raid...")
+                self._game.mouse_tools.move_and_click_point(select_button_locations[2 + nightmare_is_available][0], select_button_locations[2 + nightmare_is_available][1], "select")
+
+                self._game.wait(1)
+
+                self._game.find_and_click_button("play")
+
+        return None
+
     def select_map(self, farming_mode: str, map_name: str, mission_name: str, difficulty: str):
         """Navigates the bot to the specified map and preps the bot for Summon/Party selection.
 
@@ -1054,6 +1099,8 @@ class MapSelection:
             self._navigate_to_guild_wars(difficulty)
         elif farming_mode == "Proving Grounds":
             self._navigate_to_proving_grounds(difficulty)
+        elif farming_mode == "Xeno Clash":
+            self._navigate_to_xeno_clash(mission_name)
 
         # Check for available AP. Note that Proving Grounds has the AP check after you select your Summon.
         if farming_mode != "Proving Grounds":
