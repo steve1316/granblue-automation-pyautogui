@@ -491,7 +491,8 @@ if __name__ == "__main__":
     # Generate a config.ini in the root of the folder if it does not exist.
     if os.path.exists("config.ini") is False:
         new_config_file = open("config.ini", "x")
-        new_config_file.write("""############################################################
+        new_config_file.write("""
+############################################################
 ; Customize the bot's internals by editing the following to your liking.
 ; Do not enclose anything in double quotes, " ".
 ############################################################
@@ -607,6 +608,7 @@ xeno_clash_nightmare_summon_element_list =
 xeno_clash_nightmare_group_number =
 xeno_clash_nightmare_party_number = """)
 
+        new_config_file.close()
         print("\n[INFO] Generated a new config.ini in the root of the project folder.")
 
     app = QGuiApplication(sys.argv)
