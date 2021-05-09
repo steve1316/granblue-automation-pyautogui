@@ -212,8 +212,8 @@ class MapSelection:
             self._game.print_and_save(f"\n[INFO] Bot is currently not on the correct island.")
             check_location = False
 
-            location_list = ["Zinkenstill", "Port Breeze Archipelago", "Valtz Duchy", "Auguste Isles", "Lumacie Archipelago", "Albion Citadel", "Mist-Shrouded Isle", "Golonzo Island", "Amalthea Island",
-                             "Former Capital Mephorash", "Agastia"]
+            location_list = ["Zinkenstill", "Port Breeze Archipelago", "Valtz Duchy", "Auguste Isles", "Lumacie Archipelago", "Albion Citadel", "Mist-Shrouded Isle", "Golonzo Island",
+                             "Amalthea Island", "Former Capital Mephorash", "Agastia"]
 
             while len(location_list) > 0:
                 temp_map_location = location_list.pop(0)
@@ -627,11 +627,7 @@ class MapSelection:
             self._game.find_and_click_button("close")
 
         # Remove the difficulty prefix from the mission name.
-        if difficulty == "Normal":
-            formatted_mission_name = mission_name[2:]
-        elif difficulty == "Hard":
-            formatted_mission_name = mission_name[2:]
-        elif difficulty == "Very Hard":
+        if difficulty == "Very Hard":
             formatted_mission_name = mission_name[3:]
         elif difficulty == "Extreme":
             formatted_mission_name = mission_name[3:]
@@ -689,14 +685,8 @@ class MapSelection:
                 # Find all the round "Play" buttons.
                 quest_play_locations = self._game.image_tools.find_all("play_round_button")
 
-                if difficulty == "Normal":
-                    self._game.mouse_tools.move_and_click_point(quest_play_locations[0][0], quest_play_locations[0][1], "play_round_button")
-                elif difficulty == "Hard":
-                    self._game.mouse_tools.move_and_click_point(quest_play_locations[1][0], quest_play_locations[1][1], "play_round_button")
-                elif difficulty == "Very Hard":
-                    self._game.mouse_tools.move_and_click_point(quest_play_locations[2][0], quest_play_locations[2][1], "play_round_button")
-                elif difficulty == "Extreme":
-                    self._game.mouse_tools.move_and_click_point(quest_play_locations[3][0], quest_play_locations[3][1], "play_round_button")
+                # Only Extreme difficulty is supported for farming efficiency.
+                self._game.mouse_tools.move_and_click_point(quest_play_locations[3][0], quest_play_locations[3][1], "play_round_button")
 
             elif formatted_mission_name == "Event Raid":
                 # Bring up the "Raid Battle" popup. Then scroll down the screen a bit for screens less than 1440p to see the entire popup.
@@ -809,11 +799,7 @@ class MapSelection:
 
         if self._game.image_tools.confirm_location("rotb"):
             # Remove the difficulty prefix from the mission name.
-            if difficulty == "Normal":
-                temp_mission_name = mission_name[2:]
-            elif difficulty == "Hard":
-                temp_mission_name = mission_name[2:]
-            elif difficulty == "Very Hard":
+            if difficulty == "Very Hard":
                 temp_mission_name = mission_name[3:]
             elif difficulty == "Extreme":
                 temp_mission_name = mission_name[3:]
@@ -867,13 +853,8 @@ class MapSelection:
                     # Find all the round "Play" buttons again.
                     round_play_button_locations = self._game.image_tools.find_all("play_round_button")
 
-                    # Now select the specified difficulty.
-                    if difficulty == "Normal":
-                        self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1], "play_round_button")
-                    elif difficulty == "Hard":
-                        self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1], "play_round_button")
-                    elif difficulty == "Very Hard":
-                        self._game.mouse_tools.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1], "play_round_button")
+                    # Only Very Hard difficulty will be supported for farming efficiency
+                    self._game.mouse_tools.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1], "play_round_button")
 
         return None
 
@@ -1013,9 +994,7 @@ class MapSelection:
             if self._game.find_and_click_button("proving_grounds_missions"):
                 difficulty_button_locations = self._game.image_tools.find_all("play_round_button")
 
-                if difficulty == "Very Hard":
-                    self._game.mouse_tools.move_and_click_point(difficulty_button_locations[0][0], difficulty_button_locations[0][1], "play_round_button")
-                elif difficulty == "Extreme":
+                if difficulty == "Extreme":
                     self._game.mouse_tools.move_and_click_point(difficulty_button_locations[1][0], difficulty_button_locations[1][1], "play_round_button")
                 elif difficulty == "Extreme+":
                     self._game.mouse_tools.move_and_click_point(difficulty_button_locations[2][0], difficulty_button_locations[2][1], "play_round_button")

@@ -1506,9 +1506,6 @@ Item{
                             { text: "EX Event Raid", map: "", enabled: true },
                             { text: "IM Event Raid", map: "", enabled: true },
                             { text: "Event Quest", enabled: false },
-                            { text: "N Event Quest", map: "", enabled: true },
-                            { text: "H Event Quest", map: "", enabled: true },
-                            { text: "VH Event Quest", map: "", enabled: true },
                             { text: "EX Event Quest", map: "", enabled: true },
                         ]
                     } else if(farmingModeComboBox.displayText === "Event" && itemSelectionComboBox.displayText === "Repeated Runs") {
@@ -1517,7 +1514,6 @@ Item{
                             { text: "VH Event Raid", map: "", enabled: true },
                             { text: "EX Event Raid", map: "", enabled: true },
                             { text: "Event Quest", enabled: false },
-                            { text: "VH Event Quest", map: "", enabled: true },
                             { text: "EX Event Quest", map: "", enabled: true },
                         ]
                     } else if(farmingModeComboBox.displayText === "Dread Barrage" && itemSelectionComboBox.displayText === "Repeated Runs") {
@@ -1537,17 +1533,9 @@ Item{
                             { text: "EX Baihu", map: "", enabled: true },
                             { text: "EX Qinglong", map: "", enabled: true },
                             { text: "Event Quest", enabled: false },
-                            { text: "N Zhuque", map: "", enabled: true },
-                            { text: "H Zhuque", map: "", enabled: true },
                             { text: "VH Zhuque", map: "", enabled: true },
-                            { text: "N Xuanwu", map: "", enabled: true },
-                            { text: "H Xuanwu", map: "", enabled: true },
                             { text: "VH Xuanwu", map: "", enabled: true },
-                            { text: "N Baihu", map: "", enabled: true },
-                            { text: "H Baihu", map: "", enabled: true },
                             { text: "VH Baihu", map: "", enabled: true },
-                            { text: "N Qinglong", map: "", enabled: true },
-                            { text: "H Qinglong", map: "", enabled: true },
                             { text: "VH Qinglong", map: "", enabled: true },
                         ]
                     } else if(farmingModeComboBox.displayText === "Guild Wars" && itemSelectionComboBox.displayText === "Repeated Runs") {
@@ -1565,7 +1553,6 @@ Item{
                     } else if(farmingModeComboBox.displayText === "Proving Grounds" && itemSelectionComboBox.displayText === "Repeated Runs") {
                         missionSelectionComboBox.model = [
                             { text: "Proving Ground Missions", enabled: false },
-                            { text: "Very Hard", enabled: true },
                             { text: "Extreme", enabled: true },
                             { text: "Extreme+", enabled: true },
                         ]
