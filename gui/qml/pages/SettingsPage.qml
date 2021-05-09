@@ -127,7 +127,8 @@ Item{
                 { text: "Rise of the Beasts", enabled: true },
                 { text: "Guild Wars", enabled: true },
                 { text: "Dread Barrage", enabled: true },
-                { text: "Proving Grounds", enabled: true }
+                { text: "Proving Grounds", enabled: true },
+                { text: "Xeno Clash", enabled: true }
             ]
 
             onCurrentIndexChanged: {
@@ -137,7 +138,8 @@ Item{
 
                 // Display either the Item Selection button or ComboBox depending on the Farming Mode selected.
                 if(farmingModeComboBox.displayText === "Event" || farmingModeComboBox.displayText === "Event (Token Drawboxes)" || farmingModeComboBox.displayText === "Dread Barrage" || 
-                farmingModeComboBox.displayText === "Rise of the Beasts" || farmingModeComboBox.displayText === "Guild Wars" || farmingModeComboBox.displayText === "Proving Grounds") {
+                farmingModeComboBox.displayText === "Rise of the Beasts" || farmingModeComboBox.displayText === "Guild Wars" || farmingModeComboBox.displayText === "Proving Grounds" ||
+                farmingModeComboBox.displayText === "Xeno Clash") {
                     // Set the contents of the Item Selection ComboBox.
                     if(farmingModeComboBox.displayText === "Dread Barrage") {
                         itemSelectionComboBox.model = [
@@ -1566,6 +1568,12 @@ Item{
                             { text: "Very Hard", enabled: true },
                             { text: "Extreme", enabled: true },
                             { text: "Extreme+", enabled: true },
+                        ]
+                    } else if(farmingModeComboBox.displayText === "Xeno Clash" && itemSelectionComboBox.displayText === "Repeated Runs") {
+                        missionSelectionComboBox.model = [
+                            { text: "Xeno Clash", enabled: false },
+                            { text: "Xeno Clash Extreme", enabled: true },
+                            { text: "Xeno Clash Raid", enabled: true },
                         ]
                     }
 
