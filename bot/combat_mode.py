@@ -538,7 +538,7 @@ class CombatMode:
                                 self._game.print_and_save("################################################################################")
                                 self._game.print_and_save("################################################################################")
                                 return False
-                            elif self._game.find_and_click_button("ok", tries = 1, suppress_error = True):
+                            elif self._game.image_tools.confirm_location("battle_concluded", tries = 1):
                                 self._game.print_and_save("\n[COMBAT] Battle concluded suddenly.")
                                 self._game.print_and_save("\n################################################################################")
                                 self._game.print_and_save("################################################################################")
@@ -597,7 +597,7 @@ class CombatMode:
                                 self._use_character_skill(character_selected, skill_command_list)
 
                                 # Check if the Battle ended suddenly.
-                                if self._game.find_and_click_button("ok", tries = 1, suppress_error = True):
+                                if self._game.image_tools.confirm_location("battle_concluded", tries = 1):
                                     self._game.print_and_save("\n[COMBAT] Battle concluded suddenly.")
                                     self._game.print_and_save("\n################################################################################")
                                     self._game.print_and_save("################################################################################")
@@ -697,7 +697,7 @@ class CombatMode:
                 turn_number += 1
 
                 # Check if the Battle ended suddenly.
-                if self._game.find_and_click_button("ok", tries = 1, suppress_error = True):
+                if self._game.image_tools.confirm_location("battle_concluded", tries = 1):
                     self._game.print_and_save("\n[COMBAT] Battle concluded suddenly.")
                     self._game.print_and_save("\n################################################################################")
                     self._game.print_and_save("################################################################################")
@@ -733,7 +733,7 @@ class CombatMode:
             # Main workflow loop for Semi Auto. The bot will progress the Quest/Raid until it ends or the Party wipes.
             while not self._retreat_check and not full_auto and semi_auto and not self._game.image_tools.confirm_location("exp_gained", tries = 1) and \
                     not self._game.image_tools.confirm_location("no_loot", tries = 1):
-                if self._game.find_and_click_button("ok", tries = 1, suppress_error = True):
+                if self._game.image_tools.confirm_location("battle_concluded", tries = 1):
                     self._game.print_and_save("\n[COMBAT] Battle concluded suddenly.")
                     self._game.print_and_save("\n################################################################################")
                     self._game.print_and_save("################################################################################")
@@ -749,7 +749,7 @@ class CombatMode:
             # Main workflow loop for Full Auto. The bot will progress the Quest/Raid until it ends or the Party wipes.
             while not self._retreat_check and full_auto and not semi_auto and not self._game.image_tools.confirm_location("exp_gained", tries = 1) and \
                     not self._game.image_tools.confirm_location("no_loot", tries = 1):
-                if self._game.find_and_click_button("ok", tries = 1, suppress_error = True):
+                if self._game.image_tools.confirm_location("battle_concluded", tries = 1):
                     self._game.print_and_save("\n[COMBAT] Battle concluded suddenly.")
                     self._game.print_and_save("\n################################################################################")
                     self._game.print_and_save("################################################################################")
