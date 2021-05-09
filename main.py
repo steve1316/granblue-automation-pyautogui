@@ -540,166 +540,72 @@ delay_in_seconds = 15
 # Enable randomized delay in seconds between runs in the range between the lower and upper bounds inclusive to serve as a resting period.
 # Default is 15 seconds for the lower bound and 60 seconds for the upper bound.
 ############################################################
-enable_randomized_delay_between_runs = True
+enable_randomized_delay_between_runs = False
 delay_in_seconds_lower_bound = 15
 delay_in_seconds_upper_bound = 60
 
-[dimensional_halo]
 ############################################################
-# Determines whether or not the bot will run Dimensional Halo whenever it appears during VH Angel Halo.
-############################################################
-enable_dimensional_halo = False
+# The following settings below follow pretty much the same template provided. They default to the settings selected for Farming Mode if nothing is set.
 
-############################################################
-# The file name of the combat script to use inside the /scripts/ folder.
-# Example: full_auto
-# If set to nothing, it will reuse the combat script selected for Farming Mode.
-############################################################
-dimensional_halo_combat_script = 
+# Enables this fight or skip it if false.
+# enable_*** =
 
-############################################################
-# Select what Summon(s) separated by commas to use in order from highest priority to least for Dimensional Halo.
-# The Summons that you can select are listed in the following wiki page:
+# The file name of the combat script to use inside the /scripts/ folder. If set to nothing, defaults to the one selected for Farming Mode. Example: full_auto
+# ***_combat_script =
+
+# Select what Summon(s) separated by commas to use in order from highest priority to least. Example: Shiva, Colossus Omega, Varuna, Agni
 # https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons
-# Example: Shiva, Colossus Omega, Varuna, Agni
-# If set to nothing, it will reuse the summon selected for Farming Mode.
-############################################################
-dimensional_halo_summon_list = 
+# ***_summon_list =
 
-############################################################
-# Indicate what element(s) the Summon(s) are in order from dimensional_halo_summon_list for Dimensional Halo.
-# Accepted values are: Fire, Water, Earth, Wind, Light, Dark, Misc.
-# Example: Fire, Fire, Water, Fire
-# If set to nothing, it will reuse the elements selected for Event Farming Mode.
-############################################################
-dimensional_halo_summon_element_list = 
+# Indicate what element(s) the Summon(s) are in order from ***_summon_list separated by commas. Accepted values are: Fire, Water, Earth, Wind, Light, Dark, Misc.
+# ***__summon_element_list =
 
+# Set what Party to select and under what Group to run for the specified fight. Accepted values are: Group [1, 2, 3, 4, 5, 6, 7] and Party [1, 2, 3, 4, 5, 6].
+# ***_group_number =
+# ***_party_number =
 ############################################################
-# Set what Party to select and under what Group to run Dimensional Halo.
-# Accepted values are: Group [1, 2, 3, 4, 5, 6, 7] and Party [1, 2, 3, 4, 5, 6]
-# If set to nothing, it will reuse what was selected for Farming Mode.
-############################################################
-dimensional_halo_group_number = 
-dimensional_halo_party_number = 
+
+[dimensional_halo]
+enable_dimensional_halo = False
+dimensional_halo_combat_script =
+dimensional_halo_summon_list =
+dimensional_halo_summon_element_list =
+dimensional_halo_group_number =
+dimensional_halo_party_number =
 
 [event]
-############################################################
-# Determines whether or not the bot will run Nightmares whenever it appears when farming Event missions.
-############################################################
 enable_event_nightmare = False
-
-############################################################
-# The file name of the combat script to use inside the /scripts/ folder.
-# Example: full_auto
-# If set to nothing, it will reuse the combat script selected for Event Farming Mode.
-############################################################
-event_nightmare_combat_script = 
-
-############################################################
-# Select what Summon(s) separated by commas to use in order from highest priority to least for Event Nightmare. 
-# The Summons that you can select are listed in the following wiki page:
-# https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons
-# Example: Shiva, Colossus Omega, Varuna, Agni
-# If set to nothing, it will reuse the summons selected for Event Farming Mode.
-############################################################
-event_nightmare_summon_list = 
-
-############################################################
-# Indicate what element(s) the Summon(s) are in order from event_nightmare_summon_list for Event Nightmare.
-# Accepted values are: Fire, Water, Earth, Wind, Light, Dark, Misc.
-# Example: Fire, Fire, Water, Fire
-# If set to nothing, it will reuse the elements selected for Event Farming Mode.
-############################################################
-event_nightmare_summon_element_list = 
-
-############################################################
-# Set what Party to select and under what Group to run Event Nightmare.
-# Accepted values are: Group [1, 2, 3, 4, 5, 6, 7] and Party [1, 2, 3, 4, 5, 6]
-# If set to nothing, it will reuse what was selected for Event Farming Mode.
-############################################################
-event_nightmare_group_number = 
-event_nightmare_party_number = 
+event_nightmare_combat_script =
+event_nightmare_summon_list =
+event_nightmare_summon_element_list =
+event_nightmare_group_number =
+event_nightmare_party_number =
 
 [rise_of_the_beasts]
-############################################################
-# Determines whether or not the bot will run Extreme+ or skip them.
-############################################################
 enable_rotb_extreme_plus = False
-
-############################################################
-# The name of the combat script to use inside the /scripts/ folder.
-# If set to nothing, it will reuse the combat script selected for Rise of the Beasts Farming Mode.
-############################################################
-rotb_extreme_plus_combat_script = 
-
-############################################################
-# Select what Summon(s) separated by commas to use in order from highest priority to least for Extreme+. 
-# The Summons that you can select are listed in the following wiki page:
-# https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons
-# Example: Shiva, Colossus Omega, Varuna, Agni
-# If set to nothing, it will reuse the summon selected for Rise of the Beasts Farming Mode.
-############################################################
-rotb_extreme_plus_summon_list = 
-
-############################################################
-# Indicate what element(s) the Summon(s) are in order from rotb_extreme_plus_summon_list for Extreme+.
-# Accepted values are: Fire, Water, Earth, Wind, Light, Dark, Misc.
-# Example: Fire, Fire, Water, Fire
-# If set to nothing, it will reuse the element selected for Rise of the Beasts Farming Mode.
-############################################################
-rotb_extreme_plus_summon_element_list = 
-
-############################################################
-# Set what Party to select and under what Group to run Extreme+.
-# Accepted values are: Group [1, 2, 3, 4, 5, 6, 7] and Party [1, 2, 3, 4, 5, 6]
-# If set to nothing, it will reuse what was selected for Rise of the Beasts Farming Mode.
-############################################################
-rotb_extreme_plus_group_number = 
-rotb_extreme_plus_party_number = 
+rotb_extreme_plus_combat_script =
+rotb_extreme_plus_summon_list =
+rotb_extreme_plus_summon_element_list =
+rotb_extreme_plus_group_number =
+rotb_extreme_plus_party_number =
 
 [dread_barrage]
-############################################################
-# Determines whether or not the bot will run Unparalleled Foes or skip them.
-############################################################
 enable_unparalleled_foe = False
-
-############################################################
-# Select which Unparalleled Foe to fight. Only one will be selected and if you enable both, the bot will choose the first one only.
-# Likewise if none are selected, then the bot will choose the first one by default.
-############################################################
 enable_unparalleled_foe_level_95 = False
 enable_unparalleled_foe_level_175 = False
+unparalleled_foe_combat_script =
+unparalleled_foe_summon_list =
+unparalleled_foe_summon_element_list =
+unparalleled_foe_group_number =
+unparalleled_foe_party_number =
 
-############################################################
-# The name of the combat script to use inside the /scripts/ folder.
-# If set to nothing, it will reuse the combat script selected for Dread Barrage Farming Mode.
-############################################################
-unparalleled_foe_combat_script = 
-
-############################################################
-# Select what Summon(s) separated by commas to use in order from highest priority to least for Unparalleled Foes. 
-# The Summons that you can select are listed in the following wiki page:
-# https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons
-# Example: Shiva, Colossus Omega, Varuna, Agni
-# If set to nothing, it will reuse the summon selected for Dread Barrage Farming Mode.
-############################################################
-unparalleled_foe_summon_list = 
-
-############################################################
-# Indicate what element(s) the Summon(s) are in order from unparalleled_foe_summon_list for Unparalleled Foes.
-# Accepted values are: Fire, Water, Earth, Wind, Light, Dark, Misc.
-# Example: Fire, Fire, Water, Fire
-# If set to nothing, it will reuse the element selected for Dread Barrage Farming Mode.
-############################################################
-unparalleled_foe_summon_element_list = 
-
-############################################################
-# Set what Party to select and under what Group to run Dread Barrage Unparalleled Foes.
-# Accepted values are: Group [1, 2, 3, 4, 5, 6, 7] and Party [1, 2, 3, 4, 5, 6]
-# If set to nothing, it will reuse what was selected for Dread Barrage Farming Mode.
-############################################################
-unparalleled_foe_group_number = 
-unparalleled_foe_party_number = """)
+[xeno_clash]
+enable_xeno_clash_nightmare = False
+xeno_clash_nightmare_combat_script =
+xeno_clash_nightmare_summon_list =
+xeno_clash_nightmare_summon_element_list =
+xeno_clash_nightmare_group_number =
+xeno_clash_nightmare_party_number = """)
 
         print("\n[INFO] Generated a new config.ini in the root of the project folder.")
 
