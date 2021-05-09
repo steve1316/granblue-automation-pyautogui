@@ -955,6 +955,12 @@ class Game:
 
                 self.wait(1)
 
+                # Select only the first Nightmare.
+                play_round_buttons = self.image_tools.find_all("play_round_button")
+                self.mouse_tools.move_and_click_point(play_round_buttons[0][0], play_round_buttons[0][1], "play_round_button")
+
+                self.wait(1)
+
                 # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
                 if self.image_tools.confirm_location("select_a_summon"):
                     self._select_summon(self._xeno_clash_nightmare_summon_list, self._xeno_clash_nightmare_summon_element_list)
