@@ -403,6 +403,27 @@ class CombatMode:
 
         return None
 
+    def _reload_for_attack(self):
+        """Determine whether or not to reload after an Attack.
+
+        Returns:
+            None
+        """
+        rotb_quests = ["VH Zhuque", "VH Xuanwu", "VH Baihu", "VH Qinglong"]
+        proving_grounds_quests = ["Extreme", "Extreme+"]
+
+        # If the "Cancel" button vanishes, that means the attack is in-progress. Now reload the page and wait for either the attack to finish or Battle ended.
+        if (self._game.farming_mode != "Quest" and self._game.farming_mode != "Special") and \
+                (self._game.farming_mode != "Event" and self._game.mission_name != "EX Event Quest") and \
+                (self._game.farming_mode != "Event (Token Drawboxes)" and self._game.mission_name != "EX Event Quest") and \
+                (self._game.farming_mode != "Rise of the Beasts" and not rotb_quests.__contains__(self._game.mission_name)) and \
+                (self._game.farming_mode != "Proving Grounds" and not proving_grounds_quests.__contains__(self._game.mission_name)) and \
+                (self._game.farming_mode != "Xeno Clash" and self._game.mission_name != "Xeno Clash Extreme"):
+
+            self._game.find_and_click_button("reload")
+
+        return None
+
     def start_combat_mode(self, script_file_path: str = "", is_nightmare: bool = False):
         """Start Combat Mode with the given script file path. Start reading through the text file line by line and have the bot proceed with the commands accordingly.
 
@@ -498,10 +519,7 @@ class CombatMode:
                                             self._game.print_and_save("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
                                         self._game.wait(1)
 
-                                # If the "Cancel" button vanishes, that means the attack is in-progress. Now reload the page and wait for either the attack to finish or Battle ended.
-                                if self._game.farming_mode != "Quest" and self._game.farming_mode != "Special":
-                                    self._game.find_and_click_button("reload")
-
+                                self._reload_for_attack()
                                 self._wait_for_attack()
 
                                 self._game.print_and_save(f"[COMBAT] Turn {turn_number} has ended.")
@@ -640,9 +658,7 @@ class CombatMode:
                                     self._game.print_and_save("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
                                 self._game.wait(1)
 
-                        # If the "Cancel" button vanishes, that means the attack is in-progress. Now reload the page and wait for either the attack to finish or Battle ended.
-                        if self._game.farming_mode != "Quest" and self._game.farming_mode != "Special":
-                            self._game.find_and_click_button("reload")
+                        self._reload_for_attack()
                         self._wait_for_attack()
 
                         self._game.print_and_save(f"[COMBAT] Turn {turn_number} has ended.")
@@ -672,11 +688,10 @@ class CombatMode:
                             self._game.print_and_save("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
                         self._game.wait(1)
 
-                # If the "Cancel" button vanishes, that means the attack is in-progress. Now reload the page and wait for either the attack to finish or Battle ended.
-                if self._game.farming_mode != "Quest" and self._game.farming_mode != "Special":
-                    self._game.find_and_click_button("reload")
-
+                self._reload_for_attack()
                 self._wait_for_attack()
+
+                self._game.print_and_save(f"[COMBAT] Turn {turn_number} has ended.")
 
                 turn_number += 1
 

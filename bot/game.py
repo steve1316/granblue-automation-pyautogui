@@ -184,7 +184,7 @@ class Game:
         self._item_amount_farmed = 0
         self.farming_mode = ""
         self._map_name = ""
-        self._mission_name = ""
+        self.mission_name = ""
         self._difficulty = ""
         self._summon_element_list = []
         self._summon_list = []
@@ -712,7 +712,7 @@ class Game:
                 self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
-                self.print_and_save(f"[FARM] Mission: {self._mission_name}")
+                self.print_and_save(f"[FARM] Mission: {self.mission_name}")
                 self.print_and_save(f"[FARM] Summons: {self._summon_list}")
                 self.print_and_save(f"[FARM] Amount of {self._item_name} gained this run: {temp_amount}")
                 self.print_and_save(f"[FARM] Amount of {self._item_name} gained in total: {self._item_amount_farmed} / {self._item_amount_to_farm}")
@@ -723,7 +723,7 @@ class Game:
                 self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
-                self.print_and_save(f"[FARM] Mission: {self._mission_name}")
+                self.print_and_save(f"[FARM] Mission: {self.mission_name}")
                 self.print_and_save(f"[FARM] Summons: {self._summon_list}")
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished} / {self._item_amount_to_farm}")
                 self.print_and_save("********************************************************************************")
@@ -752,18 +752,18 @@ class Game:
 
             # Check for certain popups for certain Farming Modes.
             if (self.farming_mode == "Rise of the Beasts" and self._check_for_rotb_extreme_plus()) or (
-                    self.farming_mode == "Special" and self._mission_name == "VH Angel Halo" and self._item_name == "Angel Halo Weapons" and self._check_for_dimensional_halo()) or (
+                    self.farming_mode == "Special" and self.mission_name == "VH Angel Halo" and self._item_name == "Angel Halo Weapons" and self._check_for_dimensional_halo()) or (
                     (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._check_for_event_nightmare()) or (
                     self.farming_mode == "Xeno Clash" and self._check_for_xeno_clash_nightmare()):
                 # Make sure the bot goes back to the Home screen so that the "Play Again" functionality comes back.
-                self._map_selection.select_map(self.farming_mode, self._map_name, self._mission_name, self._difficulty)
+                self._map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self._difficulty)
                 break
 
             # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select the Mission again.
             if (self.farming_mode == "Event (Token Drawboxes)" or self.farming_mode == "Guild Wars") and self.image_tools.confirm_location("not_enough_treasure", tries = 1):
                 self.find_and_click_button("ok")
                 self._delay_between_runs()
-                self._map_selection.select_map(self.farming_mode, self._map_name, self._mission_name, self._difficulty)
+                self._map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self._difficulty)
                 break
 
             # Attempt to close the popup by clicking on any detected "Close" and "Cancel" buttons.
@@ -988,7 +988,7 @@ class Game:
             None
         """
         # If Dimensional Halo is enabled, save settings for it based on conditions.
-        if self.farming_mode == "Special" and self._mission_name == "VH Angel Halo" and self._enable_dimensional_halo and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons"):
+        if self.farming_mode == "Special" and self.mission_name == "VH Angel Halo" and self._enable_dimensional_halo and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons"):
             self.print_and_save("\n[INFO] Initializing settings for Dimensional Halo...")
 
             if self._dimensional_halo_combat_script == "":
@@ -1219,7 +1219,7 @@ class Game:
             self._item_amount_to_farm = item_amount_to_farm
             self.farming_mode = farming_mode
             self._map_name = map_name
-            self._mission_name = mission_name
+            self.mission_name = mission_name
             self._difficulty = difficulty
             self._summon_element_list = summon_element_list
             self._summon_list = summon_list
