@@ -165,7 +165,7 @@ class Game:
         # Initialize the objects of helper classes.
         self.combat_mode = CombatMode(self, is_bot_running, debug_mode = self._debug_mode)
         self._map_selection = MapSelection(self, is_bot_running)
-        self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3], debug_mode = self._debug_mode)
+        self.room_finder = TwitterRoomFinder(self, self._is_bot_running, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3], debug_mode = self._debug_mode)
         self.image_tools = ImageUtils(self, debug_mode = self._debug_mode)
         self.mouse_tools = MouseUtils(self, enable_bezier_curve = enable_bezier_curve_mouse_movement, mouse_speed = custom_mouse_speed, debug_mode = self._debug_mode)
 

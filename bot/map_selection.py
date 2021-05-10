@@ -5,7 +5,7 @@ class MapSelection:
     ----------
     bot (bot.Game): The Game object.
     
-    isBotRunning (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
+    is_bot_running (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
     
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
     """

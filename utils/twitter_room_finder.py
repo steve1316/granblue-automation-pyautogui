@@ -13,6 +13,8 @@ class TwitterRoomFinder:
     ----------
         bot (bot.Game): The Game object.
 
+        is_bot_running (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
+
         consumer_key (str): Consumer API key from the user's personal Twitter Developer app.
 
         consumer_secret (str): Consumer Secret API key from the user's personal Twitter Developer app.
@@ -25,10 +27,11 @@ class TwitterRoomFinder:
 
     """
 
-    def __init__(self, game, consumer_key: str, consumer_secret: str, access_token: str, access_token_secret: str, debug_mode: bool = False):
+    def __init__(self, game, is_bot_running: int, consumer_key: str, consumer_secret: str, access_token: str, access_token_secret: str, debug_mode: bool = False):
         super().__init__()
 
         self._game = game
+        self._is_bot_running = is_bot_running
 
         # Save consumer keys and access tokens.
         self._consumer_key = consumer_key
@@ -161,7 +164,7 @@ class TwitterRoomFinder:
             except Exception:
                 self._game.print_and_save(
                     f"\n[ERROR] Connection to the Twitter API failed. Check the config.ini and verify that the keys and tokens are correct. Exact error is: \n{traceback.format_exc()}")
-                self._game.isBotRunning.value = 1
+                self._is_bot_running.value = 1
 
     def find_most_recent(self, raid_name: str, count: int = 10):
         """Start listening to tweets containing room codes starting with JP and then EN tweets if there was not enough collected tweets from JP.
@@ -208,7 +211,7 @@ class TwitterRoomFinder:
             return tweets
         except Exception:
             self._game.print_and_save(f"[ERROR] Bot got rate-limited or Twitter failed to respond after a certain amount of time. Exact error is: \n{traceback.format_exc()}")
-            self._game.isBotRunning.value = 1
+            self._is_bot_running.value = 1
 
     def clean_tweets(self, tweets: List[str]):
         """Clean the tweets passed to this function and parse out the room codes from them.
@@ -242,4 +245,4 @@ class TwitterRoomFinder:
             return room_codes
         except Exception:
             self._game.print_and_save(f"[ERROR] Bot cannot parse given tweets. Exact error is: \n{traceback.format_exc()} \nTweets given to it was: \n{tweets}")
-            self._game.isBotRunning.value = 1
+            self._is_bot_running.value = 1

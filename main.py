@@ -64,7 +64,7 @@ class MainWindow(QObject):
 
         # Create the Queue for storing logging messages, the flag for the bot's running status, and the amount of seconds that the bot has been running for.
         self._queue = multiprocessing.Queue()
-        self._isBotRunning = None
+        self._is_bot_running = None
         self._botRunningTimeInSeconds = None
 
         # Create a list in memory to hold all messages in case the frontend wants to save all those messages into a text file.
@@ -404,7 +404,7 @@ class MainWindow(QObject):
                 self.updateTimerTextField.emit(remaining_time)
 
         # Transmit True if the bot had stopped running and False otherwise.
-        elif self._isBotRunning.value == 1:
+        elif self._is_bot_running.value == 1:
             self.checkBotStatus.emit(True)
         else:
             self.checkBotStatus.emit(False)
@@ -457,8 +457,8 @@ class MainWindow(QObject):
         # Clear the text log.
         self._text_log.clear()
 
-        # Save the isBotRunning flag as an int in memory to be shared across classes. Value of 0 means the bot is currently running and a value of 1 means the bot has stopped.
-        self._isBotRunning = multiprocessing.Value("i", 0)
+        # Save the bot status flag as an int in memory to be shared across classes. Value of 0 means the bot is currently running and a value of 1 means the bot has stopped.
+        self._is_bot_running = multiprocessing.Value("i", 0)
 
         # Start the timer for the running time of the bot.
         self._botRunningTimeInSeconds = timer()
@@ -466,7 +466,7 @@ class MainWindow(QObject):
         # Create a new Process whose target is the MainDriver's run_bot() method.
         self._bot_process = multiprocessing.Process(target = self._bot_object.run_bot, args = (self._item_name, self._item_amount_to_farm, self._farming_mode, self._location_name,
                                                                                                self._mission_name, self._summon_element_list, self._summon_list, self._group_number,
-                                                                                               self._party_number, self._real_file_path, self._queue, self._isBotRunning, self._debug_mode))
+                                                                                               self._party_number, self._real_file_path, self._queue, self._is_bot_running, self._debug_mode))
 
         # Now start the new Process on a new Thread.
         self._bot_process.start()
