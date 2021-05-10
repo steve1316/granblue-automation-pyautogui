@@ -76,7 +76,13 @@ Flickable {
                 "Galleon": ["Galleon's Jaw"],
                 "Ewiyar": ["Ewiyar's Beak"],
                 "Lu Woh": ["Lu Woh's Horn"],
-                "Fediel": ["Fediel's Spine"]
+                "Fediel": ["Fediel's Spine"],
+                "Xeno Ifrit": ["True Xeno Ifrit Anima", "Infernal Vajra"],
+                "Xeno Cocytus": ["True Xeno Cocytus Anima", "Frozen Hellplume"],
+                "Xeno Vohu Manah": ["True Xeno Vohu Manah Anima", "Sacrosanct Sutra"],
+                "Xeno Sagittarius": ["True Xeno Sagittarius Anima", "Zodiac Arc"],
+                "Xeno Corow": ["True Xeno Corow Anima", "Flame Fanner"],
+                "Xeno Diablo": ["True Xeno Diablo Anima", "Wraithbind Fetter"]
             }
 
             function createListElement(itemName){
@@ -2718,6 +2724,342 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Luminiera Malice /////////
+
+        ///////// Raid Items - Xeno Ifrit /////////
+        Label {
+            id: label_XenoIfrit
+
+            color: "#aa0000"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Xeno Ifrit"
+        }
+
+        Repeater {
+            id: repeater_XenoIfrit
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_XenoIfrit.visible === true){
+                    repeater_XenoIfrit.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_XenoIfrit.text].length; i++){
+                        repeater_XenoIfrit.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_XenoIfrit.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_XenoIfrit
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#aa0000"
+                    anchors.left: itemImage_XenoIfrit.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Xeno Ifrit /////////
+
+        ///////// Raid Items - Xeno Cocytus /////////
+        Label {
+            id: label_XenoCocytus
+
+            color: "#00ffff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Xeno Cocytus"
+        }
+
+        Repeater {
+            id: repeater_XenoCocytus
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_XenoCocytus.visible === true){
+                    repeater_XenoCocytus.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_XenoCocytus.text].length; i++){
+                        repeater_XenoCocytus.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_XenoCocytus.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_XenoCocytus
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#00ffff"
+                    anchors.left: itemImage_XenoCocytus.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Xeno Cocytus /////////
+
+        ///////// Raid Items - Xeno Vohu Manah /////////
+        Label {
+            id: label_XenoVohuManah
+
+            color: "#ff8000"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Xeno Vohu Manah"
+        }
+
+        Repeater {
+            id: repeater_XenoVohuManah
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_XenoVohuManah.visible === true){
+                    repeater_XenoVohuManah.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_XenoVohuManah.text].length; i++){
+                        repeater_XenoVohuManah.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_XenoVohuManah.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_XenoVohuManah
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ff8000"
+                    anchors.left: itemImage_XenoVohuManah.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Xeno Vohu Manah /////////
+
+        ///////// Raid Items - Xeno Sagittarius /////////
+        Label {
+            id: label_XenoSagittarius
+
+            color: "#00ff00"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Xeno Sagittarius"
+        }
+
+        Repeater {
+            id: repeater_XenoSagittarius
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_XenoSagittarius.visible === true){
+                    repeater_XenoSagittarius.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_XenoSagittarius.text].length; i++){
+                        repeater_XenoSagittarius.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_XenoSagittarius.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_XenoSagittarius
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#00ff00"
+                    anchors.left: itemImage_XenoSagittarius.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Xeno Sagittarius /////////
+
+        ///////// Raid Items - Xeno Corow /////////
+        Label {
+            id: label_XenoCorow
+
+            color: "#ffff00"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Xeno Corow"
+        }
+
+        Repeater {
+            id: repeater_XenoCorow
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_XenoCorow.visible === true){
+                    repeater_XenoCorow.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_XenoCorow.text].length; i++){
+                        repeater_XenoCorow.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_XenoCorow.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_XenoCorow
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ffff00"
+                    anchors.left: itemImage_XenoCorow.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Xeno Corow /////////
+
+        ///////// Raid Items - Xeno Diablo /////////
+        Label {
+            id: label_XenoDiablo
+
+            color: "#aa00ff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Xeno Diablo"
+        }
+
+        Repeater {
+            id: repeater_XenoDiablo
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_XenoDiablo.visible === true){
+                    repeater_XenoDiablo.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_XenoDiablo.text].length; i++){
+                        repeater_XenoDiablo.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_XenoDiablo.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_XenoDiablo
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#aa00ff"
+                    anchors.left: itemImage_XenoDiablo.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Xeno Diablo /////////
     }
 
     Connections {

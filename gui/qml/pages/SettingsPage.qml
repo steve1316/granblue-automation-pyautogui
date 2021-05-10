@@ -1259,6 +1259,39 @@ Item{
                         ]
                     }
 
+                    // Xeno Items
+                    else if(itemSelectionButton.text === "True Xeno Ifrit Anima" || itemSelectionButton.text === "Infernal Vajra") {
+                        missionSelectionComboBox.model = [
+                            { text: "Xeno Ifrit", enabled: false },
+                            { text: "Lvl 100 Xeno Ifrit", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "True Xeno Cocytus Anima" || itemSelectionButton.text === "Frozen Hellplume") {
+                        missionSelectionComboBox.model = [
+                            { text: "Xeno Cocytus", enabled: false },
+                            { text: "Lvl 100 Xeno Cocytus", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "True Xeno Vohu Manah Anima" || itemSelectionButton.text === "Sacrosanct Sutra") {
+                        missionSelectionComboBox.model = [
+                            { text: "Xeno Vohu Manah", enabled: false },
+                            { text: "Lvl 100 Xeno Vohu Manah", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "True Xeno Sagittarius Anima" || itemSelectionButton.text === "Zodiac Arc") {
+                        missionSelectionComboBox.model = [
+                            { text: "Xeno Sagittarius", enabled: false },
+                            { text: "Lvl 100 Xeno Sagittarius", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "True Xeno Corow Anima" || itemSelectionButton.text === "Flame Fanner") {
+                        missionSelectionComboBox.model = [
+                            { text: "Xeno Corow", enabled: false },
+                            { text: "Lvl 100 Xeno Corow", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "True Xeno Diablo Anima" || itemSelectionButton.text === "Wraithbind Fetter") {
+                        missionSelectionComboBox.model = [
+                            { text: "Xeno Diablo", enabled: false },
+                            { text: "Lvl 100 Xeno Diablo", enabled: true },
+                        ]
+                    }
+
                     // Misc Items
                     else if(itemSelectionButton.text === "Azure Feather" || itemSelectionButton.text === "Heavenly Horn") {
                         missionSelectionComboBox.model = [
