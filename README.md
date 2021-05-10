@@ -65,6 +65,7 @@ By downloading this program, you consent to your account potentially getting fla
     - [x] Rise of the Beasts
     - [x] Dread Barrage
     - [x] Proving Grounds
+    - [x] Xeno Clash
 - [x] Alert for when anti-bot CAPTCHA pops up.
 
 # Requirements
