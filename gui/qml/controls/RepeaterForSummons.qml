@@ -29,19 +29,19 @@ Flickable {
             id: fireSummonsModel
 
             ListElement {
-                imageSource: "../../../images/summons/icons/colossus_omega_icon.png"
+                imageSource: "../../../images/summons/colossus_omega.png"
                 name: "Colossus Omega"
                 element: "Fire"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/shiva_icon.png"
+                imageSource: "../../../images/summons/shiva.png"
                 name: "Shiva"
                 element: "Fire"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/agni_icon.png"
+                imageSource: "../../../images/summons/agni.png"
                 name: "Agni"
                 element: "Fire"
             }
@@ -51,25 +51,25 @@ Flickable {
             id: waterSummonsModel
 
             ListElement {
-                imageSource: "../../../images/summons/icons/leviathan_omega_icon.png"
+                imageSource: "../../../images/summons/leviathan_omega.png"
                 name: "Leviathan Omega"
                 element: "Water"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/europa_icon.png"
+                imageSource: "../../../images/summons/europa.png"
                 name: "Europa"
                 element: "Water"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/varuna_icon.png"
+                imageSource: "../../../images/summons/varuna.png"
                 name: "Varuna"
                 element: "Water"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/bonito_icon.png"
+                imageSource: "../../../images/summons/bonito.png"
                 name: "Bonito"
                 element: "Water"
             }
@@ -79,19 +79,19 @@ Flickable {
             id: earthSummonsModel
 
             ListElement {
-                imageSource: "../../../images/summons/icons/yggdrasil_omega_icon.png"
+                imageSource: "../../../images/summons/yggdrasil_omega.png"
                 name: "Yggdrasil Omega"
                 element: "Earth"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/godsworn_alexiel_icon.png"
+                imageSource: "../../../images/summons/godsworn_alexiel.png"
                 name: "Godsworn Alexiel"
                 element: "Earth"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/titan_icon.png"
+                imageSource: "../../../images/summons/titan.png"
                 name: "Titan"
                 element: "Earth"
             }
@@ -101,19 +101,19 @@ Flickable {
             id: windSummonsModel
 
             ListElement {
-                imageSource: "../../../images/summons/icons/tiamat_omega_icon.png"
+                imageSource: "../../../images/summons/tiamat_omega.png"
                 name: "Tiamat Omega"
                 element: "Wind"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/grimnir_icon.png"
+                imageSource: "../../../images/summons/grimnir.png"
                 name: "Grimnir"
                 element: "Wind"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/zephyrus_icon.png"
+                imageSource: "../../../images/summons/zephyrus.png"
                 name: "Zephyrus"
                 element: "Wind"
             }
@@ -123,19 +123,19 @@ Flickable {
             id: lightSummonsModel
 
             ListElement {
-                imageSource: "../../../images/summons/icons/luminiera_omega_icon.png"
+                imageSource: "../../../images/summons/luminiera_omega.png"
                 name: "Luminiera Omega"
                 element: "Light"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/lucifer_icon.png"
+                imageSource: "../../../images/summons/lucifer.png"
                 name: "Lucifer"
                 element: "Light"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/zeus_icon.png"
+                imageSource: "../../../images/summons/zeus.png"
                 name: "Zeus"
                 element: "Light"
             }
@@ -145,19 +145,19 @@ Flickable {
             id: darkSummonsModel
 
             ListElement {
-                imageSource: "../../../images/summons/icons/celeste_omega_icon.png"
+                imageSource: "../../../images/summons/celeste_omega.png"
                 name: "Celeste Omega"
                 element: "Dark"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/bahamut_icon.png"
+                imageSource: "../../../images/summons/bahamut.png"
                 name: "Bahamut"
                 element: "Dark"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/hades_icon.png"
+                imageSource: "../../../images/summons/hades.png"
                 name: "Hades"
                 element: "Dark"
             }
@@ -167,37 +167,37 @@ Flickable {
             id: miscSummonsModel
 
             ListElement {
-                imageSource: "../../../images/summons/icons/huanglong_icon.png"
+                imageSource: "../../../images/summons/huanglong.png"
                 name: "Huanglong"
                 element: "Misc"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/qilin_icon.png"
+                imageSource: "../../../images/summons/qilin.png"
                 name: "Qilin"
                 element: "Misc"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/kaguya_icon.png"
+                imageSource: "../../../images/summons/kaguya.png"
                 name: "Kaguya"
                 element: "Misc"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/nobiyo_icon.png"
+                imageSource: "../../../images/summons/nobiyo.png"
                 name: "Nobiyo"
                 element: "Misc"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/white_rabbit_icon.png"
+                imageSource: "../../../images/summons/white_rabbit.png"
                 name: "White Rabbit"
                 element: "Misc"
             }
 
             ListElement {
-                imageSource: "../../../images/summons/icons/black_rabbit_icon.png"
+                imageSource: "../../../images/summons/black_rabbit.png"
                 name: "Black Rabbit"
                 element: "Misc"
             }
