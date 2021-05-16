@@ -238,11 +238,8 @@ class ImageUtils:
                             self._game.print_and_save(f"[WARNING] Could not locate {summon_list[summon_index].upper()} Summon. Trying again...")
 
                         # If the bot reached the bottom of the page, scroll back up to the top and start searching for the next Summon.
-                        special_summon_selection = ["Event", "Event (Token Drawboxes)", "Guild Wars", "Proving Grounds"]
-                        special_summon_selection2 = ["Event", "Event (Token Drawboxes)", "Guild Wars"]
-                        if (special_summon_selection.__contains__(self._game.farming_mode) is False and self.find_button("bottom_of_summon_selection", tries = 1) is not None) or \
-                                (special_summon_selection2.__contains__(self._game.farming_mode) and self.find_button("bottom_of_event_summon_selection", tries = 1) is not None) or \
-                                (self._game.farming_mode == "Proving Grounds" and self.find_button("bottom_of_proving_grounds_summon_selection", tries = 1) is not None):
+                        if (self._game.farming_mode == "Proving Grounds" and self.find_button("bottom_of_proving_grounds_summon_selection", tries = 1) is not None) or \
+                                self.find_button("bottom_of_summon_selection", tries = 1) or self.find_button("bottom_of_event_summon_selection", tries = 1) is not None:
                             self._game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, 10000)
                             summon_index += 1
                             break
