@@ -246,6 +246,8 @@ class ImageUtils:
 
                         # If matching failed, scroll the screen down to see more Summons.
                         self._game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
+
+                        self._game.wait(1)
                     else:
                         guibot_check = True
 
