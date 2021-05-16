@@ -3,7 +3,7 @@
 
 > Android version here: https://github.com/steve1316/granblue-automation-android
 
-![Correct Window Size](images/readme_assets/preview.png)
+https://user-images.githubusercontent.com/18709555/118408116-db622c00-b638-11eb-9a24-5edc59cef34e.mp4
 
 This Python application is designed for educational research purposes on studying how to automate certain workflows via image template matching using PyAutoGUI and GuiBot. PyAutoGUI accomplishes this by taking over the mouse, hence why it is recommended to run this on a separate machine than the one that you use daily. This can be circumvented by running this on a virtual machine like VMWare Workstation Player so you can keep using your main computer without interruption.
 
