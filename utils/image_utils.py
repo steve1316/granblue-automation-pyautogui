@@ -1,4 +1,5 @@
 import datetime
+import multiprocessing
 import os
 import time
 from datetime import date
@@ -10,7 +11,6 @@ from PIL import Image
 from guibot.fileresolver import FileResolver
 from guibot.guibot import GuiBot
 from playsound import playsound
-import multiprocessing
 
 
 class ImageUtils:

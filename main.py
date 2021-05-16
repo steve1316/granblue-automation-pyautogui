@@ -45,7 +45,7 @@ class MainDriver:
             None
         """
         # Initialize the Game class and start Farming Mode.
-        self._game = Game(queue = queue, is_bot_running = is_bot_running, combat_script = combat_script, debug_mode = debug_mode)
+        self._game = Game(queue = queue, is_bot_running = is_bot_running, combat_script = combat_script, debug_mode = debug_mode, test_mode = False)
 
         self._game.start_farming_mode(item_name = item_name, item_amount_to_farm = int(item_amount_to_farm), farming_mode = farming_mode, map_name = location_name, mission_name = mission_name,
                                       summon_element_list = summon_element_list, summon_list = summon_list, group_number = group_number, party_number = party_number)

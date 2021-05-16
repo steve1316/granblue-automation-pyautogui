@@ -142,7 +142,7 @@ class TwitterRoomFinder:
             "Lvl 200 Lu Woh": "Lv200 ル・オー",
             "Lvl 200 Fediel": "Lv200 フェディエル",
             "Lvl 250 Beelzebub": "Lv250 ベルゼバブ",
-            
+
             # Xeno Clash Raids
             "Lvl 100 Xeno Ifrit": "Lv100 ゼノ・イフリート",
             "Lvl 100 Xeno Cocytus": "Lv100 ゼノ・コキュートス",
