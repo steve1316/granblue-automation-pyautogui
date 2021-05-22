@@ -1298,6 +1298,11 @@ Item{
                             { text: "Grand Order", enabled: false },
                             { text: "Lvl 100 Grand Order", map: "", enabled: true },
                         ]
+                    } else if(itemSelectionButton.text === "Verdant Azurite") {
+                        missionSelectionComboBox.model = [
+                            { text: "Grand Order", enabled: false },
+                            { text: "Lvl 200 Grand Order", map: "", enabled: true },
+                        ]
                     } else if(itemSelectionButton.text === "Horn of Bahamut" || itemSelectionButton.text === "Champion Merit") {
                         missionSelectionComboBox.model = [
                             { text: "Proto Bahamut", enabled: false },
@@ -1312,6 +1317,16 @@ Item{
                         missionSelectionComboBox.model = [
                             { text: "Rose Queen", enabled: false },
                             { text: "Lvl 110 Rose Queen", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Hollow Key") {
+                        missionSelectionComboBox.model = [
+                            { text: "Akasha", enabled: false },
+                            { text: "Lvl 200 Akasha", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Dark Residue" || itemSelectionButton.text === "Shadow Substance") {
+                        missionSelectionComboBox.model = [
+                            { text: "Lucilius", enabled: false },
+                            { text: "Lvl 150 Lucilius", map: "", enabled: true },
                         ]
                     } else if(itemSelectionButton.text === "Michael Anima") {
                         missionSelectionComboBox.model = [

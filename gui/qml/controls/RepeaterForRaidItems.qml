@@ -64,7 +64,7 @@ Flickable {
                 "Leviathan Malice": ["Leviathan Malice Anima", "Kaladanda", "Kris of Hypnos"],
                 "Phronesis": ["Phronesis Anima", "Dark Thrasher", "Master Bamboo Sword"],
                 "Luminiera Malice": ["Luminiera Malice Anima", "Colomba", "Seyfert"],
-                "Grand Order": ["Azure Feather", "Heavenly Horn"],
+                "Grand Order": ["Azure Feather", "Heavenly Horn", "Verdant Azurite"],
                 "Proto Bahamut": ["Horn of Bahamut", "Champion Merit", "Primeval Horn"],
                 "Rose Queen": ["Rose Petal"],
                 "Michael": ["Michael Anima"],
@@ -82,7 +82,9 @@ Flickable {
                 "Xeno Vohu Manah": ["True Xeno Vohu Manah Anima", "Sacrosanct Sutra"],
                 "Xeno Sagittarius": ["True Xeno Sagittarius Anima", "Zodiac Arc"],
                 "Xeno Corow": ["True Xeno Corow Anima", "Flame Fanner"],
-                "Xeno Diablo": ["True Xeno Diablo Anima", "Wraithbind Fetter"]
+                "Xeno Diablo": ["True Xeno Diablo Anima", "Wraithbind Fetter"],
+                "Akasha": ["Hollow Key"],
+                "Lucilius": ["Dark Residue", "Shadow Substance"]
             }
 
             function createListElement(itemName){
@@ -2500,6 +2502,118 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Fediel /////////
+
+        ///////// Raid Items - Akasha /////////
+        Label {
+            id: label_Akasha
+
+            color: "#ffffff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Akasha"
+        }
+
+        Repeater {
+            id: repeater_Akasha
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_Akasha.visible === true){
+                    repeater_Akasha.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Akasha.text].length; i++){
+                        repeater_Akasha.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Akasha.text][i]))
+                    }
+                }
+            }
+
+            Image {
+                id: itemImage_Akasha
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ffffff"
+                    anchors.left: itemImage_Akasha.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Akasha /////////
+
+        ///////// Raid Items - Lucilius /////////
+        Label {
+            id: label_Lucilius
+
+            color: "#ffffff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Lucilius"
+        }
+
+        Repeater {
+            id: repeater_Lucilius
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_Lucilius.visible === true){
+                    repeater_Lucilius.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Lucilius.text].length; i++){
+                        repeater_Lucilius.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Lucilius.text][i]))
+                    }
+                }
+            }
+
+            Image {
+                id: itemImage_Lucilius
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ffffff"
+                    anchors.left: itemImage_Lucilius.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Lucilius /////////
 
         ///////// Raid Items - Tiamat Malice /////////
         Label {
