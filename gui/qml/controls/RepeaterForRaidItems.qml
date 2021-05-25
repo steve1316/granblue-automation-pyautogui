@@ -71,6 +71,7 @@ Flickable {
                 "Gabriel": ["Gabriel Anima"],
                 "Uriel": ["Uriel Anima"],
                 "Raphael": ["Raphael Anima"],
+                "Four Primarchs": ["Fire Halo", "Water Halo", "Earth Halo", "Wind Halo"],
                 "Wilnas": ["Wilnas's Finger"],
                 "Wamdus": ["Wamdus's Cnidocyte"],
                 "Galleon": ["Galleon's Jaw"],
@@ -990,7 +991,63 @@ Flickable {
                 }
             }
         }
-        ///////// End of Raid Items - Uriel /////////
+        ///////// End of Raid Items - Raphael /////////
+
+        ///////// Raid Items - Four Primarchs /////////
+        Label {
+            id: label_FourPrimarchs
+
+            color: "#ffffff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Four Primarchs"
+        }
+
+        Repeater {
+            id: repeater_FourPrimarchs
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_FourPrimarchs.visible === true){
+                    repeater_FourPrimarchs.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_FourPrimarchs.text].length; i++){
+                        repeater_FourPrimarchs.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_FourPrimarchs.text][i]))
+                    }
+                }
+            }
+
+            Image {
+                id: itemImage_FourPrimarchs
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ffffff"
+                    anchors.left: itemImage_FourPrimarchs.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Four Primarchs /////////
 
         ///////// Raid Items - Rose Queen /////////
         Label {

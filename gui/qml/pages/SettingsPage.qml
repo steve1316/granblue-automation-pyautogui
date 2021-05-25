@@ -1348,6 +1348,11 @@ Item{
                             { text: "Raphael", enabled: false },
                             { text: "Lvl 100 Raphael", map: "", enabled: true },
                         ]
+                    } else if(itemSelectionButton.text === "Fire Halo" || itemSelectionButton.text === "Water Halo" || itemSelectionButton.text === "Earth Halo" || itemSelectionButton.text === "Wind Halo") {
+                        missionSelectionComboBox.model = [
+                            { text: "Four Primarchs", enabled: false },
+                            { text: "The Four Primarchs", map: "", enabled: true },
+                        ]
                     }
                 }
 
