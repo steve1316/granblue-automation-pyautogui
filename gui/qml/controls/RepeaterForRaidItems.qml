@@ -85,7 +85,9 @@ Flickable {
                 "Xeno Corow": ["True Xeno Corow Anima", "Flame Fanner"],
                 "Xeno Diablo": ["True Xeno Diablo Anima", "Wraithbind Fetter"],
                 "Akasha": ["Hollow Key"],
-                "Lucilius": ["Dark Residue", "Shadow Substance"]
+                "Lucilius": ["Dark Residue", "Shadow Substance"],
+                "Ultimate Bahamut": ["Michael Anima", "Gabriel Anima", "Uriel Anima", "Raphael Anima", "Meteorite Fragment", "Meteorite", "Silver Centrum", "Athena Anima", "Athena Omega Anima", "Grani Anima", "Grani Omega Anima", "Baal Anima", "Baal Omega Anima", "Garuda Anima", "Garuda Omega Anima", "Odin Anima", "Odin Omega Anima", "Lich Anima", "Lich Omega Anima"],
+                "Lindwurm": ["Golden Scale", "Lineage Fragment"]
             }
 
             function createListElement(itemName){
@@ -1216,6 +1218,62 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Proto Bahamut /////////
+
+        ///////// Raid Items - Ultimate Bahamut /////////
+        Label {
+            id: label_UltimateBahamut
+
+            color: "#ffffff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Ultimate Bahamut"
+        }
+
+        Repeater {
+            id: repeater_UltimateBahamut
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_UltimateBahamut.visible === true){
+                    repeater_UltimateBahamut.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_UltimateBahamut.text].length; i++){
+                        repeater_UltimateBahamut.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_UltimateBahamut.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_UltimateBahamut
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ffffff"
+                    anchors.left: itemImage_UltimateBahamut.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Ultimate Bahamut /////////
 
         ///////// Raid Items - Twin Elements /////////
         Label {
@@ -2671,6 +2729,62 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Lucilius /////////
+
+        ///////// Raid Items - Lindwurm /////////
+        Label {
+            id: label_Lindwurm
+
+            color: "#ffffff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Lindwurm"
+        }
+
+        Repeater {
+            id: repeater_Lindwurm
+            model: ListModel { }
+            
+            onVisibleChanged: {
+                if(repeater_Lindwurm.visible === true){
+                    repeater_Lindwurm.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Lindwurm.text].length; i++){
+                        repeater_Lindwurm.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Lindwurm.text][i]))
+                    }
+                }
+            }
+        
+            Image {
+                id: itemImage_Lindwurm
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ffffff"
+                    anchors.left: itemImage_Lindwurm.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Lindwurm /////////
 
         ///////// Raid Items - Tiamat Malice /////////
         Label {

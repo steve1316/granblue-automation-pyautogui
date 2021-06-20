@@ -1138,32 +1138,74 @@ Item{
                             { text: "Lvl 100 Dark Angel Olivia", map: "", enabled: true },
                             { text: "Lvl 120 Dark Angel Olivia", map: "", enabled: true },
                         ]
-                    } else if(itemSelectionButton.text === "Athena Anima" || itemSelectionButton.text === "Athena Omega Anima" || itemSelectionButton.text === "Erichthonius" || itemSelectionButton.text === "Sword of Pallas") {
+                    } else if(itemSelectionButton.text === "Athena Anima" || itemSelectionButton.text === "Athena Omega Anima") {
+                        missionSelectionComboBox.model = [
+                            { text: "Athena", enabled: false },
+                            { text: "Lvl 100 Athena", map: "", enabled: true },
+                            { text: "Ultimate Bahamut", enabled: false },
+                            { text: "Lvl 150 Ultimate Bahamut", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Erichthonius" || itemSelectionButton.text === "Sword of Pallas") {
                         missionSelectionComboBox.model = [
                             { text: "Athena", enabled: false },
                             { text: "Lvl 100 Athena", map: "", enabled: true },
                         ]
-                    } else if(itemSelectionButton.text === "Grani Anima" || itemSelectionButton.text === "Grani Omega Anima" || itemSelectionButton.text === "Bow of Sigurd" || itemSelectionButton.text === "Wilhelm") {
+                    } else if(itemSelectionButton.text === "Grani Anima" || itemSelectionButton.text === "Grani Omega Anima") {
+                        missionSelectionComboBox.model = [
+                            { text: "Grani", enabled: false },
+                            { text: "Lvl 100 Grani", map: "", enabled: true },
+                            { text: "Ultimate Bahamut", enabled: false },
+                            { text: "Lvl 150 Ultimate Bahamut", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Bow of Sigurd" || itemSelectionButton.text === "Wilhelm") {
                         missionSelectionComboBox.model = [
                             { text: "Grani", enabled: false },
                             { text: "Lvl 100 Grani", map: "", enabled: true },
                         ]
-                    } else if(itemSelectionButton.text === "Baal Anima" || itemSelectionButton.text === "Baal Omega Anima" || itemSelectionButton.text === "Solomon's Axe" || itemSelectionButton.text === "Spymur's Vision") {
+                    } else if(itemSelectionButton.text === "Baal Anima" || itemSelectionButton.text === "Baal Omega Anima") {
+                        missionSelectionComboBox.model = [
+                            { text: "Baal", enabled: false },
+                            { text: "Lvl 100 Baal", map: "", enabled: true },
+                            { text: "Ultimate Bahamut", enabled: false },
+                            { text: "Lvl 150 Ultimate Bahamut", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Solomon's Axe" || itemSelectionButton.text === "Spymur's Vision") {
                         missionSelectionComboBox.model = [
                             { text: "Baal", enabled: false },
                             { text: "Lvl 100 Baal", map: "", enabled: true },
                         ]
-                    } else if(itemSelectionButton.text === "Garuda Anima" || itemSelectionButton.text === "Garuda Omega Anima" || itemSelectionButton.text === "Plume of Suparna" || itemSelectionButton.text === "Indra's Edge") {
+                    } else if(itemSelectionButton.text === "Garuda Anima" || itemSelectionButton.text === "Garuda Omega Anima") {
+                        missionSelectionComboBox.model = [
+                            { text: "Garuda", enabled: false },
+                            { text: "Lvl 100 Garuda", map: "", enabled: true },
+                            { text: "Ultimate Bahamut", enabled: false },
+                            { text: "Lvl 150 Ultimate Bahamut", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Plume of Suparna" || itemSelectionButton.text === "Indra's Edge") {
                         missionSelectionComboBox.model = [
                             { text: "Garuda", enabled: false },
                             { text: "Lvl 100 Garuda", map: "", enabled: true },
                         ]
-                    } else if(itemSelectionButton.text === "Odin Anima" || itemSelectionButton.text === "Odin Omega Anima" || itemSelectionButton.text === "Gungnir" || itemSelectionButton.text === "Sleipnir Shoe") {
+                    } else if(itemSelectionButton.text === "Odin Anima" || itemSelectionButton.text === "Odin Omega Anima") {
+                        missionSelectionComboBox.model = [
+                            { text: "Odin", enabled: false },
+                            { text: "Lvl 100 Odin", map: "", enabled: true },
+                            { text: "Ultimate Bahamut", enabled: false },
+                            { text: "Lvl 150 Ultimate Bahamut", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Gungnir" || itemSelectionButton.text === "Sleipnir Shoe") {
                         missionSelectionComboBox.model = [
                             { text: "Odin", enabled: false },
                             { text: "Lvl 100 Odin", map: "", enabled: true },
                         ]
-                    } else if(itemSelectionButton.text === "Lich Anima" || itemSelectionButton.text === "Lich Omega Anima" || itemSelectionButton.text === "Obscuritas" || itemSelectionButton.text === "Phantasmas") {
+                    } else if(itemSelectionButton.text === "Lich Anima" || itemSelectionButton.text === "Lich Omega Anima") {
+                        missionSelectionComboBox.model = [
+                            { text: "Lich", enabled: false },
+                            { text: "Lvl 100 Lich", map: "", enabled: true },
+                            { text: "Ultimate Bahamut", enabled: false },
+                            { text: "Lvl 150 Ultimate Bahamut", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Obscuritas" || itemSelectionButton.text === "Phantasmas") {
                         missionSelectionComboBox.model = [
                             { text: "Lich", enabled: false },
                             { text: "Lvl 100 Lich", map: "", enabled: true },
@@ -1313,6 +1355,12 @@ Item{
                             { text: "Proto Bahamut", enabled: false },
                             { text: "Lvl 150 Proto Bahamut", map: "", enabled: true },
                         ]
+                    } else if(itemSelectionButton.text === "Silver Centrum" || itemSelectionButton.text === "Meteorite Fragment" || itemSelectionButton.text === "Meteorite") {
+                        missionSelectionComboBox.model = [
+                            { text: "Ultimate Bahamut", enabled: false },
+                            { text: "Lvl 150 Ultimate Bahamut", map: "", enabled: true },
+                            { text: "Lvl 200 Ultimate Bahamut", map: "", enabled: true },
+                        ]
                     } else if(itemSelectionButton.text === "Rose Petal") {
                         missionSelectionComboBox.model = [
                             { text: "Rose Queen", enabled: false },
@@ -1328,25 +1376,38 @@ Item{
                             { text: "Lucilius", enabled: false },
                             { text: "Lvl 150 Lucilius", map: "", enabled: true },
                         ]
+                    } else if(itemSelectionButton.text === "Golden Scale" || itemSelectionButton.text === "Lineage Fragment") {
+                        missionSelectionComboBox.model = [
+                            { text: "Lindwurm", enabled: false },
+                            { text: "Lvl 200 Lindwurm", map: "", enabled: true },
+                        ]
                     } else if(itemSelectionButton.text === "Michael Anima") {
                         missionSelectionComboBox.model = [
                             { text: "Michael", enabled: false },
                             { text: "Lvl 100 Michael", map: "", enabled: true },
+                            { text: "Ultimate Bahamut", enabled: false },
+                            { text: "Lvl 150 Ultimate Bahamut", map: "", enabled: true },
                         ]
                     } else if(itemSelectionButton.text === "Gabriel Anima") {
                         missionSelectionComboBox.model = [
                             { text: "Gabriel", enabled: false },
                             { text: "Lvl 100 Gabriel", map: "", enabled: true },
+                            { text: "Ultimate Bahamut", enabled: false },
+                            { text: "Lvl 150 Ultimate Bahamut", map: "", enabled: true },
                         ]
                     } else if(itemSelectionButton.text === "Uriel Anima") {
                         missionSelectionComboBox.model = [
                             { text: "Uriel", enabled: false },
                             { text: "Lvl 100 Uriel", map: "", enabled: true },
+                            { text: "Ultimate Bahamut", enabled: false },
+                            { text: "Lvl 150 Ultimate Bahamut", map: "", enabled: true },
                         ]
                     } else if(itemSelectionButton.text === "Raphael Anima") {
                         missionSelectionComboBox.model = [
                             { text: "Raphael", enabled: false },
                             { text: "Lvl 100 Raphael", map: "", enabled: true },
+                            { text: "Ultimate Bahamut", enabled: false },
+                            { text: "Lvl 150 Ultimate Bahamut", map: "", enabled: true },
                         ]
                     } else if(itemSelectionButton.text === "Fire Halo" || itemSelectionButton.text === "Water Halo" || itemSelectionButton.text === "Earth Halo" || itemSelectionButton.text === "Wind Halo") {
                         missionSelectionComboBox.model = [
