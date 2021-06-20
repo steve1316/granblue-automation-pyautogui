@@ -127,6 +127,7 @@ class TwitterRoomFinder:
             "Lvl 200 Akasha": "Lv200 アーカーシャ",
             "Lvl 150 Lucilius": "Lv150 ルシファー",
             "Lvl 250 Lucilius": "Lv250 ルシファー",
+            "Lvl 200 Lindwurm": "Lv200 リンドヴルム",
 
             # Malice Raids
             "Lvl 150 Tiamat Malice": "Lv150 ティアマト・マリス",
