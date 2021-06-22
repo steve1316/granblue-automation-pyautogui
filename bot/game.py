@@ -116,25 +116,6 @@ class Game:
             self._rotb_extreme_plus_amount = 0
         # #### end of rise_of_the_beasts ####
 
-        # #### dread_barrage ####
-        self._enable_unparalleled_foe = config.getboolean("dread_barrage", "enable_unparalleled_foe")
-        if self._enable_unparalleled_foe:
-            self._enable_unparalleled_foe_level_95 = config.getboolean("dread_barrage", "enable_unparalleled_foe_level_95")
-            self._enable_unparalleled_foe_level_175 = config.getboolean("dread_barrage", "enable_unparalleled_foe_level_175")
-            self._unparalleled_foe_combat_script = config.get("dread_barrage", "unparalleled_foe_combat_script")
-
-            self._unparalleled_foe_summon_list = config.get("dread_barrage", "unparalleled_foe_summon_list").replace(" ", "_").split(",")
-            if len(self._unparalleled_foe_summon_list) == 1 and self._unparalleled_foe_summon_list[0] == "":
-                self._unparalleled_foe_summon_list.clear()
-
-            self._unparalleled_foe_summon_element_list = config.get("dread_barrage", "unparalleled_foe_summon_element_list").replace(" ", "_").split(",")
-            if len(self._unparalleled_foe_summon_element_list) == 1 and self._unparalleled_foe_summon_element_list[0] == "":
-                self._unparalleled_foe_summon_element_list.clear()
-
-            self._unparalleled_foe_group_number = config.get("dread_barrage", "unparalleled_foe_group_number")
-            self._unparalleled_foe_party_number = config.get("dread_barrage", "unparalleled_foe_party_number")
-        # #### end of dread_barrage ####
-
         # #### xeno_clash ####
         self._enable_xeno_clash_nightmare = config.getboolean("xeno_clash", "enable_xeno_clash_nightmare")
         if self._enable_xeno_clash_nightmare:
@@ -1080,35 +1061,6 @@ class Game:
                 self._rotb_extreme_plus_party_number = int(self._rotb_extreme_plus_party_number)
 
             self.print_and_save("[INFO] Settings initialized for Rise of the Beasts Extreme+...")
-        elif self.farming_mode == "Dread Barrage" and self._item_name == "Repeated Runs" and self._enable_unparalleled_foe:
-            # Do the same for Dread Barrage Unparalleled Foes if enabled.
-            self.print_and_save("\n[INFO] Initializing settings for Dread Barrage Unparalleled Foes...")
-
-            if self._unparalleled_foe_combat_script == "":
-                self.print_and_save("[INFO] Combat Script for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
-                self._unparalleled_foe_combat_script = self._combat_script
-
-            if len(self._unparalleled_foe_summon_element_list) == 0:
-                self.print_and_save("[INFO] Summon Elements for Dread Barrage Unparalleled Foes will reuse the ones for Farming Mode.")
-                self._unparalleled_foe_summon_element_list = self._summon_element_list
-
-            if len(self._unparalleled_foe_summon_list) == 0:
-                self.print_and_save("[INFO] Summons for Dread Barrage Unparalleled Foes will reuse the ones for Farming Mode.")
-                self._unparalleled_foe_summon_list = self._summon_list
-
-            if self._unparalleled_foe_group_number == "":
-                self.print_and_save("[INFO] Group Number for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
-                self._unparalleled_foe_group_number = self._group_number
-            else:
-                self._unparalleled_foe_group_number = int(self._unparalleled_foe_group_number)
-
-            if self._unparalleled_foe_party_number == "":
-                self.print_and_save("[INFO] Party Number for Dread Barrage Unparalleled Foes will reuse the one for Farming Mode.")
-                self._unparalleled_foe_party_number = self._party_number
-            else:
-                self._unparalleled_foe_party_number = int(self._unparalleled_foe_party_number)
-
-            self.print_and_save("[INFO] Settings initialized for Dread Barrage Unparalleled Foes...")
         elif self.farming_mode == "Xeno Clash" and self._item_name == "Repeated Runs" and self._enable_xeno_clash_nightmare:
             # Do the same for Xeno Clash if enabled.
             self.print_and_save("\n[INFO] Initializing settings for Xeno Clash Nightmare...")
@@ -1232,7 +1184,7 @@ class Game:
             self._group_number = group_number
             self._party_number = party_number
 
-            # Perform advanced setup for the special fights like Dimensional Halo, Event Nightmares, and Dread Barrage's Unparalleled Foes.
+            # Perform advanced setup for the special fights like Dimensional Halo and Event Nightmares.
             self._advanced_setup()
 
             if farming_mode != "Raid":
@@ -1331,30 +1283,6 @@ class Game:
                                 self.find_and_click_button("coop_start")
 
                                 self.wait(1)
-
-                            elif farming_mode == "Dread Barrage" and self.image_tools.confirm_location("dread_barrage_unparalleled_foes", tries = 1):
-                                # Find the locations of the "AP 0" text underneath each Unparalleled Foe.
-                                ap_0_locations = self.image_tools.find_all("ap_0")
-
-                                # Start the Level 95 Unparalleled Foe.
-                                if self._enable_unparalleled_foe_level_95 and not self._enable_unparalleled_foe_level_175:
-                                    self.print_and_save("\n[INFO] Starting Level 95 Unparalleled Foe...")
-                                    self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1], "ap_0")
-
-                                # Start the Level 175 Unparalleled Foe.
-                                elif self._enable_unparalleled_foe_level_175 and not self._enable_unparalleled_foe_level_95:
-                                    self.print_and_save("\n[INFO] Starting Level 175 Unparalleled Foe...")
-                                    self.mouse_tools.move_and_click_point(ap_0_locations[1][0], ap_0_locations[1][1], "ap_0")
-
-                                # Close the popup if the user does not want to fight any of them.
-                                elif not self._enable_unparalleled_foe_level_95 and not self._enable_unparalleled_foe_level_175:
-                                    self.print_and_save("\n[INFO] User did not opt to fight any Unparalleled Foes. Closing Unparalleled Foes popup...")
-                                    self.find_and_click_button("close")
-
-                                # Every other case will default to the Level 95 Unparalleled Foe.
-                                else:
-                                    self.print_and_save("\n[INFO] Defaulting to Level 95 Unparalleled Foe due to incorrect config.ini settings. Starting it now...")
-                                    self.mouse_tools.move_and_click_point(ap_0_locations[0][0], ap_0_locations[0][1], "ap_0")
 
                             elif farming_mode == "Proving Grounds":
                                 # Click the "Next Battle" button if there are any battles left.

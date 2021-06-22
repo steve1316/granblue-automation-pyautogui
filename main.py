@@ -590,16 +590,6 @@ rotb_extreme_plus_summon_element_list =
 rotb_extreme_plus_group_number =
 rotb_extreme_plus_party_number =
 
-[dread_barrage]
-enable_unparalleled_foe = False
-enable_unparalleled_foe_level_95 = False
-enable_unparalleled_foe_level_175 = False
-unparalleled_foe_combat_script =
-unparalleled_foe_summon_list =
-unparalleled_foe_summon_element_list =
-unparalleled_foe_group_number =
-unparalleled_foe_party_number =
-
 [xeno_clash]
 enable_xeno_clash_nightmare = False
 xeno_clash_nightmare_combat_script =
