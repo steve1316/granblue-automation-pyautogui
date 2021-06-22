@@ -1355,10 +1355,20 @@ Item{
                             { text: "Proto Bahamut", enabled: false },
                             { text: "Lvl 150 Proto Bahamut", map: "", enabled: true },
                         ]
-                    } else if(itemSelectionButton.text === "Silver Centrum" || itemSelectionButton.text === "Meteorite Fragment" || itemSelectionButton.text === "Meteorite") {
+                    } else if(itemSelectionButton.text === "Meteorite Fragment" || itemSelectionButton.text === "Meteorite") {
                         missionSelectionComboBox.model = [
                             { text: "Ultimate Bahamut", enabled: false },
                             { text: "Lvl 150 Ultimate Bahamut", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Silver Centrum") {
+                        missionSelectionComboBox.model = [
+                            { text: "Ultimate Bahamut", enabled: false },
+                            { text: "Lvl 150 Ultimate Bahamut", map: "", enabled: true },
+                            { text: "Lvl 200 Ultimate Bahamut", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Ultima Unit") {
+                        missionSelectionComboBox.model = [
+                            { text: "Ultimate Bahamut", enabled: false },
                             { text: "Lvl 200 Ultimate Bahamut", map: "", enabled: true },
                         ]
                     } else if(itemSelectionButton.text === "Rose Petal") {

@@ -86,7 +86,7 @@ Flickable {
                 "Xeno Diablo": ["True Xeno Diablo Anima", "Wraithbind Fetter"],
                 "Akasha": ["Hollow Key"],
                 "Lucilius": ["Dark Residue", "Shadow Substance"],
-                "Ultimate Bahamut": ["Michael Anima", "Gabriel Anima", "Uriel Anima", "Raphael Anima", "Meteorite Fragment", "Meteorite", "Silver Centrum", "Athena Anima", "Athena Omega Anima", "Grani Anima", "Grani Omega Anima", "Baal Anima", "Baal Omega Anima", "Garuda Anima", "Garuda Omega Anima", "Odin Anima", "Odin Omega Anima", "Lich Anima", "Lich Omega Anima"],
+                "Ultimate Bahamut": ["Michael Anima", "Gabriel Anima", "Uriel Anima", "Raphael Anima", "Meteorite Fragment", "Meteorite", "Silver Centrum", "Ultima Unit", "Athena Anima", "Athena Omega Anima", "Grani Anima", "Grani Omega Anima", "Baal Anima", "Baal Omega Anima", "Garuda Anima", "Garuda Omega Anima", "Odin Anima", "Odin Omega Anima", "Lich Anima", "Lich Omega Anima"],
                 "Lindwurm": ["Golden Scale", "Lineage Fragment"]
             }
 
