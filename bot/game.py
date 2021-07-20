@@ -4,6 +4,7 @@ import random
 import time
 import traceback
 from configparser import ConfigParser
+from datetime import datetime as DateTime
 from timeit import default_timer as timer
 from typing import List
 
@@ -24,6 +25,8 @@ class Game:
     ----------
     queue (multiprocessing.Queue): Queue to keep track of logging messages to share between backend and frontend.
 
+    discord_queue (multiprocessing.Queue): Queue to keep track of status messages to inform the user via Discord DMs.
+
     is_bot_running (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
 
     combat_script (str, optional): The file path to the combat script to use for Combat Mode. Defaults to empty string.
@@ -34,13 +37,17 @@ class Game:
 
     """
 
-    def __init__(self, queue: multiprocessing.Queue, is_bot_running: int, combat_script: str = "", test_mode: bool = False, debug_mode: bool = False):
+    def __init__(self, queue: multiprocessing.Queue, discord_queue: multiprocessing.Queue, is_bot_running: int, combat_script: str = "", test_mode: bool = False, debug_mode: bool = False):
         super().__init__()
 
         # ################## config.ini ###################
         # Grab the Twitter API keys and tokens from config.ini. The list order is: [consumer key, consumer secret key, access token, access secret token].
         config = ConfigParser()
         config.read("config.ini")
+
+        # #### discord ####
+        self.discord_queue = discord_queue
+        # #### end of discord ####
 
         # #### twitter ####
         keys_tokens = [config.get("twitter", "api_key"), config.get("twitter", "api_key_secret"), config.get("twitter", "access_token"), config.get("twitter", "access_token_secret")]
@@ -700,6 +707,12 @@ class Game:
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished}")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
+
+                if temp_amount != 0:
+                    now = DateTime.now()
+                    self.discord_queue.put(
+                        f"--------------------\n[{now.strftime('%I:%M:%S')}]Amount of {self._item_name} gained this run: {temp_amount}.\nAmount of {self._item_name} gained in total: "
+                        f"{self._item_amount_farmed} / {self._item_amount_to_farm}")
             else:
                 self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
@@ -709,6 +722,10 @@ class Game:
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished} / {self._item_amount_to_farm}")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
+
+                now = DateTime.now()
+                self.discord_queue.put(f"--------------------\n[{now.strftime('%I:%M:%S')}]Runs Completed: [{self._amount_of_runs_finished} / {self._item_amount_to_farm}] -> "
+                                       f"[{self._amount_of_runs_finished} / {self._item_amount_to_farm}]")
 
         return None
 

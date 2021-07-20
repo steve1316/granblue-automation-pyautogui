@@ -1,6 +1,8 @@
 import multiprocessing
 import os
 import sys
+from configparser import ConfigParser
+from datetime import datetime
 from pathlib import Path
 from timeit import default_timer as timer
 from typing import List
@@ -9,6 +11,7 @@ from PySide2.QtCore import QObject, QUrl, Signal, Slot
 from PySide2.QtGui import QGuiApplication
 from PySide2.QtQml import QQmlApplicationEngine
 
+import utils.discord_utils
 from bot.game import Game
 
 
@@ -23,7 +26,7 @@ class MainDriver:
         self._debug = None
 
     def run_bot(self, item_name: str, item_amount_to_farm: str, farming_mode: str, location_name: str, mission_name: str, summon_element_list: List[str], summon_list: List[str],
-                group_number: int, party_number: int, combat_script: str, queue: multiprocessing.Queue, is_bot_running: int, debug_mode: bool = False):
+                group_number: int, party_number: int, combat_script: str, queue: multiprocessing.Queue, discord_queue: multiprocessing.Queue, is_bot_running: int, debug_mode: bool = False):
         """Starts the main bot process on this Thread.
 
         Args:
@@ -38,6 +41,7 @@ class MainDriver:
             party_number (int): The specified Party to start the mission with.
             combat_script (str): The file path to the combat script to use for Combat Mode.
             queue (multiprocessing.Queue): Queue to keep track of logging messages to share between backend and frontend.
+            discord_queue (multiprocessing.Queue): Queue to keep track of status messages to inform the user via Discord DMs.
             is_bot_running (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
             debug_mode (bool): Optional flag to print relevant debug messages. Defaults to False.
 
@@ -45,7 +49,7 @@ class MainDriver:
             None
         """
         # Initialize the Game class and start Farming Mode.
-        self._game = Game(queue = queue, is_bot_running = is_bot_running, combat_script = combat_script, debug_mode = debug_mode, test_mode = False)
+        self._game = Game(queue = queue, discord_queue = discord_queue, is_bot_running = is_bot_running, combat_script = combat_script, debug_mode = debug_mode, test_mode = False)
 
         self._game.start_farming_mode(item_name = item_name, item_amount_to_farm = int(item_amount_to_farm), farming_mode = farming_mode, map_name = location_name, mission_name = mission_name,
                                       summon_element_list = summon_element_list, summon_list = summon_list, group_number = group_number, party_number = party_number)
@@ -66,6 +70,10 @@ class MainWindow(QObject):
         self._queue = multiprocessing.Queue()
         self._is_bot_running = None
         self._botRunningTimeInSeconds = None
+
+        # Create the Queue and process for the Discord functionality.
+        self.discord_queue = None
+        self._discord_process = None
 
         # Create a list in memory to hold all messages in case the frontend wants to save all those messages into a text file.
         self._text_log = []
@@ -463,10 +471,25 @@ class MainWindow(QObject):
         # Start the timer for the running time of the bot.
         self._botRunningTimeInSeconds = timer()
 
+        # #### discord ####
+        config = ConfigParser()
+        config.read("config.ini")
+        discord_token: str = config.get("discord", "discord_token")
+        user_id: int = config.getint("discord", "user_id")
+        if discord_token != "" and user_id != 0:
+            print("\n[STATUS] Starting Discord process on a new Thread...")
+            self.discord_queue = multiprocessing.Queue()
+            self._discord_process = multiprocessing.Process(target = utils.discord_utils.start_now, args = (discord_token, user_id, self.discord_queue))
+            self._discord_process.start()
+        else:
+            print("\n[STATUS] Unable to start Discord process. Double-check that you included the token and user id inside the config.ini!")
+        # #### end of discord ####
+
         # Create a new Process whose target is the MainDriver's run_bot() method.
         self._bot_process = multiprocessing.Process(target = self._bot_object.run_bot, args = (self._item_name, self._item_amount_to_farm, self._farming_mode, self._location_name,
                                                                                                self._mission_name, self._summon_element_list, self._summon_list, self._group_number,
-                                                                                               self._party_number, self._real_file_path, self._queue, self._is_bot_running, self._debug_mode))
+                                                                                               self._party_number, self._real_file_path, self._queue, self.discord_queue, self._is_bot_running,
+                                                                                               self._debug_mode))
 
         # Now start the new Process on a new Thread.
         self._bot_process.start()
@@ -482,8 +505,14 @@ class MainWindow(QObject):
             None
         """
         if self._bot_process is not None:
-            print("\n[STATUS] Stopping the bot and terminating the Thread.")
+            print("\n[STATUS] Stopping the bot and terminating its Thread.")
             self._bot_process.terminate()
+
+        if self._discord_process is not None and self._discord_process.is_alive():
+            print("\n[STATUS] Stopping the Discord process and terminating its Thread.")
+            now = datetime.now()
+            self.queue.put(f"--------------------\n[{now.strftime('%I:%M:%S')}]Disconnected from Discord API.")
+            self._discord_process.terminate()
         return None
 
 
@@ -496,6 +525,13 @@ if __name__ == "__main__":
 ; Customize the bot's internals by editing the following to your liking.
 ; Do not enclose anything in double quotes, " ".
 ############################################################
+
+############################################################
+# Read the instructions on the GitHub repository README.md on how to setup Discord notifications.
+############################################################
+[discord]
+discord_token = 
+user_id = 0
 
 ############################################################
 # Read the instructions on the GitHub repository README.md on how to get these keys in order to allow the bot to farm Raids via Twitter.
