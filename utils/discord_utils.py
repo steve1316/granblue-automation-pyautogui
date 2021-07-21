@@ -2,6 +2,7 @@ import multiprocessing
 from datetime import datetime
 
 import discord
+from discord import LoginFailure
 from discord.ext.tasks import loop
 
 
@@ -15,25 +16,30 @@ class MyClient:
 
     @loop(seconds = 1.0)
     async def print_status(self):
-        if self.user is None:
-            self.user = await self.bot.fetch_user(self.user_id)
-            print(f"Found user: {self.user.name}")
-
-        if not self.queue.empty():
+        if self.user is not None and not self.queue.empty():
             message: str = self.queue.get()
-            print(f"Acquired message to send via Discord DM: {message}")
+            print(f"[DISCORD] Acquired message to send via Discord DM: {message}")
             await self.user.send(content = message)
 
     @print_status.before_loop
     async def before_print_status(self):
-        print("Waiting for connection to Discord API...")
+        print("\n[DISCORD] Waiting for connection to Discord API...")
         await self.bot.wait_until_ready()
-        print("Connection to Discord API successful!")
+        print("[DISCORD] Connection to Discord API successful!")
         now = datetime.now()
         self.queue.put(f"--------------------\n[{now.strftime('%I:%M:%S')}]Connection to Discord API successful!")
+
+        try:
+            self.user = await self.bot.fetch_user(self.user_id)
+            print(f"[DISCORD] Found user: {self.user.name}")
+        except discord.errors.NotFound:
+            print("[DISCORD] Failed to find user.\n")
 
 
 def start_now(token: str, user_id: int, queue: multiprocessing.Queue):
     client = discord.Client()
     MyClient(client, queue, user_id)
-    client.run(token)
+    try:
+        client.run(token)
+    except LoginFailure:
+        print("\n[DISCORD] Failed to connect to Discord API. Please double check your token.\n")
