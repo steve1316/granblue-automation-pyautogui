@@ -294,7 +294,7 @@ class Game:
         time.sleep(seconds)
         return None
 
-    def find_and_click_button(self, button_name: str, clicks: int = 1, tries: int = 2, suppress_error: bool = False):
+    def find_and_click_button(self, button_name: str, clicks: int = 1, tries: int = 2, suppress_error: bool = False, grayscale: bool = False):
         """Find the center point of a button image and click it.
 
         Args:
@@ -302,6 +302,7 @@ class Game:
             clicks (int): Number of mouse clicks when clicking the button image location. Defaults to 1.
             tries (int): Number of tries to attempt to find the specified button image. Defaults to 2.
             suppress_error (bool): Suppresses template matching error depending on boolean. Defaults to False.
+            grayscale (bool): Enables grayscale template matching. Defaults to False.
 
         Returns:
             (bool): Return True if the button was found and clicked. Otherwise, return False.
@@ -348,7 +349,7 @@ class Game:
                 self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "event_special_quest", mouse_clicks = clicks)
                 return True
         else:
-            temp_location = self.image_tools.find_button(button_name.lower(), tries = tries, suppress_error = suppress_error)
+            temp_location = self.image_tools.find_button(button_name.lower(), tries = tries, grayscale_check = grayscale, suppress_error = suppress_error)
             if temp_location is not None:
                 self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], button_name, mouse_clicks = clicks)
                 return True
