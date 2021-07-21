@@ -39,8 +39,7 @@ exit
 ## Disclaimer
 By downloading this program, you consent to your account potentially getting flagged for excessive amounts of farming for multiple hours straight and banned in the next banwave by KMR. I hold no responsibility for how much or how long you use this program for. I trust you have the self-control necessary to only farm in reasonable bursts of time with breaks in between and to always be alert for when the bot encounters the CAPTCHA.
 
-- [Granblue Automation using Template Matching (It is like Full Auto, but with Full Customization!)](#granblue-automation-using-template-matching-it-is-like-full-auto-but-with-full-customization)
-  - [Disclaimer](#disclaimer)
+# Table of Contents
 - [Features](#features)
 - [Wiki](#wiki)
 - [Requirements](#requirements)
