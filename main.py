@@ -476,9 +476,9 @@ class MainWindow(QObject):
         config.read("config.ini")
         discord_token: str = config.get("discord", "discord_token")
         user_id: int = config.getint("discord", "user_id")
+        self.discord_queue = multiprocessing.Queue()
         if discord_token != "" and user_id != 0:
             print("\n[STATUS] Starting Discord process on a new Thread...")
-            self.discord_queue = multiprocessing.Queue()
             self._discord_process = multiprocessing.Process(target = utils.discord_utils.start_now, args = (discord_token, user_id, self.discord_queue))
             self._discord_process.start()
         else:
@@ -511,7 +511,7 @@ class MainWindow(QObject):
         if self._discord_process is not None and self._discord_process.is_alive():
             print("\n[STATUS] Stopping the Discord process and terminating its Thread.")
             now = datetime.now()
-            self.queue.put(f"--------------------\n[{now.strftime('%I:%M:%S')}]Disconnected from Discord API.")
+            self.discord_queue.put(f"--------------------\n[{now.strftime('%I:%M:%S')}]Disconnected from Discord API.")
             self._discord_process.terminate()
         return None
 
