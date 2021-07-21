@@ -40,16 +40,17 @@ exit
 By downloading this program, you consent to your account potentially getting flagged for excessive amounts of farming for multiple hours straight and banned in the next banwave by KMR. I hold no responsibility for how much or how long you use this program for. I trust you have the self-control necessary to only farm in reasonable bursts of time with breaks in between and to always be alert for when the bot encounters the CAPTCHA.
 
 # Table of Contents
-- [Features](<#Features>)
-- [Wiki](<#Wiki>)
-- [Requirements](<#Requirements>)
-  - [Python Dependencies](<##Python-Dependencies-(make-sure-to-have-these-installed-before-moving-on-to-the-instructions)>)
-- [Instructions](<#Instructions>)
-  - [How to create a Combat Script](<###How-to-create-my-own-Combat-Script>)
-  - [How to farm Raids](<#Instructions-for-the-Raid-component-of-this-application-(optional,-only-if-you-want-to-farm-Raids)>)
-  - [Virtualization](<#Instructions-on-how-to-get-this-working-on-VMWare-Workstation-Player-or-a-similar-virtual-machine>)
-
-- [Technologies used](<#Technologies-Used>)
+- [Features](#features)
+- [Wiki](#wiki)
+- [Requirements](#requirements)
+  * [Python Dependencies (make sure to have these installed before moving on to the instructions)](#python-dependencies--make-sure-to-have-these-installed-before-moving-on-to-the-instructions-)
+- [Instructions](#instructions)
+  * [Instructions to set up Discord integration](#instructions-to-set-up-discord-integration)
+  * [How to create my own Combat Script?](#how-to-create-my-own-combat-script-)
+  * [What Missions/Items/Summons are supported?](#what-missions-items-summons-are-supported-)
+  * [Instructions for farming Raids (optional, only if you want to farm Raids)](#instructions-for-farming-raids--optional--only-if-you-want-to-farm-raids-)
+  * [Virtual Machine Setup (optional)](#virtual-machine-setup--optional-)
+- [Technologies Used](#technologies-used)
 
 # Features
 - [x] Customize what skills to use during each turn in a user-created plan. Users can select which plan to use when starting the bot.
@@ -128,12 +129,12 @@ pip install -r requirements.txt
 - Vist the [Selectable Summons wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons) for available Summons.
 ---
 
-## Instructions for the Raid component of this application (optional, only if you want to farm Raids)
+## Instructions for farming Raids (optional, only if you want to farm Raids)
 - Visit the [Instructions for Farming Raids wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Instructions-for-Farming-Raids) for setting up Raid farming.
 
 ---
 
-## Instructions on how to get this working on VMWare Workstation Player or a similar virtual machine
+## Virtual Machine Setup (optional)
 - Visit the [Virtual Machine Setup wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Virtual-Machine-Setup) for setting up a Virtual Machine to run this program on.
 
 # Technologies Used
