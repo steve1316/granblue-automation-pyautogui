@@ -39,17 +39,18 @@ exit
 ## Disclaimer
 By downloading this program, you consent to your account potentially getting flagged for excessive amounts of farming for multiple hours straight and banned in the next banwave by KMR. I hold no responsibility for how much or how long you use this program for. I trust you have the self-control necessary to only farm in reasonable bursts of time with breaks in between and to always be alert for when the bot encounters the CAPTCHA.
 
-# Table of Contents
+- [Granblue Automation using Template Matching (It is like Full Auto, but with Full Customization!)](#granblue-automation-using-template-matching-it-is-like-full-auto-but-with-full-customization)
+  - [Disclaimer](#disclaimer)
 - [Features](#features)
 - [Wiki](#wiki)
 - [Requirements](#requirements)
-  * [Python Dependencies (make sure to have these installed before moving on to the instructions)](#python-dependencies--make-sure-to-have-these-installed-before-moving-on-to-the-instructions-)
+  - [Python Dependencies (make sure to have these installed before moving on to the instructions)](#python-dependencies-make-sure-to-have-these-installed-before-moving-on-to-the-instructions)
 - [Instructions](#instructions)
-  * [Instructions to set up Discord integration](#instructions-to-set-up-discord-integration)
-  * [How to create my own Combat Script?](#how-to-create-my-own-combat-script-)
-  * [What Missions/Items/Summons are supported?](#what-missions-items-summons-are-supported-)
-  * [Instructions for farming Raids (optional, only if you want to farm Raids)](#instructions-for-farming-raids--optional--only-if-you-want-to-farm-raids-)
-  * [Virtual Machine Setup (optional)](#virtual-machine-setup--optional-)
+  - [Instructions to set up Discord integration](#instructions-to-set-up-discord-integration)
+  - [How to create my own Combat Script?](#how-to-create-my-own-combat-script)
+  - [What Missions/Items/Summons are supported?](#what-missionsitemssummons-are-supported)
+  - [Instructions for farming Raids (optional, only if you want to farm Raids)](#instructions-for-farming-raids-optional-only-if-you-want-to-farm-raids)
+  - [Virtual Machine Setup (optional)](#virtual-machine-setup-optional)
 - [Technologies Used](#technologies-used)
 
 # Features
@@ -125,8 +126,8 @@ pip install -r requirements.txt
 - Visit the [Combat Scripting Documentation and Examples wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Combat-Scripting-Documentation-and-Examples) for combat scripting usage and examples.
 ---
 ## What Missions/Items/Summons are supported?
-- Vist the [List of Supported Quests, Special, Coop, Raid, Event, and Dread Barrage Missions and their Farmable Items wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/List-of-Supported-Quests,-Special,-Coop,-Raid,-Event,-and-Dread-Barrage-Missions-and-their-Farmable-Items) for supported content.
-- Vist the [Selectable Summons wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons) for available Summons.
+- Visit the [List of Supported Quests, Special, Coop, Raid, Event, and Dread Barrage Missions and their Farmable Items wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/List-of-Supported-Quests,-Special,-Coop,-Raid,-Event,-and-Dread-Barrage-Missions-and-their-Farmable-Items) for supported content.
+- Visit the [Selectable Summons wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons) for available Summons.
 ---
 
 ## Instructions for farming Raids (optional, only if you want to farm Raids)
