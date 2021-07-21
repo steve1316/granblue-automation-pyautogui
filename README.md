@@ -41,13 +41,14 @@ By downloading this program, you consent to your account potentially getting fla
 
 # Table of Contents
 - [Features](<#Features>)
+- [Wiki](<#Wiki>)
 - [Requirements](<#Requirements>)
   - [Python Dependencies](<##Python-Dependencies-(make-sure-to-have-these-installed-before-moving-on-to-the-instructions)>)
 - [Instructions](<#Instructions>)
   - [How to create a Combat Script](<###How-to-create-my-own-Combat-Script>)
   - [How to farm Raids](<#Instructions-for-the-Raid-component-of-this-application-(optional,-only-if-you-want-to-farm-Raids)>)
   - [Virtualization](<#Instructions-on-how-to-get-this-working-on-VMWare-Workstation-Player-or-a-similar-virtual-machine>)
-- [Wiki](<#Wiki>)
+
 - [Technologies used](<#Technologies-Used>)
 
 # Features
@@ -67,6 +68,10 @@ By downloading this program, you consent to your account potentially getting fla
     - [x] Proving Grounds
     - [x] Xeno Clash
 - [x] Alert for when anti-bot CAPTCHA pops up.
+- [x] Discord integration for informing you of status updates like loot drops via private DMs.
+
+# Wiki
+Visit the [Wiki here](https://github.com/steve1316/granblue-automation-pyautogui/wiki) for detailed documentation and examples.
 
 # Requirements
 1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
@@ -89,6 +94,9 @@ pip install -r requirements.txt
 - [autopy 4.0.0+](https://pypi.org/project/autopy/)
 - [tweepy 3.10.0+](https://pypi.org/project/tweepy)
 - [pyclick 0.0.2+](https://pypi.org/project/pyclick/)
+- [playsound 1.2.2+](https://pypi.org/project/playsound/)
+- [pyperclip 1.8.1+](https://pypi.org/project/pyperclip/)
+- [discord.py 1.7.3+](https://pypi.org/project/discord.py/)
 
 # Instructions
 1. Download the entire project folder.
@@ -108,58 +116,25 @@ pip install -r requirements.txt
 6. (Optional) Check out the ```config.ini``` in the root of the project folder and see what internal settings you would like to change before starting. Some of these settings include mouse settings (Bezier Curve or non-Bezier Curve), Twitter API settings, Dimensional Halo settings, etc.
 
 ---
-### How to create my own Combat Script?
+## Instructions to set up Discord integration
+- Visit the [Instructions for Discord integration wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Instructions-for-Discord-integration) for setting up the program notifying you of status updates like loot drops via private DMs.
+
+---
+## How to create my own Combat Script?
 - Visit the [Combat Scripting Documentation and Examples wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Combat-Scripting-Documentation-and-Examples) for combat scripting usage and examples.
 ---
-### What Missions/Items/Summons are supported?
+## What Missions/Items/Summons are supported?
 - Vist the [List of Supported Quests, Special, Coop, Raid, Event, and Dread Barrage Missions and their Farmable Items wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/List-of-Supported-Quests,-Special,-Coop,-Raid,-Event,-and-Dread-Barrage-Missions-and-their-Farmable-Items) for supported content.
 - Vist the [Selectable Summons wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons) for available Summons.
 ---
 
-### Instructions for the Raid component of this application (optional, only if you want to farm Raids)
-In order to get a Twitter Developer account, you need a Twitter account. Recommended to use the one bound to your GBF account just to keep it all in one place.
-1. Head to https://developer.twitter.com/en/apply-for-access and click "Apply for a developer account".
-2. Select "Hobbyist" and then "Exploring the API" and click "Get Started".
-3. If you have not already, add a valid phone number to your account. Now fill out the form and select "Some Experience" for your coding experience and then click "Next".
-4. In the first textbox, state your intention on exploring the Twitter API for educational purposes and using what you learned to develop a Python application. You can either craft your own response based on mine below or copy it outright:
-
-`
-I want to develop a Python application for a mobile Japanese game called Granblue Fantasy that uses tweepy and I want to explore what the Twitter Standard API 1.1 has to offer for me. I plan to use what I learn and apply it to the application so that it can search tweets made by users from the game in the past 24 hours based on user-created queries and parse specific text in the tweets. This is for educational purposes only.
-`
-
-5. Check Yes for "Are you planning to analyze Twitter data?" and either craft your own response based on mine below or copy it outright:
-
-`
-The application will allow the users to look up tweets made in the past 24 hours while searching for tweets that have specific text or keywords in the tweets. It will then return and display those tweets onto the application's GUI.
-`
-
-6. Uncheck the rest of the options and then click "Next".
-7. Accept the "Developer agreement & policy" and click "Submit Application".
-8. Once you verify the email sent to you, either two things will happen:
-   - You get accepted immediately and can get started on Step 9.
-   - You have to wait for Twitter to approve your application.
-9. Once you get accepted, head over to https://developer.twitter.com/en/portal/dashboard and click on "Projects & Apps" on the left sidebar and click on "+ Create App".
-10.  Give a name to your app. For example, mine is called `GBF Battle ID Finder` and click "Complete".
-11.  Now click on "App Settings" at the bottom. Then click on "Keys and tokens" at the top.
-12.  Click "Regenerate" for Consumer Keys and copy the API key and the API key secret into their respective places in config.ini in the root of the project folder. After that, click "Yes, I saved them".
-13.  Now click "Generate" for "Access token & secret". Again, copy these 2 tokens into their respective places in config.ini and after that, click "Yes, I saved them".
-14.  After that, the bot is now ready to access the Twitter API to look for raids.
+## Instructions for the Raid component of this application (optional, only if you want to farm Raids)
+- Visit the [Instructions for Farming Raids wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Instructions-for-Farming-Raids) for setting up Raid farming.
 
 ---
 
-### Instructions on how to get this working on VMWare Workstation Player or a similar virtual machine
-1. Download and install VMWare Workstation Player.
-2. Download a Windows 10 .iso from the official Microsoft website, https://www.microsoft.com/en-us/software-download/windows10
-3. Create a new virtual machine with the following settings:
-	- At least 4096MB of RAM is recommended.
-	- 4 processor cores is recommended.
-	- At least 30GB of space reserved.
-4. Boot up the virtual machine using the Windows 10 .iso and install Windows 10. After that, install VMWare Tools to give the virtual machine full processing capability by going up to Player at the top left and then going to Manage -> Install VMWare Tools. Otherwise, the virtual machine will run choppy.
-5. Set the display resolution to be 1920x1080 or higher. You can set it lower, but I cannot guarantee that it will run smoothly at lower resolutions.
-6. After that, download the project folder into the virtual machine and follow the instructions to start the application.
-
-# Wiki
-Visit https://github.com/steve1316/granblue-automation-pyautogui/wiki for detailed documentation and examples.
+## Instructions on how to get this working on VMWare Workstation Player or a similar virtual machine
+- Visit the [Virtual Machine Setup wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Virtual-Machine-Setup) for setting up a Virtual Machine to run this program on.
 
 # Technologies Used
 1. [Python - The main language](https://www.python.org/)
