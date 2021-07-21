@@ -4,7 +4,6 @@ import random
 import time
 import traceback
 from configparser import ConfigParser
-from datetime import datetime as DateTime
 from timeit import default_timer as timer
 from typing import List
 

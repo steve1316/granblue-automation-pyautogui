@@ -1,8 +1,8 @@
 import multiprocessing
 import os
 import sys
+import time
 from configparser import ConfigParser
-from datetime import datetime
 from pathlib import Path
 from timeit import default_timer as timer
 from typing import List
@@ -478,11 +478,11 @@ class MainWindow(QObject):
         user_id: int = config.getint("discord", "user_id")
         self.discord_queue = multiprocessing.Queue()
         if discord_token != "" and user_id != 0:
-            print("\n[STATUS] Starting Discord process on a new Thread...")
+            print("\n[DISCORD] Starting Discord process on a new Thread...")
             self._discord_process = multiprocessing.Process(target = utils.discord_utils.start_now, args = (discord_token, user_id, self.discord_queue))
             self._discord_process.start()
         else:
-            print("\n[STATUS] Unable to start Discord process. Double-check that you included the token and user id inside the config.ini!")
+            print("\n[DISCORD] Unable to start Discord process. Double-check that you included the token and user id inside the config.ini!")
         # #### end of discord ####
 
         # Create a new Process whose target is the MainDriver's run_bot() method.
@@ -510,8 +510,8 @@ class MainWindow(QObject):
 
         if self._discord_process is not None and self._discord_process.is_alive():
             self.discord_queue.put(f"```diff\n- Terminated connection to Discord API for Granblue Automation\n```")
-            now = datetime.now()
-            self.discord_queue.put(f"--------------------\n[{now.strftime('%I:%M:%S')}]Disconnected from Discord API.")
+            print("\n[DISCORD] Terminated connection to Discord API and terminating its Thread.")
+            time.sleep(1.0)
             self._discord_process.terminate()
         return None
 

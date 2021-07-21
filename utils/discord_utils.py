@@ -1,5 +1,4 @@
 import multiprocessing
-from datetime import datetime
 
 import discord
 from discord import LoginFailure
@@ -25,9 +24,8 @@ class MyClient:
     async def before_print_status(self):
         print("\n[DISCORD] Waiting for connection to Discord API...")
         await self.bot.wait_until_ready()
-        print("[DISCORD] Connection to Discord API successful!")
+        print("[DISCORD] Successful connection to Discord API")
         self.queue.put(f"```diff\n+ Successful connection to Discord API for Granblue Automation\n```")
-        self.queue.put(f"--------------------\n[{now.strftime('%I:%M:%S')}]Connection to Discord API successful!")
 
         try:
             self.user = await self.bot.fetch_user(self.user_id)
