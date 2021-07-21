@@ -1367,6 +1367,7 @@ class Game:
                     raise Exception("Failed to arrive at the Summon Selection screen after selecting the Mission.")
         except Exception:
             self.print_and_save(f"\n[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
+            self.discord_queue.put(f"[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
 
         self.print_and_save("\n################################################################################")
         self.print_and_save("################################################################################")
