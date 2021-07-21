@@ -24,6 +24,8 @@ class Game:
     ----------
     queue (multiprocessing.Queue): Queue to keep track of logging messages to share between backend and frontend.
 
+    discord_queue (multiprocessing.Queue): Queue to keep track of status messages to inform the user via Discord DMs.
+
     is_bot_running (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
 
     combat_script (str, optional): The file path to the combat script to use for Combat Mode. Defaults to empty string.
@@ -34,13 +36,17 @@ class Game:
 
     """
 
-    def __init__(self, queue: multiprocessing.Queue, is_bot_running: int, combat_script: str = "", test_mode: bool = False, debug_mode: bool = False):
+    def __init__(self, queue: multiprocessing.Queue, discord_queue: multiprocessing.Queue, is_bot_running: int, combat_script: str = "", test_mode: bool = False, debug_mode: bool = False):
         super().__init__()
 
         # ################## config.ini ###################
         # Grab the Twitter API keys and tokens from config.ini. The list order is: [consumer key, consumer secret key, access token, access secret token].
         config = ConfigParser()
         config.read("config.ini")
+
+        # #### discord ####
+        self.discord_queue = discord_queue
+        # #### end of discord ####
 
         # #### twitter ####
         keys_tokens = [config.get("twitter", "api_key"), config.get("twitter", "api_key_secret"), config.get("twitter", "access_token"), config.get("twitter", "access_token_secret")]
@@ -288,7 +294,7 @@ class Game:
         time.sleep(seconds)
         return None
 
-    def find_and_click_button(self, button_name: str, clicks: int = 1, tries: int = 2, suppress_error: bool = False):
+    def find_and_click_button(self, button_name: str, clicks: int = 1, tries: int = 2, suppress_error: bool = False, grayscale: bool = False):
         """Find the center point of a button image and click it.
 
         Args:
@@ -296,6 +302,7 @@ class Game:
             clicks (int): Number of mouse clicks when clicking the button image location. Defaults to 1.
             tries (int): Number of tries to attempt to find the specified button image. Defaults to 2.
             suppress_error (bool): Suppresses template matching error depending on boolean. Defaults to False.
+            grayscale (bool): Enables grayscale template matching. Defaults to False.
 
         Returns:
             (bool): Return True if the button was found and clicked. Otherwise, return False.
@@ -342,7 +349,7 @@ class Game:
                 self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "event_special_quest", mouse_clicks = clicks)
                 return True
         else:
-            temp_location = self.image_tools.find_button(button_name.lower(), tries = tries, suppress_error = suppress_error)
+            temp_location = self.image_tools.find_button(button_name.lower(), tries = tries, grayscale_check = grayscale, suppress_error = suppress_error)
             if temp_location is not None:
                 self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], button_name, mouse_clicks = clicks)
                 return True
@@ -700,6 +707,16 @@ class Game:
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished}")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
+
+                if temp_amount != 0:
+                    if self._item_amount_farmed >= self._item_amount_to_farm:
+                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained this run: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
+                                         f"**[{self._item_amount_farmed} / {self._item_amount_to_farm}]** :white_check_mark:"
+                    else:
+                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained this run: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
+                                         f"**[{self._item_amount_farmed} / {self._item_amount_to_farm}]**"
+
+                    self.discord_queue.put(discord_string)
             else:
                 self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
@@ -709,6 +726,15 @@ class Game:
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished} / {self._item_amount_to_farm}")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
+
+                if self._amount_of_runs_finished >= self._item_amount_to_farm:
+                    discord_string = f"> Runs completed for __{self.mission_name}__: **[{self._amount_of_runs_finished - 1} / {self._item_amount_to_farm}]** -> " \
+                                     f"**[{self._amount_of_runs_finished} / {self._item_amount_to_farm}]** :white_check_mark:"
+                else:
+                    discord_string = f"> Runs completed for __{self.mission_name}__: **[{self._amount_of_runs_finished - 1} / {self._item_amount_to_farm}]** -> " \
+                                     f"**[{self._amount_of_runs_finished} / {self._item_amount_to_farm}]**"
+
+                self.discord_queue.put(discord_string)
 
         return None
 
@@ -1350,6 +1376,7 @@ class Game:
                     raise Exception("Failed to arrive at the Summon Selection screen after selecting the Mission.")
         except Exception:
             self.print_and_save(f"\n[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
+            self.discord_queue.put(f"[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
 
         self.print_and_save("\n################################################################################")
         self.print_and_save("################################################################################")

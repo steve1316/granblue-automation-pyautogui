@@ -887,7 +887,7 @@ class MapSelection:
                 self._game.print_and_save(f"\n[INFO] Now proceeding to farm meat.")
 
                 # Click on the banner to farm meat.
-                self._game.find_and_click_button("guild_wars_meat")
+                self._game.find_and_click_button("guild_wars_meat", grayscale = True)
 
                 if self._game.image_tools.confirm_location("guild_wars_meat"):
                     # Now click on the specified Mission to start.
