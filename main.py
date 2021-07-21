@@ -509,7 +509,7 @@ class MainWindow(QObject):
             self._bot_process.terminate()
 
         if self._discord_process is not None and self._discord_process.is_alive():
-            print("\n[STATUS] Stopping the Discord process and terminating its Thread.")
+            self.discord_queue.put(f"```diff\n- Terminated connection to Discord API for Granblue Automation\n```")
             now = datetime.now()
             self.discord_queue.put(f"--------------------\n[{now.strftime('%I:%M:%S')}]Disconnected from Discord API.")
             self._discord_process.terminate()

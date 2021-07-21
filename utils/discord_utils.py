@@ -26,7 +26,7 @@ class MyClient:
         print("\n[DISCORD] Waiting for connection to Discord API...")
         await self.bot.wait_until_ready()
         print("[DISCORD] Connection to Discord API successful!")
-        now = datetime.now()
+        self.queue.put(f"```diff\n+ Successful connection to Discord API for Granblue Automation\n```")
         self.queue.put(f"--------------------\n[{now.strftime('%I:%M:%S')}]Connection to Discord API successful!")
 
         try:

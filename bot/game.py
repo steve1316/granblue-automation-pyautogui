@@ -709,10 +709,14 @@ class Game:
                 self.print_and_save("********************************************************************************\n")
 
                 if temp_amount != 0:
-                    now = DateTime.now()
-                    self.discord_queue.put(
-                        f"--------------------\n[{now.strftime('%I:%M:%S')}]Amount of {self._item_name} gained this run: {temp_amount}.\nAmount of {self._item_name} gained in total: "
-                        f"{self._item_amount_farmed} / {self._item_amount_to_farm}")
+                    if self._item_amount_farmed >= self._item_amount_to_farm:
+                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained this run: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
+                                         f"**[{self._item_amount_farmed} / {self._item_amount_to_farm}]** :white_check_mark:"
+                    else:
+                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained this run: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
+                                         f"**[{self._item_amount_farmed} / {self._item_amount_to_farm}]**"
+
+                    self.discord_queue.put(discord_string)
             else:
                 self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
@@ -723,9 +727,14 @@ class Game:
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
 
-                now = DateTime.now()
-                self.discord_queue.put(f"--------------------\n[{now.strftime('%I:%M:%S')}]Runs Completed: [{self._amount_of_runs_finished} / {self._item_amount_to_farm}] -> "
-                                       f"[{self._amount_of_runs_finished} / {self._item_amount_to_farm}]")
+                if self._amount_of_runs_finished >= self._item_amount_to_farm:
+                    discord_string = f"> Runs completed for __{self.mission_name}__: **[{self._amount_of_runs_finished - 1} / {self._item_amount_to_farm}]** -> " \
+                                     f"**[{self._amount_of_runs_finished} / {self._item_amount_to_farm}]** :white_check_mark:"
+                else:
+                    discord_string = f"> Runs completed for __{self.mission_name}__: **[{self._amount_of_runs_finished - 1} / {self._item_amount_to_farm}]** -> " \
+                                     f"**[{self._amount_of_runs_finished} / {self._item_amount_to_farm}]**"
+
+                self.discord_queue.put(discord_string)
 
         return None
 
