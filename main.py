@@ -474,15 +474,16 @@ class MainWindow(QObject):
         # #### discord ####
         config = ConfigParser()
         config.read("config.ini")
+        enable_discord: bool = config.getboolean("discord", "enable_discord")
         discord_token: str = config.get("discord", "discord_token")
         user_id: int = config.getint("discord", "user_id")
         self.discord_queue = multiprocessing.Queue()
-        if discord_token != "" and user_id != 0:
+        if enable_discord and discord_token != "" and user_id != 0:
             print("\n[DISCORD] Starting Discord process on a new Thread...")
             self._discord_process = multiprocessing.Process(target = utils.discord_utils.start_now, args = (discord_token, user_id, self.discord_queue))
             self._discord_process.start()
         else:
-            print("\n[DISCORD] Unable to start Discord process. Double-check that you included the token and user id inside the config.ini!")
+            print("\n[DISCORD] Unable to start Discord process. Either you opted not to turn it on or your included token and user id inside the config.ini are invalid.")
         # #### end of discord ####
 
         # Create a new Process whose target is the MainDriver's run_bot() method.
@@ -530,6 +531,7 @@ if __name__ == "__main__":
 # Read the instructions on the GitHub repository README.md on how to setup Discord notifications.
 ############################################################
 [discord]
+enable_discord = False
 discord_token = 
 user_id = 0
 
