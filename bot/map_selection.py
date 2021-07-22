@@ -894,12 +894,15 @@ class MapSelection:
                     if difficulty == "Very Hard":
                         self._game.print_and_save(f"[INFO] Now hosting Very Hard now...")
                         self._game.find_and_click_button("guild_wars_meat_very_hard")
+                        self._game.find_and_click_button("guild_wars_meat_very_hard", tries = 1, suppress_error = True)
                     elif difficulty == "Extreme":
                         self._game.print_and_save(f"[INFO] Now hosting Extreme now...")
                         self._game.find_and_click_button("guild_wars_meat_extreme")
+                        self._game.find_and_click_button("guild_wars_meat_extreme", tries = 1, suppress_error = True)
                     elif difficulty == "Extreme+":
                         self._game.print_and_save(f"[INFO] Now hosting Extreme+ now...")
                         self._game.find_and_click_button("guild_wars_meat_extreme+")
+                        self._game.find_and_click_button("guild_wars_meat_extreme+", tries = 1, suppress_error = True)
 
                         # Alert the user if they did not unlock Extreme+ and stop the bot.
                         if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 5):
@@ -913,9 +916,11 @@ class MapSelection:
                 # Click on the banner to farm Nightmares.
                 if difficulty != "NM150":
                     self._game.find_and_click_button("guild_wars_nightmare")
+                    self._game.find_and_click_button("guild_wars_nightmare", tries = 1, suppress_error = True)
                 else:
                     self._game.print_and_save(f"\n[INFO] Now hosting NM150 now...")
                     self._game.find_and_click_button("guild_wars_nightmare_150")
+                    self._game.find_and_click_button("guild_wars_nightmare_150", tries = 1, suppress_error = True)
 
                     if self._game.image_tools.confirm_location("guild_wars_nightmare"):
                         self._game.find_and_click_button("start")
