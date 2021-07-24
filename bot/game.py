@@ -182,7 +182,6 @@ class Game:
 
         # Enable checking for Skyscope mission popups.
         self.enable_skyscope = True
-
         if test_mode is False:
             # Calibrate the dimensions of the bot window on bot launch.
             self.go_back_home(confirm_location_check = True, display_info_check = True)
@@ -372,6 +371,7 @@ class Game:
             return None
         except RuntimeError:
             self.print_and_save(f"\n[ERROR] Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
+            self.discord_queue.put(f"> Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
             self.image_tools.generate_alert_for_captcha()
             self._is_bot_running.value = 1
             self.wait(1)
@@ -1376,7 +1376,7 @@ class Game:
                     raise Exception("Failed to arrive at the Summon Selection screen after selecting the Mission.")
         except Exception:
             self.print_and_save(f"\n[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
-            self.discord_queue.put(f"[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
+            self.discord_queue.put(f"> Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
 
         self.print_and_save("\n################################################################################")
         self.print_and_save("################################################################################")
