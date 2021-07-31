@@ -702,16 +702,24 @@ class MapSelection:
 
                 if difficulty == "Very Hard":
                     self._game.find_and_click_button("event_raid_very_hard")
+                    self._game.wait(0.5)
+                    self._game.find_and_click_button("event_raid_very_hard", tries = 1, suppress_error = True)
                 elif difficulty == "Extreme":
                     self._game.find_and_click_button("event_raid_extreme")
+                    self._game.wait(0.5)
+                    self._game.find_and_click_button("event_raid_extreme", tries = 1, suppress_error = True)
                 elif difficulty == "Impossible":
                     self._game.find_and_click_button("event_raid_impossible")
+                    self._game.wait(0.5)
+                    self._game.find_and_click_button("event_raid_impossible", tries = 1, suppress_error = True)
 
                 # If the user does not have enough Treasures to host a Extreme or an Impossible Raid, host a Very Hard Raid instead.
                 if (difficulty == "Extreme" and not self._game.image_tools.wait_vanish("event_raid_extreme", timeout = 3)) or (
                         difficulty == "Impossible" and not self._game.image_tools.wait_vanish("event_raid_impossible", timeout = 3)):
                     self._game.print_and_save(f"[INFO] Not enough materials to host ${difficulty}. Hosting Very Hard instead...")
                     self._game.find_and_click_button("event_raid_very_hard")
+                    self._game.wait(0.5)
+                    self._game.find_and_click_button("event_raid_very_hard", tries = 1, suppress_error = True)
 
         return None
 
@@ -894,14 +902,17 @@ class MapSelection:
                     if difficulty == "Very Hard":
                         self._game.print_and_save(f"[INFO] Now hosting Very Hard now...")
                         self._game.find_and_click_button("guild_wars_meat_very_hard")
+                        self._game.wait(0.5)
                         self._game.find_and_click_button("guild_wars_meat_very_hard", tries = 1, suppress_error = True)
                     elif difficulty == "Extreme":
                         self._game.print_and_save(f"[INFO] Now hosting Extreme now...")
                         self._game.find_and_click_button("guild_wars_meat_extreme")
+                        self._game.wait(0.5)
                         self._game.find_and_click_button("guild_wars_meat_extreme", tries = 1, suppress_error = True)
                     elif difficulty == "Extreme+":
                         self._game.print_and_save(f"[INFO] Now hosting Extreme+ now...")
                         self._game.find_and_click_button("guild_wars_meat_extreme+")
+                        self._game.wait(0.5)
                         self._game.find_and_click_button("guild_wars_meat_extreme+", tries = 1, suppress_error = True)
 
                         # Alert the user if they did not unlock Extreme+ and stop the bot.
