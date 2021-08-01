@@ -472,16 +472,16 @@ class Game:
                 self.wait(3)
 
                 # Close the popup and then retreat from this Trial Battle.
-                if self.image_tools.confirm_location("trial_battles_description"):
-                    self.find_and_click_button("close")
+                if self.image_tools.confirm_location("trial_battles_description", tries = 10):
+                    self.find_and_click_button("close", tries = 5)
 
-                    self.find_and_click_button("menu")
-                    self.find_and_click_button("retreat")
-                    self.find_and_click_button("retreat_confirmation")
-                    self.find_and_click_button("next")
+                    self.find_and_click_button("menu", tries = 5)
+                    self.find_and_click_button("retreat", tries = 5)
+                    self.find_and_click_button("retreat_confirmation", tries = 5)
+                    self.go_back_home()
 
-        if self.image_tools.confirm_location("trial_battles"):
-            self.print_and_save("[SUCCESS] Summons have now been refreshed.")
+                if self.image_tools.confirm_location("home"):
+                    self.print_and_save("[SUCCESS] Summons have now been refreshed.")
 
         return None
 
