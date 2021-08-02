@@ -509,10 +509,11 @@ class ImageUtils:
         self._game.print_and_save(f"\n[INFO] Now waiting for {image_name} to vanish from screen...")
         self._file_resolver.add_path("images/buttons/")
         self._clear_memory_guibot()
-        if self._guibot.wait_vanish(image_name, timeout = timeout):
+        try:
+            self._guibot.wait_vanish(image_name, timeout = timeout)
             self._game.print_and_save(f"[SUCCESS] Image successfully vanished from screen...")
             return True
-        else:
+        except Exception:
             if suppress_error is False:
                 self._game.print_and_save(f"[WARNING] Image did not vanish from screen...")
             return False
