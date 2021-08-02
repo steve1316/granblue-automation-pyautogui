@@ -555,7 +555,7 @@ class CombatMode:
                         self._find_dialog_in_combat()
 
                         # Process each command inside this Turn block until the "end" command is reached to close out the block.
-                        while len(command_list) > 0 and command != "exit" and command != "end":
+                        while len(command_list) > 0:
                             command = command_list.pop(0).strip().lower()
                             if command == "" or command[0] == "#" or command[0] == "/":
                                 continue
