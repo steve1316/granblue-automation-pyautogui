@@ -699,27 +699,28 @@ class MapSelection:
                 self._game.mouse_tools.scroll_screen_from_home_button(-200)
 
                 self._game.wait(1)
+                
+                ap_locations = self._game.image_tools.find_all("ap", custom_confidence = 0.8, grayscale_check = True)
 
                 if difficulty == "Very Hard":
-                    self._game.find_and_click_button("event_raid_very_hard")
+                    self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
                     self._game.wait(0.5)
-                    self._game.find_and_click_button("event_raid_very_hard", tries = 1, suppress_error = True)
+                    self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
                 elif difficulty == "Extreme":
-                    self._game.find_and_click_button("event_raid_extreme")
+                    self._game.mouse_tools.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap")
                     self._game.wait(0.5)
-                    self._game.find_and_click_button("event_raid_extreme", tries = 1, suppress_error = True)
+                    self._game.mouse_tools.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap")
                 elif difficulty == "Impossible":
-                    self._game.find_and_click_button("event_raid_impossible")
+                    self._game.mouse_tools.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap")
                     self._game.wait(0.5)
-                    self._game.find_and_click_button("event_raid_impossible", tries = 1, suppress_error = True)
+                    self._game.mouse_tools.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap")
 
                 # If the user does not have enough Treasures to host a Extreme or an Impossible Raid, host a Very Hard Raid instead.
-                if (difficulty == "Extreme" and not self._game.image_tools.wait_vanish("event_raid_extreme", timeout = 3)) or (
-                        difficulty == "Impossible" and not self._game.image_tools.wait_vanish("event_raid_impossible", timeout = 3)):
-                    self._game.print_and_save(f"[INFO] Not enough materials to host ${difficulty}. Hosting Very Hard instead...")
-                    self._game.find_and_click_button("event_raid_very_hard")
+                if (not self._game.image_tools.wait_vanish("close", timeout = 3)):
+                    self._game.print_and_save(f"[INFO] Not enough materials to host {difficulty}. Hosting Very Hard instead...")
+                    self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
                     self._game.wait(0.5)
-                    self._game.find_and_click_button("event_raid_very_hard", tries = 1, suppress_error = True)
+                    self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
 
         return None
 
