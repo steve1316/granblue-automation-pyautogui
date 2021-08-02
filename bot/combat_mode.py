@@ -394,7 +394,8 @@ class CombatMode:
             tries -= 1
             if tries <= 0 or self._game.image_tools.find_button("attack", tries = 1, suppress_error = True) is not None or \
                     self._game.image_tools.find_button("next", tries = 1, suppress_error = True) is not None or \
-                    self._game.image_tools.confirm_location("battle_concluded", tries = 1) is True:
+                    self._game.image_tools.confirm_location("battle_concluded", tries = 1) is True or \
+                    self._game.image_tools.confirm_location("exp_gained", tries = 1) is True:
                 break
 
             # Check if the Party wiped after attacking.
