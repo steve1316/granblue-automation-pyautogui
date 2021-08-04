@@ -100,6 +100,23 @@ Flickable {
             }
         }
 
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
+        Label {
+            color: "black"
+            font.bold: true
+            font.pointSize: 18
+            text: "Omega I Raids"
+        }
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
+
         ///////// Raid Items - Tiamat Omega /////////
         Label {
             id: label_TiamatOmega
@@ -435,6 +452,23 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Celeste Omega /////////
+
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
+        Label {
+            color: "black"
+            font.bold: true
+            font.pointSize: 18
+            text: "Omega II Raids"
+        }
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
 
         ///////// Raid Items - Shiva /////////
         Label {
@@ -772,6 +806,23 @@ Flickable {
         }
         ///////// End of Raid Items - Avatar /////////
 
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
+        Label {
+            color: "black"
+            font.bold: true
+            font.pointSize: 18
+            text: "Primarch Raids"
+        }
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
+
         ///////// Raid Items - Michael /////////
         Label {
             id: label_Michael
@@ -1052,6 +1103,23 @@ Flickable {
         }
         ///////// End of Raid Items - Four Primarchs /////////
 
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
+        Label {
+            color: "black"
+            font.bold: true
+            font.pointSize: 18
+            text: "Nightmare/Impossible Raids"
+        }
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
+
         ///////// Raid Items - Rose Queen /////////
         Label {
             id: label_RoseQueen
@@ -1070,7 +1138,7 @@ Flickable {
         Repeater {
             id: repeater_RoseQueen
             model: ListModel { }
-            
+
             onVisibleChanged: {
                 if(repeater_RoseQueen.visible === true){
                     repeater_RoseQueen.model.clear()
@@ -1079,7 +1147,7 @@ Flickable {
                     }
                 }
             }
-        
+
             Image {
                 id: itemImage_RoseQueen
                 source: imageSource
@@ -1126,7 +1194,7 @@ Flickable {
         Repeater {
             id: repeater_GrandOrder
             model: ListModel { }
-            
+
             onVisibleChanged: {
                 if(repeater_GrandOrder.visible === true){
                     repeater_GrandOrder.model.clear()
@@ -1135,7 +1203,7 @@ Flickable {
                     }
                 }
             }
-        
+
             Image {
                 id: itemImage_GrandOrder
                 source: imageSource
@@ -1163,6 +1231,174 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Grand Order /////////
+
+        ///////// Raid Items - Akasha /////////
+        Label {
+            id: label_Akasha
+
+            color: "#ffffff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Akasha"
+        }
+
+        Repeater {
+            id: repeater_Akasha
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_Akasha.visible === true){
+                    repeater_Akasha.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Akasha.text].length; i++){
+                        repeater_Akasha.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Akasha.text][i]))
+                    }
+                }
+            }
+
+            Image {
+                id: itemImage_Akasha
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ffffff"
+                    anchors.left: itemImage_Akasha.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Akasha /////////
+
+        ///////// Raid Items - Lucilius /////////
+        Label {
+            id: label_Lucilius
+
+            color: "#ffffff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Lucilius"
+        }
+
+        Repeater {
+            id: repeater_Lucilius
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_Lucilius.visible === true){
+                    repeater_Lucilius.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Lucilius.text].length; i++){
+                        repeater_Lucilius.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Lucilius.text][i]))
+                    }
+                }
+            }
+
+            Image {
+                id: itemImage_Lucilius
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ffffff"
+                    anchors.left: itemImage_Lucilius.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Lucilius /////////
+
+        ///////// Raid Items - Lindwurm /////////
+        Label {
+            id: label_Lindwurm
+
+            color: "#ffffff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Lindwurm"
+        }
+
+        Repeater {
+            id: repeater_Lindwurm
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_Lindwurm.visible === true){
+                    repeater_Lindwurm.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_Lindwurm.text].length; i++){
+                        repeater_Lindwurm.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Lindwurm.text][i]))
+                    }
+                }
+            }
+
+            Image {
+                id: itemImage_Lindwurm
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ffffff"
+                    anchors.left: itemImage_Lindwurm.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Lindwurm /////////
 
         ///////// Raid Items - Huanglong and Qilin /////////
         Label {
@@ -1218,7 +1454,7 @@ Flickable {
                 }
             }
         }
-        ///////// End of Raid Items - Grand Order /////////
+        ///////// End of Raid Items - Huanglong and Qilin /////////
 
         ///////// Raid Items - Proto Bahamut /////////
         Label {
@@ -1238,7 +1474,7 @@ Flickable {
         Repeater {
             id: repeater_ProtoBahamut
             model: ListModel { }
-            
+
             onVisibleChanged: {
                 if(repeater_ProtoBahamut.visible === true){
                     repeater_ProtoBahamut.model.clear()
@@ -1247,7 +1483,7 @@ Flickable {
                     }
                 }
             }
-        
+
             Image {
                 id: itemImage_ProtoBahamut
                 source: imageSource
@@ -1294,7 +1530,7 @@ Flickable {
         Repeater {
             id: repeater_UltimateBahamut
             model: ListModel { }
-            
+
             onVisibleChanged: {
                 if(repeater_UltimateBahamut.visible === true){
                     repeater_UltimateBahamut.model.clear()
@@ -1303,7 +1539,7 @@ Flickable {
                     }
                 }
             }
-        
+
             Image {
                 id: itemImage_UltimateBahamut
                 source: imageSource
@@ -1331,6 +1567,23 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Ultimate Bahamut /////////
+
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
+        Label {
+            color: "black"
+            font.bold: true
+            font.pointSize: 18
+            text: "Tier 1 Summon Raids"
+        }
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
 
         ///////// Raid Items - Twin Elements /////////
         Label {
@@ -1666,6 +1919,23 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Dark Angel Olivia /////////
+
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
+        Label {
+            color: "black"
+            font.bold: true
+            font.pointSize: 18
+            text: "Tier 2 Summon Raids"
+        }
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
 
         ///////// Raid Items - Athena /////////
         Label {
@@ -2003,6 +2273,23 @@ Flickable {
         }
         ///////// End of Raid Items - Lich /////////
 
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
+        Label {
+            color: "black"
+            font.bold: true
+            font.pointSize: 18
+            text: "Tier 3 Summon Raids"
+        }
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
+
         ///////// Raid Items - Prometheus /////////
         Label {
             id: label_Prometheus
@@ -2338,6 +2625,23 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Anubis /////////
+
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
+        Label {
+            color: "black"
+            font.bold: true
+            font.pointSize: 18
+            text: "Six Dragon Raids"
+        }
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
 
         ///////// Raid Items - Wilnas /////////
         Label {
@@ -2675,173 +2979,22 @@ Flickable {
         }
         ///////// End of Raid Items - Fediel /////////
 
-        ///////// Raid Items - Akasha /////////
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
         Label {
-            id: label_Akasha
-
-            color: "#ffffff"
-            anchors.left: parent.left
-            horizontalAlignment: Text.AlignHCenter
+            color: "black"
             font.bold: true
-            font.underline: true
-            font.pointSize: 15
-            font.letterSpacing: 1
-
-            text: "Akasha"
+            font.pointSize: 18
+            text: "Malice Raids"
         }
-
-        Repeater {
-            id: repeater_Akasha
-            model: ListModel { }
-
-            onVisibleChanged: {
-                if(repeater_Akasha.visible === true){
-                    repeater_Akasha.model.clear()
-                    for(var i = 0; i < itemsModel.listOfItems[label_Akasha.text].length; i++){
-                        repeater_Akasha.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Akasha.text][i]))
-                    }
-                }
-            }
-
-            Image {
-                id: itemImage_Akasha
-                source: imageSource
-                width: 35
-                height: 40
-
-                MouseArea {
-                    anchors.fill: parent
-
-                    onClicked: {
-                        backend.update_item_name(name)
-                        raidItemsPopup.close()
-                        itemSelectionButton.text = name
-                    }
-                }
-
-                Label {
-                    color: "#ffffff"
-                    anchors.left: itemImage_Akasha.right
-                    anchors.leftMargin: 12
-                    font.letterSpacing: 1
-                    font.pointSize: 10
-                    text: name
-                }
-            }
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
         }
-        ///////// End of Raid Items - Akasha /////////
-
-        ///////// Raid Items - Lucilius /////////
-        Label {
-            id: label_Lucilius
-
-            color: "#ffffff"
-            anchors.left: parent.left
-            horizontalAlignment: Text.AlignHCenter
-            font.bold: true
-            font.underline: true
-            font.pointSize: 15
-            font.letterSpacing: 1
-
-            text: "Lucilius"
-        }
-
-        Repeater {
-            id: repeater_Lucilius
-            model: ListModel { }
-
-            onVisibleChanged: {
-                if(repeater_Lucilius.visible === true){
-                    repeater_Lucilius.model.clear()
-                    for(var i = 0; i < itemsModel.listOfItems[label_Lucilius.text].length; i++){
-                        repeater_Lucilius.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Lucilius.text][i]))
-                    }
-                }
-            }
-
-            Image {
-                id: itemImage_Lucilius
-                source: imageSource
-                width: 35
-                height: 40
-
-                MouseArea {
-                    anchors.fill: parent
-
-                    onClicked: {
-                        backend.update_item_name(name)
-                        raidItemsPopup.close()
-                        itemSelectionButton.text = name
-                    }
-                }
-
-                Label {
-                    color: "#ffffff"
-                    anchors.left: itemImage_Lucilius.right
-                    anchors.leftMargin: 12
-                    font.letterSpacing: 1
-                    font.pointSize: 10
-                    text: name
-                }
-            }
-        }
-        ///////// End of Raid Items - Lucilius /////////
-
-        ///////// Raid Items - Lindwurm /////////
-        Label {
-            id: label_Lindwurm
-
-            color: "#ffffff"
-            anchors.left: parent.left
-            horizontalAlignment: Text.AlignHCenter
-            font.bold: true
-            font.underline: true
-            font.pointSize: 15
-            font.letterSpacing: 1
-
-            text: "Lindwurm"
-        }
-
-        Repeater {
-            id: repeater_Lindwurm
-            model: ListModel { }
-            
-            onVisibleChanged: {
-                if(repeater_Lindwurm.visible === true){
-                    repeater_Lindwurm.model.clear()
-                    for(var i = 0; i < itemsModel.listOfItems[label_Lindwurm.text].length; i++){
-                        repeater_Lindwurm.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_Lindwurm.text][i]))
-                    }
-                }
-            }
-        
-            Image {
-                id: itemImage_Lindwurm
-                source: imageSource
-                width: 35
-                height: 40
-
-                MouseArea {
-                    anchors.fill: parent
-
-                    onClicked: {
-                        backend.update_item_name(name)
-                        raidItemsPopup.close()
-                        itemSelectionButton.text = name
-                    }
-                }
-
-                Label {
-                    color: "#ffffff"
-                    anchors.left: itemImage_Lindwurm.right
-                    anchors.leftMargin: 12
-                    font.letterSpacing: 1
-                    font.pointSize: 10
-                    text: name
-                }
-            }
-        }
-        ///////// End of Raid Items - Lindwurm /////////
 
         ///////// Raid Items - Tiamat Malice /////////
         Label {
@@ -3066,6 +3219,23 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Luminiera Malice /////////
+
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
+        Label {
+            color: "black"
+            font.bold: true
+            font.pointSize: 18
+            text: "Xeno Clash Raids"
+        }
+        Rectangle {
+            width: parent.width
+            height: 3
+            color: "black"
+        }
 
         ///////// Raid Items - Xeno Ifrit /////////
         Label {
