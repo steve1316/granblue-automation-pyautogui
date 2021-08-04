@@ -87,7 +87,8 @@ Flickable {
                 "Akasha": ["Hollow Key"],
                 "Lucilius": ["Dark Residue", "Shadow Substance"],
                 "Ultimate Bahamut": ["Michael Anima", "Gabriel Anima", "Uriel Anima", "Raphael Anima", "Meteorite Fragment", "Meteorite", "Silver Centrum", "Ultima Unit", "Athena Anima", "Athena Omega Anima", "Grani Anima", "Grani Omega Anima", "Baal Anima", "Baal Omega Anima", "Garuda Anima", "Garuda Omega Anima", "Odin Anima", "Odin Omega Anima", "Lich Anima", "Lich Omega Anima"],
-                "Lindwurm": ["Golden Scale", "Lineage Fragment"]
+                "Lindwurm": ["Golden Scale", "Lineage Fragment"],
+                "Huanglong and Qilin": ["Huanglong Anima", "Qilin Anima", "Golden Talisman", "Obsidian Talisman"]
             }
 
             function createListElement(itemName){
@@ -1154,6 +1155,62 @@ Flickable {
                 Label {
                     color: "#ffff00"
                     anchors.left: itemImage_GrandOrder.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Grand Order /////////
+
+        ///////// Raid Items - Huanglong and Qilin /////////
+        Label {
+            id: label_HuanglongAndQilin
+
+            color: "#ffffff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Huanglong and Qilin"
+        }
+
+        Repeater {
+            id: repeater_HuanglongAndQilin
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_HuanglongAndQilin.visible === true){
+                    repeater_HuanglongAndQilin.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_HuanglongAndQilin.text].length; i++){
+                        repeater_HuanglongAndQilin.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_HuanglongAndQilin.text][i]))
+                    }
+                }
+            }
+
+            Image {
+                id: itemImage_HuanglongAndQilin
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#ffffff"
+                    anchors.left: itemImage_HuanglongAndQilin.right
                     anchors.leftMargin: 12
                     font.letterSpacing: 1
                     font.pointSize: 10

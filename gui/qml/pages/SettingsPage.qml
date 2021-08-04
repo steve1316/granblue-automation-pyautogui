@@ -1424,6 +1424,11 @@ Item{
                             { text: "Four Primarchs", enabled: false },
                             { text: "The Four Primarchs", map: "", enabled: true },
                         ]
+                    } else if(itemSelectionButton.text === "Huanglong Anima" || itemSelectionButton.text === "Qilin Anima" || itemSelectionButton.text === "Golden Talisman" || itemSelectionButton.text === "Obsidian Talisman") {
+                        missionSelectionComboBox.model = [
+                            { text: "Huanglong and Qilin", enabled: false },
+                            { text: "Huanglong & Qilin (Impossible)", map: "", enabled: true },
+                        ]
                     }
                 }
 
