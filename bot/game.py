@@ -674,7 +674,7 @@ class Game:
 
             # Now that the bot is at the Loot Collected screen, detect any user-specified items.
             if not is_pending_battle and not is_event_nightmare:
-                self.print_and_save("\n[INFO] Detecting if any user-specified loot dropped this run...")
+                self.print_and_save("\n[INFO] Detecting if any user-specified loot dropped from this run...")
                 if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
                     temp_amount = self.image_tools.find_farmed_items(self._item_name)
                 else:
@@ -702,7 +702,7 @@ class Game:
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"[FARM] Mission: {self.mission_name}")
                 self.print_and_save(f"[FARM] Summons: {self._summon_list}")
-                self.print_and_save(f"[FARM] Amount of {self._item_name} gained this run: {temp_amount}")
+                self.print_and_save(f"[FARM] Amount of {self._item_name} gained from this run: {temp_amount}")
                 self.print_and_save(f"[FARM] Amount of {self._item_name} gained in total: {self._item_amount_farmed} / {self._item_amount_to_farm}")
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished}")
                 self.print_and_save("********************************************************************************")
@@ -710,10 +710,10 @@ class Game:
 
                 if temp_amount != 0:
                     if self._item_amount_farmed >= self._item_amount_to_farm:
-                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained this run: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
+                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained from this run: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
                                          f"**[{self._item_amount_farmed} / {self._item_amount_to_farm}]** :white_check_mark:"
                     else:
-                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained this run: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
+                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained from this run: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
                                          f"**[{self._item_amount_farmed} / {self._item_amount_to_farm}]**"
 
                     self.discord_queue.put(discord_string)
