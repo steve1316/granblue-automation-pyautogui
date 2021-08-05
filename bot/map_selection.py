@@ -1157,15 +1157,19 @@ class MapSelection:
             self._check_for_joined()
 
             if self._raids_joined >= 3:
-                # If the maximum number of raids has been joined, collect any pending rewards with a interval of 60 seconds in between until the number of joined raids is below 3.
+                # If the maximum number of raids has been joined, collect any pending rewards with a interval of 30 seconds in between until the number of joined raids is below 3.
                 while self._raids_joined >= 3:
-                    self._game.print_and_save(f"\n[INFO] Maximum raids of 3 has been joined. Waiting 60 seconds to see if any finish.")
+                    self._game.print_and_save(f"\n[INFO] Maximum raids of 3 has been joined. Waiting 30 seconds to see if any finish.")
+                    self._game.wait(30)
+
                     self._game.go_back_home(confirm_location_check = True)
+                    self._game.find_and_click_button("quest")
 
-                    self._game.wait(60)
+                    if self.check_for_pending("raid"):
+                        self._game.find_and_click_button("quest")
 
-                    self._game.find_and_click_button("quest", suppress_error = True)
-                    self.check_for_pending("raid")
+                    self._game.find_and_click_button("raid")
+                    self._check_for_joined()
 
             # Click on the "Enter ID" button.
             self._game.print_and_save(f"\n[INFO] Now moving to the \"Enter ID\" screen.")
