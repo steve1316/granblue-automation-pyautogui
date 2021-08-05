@@ -95,8 +95,8 @@ class MapSelection:
 
                         self._game.wait(1)
                     else:
-                        # When there are no more Pending Battles, go back to the Quests screen.
-                        self._game.find_and_click_button("quests", suppress_error = True)
+                        # When there are no more Pending Battles, go back to the Home screen.
+                        self._game.find_and_click_button("home")
 
                         # Close the Skyscope mission popup.
                         if self._game.enable_skyscope and self._game.image_tools.confirm_location("skyscope"):
@@ -1138,7 +1138,7 @@ class MapSelection:
         self._game.go_back_home(confirm_location_check = True)
 
         # Then navigate to the Quest screen.
-        self._game.find_and_click_button("quest", suppress_error = True)
+        self._game.find_and_click_button("quest")
 
         # Check for the "You retreated from the raid battle" popup.
         self._game.wait(1)
@@ -1146,10 +1146,11 @@ class MapSelection:
             self._game.find_and_click_button("ok")
 
         # Check for any Pending Battles popup.
-        self.check_for_pending("raid")
+        if self.check_for_pending("raid"):
+            self._game.find_and_click_button("quest")
 
         # Now navigate to the Raid screen.
-        self._game.find_and_click_button("raid", suppress_error = True)
+        self._game.find_and_click_button("raid")
 
         if self._game.image_tools.confirm_location("raid"):
             # Check for any joined raids.
