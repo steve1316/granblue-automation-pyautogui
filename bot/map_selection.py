@@ -67,16 +67,12 @@ class MapSelection:
         """
         self._game.wait(1)
 
-        # Check for the "Check your Pending Battles" popup when navigating to the Quest screen or attempting to join a raid when there are 6 Pending Battles
-        # or check if the "Play Again" button is covered by the "Pending Battles" button for any other Farming Mode.
-        if (farming_mode == "Raid" and self._game.image_tools.confirm_location("check_your_pending_battles", tries = 1)) or (
-                farming_mode != "Raid" and self._game.image_tools.find_button("quest_results_pending_battles", tries = 1, suppress_error = True)):
+        if (self._game.image_tools.confirm_location("check_your_pending_battles", tries = 1)) or \
+                (self._game.image_tools.find_button("quest_results_pending_battles", tries = 1)):
             self._game.print_and_save(f"\n[INFO] Found Pending Battles that need collecting from.")
 
-            if farming_mode == "Raid":
-                self._game.find_and_click_button("ok")
-            else:
-                self._game.find_and_click_button("quest_results_pending_battles")
+            if self._game.find_and_click_button("quest_results_pending_battles", tries = 1) is False:
+                self._game.find_and_click_button("ok", tries = 1)
 
             self._game.wait(1)
 
