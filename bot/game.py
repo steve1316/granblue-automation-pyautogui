@@ -690,6 +690,14 @@ class Game:
                         self._amount_of_runs_finished += 1
                 else:
                     self._amount_of_runs_finished += 1
+            elif is_pending_battle:
+                self.print_and_save("\n[INFO] Detecting if any user-specified loot dropped from this pending battle...")
+                if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
+                    temp_amount = self.image_tools.find_farmed_items(self._item_name)
+                else:
+                    temp_amount = 0
+
+                self._item_amount_farmed += temp_amount
         else:
             # If the bot reached here, that means the raid ended without the bot being able to take action so no loot
             # dropped.
@@ -735,6 +743,28 @@ class Game:
                                      f"**[{self._amount_of_runs_finished} / {self._item_amount_to_farm}]**"
 
                 self.discord_queue.put(discord_string)
+        elif is_pending_battle and temp_amount > 0:
+            if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
+                self.print_and_save("\n********************************************************************************")
+                self.print_and_save("********************************************************************************")
+                self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
+                self.print_and_save(f"[FARM] Mission: {self.mission_name}")
+                self.print_and_save(f"[FARM] Summons: {self._summon_list}")
+                self.print_and_save(f"[FARM] Amount of {self._item_name} gained from this pending battle: {temp_amount}")
+                self.print_and_save(f"[FARM] Amount of {self._item_name} gained in total: {self._item_amount_farmed} / {self._item_amount_to_farm}")
+                self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished}")
+                self.print_and_save("********************************************************************************")
+                self.print_and_save("********************************************************************************\n")
+
+                if temp_amount != 0:
+                    if self._item_amount_farmed >= self._item_amount_to_farm:
+                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained from this pending battle: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
+                                         f"**[{self._item_amount_farmed} / {self._item_amount_to_farm}]** :white_check_mark:"
+                    else:
+                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained from this pending battle: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
+                                         f"**[{self._item_amount_farmed} / {self._item_amount_to_farm}]**"
+
+                    self.discord_queue.put(discord_string)
 
         return None
 
