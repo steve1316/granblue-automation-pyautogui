@@ -52,6 +52,9 @@ class MapSelection:
                 if self._raids_joined > 0:
                     self._raids_joined -= 1
 
+                self._game.find_and_click_button("close", tries = 1, suppress_error = True)
+                self._game.find_and_click_button("ok", tries = 1, suppress_error = True)
+
                 return True
 
         return False
