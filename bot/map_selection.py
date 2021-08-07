@@ -1182,7 +1182,7 @@ class MapSelection:
             join_room_button = self._game.image_tools.find_button("join_a_room")
             room_code_textbox = (join_room_button[0] - 185, join_room_button[1])
 
-            # Loop and try to join a raid from a parsed list of room codes. If none of the room codes worked, wait 60 seconds before trying again with a new set of room codes for a maximum of 10 tries.
+            # Loop and try to join a raid from a parsed list of room codes. If none of the room codes worked, wait 30 seconds before trying again with a new set of room codes for a maximum of 10 tries.
             tries = 10
             while tries > 0:
                 # Find 5 most recent tweets for the specified raid and then parse for room codes.
@@ -1216,7 +1216,7 @@ class MapSelection:
                         self._game.find_and_click_button("ok")
 
                 tries -= 1
-                self._game.print_and_save(f"\n[WARNING] Could not find any valid room codes. \nWaiting 60 seconds and then trying again with {tries} tries left before exiting.")
-                self._game.wait(60)
+                self._game.print_and_save(f"\n[WARNING] Could not find any valid room codes. \nWaiting 30 seconds and then trying again with {tries} tries left before exiting.")
+                self._game.wait(30)
 
         return False
