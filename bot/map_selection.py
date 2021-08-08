@@ -71,11 +71,11 @@ class MapSelection:
         self._game.wait(1)
 
         if (self._game.image_tools.confirm_location("check_your_pending_battles", tries = 1)) or \
-                (self._game.image_tools.find_button("quest_results_pending_battles", tries = 1)):
+                (self._game.image_tools.confirm_location("pending_battles", tries = 1)) or \
+                (self._game.find_and_click_button("quest_results_pending_battles", tries = 1)):
             self._game.print_and_save(f"\n[INFO] Found Pending Battles that need collecting from.")
 
-            if self._game.find_and_click_button("quest_results_pending_battles", tries = 1) is False:
-                self._game.find_and_click_button("ok", tries = 1)
+            self._game.find_and_click_button("ok", tries = 1)
 
             self._game.wait(1)
 
@@ -698,7 +698,7 @@ class MapSelection:
                 self._game.mouse_tools.scroll_screen_from_home_button(-200)
 
                 self._game.wait(1)
-                
+
                 ap_locations = self._game.image_tools.find_all("ap", custom_confidence = 0.8, grayscale_check = True)
 
                 if difficulty == "Very Hard":
