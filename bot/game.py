@@ -1094,7 +1094,7 @@ class Game:
 
             if self._rotb_extreme_plus_combat_script == "":
                 self.print_and_save("[INFO] Combat Script for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
-                self._event_nightmare_combat_script = self._combat_script
+                self._rotb_extreme_plus_combat_script = self._combat_script
 
             if len(self._rotb_extreme_plus_summon_element_list) == 0:
                 self.print_and_save("[INFO] Summon Elements for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
