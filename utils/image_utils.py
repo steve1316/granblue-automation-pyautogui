@@ -421,7 +421,6 @@ class ImageUtils:
                                   "Leviathan Malice Anima", "Phronesis Anima"]
 
         self._game.print_and_save(f"[INFO] Now detecting item rewards...")
-        amounts_farmed = []
         guibot_check = False
 
         total_amount_farmed = 0
