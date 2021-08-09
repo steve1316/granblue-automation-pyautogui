@@ -1686,6 +1686,7 @@ Item{
                             { text: "EX Xuanwu", map: "", enabled: true },
                             { text: "EX Baihu", map: "", enabled: true },
                             { text: "EX Qinglong", map: "", enabled: true },
+                            { text: "Lvl 100 Shenxian", map: "", enabled: true },
                             { text: "Event Quest", enabled: false },
                             { text: "VH Zhuque", map: "", enabled: true },
                             { text: "VH Xuanwu", map: "", enabled: true },

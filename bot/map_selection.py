@@ -799,6 +799,8 @@ class MapSelection:
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
+        self._game.print_and_save(f"\n[INFO] Now navigating to Rise of the Beasts...")
+
         # Go to the Event by clicking on the "Menu" button and then click the very first banner.
         self._game.find_and_click_button("home_menu")
         banner_locations = self._game.image_tools.find_all("event_banner")
@@ -822,6 +824,7 @@ class MapSelection:
             # Only Raids are marked with Extreme difficulty.
             if difficulty == "Extreme":
                 # Click on the Raid banner.
+                self._game.print_and_save(f"[INFO] Now hosting {temp_mission_name} Raid...")
                 self._game.find_and_click_button("rotb_extreme")
 
                 if self._game.image_tools.confirm_location("rotb_battle_the_beasts"):
@@ -838,7 +841,18 @@ class MapSelection:
                         self._game.print_and_save(f"[INFO] Now starting EX Qinglong Raid...")
                         self._game.find_and_click_button("rotb_raid_qinglong")
 
+            elif mission_name == "Lvl 100 Shenxian":
+                # Click on Shenxian to host.
+                self._game.print_and_save(f"[INFO] Now hosting Shenxian Raid...")
+                self._game.find_and_click_button("rotb_shenxian_host")
+
+                if self._game.image_tools.wait_vanish("rotb_shenxian_host", timeout = 10) is False:
+                    self._game.print_and_save(f"[INFO] There are no more Shenxian hosts left. Alerting user...")
+                    raise Exception("There are no more Shenxian hosts left.")
+
             else:
+                self._game.print_and_save(f"[INFO] Now hosting {temp_mission_name} Quest...")
+
                 # Scroll the screen down to make way for smaller screens.
                 self._game.mouse_tools.scroll_screen_from_home_button(-400)
 
