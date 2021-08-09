@@ -172,7 +172,7 @@ class Game:
         self.farming_mode = ""
         self._map_name = ""
         self.mission_name = ""
-        self._difficulty = ""
+        self.difficulty = ""
         self._summon_element_list = []
         self._summon_list = []
         self._group_number = 0
@@ -793,14 +793,14 @@ class Game:
                     (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._check_for_event_nightmare()) or (
                     self.farming_mode == "Xeno Clash" and self._check_for_xeno_clash_nightmare()):
                 # Make sure the bot goes back to the Home screen so that the "Play Again" functionality comes back.
-                self._map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self._difficulty)
+                self._map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self.difficulty)
                 break
 
             # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select the Mission again.
             if (self.farming_mode == "Event (Token Drawboxes)" or self.farming_mode == "Guild Wars") and self.image_tools.confirm_location("not_enough_treasure", tries = 1):
                 self.find_and_click_button("ok")
                 self._delay_between_runs()
-                self._map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self._difficulty)
+                self._map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self.difficulty)
                 break
 
             # Attempt to close the popup by clicking on any detected "Close" and "Cancel" buttons.
@@ -1234,7 +1234,7 @@ class Game:
             self.farming_mode = farming_mode
             self._map_name = map_name
             self.mission_name = mission_name
-            self._difficulty = difficulty
+            self.difficulty = difficulty
             self._summon_element_list = summon_element_list
             self._summon_list = summon_list
             self._group_number = group_number

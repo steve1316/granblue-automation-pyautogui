@@ -266,6 +266,32 @@ class CombatMode:
         self._game.mouse_tools.move_and_click_point(x, y, "template_character", mouse_clicks = 2)
         return None
 
+    def _select_enemy_target(self, command: str):
+        """Selects the targeted enemy.
+
+        Args:
+            command (str): The command to be executed.
+
+        Returns:
+            None
+        """
+        for target in range(1, 3):
+            if command == f"targetenemy({target})":
+                if target == 1:
+                    x = self._attack_button_location[0] - 280
+                elif target == 2:
+                    x = self._attack_button_location[0] - 120
+                else:
+                    x = self._attack_button_location[0] + 40
+
+                y = self._attack_button_location[1] - 290
+
+                self._game.mouse_tools.move_and_click_point(x, y, "template_enemy_target")
+                self._game.find_and_click_button("set_target")
+                self._game.print_and_save(f"[COMBAT] Targeted Enemy #{target}.")
+
+        return None
+
     def _use_character_skill(self, character_selected: int, skill_command_list: List[str]):
         """Activate the specified skill(s) for the already selected character.
 
@@ -575,6 +601,10 @@ class CombatMode:
                                 self._game.print_and_save("################################################################################")
                                 self._game.go_back_home(confirm_location_check = True)
                                 return False
+
+                            # Select enemy target.
+                            if "targetenemy" in command:
+                                self._select_enemy_target(command)
 
                             # Determine which Character to take action.
                             if "character1." in command:
