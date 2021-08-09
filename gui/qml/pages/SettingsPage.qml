@@ -1429,6 +1429,31 @@ Item{
                             { text: "Huanglong and Qilin", enabled: false },
                             { text: "Huanglong & Qilin (Impossible)", map: "", enabled: true },
                         ]
+                    } else if(itemSelectionButton.text === "Shenxian Badge") {
+                        missionSelectionComboBox.model = [
+                            { text: "Shenxian", enabled: false },
+                            { text: "Lvl 100 Shenxian", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Zhuque Badge") {
+                        missionSelectionComboBox.model = [
+                            { text: "Agni", enabled: false },
+                            { text: "Lvl 90 Agni", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Xuanwu Badge") {
+                        missionSelectionComboBox.model = [
+                            { text: "Neptune", enabled: false },
+                            { text: "Lvl 90 Neptune", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Baihu Badge") {
+                        missionSelectionComboBox.model = [
+                            { text: "Titan", enabled: false },
+                            { text: "Lvl 90 Titan", map: "", enabled: true },
+                        ]
+                    } else if(itemSelectionButton.text === "Qinglong Badge") {
+                        missionSelectionComboBox.model = [
+                            { text: "Zephyrus", enabled: false },
+                            { text: "Lvl 90 Zephyrus", map: "", enabled: true },
+                        ]
                     }
                 }
 
