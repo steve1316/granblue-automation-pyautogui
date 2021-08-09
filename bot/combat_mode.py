@@ -437,17 +437,23 @@ class CombatMode:
         Returns:
             None
         """
-        rotb_quests = ["VH Zhuque", "VH Xuanwu", "VH Baihu", "VH Qinglong"]
-        proving_grounds_quests = ["Extreme", "Extreme+"]
+        event_raids = ["VH Event Raid", "EX Event Raid", "IM Event Raid"]
+        rotb_raids = ["EX Zhuque", "EX Xuanwu", "EX Baihu", "EX Qinglong", "Lvl 100 Shenxian"]
+        dread_barrage_raids = ["1 Star", "2 Star", "3 Star", "4 Star", "5 Star"]
+        proving_grounds_raids = ["Extreme", "Extreme+"]
+        guild_wars_raids = ["Very Hard", "Extreme", "Extreme+", "NM90", "NM100", "NM150"]
+        xeno_clash_raids = ["Xeno Clash Raid"]
 
         # If the "Cancel" button vanishes, that means the attack is in-progress. Now reload the page and wait for either the attack to finish or Battle ended.
-        if (self._game.farming_mode != "Quest" and self._game.farming_mode != "Special") and \
-                (self._game.farming_mode != "Event" and self._game.mission_name != "EX Event Quest") and \
-                (self._game.farming_mode != "Event (Token Drawboxes)" and self._game.mission_name != "EX Event Quest") and \
-                (self._game.farming_mode != "Rise of the Beasts" and not rotb_quests.__contains__(self._game.mission_name)) and \
-                (self._game.farming_mode != "Proving Grounds" and not proving_grounds_quests.__contains__(self._game.mission_name)) and \
-                (self._game.farming_mode != "Xeno Clash" and self._game.mission_name != "Xeno Clash Extreme"):
+        if self._game.farming_mode == "Raid" or \
+                event_raids.__contains__(self._game.mission_name) or \
+                rotb_raids.__contains__(self._game.mission_name) or \
+                dread_barrage_raids.__contains__(self._game.difficulty) or \
+                proving_grounds_raids.__contains__(self._game.difficulty) or \
+                guild_wars_raids.__contains__(self._game.difficulty) or \
+                xeno_clash_raids.__contains__(self._game.mission_name):
 
+            self._game.print_and_save("[COMBAT] Reloading now.")
             self._game.find_and_click_button("reload")
 
         return None
