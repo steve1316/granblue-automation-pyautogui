@@ -182,9 +182,12 @@ class Game:
 
         # Enable checking for Skyscope mission popups.
         self.enable_skyscope = True
+        print(f"Test mode is {test_mode}")
         if test_mode is False:
             # Calibrate the dimensions of the bot window on bot launch.
             self.go_back_home(confirm_location_check = True, display_info_check = True)
+        else:
+            self.home_button_location = self.image_tools.find_button("home")
 
     def _print_time(self):
         """Formats the time since the bot started into a readable, printable HH:MM:SS format using timedelta.

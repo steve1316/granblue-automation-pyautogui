@@ -2260,12 +2260,8 @@ Item{
 
                 onClicked: {
                     testModeCheckBox.checked = !testModeCheckBox.checked
-
-                    if(testModeCheckBox.checked) {
-                        backend.check_bot_ready(true)
-                    }else{
-                        backend.check_bot_ready(false)
-                    }
+                    backend.check_bot_ready(testModeCheckBox.checked)
+                    backend.update_test_mode(testModeCheckBox.checked)
                 }
             }
         }

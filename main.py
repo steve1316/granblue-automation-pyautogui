@@ -26,7 +26,7 @@ class MainDriver:
         self._debug = None
 
     def run_bot(self, item_name: str, item_amount_to_farm: str, farming_mode: str, location_name: str, mission_name: str, summon_element_list: List[str], summon_list: List[str],
-                group_number: int, party_number: int, combat_script: str, queue: multiprocessing.Queue, discord_queue: multiprocessing.Queue, is_bot_running: int, debug_mode: bool = False):
+                group_number: int, party_number: int, combat_script: str, queue: multiprocessing.Queue, discord_queue: multiprocessing.Queue, is_bot_running: int, debug_mode: bool = False, test_mode: bool = False):
         """Starts the main bot process on this Thread.
 
         Args:
@@ -44,12 +44,13 @@ class MainDriver:
             discord_queue (multiprocessing.Queue): Queue to keep track of status messages to inform the user via Discord DMs.
             is_bot_running (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
             debug_mode (bool): Optional flag to print relevant debug messages. Defaults to False.
+            test_mode (bool): Optional flag to turn on debugging testing mode. Defaults to False.
 
         Returns:
             None
         """
         # Initialize the Game class and start Farming Mode.
-        self._game = Game(queue = queue, discord_queue = discord_queue, is_bot_running = is_bot_running, combat_script = combat_script, debug_mode = debug_mode, test_mode = False)
+        self._game = Game(queue = queue, discord_queue = discord_queue, is_bot_running = is_bot_running, combat_script = combat_script, debug_mode = debug_mode, test_mode = test_mode)
 
         self._game.start_farming_mode(item_name = item_name, item_amount_to_farm = int(item_amount_to_farm), farming_mode = farming_mode, map_name = location_name, mission_name = mission_name,
                                       summon_element_list = summon_element_list, summon_list = summon_list, group_number = group_number, party_number = party_number)
@@ -76,30 +77,32 @@ class MainWindow(QObject):
         self._discord_process = None
 
         # Create a list in memory to hold all messages in case the frontend wants to save all those messages into a text file.
-        self._text_log = []
+        self._text_log: list = []
 
         # Hold the file path to the combat script for use during Combat Mode.
-        self._real_file_path = None
+        self._real_file_path: str = None
 
         # Prep the following objects for multi-processed threading.        
         self._bot_object = MainDriver()
         self._bot_process = None
 
         # Hold the following information for the Game class initialization in a new thread.
-        self._farming_mode = ""
-        self._item_name = ""
-        self._item_amount_to_farm = ""
-        self._location_name = ""
-        self._mission_name = ""
-        self._summon_element_list = []
-        self._summon_list = []
-        self._group_number = ""
-        self._party_number = ""
+        self._farming_mode: str = ""
+        self._item_name: str = ""
+        self._item_amount_to_farm: int = 0
+        self._location_name: str = ""
+        self._mission_name: str = ""
+        self._summon_element_list: list = []
+        self._summon_list: list = []
+        self._group_number: int = 0
+        self._party_number: int = 0
 
         # Amount of time that the bot is allowed to run for in seconds.
         self._maximum_runtime = "none"
 
         self._debug_mode = False
+
+        self._test_mode = False
 
     # These signal connections connects the following backend functions to their respective functions in the frontend via the Connections type in the Signal and Handler Event System in Qt QML.
     # The data type inside the Signal indicates the return type going from backend to frontend. All of the functions that are connected to the frontend needs to use the emit() functionality 
@@ -124,13 +127,13 @@ class MainWindow(QObject):
         """
         self._farming_mode = ""
         self._item_name = ""
-        self._item_amount_to_farm = "0"
+        self._item_amount_to_farm = 0
         self._location_name = ""
         self._mission_name = ""
         self._summon_element_list = []
         self._summon_list = []
-        self._group_number = ""
-        self._party_number = ""
+        self._group_number = 0
+        self._party_number = 0
         return None
 
     @Slot(str)
@@ -451,6 +454,38 @@ class MainWindow(QObject):
         self.checkBotReady.emit(ready_flag)
         return None
 
+    @Slot(str)
+    def update_test_mode(self, flag: bool):
+        """Grab logging messages from the Queue and then output to the frontend's log.
+
+        @Slot(str)
+
+        Args:
+            flag (bool): True if the bot will start in a debugging testing mode and False for normal operations.
+
+        Returns:
+            None
+        """
+        print(f"Testing mode is {flag}")
+        self._test_mode = not self._test_mode
+
+        if self._test_mode:
+            self._farming_mode = "test"
+            self._item_name = "test"
+            self._item_amount_to_farm = 1
+            self._location_name = "test"
+            self._mission_name = "test"
+            self._summon_element_list = ["fire"]
+            self._summon_list = ["colossus omega"]
+            self._group_number = 1
+            self._party_number = 1
+            self.updateMessage.emit("Testing Mode turned on.")
+        else:
+            self.reset_values()
+            self.updateMessage.emit("Testing Mode turned off.")
+
+        return None
+
     @Slot()
     def start_bot(self):
         """Starts the bot's Game class on a new Thread.
@@ -490,7 +525,7 @@ class MainWindow(QObject):
         self._bot_process = multiprocessing.Process(target = self._bot_object.run_bot, args = (self._item_name, self._item_amount_to_farm, self._farming_mode, self._location_name,
                                                                                                self._mission_name, self._summon_element_list, self._summon_list, self._group_number,
                                                                                                self._party_number, self._real_file_path, self._queue, self.discord_queue, self._is_bot_running,
-                                                                                               self._debug_mode))
+                                                                                               self._debug_mode, self._test_mode))
 
         # Now start the new Process on a new Thread.
         self._bot_process.start()
