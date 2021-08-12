@@ -182,8 +182,14 @@ class CombatMode:
         self._game.print_and_save(f"\n[COMBAT] Now requesting Backup for this Raid.")
 
         # Scroll down the screen a little bit to have the "Request Backup" button visible on all screen sizes and then click it.
-        self._game.mouse_tools.scroll_screen_from_home_button(-400)
-        self._game.find_and_click_button("request_backup")
+        tries = 5
+        while self._game.find_and_click_button("request_backup") is False:
+            self._game.mouse_tools.scroll_screen_from_home_button(-200)
+            tries -= 1
+            if tries <= 0:
+                self._game.print_and_save(f"\n[COMBAT] Failed to request backup.")
+                self._game.mouse_tools.scroll_screen_from_home_button(400)
+                return None
 
         self._game.wait(1)
 
