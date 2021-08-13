@@ -531,6 +531,8 @@ class CombatMode:
                 if command == "" or command[0] == "#" or command[0] == "/":
                     continue
 
+                back_flag = False
+
                 self._game.print_and_save(f"[COMBAT] Reading command: {command}")
 
                 if command.__contains__("turn"):
@@ -614,10 +616,6 @@ class CombatMode:
                                 self._game.go_back_home(confirm_location_check = True)
                                 return False
 
-                            # Select enemy target.
-                            if "targetenemy" in command:
-                                self._select_enemy_target(command)
-
                             # Determine which Character to take action.
                             if "character1." in command:
                                 character_selected = 1
@@ -672,6 +670,16 @@ class CombatMode:
                                     self._game.print_and_save("[COMBAT] Bot failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
                                     semi_auto = True
                                 break
+                            elif "targetenemy" in command:
+                                # Select enemy target.
+                                self._select_enemy_target(command)
+                            elif "back" in command and self._game.find_and_click_button("home_back", tries = 1):
+                                self._game.print_and_save("[COMBAT] Tapped the Back button.")
+                                self._wait_for_attack()
+                                back_flag = True
+
+                                # Advance the Turn number by 1.
+                                turn_number += 1
 
                             if self._game.find_and_click_button("next", tries = 1, suppress_error = True):
                                 break
@@ -690,7 +698,7 @@ class CombatMode:
                             self._game.print_and_save("[COMBAT] Bot failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
                             semi_auto = True
                         break
-                    elif semi_auto is False and full_auto is False and command == "end":
+                    elif semi_auto is False and full_auto is False and command == "end" and back_flag is False:
                         # Click the "Attack" button once every command inside the Turn Block has been processed.
                         self._game.print_and_save(f"[COMBAT] Ending Turn {turn_number}.")
                         self._game.find_and_click_button("attack", tries = 10)
