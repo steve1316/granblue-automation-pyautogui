@@ -210,17 +210,27 @@ class ImageUtils:
             self._game.print_and_save(f"[DEBUG] Received the following list of Summons to search for: {str(summon_list)}")
             self._game.print_and_save(f"[DEBUG] Received the following list of Elements: {str(summon_element_list)}")
 
+        last_summon_element = ""
         summon_location = None
         guibot_check = False
         summon_index = 0
 
-        while summon_location is None and summon_index <= len(summon_list):
-            # First select the Summon Element tab at the current index.
-            self._game.print_and_save(f"[INFO] Now attempting to find: {summon_list[summon_index].upper()}")
-            current_summon_element = summon_element_list[summon_index]
-            self._game.find_and_click_button(f"summon_{current_summon_element}")
+        # Make sure that the bot is at the Summon Selection screen.
+        tries = 3
+        while not self.confirm_location("select_a_summon"):
+            self._game.find_and_click_button('reload')
+            tries -= 1
+            if tries <= 0 and self.confirm_location("select_a_summon", tries = 1) is False:
+                raise Exception("Could not reach the Summon Selection screen.")
 
-            while summon_location is None and summon_index <= len(summon_list):
+        while summon_location is None:
+            current_summon_element = summon_element_list[summon_index]
+            if current_summon_element != last_summon_element:
+                self._game.find_and_click_button(f"summon_{current_summon_element}")
+                last_summon_element = current_summon_element
+
+            summon_index = 0
+            while summon_index <= len(summon_list):
                 # Now try and find the Summon at the current index.
                 if self._window_left is not None or self._window_top is not None or self._window_width is not None or self._window_height is not None:
                     summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_list[summon_index]}.png", confidence = custom_confidence, grayscale = grayscale_check,
@@ -233,35 +243,36 @@ class ImageUtils:
                     self._file_resolver.add_path("images/summons/")
                     self._clear_memory_guibot()
                     summon_location = self._guibot.exists(f"{summon_list[summon_index]}")
+
                     if summon_location is None:
-                        if self._debug_mode:
-                            self._game.print_and_save(f"[WARNING] Could not locate {summon_list[summon_index].upper()} Summon. Trying again...")
+                        if suppress_error is False:
+                            self._game.print_and_save(f"[WARNING] Could not locate {summon_list[summon_index].upper()} Summon.")
 
-                        # If the bot reached the bottom of the page, scroll back up to the top and start searching for the next Summon.
-                        if (self._game.farming_mode == "Proving Grounds" and self.find_button("bottom_of_proving_grounds_summon_selection", tries = 1) is not None) or \
-                                self.find_button("bottom_of_summon_selection", tries = 1) or self.find_button("bottom_of_event_summon_selection", tries = 1) is not None:
-                            self._game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, 10000)
-                            summon_index += 1
+                        if summon_index + 1 >= len(summon_list):
                             break
-
-                        # If matching failed, scroll the screen down to see more Summons.
-                        self._game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
-
-                        self._game.wait(1)
+                        else:
+                            summon_index += 1
                     else:
                         guibot_check = True
+                else:
+                    break
 
-            if summon_location is None and (summon_index + 1) > len(summon_list):
-                if not suppress_error:
-                    self._game.print_and_save(f"[WARNING] Could not find any of the specified Summons.")
+            # If the location was successfully found using GuiBot, convert the Match object to a Location object.
+            if guibot_check:
+                summon_location = (summon_location.target.x, summon_location.target.y)
+                break
+            elif summon_location is not None:
+                break
+
+            # If the bot reached the bottom of the page, scroll back up to the top and start searching for the next Summon.
+            if self.find_button("bottom_of_summon_selection", tries = 1) is not None:
+                self._game.print_and_save(f"[WARNING] Bot has reached the bottom of the page and found no suitable Summons. Resetting Summons now...")
                 return None
 
-        # If the location was successfully found using GuiBot, convert the Match object to a Location object.
-        if guibot_check:
-            summon_location = (summon_location.target.x, summon_location.target.y)
+            # If matching failed, scroll the screen down to see more Summons.
+            self._game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
 
         self._game.print_and_save(f"[SUCCESS] Found {summon_list[summon_index].upper()} Summon at {summon_location}.")
-
         return summon_location
 
     def find_dialog(self, attack_button_x: int, attack_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 3, sleep_time: int = 1):
