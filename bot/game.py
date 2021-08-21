@@ -1381,7 +1381,7 @@ class Game:
                     # Handle the rare case where joining the Raid after selecting the Summon and Party led the bot to the Quest Results screen with no loot to collect.
                     if self.image_tools.confirm_location("no_loot", tries = 1):
                         self.print_and_save("\n[INFO] Seems that the Raid just ended. Moving back to the Home screen and joining another Raid...")
-                        self.go_back_home(confirm_location_check = True)
+                        self.map_selection.join_raid(mission_name)
                     else:
                         # At this point, the Summon and Party have already been selected and the Mission has started. Now commence Combat Mode.
                         if self.combat_mode.start_combat_mode(self._combat_script):
