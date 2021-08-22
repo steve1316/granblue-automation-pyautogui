@@ -151,7 +151,7 @@ class Game:
 
         # Initialize the objects of helper classes.
         self.combat_mode = CombatMode(self, is_bot_running, debug_mode = self._debug_mode)
-        self._map_selection = MapSelection(self, is_bot_running)
+        self.map_selection = MapSelection(self, is_bot_running)
         self.room_finder = TwitterRoomFinder(self, self._is_bot_running, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3], debug_mode = self._debug_mode)
         self.image_tools = ImageUtils(self, debug_mode = self._debug_mode)
         self.mouse_tools = MouseUtils(self, enable_bezier_curve = enable_bezier_curve_mouse_movement, mouse_speed = custom_mouse_speed, debug_mode = self._debug_mode)
@@ -182,7 +182,6 @@ class Game:
 
         # Enable checking for Skyscope mission popups.
         self.enable_skyscope = True
-        print(f"Test mode is {test_mode}")
         if test_mode is False:
             # Calibrate the dimensions of the bot window on bot launch.
             self.go_back_home(confirm_location_check = True, display_info_check = True)
@@ -270,7 +269,8 @@ class Game:
         """
         if not self.image_tools.confirm_location("home"):
             self.print_and_save("\n[INFO] Moving back to the Home screen...")
-            self.find_and_click_button("home")
+            if self.find_and_click_button("home") is False:
+                raise (Exception("Home button located on the bottom bar is not visible. Is the browser window properly visible?"))
         else:
             self.print_and_save("[INFO] Bot is at the Home screen.")
 
@@ -488,7 +488,7 @@ class Game:
 
         return None
 
-    def _find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 3):
+    def find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 3):
         """Select the specified Group and Party. It will then start the mission.
 
         Args:
@@ -653,12 +653,13 @@ class Game:
         self.print_and_save("[INFO] EP is available. Continuing...")
         return None
 
-    def collect_loot(self, is_pending_battle: bool = False, is_event_nightmare: bool = False):
+    def collect_loot(self, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False):
         """Collect the loot from the Results screen while clicking away any dialog popups. Primarily for raids.
         
         Args:
             is_pending_battle (bool): Skip the incrementation of runs attempted if this was a Pending Battle. Defaults to False.
             is_event_nightmare (bool): Skip the incrementation of runs attempted if this was a Event Nightmare. Defaults to False.
+            skip_info (bool): Skip printing the information of the run. Defaults to False.
 
         Returns:
             None
@@ -706,7 +707,7 @@ class Game:
             # dropped.
             temp_amount = 0
 
-        if not is_pending_battle and not is_event_nightmare:
+        if not is_pending_battle and not is_event_nightmare and not skip_info:
             if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
                 self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
@@ -746,7 +747,7 @@ class Game:
                                      f"**[{self._amount_of_runs_finished} / {self._item_amount_to_farm}]**"
 
                 self.discord_queue.put(discord_string)
-        elif is_pending_battle and temp_amount > 0:
+        elif is_pending_battle and temp_amount > 0 and not skip_info:
             if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
                 self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
@@ -796,14 +797,14 @@ class Game:
                     (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._check_for_event_nightmare()) or (
                     self.farming_mode == "Xeno Clash" and self._check_for_xeno_clash_nightmare()):
                 # Make sure the bot goes back to the Home screen so that the "Play Again" functionality comes back.
-                self._map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self.difficulty)
+                self.map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self.difficulty)
                 break
 
             # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select the Mission again.
             if (self.farming_mode == "Event (Token Drawboxes)" or self.farming_mode == "Guild Wars") and self.image_tools.confirm_location("not_enough_treasure", tries = 1):
                 self.find_and_click_button("ok")
                 self._delay_between_runs()
-                self._map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self.difficulty)
+                self.map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self.difficulty)
                 break
 
             # Attempt to close the popup by clicking on any detected "Close" and "Cancel" buttons.
@@ -844,7 +845,7 @@ class Game:
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             if self.image_tools.confirm_location("select_a_summon"):
                 self._select_summon(self._dimensional_halo_summon_list, self._dimensional_halo_summon_element_list)
-                start_check = self._find_party_and_start_mission(int(self._dimensional_halo_group_number), int(self._dimensional_halo_party_number))
+                start_check = self.find_party_and_start_mission(int(self._dimensional_halo_group_number), int(self._dimensional_halo_party_number))
 
                 # Once preparations are completed, start Combat Mode.
                 if start_check and self.combat_mode.start_combat_mode(self._dimensional_halo_combat_script, is_nightmare = True):
@@ -895,7 +896,7 @@ class Game:
                 # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
                 if self.image_tools.confirm_location("select_a_summon"):
                     self._select_summon(self._event_nightmare_summon_list, self._event_nightmare_summon_element_list)
-                    start_check = self._find_party_and_start_mission(int(self._event_nightmare_group_number), int(self._event_nightmare_party_number))
+                    start_check = self.find_party_and_start_mission(int(self._event_nightmare_group_number), int(self._event_nightmare_party_number))
 
                     # Once preparations are completed, start Combat Mode.
                     if start_check and self.combat_mode.start_combat_mode(self._event_nightmare_combat_script, is_nightmare = True):
@@ -947,7 +948,7 @@ class Game:
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             if self.image_tools.confirm_location("select_a_summon"):
                 self._select_summon(self._rotb_extreme_plus_summon_list, self._rotb_extreme_plus_summon_element_list)
-                start_check = self._find_party_and_start_mission(int(self._rotb_extreme_plus_group_number), int(self._rotb_extreme_plus_party_number))
+                start_check = self.find_party_and_start_mission(int(self._rotb_extreme_plus_group_number), int(self._rotb_extreme_plus_party_number))
 
                 # Once preparations are completed, start Combat mode.
                 if start_check and self.combat_mode.start_combat_mode(self._rotb_extreme_plus_combat_script, is_nightmare = True):
@@ -1004,7 +1005,7 @@ class Game:
                 # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
                 if self.image_tools.confirm_location("select_a_summon"):
                     self._select_summon(self._xeno_clash_nightmare_summon_list, self._xeno_clash_nightmare_summon_element_list)
-                    start_check = self._find_party_and_start_mission(int(self._xeno_clash_nightmare_group_number), int(self._xeno_clash_nightmare_party_number))
+                    start_check = self.find_party_and_start_mission(int(self._xeno_clash_nightmare_group_number), int(self._xeno_clash_nightmare_party_number))
 
                     # Once preparations are completed, start Combat Mode.
                     if start_check and self.combat_mode.start_combat_mode(self._xeno_clash_nightmare_combat_script, is_nightmare = True):
@@ -1247,9 +1248,9 @@ class Game:
             self._advanced_setup()
 
             if farming_mode != "Raid":
-                self._map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+                self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
             else:
-                self._map_selection.join_raid(mission_name)
+                self.map_selection.join_raid(mission_name)
 
             while self._item_amount_farmed < item_amount_to_farm:
                 # Reset the Summon Selection flag.
@@ -1264,16 +1265,16 @@ class Game:
                     # If the Summon Selection flag is False, that means the Summons were reset.
                     if summon_check is False and farming_mode != "Raid":
                         self.print_and_save("\n[INFO] Selecting Mission again after resetting Summons.")
-                        self._map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+                        self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
                     elif summon_check is False and farming_mode == "Raid":
                         self.print_and_save("\n[INFO] Joining Raids again after resetting Summons.")
-                        self._map_selection.join_raid(mission_name)
+                        self.map_selection.join_raid(mission_name)
 
                 # Perform Party Selection and then start the Mission. If Farming Mode is Coop, skip this as Coop reuses the same Party.
                 if farming_mode != "Coop" and farming_mode != "Proving Grounds":
-                    start_check = self._find_party_and_start_mission(self._group_number, self._party_number)
+                    start_check = self.find_party_and_start_mission(self._group_number, self._party_number)
                 elif farming_mode == "Coop" and self._coop_first_run:
-                    start_check = self._find_party_and_start_mission(self._group_number, self._party_number)
+                    start_check = self.find_party_and_start_mission(self._group_number, self._party_number)
                     self._coop_first_run = False
 
                     # Now click the "Start" button to start the Coop Mission.
@@ -1314,13 +1315,13 @@ class Game:
                             # Handle special situations for certain Farming Modes.
                             if farming_mode != "Coop" and farming_mode != "Proving Grounds" and not self.find_and_click_button("play_again"):
                                 # Clear away any Pending Battles.
-                                self._map_selection.check_for_pending(farming_mode)
+                                self.map_selection.check_for_pending(farming_mode)
 
                                 # Now repeat the Mission.
-                                self._map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+                                self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
                             elif farming_mode == "Event (Token Drawboxes)" and event_quests.__contains__(mission_name):
                                 # Select the Mission again since Event Quests do not have "Play Again" functionality.
-                                self._map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+                                self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
                             elif farming_mode == "Coop":
                                 # Head back to the Coop Room.
                                 self.find_and_click_button("coop_room")
@@ -1375,7 +1376,7 @@ class Game:
                     else:
                         # Select the Mission again if the Party wiped or exited prematurely during Combat Mode.
                         self.print_and_save("\n[INFO] Restarting the Mission due to Combat Mode returning False...")
-                        self._map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+                        self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
 
                 elif start_check and farming_mode == "Raid":
                     # Handle the rare case where joining the Raid after selecting the Summon and Party led the bot to the Quest Results screen with no loot to collect.
@@ -1392,18 +1393,18 @@ class Game:
                                 self._delay_between_runs()
 
                                 # Clear away any Pending Battles.
-                                self._map_selection.check_for_pending(farming_mode)
+                                self.map_selection.check_for_pending(farming_mode)
 
                                 # Now join a new Raid.
-                                self._map_selection.join_raid(mission_name)
+                                self.map_selection.join_raid(mission_name)
                         else:
                             # Join a new Raid.
-                            self._map_selection.join_raid(mission_name)
+                            self.map_selection.join_raid(mission_name)
 
                 elif start_check is False and farming_mode == "Raid":
                     # If the bot reaches here, that means the Raid ended before the bot could start the Mission after selecting the Summon and Party.
                     self.print_and_save("\n[INFO] Seems that the Raid ended before the bot was able to join. Now looking for another Raid to join...")
-                    self._map_selection.join_raid(mission_name)
+                    self.map_selection.join_raid(mission_name)
 
                 elif start_check is False:
                     raise Exception("Failed to arrive at the Summon Selection screen after selecting the Mission.")

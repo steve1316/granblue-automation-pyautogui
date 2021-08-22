@@ -464,11 +464,12 @@ class CombatMode:
 
         return None
 
-    def start_combat_mode(self, script_file_path: str = "", is_nightmare: bool = False):
+    def start_combat_mode(self, script_file_path: str = "", script_commands: List[str] = None, is_nightmare: bool = False):
         """Start Combat Mode with the given script file path. Start reading through the text file line by line and have the bot proceed with the commands accordingly.
 
         Args:
             script_file_path (str, optional): Path to the combat script text file. Defaults to "".
+            script_commands (List[str], optional): List of script commands to use instead of reading from a text file. Defaults to None.
             is_nightmare (bool, optional): If Combat Mode is being used for a Nightmare, determines the method of reading the script file.
 
         Returns:
@@ -480,6 +481,9 @@ class CombatMode:
             self._game.print_and_save(f"[COMBAT] Starting Combat Mode.")
             self._game.print_and_save("################################################################################")
             self._game.print_and_save("################################################################################\n")
+
+            if script_commands is not None:
+                print("Size of script commands: ", len(script_commands))
 
             # Open the combat script text file.
             if script_file_path == "" or script_file_path is None:
