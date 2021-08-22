@@ -128,7 +128,8 @@ Item{
                 { text: "Guild Wars", enabled: true },
                 { text: "Dread Barrage", enabled: true },
                 { text: "Proving Grounds", enabled: true },
-                { text: "Xeno Clash", enabled: true }
+                { text: "Xeno Clash", enabled: true },
+                { text: "Arcarum", enabled: true },
             ]
 
             onCurrentIndexChanged: {
@@ -139,7 +140,7 @@ Item{
                 // Display either the Item Selection button or ComboBox depending on the Farming Mode selected.
                 if(farmingModeComboBox.displayText === "Event" || farmingModeComboBox.displayText === "Event (Token Drawboxes)" || farmingModeComboBox.displayText === "Dread Barrage" || 
                 farmingModeComboBox.displayText === "Rise of the Beasts" || farmingModeComboBox.displayText === "Guild Wars" || farmingModeComboBox.displayText === "Proving Grounds" ||
-                farmingModeComboBox.displayText === "Xeno Clash") {
+                farmingModeComboBox.displayText === "Xeno Clash" || farmingModeComboBox.displayText === "Arcarum") {
                     // Set the contents of the Item Selection ComboBox.
                     if(farmingModeComboBox.displayText === "Dread Barrage") {
                         itemSelectionComboBox.model = [
@@ -1717,6 +1718,13 @@ Item{
                             { text: "Xeno Clash Extreme", enabled: true },
                             { text: "Xeno Clash Raid", enabled: true },
                         ]
+                    } else if(farmingModeComboBox.displayText === "Arcarum" && itemSelectionComboBox.displayText === "Repeated Runs") {
+                        missionSelectionComboBox.model = [
+                            { text: "Arcarum", enabled: false },
+                            { text: "Point Aquila", enabled: true },
+                            { text: "Point Bellator", enabled: true },
+                            { text: "Point Celsus", enabled: true },
+                        ]
                     }
 
                     // Update the status message for this ComboBox to indicate success.
@@ -1921,7 +1929,7 @@ Item{
                 amountSelectionStatusMessage.color = "#00ff00"
                 amountSelectionStatusMessage.text = qsTr("Amount of Items saved successfully")
 
-                if(farmingModeComboBox.displayText === qsTr("Coop")) {
+                if(farmingModeComboBox.displayText === qsTr("Coop") || farmingModeComboBox.displayText === qsTr("Arcarum")) {
                     // Reset the Summon Selection button and its relevant status message.
                     summonSelectionButton.enabled = false
                     summonSelectionButton.text = qsTr("Select Summon")

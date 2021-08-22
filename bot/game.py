@@ -9,6 +9,7 @@ from typing import List
 
 import pyautogui
 
+from bot.arcarum import Arcarum
 from bot.combat_mode import CombatMode
 from bot.map_selection import MapSelection
 from utils.image_utils import ImageUtils
@@ -1246,6 +1247,10 @@ class Game:
 
             # Perform advanced setup for the special fights like Dimensional Halo and Event Nightmares.
             self._advanced_setup()
+
+            if farming_mode == "Arcarum":
+                arcarum_object = Arcarum(self, mission_name, group_number, party_number, item_amount_to_farm, self._combat_script)
+                arcarum_object.start()
 
             if farming_mode != "Raid":
                 self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
