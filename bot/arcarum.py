@@ -1,4 +1,22 @@
 class Arcarum:
+    """
+    Provides the utility functions to handle the Arcarum game mode.
+
+    Attributes
+    ----------
+    game_object (bot.Game): The Game object.
+
+    map_name (str): The name of the Arcarum map.
+
+    group_number (int): The Group that the specified Party in in.
+
+    party_number (int): The specified Party to start the mission with.
+
+    number_of_runs (int): Number of runs for the specified Arcarum map.
+
+    combat_script (str): The file path to the combat script to use for Combat Mode.
+
+    """
 
     def __init__(self, game, map_name: str, group_number: int, party_number: int, number_of_runs: int = 1, combat_script: str = ""):
         super().__init__()
@@ -11,6 +29,11 @@ class Arcarum:
         self.combat_script = combat_script
 
     def _navigate_to_map(self) -> bool:
+        """Navigates to the specified Arcarum expedition.
+
+        Returns:
+            (bool): True if the bot was able to start/resume the expedition. False otherwise.
+        """
         self._game.print_and_save(f"\n[ARCARUM] Now beginning navigation to {self.map}.")
         self._game.go_back_home()
 
@@ -48,6 +71,11 @@ class Arcarum:
             raise (Exception("Failed to encounter the Departure Check to confirm starting the expedition."))
 
     def _choose_action(self) -> str:
+        """Chooses the next action to take for the current Arcarum expedition.
+
+        Returns:
+            (str): The action to take next.
+        """
         # Determine what action to take.
         self._game.print_and_save(f"\n[ARCARUM] Now determining what action to take...")
 
@@ -86,7 +114,12 @@ class Arcarum:
 
         return "Next Area"
 
-    def start(self):
+    def start(self) -> bool:
+        """Starts the process of completing Arcarum expeditions.
+
+        Returns:
+            (bool): True if the number of completed Arcarum expeditions has been reached. False otherwise.
+        """
         runs_completed = 0
 
         while runs_completed <= self.number_of_runs:
@@ -123,3 +156,5 @@ class Arcarum:
                         break
 
                 self._game.wait(1)
+
+        return True
