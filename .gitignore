@@ -140,3 +140,6 @@ results/
 
 # Config.ini
 config.ini
+
+# Scripts folder
+scripts/
