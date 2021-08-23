@@ -50,6 +50,10 @@ class Arcarum:
 
         # Now make sure that the Extreme difficulty is selected.
         self._game.wait(1)
+
+        if self._game.image_tools.confirm_location("arcarum_expedition", tries = 1):
+            self._game.find_and_click_button("ok")
+
         self._game.find_and_click_button("arcarum_extreme")
 
         # Finally, navigate to the specified map to start it.
@@ -82,7 +86,7 @@ class Arcarum:
         # Wait a second in case the "Do or Die" animation plays.
         self._game.wait(1)
 
-        tries = 2
+        tries = 3
 
         while tries > 0:
             # Prioritise any enemies/chests/thorns that are available on the current node.
@@ -121,31 +125,32 @@ class Arcarum:
             (bool): True if the number of completed Arcarum expeditions has been reached. False otherwise.
         """
         runs_completed = 0
-
         while runs_completed <= self.number_of_runs:
             self._navigate_to_map()
 
             while True:
-
                 action = self._choose_action()
-                self._game.print_and_save(f"\n[ARCARUM] Action to take will be: {action}")
+                self._game.print_and_save(f"[ARCARUM] Action to take will be: {action}")
 
                 if action == "Combat":
-                    # TODO: Check for CAPTCHA before or after Party Selection.
+                    # Start Combat Mode.
+                    self._game.check_for_captcha()
                     if self._game.find_party_and_start_mission(self.group_number, self.party_number):
                         if self._game.image_tools.confirm_location("elemental_damage", tries = 1):
                             raise (Exception(
                                 "Encountered an important mob for Arcarum and the selected party does not conform to the enemy's weakness. Perhaps you would like to do this battle yourself?"))
                         elif self._game.image_tools.confirm_location("arcarum_restriction", tries = 1):
-                            raise(Exception("Encountered a party restriction for Arcarum. Perhaps you would like to complete this section by yourself?"))
+                            raise (Exception("Encountered a party restriction for Arcarum. Perhaps you would like to complete this section by yourself?"))
 
                         self._game.wait(3)
                         if self._game.combat_mode.start_combat_mode(self.combat_script):
                             self._game.collect_loot(skip_info = True)
                             self._game.find_and_click_button("expedition")
                 elif action == "Navigating":
+                    # Move to the next available node.
                     self._game.find_and_click_button("move")
                 elif action == "Next Area":
+                    # Either navigate to the next area or confirm the expedition's conclusion.
                     if self._game.find_and_click_button("arcarum_next_stage"):
                         self._game.find_and_click_button("ok")
                         self._game.print_and_save(f"[ARCARUM] Moving to the next area...")
