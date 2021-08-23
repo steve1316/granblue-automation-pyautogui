@@ -4,6 +4,17 @@ from typing import List
 
 
 class CombatMode:
+    """Provides the utility functions needed for Combat Mode.
+
+    Attributes
+    ----------
+    bot (bot.Game): The Game object.
+
+    is_bot_running (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
+
+    debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
+    """
+
     def __init__(self, game, is_bot_running: int, debug_mode: bool = False):
         super().__init__()
 
