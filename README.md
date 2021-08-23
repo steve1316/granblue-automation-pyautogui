@@ -68,6 +68,7 @@ By downloading this program, you consent to your account potentially getting fla
     - [x] Dread Barrage
     - [x] Proving Grounds
     - [x] Xeno Clash
+    - [x] Arcarum
 - [x] Alert for when anti-bot CAPTCHA pops up.
 - [x] Discord integration for informing you of status updates like loot drops via private DMs.
 
