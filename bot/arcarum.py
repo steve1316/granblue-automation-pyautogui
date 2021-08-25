@@ -1,6 +1,6 @@
 class Arcarum:
     """
-    Provides the utility functions to handle the Arcarum game mode.
+    Provides the navigation and any necessary utility functions to handle the Arcarum game mode.
 
     Attributes
     ----------
@@ -51,6 +51,7 @@ class Arcarum:
         # Now make sure that the Extreme difficulty is selected.
         self._game.wait(1)
 
+        # Confirm the completion popup if it shows up.
         if self._game.image_tools.confirm_location("arcarum_expedition", tries = 1):
             self._game.find_and_click_button("ok")
 
@@ -122,7 +123,7 @@ class Arcarum:
         """Starts the process of completing Arcarum expeditions.
 
         Returns:
-            (bool): True if the number of completed Arcarum expeditions has been reached. False otherwise.
+            (bool): True if the number of completed runs has been reached. False otherwise.
         """
         runs_completed = 0
         while runs_completed <= self.number_of_runs:
