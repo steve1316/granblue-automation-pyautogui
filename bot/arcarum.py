@@ -63,8 +63,7 @@ class Arcarum:
         if self._game.find_and_click_button(f"arcarum_{formatted_map_name}", tries = 5) is False:
             # Resume the expedition if it is already in-progress.
             self._game.find_and_click_button("arcarum_exploring")
-
-        if self._game.image_tools.confirm_location("arcarum_departure_check"):
+        elif self._game.image_tools.confirm_location("arcarum_departure_check"):
             self._game.print_and_save(f"[ARCARUM] Now using 1 Arcarum ticket to start this expedition...")
             result_check = self._game.find_and_click_button("start_expedition")
             self._game.wait(6)
@@ -101,6 +100,10 @@ class Arcarum:
                 else:
                     return "Claimed Spirethorn"
 
+            if self._game.image_tools.confirm_location("arcarum_treasure", tries = 1):
+                self._game.find_and_click_button("ok")
+                return "Claimed Treasure"
+
             # Next, determine if there is a available node to move to. Any bound monsters should have been destroyed by now.
             if self._game.find_and_click_button("arcarum_node", tries = 1):
                 self._game.wait(1)
@@ -110,10 +113,6 @@ class Arcarum:
             if self._game.find_and_click_button("arcarum_mob", tries = 1) or self._game.find_and_click_button("arcarum_red_mob", tries = 1):
                 self._game.wait(1)
                 return "Navigating"
-
-            if self._game.image_tools.confirm_location("arcarum_treasure", tries = 1):
-                self._game.find_and_click_button("ok")
-                return "Claimed Treasure"
 
             tries -= 1
 
