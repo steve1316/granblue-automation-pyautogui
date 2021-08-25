@@ -50,6 +50,10 @@ class ImageUtils:
         self._reader = easyocr.Reader(["en"], gpu = True)
         self._game.print_and_save(f"[INFO] EasyOCR reader initialized.")
 
+        # Used for skipping selecting the Summon Element every time on repeated runs.
+        self._summon_selection_first_run = True
+        self._summon_selection_same_element = False
+
     def update_window_dimensions(self, window_left: int, window_top: int, window_width: int, window_height: int):
         """Updates the window dimensions for PyAutoGUI to perform faster operations in.
 
@@ -223,11 +227,17 @@ class ImageUtils:
             if tries <= 0 and self.confirm_location("select_a_summon", tries = 1) is False:
                 raise Exception("Could not reach the Summon Selection screen.")
 
+        # Determine if all the summon elements are the same or not. This will influence whether or not the bot needs to change elements in repeated runs.
+        self._summon_selection_same_element = all(element == summon_element_list[0] for element in summon_element_list)
+
         while summon_location is None:
-            current_summon_element = summon_element_list[summon_index]
-            if current_summon_element != last_summon_element:
-                self._game.find_and_click_button(f"summon_{current_summon_element}")
-                last_summon_element = current_summon_element
+            if self._summon_selection_first_run or self._summon_selection_same_element is False:
+                current_summon_element = summon_element_list[summon_index]
+                if current_summon_element != last_summon_element:
+                    self._game.find_and_click_button(f"summon_{current_summon_element}")
+                    last_summon_element = current_summon_element
+
+                self._summon_selection_first_run = False
 
             summon_index = 0
             while summon_index <= len(summon_list):

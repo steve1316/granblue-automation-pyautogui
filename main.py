@@ -581,14 +581,12 @@ access_token_secret =
 
 [refill]
 ############################################################
-# For Quest, Special, and Coop.
+# NOTE: Enable the 'enabled_auto_restore' field if you have enabled the 'AP/EP Auto-Restore Settings' under the Misc settings in-game.
+# This includes the 'Auto-Restore Notification Settings' being set to Hide. This will shave off about 10s per run.
 ############################################################
 refill_using_full_elixir = False
-
-############################################################
-# For Raids.
-############################################################
 refill_using_soul_balms = False
+enabled_auto_restore = True
 
 [configuration]
 ############################################################

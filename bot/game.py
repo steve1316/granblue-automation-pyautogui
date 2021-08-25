@@ -56,6 +56,7 @@ class Game:
         # #### refill ####
         self._use_full_elixir = config.getboolean("refill", "refill_using_full_elixir")
         self._use_soul_balm = config.getboolean("refill", "refill_using_soul_balms")
+        self._enabled_auto_restore = config.getboolean("refill", "enabled_auto_restore")
         # #### end of refill ####
 
         # #### configuration ####
@@ -180,6 +181,7 @@ class Game:
         self._party_number = 0
         self._amount_of_runs_finished = 0
         self._coop_first_run = True
+        self._party_selection_first_run = True
 
         # Enable checking for Skyscope mission popups.
         self.enable_skyscope = True
@@ -366,8 +368,7 @@ class Game:
             None
         """
         try:
-            self.wait(2)
-            if self.image_tools.confirm_location("captcha", tries = 1):
+            if self.image_tools.confirm_location("captcha"):
                 raise RuntimeError("CAPTCHA DETECTED!")
             else:
                 self.print_and_save("\n[CAPTCHA] CAPTCHA not detected. Moving on to Party Selection...")
@@ -500,71 +501,75 @@ class Game:
         Returns:
             (bool): Returns False if it detects the "Raid is full/Raid is already done" dialog. Otherwise, return True.
         """
-        # Find the Group that the Party is in first. If the specified Group number is less than 8, it is in Set A. Otherwise, it is in Set B. If failed, alternate searching for Set A / Set B until
-        # found or tries are depleted.
-        set_location = None
-        if group_number < 8:
-            while set_location is None:
-                set_location = self.image_tools.find_button("party_set_a", tries = 1)
-                if set_location is None:
-                    tries -= 1
-                    if tries <= 0:
-                        raise Exception("Could not find Set A.")
-
-                    # See if the user had Set B active instead of Set A if matching failed.
-                    set_location = self.image_tools.find_button("party_set_b", tries = 1)
-        else:
-            while set_location is None:
-                set_location = self.image_tools.find_button("party_set_b", tries = 1)
-                if set_location is None:
-                    tries -= 1
-                    if tries <= 0:
-                        raise Exception("Could not find Set B.")
-
-                    # See if the user had Set A active instead of Set B if matching failed.
+        # Repeat runs already have the same party already selected.
+        if self._party_selection_first_run:
+            # Find the Group that the Party is in first. If the specified Group number is less than 8, it is in Set A. Otherwise, it is in Set B. If failed, alternate searching for Set A / Set B until
+            # found or tries are depleted.
+            set_location = None
+            if group_number < 8:
+                while set_location is None:
                     set_location = self.image_tools.find_button("party_set_a", tries = 1)
+                    if set_location is None:
+                        tries -= 1
+                        if tries <= 0:
+                            raise Exception("Could not find Set A.")
 
-        # Center the mouse on the "Set A" / "Set B" button and then click the correct Group tab.
-        if self._debug_mode:
-            self.print_and_save(f"\n[DEBUG] Successfully selected the correct Set. Now selecting Group {group_number}...")
+                        # See if the user had Set B active instead of Set A if matching failed.
+                        set_location = self.image_tools.find_button("party_set_b", tries = 1)
+            else:
+                while set_location is None:
+                    set_location = self.image_tools.find_button("party_set_b", tries = 1)
+                    if set_location is None:
+                        tries -= 1
+                        if tries <= 0:
+                            raise Exception("Could not find Set B.")
 
-        if group_number == 1:
-            x = set_location[0] - 350
-        elif group_number == 2:
-            x = set_location[0] - 290
-        elif group_number == 3:
-            x = set_location[0] - 230
-        elif group_number == 4:
-            x = set_location[0] - 170
-        elif group_number == 5:
-            x = set_location[0] - 110
-        elif group_number == 6:
-            x = set_location[0] - 50
-        else:
-            x = set_location[0] + 10
+                        # See if the user had Set A active instead of Set B if matching failed.
+                        set_location = self.image_tools.find_button("party_set_a", tries = 1)
 
-        y = set_location[1] + 50
-        self.mouse_tools.move_and_click_point(x, y, "template_group", mouse_clicks = 2)
+            # Center the mouse on the "Set A" / "Set B" button and then click the correct Group tab.
+            if self._debug_mode:
+                self.print_and_save(f"\n[DEBUG] Successfully selected the correct Set. Now selecting Group {group_number}...")
 
-        # Now select the correct Party.
-        if self._debug_mode:
-            self.print_and_save(f"[DEBUG] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
+            if group_number == 1:
+                x = set_location[0] - 350
+            elif group_number == 2:
+                x = set_location[0] - 290
+            elif group_number == 3:
+                x = set_location[0] - 230
+            elif group_number == 4:
+                x = set_location[0] - 170
+            elif group_number == 5:
+                x = set_location[0] - 110
+            elif group_number == 6:
+                x = set_location[0] - 50
+            else:
+                x = set_location[0] + 10
 
-        if party_number == 1:
-            x = set_location[0] - 309
-        elif party_number == 2:
-            x = set_location[0] - 252
-        elif party_number == 3:
-            x = set_location[0] - 195
-        elif party_number == 4:
-            x = set_location[0] - 138
-        elif party_number == 5:
-            x = set_location[0] - 81
-        elif party_number == 6:
-            x = set_location[0] - 24
+            y = set_location[1] + 50
+            self.mouse_tools.move_and_click_point(x, y, "template_group", mouse_clicks = 2)
 
-        y = set_location[1] + 325
-        self.mouse_tools.move_and_click_point(x, y, "template_party", mouse_clicks = 2)
+            # Now select the correct Party.
+            if self._debug_mode:
+                self.print_and_save(f"[DEBUG] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
+
+            if party_number == 1:
+                x = set_location[0] - 309
+            elif party_number == 2:
+                x = set_location[0] - 252
+            elif party_number == 3:
+                x = set_location[0] - 195
+            elif party_number == 4:
+                x = set_location[0] - 138
+            elif party_number == 5:
+                x = set_location[0] - 81
+            elif party_number == 6:
+                x = set_location[0] - 24
+
+            y = set_location[1] + 325
+            self.mouse_tools.move_and_click_point(x, y, "template_party", mouse_clicks = 2)
+
+            self._party_selection_first_run = False
 
         if self._debug_mode:
             self.print_and_save(f"[DEBUG] Successfully selected Party {party_number}. Now starting the mission.")
@@ -586,42 +591,46 @@ class Game:
         Returns:
             None
         """
-        tries = 3
+        if self._enabled_auto_restore is False:
+            tries = 3
 
-        self.wait(3)
+            self.wait(3)
 
-        if self.image_tools.confirm_location("auto_ap_recovered", tries = 1) is False and self.image_tools.confirm_location("auto_ap_recovered2", tries = 1) is False:
-            # Loop until the user gets to the Summon Selection screen.
-            while (self.farming_mode.lower() != "coop" and not self.image_tools.confirm_location("select_a_summon", tries = 2)) or (
-                    self.farming_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries = 2)):
-                if self.image_tools.confirm_location("not_enough_ap", tries = 2):
-                    # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full Elixir.
-                    if self._use_full_elixir is False:
-                        self.print_and_save("\n[INFO] AP ran out! Using Half Elixir...")
-                        half_ap_location = self.image_tools.find_button("refill_half_ap")
-                        self.mouse_tools.move_and_click_point(half_ap_location[0], half_ap_location[1] + 175, "use")
-                    else:
-                        self.print_and_save("\n[INFO] AP ran out! Using Full Elixir...")
-                        full_ap_location = self.image_tools.find_button("refill_full_ap")
-                        self.mouse_tools.move_and_click_point(full_ap_location[0], full_ap_location[1] + 175, "use")
+            if self.image_tools.confirm_location("auto_ap_recovered", tries = 1) is False and self.image_tools.confirm_location("auto_ap_recovered2", tries = 1) is False:
+                # Loop until the user gets to the Summon Selection screen.
+                while (self.farming_mode.lower() != "coop" and not self.image_tools.confirm_location("select_a_summon", tries = 2)) or (
+                        self.farming_mode.lower() == "coop" and not self.image_tools.confirm_location("coop_without_support_summon", tries = 2)):
+                    if self.image_tools.confirm_location("not_enough_ap", tries = 2):
+                        # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full Elixir.
+                        if self._use_full_elixir is False:
+                            self.print_and_save("\n[INFO] AP ran out! Using Half Elixir...")
+                            half_ap_location = self.image_tools.find_button("refill_half_ap")
+                            self.mouse_tools.move_and_click_point(half_ap_location[0], half_ap_location[1] + 175, "use")
+                        else:
+                            self.print_and_save("\n[INFO] AP ran out! Using Full Elixir...")
+                            full_ap_location = self.image_tools.find_button("refill_full_ap")
+                            self.mouse_tools.move_and_click_point(full_ap_location[0], full_ap_location[1] + 175, "use")
 
-                    # Press the "OK" button to move to the Summon Selection screen.
-                    self.wait(1)
-                    self.find_and_click_button("ok")
-                    return None
-                elif self.farming_mode.lower() == "coop" and not self._coop_first_run and self.image_tools.find_button("attack"):
-                    break
-                else:
-                    self.wait(1)
-
-                    tries -= 1
-                    if tries <= 0:
+                        # Press the "OK" button to move to the Summon Selection screen.
+                        self.wait(1)
+                        self.find_and_click_button("ok")
+                        return None
+                    elif self.farming_mode.lower() == "coop" and not self._coop_first_run and self.image_tools.find_button("attack"):
                         break
-        else:
-            self.print_and_save("\n[INFO] AP auto recovered due to in-game settings. Closing the popup now...")
-            self.find_and_click_button("ok")
+                    else:
+                        self.wait(1)
 
-        self.print_and_save("[INFO] AP is available. Continuing...")
+                        tries -= 1
+                        if tries <= 0:
+                            break
+            else:
+                self.print_and_save("\n[INFO] AP auto recovered due to in-game settings. Closing the popup now...")
+                self.find_and_click_button("ok")
+
+            self.print_and_save("[INFO] AP is available. Continuing...")
+        else:
+            self.print_and_save("[INFO] AP was auto-restored according to your config.ini. Continuing...")
+
         return None
 
     def check_for_ep(self):
@@ -630,28 +639,32 @@ class Game:
         Returns:
             None
         """
-        self.wait(3)
+        if self._enabled_auto_restore is False:
+            self.wait(3)
 
-        if self.image_tools.confirm_location("auto_ep_recovered", tries = 1) is False:
-            if self.farming_mode.lower() == "raid" and self.image_tools.confirm_location("not_enough_ep", tries = 2):
-                # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
-                if self._use_soul_balm is False:
-                    self.print_and_save("\n[INFO] EP ran out! Using Soul Berries...")
-                    half_ep_location = self.image_tools.find_button("refill_soul_berry")
-                    self.mouse_tools.move_and_click_point(half_ep_location[0], half_ep_location[1] + 175, "use")
-                else:
-                    self.print_and_save("\n[INFO] EP ran out! Using Soul Balm...")
-                    full_ep_location = self.image_tools.find_button("refill_soul_balm")
-                    self.mouse_tools.move_and_click_point(full_ep_location[0], full_ep_location[1] + 175, "use")
+            if self.image_tools.confirm_location("auto_ep_recovered", tries = 1) is False:
+                if self.farming_mode.lower() == "raid" and self.image_tools.confirm_location("not_enough_ep", tries = 2):
+                    # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
+                    if self._use_soul_balm is False:
+                        self.print_and_save("\n[INFO] EP ran out! Using Soul Berries...")
+                        half_ep_location = self.image_tools.find_button("refill_soul_berry")
+                        self.mouse_tools.move_and_click_point(half_ep_location[0], half_ep_location[1] + 175, "use")
+                    else:
+                        self.print_and_save("\n[INFO] EP ran out! Using Soul Balm...")
+                        full_ep_location = self.image_tools.find_button("refill_soul_balm")
+                        self.mouse_tools.move_and_click_point(full_ep_location[0], full_ep_location[1] + 175, "use")
 
-                # Press the "OK" button to move to the Summon Selection screen.
-                self.wait(1)
+                    # Press the "OK" button to move to the Summon Selection screen.
+                    self.wait(1)
+                    self.find_and_click_button("ok")
+            else:
+                self.print_and_save("\n[INFO] EP auto recovered due to in-game settings. Closing the popup now...")
                 self.find_and_click_button("ok")
-        else:
-            self.print_and_save("\n[INFO] EP auto recovered due to in-game settings. Closing the popup now...")
-            self.find_and_click_button("ok")
 
-        self.print_and_save("[INFO] EP is available. Continuing...")
+            self.print_and_save("[INFO] EP is available. Continuing...")
+        else:
+            self.print_and_save("[INFO] EP was auto-restored according to your config.ini. Continuing...")
+
         return None
 
     def collect_loot(self, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False):
