@@ -126,7 +126,7 @@ class Arcarum:
             (bool): True if the number of completed runs has been reached. False otherwise.
         """
         runs_completed = 0
-        while runs_completed <= self.number_of_runs:
+        while runs_completed < self.number_of_runs:
             self._navigate_to_map()
 
             while True:
