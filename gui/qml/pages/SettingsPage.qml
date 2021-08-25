@@ -1300,6 +1300,11 @@ Item{
                             { text: "Luminiera Malice", enabled: false },
                             { text: "Lvl 150 Luminiera Malice", map: "", enabled: true },
                         ]
+                    } else if(itemSelectionButton.text === "Hive God Anima" || itemSelectionButton.text === "Agonize" || itemSelectionButton.text === "Faceless") {
+                        missionSelectionComboBox.model = [
+                            { text: "Anima-Animus Core", enabled: false },
+                            { text: "Lvl 150 Anima-Animus Core", map: "", enabled: true },
+                        ]
                     }
 
                     // Xeno Items

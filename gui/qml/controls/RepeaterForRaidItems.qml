@@ -64,6 +64,7 @@ Flickable {
                 "Leviathan Malice": ["Leviathan Malice Anima", "Kaladanda", "Kris of Hypnos"],
                 "Phronesis": ["Phronesis Anima", "Dark Thrasher", "Master Bamboo Sword"],
                 "Luminiera Malice": ["Luminiera Malice Anima", "Colomba", "Seyfert"],
+                "Anima-Animus Core": ["Hive God Anima", "Agonize", "Faceless"],
                 "Grand Order": ["Azure Feather", "Heavenly Horn", "Verdant Azurite"],
                 "Proto Bahamut": ["Horn of Bahamut", "Champion Merit", "Primeval Horn"],
                 "Rose Queen": ["Rose Petal"],
@@ -3224,6 +3225,62 @@ Flickable {
             }
         }
         ///////// End of Raid Items - Luminiera Malice /////////
+
+        ///////// Raid Items - Anima-Animus Core /////////
+        Label {
+            id: label_AnimaAnimusCore
+
+            color: "#aa00ff"
+            anchors.left: parent.left
+            horizontalAlignment: Text.AlignHCenter
+            font.bold: true
+            font.underline: true
+            font.pointSize: 15
+            font.letterSpacing: 1
+
+            text: "Anima-Animus Core"
+        }
+
+        Repeater {
+            id: repeater_AnimaAnimusCore
+            model: ListModel { }
+
+            onVisibleChanged: {
+                if(repeater_AnimaAnimusCore.visible === true){
+                    repeater_AnimaAnimusCore.model.clear()
+                    for(var i = 0; i < itemsModel.listOfItems[label_AnimaAnimusCore.text].length; i++){
+                        repeater_AnimaAnimusCore.model.append(itemsModel.createListElement(itemsModel.listOfItems[label_AnimaAnimusCore.text][i]))
+                    }
+                }
+            }
+
+            Image {
+                id: itemImage_AnimaAnimusCore
+                source: imageSource
+                width: 35
+                height: 40
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onClicked: {
+                        backend.update_item_name(name)
+                        raidItemsPopup.close()
+                        itemSelectionButton.text = name
+                    }
+                }
+
+                Label {
+                    color: "#aa00ff"
+                    anchors.left: itemImage_AnimaAnimusCore.right
+                    anchors.leftMargin: 12
+                    font.letterSpacing: 1
+                    font.pointSize: 10
+                    text: name
+                }
+            }
+        }
+        ///////// End of Raid Items - Anima-Animus Core /////////
 
         Rectangle {
             width: parent.width
