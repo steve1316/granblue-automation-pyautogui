@@ -87,11 +87,12 @@ class Arcarum:
         self._game.wait(1)
 
         tries = 3
-
         while tries > 0:
             # Prioritise any enemies/chests/thorns that are available on the current node.
             if self._game.find_and_click_button("arcarum_action", tries = 1):
                 self._game.wait(2)
+
+                self._game.check_for_captcha()
 
                 if self._game.image_tools.confirm_location("arcarum_party_selection", tries = 1):
                     return "Combat"
@@ -134,7 +135,6 @@ class Arcarum:
 
                 if action == "Combat":
                     # Start Combat Mode.
-                    self._game.check_for_captcha()
                     if self._game.find_party_and_start_mission(self.group_number, self.party_number):
                         if self._game.image_tools.confirm_location("elemental_damage", tries = 1):
                             raise (Exception(
