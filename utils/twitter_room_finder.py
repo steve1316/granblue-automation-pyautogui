@@ -90,11 +90,7 @@ class TwitterRoomFinder:
 
             # Nightmare Raids
             "Lvl 100 Proto Bahamut": "Lv100 プロトバハムート",
-            "Lvl 150 Proto Bahamut": "Lv150 プロトバハムート",
-            "Lvl 150 Ultimate Bahamut": "Lv150 アルティメットバハムート",
-            "Lvl 200 Ultimate Bahamut": "Lv200 アルティメットバハムート",
             "Lvl 100 Grand Order": "Lv100 ジ・オーダー・グランデ",
-            "Lvl 200 Grand Order": "Lv200 ジ・オーダー・グランデ",
 
             # Rise of the Beasts Raids
             "Lvl 60 Zhuque": "Lv60 朱雀",
@@ -124,6 +120,10 @@ class TwitterRoomFinder:
             "Lvl 120 Morrigna": "Lv120 バイヴカハ",
             "Lvl 120 Hector": "Lv120 ヘクトル",
             "Lvl 120 Anubis": "Lv120 アヌビス",
+            "Lvl 150 Proto Bahamut": "Lv150 プロトバハムート",
+            "Lvl 150 Ultimate Bahamut": "Lv150 アルティメットバハムート",
+            "Lvl 200 Ultimate Bahamut": "Lv200 アルティメットバハムート",
+            "Lvl 200 Grand Order": "Lv200 ジ・オーダー・グランデ",
             "Lvl 200 Akasha": "Lv200 アーカーシャ",
             "Lvl 150 Lucilius": "Lv150 ルシファー",
             "Lvl 250 Lucilius": "Lv250 ルシファー",
@@ -134,6 +134,7 @@ class TwitterRoomFinder:
             "Lvl 150 Leviathan Malice": "Lv150 リヴァイアサン・マリス",
             "Lvl 150 Phronesis": "Lv150 フロネシス",
             "Lvl 150 Luminiera Malice": "Lv150 シュヴァリエ・マリス",
+            "Lvl 150 Anima-Animus Core": "Lv150 アニマ・アニムス・コア",
 
             # Six Dragon Raids
             "Lvl 200 Wilnas": "Lv200 ウィルナス",
