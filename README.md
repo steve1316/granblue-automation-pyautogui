@@ -126,7 +126,7 @@ pip install -r requirements.txt
 - Visit the [Combat Scripting Documentation and Examples wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Combat-Scripting-Documentation-and-Examples) for combat scripting usage and examples.
 ---
 ## What Missions/Items/Summons are supported?
-- Visit the [List of Supported Quests, Special, Coop, Raid, Event, and Dread Barrage Missions and their Farmable Items wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/List-of-Supported-Quests,-Special,-Coop,-Raid,-Event,-and-Dread-Barrage-Missions-and-their-Farmable-Items) for supported content.
+- Visit the [List of Supported Missions and their Farmable Items wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/List-of-Supported-Missions-and-their-Farmable-Items) for supported content.
 - Visit the [Selectable Summons wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons) for available Summons.
 ---
 
