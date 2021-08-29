@@ -466,8 +466,8 @@ class CombatMode:
                 event_raids.__contains__(self._game.mission_name) or \
                 rotb_raids.__contains__(self._game.mission_name) or \
                 dread_barrage_raids.__contains__(self._game.difficulty) or \
-                proving_grounds_raids.__contains__(self._game.difficulty) or \
-                guild_wars_raids.__contains__(self._game.difficulty) or \
+                (self._game.farming_mode == "Proving Grounds" and proving_grounds_raids.__contains__(self._game.difficulty)) or \
+                (self._game.farming_mode == "Guild Wars" and guild_wars_raids.__contains__(self._game.difficulty)) or \
                 xeno_clash_raids.__contains__(self._game.mission_name):
 
             self._game.print_and_save("[COMBAT] Reloading now.")
