@@ -531,6 +531,10 @@ class CombatMode:
             self._attack_button_location = None
             self._back_button_location = None
 
+            # If current Farming Mode is Arcarum, attempt to dismiss potential stage effect popup like "Can't use Charge Attacks".
+            if self._game.farming_mode == "Arcarum":
+                self._game.find_and_click_button("arcarum_stage_effect_active", tries = 5)
+
             # Save the positions of the "Attack" and "Back" button.
             self._attack_button_location = self._game.image_tools.find_button("attack", tries = 10)
             if self._attack_button_location is not None:
