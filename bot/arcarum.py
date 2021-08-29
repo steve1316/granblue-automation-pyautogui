@@ -1,3 +1,6 @@
+from configparser import ConfigParser
+
+
 class Arcarum:
     """
     Provides the navigation and any necessary utility functions to handle the Arcarum game mode.
@@ -22,12 +25,18 @@ class Arcarum:
         super().__init__()
 
         self._game = game
-        self.map = map_name
-        self.group_number = group_number
-        self.party_number = party_number
-        self.number_of_runs = number_of_runs
-        self.combat_script = combat_script
+        self.map: str = map_name
+        self.group_number: int = group_number
+        self.party_number: int = party_number
+        self.number_of_runs: int = number_of_runs
+        self.combat_script: str = combat_script
         self._first_run = True
+        self._encountered_boss = False
+
+        # Read the config.ini to get custom settings for Arcarum bosses.
+        config = ConfigParser()
+        config.read("config.ini")
+        self._enable_arcarum_boss = config.getboolean("arcarum", "enable_arcarum_custom_boss")
 
     def _navigate_to_map(self) -> bool:
         """Navigates to the specified Arcarum expedition.
@@ -94,6 +103,9 @@ class Arcarum:
 
         tries = 3
         while tries > 0:
+            if self._check_for_boss():
+                return "Boss Detected"
+
             # Prioritise any enemies/chests/thorns that are available on the current node.
             if self._game.find_and_click_button("arcarum_action", tries = 1):
                 self._game.wait(2)
@@ -136,6 +148,22 @@ class Arcarum:
         self._game.print_and_save(f"[ARCARUM] No action can be taken. Defaulting to moving to the next area.")
         return "Next Area"
 
+    def _check_for_boss(self) -> bool:
+        """Checks for the existence of 3-3, 6-3 or 9-3 boss if config.ini enabled it.
+
+        Returns:
+            (bool): Flag on whether or not a Boss was detected.
+        """
+        if self._enable_arcarum_boss:
+            self._game.print_and_save(f"\n[ARCARUM] Checking if boss is available...")
+
+            if self._game.image_tools.find_button("arcarum_boss", tries = 1) or self._game.image_tools.find_button("arcarum_boss2", tries = 1):
+                return True
+            else:
+                return False
+        else:
+            return False
+
     def start(self) -> bool:
         """Starts the process of completing Arcarum expeditions.
 
@@ -176,6 +204,9 @@ class Arcarum:
                         self._game.print_and_save(f"[ARCARUM] Expedition is complete.")
                         runs_completed += 1
                         break
+                elif action == "Boss Detected":
+                    self._game.print_and_save(f"[ARCARUM] Boss has been detected. Stopping the bot.")
+                    return True
 
                 self._game.wait(1)
 
