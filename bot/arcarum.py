@@ -27,6 +27,7 @@ class Arcarum:
         self.party_number = party_number
         self.number_of_runs = number_of_runs
         self.combat_script = combat_script
+        self._first_run = True
 
     def _navigate_to_map(self) -> bool:
         """Navigates to the specified Arcarum expedition.
@@ -34,19 +35,24 @@ class Arcarum:
         Returns:
             (bool): True if the bot was able to start/resume the expedition. False otherwise.
         """
-        self._game.print_and_save(f"\n[ARCARUM] Now beginning navigation to {self.map}.")
-        self._game.go_back_home()
+        if self._first_run:
+            self._game.print_and_save(f"\n[ARCARUM] Now beginning navigation to {self.map}.")
+            self._game.go_back_home()
 
-        # Navigate to the Arcarum banner.
-        tries = 5
-        while tries > 0:
-            if self._game.find_and_click_button("arcarum_banner", tries = 1) is False:
-                self._game.mouse_tools.scroll_screen_from_home_button(-300)
-                tries -= 1
-                if tries <= 0:
-                    raise (Exception("Failed to navigate to Arcarum from the Home screen."))
-            else:
-                break
+            # Navigate to the Arcarum banner.
+            tries = 5
+            while tries > 0:
+                if self._game.find_and_click_button("arcarum_banner", tries = 1) is False:
+                    self._game.mouse_tools.scroll_screen_from_home_button(-300)
+                    tries -= 1
+                    if tries <= 0:
+                        raise (Exception("Failed to navigate to Arcarum from the Home screen."))
+                else:
+                    break
+
+            self._first_run = False
+        else:
+            self._game.wait(4)
 
         # Now make sure that the Extreme difficulty is selected.
         self._game.wait(1)
