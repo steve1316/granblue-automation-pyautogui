@@ -26,7 +26,8 @@ class MainDriver:
         self._debug = None
 
     def run_bot(self, item_name: str, item_amount_to_farm: str, farming_mode: str, location_name: str, mission_name: str, summon_element_list: List[str], summon_list: List[str],
-                group_number: int, party_number: int, combat_script: str, queue: multiprocessing.Queue, discord_queue: multiprocessing.Queue, is_bot_running: int, debug_mode: bool = False, test_mode: bool = False):
+                group_number: int, party_number: int, combat_script: str, queue: multiprocessing.Queue, discord_queue: multiprocessing.Queue, is_bot_running: int, debug_mode: bool = False,
+                test_mode: bool = False):
         """Starts the main bot process on this Thread.
 
         Args:
@@ -639,35 +640,39 @@ delay_in_seconds_upper_bound = 60
 
 [dimensional_halo]
 enable_dimensional_halo = False
-dimensional_halo_combat_script =
-dimensional_halo_summon_list =
-dimensional_halo_summon_element_list =
-dimensional_halo_group_number =
-dimensional_halo_party_number =
+dimensional_halo_combat_script = 
+dimensional_halo_summon_list = 
+dimensional_halo_summon_element_list = 
+dimensional_halo_group_number = 
+dimensional_halo_party_number = 
 
 [event]
 enable_event_nightmare = False
-event_nightmare_combat_script =
-event_nightmare_summon_list =
-event_nightmare_summon_element_list =
-event_nightmare_group_number =
-event_nightmare_party_number =
+event_nightmare_combat_script = 
+event_nightmare_summon_list = 
+event_nightmare_summon_element_list = 
+event_nightmare_group_number = 
+event_nightmare_party_number = 
 
 [rise_of_the_beasts]
 enable_rotb_extreme_plus = False
-rotb_extreme_plus_combat_script =
-rotb_extreme_plus_summon_list =
-rotb_extreme_plus_summon_element_list =
-rotb_extreme_plus_group_number =
-rotb_extreme_plus_party_number =
+rotb_extreme_plus_combat_script = 
+rotb_extreme_plus_summon_list = 
+rotb_extreme_plus_summon_element_list = 
+rotb_extreme_plus_group_number = 
+rotb_extreme_plus_party_number = 
 
 [xeno_clash]
 enable_xeno_clash_nightmare = False
-xeno_clash_nightmare_combat_script =
-xeno_clash_nightmare_summon_list =
-xeno_clash_nightmare_summon_element_list =
-xeno_clash_nightmare_group_number =
-xeno_clash_nightmare_party_number = """)
+xeno_clash_nightmare_combat_script = 
+xeno_clash_nightmare_summon_list = 
+xeno_clash_nightmare_summon_element_list = 
+xeno_clash_nightmare_group_number = 
+xeno_clash_nightmare_party_number = 
+
+[arcarum]
+enable_stop_on_arcarum_boss = True
+""")
 
         new_config_file.close()
         print("\n[INFO] Generated a new config.ini in the root of the project folder.")

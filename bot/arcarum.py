@@ -36,7 +36,7 @@ class Arcarum:
         # Read the config.ini to get custom settings for Arcarum bosses.
         config = ConfigParser()
         config.read("config.ini")
-        self._enable_arcarum_boss = config.getboolean("arcarum", "enable_arcarum_custom_boss")
+        self._enable_stop_on_arcarum_boss = config.getboolean("arcarum", "enable_stop_on_arcarum_boss")
 
     def _navigate_to_map(self) -> bool:
         """Navigates to the specified Arcarum expedition.
@@ -154,7 +154,7 @@ class Arcarum:
         Returns:
             (bool): Flag on whether or not a Boss was detected.
         """
-        if self._enable_arcarum_boss:
+        if self._enable_stop_on_arcarum_boss:
             self._game.print_and_save(f"\n[ARCARUM] Checking if boss is available...")
 
             if self._game.image_tools.find_button("arcarum_boss", tries = 1) or self._game.image_tools.find_button("arcarum_boss2", tries = 1):
