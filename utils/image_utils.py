@@ -264,6 +264,7 @@ class ImageUtils:
                             summon_index += 1
                     else:
                         guibot_check = True
+                        break
                 else:
                     break
 
