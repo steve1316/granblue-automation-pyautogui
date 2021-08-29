@@ -1387,7 +1387,7 @@ class Game:
                                                 self.find_and_click_button("play_again")
 
                                 # For every other Farming Mode other than Coop and Proving Grounds, handle all popups and perform AP check until the bot reaches the Summon Selection screen.
-                                if farming_mode != "Proving Grounds":
+                                if farming_mode != "Proving Grounds" and farming_mode != "Coop":
                                     self._check_for_popups()
                                     self.check_for_ap()
 
