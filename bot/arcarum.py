@@ -101,22 +101,33 @@ class Arcarum:
                 else:
                     return "Claimed Spirethorn"
 
+            # Clear any detected Treasure popup after claiming a chest.
+            self._game.print_and_save(f"[ARCARUM] No action found for the current node. Looking for Treasure popup...")
             if self._game.image_tools.confirm_location("arcarum_treasure", tries = 1):
                 self._game.find_and_click_button("ok")
                 return "Claimed Treasure"
 
             # Next, determine if there is a available node to move to. Any bound monsters should have been destroyed by now.
+            self._game.print_and_save(f"[ARCARUM] No Treasure popup detected. Looking for an available node to move to...")
             if self._game.find_and_click_button("arcarum_node", tries = 1):
                 self._game.wait(1)
                 return "Navigating"
 
-            # If all else fails, attempt to navigate to a node that is occupied by mob(s).
+            # Next, attempt to navigate to a node that is occupied by mob(s).
+            self._game.print_and_save(f"[ARCARUM] No available node to move to. Looking for nodes with mobs on them...")
             if self._game.find_and_click_button("arcarum_mob", tries = 1) or self._game.find_and_click_button("arcarum_red_mob", tries = 1):
+                self._game.wait(1)
+                return "Navigating"
+
+            # If all else fails, see if there are any unclaimed chests, like the ones spawned by a random special event that spawns chests on all nodes.
+            self._game.print_and_save(f"[ARCARUM] No nodes with mobs on them. Looking for nodes with chests on them...")
+            if self._game.find_and_click_button("arcarum_silver_chest", tries = 1) or self._game.find_and_click_button("arcarum_gold_chest", tries = 1):
                 self._game.wait(1)
                 return "Navigating"
 
             tries -= 1
 
+        self._game.print_and_save(f"[ARCARUM] No action can be taken. Defaulting to moving to the next area.")
         return "Next Area"
 
     def start(self) -> bool:
