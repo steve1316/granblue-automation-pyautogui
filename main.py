@@ -51,15 +51,18 @@ class MainDriver:
             None
         """
         # Initialize the Game class and start Farming Mode.
-        self._game = Game(queue = queue, discord_queue = discord_queue, is_bot_running = is_bot_running, combat_script = combat_script, debug_mode = debug_mode, test_mode = test_mode)
+        self._game = Game(queue = queue, discord_queue = discord_queue, is_bot_running = is_bot_running, item_name = item_name, item_amount_to_farm = int(item_amount_to_farm),
+                          farming_mode = farming_mode, map_name = location_name, mission_name = mission_name, summon_element_list = summon_element_list, summon_list = summon_list,
+                          group_number = group_number, party_number = party_number, combat_script = combat_script, debug_mode = debug_mode, test_mode = test_mode)
 
-        self._game.start_farming_mode(item_name = item_name, item_amount_to_farm = int(item_amount_to_farm), farming_mode = farming_mode, map_name = location_name, mission_name = mission_name,
-                                      summon_element_list = summon_element_list, summon_list = summon_list, group_number = group_number, party_number = party_number)
+        self._game.start_farming_mode()
 
         is_bot_running.value = 1
         return None
 
 
+# noinspection PyUnresolvedReferences
+# ^ This is for suppressing warnings in PyCharm that it cannot recognize the emit() method.
 class MainWindow(QObject):
     """
     Provides the methods to share information and perform operations between backend and frontend.
@@ -81,7 +84,7 @@ class MainWindow(QObject):
         self._text_log: list = []
 
         # Hold the file path to the combat script for use during Combat Mode.
-        self._real_file_path: str = None
+        self._real_file_path: str = ""
 
         # Prep the following objects for multi-processed threading.        
         self._bot_object = MainDriver()
@@ -425,7 +428,7 @@ class MainWindow(QObject):
 
     @Slot()
     def update_console_log(self):
-        """Grab logging messages from the Queue and then output to the frontend's log.
+        """Grab logging messages from the Queue and then output to the frontend log.
 
         @Slot()
         
@@ -457,7 +460,7 @@ class MainWindow(QObject):
 
     @Slot(str)
     def update_test_mode(self, flag: bool):
-        """Grab logging messages from the Queue and then output to the frontend's log.
+        """Grab logging messages from the Queue and then output to the frontend log.
 
         @Slot(str)
 
@@ -643,32 +646,32 @@ enable_dimensional_halo = False
 dimensional_halo_combat_script = 
 dimensional_halo_summon_list = 
 dimensional_halo_summon_element_list = 
-dimensional_halo_group_number = 
-dimensional_halo_party_number = 
+dimensional_halo_group_number = 0
+dimensional_halo_party_number = 0
 
 [event]
 enable_event_nightmare = False
 event_nightmare_combat_script = 
 event_nightmare_summon_list = 
 event_nightmare_summon_element_list = 
-event_nightmare_group_number = 
-event_nightmare_party_number = 
+event_nightmare_group_number = 0
+event_nightmare_party_number = 0
 
 [rise_of_the_beasts]
 enable_rotb_extreme_plus = False
 rotb_extreme_plus_combat_script = 
 rotb_extreme_plus_summon_list = 
 rotb_extreme_plus_summon_element_list = 
-rotb_extreme_plus_group_number = 
-rotb_extreme_plus_party_number = 
+rotb_extreme_plus_group_number = 0
+rotb_extreme_plus_party_number = 0
 
 [xeno_clash]
 enable_xeno_clash_nightmare = False
 xeno_clash_nightmare_combat_script = 
 xeno_clash_nightmare_summon_list = 
 xeno_clash_nightmare_summon_element_list = 
-xeno_clash_nightmare_group_number = 
-xeno_clash_nightmare_party_number = 
+xeno_clash_nightmare_group_number = 0
+xeno_clash_nightmare_party_number = 0
 
 [arcarum]
 enable_stop_on_arcarum_boss = True

@@ -9,8 +9,8 @@ from typing import List
 
 import pyautogui
 
-from bot.arcarum import Arcarum
 from bot.combat_mode import CombatMode
+from bot.game_modes.quest import Quest
 from bot.map_selection import MapSelection
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
@@ -29,6 +29,24 @@ class Game:
 
     is_bot_running (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
 
+    item_name (str): Name of the item to farm.
+
+    item_amount_to_farm (int): Amount of the item to farm.
+
+    farming_mode (str): Mode to look for the specified item and map in.
+
+    map_name (str): Name of the map to look for the specified mission in.
+
+    mission_name (str): Name of the mission to farm the item in.
+
+    summon_element_list (List[str]): List of names of the Summon element image file in the /images/buttons/ folder.
+
+    summon_list (List[str]): List of names of the Summon image's file name in /images/summons/ folder.
+
+    group_number (int): The Group that the specified Party in in.
+
+    party_number (int): The specified Party to start the mission with.
+
     combat_script (str, optional): The file path to the combat script to use for Combat Mode. Defaults to empty string.
 
     test_mode (bool, optional): Prevents the bot from automatically calibrating the window dimensions to facilitate easier testing.
@@ -37,7 +55,9 @@ class Game:
 
     """
 
-    def __init__(self, queue: multiprocessing.Queue, discord_queue: multiprocessing.Queue, is_bot_running: int, combat_script: str = "", test_mode: bool = False, debug_mode: bool = False):
+    def __init__(self, queue: multiprocessing.Queue, discord_queue: multiprocessing.Queue, is_bot_running: int, item_name: str, item_amount_to_farm: int, farming_mode: str, map_name: str,
+                 mission_name: str, summon_element_list: List[str], summon_list: List[str], group_number: int, party_number: int, combat_script: str = "", test_mode: bool = False,
+                 debug_mode: bool = False):
         super().__init__()
 
         # ################## config.ini ###################
@@ -54,74 +74,74 @@ class Game:
         # #### end of twitter ####
 
         # #### refill ####
-        self._use_full_elixir = config.getboolean("refill", "refill_using_full_elixir")
-        self._use_soul_balm = config.getboolean("refill", "refill_using_soul_balms")
-        self._enabled_auto_restore = config.getboolean("refill", "enabled_auto_restore")
+        self._use_full_elixir: bool = config.getboolean("refill", "refill_using_full_elixir")
+        self._use_soul_balm: bool = config.getboolean("refill", "refill_using_soul_balms")
+        self._enabled_auto_restore: bool = config.getboolean("refill", "enabled_auto_restore")
         # #### end of refill ####
 
         # #### configuration ####
-        custom_mouse_speed = float(config.get("configuration", "mouse_speed"))
+        custom_mouse_speed: float = config.getfloat("configuration", "mouse_speed")
 
-        enable_bezier_curve_mouse_movement = config.getboolean("configuration", "enable_bezier_curve_mouse_movement")
+        enable_bezier_curve_mouse_movement: bool = config.getboolean("configuration", "enable_bezier_curve_mouse_movement")
 
-        self._enable_delay_between_runs = config.getboolean("configuration", "enable_delay_between_runs")
-        self._delay_in_seconds = config.getint("configuration", "delay_in_seconds")
-        self._enable_randomized_delay_between_runs = config.getboolean("configuration", "enable_randomized_delay_between_runs")
-        self._delay_in_seconds_lower_bound = config.getint("configuration", "delay_in_seconds_lower_bound")
-        self._delay_in_seconds_upper_bound = config.getint("configuration", "delay_in_seconds_upper_bound")
+        self._enable_delay_between_runs: bool = config.getboolean("configuration", "enable_delay_between_runs")
+        self._delay_in_seconds: int = config.getint("configuration", "delay_in_seconds")
+        self._enable_randomized_delay_between_runs: bool = config.getboolean("configuration", "enable_randomized_delay_between_runs")
+        self._delay_in_seconds_lower_bound: int = config.getint("configuration", "delay_in_seconds_lower_bound")
+        self._delay_in_seconds_upper_bound: int = config.getint("configuration", "delay_in_seconds_upper_bound")
         # #### end of configuration ####
 
         # #### dimensional_halo ####
-        self._enable_dimensional_halo = config.getboolean("dimensional_halo", "enable_dimensional_halo")
+        self._enable_dimensional_halo: bool = config.getboolean("dimensional_halo", "enable_dimensional_halo")
         if self._enable_dimensional_halo:
-            self._dimensional_halo_combat_script = config.get("dimensional_halo", "dimensional_halo_combat_script")
+            self._dimensional_halo_combat_script: str = config.get("dimensional_halo", "dimensional_halo_combat_script")
 
-            self._dimensional_halo_summon_list = config.get("dimensional_halo", "dimensional_halo_summon_list").replace(" ", "_").split(",")
+            self._dimensional_halo_summon_list: List[str] = config.get("dimensional_halo", "dimensional_halo_summon_list").replace(" ", "_").split(",")
             if len(self._dimensional_halo_summon_list) == 1 and self._dimensional_halo_summon_list[0] == "":
                 self._dimensional_halo_summon_list.clear()
 
-            self._dimensional_halo_summon_element_list = config.get("dimensional_halo", "dimensional_halo_summon_element_list").replace(" ", "_").split(",")
+            self._dimensional_halo_summon_element_list: List[str] = config.get("dimensional_halo", "dimensional_halo_summon_element_list").replace(" ", "_").split(",")
             if len(self._dimensional_halo_summon_element_list) == 1 and self._dimensional_halo_summon_element_list[0] == "":
                 self._dimensional_halo_summon_element_list.clear()
 
-            self._dimensional_halo_group_number = config.get("dimensional_halo", "dimensional_halo_group_number")
-            self._dimensional_halo_party_number = config.get("dimensional_halo", "dimensional_halo_party_number")
-            self._dimensional_halo_amount = 0
+            self._dimensional_halo_group_number: int = config.getint("dimensional_halo", "dimensional_halo_group_number")
+            self._dimensional_halo_party_number: int = config.getint("dimensional_halo", "dimensional_halo_party_number")
+            self._dimensional_halo_amount: int = 0
         # #### end of dimensional_halo ####
 
         # #### event ####
-        self._enable_event_nightmare = config.getboolean("event", "enable_event_nightmare")
+        self._enable_event_nightmare: bool = config.getboolean("event", "enable_event_nightmare")
         if self._enable_event_nightmare:
-            self._event_nightmare_combat_script = config.get("event", "event_nightmare_combat_script")
+            self._event_nightmare_combat_script: str = config.get("event", "event_nightmare_combat_script")
 
-            self._event_nightmare_summon_list = config.get("event", "event_nightmare_summon_list").replace(" ", "_").split(",")
+            self._event_nightmare_summon_list: List[str] = config.get("event", "event_nightmare_summon_list").replace(" ", "_").split(",")
             if len(self._event_nightmare_summon_list) == 1 and self._event_nightmare_summon_list[0] == "":
                 self._event_nightmare_summon_list.clear()
 
-            self._event_nightmare_summon_element_list = config.get("event", "event_nightmare_summon_element_list").replace(" ", "_").split(",")
+            self._event_nightmare_summon_element_list: List[str] = config.get("event", "event_nightmare_summon_element_list").replace(" ", "_").split(",")
             if len(self._event_nightmare_summon_element_list) == 1 and self._event_nightmare_summon_element_list[0] == "":
                 self._event_nightmare_summon_element_list.clear()
 
-            self._event_nightmare_group_number = config.get("event", "event_nightmare_group_number")
-            self._event_nightmare_party_number = config.get("event", "event_nightmare_party_number")
+            self._event_nightmare_group_number: int = config.getint("event", "event_nightmare_group_number")
+            self._event_nightmare_party_number: int = config.getint("event", "event_nightmare_party_number")
         # #### end of event ####
 
         # #### rise_of_the_beasts ####
-        self._enable_rotb_extreme_plus = config.getboolean("rise_of_the_beasts", "enable_rotb_extreme_plus")
+        self._enable_rotb_extreme_plus: bool = config.getboolean("rise_of_the_beasts", "enable_rotb_extreme_plus")
         if self._enable_rotb_extreme_plus:
-            self._rotb_extreme_plus_combat_script = config.get("rise_of_the_beasts", "rotb_extreme_plus_combat_script")
+            self._rotb_extreme_plus_combat_script: str = config.get("rise_of_the_beasts", "rotb_extreme_plus_combat_script")
 
-            self._rotb_extreme_plus_summon_list = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_list").replace(" ", "_").split(",")
+            self._rotb_extreme_plus_summon_list: List[str] = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_list").replace(" ", "_").split(",")
             if len(self._rotb_extreme_plus_summon_list) == 1 and self._rotb_extreme_plus_summon_list[0] == "":
                 self._rotb_extreme_plus_summon_list.clear()
 
-            self._rotb_extreme_plus_summon_element_list = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_element_list").replace(" ", "_").split(",")
+            self._rotb_extreme_plus_summon_element_list: List[str] = config.get("rise_of_the_beasts", "rotb_extreme_plus_summon_element_list").replace(" ", "_").split(",")
             if len(self._rotb_extreme_plus_summon_element_list) == 1 and self._rotb_extreme_plus_summon_element_list[0] == "":
                 self._rotb_extreme_plus_summon_element_list.clear()
 
-            self._rotb_extreme_plus_group_number = config.get("rise_of_the_beasts", "rotb_extreme_plus_group_number")
-            self._rotb_extreme_plus_party_number = config.get("rise_of_the_beasts", "rotb_extreme_plus_party_number")
-            self._rotb_extreme_plus_amount = 0
+            self._rotb_extreme_plus_group_number: int = config.getint("rise_of_the_beasts", "rotb_extreme_plus_group_number")
+            self._rotb_extreme_plus_party_number: int = config.getint("rise_of_the_beasts", "rotb_extreme_plus_party_number")
+            self._rotb_extreme_plus_amount: int = 0
         # #### end of rise_of_the_beasts ####
 
         # #### xeno_clash ####
@@ -142,14 +162,14 @@ class Game:
         # ################## end of config.ini ###################
 
         # Start a timer signaling bot start in order to keep track of elapsed time and create a Queue to share logging messages between backend and frontend.
-        self._starting_time = timer()
+        self._starting_time: float = timer()
         self._queue = queue
 
         # Keep track of a bot running status flag shared in memory. Value of 0 means the bot is currently running and a value of 1 means that the bot has stopped.
-        self._is_bot_running = is_bot_running
+        self._is_bot_running: int = is_bot_running
 
         # Set a debug flag to determine whether or not to print debugging messages.
-        self._debug_mode = debug_mode
+        self._debug_mode: bool = debug_mode
 
         # Initialize the objects of helper classes.
         self.combat_mode = CombatMode(self, is_bot_running, debug_mode = self._debug_mode)
@@ -160,31 +180,31 @@ class Game:
 
         # Save the locations of the "Home", "Attack", and "Back" buttons for use in other classes.
         self.home_button_location = None
-        self._attack_button_location = None
-        self._back_button_location = None
 
         # Keep track of the following for Combat Mode.
-        self._combat_script = combat_script
-        self._retreat_check = False
+        self.combat_script: str = combat_script
+        self._retreat_check: bool = False
 
         # Keep track of the following for Farming Mode.
-        self._item_name = ""
-        self._item_amount_to_farm = 0
-        self._item_amount_farmed = 0
-        self.farming_mode = ""
-        self._map_name = ""
-        self.mission_name = ""
-        self.difficulty = ""
-        self._summon_element_list = []
-        self._summon_list = []
-        self._group_number = 0
-        self._party_number = 0
-        self._amount_of_runs_finished = 0
-        self._coop_first_run = True
-        self._party_selection_first_run = True
+        self.item_name: str = item_name
+        self._item_amount_to_farm: int = item_amount_to_farm
+        self._item_amount_farmed: int = 0
+        self.farming_mode: str = farming_mode
+        self._map_name: str = map_name
+        self.mission_name: str = mission_name
+        self.difficulty: str = ""
+        self.summon_element_list: List[str] = summon_element_list
+        self.summon_list: List[str] = summon_list
+        self.group_number: int = group_number
+        self.party_number: int = party_number
+        self._amount_of_runs_finished: int = 0
+        self._coop_first_run: bool = True
+        self._party_selection_first_run: bool = True
 
-        # Enable checking for Skyscope mission popups.
-        self.enable_skyscope = True
+        # Construct the object of the specified Farming Mode.
+        if self.farming_mode == "Quest":
+            self._quest = Quest(self, self._map_name, self.mission_name)
+
         if test_mode is False:
             # Calibrate the dimensions of the bot window on bot launch.
             self.go_back_home(confirm_location_check = True, display_info_check = True)
@@ -414,7 +434,25 @@ class Game:
         self.print_and_save("\n[INFO] Resting period complete.")
         return None
 
-    def _select_summon(self, summon_list: List[str], summon_element_list: List[str]):
+    def check_summon_location(self) -> bool:
+        """Checks to see if the bot is at the Summon Selections screen.
+
+        Returns:
+            (bool): Flag on whether or not the bot is at the Summon Selection screen.
+        """
+        self.print_and_save(f"[INFO] Now checking if bot is currently at Summon Selection screen...")
+
+        if self.farming_mode != "Proving Grounds" and self.image_tools.confirm_location("select_a_summon", tries = 5):
+            self.print_and_save(f"[INFO] Bot is currently at Summon Selection screen.")
+            return True
+        elif self.farming_mode == "Proving Grounds" and self.image_tools.confirm_location("proving_grounds_summon_selection", tries = 5):
+            self.print_and_save(f"[INFO] Bot is currently at the Proving Grounds' Summon Selection screen.")
+            return True
+        else:
+            self.print_and_save(f"[WARNING] Bot is not at Summon Selection screen.")
+            return False
+
+    def select_summon(self, summon_list: List[str], summon_element_list: List[str]):
         """Finds and selects the specified Summon based on the current index on the Summon Selection screen and then checks for CAPTCHA right
         afterwards.
 
@@ -528,8 +566,7 @@ class Game:
                         set_location = self.image_tools.find_button("party_set_a", tries = 1)
 
             # Center the mouse on the "Set A" / "Set B" button and then click the correct Group tab.
-            if self._debug_mode:
-                self.print_and_save(f"\n[DEBUG] Successfully selected the correct Set. Now selecting Group {group_number}...")
+            self.print_and_save(f"\n[INFO] Successfully selected the correct Set. Now selecting Group {group_number}...")
 
             if group_number == 1:
                 x = set_location[0] - 350
@@ -550,8 +587,7 @@ class Game:
             self.mouse_tools.move_and_click_point(x, y, "template_group", mouse_clicks = 2)
 
             # Now select the correct Party.
-            if self._debug_mode:
-                self.print_and_save(f"[DEBUG] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
+            self.print_and_save(f"[INFO] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
 
             if party_number == 1:
                 x = set_location[0] - 309
@@ -571,8 +607,7 @@ class Game:
 
             self._party_selection_first_run = False
 
-        if self._debug_mode:
-            self.print_and_save(f"[DEBUG] Successfully selected Party {party_number}. Now starting the mission.")
+        self.print_and_save(f"[INFO] Successfully selected Party {party_number}. Now starting the mission.")
 
         # Find and click the "OK" button to start the mission.
         self.find_and_click_button("ok")
@@ -667,7 +702,86 @@ class Game:
 
         return None
 
-    def collect_loot(self, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False):
+    def _clear_pending_battle(self):
+        """Process a Pending Battle.
+
+        Returns:
+            (bool): Return True if a Pending Battle was successfully processed. Otherwise, return False.
+        """
+        if self.find_and_click_button("tap_here_to_see_rewards", tries = 1):
+            self.wait(1)
+
+            # If there is loot available, start loot detection and decrement number of raids joined as necessary.
+            if self.image_tools.confirm_location("no_loot", tries = 1):
+                self.print_and_save(f"[INFO] No loot can be collected.")
+
+                # Navigate back to the Quests screen.
+                self.find_and_click_button("quests", suppress_error = True)
+
+                return True
+            else:
+                self.collect_loot(is_pending_battle = True)
+
+                self.find_and_click_button("close", tries = 1, suppress_error = True)
+                self.find_and_click_button("ok", tries = 1, suppress_error = True)
+
+                return True
+
+        return False
+
+    def check_for_pending(self):
+        """Check and collect any pending rewards and free up slots for the bot to join more raids.
+
+        Returns:
+            (bool): Return True if Pending Battles were detected. Otherwise, return False.
+        """
+        self.wait(1)
+
+        if (self.image_tools.confirm_location("check_your_pending_battles", tries = 1)) or \
+                (self.image_tools.confirm_location("pending_battles", tries = 1)) or \
+                (self.find_and_click_button("quest_results_pending_battles", tries = 1)):
+            self.print_and_save(f"\n[INFO] Found Pending Battles that need collecting from.")
+
+            self.find_and_click_button("ok", tries = 1)
+
+            self.wait(1)
+
+            if self.image_tools.confirm_location("pending_battles", tries = 1):
+                # Process the current Pending Battle.
+                while self._clear_pending_battle():
+                    # While on the Loot Collected screen, if there are more Pending Battles then head back to the Pending Battles screen.
+                    if self.image_tools.find_button("quest_results_pending_battles", tries = 1):
+                        self.find_and_click_button("quest_results_pending_battles")
+
+                        self.wait(1)
+
+                        # Close the Skyscope mission popup.
+                        if self.image_tools.confirm_location("skyscope"):
+                            self.find_and_click_button("close")
+                            self.wait(1)
+
+                        if self.image_tools.confirm_location("friend_request", tries = 1):
+                            self.find_and_click_button("cancel")
+
+                        self.wait(1)
+                    else:
+                        # When there are no more Pending Battles, go back to the Home screen.
+                        self.find_and_click_button("home")
+
+                        # Close the Skyscope mission popup.
+                        if self.image_tools.confirm_location("skyscope"):
+                            self.find_and_click_button("close")
+                            self.wait(1)
+
+                        break
+
+            self.print_and_save(f"[INFO] Pending battles have been cleared.")
+            return True
+
+        self.print_and_save(f"[INFO] No Pending Battles needed to be cleared.")
+        return False
+
+    def collect_loot(self, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False) -> int:
         """Collect the loot from the Results screen while clicking away any dialog popups. Primarily for raids.
         
         Args:
@@ -676,7 +790,7 @@ class Game:
             skip_info (bool): Skip printing the information of the run. Defaults to False.
 
         Returns:
-            None
+            (int): The amount of items detected.
         """
         temp_amount = 0
 
@@ -693,12 +807,10 @@ class Game:
             # Now that the bot is at the Loot Collected screen, detect any user-specified items.
             if not is_pending_battle and not is_event_nightmare:
                 self.print_and_save("\n[INFO] Detecting if any user-specified loot dropped from this run...")
-                if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
-                    temp_amount = self.image_tools.find_farmed_items(self._item_name)
+                if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
+                    temp_amount = self.image_tools.find_farmed_items(self.item_name)
                 else:
                     temp_amount = 1
-
-                self._item_amount_farmed += temp_amount
 
                 # Only increment number of runs for Proving Grounds when the bot acquires the Completion Rewards.
                 # Currently for Proving Grounds, completing 2 battles per difficulty nets you the Completion Rewards.
@@ -710,37 +822,34 @@ class Game:
                     self._amount_of_runs_finished += 1
             elif is_pending_battle:
                 self.print_and_save("\n[INFO] Detecting if any user-specified loot dropped from this pending battle...")
-                if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
-                    temp_amount = self.image_tools.find_farmed_items(self._item_name)
+                if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
+                    temp_amount = self.image_tools.find_farmed_items(self.item_name)
                 else:
                     temp_amount = 0
-
-                self._item_amount_farmed += temp_amount
         else:
-            # If the bot reached here, that means the raid ended without the bot being able to take action so no loot
-            # dropped.
+            # If the bot reached here, that means the raid ended without the bot being able to take action so no loot dropped.
             temp_amount = 0
 
         if not is_pending_battle and not is_event_nightmare and not skip_info:
-            if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
+            if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
                 self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"[FARM] Mission: {self.mission_name}")
-                self.print_and_save(f"[FARM] Summons: {self._summon_list}")
-                self.print_and_save(f"[FARM] Amount of {self._item_name} gained from this run: {temp_amount}")
-                self.print_and_save(f"[FARM] Amount of {self._item_name} gained in total: {self._item_amount_farmed} / {self._item_amount_to_farm}")
+                self.print_and_save(f"[FARM] Summons: {self.summon_list}")
+                self.print_and_save(f"[FARM] Amount of {self.item_name} gained from this run: {temp_amount}")
+                self.print_and_save(f"[FARM] Amount of {self.item_name} gained in total: {self._item_amount_farmed + temp_amount} / {self._item_amount_to_farm}")
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished}")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
 
                 if temp_amount != 0:
                     if self._item_amount_farmed >= self._item_amount_to_farm:
-                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained from this run: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
-                                         f"**[{self._item_amount_farmed} / {self._item_amount_to_farm}]** :white_check_mark:"
+                        discord_string = f"> {temp_amount}x __{self.item_name}__ gained from this run: **[{self._item_amount_farmed} / {self._item_amount_to_farm}]** -> " \
+                                         f"**[{self._item_amount_farmed + temp_amount} / {self._item_amount_to_farm}]** :white_check_mark:"
                     else:
-                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained from this run: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
-                                         f"**[{self._item_amount_farmed} / {self._item_amount_to_farm}]**"
+                        discord_string = f"> {temp_amount}x __{self.item_name}__ gained from this run: **[{self._item_amount_farmed} / {self._item_amount_to_farm}]** -> " \
+                                         f"**[{self._item_amount_farmed + temp_amount} / {self._item_amount_to_farm}]**"
 
                     self.discord_queue.put(discord_string)
             else:
@@ -748,7 +857,7 @@ class Game:
                 self.print_and_save("********************************************************************************")
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"[FARM] Mission: {self.mission_name}")
-                self.print_and_save(f"[FARM] Summons: {self._summon_list}")
+                self.print_and_save(f"[FARM] Summons: {self.summon_list}")
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished} / {self._item_amount_to_farm}")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
@@ -762,29 +871,29 @@ class Game:
 
                 self.discord_queue.put(discord_string)
         elif is_pending_battle and temp_amount > 0 and not skip_info:
-            if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
+            if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
                 self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"[FARM] Mission: {self.mission_name}")
-                self.print_and_save(f"[FARM] Summons: {self._summon_list}")
-                self.print_and_save(f"[FARM] Amount of {self._item_name} gained from this pending battle: {temp_amount}")
-                self.print_and_save(f"[FARM] Amount of {self._item_name} gained in total: {self._item_amount_farmed} / {self._item_amount_to_farm}")
+                self.print_and_save(f"[FARM] Summons: {self.summon_list}")
+                self.print_and_save(f"[FARM] Amount of {self.item_name} gained from this pending battle: {temp_amount}")
+                self.print_and_save(f"[FARM] Amount of {self.item_name} gained in total: {self._item_amount_farmed + temp_amount} / {self._item_amount_to_farm}")
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished}")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
 
                 if temp_amount != 0:
                     if self._item_amount_farmed >= self._item_amount_to_farm:
-                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained from this pending battle: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
-                                         f"**[{self._item_amount_farmed} / {self._item_amount_to_farm}]** :white_check_mark:"
+                        discord_string = f"> {temp_amount}x __{self.item_name}__ gained from this pending battle: **[{self._item_amount_farmed} / {self._item_amount_to_farm}]** -> " \
+                                         f"**[{self._item_amount_farmed + temp_amount} / {self._item_amount_to_farm}]** :white_check_mark:"
                     else:
-                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained from this pending battle: **[{self._item_amount_farmed - temp_amount} / {self._item_amount_to_farm}]** -> " \
-                                         f"**[{self._item_amount_farmed} / {self._item_amount_to_farm}]**"
+                        discord_string = f"> {temp_amount}x __{self.item_name}__ gained from this pending battle: **[{self._item_amount_farmed} / {self._item_amount_to_farm}]** -> " \
+                                         f"**[{self._item_amount_farmed + temp_amount} / {self._item_amount_to_farm}]**"
 
                     self.discord_queue.put(discord_string)
 
-        return None
+        return temp_amount
 
     def _check_for_popups(self):
         """Detect any popups and attempt to close them all with the final destination being the Summon Selection screen.
@@ -807,7 +916,7 @@ class Game:
 
             # Check for certain popups for certain Farming Modes.
             if (self.farming_mode == "Rise of the Beasts" and self._check_for_rotb_extreme_plus()) or (
-                    self.farming_mode == "Special" and self.mission_name == "VH Angel Halo" and self._item_name == "Angel Halo Weapons" and self._check_for_dimensional_halo()) or (
+                    self.farming_mode == "Special" and self.mission_name == "VH Angel Halo" and self.item_name == "Angel Halo Weapons" and self._check_for_dimensional_halo()) or (
                     (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._check_for_event_nightmare()) or (
                     self.farming_mode == "Xeno Clash" and self._check_for_xeno_clash_nightmare()):
                 # Make sure the bot goes back to the Home screen so that the "Play Again" functionality comes back.
@@ -858,7 +967,7 @@ class Game:
 
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             if self.image_tools.confirm_location("select_a_summon"):
-                self._select_summon(self._dimensional_halo_summon_list, self._dimensional_halo_summon_element_list)
+                self.select_summon(self._dimensional_halo_summon_list, self._dimensional_halo_summon_element_list)
                 start_check = self.find_party_and_start_mission(int(self._dimensional_halo_group_number), int(self._dimensional_halo_party_number))
 
                 # Once preparations are completed, start Combat Mode.
@@ -909,7 +1018,7 @@ class Game:
 
                 # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
                 if self.image_tools.confirm_location("select_a_summon"):
-                    self._select_summon(self._event_nightmare_summon_list, self._event_nightmare_summon_element_list)
+                    self.select_summon(self._event_nightmare_summon_list, self._event_nightmare_summon_element_list)
                     start_check = self.find_party_and_start_mission(int(self._event_nightmare_group_number), int(self._event_nightmare_party_number))
 
                     # Once preparations are completed, start Combat Mode.
@@ -961,7 +1070,7 @@ class Game:
 
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             if self.image_tools.confirm_location("select_a_summon"):
-                self._select_summon(self._rotb_extreme_plus_summon_list, self._rotb_extreme_plus_summon_element_list)
+                self.select_summon(self._rotb_extreme_plus_summon_list, self._rotb_extreme_plus_summon_element_list)
                 start_check = self.find_party_and_start_mission(int(self._rotb_extreme_plus_group_number), int(self._rotb_extreme_plus_party_number))
 
                 # Once preparations are completed, start Combat mode.
@@ -1018,7 +1127,7 @@ class Game:
 
                 # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
                 if self.image_tools.confirm_location("select_a_summon"):
-                    self._select_summon(self._xeno_clash_nightmare_summon_list, self._xeno_clash_nightmare_summon_element_list)
+                    self.select_summon(self._xeno_clash_nightmare_summon_list, self._xeno_clash_nightmare_summon_element_list)
                     start_check = self.find_party_and_start_mission(int(self._xeno_clash_nightmare_group_number), int(self._xeno_clash_nightmare_party_number))
 
                     # Once preparations are completed, start Combat Mode.
@@ -1049,117 +1158,117 @@ class Game:
             None
         """
         # If Dimensional Halo is enabled, save settings for it based on conditions.
-        if self.farming_mode == "Special" and self.mission_name == "VH Angel Halo" and self._enable_dimensional_halo and (self._item_name == "EXP" or self._item_name == "Angel Halo Weapons"):
+        if self.farming_mode == "Special" and self.mission_name == "VH Angel Halo" and self._enable_dimensional_halo and (self.item_name == "EXP" or self.item_name == "Angel Halo Weapons"):
             self.print_and_save("\n[INFO] Initializing settings for Dimensional Halo...")
 
             if self._dimensional_halo_combat_script == "":
                 self.print_and_save("[INFO] Combat Script for Dimensional Halo will reuse the one for Farming Mode.")
-                self._dimensional_halo_combat_script = self._combat_script
+                self._dimensional_halo_combat_script = self.combat_script
 
             if len(self._dimensional_halo_summon_element_list) == 0:
                 self.print_and_save("[INFO] Summon Elements for Dimensional Halo will reuse the ones for Farming Mode.")
-                self._dimensional_halo_summon_element_list = self._summon_element_list
+                self._dimensional_halo_summon_element_list = self.summon_element_list
 
             if len(self._dimensional_halo_summon_list) == 0:
                 self.print_and_save("[INFO] Summons for Dimensional Halo will reuse the ones for Farming Mode.")
-                self._dimensional_halo_summon_list = self._summon_list
+                self._dimensional_halo_summon_list = self.summon_list
 
             if self._dimensional_halo_group_number == "":
                 self.print_and_save("[INFO] Group Number for Dimensional Halo will reuse the one for Farming Mode.")
-                self._dimensional_halo_group_number = self._group_number
+                self._dimensional_halo_group_number = self.group_number
             else:
                 self._dimensional_halo_group_number = int(self._dimensional_halo_group_number)
 
             if self._dimensional_halo_party_number == "":
                 self.print_and_save("[INFO] Party Number for Dimensional Halo will reuse the one for Farming Mode.")
-                self._dimensional_halo_party_number = self._party_number
+                self._dimensional_halo_party_number = self.party_number
             else:
                 self._dimensional_halo_party_number = int(self._dimensional_halo_party_number)
 
             self.print_and_save("[INFO] Settings initialized for Dimensional Halo...")
-        elif (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._item_name == "Repeated Runs" and self._enable_event_nightmare:
+        elif (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self.item_name == "Repeated Runs" and self._enable_event_nightmare:
             # Do the same for Event Nightmare if enabled.
             self.print_and_save("\n[INFO] Initializing settings for Event...")
 
             if self._event_nightmare_combat_script == "":
                 self.print_and_save("[INFO] Combat Script for Event will reuse the one for Farming Mode.")
-                self._event_nightmare_combat_script = self._combat_script
+                self._event_nightmare_combat_script = self.combat_script
 
             if len(self._event_nightmare_summon_element_list) == 0:
                 self.print_and_save("[INFO] Summon Elements for Event will reuse the ones for Farming Mode.")
-                self._event_nightmare_summon_element_list = self._summon_element_list
+                self._event_nightmare_summon_element_list = self.summon_element_list
 
             if len(self._event_nightmare_summon_list) == 0:
                 self.print_and_save("[INFO] Summons for Event will reuse the ones for Farming Mode.")
-                self._event_nightmare_summon_list = self._summon_list
+                self._event_nightmare_summon_list = self.summon_list
 
             if self._event_nightmare_group_number == "":
                 self.print_and_save("[INFO] Group Number for Event will reuse the one for Farming Mode.")
-                self._event_nightmare_group_number = self._group_number
+                self._event_nightmare_group_number = self.group_number
             else:
                 self._event_nightmare_group_number = int(self._event_nightmare_group_number)
 
             if self._event_nightmare_party_number == "":
                 self.print_and_save("[INFO] Party Number for Event will reuse the one for Farming Mode.")
-                self._event_nightmare_party_number = self._party_number
+                self._event_nightmare_party_number = self.party_number
             else:
                 self._event_nightmare_party_number = int(self._event_nightmare_party_number)
 
             self.print_and_save("[INFO] Settings initialized for Event...")
-        elif self.farming_mode == "Rise of the Beasts" and self._item_name == "Repeated Runs" and self._enable_rotb_extreme_plus:
+        elif self.farming_mode == "Rise of the Beasts" and self.item_name == "Repeated Runs" and self._enable_rotb_extreme_plus:
             # Do the same for Rise of the Beasts Extreme+ if enabled.
             self.print_and_save("\n[INFO] Initializing settings for Rise of the Beasts Extreme+...")
 
             if self._rotb_extreme_plus_combat_script == "":
                 self.print_and_save("[INFO] Combat Script for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
-                self._rotb_extreme_plus_combat_script = self._combat_script
+                self._rotb_extreme_plus_combat_script = self.combat_script
 
             if len(self._rotb_extreme_plus_summon_element_list) == 0:
                 self.print_and_save("[INFO] Summon Elements for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
-                self._rotb_extreme_plus_summon_element_list = self._summon_element_list
+                self._rotb_extreme_plus_summon_element_list = self.summon_element_list
 
             if len(self._rotb_extreme_plus_summon_list) == 0:
                 self.print_and_save("[INFO] Summons for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
-                self._rotb_extreme_plus_summon_list = self._summon_list
+                self._rotb_extreme_plus_summon_list = self.summon_list
 
             if self._rotb_extreme_plus_group_number == "":
                 self.print_and_save("[INFO] Group Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
-                self._rotb_extreme_plus_group_number = self._group_number
+                self._rotb_extreme_plus_group_number = self.group_number
             else:
                 self._rotb_extreme_plus_group_number = int(self._rotb_extreme_plus_group_number)
 
             if self._rotb_extreme_plus_party_number == "":
                 self.print_and_save("[INFO] Party Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
-                self._rotb_extreme_plus_party_number = self._party_number
+                self._rotb_extreme_plus_party_number = self.party_number
             else:
                 self._rotb_extreme_plus_party_number = int(self._rotb_extreme_plus_party_number)
 
             self.print_and_save("[INFO] Settings initialized for Rise of the Beasts Extreme+...")
-        elif self.farming_mode == "Xeno Clash" and self._item_name == "Repeated Runs" and self._enable_xeno_clash_nightmare:
+        elif self.farming_mode == "Xeno Clash" and self.item_name == "Repeated Runs" and self._enable_xeno_clash_nightmare:
             # Do the same for Xeno Clash if enabled.
             self.print_and_save("\n[INFO] Initializing settings for Xeno Clash Nightmare...")
 
             if self._xeno_clash_nightmare_combat_script == "":
                 self.print_and_save("[INFO] Combat Script for Xeno Clash Nightmare will reuse the one for Farming Mode.")
-                self._xeno_clash_nightmare_combat_script = self._combat_script
+                self._xeno_clash_nightmare_combat_script = self.combat_script
 
             if len(self._xeno_clash_nightmare_summon_element_list) == 0:
                 self.print_and_save("[INFO] Summon Elements for Xeno Clash Nightmare will reuse the ones for Farming Mode.")
-                self._xeno_clash_nightmare_summon_element_list = self._summon_element_list
+                self._xeno_clash_nightmare_summon_element_list = self.summon_element_list
 
             if len(self._xeno_clash_nightmare_summon_list) == 0:
                 self.print_and_save("[INFO] Summons for Xeno Clash Nightmare will reuse the ones for Farming Mode.")
-                self._xeno_clash_nightmare_summon_list = self._summon_list
+                self._xeno_clash_nightmare_summon_list = self.summon_list
 
             if self._xeno_clash_nightmare_group_number == "":
                 self.print_and_save("[INFO] Group Number for Xeno Clash Nightmare will reuse the one for Farming Mode.")
-                self._xeno_clash_nightmare_group_number = self._group_number
+                self._xeno_clash_nightmare_group_number = self.group_number
             else:
                 self._xeno_clash_nightmare_number = int(self._xeno_clash_nightmare_group_number)
 
             if self._xeno_clash_nightmare_party_number == "":
                 self.print_and_save("[INFO] Party Number for Xeno Clash Nightmare will reuse the one for Farming Mode.")
-                self._xeno_clash_nightmare_party_number = self._party_number
+                self._xeno_clash_nightmare_party_number = self.party_number
             else:
                 self._xeno_clash_nightmare_party_number = int(self._xeno_clash_nightmare_party_number)
 
@@ -1167,265 +1276,268 @@ class Game:
 
         return None
 
-    def start_farming_mode(self, item_name: str, item_amount_to_farm: int, farming_mode: str, map_name: str, mission_name: str, summon_element_list: List[str], summon_list: List[str],
-                           group_number: int, party_number: int):
+    def start_farming_mode(self):
         """Start the Farming Mode using the given parameters.
 
-        Args:
-            item_name (str): Name of the item to farm.
-            item_amount_to_farm (int): Amount of the item to farm.
-            farming_mode (str): Mode to look for the specified item and map in.
-            map_name (str): Name of the map to look for the specified mission in.
-            mission_name (str): Name of the mission to farm the item in.
-            summon_element_list (List[str]): List of names of the Summon element image file in the /images/buttons/ folder.
-            summon_list (List[str]): List of names of the Summon image's file name in /images/summons/ folder.
-            group_number (int): The Group that the specified Party in in.
-            party_number (int): The specified Party to start the mission with.
-        
         Returns:
             None
         """
         try:
-            if item_name != "EXP":
-                self.print_and_save("\n################################################################################")
-                self.print_and_save("################################################################################")
-                self.print_and_save(f"[FARM] Starting Farming Mode for {farming_mode}.")
-                self.print_and_save(f"[FARM] Farming {item_amount_to_farm}x {item_name} at {mission_name}.")
-                self.print_and_save("################################################################################")
-                self.print_and_save("################################################################################\n")
-            else:
-                self.print_and_save("\n################################################################################")
-                self.print_and_save("################################################################################")
-                self.print_and_save(f"[FARM] Starting Farming Mode for {farming_mode}.")
-                self.print_and_save(f"[FARM] Doing {item_amount_to_farm}x runs for {item_name} at {mission_name}.")
-                self.print_and_save("################################################################################")
-                self.print_and_save("################################################################################\n")
-
-            # Parse the difficulty for the chosen mission.
-            difficulty = ""
-            if farming_mode == "Special" or farming_mode == "Event" or farming_mode == "Event (Token Drawboxes)" or farming_mode == "Rise of the Beasts":
-                if mission_name.find("N ") == 0:
-                    difficulty = "Normal"
-                elif mission_name.find("H ") == 0:
-                    difficulty = "Hard"
-                elif mission_name.find("VH ") == 0:
-                    difficulty = "Very Hard"
-                elif mission_name.find("EX ") == 0:
-                    difficulty = "Extreme"
-                elif mission_name.find("IM ") == 0:
-                    difficulty = "Impossible"
-            elif farming_mode == "Dread Barrage":
-                if mission_name.find("1 Star") == 0:
-                    difficulty = "1 Star"
-                elif mission_name.find("2 Star") == 0:
-                    difficulty = "2 Star"
-                elif mission_name.find("3 Star") == 0:
-                    difficulty = "3 Star"
-                elif mission_name.find("4 Star") == 0:
-                    difficulty = "4 Star"
-                elif mission_name.find("5 Star") == 0:
-                    difficulty = "5 Star"
-            elif farming_mode == "Guild Wars" or farming_mode == "Proving Grounds":
-                if mission_name == "Very Hard":
-                    difficulty = "Very Hard"
-                elif mission_name == "Extreme":
-                    difficulty = "Extreme"
-                elif mission_name == "Extreme+":
-                    difficulty = "Extreme+"
-                elif mission_name == "NM90":
-                    difficulty = "NM90"
-                elif mission_name == "NM95":
-                    difficulty = "NM95"
-                elif mission_name == "NM100":
-                    difficulty = "NM100"
-                elif mission_name == "NM150":
-                    difficulty = "NM150"
-
-            self._item_amount_farmed = 0
-            self._amount_of_runs_finished = 0
-            event_quests = ["N Event Quest", "H Event Quest", "VH Event Quest", "EX Event Quest"]
-            proving_grounds_first_time = True
-
-            # Save the following information to share between the Game class and the MapSelection class.
-            self._item_name = item_name
-            self._item_amount_to_farm = item_amount_to_farm
-            self.farming_mode = farming_mode
-            self._map_name = map_name
-            self.mission_name = mission_name
-            self.difficulty = difficulty
-            self._summon_element_list = summon_element_list
-            self._summon_list = summon_list
-            self._group_number = group_number
-            self._party_number = party_number
+            # if item_name != "EXP":
+            #     self.print_and_save("\n################################################################################")
+            #     self.print_and_save("################################################################################")
+            #     self.print_and_save(f"[FARM] Starting Farming Mode for {farming_mode}.")
+            #     self.print_and_save(f"[FARM] Farming {item_amount_to_farm}x {item_name} at {mission_name}.")
+            #     self.print_and_save("################################################################################")
+            #     self.print_and_save("################################################################################\n")
+            # else:
+            #     self.print_and_save("\n################################################################################")
+            #     self.print_and_save("################################################################################")
+            #     self.print_and_save(f"[FARM] Starting Farming Mode for {farming_mode}.")
+            #     self.print_and_save(f"[FARM] Doing {item_amount_to_farm}x runs for {item_name} at {mission_name}.")
+            #     self.print_and_save("################################################################################")
+            #     self.print_and_save("################################################################################\n")
+            #
+            # # Parse the difficulty for the chosen mission.
+            # difficulty = ""
+            # if farming_mode == "Special" or farming_mode == "Event" or farming_mode == "Event (Token Drawboxes)" or farming_mode == "Rise of the Beasts":
+            #     if mission_name.find("N ") == 0:
+            #         difficulty = "Normal"
+            #     elif mission_name.find("H ") == 0:
+            #         difficulty = "Hard"
+            #     elif mission_name.find("VH ") == 0:
+            #         difficulty = "Very Hard"
+            #     elif mission_name.find("EX ") == 0:
+            #         difficulty = "Extreme"
+            #     elif mission_name.find("IM ") == 0:
+            #         difficulty = "Impossible"
+            # elif farming_mode == "Dread Barrage":
+            #     if mission_name.find("1 Star") == 0:
+            #         difficulty = "1 Star"
+            #     elif mission_name.find("2 Star") == 0:
+            #         difficulty = "2 Star"
+            #     elif mission_name.find("3 Star") == 0:
+            #         difficulty = "3 Star"
+            #     elif mission_name.find("4 Star") == 0:
+            #         difficulty = "4 Star"
+            #     elif mission_name.find("5 Star") == 0:
+            #         difficulty = "5 Star"
+            # elif farming_mode == "Guild Wars" or farming_mode == "Proving Grounds":
+            #     if mission_name == "Very Hard":
+            #         difficulty = "Very Hard"
+            #     elif mission_name == "Extreme":
+            #         difficulty = "Extreme"
+            #     elif mission_name == "Extreme+":
+            #         difficulty = "Extreme+"
+            #     elif mission_name == "NM90":
+            #         difficulty = "NM90"
+            #     elif mission_name == "NM95":
+            #         difficulty = "NM95"
+            #     elif mission_name == "NM100":
+            #         difficulty = "NM100"
+            #     elif mission_name == "NM150":
+            #         difficulty = "NM150"
+            #
+            # self._item_amount_farmed = 0
+            # self._amount_of_runs_finished = 0
+            # event_quests = ["N Event Quest", "H Event Quest", "VH Event Quest", "EX Event Quest"]
+            # proving_grounds_first_time = True
+            #
+            # # Save the following information to share between the Game class and the MapSelection class.
+            # self.item_name = item_name
+            # self._item_amount_to_farm = item_amount_to_farm
+            # self.farming_mode = farming_mode
+            # self._map_name = map_name
+            # self.mission_name = mission_name
+            # self.difficulty = difficulty
+            # self.summon_element_list = summon_element_list
+            # self.summon_list = summon_list
+            # self.group_number = group_number
+            # self.party_number = party_number
 
             # Perform advanced setup for the special fights like Dimensional Halo and Event Nightmares.
             self._advanced_setup()
 
-            if farming_mode == "Arcarum":
-                arcarum_object = Arcarum(self, mission_name, group_number, party_number, item_amount_to_farm, self._combat_script)
-                arcarum_object.start()
-            else:
-                if farming_mode != "Raid":
-                    self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
-                else:
-                    self.map_selection.join_raid(mission_name)
+            first_run = True
+            while self._item_amount_farmed < self._item_amount_to_farm:
+                if self.farming_mode == "Quest":
+                    self._item_amount_farmed += self._quest.start(first_run)
 
-                while self._item_amount_farmed < item_amount_to_farm:
-                    # Reset the Summon Selection flag.
-                    summon_check = False
-                    start_check = False
+                if self._item_amount_farmed < self._item_amount_to_farm:
+                    # Generate a resting period if the user enabled it.
+                    self._delay_between_runs()
 
-                    # Loop and attempt to select a Summon. Reset Summons if needed.
-                    while (summon_check is False and farming_mode != "Coop" and farming_mode != "Proving Grounds") or \
-                            (summon_check is False and proving_grounds_first_time is True and farming_mode == "Proving Grounds"):
-                        summon_check = self._select_summon(self._summon_list, self._summon_element_list)
+                    first_run = False
 
-                        # If the Summon Selection flag is False, that means the Summons were reset.
-                        if summon_check is False and farming_mode != "Raid":
-                            self.print_and_save("\n[INFO] Selecting Mission again after resetting Summons.")
-                            self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
-                        elif summon_check is False and farming_mode == "Raid":
-                            self.print_and_save("\n[INFO] Joining Raids again after resetting Summons.")
-                            self.map_selection.join_raid(mission_name)
+                    if self.find_and_click_button("play_again"):
+                        self._check_for_popups()
 
-                    # Perform Party Selection and then start the Mission. If Farming Mode is Coop, skip this as Coop reuses the same Party.
-                    if farming_mode != "Coop" and farming_mode != "Proving Grounds":
-                        start_check = self.find_party_and_start_mission(self._group_number, self._party_number)
-                    elif farming_mode == "Coop" and self._coop_first_run:
-                        start_check = self.find_party_and_start_mission(self._group_number, self._party_number)
-                        self._coop_first_run = False
 
-                        # Now click the "Start" button to start the Coop Mission.
-                        self.find_and_click_button("coop_start")
-                    elif farming_mode == "Coop" and self._coop_first_run is False:
-                        self.print_and_save("\n[INFO] Starting Coop Mission again.")
-                        start_check = True
-                    elif farming_mode == "Proving Grounds":
-                        # Parties are assumed to have already been formed by the player prior to starting. In addition, no need to select a Summon again as it is reused.
-                        if proving_grounds_first_time:
-                            self.check_for_ap()
-
-                            self.find_and_click_button("ok")
-                            proving_grounds_first_time = False
-                        start_check = True
-
-                    if start_check and farming_mode != "Raid":
-                        self.wait(3)
-
-                        # Check for the "Items Picked Up" popup for Quest Farming Mode.
-                        if farming_mode == "Quest" and self.image_tools.confirm_location("items_picked_up", tries = 1):
-                            self.find_and_click_button("ok")
-
-                        # Click the "Start" button to start the Proving Grounds Mission.
-                        if farming_mode == "Proving Grounds":
-                            self.print_and_save("\n[INFO] Now starting Mission for Proving Grounds...")
-                            self.find_and_click_button("proving_grounds_start")
-
-                        # Finally, start Combat Mode.
-                        if self.combat_mode.start_combat_mode(self._combat_script):
-                            # If it ended successfully, detect loot and repeat if acquired item amount has not been reached.
-                            self.collect_loot()
-
-                            if self._item_amount_farmed < item_amount_to_farm:
-                                # Generate a resting period if the user enabled it.
-                                self._delay_between_runs()
-
-                                # Handle special situations for certain Farming Modes.
-                                if farming_mode != "Coop" and farming_mode != "Proving Grounds" and not self.find_and_click_button("play_again"):
-                                    # Clear away any Pending Battles.
-                                    self.map_selection.check_for_pending(farming_mode)
-
-                                    # Now repeat the Mission.
-                                    self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
-                                elif farming_mode == "Event (Token Drawboxes)" and event_quests.__contains__(mission_name):
-                                    # Select the Mission again since Event Quests do not have "Play Again" functionality.
-                                    self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
-                                elif farming_mode == "Coop":
-                                    # Head back to the Coop Room.
-                                    self.find_and_click_button("coop_room")
-
-                                    self.wait(1)
-
-                                    # Check for "Daily Missions" popup for Coop.
-                                    if self.image_tools.confirm_location("coop_daily_missions", tries = 1):
-                                        self.find_and_click_button("close")
-
-                                    self.wait(1)
-
-                                    # Now that the bot is back at the Coop Room/Lobby, check if it closed due to time running out.
-                                    if self.image_tools.confirm_location("coop_room_closed", tries = 1):
-                                        self.print_and_save("\n[INFO] Coop room has closed due to time running out.")
-                                        break
-
-                                    # Start the Coop Mission again.
-                                    self.find_and_click_button("coop_start")
-
-                                    self.wait(1)
-
-                                elif farming_mode == "Proving Grounds":
-                                    # Click the "Next Battle" button if there are any battles left.
-                                    if self.find_and_click_button("proving_grounds_next_battle", suppress_error = True):
-                                        self.print_and_save("\n[INFO] Moving onto the next battle for Proving Grounds...")
-
-                                        # Then click the "OK" button to play the next battle.
-                                        self.find_and_click_button("ok")
-                                    else:
-                                        # Otherwise, all battles for the Mission has been completed. Collect the completion rewards at the end.
-                                        self.print_and_save("\n[INFO] Proving Grounds Mission has been completed.")
-                                        self.find_and_click_button("event")
-
-                                        self.wait(2)
-                                        self.find_and_click_button("proving_grounds_open_chest", tries = 5)
-
-                                        if self.image_tools.confirm_location("proving_grounds_completion_loot"):
-                                            self.print_and_save("\n[INFO] Completion rewards has been acquired.")
-
-                                            # Reset the First Time flag so the bot can select a Summon and select the Mission again.
-                                            if self._item_amount_farmed < item_amount_to_farm:
-                                                self.print_and_save("\n[INFO] Starting Proving Grounds Mission again...")
-                                                proving_grounds_first_time = True
-                                                self.find_and_click_button("play_again")
-
-                                # For every other Farming Mode other than Coop and Proving Grounds, handle all popups and perform AP check until the bot reaches the Summon Selection screen.
-                                if farming_mode != "Proving Grounds" and farming_mode != "Coop":
-                                    self._check_for_popups()
-                                    self.check_for_ap()
-
-                        else:
-                            # Select the Mission again if the Party wiped or exited prematurely during Combat Mode.
-                            self.print_and_save("\n[INFO] Restarting the Mission due to Combat Mode returning False...")
-                            self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
-
-                    elif start_check and farming_mode == "Raid":
-                        # Handle the rare case where joining the Raid after selecting the Summon and Party led the bot to the Quest Results screen with no loot to collect.
-                        if self.image_tools.confirm_location("no_loot", tries = 1):
-                            self.print_and_save("\n[INFO] Seems that the Raid just ended. Moving back to the Home screen and joining another Raid...")
-                            self.map_selection.join_raid(mission_name)
-                        else:
-                            # At this point, the Summon and Party have already been selected and the Mission has started. Now commence Combat Mode.
-                            if self.combat_mode.start_combat_mode(self._combat_script):
-                                self.collect_loot()
-
-                                if self._item_amount_farmed < item_amount_to_farm:
-                                    # Generate a resting period if the user enabled it.
-                                    self._delay_between_runs()
-
-                                    # Clear away any Pending Battles.
-                                    self.map_selection.check_for_pending(farming_mode)
-
-                                    # Now join a new Raid.
-                                    self.map_selection.join_raid(mission_name)
-                            else:
-                                # Join a new Raid.
-                                self.map_selection.join_raid(mission_name)
-
-                    elif start_check is False and farming_mode == "Raid":
-                        # If the bot reaches here, that means the Raid ended before the bot could start the Mission after selecting the Summon and Party.
-                        self.print_and_save("\n[INFO] Seems that the Raid ended before the bot was able to join. Now looking for another Raid to join...")
-                        self.map_selection.join_raid(mission_name)
-
-                    elif start_check is False:
-                        raise Exception("Failed to arrive at the Summon Selection screen after selecting the Mission.")
+            # if farming_mode == "Arcarum":
+            #     arcarum_object = Arcarum(self, mission_name, group_number, party_number, item_amount_to_farm, self.combat_script)
+            #     arcarum_object.start()
+            # else:
+            #     if farming_mode != "Raid":
+            #         self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+            #     else:
+            #         self.map_selection.join_raid(mission_name)
+            #
+            #     while self._item_amount_farmed < item_amount_to_farm:
+            #         # Reset the Summon Selection flag.
+            #         summon_check = False
+            #         start_check = False
+            #
+            #         # Loop and attempt to select a Summon. Reset Summons if needed.
+            #         while (summon_check is False and farming_mode != "Coop" and farming_mode != "Proving Grounds") or \
+            #                 (summon_check is False and proving_grounds_first_time is True and farming_mode == "Proving Grounds"):
+            #             summon_check = self.select_summon(self.summon_list, self.summon_element_list)
+            #
+            #             # If the Summon Selection flag is False, that means the Summons were reset.
+            #             if summon_check is False and farming_mode != "Raid":
+            #                 self.print_and_save("\n[INFO] Selecting Mission again after resetting Summons.")
+            #                 self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+            #             elif summon_check is False and farming_mode == "Raid":
+            #                 self.print_and_save("\n[INFO] Joining Raids again after resetting Summons.")
+            #                 self.map_selection.join_raid(mission_name)
+            #
+            #         # Perform Party Selection and then start the Mission. If Farming Mode is Coop, skip this as Coop reuses the same Party.
+            #         if farming_mode != "Coop" and farming_mode != "Proving Grounds":
+            #             start_check = self.find_party_and_start_mission(self.group_number, self.party_number)
+            #         elif farming_mode == "Coop" and self._coop_first_run:
+            #             start_check = self.find_party_and_start_mission(self.group_number, self.party_number)
+            #             self._coop_first_run = False
+            #
+            #             # Now click the "Start" button to start the Coop Mission.
+            #             self.find_and_click_button("coop_start")
+            #         elif farming_mode == "Coop" and self._coop_first_run is False:
+            #             self.print_and_save("\n[INFO] Starting Coop Mission again.")
+            #             start_check = True
+            #         elif farming_mode == "Proving Grounds":
+            #             # Parties are assumed to have already been formed by the player prior to starting. In addition, no need to select a Summon again as it is reused.
+            #             if proving_grounds_first_time:
+            #                 self.check_for_ap()
+            #
+            #                 self.find_and_click_button("ok")
+            #                 proving_grounds_first_time = False
+            #             start_check = True
+            #
+            #         if start_check and farming_mode != "Raid":
+            #             self.wait(3)
+            #
+            #             # Check for the "Items Picked Up" popup for Quest Farming Mode.
+            #             if farming_mode == "Quest" and self.image_tools.confirm_location("items_picked_up", tries = 1):
+            #                 self.find_and_click_button("ok")
+            #
+            #             # Click the "Start" button to start the Proving Grounds Mission.
+            #             if farming_mode == "Proving Grounds":
+            #                 self.print_and_save("\n[INFO] Now starting Mission for Proving Grounds...")
+            #                 self.find_and_click_button("proving_grounds_start")
+            #
+            #             # Finally, start Combat Mode.
+            #             if self.combat_mode.start_combat_mode(self.combat_script):
+            #                 # If it ended successfully, detect loot and repeat if acquired item amount has not been reached.
+            #                 self.collect_loot()
+            #
+            #                 if self._item_amount_farmed < item_amount_to_farm:
+            #                     # Generate a resting period if the user enabled it.
+            #                     self._delay_between_runs()
+            #
+            #                     # Handle special situations for certain Farming Modes.
+            #                     if farming_mode != "Coop" and farming_mode != "Proving Grounds" and not self.find_and_click_button("play_again"):
+            #                         # Clear away any Pending Battles.
+            #                         self.map_selection.check_for_pending(farming_mode)
+            #
+            #                         # Now repeat the Mission.
+            #                         self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+            #                     elif farming_mode == "Event (Token Drawboxes)" and event_quests.__contains__(mission_name):
+            #                         # Select the Mission again since Event Quests do not have "Play Again" functionality.
+            #                         self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+            #                     elif farming_mode == "Coop":
+            #                         # Head back to the Coop Room.
+            #                         self.find_and_click_button("coop_room")
+            #
+            #                         self.wait(1)
+            #
+            #                         # Check for "Daily Missions" popup for Coop.
+            #                         if self.image_tools.confirm_location("coop_daily_missions", tries = 1):
+            #                             self.find_and_click_button("close")
+            #
+            #                         self.wait(1)
+            #
+            #                         # Now that the bot is back at the Coop Room/Lobby, check if it closed due to time running out.
+            #                         if self.image_tools.confirm_location("coop_room_closed", tries = 1):
+            #                             self.print_and_save("\n[INFO] Coop room has closed due to time running out.")
+            #                             break
+            #
+            #                         # Start the Coop Mission again.
+            #                         self.find_and_click_button("coop_start")
+            #
+            #                         self.wait(1)
+            #
+            #                     elif farming_mode == "Proving Grounds":
+            #                         # Click the "Next Battle" button if there are any battles left.
+            #                         if self.find_and_click_button("proving_grounds_next_battle", suppress_error = True):
+            #                             self.print_and_save("\n[INFO] Moving onto the next battle for Proving Grounds...")
+            #
+            #                             # Then click the "OK" button to play the next battle.
+            #                             self.find_and_click_button("ok")
+            #                         else:
+            #                             # Otherwise, all battles for the Mission has been completed. Collect the completion rewards at the end.
+            #                             self.print_and_save("\n[INFO] Proving Grounds Mission has been completed.")
+            #                             self.find_and_click_button("event")
+            #
+            #                             self.wait(2)
+            #                             self.find_and_click_button("proving_grounds_open_chest", tries = 5)
+            #
+            #                             if self.image_tools.confirm_location("proving_grounds_completion_loot"):
+            #                                 self.print_and_save("\n[INFO] Completion rewards has been acquired.")
+            #
+            #                                 # Reset the First Time flag so the bot can select a Summon and select the Mission again.
+            #                                 if self._item_amount_farmed < item_amount_to_farm:
+            #                                     self.print_and_save("\n[INFO] Starting Proving Grounds Mission again...")
+            #                                     proving_grounds_first_time = True
+            #                                     self.find_and_click_button("play_again")
+            #
+            #                     # For every other Farming Mode other than Coop and Proving Grounds, handle all popups and perform AP check until the bot reaches the Summon Selection screen.
+            #                     if farming_mode != "Proving Grounds" and farming_mode != "Coop":
+            #                         self._check_for_popups()
+            #                         self.check_for_ap()
+            #
+            #             else:
+            #                 # Select the Mission again if the Party wiped or exited prematurely during Combat Mode.
+            #                 self.print_and_save("\n[INFO] Restarting the Mission due to Combat Mode returning False...")
+            #                 self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
+            #
+            #         elif start_check and farming_mode == "Raid":
+            #             # Handle the rare case where joining the Raid after selecting the Summon and Party led the bot to the Quest Results screen with no loot to collect.
+            #             if self.image_tools.confirm_location("no_loot", tries = 1):
+            #                 self.print_and_save("\n[INFO] Seems that the Raid just ended. Moving back to the Home screen and joining another Raid...")
+            #                 self.map_selection.join_raid(mission_name)
+            #             else:
+            #                 # At this point, the Summon and Party have already been selected and the Mission has started. Now commence Combat Mode.
+            #                 if self.combat_mode.start_combat_mode(self.combat_script):
+            #                     self.collect_loot()
+            #
+            #                     if self._item_amount_farmed < item_amount_to_farm:
+            #                         # Generate a resting period if the user enabled it.
+            #                         self._delay_between_runs()
+            #
+            #                         # Clear away any Pending Battles.
+            #                         self.map_selection.check_for_pending(farming_mode)
+            #
+            #                         # Now join a new Raid.
+            #                         self.map_selection.join_raid(mission_name)
+            #                 else:
+            #                     # Join a new Raid.
+            #                     self.map_selection.join_raid(mission_name)
+            #
+            #         elif start_check is False and farming_mode == "Raid":
+            #             # If the bot reaches here, that means the Raid ended before the bot could start the Mission after selecting the Summon and Party.
+            #             self.print_and_save("\n[INFO] Seems that the Raid ended before the bot was able to join. Now looking for another Raid to join...")
+            #             self.map_selection.join_raid(mission_name)
+            #
+            #         elif start_check is False:
+            #             raise Exception("Failed to arrive at the Summon Selection screen after selecting the Mission.")
         except Exception as e:
             self.print_and_save(f"\n[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
             self.discord_queue.put(f"> Bot encountered exception in Farming Mode: \n{e}")
