@@ -5,6 +5,27 @@ from typing import List
 import tweepy
 
 
+class RoomStreamException(Exception):
+    pass
+
+
+class RoomStreamListener(tweepy.StreamListener):
+    def __init__(self, number_of_tweets: int):
+        super().__init__()
+        self.tweets = []
+        self._number_of_tweets = number_of_tweets
+
+    def on_status(self, status):
+        print(f"[DEBUG] Stream found: {status.text}")
+        self.tweets.append(status)
+        if len(self.tweets) >= self._number_of_tweets:
+            raise RoomStreamException
+
+    def on_error(self, status_code):
+        print(f"[ERROR] Stream API encountered Error Code {status_code}. Closing the stream...")
+        return False
+
+
 class TwitterRoomFinder:
     """
     Provides the functions needed to perform Twitter API-related tasks such as searching tweets for room codes for raid farming.
@@ -184,7 +205,7 @@ class TwitterRoomFinder:
             count (int): Number of most recent tweets to grab. Defaults to 10.
 
         Returns:
-            tweets (List[str]): List of most recent tweets that match the query.
+            (List[str]): List of room codes cleaned of all other text.
         """
         # Connect to Twitter API if bot has not already done so.
         self._connect_to_twitter_api()
@@ -206,6 +227,7 @@ class TwitterRoomFinder:
             # Search JP tweets first and filter for tweets that the bot has not processed yet.
             tweet_jp = self._api.search(q = query_jp, since = today.strftime('%Y-%m-%d'), count = count)
             for tweet in tweet_jp:
+                print(f"[DEBUG] Regular method for JP found: {tweet.text}.")
                 if tweet.id not in self._list_of_id and len(tweets) < count:
                     tweets.append(tweet)
                     self._list_of_id.append(tweet.id)
@@ -214,26 +236,48 @@ class TwitterRoomFinder:
             if len(tweets) < count:
                 tweet_en = self._api.search(q = query_en, since = today.strftime('%Y-%m-%d'), count = count)
                 for tweet in tweet_en:
+                    print(f"[DEBUG] Regular method for EN found: {tweet.text}.")
                     if tweet.id not in self._list_of_id and len(tweets) < count:
                         tweets.append(tweet)
                         self._list_of_id.append(tweet.id)
 
-            return tweets
+            # Fallback onto the Stream API.
+            if len(tweets) == 0:
+                self._game.print_and_save(f"\n[TWITTER] Regular method failed for finding tweets. Now finding the {count} most recent tweets via the Stream API for {raid_name}.")
+
+                # Create the listener and stream objects.
+                listener = RoomStreamListener(count)
+                stream = tweepy.Stream(auth = self._api.auth, listener = listener)
+
+                # Keep listening to the stream until the listener acquires the necessary amount of tweets.
+                try:
+                    self._game.print_and_save(f"\n[TWITTER] Now listening onto the Stream API for {count} newest tweets for {raid_name}.")
+                    stream.filter(track = [raid_name, self._list_of_raids[raid_name]], filter_level = "none")
+                except RoomStreamException:
+                    print("\n[DEBUG] Closed Twitter stream.")
+
+                return self._clean_tweets(listener.tweets)
+            else:
+                return self._clean_tweets(tweets)
         except Exception:
             self._game.print_and_save(f"[ERROR] Bot got rate-limited or Twitter failed to respond after a certain amount of time. Exact error is: \n{traceback.format_exc()}")
             self._is_bot_running.value = 1
 
-    def clean_tweets(self, tweets: List[str]):
+    def _clean_tweets(self, tweets: List[str]):
         """Clean the tweets passed to this function and parse out the room codes from them.
 
         Args:
             tweets (List[str]): List of tweets with its text unchanged.
 
         Returns:
-            room_codes (Iterable[str]): List of room codes cleaned of all other text.
+            (List[str]): List of room codes cleaned of all other text.
         """
+        if len(tweets) == 0:
+            self._game.print_and_save(f"[TWITTER] There are no recent or detected tweets available for the given raid.")
+            return []
+
         try:
-            self._game.print_and_save(f"\n[TWITTER] Now cleaning up the tweets and parsing for room codes...\n")
+            self._game.print_and_save(f"[TWITTER] Now cleaning up the tweets and parsing for room codes...")
             room_codes = []
 
             for tweet in tweets:

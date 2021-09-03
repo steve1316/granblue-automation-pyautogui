@@ -1202,9 +1202,8 @@ class MapSelection:
             # Loop and try to join a raid from a parsed list of room codes. If none of the room codes worked, wait 30 seconds before trying again with a new set of room codes for a maximum of 10 tries.
             tries = 10
             while tries > 0:
-                # Find 5 most recent tweets for the specified raid and then parse for room codes.
-                tweets = self._game.room_finder.find_most_recent(mission_name, 5)
-                room_codes = self._game.room_finder.clean_tweets(tweets)
+                # Find 5 most recent tweets for the specified raid and then parse for room codes. If the regular method of searching tweets failed, use the Stream API.
+                room_codes = self._game.room_finder.find_most_recent(mission_name, 5)
 
                 for room_code in room_codes:
                     # Select the "Room Code" textbox and then clear all text from it.
