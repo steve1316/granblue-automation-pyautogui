@@ -33,10 +33,12 @@ class Arcarum:
         self._first_run = True
         self._encountered_boss = False
 
-        # Read the config.ini to get custom settings for Arcarum bosses.
         config = ConfigParser()
         config.read("config.ini")
+
+        # #### config.ini ####
         self._enable_stop_on_arcarum_boss = config.getboolean("arcarum", "enable_stop_on_arcarum_boss")
+        # #### end of config.ini ####
 
     def _navigate_to_map(self) -> bool:
         """Navigates to the specified Arcarum expedition.

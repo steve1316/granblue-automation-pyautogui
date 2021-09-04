@@ -428,7 +428,7 @@ class MainWindow(QObject):
 
     @Slot()
     def update_console_log(self):
-        """Grab logging messages from the Queue and then output to the frontend log.
+        """Grab logging messages from the Queue and then output to the frontend's log.
 
         @Slot()
         
@@ -460,7 +460,7 @@ class MainWindow(QObject):
 
     @Slot(str)
     def update_test_mode(self, flag: bool):
-        """Grab logging messages from the Queue and then output to the frontend log.
+        """Grab logging messages from the Queue and then output to the frontend's log.
 
         @Slot(str)
 
