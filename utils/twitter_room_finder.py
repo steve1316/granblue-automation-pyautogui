@@ -197,12 +197,12 @@ class TwitterRoomFinder:
                     f"\n[ERROR] Connection to the Twitter API failed. Check the config.ini and verify that the keys and tokens are correct. Exact error is: \n{traceback.format_exc()}")
                 self._is_bot_running.value = 1
 
-    def find_most_recent(self, raid_name: str, count: int = 10):
-        """Start listening to tweets containing room codes starting with JP and then EN tweets if there was not enough collected tweets from JP.
+    def find_most_recent(self, raid_name: str, count: int = 3):
+        """Start listening to tweets containing room codes using the Stream API.
 
         Args:
             raid_name (str): Name and level of the raid that appears in tweets containing the room code to it.
-            count (int): Number of most recent tweets to grab. Defaults to 10.
+            count (int): Number of most recent tweets to grab. Defaults to 3.
 
         Returns:
             (List[str]): List of room codes cleaned of all other text.
@@ -210,55 +210,26 @@ class TwitterRoomFinder:
         # Connect to Twitter API if bot has not already done so.
         self._connect_to_twitter_api()
 
-        self._game.print_and_save(f"\n[TWITTER] Now finding the {count} most recent tweets for {raid_name}.")
-
-        today = datetime.datetime.today()
-        query_en = f"+(:Battle ID) AND +({raid_name})"
-        query_jp = f"+(:参戦ID) AND +({self._list_of_raids[raid_name]})"
+        self._game.print_and_save(f"\n[TWITTER] Now finding the {count} most recent tweets for {raid_name} using Stream API.")
 
         # Example of expected tweet:
         #   CUSTOM_USER_MESSAGE XXXXXXXX :Battle ID
         #   I need backup!
         #   LEVEL and NAME OF RAID
 
-        tweets = []
-
         try:
-            # Search JP tweets first and filter for tweets that the bot has not processed yet.
-            tweet_jp = self._api.search(q = query_jp, since = today.strftime('%Y-%m-%d'), count = count)
-            for tweet in tweet_jp:
-                print(f"[DEBUG] Regular method for JP found: {tweet.text}.")
-                if tweet.id not in self._list_of_id and len(tweets) < count:
-                    tweets.append(tweet)
-                    self._list_of_id.append(tweet.id)
+            # Create the listener and stream objects.
+            listener = RoomStreamListener(count)
+            stream = tweepy.Stream(auth = self._api.auth, listener = listener)
 
-            # Search EN tweets only if the filtered JP tweets was less than the desired amount.
-            if len(tweets) < count:
-                tweet_en = self._api.search(q = query_en, since = today.strftime('%Y-%m-%d'), count = count)
-                for tweet in tweet_en:
-                    print(f"[DEBUG] Regular method for EN found: {tweet.text}.")
-                    if tweet.id not in self._list_of_id and len(tweets) < count:
-                        tweets.append(tweet)
-                        self._list_of_id.append(tweet.id)
+            # Keep listening to the stream until the listener acquires the necessary amount of tweets.
+            try:
+                self._game.print_and_save(f"\n[TWITTER] Now listening onto the Stream API for {count} newest tweets for {raid_name}.")
+                stream.filter(track = [raid_name, self._list_of_raids[raid_name]], filter_level = "none")
+            except RoomStreamException:
+                print("\n[DEBUG] Closed Twitter stream.")
 
-            # Fallback onto the Stream API.
-            if len(tweets) == 0:
-                self._game.print_and_save(f"\n[TWITTER] Regular method failed for finding tweets. Now finding the {count} most recent tweets via the Stream API for {raid_name}.")
-
-                # Create the listener and stream objects.
-                listener = RoomStreamListener(count)
-                stream = tweepy.Stream(auth = self._api.auth, listener = listener)
-
-                # Keep listening to the stream until the listener acquires the necessary amount of tweets.
-                try:
-                    self._game.print_and_save(f"\n[TWITTER] Now listening onto the Stream API for {count} newest tweets for {raid_name}.")
-                    stream.filter(track = [raid_name, self._list_of_raids[raid_name]], filter_level = "none")
-                except RoomStreamException:
-                    print("\n[DEBUG] Closed Twitter stream.")
-
-                return self._clean_tweets(listener.tweets)
-            else:
-                return self._clean_tweets(tweets)
+            return self._clean_tweets(listener.tweets)
         except Exception:
             self._game.print_and_save(f"[ERROR] Bot got rate-limited or Twitter failed to respond after a certain amount of time. Exact error is: \n{traceback.format_exc()}")
             self._is_bot_running.value = 1
