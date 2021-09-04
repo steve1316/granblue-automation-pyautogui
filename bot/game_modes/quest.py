@@ -209,10 +209,15 @@ class Quest:
         # Start the navigation process.
         if first_run:
             self._navigate()
+        elif self._game.find_and_click_button("play_again"):
+            self._game.check_for_popups()
         else:
             # If the bot cannot find the "Play Again" button, check for Pending Battles and then perform navigation again.
             self._game.check_for_pending()
             self._navigate()
+
+        # Check for AP.
+        self._game.check_for_ap()
 
         # Check if the bot is at the Summon Selection screen.
         if self._game.check_summon_location():
