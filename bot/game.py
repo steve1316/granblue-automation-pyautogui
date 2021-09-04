@@ -12,7 +12,6 @@ import pyautogui
 from bot.combat_mode import CombatMode
 from bot.game_modes.quest import Quest
 from bot.game_modes.special import Special
-from bot.map_selection import MapSelection
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
 from utils.twitter_room_finder import TwitterRoomFinder
@@ -98,15 +97,14 @@ class Game:
         self._queue = queue
 
         # Keep track of a bot running status flag shared in memory. Value of 0 means the bot is currently running and a value of 1 means that the bot has stopped.
-        self._is_bot_running = is_bot_running
+        self.is_bot_running = is_bot_running
 
         # Set a debug flag to determine whether or not to print debugging messages.
         self._debug_mode = debug_mode
 
         # Initialize the objects of helper classes.
         self.combat_mode = CombatMode(self, is_bot_running, debug_mode = self._debug_mode)
-        self.map_selection = MapSelection(self, is_bot_running)
-        self.room_finder = TwitterRoomFinder(self, self._is_bot_running, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3], debug_mode = self._debug_mode)
+        self.room_finder = TwitterRoomFinder(self, self.is_bot_running, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3], debug_mode = self._debug_mode)
         self.image_tools = ImageUtils(self, debug_mode = self._debug_mode)
         self.mouse_tools = MouseUtils(self, enable_bezier_curve = enable_bezier_curve_mouse_movement, mouse_speed = custom_mouse_speed, debug_mode = self._debug_mode)
 
@@ -331,7 +329,7 @@ class Game:
             self.print_and_save(f"\n[ERROR] Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
             self.discord_queue.put(f"> Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
             self.image_tools.generate_alert_for_captcha()
-            self._is_bot_running.value = 1
+            self.is_bot_running.value = 1
             self.wait(1)
 
     def _delay_between_runs(self):
@@ -442,17 +440,6 @@ class Game:
                     self.print_and_save("[SUCCESS] Summons have now been refreshed.")
 
         return None
-
-    def check_summon_location(self) -> bool:
-        """Checks if the bot arrived at the Summon Selection screen.
-
-        Returns:
-            (bool): True if the bot is currently at the Summon Selection screen.
-        """
-        if self.image_tools.confirm_location("select_a_summon"):
-            return True
-        else:
-            return False
 
     def find_party_and_start_mission(self, group_number: int, party_number: int, tries: int = 3):
         """Select the specified Group and Party. It will then start the mission.
@@ -779,12 +766,12 @@ class Game:
             #     self.map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self.difficulty)
             #     break
 
-            # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select the Mission again.
-            if (self.farming_mode == "Event (Token Drawboxes)" or self.farming_mode == "Guild Wars") and self.image_tools.confirm_location("not_enough_treasure", tries = 1):
-                self.find_and_click_button("ok")
-                self._delay_between_runs()
-                self.map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self.difficulty)
-                break
+            # # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select the Mission again.
+            # if (self.farming_mode == "Event (Token Drawboxes)" or self.farming_mode == "Guild Wars") and self.image_tools.confirm_location("not_enough_treasure", tries = 1):
+            #     self.find_and_click_button("ok")
+            #     self._delay_between_runs()
+            #     self.map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self.difficulty)
+            #     break
 
             # Attempt to close the popup by clicking on any detected "Close" and "Cancel" buttons.
             if self.find_and_click_button("close", tries = 1) is False:
@@ -834,12 +821,14 @@ class Game:
         Returns:
             (bool): Return True if Pending Battles were detected. Otherwise, return False.
         """
+        self.print_and_save(f"\n[INFO] Starting process of checking for Pending Battles...")
+
         self.wait(1)
 
         if (self.image_tools.confirm_location("check_your_pending_battles", tries = 1)) or \
                 (self.image_tools.confirm_location("pending_battles", tries = 1)) or \
                 (self.find_and_click_button("quest_results_pending_battles", tries = 1)):
-            self.print_and_save(f"\n[INFO] Found Pending Battles that need collecting from.")
+            self.print_and_save(f"[INFO] Found Pending Battles that need collecting from.")
 
             self.find_and_click_button("ok", tries = 1)
 
@@ -902,103 +891,7 @@ class Game:
                 self.print_and_save("################################################################################")
                 self.print_and_save("################################################################################\n")
 
-            # if farming_mode == "Special" or farming_mode == "Event" or farming_mode == "Event (Token Drawboxes)" or farming_mode == "Rise of the Beasts":
-            #     if mission_name.find("N ") == 0:
-            #         difficulty = "Normal"
-            #     elif mission_name.find("H ") == 0:
-            #         difficulty = "Hard"
-            #     elif mission_name.find("VH ") == 0:
-            #         difficulty = "Very Hard"
-            #     elif mission_name.find("EX ") == 0:
-            #         difficulty = "Extreme"
-            #     elif mission_name.find("IM ") == 0:
-            #         difficulty = "Impossible"
-            # elif farming_mode == "Dread Barrage":
-            #     if mission_name.find("1 Star") == 0:
-            #         difficulty = "1 Star"
-            #     elif mission_name.find("2 Star") == 0:
-            #         difficulty = "2 Star"
-            #     elif mission_name.find("3 Star") == 0:
-            #         difficulty = "3 Star"
-            #     elif mission_name.find("4 Star") == 0:
-            #         difficulty = "4 Star"
-            #     elif mission_name.find("5 Star") == 0:
-            #         difficulty = "5 Star"
-            # elif farming_mode == "Guild Wars" or farming_mode == "Proving Grounds":
-            #     if mission_name == "Very Hard":
-            #         difficulty = "Very Hard"
-            #     elif mission_name == "Extreme":
-            #         difficulty = "Extreme"
-            #     elif mission_name == "Extreme+":
-            #         difficulty = "Extreme+"
-            #     elif mission_name == "NM90":
-            #         difficulty = "NM90"
-            #     elif mission_name == "NM95":
-            #         difficulty = "NM95"
-            #     elif mission_name == "NM100":
-            #         difficulty = "NM100"
-            #     elif mission_name == "NM150":
-            #         difficulty = "NM150"
-            #
-            # event_quests = ["N Event Quest", "H Event Quest", "VH Event Quest", "EX Event Quest"]
             # proving_grounds_first_time = True
-
-            # # Parse the difficulty for the chosen mission.
-            # difficulty = ""
-            # if farming_mode == "Special" or farming_mode == "Event" or farming_mode == "Event (Token Drawboxes)" or farming_mode == "Rise of the Beasts":
-            #     if mission_name.find("N ") == 0:
-            #         difficulty = "Normal"
-            #     elif mission_name.find("H ") == 0:
-            #         difficulty = "Hard"
-            #     elif mission_name.find("VH ") == 0:
-            #         difficulty = "Very Hard"
-            #     elif mission_name.find("EX ") == 0:
-            #         difficulty = "Extreme"
-            #     elif mission_name.find("IM ") == 0:
-            #         difficulty = "Impossible"
-            # elif farming_mode == "Dread Barrage":
-            #     if mission_name.find("1 Star") == 0:
-            #         difficulty = "1 Star"
-            #     elif mission_name.find("2 Star") == 0:
-            #         difficulty = "2 Star"
-            #     elif mission_name.find("3 Star") == 0:
-            #         difficulty = "3 Star"
-            #     elif mission_name.find("4 Star") == 0:
-            #         difficulty = "4 Star"
-            #     elif mission_name.find("5 Star") == 0:
-            #         difficulty = "5 Star"
-            # elif farming_mode == "Guild Wars" or farming_mode == "Proving Grounds":
-            #     if mission_name == "Very Hard":
-            #         difficulty = "Very Hard"
-            #     elif mission_name == "Extreme":
-            #         difficulty = "Extreme"
-            #     elif mission_name == "Extreme+":
-            #         difficulty = "Extreme+"
-            #     elif mission_name == "NM90":
-            #         difficulty = "NM90"
-            #     elif mission_name == "NM95":
-            #         difficulty = "NM95"
-            #     elif mission_name == "NM100":
-            #         difficulty = "NM100"
-            #     elif mission_name == "NM150":
-            #         difficulty = "NM150"
-            #
-            # self._item_amount_farmed = 0
-            # self._amount_of_runs_finished = 0
-            # event_quests = ["N Event Quest", "H Event Quest", "VH Event Quest", "EX Event Quest"]
-            # proving_grounds_first_time = True
-            #
-            # # Save the following information to share between the Game class and the MapSelection class.
-            # self._item_name = item_name
-            # self._item_amount_to_farm = item_amount_to_farm
-            # self.farming_mode = farming_mode
-            # self._map_name = map_name
-            # self.mission_name = mission_name
-            # self.difficulty = difficulty
-            # self._summon_element_list = summon_element_list
-            # self._summon_list = summon_list
-            # self._group_number = group_number
-            # self._party_number = party_number
 
             first_run = True
             while self._item_amount_farmed < self._item_amount_to_farm:
@@ -1013,171 +906,6 @@ class Game:
 
                     first_run = False
 
-            # if farming_mode == "Arcarum":
-            #     arcarum_object = Arcarum(self, mission_name, group_number, party_number, item_amount_to_farm, self.combat_script)
-            #     arcarum_object.start()
-            # else:
-            #     if farming_mode != "Raid":
-            #         self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
-            #     else:
-            #         self.map_selection.join_raid(mission_name)
-            #
-            #     while self._item_amount_farmed < item_amount_to_farm:
-            #         # Reset the Summon Selection flag.
-            #         summon_check = False
-            #         start_check = False
-            #
-            #         # Loop and attempt to select a Summon. Reset Summons if needed.
-            #         while (summon_check is False and farming_mode != "Coop" and farming_mode != "Proving Grounds") or \
-            #                 (summon_check is False and proving_grounds_first_time is True and farming_mode == "Proving Grounds"):
-            #             summon_check = self.select_summon(self.summon_list, self.summon_element_list)
-            #
-            #             # If the Summon Selection flag is False, that means the Summons were reset.
-            #             if summon_check is False and farming_mode != "Raid":
-            #                 self.print_and_save("\n[INFO] Selecting Mission again after resetting Summons.")
-            #                 self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
-            #             elif summon_check is False and farming_mode == "Raid":
-            #                 self.print_and_save("\n[INFO] Joining Raids again after resetting Summons.")
-            #                 self.map_selection.join_raid(mission_name)
-            #
-            #         # Perform Party Selection and then start the Mission. If Farming Mode is Coop, skip this as Coop reuses the same Party.
-            #         if farming_mode != "Coop" and farming_mode != "Proving Grounds":
-            #             start_check = self.find_party_and_start_mission(self.group_number, self.party_number)
-            #         elif farming_mode == "Coop" and self._coop_first_run:
-            #             start_check = self.find_party_and_start_mission(self.group_number, self.party_number)
-            #             self._coop_first_run = False
-            #
-            #             # Now click the "Start" button to start the Coop Mission.
-            #             self.find_and_click_button("coop_start")
-            #         elif farming_mode == "Coop" and self._coop_first_run is False:
-            #             self.print_and_save("\n[INFO] Starting Coop Mission again.")
-            #             start_check = True
-            #         elif farming_mode == "Proving Grounds":
-            #             # Parties are assumed to have already been formed by the player prior to starting. In addition, no need to select a Summon again as it is reused.
-            #             if proving_grounds_first_time:
-            #                 self.check_for_ap()
-            #
-            #                 self.find_and_click_button("ok")
-            #                 proving_grounds_first_time = False
-            #             start_check = True
-            #
-            #         if start_check and farming_mode != "Raid":
-            #             self.wait(3)
-            #
-            #             # Check for the "Items Picked Up" popup for Quest Farming Mode.
-            #             if farming_mode == "Quest" and self.image_tools.confirm_location("items_picked_up", tries = 1):
-            #                 self.find_and_click_button("ok")
-            #
-            #             # Click the "Start" button to start the Proving Grounds Mission.
-            #             if farming_mode == "Proving Grounds":
-            #                 self.print_and_save("\n[INFO] Now starting Mission for Proving Grounds...")
-            #                 self.find_and_click_button("proving_grounds_start")
-            #
-            #             # Finally, start Combat Mode.
-            #             if self.combat_mode.start_combat_mode(self.combat_script):
-            #                 # If it ended successfully, detect loot and repeat if acquired item amount has not been reached.
-            #                 self.collect_loot()
-            #
-            #                 if self._item_amount_farmed < item_amount_to_farm:
-            #                     # Generate a resting period if the user enabled it.
-            #                     self._delay_between_runs()
-            #
-            #                     # Handle special situations for certain Farming Modes.
-            #                     if farming_mode != "Coop" and farming_mode != "Proving Grounds" and not self.find_and_click_button("play_again"):
-            #                         # Clear away any Pending Battles.
-            #                         self.map_selection.check_for_pending(farming_mode)
-            #
-            #                         # Now repeat the Mission.
-            #                         self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
-            #                     elif farming_mode == "Event (Token Drawboxes)" and event_quests.__contains__(mission_name):
-            #                         # Select the Mission again since Event Quests do not have "Play Again" functionality.
-            #                         self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
-            #                     elif farming_mode == "Coop":
-            #                         # Head back to the Coop Room.
-            #                         self.find_and_click_button("coop_room")
-            #
-            #                         self.wait(1)
-            #
-            #                         # Check for "Daily Missions" popup for Coop.
-            #                         if self.image_tools.confirm_location("coop_daily_missions", tries = 1):
-            #                             self.find_and_click_button("close")
-            #
-            #                         self.wait(1)
-            #
-            #                         # Now that the bot is back at the Coop Room/Lobby, check if it closed due to time running out.
-            #                         if self.image_tools.confirm_location("coop_room_closed", tries = 1):
-            #                             self.print_and_save("\n[INFO] Coop room has closed due to time running out.")
-            #                             break
-            #
-            #                         # Start the Coop Mission again.
-            #                         self.find_and_click_button("coop_start")
-            #
-            #                         self.wait(1)
-            #
-            #                     elif farming_mode == "Proving Grounds":
-            #                         # Click the "Next Battle" button if there are any battles left.
-            #                         if self.find_and_click_button("proving_grounds_next_battle", suppress_error = True):
-            #                             self.print_and_save("\n[INFO] Moving onto the next battle for Proving Grounds...")
-            #
-            #                             # Then click the "OK" button to play the next battle.
-            #                             self.find_and_click_button("ok")
-            #                         else:
-            #                             # Otherwise, all battles for the Mission has been completed. Collect the completion rewards at the end.
-            #                             self.print_and_save("\n[INFO] Proving Grounds Mission has been completed.")
-            #                             self.find_and_click_button("event")
-            #
-            #                             self.wait(2)
-            #                             self.find_and_click_button("proving_grounds_open_chest", tries = 5)
-            #
-            #                             if self.image_tools.confirm_location("proving_grounds_completion_loot"):
-            #                                 self.print_and_save("\n[INFO] Completion rewards has been acquired.")
-            #
-            #                                 # Reset the First Time flag so the bot can select a Summon and select the Mission again.
-            #                                 if self._item_amount_farmed < item_amount_to_farm:
-            #                                     self.print_and_save("\n[INFO] Starting Proving Grounds Mission again...")
-            #                                     proving_grounds_first_time = True
-            #                                     self.find_and_click_button("play_again")
-            #
-            #                     # For every other Farming Mode other than Coop and Proving Grounds, handle all popups and perform AP check until the bot reaches the Summon Selection screen.
-            #                     if farming_mode != "Proving Grounds" and farming_mode != "Coop":
-            #                         self._check_for_popups()
-            #                         self.check_for_ap()
-            #
-            #             else:
-            #                 # Select the Mission again if the Party wiped or exited prematurely during Combat Mode.
-            #                 self.print_and_save("\n[INFO] Restarting the Mission due to Combat Mode returning False...")
-            #                 self.map_selection.select_map(farming_mode, map_name, mission_name, difficulty)
-            #
-            #         elif start_check and farming_mode == "Raid":
-            #             # Handle the rare case where joining the Raid after selecting the Summon and Party led the bot to the Quest Results screen with no loot to collect.
-            #             if self.image_tools.confirm_location("no_loot", tries = 1):
-            #                 self.print_and_save("\n[INFO] Seems that the Raid just ended. Moving back to the Home screen and joining another Raid...")
-            #                 self.map_selection.join_raid(mission_name)
-            #             else:
-            #                 # At this point, the Summon and Party have already been selected and the Mission has started. Now commence Combat Mode.
-            #                 if self.combat_mode.start_combat_mode(self.combat_script):
-            #                     self.collect_loot()
-            #
-            #                     if self._item_amount_farmed < item_amount_to_farm:
-            #                         # Generate a resting period if the user enabled it.
-            #                         self._delay_between_runs()
-            #
-            #                         # Clear away any Pending Battles.
-            #                         self.map_selection.check_for_pending(farming_mode)
-            #
-            #                         # Now join a new Raid.
-            #                         self.map_selection.join_raid(mission_name)
-            #                 else:
-            #                     # Join a new Raid.
-            #                     self.map_selection.join_raid(mission_name)
-            #
-            #         elif start_check is False and farming_mode == "Raid":
-            #             # If the bot reaches here, that means the Raid ended before the bot could start the Mission after selecting the Summon and Party.
-            #             self.print_and_save("\n[INFO] Seems that the Raid ended before the bot was able to join. Now looking for another Raid to join...")
-            #             self.map_selection.join_raid(mission_name)
-            #
-            #         elif start_check is False:
-            #             raise Exception("Failed to arrive at the Summon Selection screen after selecting the Mission.")
         except Exception as e:
             self.print_and_save(f"\n[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
             self.discord_queue.put(f"> Bot encountered exception in Farming Mode: \n{e}")
@@ -1188,5 +916,5 @@ class Game:
         self.print_and_save("################################################################################")
         self.print_and_save("################################################################################\n")
 
-        self._is_bot_running.value = 1
+        self.is_bot_running.value = 1
         return None

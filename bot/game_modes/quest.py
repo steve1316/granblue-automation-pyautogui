@@ -220,16 +220,16 @@ class Quest:
         self._game.check_for_ap()
 
         # Check if the bot is at the Summon Selection screen.
-        if self._game.check_summon_location():
+        if self._game.image_tools.confirm_location("select_a_summon"):
             summon_check = self._game.select_summon(self._game.summon_list, self._game.summon_element_list)
-
             if summon_check:
                 # Select the Party.
                 self._game.find_party_and_start_mission(self._game.group_number, self._game.party_number)
 
                 self._game.wait(1)
 
-                if self._game.image_tools.confirm_location("items_picked_up", tries = 1):
+                # Close the "Item Picked Up" popup.
+                if self._game.image_tools.confirm_location("items_picked_up"):
                     self._game.find_and_click_button("ok")
 
                 # Now start Combat Mode and detect any item drops.
