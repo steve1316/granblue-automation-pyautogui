@@ -11,6 +11,7 @@ import pyautogui
 
 from bot.combat_mode import CombatMode
 from bot.game_modes.coop import Coop
+from bot.game_modes.dread_barrage import DreadBarrage
 from bot.game_modes.event import Event
 from bot.game_modes.quest import Quest
 from bot.game_modes.raid import Raid
@@ -143,6 +144,8 @@ class Game:
             self._raid = Raid(self, self.mission_name)
         elif self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)":
             self._event = Event(self, self.mission_name)
+        elif self.farming_mode == "Dread Barrage":
+            self._dread_barrage = DreadBarrage(self, self.mission_name)
 
         if test_mode is False:
             # Calibrate the dimensions of the bot window on bot launch.
@@ -902,6 +905,8 @@ class Game:
                     self._item_amount_farmed += self._raid.start(first_run)
                 elif self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)":
                     self._item_amount_farmed += self._event.start(first_run)
+                elif self.farming_mode == "Dread Barrage":
+                    self._item_amount_farmed += self._dread_barrage.start(first_run)
 
                 if self._item_amount_farmed < self._item_amount_to_farm:
                     # Generate a resting period if the user enabled it.
