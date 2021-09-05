@@ -13,7 +13,7 @@ from bot.combat_mode import CombatMode
 from bot.game_modes.coop import Coop
 from bot.game_modes.dread_barrage import DreadBarrage
 from bot.game_modes.event import Event
-from bot.game_modes.gw import GuildWars
+from bot.game_modes.guild_wars import GuildWars
 from bot.game_modes.proving_grounds import ProvingGrounds
 from bot.game_modes.quest import Quest
 from bot.game_modes.raid import Raid
@@ -919,6 +919,8 @@ class Game:
                     self._item_amount_farmed += self._event.start(first_run)
                 elif self.farming_mode == "Rise of the Beasts":
                     self._item_amount_farmed += self._rise_of_the_beasts.start(first_run)
+                elif self.farming_mode == "Guild Wars":
+                    self._item_amount_farmed += self._guild_wars.start(first_run)
                 elif self.farming_mode == "Dread Barrage":
                     self._item_amount_farmed += self._dread_barrage.start(first_run)
 

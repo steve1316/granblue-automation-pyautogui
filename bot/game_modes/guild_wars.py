@@ -73,7 +73,6 @@ class GuildWars:
                         # Alert the user if they did not unlock Extreme+ and stop the bot.
                         if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 5):
                             self._game.image_tools.generate_alert("You did not unlock Extreme+ yet!")
-                            self._game.is_bot_running.value = 1
                             raise GuildWarsException("You did not unlock Extreme+ yet!")
 
             else:
@@ -102,7 +101,6 @@ class GuildWars:
                         # Alert the user if they lack the meat to host this and stop the bot.
                         if not self._game.image_tools.wait_vanish("ok", 5):
                             self._game.image_tools.generate_alert("You do not have enough meat to host this NM90!")
-                            self._game.is_bot_running.value = 1
                             raise GuildWarsException("You do not have enough meat to host this NM90!")
 
                     # If it is not the first/second day of Guild Wars, that means that other difficulties are now available.
@@ -135,7 +133,6 @@ class GuildWars:
                         # Alert the user if they did not unlock Extreme+ and stop the bot.
                         if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 5):
                             self._game.image_tools.generate_alert("You did not unlock Extreme+ yet!")
-                            self._game.is_bot_running.value = 1
                             raise GuildWarsException("You did not unlock Extreme+ yet!")
 
         return None
