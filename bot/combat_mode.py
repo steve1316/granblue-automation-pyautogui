@@ -45,10 +45,10 @@ class CombatMode:
 
         party_wipe_indicator = self._game.image_tools.find_button("party_wipe_indicator", tries = 1, suppress_error = True)
         if party_wipe_indicator is not None:
-            # Click on the blue indicator to get rid of the overlay.
-            self._game.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1], "party_wipe_indicator")
-
             if (self._game.farming_mode != "Raid" and self._game.farming_mode != "Dread Barrage") and self._game.image_tools.confirm_location("continue"):
+                # Click on the blue indicator to get rid of the overlay.
+                self._game.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1], "party_wipe_indicator")
+
                 self._game.print_and_save(f"[WARNING] Party has unfortunately wiped during Combat Mode. Retreating now...")
 
                 # Cancel the popup that asks you if you want to use a Full Elixir to come back. Then click the red "Retreat" button.
@@ -62,6 +62,9 @@ class CombatMode:
                 self._game.go_back_home(confirm_location_check = True)
                 self._retreat_check = True
             elif self._game.farming_mode == "Coop" and self._game.image_tools.confirm_location("salute_participants"):
+                # Click on the blue indicator to get rid of the overlay.
+                self._game.mouse_tools.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1], "party_wipe_indicator")
+
                 # Salute the participants.
                 self._game.print_and_save(f"[WARNING] Party has unfortunately wiped during Combat Mode. Leaving the Coop room...")
                 self._game.find_and_click_button("salute")
