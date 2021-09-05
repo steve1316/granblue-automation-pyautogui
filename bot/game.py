@@ -12,6 +12,7 @@ import pyautogui
 from bot.combat_mode import CombatMode
 from bot.game_modes.coop import Coop
 from bot.game_modes.quest import Quest
+from bot.game_modes.raid import Raid
 from bot.game_modes.special import Special
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
@@ -137,6 +138,8 @@ class Game:
             self._special = Special(self, self._map_name, self.mission_name)
         elif self.farming_mode == "Coop":
             self._coop = Coop(self, self.mission_name)
+        elif self.farming_mode == "Raid":
+            self._raid = Raid(self, self.mission_name)
 
         if test_mode is False:
             # Calibrate the dimensions of the bot window on bot launch.
@@ -378,6 +381,8 @@ class Game:
         Returns:
             (bool): True if the Summon was found and clicked. Otherwise, return False.
         """
+        self.print_and_save("\n[INFO] Starting process for Support Summon Selection...")
+
         # Format the Summon name and Summon element name strings.
         for idx, summon in enumerate(summon_list):
             summon_list[idx] = summon.lower().replace(" ", "_")
@@ -899,6 +904,8 @@ class Game:
                     self._item_amount_farmed += self._special.start(first_run)
                 elif self.farming_mode == "Coop":
                     self._item_amount_farmed += self._coop.start(first_run)
+                elif self.farming_mode == "Raid":
+                    self._item_amount_farmed += self._raid.start(first_run)
 
                 if self._item_amount_farmed < self._item_amount_to_farm:
                     # Generate a resting period if the user enabled it.
