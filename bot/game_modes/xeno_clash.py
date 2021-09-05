@@ -65,7 +65,7 @@ class XenoClash:
         # #### end of Advanced Setup ####
         #################################
 
-    def _check_for_xeno_clash_nightmare(self):
+    def check_for_xeno_clash_nightmare(self):
         """Checks for Xeno Clash Nightmare and if it appears and the user enabled it in config.ini, start it.
 
         Returns:

@@ -925,6 +925,8 @@ class Game:
                     self.item_amount_farmed += self._dread_barrage.start(first_run)
                 elif self.farming_mode == "Proving Grounds":
                     self.item_amount_farmed += self._proving_grounds.start(first_run)
+                elif self.farming_mode == "Xeno Clash":
+                    self.item_amount_farmed += self._xeno_clash.start(first_run)
 
                 if self.item_amount_farmed < self.item_amount_to_farm:
                     # Generate a resting period if the user enabled it.
