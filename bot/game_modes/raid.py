@@ -28,6 +28,11 @@ class Raid:
         return None
 
     def _clear_joined_raids(self):
+        """Begin process to wait out the joined raids if there are 3 or more currently active.
+
+        Returns:
+            None
+        """
         # If the maximum number of raids has been joined, collect any pending rewards with a interval of 30 seconds in between until the number of joined raids is below 3.
         while self._raids_joined >= 3:
             self._game.print_and_save(f"\n[INFO] Maximum raids of 3 has been joined. Waiting 30 seconds to see if any finish.")
@@ -47,6 +52,13 @@ class Raid:
         return None
 
     def _join_raid(self) -> bool:
+        """Start the process to fetch a valid room code and join it.
+
+        Returns:
+            (bool): True if the bot arrived at the Summon Selection screen.
+        """
+        recovery_time = 15
+
         # Make preparations for farming raids by saving the location of the "Join Room" button and the "Room Code" textbox.
         join_room_button = self._game.image_tools.find_button("join_a_room")
         room_code_textbox = (join_room_button[0] - 185, join_room_button[1])
@@ -70,7 +82,7 @@ class Raid:
                 self._game.mouse_tools.move_and_click_point(join_room_button[0], join_room_button[1], "join_a_room")
 
                 # If the room code is valid and the raid is able to be joined, break out and head to the Summon Selection screen.
-                if self._game.find_and_click_button("ok") is False:
+                if self._game.find_and_click_button("ok", suppress_error = True) is False:
                     # Check for EP.
                     self._game.check_for_ep()
 
@@ -87,12 +99,17 @@ class Raid:
                     self._game.find_and_click_button("enter_id")
 
             tries -= 1
-            self._game.print_and_save(f"\n[WARNING] Could not find any valid room codes. \nWaiting 15 seconds and then trying again with {tries} tries left before exiting.")
-            self._game.wait(15)
+            self._game.print_and_save(f"\n[WARNING] Could not find any valid room codes. \nWaiting {recovery_time} seconds and then trying again with {tries} tries left before exiting.")
+            self._game.wait(recovery_time)
 
-        return False
+        raise RaidException("Failed to find any valid room codes for 10 total times.")
 
-    def _navigate(self) -> bool:
+    def _navigate(self):
+        """Navigates to the specified Raid.
+
+        Returns:
+            None
+        """
         # Head to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
@@ -120,7 +137,7 @@ class Raid:
             # Click on the "Enter ID" button and then start the process to join a raid.
             self._game.print_and_save(f"\n[INFO] Now moving to the \"Enter ID\" screen.")
             if self._game.find_and_click_button("enter_id"):
-                return self._join_raid()
+                self._join_raid()
         else:
             raise RaidException("Failed to reach the Backup Requests screen.")
 
@@ -138,10 +155,8 @@ class Raid:
         # Start the navigation process.
         if first_run:
             self._navigate()
-        elif self._game.find_and_click_button("play_again"):
-            self._game.check_for_popups()
         else:
-            # If the bot cannot find the "Play Again" button, check for Pending Battles and then perform navigation again.
+            # Check for Pending Battles and then perform navigation again.
             self._game.check_for_pending()
             self._navigate()
 
