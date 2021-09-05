@@ -80,7 +80,7 @@ class Special:
         # #### end of Advanced Setup ####
         #################################
 
-    def _check_for_dimensional_halo(self):
+    def check_for_dimensional_halo(self):
         """Checks for Dimensional Halo and if it appears and the user enabled it in config.ini, start it.
 
         Returns:
