@@ -10,6 +10,7 @@ from typing import List
 import pyautogui
 
 from bot.combat_mode import CombatMode
+from bot.game_modes.coop import Coop
 from bot.game_modes.quest import Quest
 from bot.game_modes.special import Special
 from utils.image_utils import ImageUtils
@@ -127,7 +128,6 @@ class Game:
         self.group_number = group_number
         self.party_number = party_number
         self._amount_of_runs_finished = 0
-        self._coop_first_run = True
         self._party_selection_first_run = True
 
         # Construct the object of the specified Farming Mode.
@@ -135,6 +135,8 @@ class Game:
             self._quest = Quest(self, self._map_name, self.mission_name)
         elif self.farming_mode == "Special":
             self._special = Special(self, self._map_name, self.mission_name)
+        elif self.farming_mode == "Coop":
+            self._coop = Coop(self, self.mission_name)
 
         if test_mode is False:
             # Calibrate the dimensions of the bot window on bot launch.
@@ -568,8 +570,6 @@ class Game:
                         self.wait(1)
                         self.find_and_click_button("ok")
                         return None
-                    elif self.farming_mode.lower() == "coop" and not self._coop_first_run and self.image_tools.find_button("attack"):
-                        break
                     else:
                         self.wait(1)
 
@@ -891,14 +891,14 @@ class Game:
                 self.print_and_save("################################################################################")
                 self.print_and_save("################################################################################\n")
 
-            # proving_grounds_first_time = True
-
             first_run = True
             while self._item_amount_farmed < self._item_amount_to_farm:
                 if self.farming_mode == "Quest":
                     self._item_amount_farmed += self._quest.start(first_run)
                 elif self.farming_mode == "Special":
                     self._item_amount_farmed += self._special.start(first_run)
+                elif self.farming_mode == "Coop":
+                    self._item_amount_farmed += self._coop.start(first_run)
 
                 if self._item_amount_farmed < self._item_amount_to_farm:
                     # Generate a resting period if the user enabled it.
