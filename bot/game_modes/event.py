@@ -7,11 +7,10 @@ class EventException(Exception):
 
 
 class Event:
-    def __init__(self, game, map_name: str, mission_name: str):
+    def __init__(self, game, mission_name: str):
         super().__init__()
 
         self._game = game
-        self._map_name: str = map_name
         self._mission_name: str = mission_name
 
         ##########################
@@ -35,37 +34,37 @@ class Event:
 
             self._event_nightmare_group_number = config.get("event", "event_nightmare_group_number")
             self._event_nightmare_party_number = config.get("event", "event_nightmare_party_number")
+
+            if self._event_nightmare_combat_script == "":
+                self._game.print_and_save("[INFO] Combat Script for Event will reuse the one for Farming Mode.")
+                self._event_nightmare_combat_script = self._game.combat_script
+
+            if len(self._event_nightmare_summon_element_list) == 0:
+                self._game.print_and_save("[INFO] Summon Elements for Event will reuse the ones for Farming Mode.")
+                self._event_nightmare_summon_element_list = self._game.summon_element_list
+
+            if len(self._event_nightmare_summon_list) == 0:
+                self._game.print_and_save("[INFO] Summons for Event will reuse the ones for Farming Mode.")
+                self._event_nightmare_summon_list = self._game.summon_list
+
+            if self._event_nightmare_group_number == "":
+                self._game.print_and_save("[INFO] Group Number for Event will reuse the one for Farming Mode.")
+                self._event_nightmare_group_number = self._game.group_number
+            else:
+                self._event_nightmare_group_number = int(self._event_nightmare_group_number)
+
+            if self._event_nightmare_party_number == "":
+                self._game.print_and_save("[INFO] Party Number for Event will reuse the one for Farming Mode.")
+                self._event_nightmare_party_number = self._game.party_number
+            else:
+                self._event_nightmare_party_number = int(self._event_nightmare_party_number)
         # #### end of config.ini ####
-
-        if self._event_nightmare_combat_script == "":
-            self._game.print_and_save("[INFO] Combat Script for Event will reuse the one for Farming Mode.")
-            self._event_nightmare_combat_script = self._game.combat_script
-
-        if len(self._event_nightmare_summon_element_list) == 0:
-            self._game.print_and_save("[INFO] Summon Elements for Event will reuse the ones for Farming Mode.")
-            self._event_nightmare_summon_element_list = self._game.summon_element_list
-
-        if len(self._event_nightmare_summon_list) == 0:
-            self._game.print_and_save("[INFO] Summons for Event will reuse the ones for Farming Mode.")
-            self._event_nightmare_summon_list = self._game.summon_list
-
-        if self._event_nightmare_group_number == "":
-            self._game.print_and_save("[INFO] Group Number for Event will reuse the one for Farming Mode.")
-            self._event_nightmare_group_number = self._game.group_number
-        else:
-            self._event_nightmare_group_number = int(self._event_nightmare_group_number)
-
-        if self._event_nightmare_party_number == "":
-            self._game.print_and_save("[INFO] Party Number for Event will reuse the one for Farming Mode.")
-            self._event_nightmare_party_number = self._game.party_number
-        else:
-            self._event_nightmare_party_number = int(self._event_nightmare_party_number)
 
         self._game.print_and_save("[INFO] Settings initialized for Event...")
         # #### end of Advanced Setup ####
         #################################
 
-    def _check_for_event_nightmare(self):
+    def check_for_event_nightmare(self):
         """Checks for Event Nightmare and if it appears and the user enabled it in config.ini, start it.
 
         Returns:
@@ -182,7 +181,6 @@ class Event:
             if not self._game.find_and_click_button("event_raid_battle"):
                 self._game.image_tools.generate_alert(
                     "Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
-                self._game.is_bot_running.value = 1
                 raise EventException("Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
             self._game.mouse_tools.scroll_screen_from_home_button(-200)
 
@@ -193,24 +191,26 @@ class Event:
             if difficulty == "Very Hard":
                 self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
                 if not self._game.image_tools.wait_vanish("close", timeout = 3):
-                    self._game.wait(0.5)
                     self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
+                    if not self._game.image_tools.wait_vanish("close", timeout = 3):
+                        self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
             elif difficulty == "Extreme":
                 self._game.mouse_tools.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap")
                 if not self._game.image_tools.wait_vanish("close", timeout = 3):
-                    self._game.wait(0.5)
                     self._game.mouse_tools.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap")
+                    if not self._game.image_tools.wait_vanish("close", timeout = 3):
+                        self._game.mouse_tools.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap")
             elif difficulty == "Impossible":
                 self._game.mouse_tools.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap")
                 if not self._game.image_tools.wait_vanish("close", timeout = 3):
-                    self._game.wait(0.5)
                     self._game.mouse_tools.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap")
+                    if not self._game.image_tools.wait_vanish("close", timeout = 3):
+                        self._game.mouse_tools.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap")
 
             # If the user does not have enough Treasures to host a Extreme or an Impossible Raid, host a Very Hard Raid instead.
+            self._game.print_and_save(f"[INFO] Not enough materials to host {difficulty}. Hosting Very Hard instead...")
+            self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
             if not self._game.image_tools.wait_vanish("close", timeout = 3):
-                self._game.print_and_save(f"[INFO] Not enough materials to host {difficulty}. Hosting Very Hard instead...")
-                self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
-                self._game.wait(0.5)
                 self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
 
         return None
@@ -264,7 +264,6 @@ class Event:
             if not self._game.find_and_click_button("event_special_quest"):
                 self._game.image_tools.generate_alert(
                     "Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
-                self._game.is_bot_running.value = 1
                 raise EventException("Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
 
             if self._game.image_tools.confirm_location("special"):
@@ -314,7 +313,8 @@ class Event:
         if first_run:
             self._navigate()
         elif self._game.find_and_click_button("play_again"):
-            self._game.check_for_popups()
+            if self._game.check_for_popups():
+                self._navigate()
         else:
             # If the bot cannot find the "Play Again" button, check for Pending Battles and then perform navigation again.
             self._game.check_for_pending()

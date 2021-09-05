@@ -11,6 +11,7 @@ import pyautogui
 
 from bot.combat_mode import CombatMode
 from bot.game_modes.coop import Coop
+from bot.game_modes.event import Event
 from bot.game_modes.quest import Quest
 from bot.game_modes.raid import Raid
 from bot.game_modes.special import Special
@@ -140,6 +141,8 @@ class Game:
             self._coop = Coop(self, self.mission_name)
         elif self.farming_mode == "Raid":
             self._raid = Raid(self, self.mission_name)
+        elif self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)":
+            self._event = Event(self, self.mission_name)
 
         if test_mode is False:
             # Calibrate the dimensions of the bot window on bot launch.
@@ -528,11 +531,10 @@ class Game:
             self.mouse_tools.move_and_click_point(x, y, "template_party", mouse_clicks = 2)
 
             self._party_selection_first_run = False
+
+            self.print_and_save(f"[INFO] Successfully selected Group {group_number}, Party {party_number}. Now starting the mission.")
         else:
             self.print_and_save("[INFO] Reusing the same Party.")
-
-        if self._debug_mode:
-            self.print_and_save(f"[DEBUG] Successfully selected Party {party_number}. Now starting the mission.")
 
         # Find and click the "OK" button to start the mission.
         self.find_and_click_button("ok")
@@ -741,11 +743,11 @@ class Game:
 
         return temp_amount
 
-    def check_for_popups(self):
+    def check_for_popups(self) -> bool:
         """Detect any popups and attempt to close them all with the final destination being the Summon Selection screen.
 
         Returns:
-            None
+            (bool): True if there was a Nightmare mission detected or some other popup appeared that requires the navigation process to be restarted.
         """
         self.print_and_save(f"\n[INFO] Now beginning process to check for popups...")
 
@@ -762,21 +764,17 @@ class Game:
                 # Scroll down the screen a little bit because the popup itself is too long for screen sizes around 1080p.
                 self.mouse_tools.scroll_screen_from_home_button(-400)
 
-            # # Check for certain popups for certain Farming Modes.
-            # if (self.farming_mode == "Rise of the Beasts" and self._check_for_rotb_extreme_plus()) or (
-            #         self.farming_mode == "Special" and self.mission_name == "VH Angel Halo" and self._item_name == "Angel Halo Weapons" and self._check_for_dimensional_halo()) or (
-            #         (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._check_for_event_nightmare()) or (
-            #         self.farming_mode == "Xeno Clash" and self._check_for_xeno_clash_nightmare()):
-            #     # Make sure the bot goes back to the Home screen so that the "Play Again" functionality comes back.
-            #     self.map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self.difficulty)
-            #     break
+            # Check for certain popups for certain Farming Modes.
+            if (self.farming_mode == "Rise of the Beasts" and self._rotb.check_for_rotb_extreme_plus()) or (
+                    self.farming_mode == "Special" and self.mission_name == "VH Angel Halo" and self._item_name == "Angel Halo Weapons" and self._special.check_for_dimensional_halo()) or (
+                    (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._event.check_for_event_nightmare()) or (
+                    self.farming_mode == "Xeno Clash" and self._xeno_clash.check_for_xeno_clash_nightmare()):
+                return True
 
-            # # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select the Mission again.
-            # if (self.farming_mode == "Event (Token Drawboxes)" or self.farming_mode == "Guild Wars") and self.image_tools.confirm_location("not_enough_treasure", tries = 1):
-            #     self.find_and_click_button("ok")
-            #     self._delay_between_runs()
-            #     self.map_selection.select_map(self.farming_mode, self._map_name, self.mission_name, self.difficulty)
-            #     break
+            # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select the Mission again.
+            if (self.farming_mode == "Event (Token Drawboxes)" or self.farming_mode == "Guild Wars") and self.image_tools.confirm_location("not_enough_treasure", tries = 1):
+                self.find_and_click_button("ok")
+                return True
 
             # Attempt to close the popup by clicking on any detected "Close" and "Cancel" buttons.
             if self.find_and_click_button("close", tries = 1) is False:
@@ -784,7 +782,7 @@ class Game:
 
             self.wait(1)
 
-        return None
+        return False
 
     def _clear_pending_battle(self):
         """Process a Pending Battle.
@@ -808,10 +806,6 @@ class Game:
                     self.collect_loot()
                 else:
                     self.collect_loot(is_pending_battle = True)
-                #
-                # # Decrement number of raids joined.
-                # if self._raids_joined > 0:
-                #     self._raids_joined -= 1
 
                 self.find_and_click_button("close", tries = 1)
                 self.find_and_click_button("ok", tries = 1)
@@ -906,6 +900,8 @@ class Game:
                     self._item_amount_farmed += self._coop.start(first_run)
                 elif self.farming_mode == "Raid":
                     self._item_amount_farmed += self._raid.start(first_run)
+                elif self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)":
+                    self._item_amount_farmed += self._event.start(first_run)
 
                 if self._item_amount_farmed < self._item_amount_to_farm:
                     # Generate a resting period if the user enabled it.
