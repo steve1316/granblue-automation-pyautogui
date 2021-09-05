@@ -1,17 +1,16 @@
 from configparser import ConfigParser
 
 
-class ROTBException(Exception):
+class RiseOfTheBeastsException(Exception):
     def __init__(self, message):
         super().__init__(message)
 
 
-class ROTB:
-    def __init__(self, game, map_name: str, mission_name: str):
+class RiseOfTheBeasts:
+    def __init__(self, game, mission_name: str):
         super().__init__()
 
         self._game = game
-        self._map_name: str = map_name
         self._mission_name: str = mission_name
 
         config = ConfigParser()
@@ -67,7 +66,7 @@ class ROTB:
         # #### end of Advanced Setup ####
         #################################
 
-    def _check_for_rotb_extreme_plus(self):
+    def check_for_rotb_extreme_plus(self):
         """Checks for Extreme+ for Rise of the Beasts and if it appears and the user enabled it in config.ini, start it.
 
         Returns:

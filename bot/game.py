@@ -13,9 +13,13 @@ from bot.combat_mode import CombatMode
 from bot.game_modes.coop import Coop
 from bot.game_modes.dread_barrage import DreadBarrage
 from bot.game_modes.event import Event
+from bot.game_modes.gw import GuildWars
+from bot.game_modes.proving_grounds import ProvingGrounds
 from bot.game_modes.quest import Quest
 from bot.game_modes.raid import Raid
+from bot.game_modes.rotb import RiseOfTheBeasts
 from bot.game_modes.special import Special
+from bot.game_modes.xeno_clash import XenoClash
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
 from utils.twitter_room_finder import TwitterRoomFinder
@@ -146,6 +150,14 @@ class Game:
             self._event = Event(self, self.mission_name)
         elif self.farming_mode == "Dread Barrage":
             self._dread_barrage = DreadBarrage(self, self.mission_name)
+        elif self.farming_mode == "Rise of the Beasts":
+            self._rise_of_the_beasts = RiseOfTheBeasts(self, self.mission_name)
+        elif self.farming_mode == "Guild Wars":
+            self._guild_wars = GuildWars(self, self.mission_name)
+        elif self.farming_mode == "Proving Grounds":
+            self._proving_grounds = ProvingGrounds(self, self.mission_name)
+        elif self.farming_mode == "Xeno Clash":
+            self._xeno_clash = XenoClash(self, self.mission_name)
 
         if test_mode is False:
             # Calibrate the dimensions of the bot window on bot launch.
@@ -768,7 +780,7 @@ class Game:
                 self.mouse_tools.scroll_screen_from_home_button(-400)
 
             # Check for certain popups for certain Farming Modes.
-            if (self.farming_mode == "Rise of the Beasts" and self._rotb.check_for_rotb_extreme_plus()) or (
+            if (self.farming_mode == "Rise of the Beasts" and self._rise_of_the_beasts.check_for_rotb_extreme_plus()) or (
                     self.farming_mode == "Special" and self.mission_name == "VH Angel Halo" and self._item_name == "Angel Halo Weapons" and self._special.check_for_dimensional_halo()) or (
                     (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._event.check_for_event_nightmare()) or (
                     self.farming_mode == "Xeno Clash" and self._xeno_clash.check_for_xeno_clash_nightmare()):
@@ -905,6 +917,8 @@ class Game:
                     self._item_amount_farmed += self._raid.start(first_run)
                 elif self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)":
                     self._item_amount_farmed += self._event.start(first_run)
+                elif self.farming_mode == "Rise of the Beasts":
+                    self._item_amount_farmed += self._rise_of_the_beasts.start(first_run)
                 elif self.farming_mode == "Dread Barrage":
                     self._item_amount_farmed += self._dread_barrage.start(first_run)
 
