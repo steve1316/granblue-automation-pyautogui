@@ -10,6 +10,7 @@ from typing import List
 import pyautogui
 
 from bot.combat_mode import CombatMode
+from bot.game_modes.arcarum import Arcarum
 from bot.game_modes.coop import Coop
 from bot.game_modes.dread_barrage import DreadBarrage
 from bot.game_modes.event import Event
@@ -158,6 +159,8 @@ class Game:
             self._proving_grounds = ProvingGrounds(self, self.mission_name)
         elif self.farming_mode == "Xeno Clash":
             self._xeno_clash = XenoClash(self, self.mission_name)
+        elif self.farming_mode == "Arcarum":
+            self._arcarum = Arcarum(self, self.mission_name)
 
         if test_mode is False:
             # Calibrate the dimensions of the bot window on bot launch.
@@ -927,6 +930,8 @@ class Game:
                     self.item_amount_farmed += self._proving_grounds.start(first_run)
                 elif self.farming_mode == "Xeno Clash":
                     self.item_amount_farmed += self._xeno_clash.start(first_run)
+                elif self.farming_mode == "Arcarum":
+                    self.item_amount_farmed += self._arcarum.start()
 
                 if self.item_amount_farmed < self.item_amount_to_farm:
                     # Generate a resting period if the user enabled it.

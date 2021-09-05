@@ -1,6 +1,11 @@
 from configparser import ConfigParser
 
 
+class ArcarumException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
+
+
 class Arcarum:
     """
     Provides the navigation and any necessary utility functions to handle the Arcarum game mode.
@@ -9,27 +14,15 @@ class Arcarum:
     ----------
     game_object (bot.Game): The Game object.
 
-    map_name (str): The name of the Arcarum map.
-
-    group_number (int): The Group that the specified Party in in.
-
-    party_number (int): The specified Party to start the mission with.
-
-    number_of_runs (int): Number of runs for the specified Arcarum map.
-
-    combat_script (str): The file path to the combat script to use for Combat Mode.
+    map_name (str): The name of the Arcarum expedition.
 
     """
 
-    def __init__(self, game, map_name: str, group_number: int, party_number: int, number_of_runs: int = 1, combat_script: str = ""):
+    def __init__(self, game, map_name: str):
         super().__init__()
 
         self._game = game
-        self.map: str = map_name
-        self.group_number: int = group_number
-        self.party_number: int = party_number
-        self.number_of_runs: int = number_of_runs
-        self.combat_script: str = combat_script
+        self._expedition: str = map_name
         self._first_run = True
         self._encountered_boss = False
 
@@ -47,7 +40,7 @@ class Arcarum:
             (bool): True if the bot was able to start/resume the expedition. False otherwise.
         """
         if self._first_run:
-            self._game.print_and_save(f"\n[ARCARUM] Now beginning navigation to {self.map}.")
+            self._game.print_and_save(f"\n[ARCARUM] Now beginning navigation to {self._expedition}.")
             self._game.go_back_home()
 
             # Navigate to the Arcarum banner.
@@ -57,7 +50,7 @@ class Arcarum:
                     self._game.mouse_tools.scroll_screen_from_home_button(-300)
                     tries -= 1
                     if tries <= 0:
-                        raise (Exception("Failed to navigate to Arcarum from the Home screen."))
+                        raise ArcarumException("Failed to navigate to Arcarum from the Home screen.")
                 else:
                     break
 
@@ -75,8 +68,9 @@ class Arcarum:
         self._game.find_and_click_button("arcarum_extreme")
 
         # Finally, navigate to the specified map to start it.
-        self._game.print_and_save(f"[ARCARUM] Now starting the specified expedition: {self.map}.")
-        formatted_map_name = self.map.lower().replace(" ", "_")
+        self._game.print_and_save(f"[ARCARUM] Now starting the specified expedition: {self._expedition}.")
+        formatted_map_name = self._expedition.lower().replace(" ", "_")
+
         if self._game.find_and_click_button(f"arcarum_{formatted_map_name}", tries = 5) is False:
             # Resume the expedition if it is already in-progress.
             self._game.find_and_click_button("arcarum_exploring")
@@ -89,7 +83,7 @@ class Arcarum:
             self._game.wait(3)
             return True
         else:
-            raise (Exception("Failed to encounter the Departure Check to confirm starting the expedition."))
+            raise ArcarumException("Failed to encounter the Departure Check to confirm starting the expedition.")
 
     def _choose_action(self) -> str:
         """Chooses the next action to take for the current Arcarum expedition.
@@ -166,14 +160,14 @@ class Arcarum:
         else:
             return False
 
-    def start(self) -> bool:
+    def start(self) -> int:
         """Starts the process of completing Arcarum expeditions.
 
         Returns:
-            (bool): True if the number of completed runs has been reached. False otherwise.
+            (int): Number of runs completed.
         """
         runs_completed = 0
-        while runs_completed < self.number_of_runs:
+        while runs_completed < self._game.item_amount_to_farm:
             self._navigate_to_map()
 
             while True:
@@ -182,15 +176,15 @@ class Arcarum:
 
                 if action == "Combat":
                     # Start Combat Mode.
-                    if self._game.find_party_and_start_mission(self.group_number, self.party_number):
+                    if self._game.find_party_and_start_mission(self._game.group_number, self._game.party_number):
                         if self._game.image_tools.confirm_location("elemental_damage", tries = 1):
-                            raise (Exception(
-                                "Encountered an important mob for Arcarum and the selected party does not conform to the enemy's weakness. Perhaps you would like to do this battle yourself?"))
+                            raise ArcarumException(
+                                "Encountered an important mob for Arcarum and the selected party does not conform to the enemy's weakness. Perhaps you would like to do this battle yourself?")
                         elif self._game.image_tools.confirm_location("arcarum_restriction", tries = 1):
-                            raise (Exception("Encountered a party restriction for Arcarum. Perhaps you would like to complete this section by yourself?"))
+                            raise ArcarumException("Encountered a party restriction for Arcarum. Perhaps you would like to complete this section by yourself?")
 
                         self._game.wait(3)
-                        if self._game.combat_mode.start_combat_mode(self.combat_script):
+                        if self._game.combat_mode.start_combat_mode(self._game.combat_script):
                             self._game.collect_loot(skip_info = True)
                             self._game.find_and_click_button("expedition")
                 elif action == "Navigating":
@@ -212,4 +206,4 @@ class Arcarum:
 
                 self._game.wait(1)
 
-        return True
+        return runs_completed
