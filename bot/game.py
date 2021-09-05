@@ -123,11 +123,11 @@ class Game:
         self.combat_script = combat_script
 
         # Keep track of the following for Farming Mode.
-        self._item_name = item_name
-        self._item_amount_to_farm = item_amount_to_farm
-        self._item_amount_farmed = 0
+        self.item_name = item_name
+        self.item_amount_to_farm = item_amount_to_farm
+        self.item_amount_farmed = 0
         self.farming_mode = farming_mode
-        self._map_name = map_name
+        self.map_name = map_name
         self.mission_name = mission_name
         self.difficulty = ""
         self.summon_element_list = summon_element_list
@@ -139,9 +139,9 @@ class Game:
 
         # Construct the object of the specified Farming Mode.
         if self.farming_mode == "Quest":
-            self._quest = Quest(self, self._map_name, self.mission_name)
+            self._quest = Quest(self, self.map_name, self.mission_name)
         elif self.farming_mode == "Special":
-            self._special = Special(self, self._map_name, self.mission_name)
+            self._special = Special(self, self.map_name, self.mission_name)
         elif self.farming_mode == "Coop":
             self._coop = Coop(self, self.mission_name)
         elif self.farming_mode == "Raid":
@@ -668,51 +668,51 @@ class Game:
             # Now that the bot is at the Loot Collected screen, detect any user-specified items.
             if not is_pending_battle and not is_event_nightmare:
                 self.print_and_save("\n[INFO] Detecting if any user-specified loot dropped from this run...")
-                if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
-                    temp_amount = self.image_tools.find_farmed_items(self._item_name)
+                if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
+                    temp_amount = self.image_tools.find_farmed_items(self.item_name)
                 else:
                     temp_amount = 1
 
                 # Only increment number of runs for Proving Grounds when the bot acquires the Completion Rewards.
                 # Currently for Proving Grounds, completing 2 battles per difficulty nets you the Completion Rewards.
                 if self.farming_mode == "Proving Grounds":
-                    if self._item_amount_farmed != 0 and self._item_amount_farmed % 2 == 0:
-                        self._item_amount_farmed = 0
+                    if self.item_amount_farmed != 0 and self.item_amount_farmed % 2 == 0:
+                        self.item_amount_farmed = 0
                         self._amount_of_runs_finished += 1
                 else:
                     self._amount_of_runs_finished += 1
             elif is_pending_battle:
                 self.print_and_save("\n[INFO] Detecting if any user-specified loot dropped from this pending battle...")
-                if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
-                    temp_amount = self.image_tools.find_farmed_items(self._item_name)
+                if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
+                    temp_amount = self.image_tools.find_farmed_items(self.item_name)
                 else:
                     temp_amount = 0
 
-                self._item_amount_farmed += temp_amount
+                self.item_amount_farmed += temp_amount
         else:
             # If the bot reached here, that means the raid ended without the bot being able to take action so no loot dropped.
             temp_amount = 0
 
         if not is_pending_battle and not is_event_nightmare and not skip_info:
-            if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
+            if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
                 self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"[FARM] Mission: {self.mission_name}")
                 self.print_and_save(f"[FARM] Summons: {self.summon_list}")
-                self.print_and_save(f"[FARM] Amount of {self._item_name} gained from this run: {temp_amount}")
-                self.print_and_save(f"[FARM] Amount of {self._item_name} gained in total: {self._item_amount_farmed + temp_amount} / {self._item_amount_to_farm}")
+                self.print_and_save(f"[FARM] Amount of {self.item_name} gained from this run: {temp_amount}")
+                self.print_and_save(f"[FARM] Amount of {self.item_name} gained in total: {self.item_amount_farmed + temp_amount} / {self.item_amount_to_farm}")
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished}")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
 
                 if temp_amount != 0:
-                    if self._item_amount_farmed >= self._item_amount_to_farm:
-                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained from this run: **[{self._item_amount_farmed} / {self._item_amount_to_farm}]** -> " \
-                                         f"**[{self._item_amount_farmed + temp_amount} / {self._item_amount_to_farm}]** :white_check_mark:"
+                    if self.item_amount_farmed >= self.item_amount_to_farm:
+                        discord_string = f"> {temp_amount}x __{self.item_name}__ gained from this run: **[{self.item_amount_farmed} / {self.item_amount_to_farm}]** -> " \
+                                         f"**[{self.item_amount_farmed + temp_amount} / {self.item_amount_to_farm}]** :white_check_mark:"
                     else:
-                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained from this run: **[{self._item_amount_farmed} / {self._item_amount_to_farm}]** -> " \
-                                         f"**[{self._item_amount_farmed + temp_amount} / {self._item_amount_to_farm}]**"
+                        discord_string = f"> {temp_amount}x __{self.item_name}__ gained from this run: **[{self.item_amount_farmed} / {self.item_amount_to_farm}]** -> " \
+                                         f"**[{self.item_amount_farmed + temp_amount} / {self.item_amount_to_farm}]**"
 
                     self.discord_queue.put(discord_string)
             else:
@@ -721,38 +721,38 @@ class Game:
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"[FARM] Mission: {self.mission_name}")
                 self.print_and_save(f"[FARM] Summons: {self.summon_list}")
-                self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished} / {self._item_amount_to_farm}")
+                self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished} / {self.item_amount_to_farm}")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
 
-                if self._amount_of_runs_finished >= self._item_amount_to_farm:
-                    discord_string = f"> Runs completed for __{self.mission_name}__: **[{self._amount_of_runs_finished - 1} / {self._item_amount_to_farm}]** -> " \
-                                     f"**[{self._amount_of_runs_finished} / {self._item_amount_to_farm}]** :white_check_mark:"
+                if self._amount_of_runs_finished >= self.item_amount_to_farm:
+                    discord_string = f"> Runs completed for __{self.mission_name}__: **[{self._amount_of_runs_finished - 1} / {self.item_amount_to_farm}]** -> " \
+                                     f"**[{self._amount_of_runs_finished} / {self.item_amount_to_farm}]** :white_check_mark:"
                 else:
-                    discord_string = f"> Runs completed for __{self.mission_name}__: **[{self._amount_of_runs_finished - 1} / {self._item_amount_to_farm}]** -> " \
-                                     f"**[{self._amount_of_runs_finished} / {self._item_amount_to_farm}]**"
+                    discord_string = f"> Runs completed for __{self.mission_name}__: **[{self._amount_of_runs_finished - 1} / {self.item_amount_to_farm}]** -> " \
+                                     f"**[{self._amount_of_runs_finished} / {self.item_amount_to_farm}]**"
 
                 self.discord_queue.put(discord_string)
         elif is_pending_battle and temp_amount > 0 and not skip_info:
-            if self._item_name != "EXP" and self._item_name != "Angel Halo Weapons" and self._item_name != "Repeated Runs":
+            if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
                 self.print_and_save("\n********************************************************************************")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"[FARM] Mission: {self.mission_name}")
                 self.print_and_save(f"[FARM] Summons: {self.summon_list}")
-                self.print_and_save(f"[FARM] Amount of {self._item_name} gained from this pending battle: {temp_amount}")
-                self.print_and_save(f"[FARM] Amount of {self._item_name} gained in total: {self._item_amount_farmed} / {self._item_amount_to_farm}")
+                self.print_and_save(f"[FARM] Amount of {self.item_name} gained from this pending battle: {temp_amount}")
+                self.print_and_save(f"[FARM] Amount of {self.item_name} gained in total: {self.item_amount_farmed} / {self.item_amount_to_farm}")
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished}")
                 self.print_and_save("********************************************************************************")
                 self.print_and_save("********************************************************************************\n")
 
                 if temp_amount != 0:
-                    if self._item_amount_farmed >= self._item_amount_to_farm:
-                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained from this pending battle: **[{self._item_amount_farmed} / {self._item_amount_to_farm}]** -> " \
-                                         f"**[{self._item_amount_farmed + temp_amount} / {self._item_amount_to_farm}]** :white_check_mark:"
+                    if self.item_amount_farmed >= self.item_amount_to_farm:
+                        discord_string = f"> {temp_amount}x __{self.item_name}__ gained from this pending battle: **[{self.item_amount_farmed} / {self.item_amount_to_farm}]** -> " \
+                                         f"**[{self.item_amount_farmed + temp_amount} / {self.item_amount_to_farm}]** :white_check_mark:"
                     else:
-                        discord_string = f"> {temp_amount}x __{self._item_name}__ gained from this pending battle: **[{self._item_amount_farmed} / {self._item_amount_to_farm}]** -> " \
-                                         f"**[{self._item_amount_farmed + temp_amount} / {self._item_amount_to_farm}]**"
+                        discord_string = f"> {temp_amount}x __{self.item_name}__ gained from this pending battle: **[{self.item_amount_farmed} / {self.item_amount_to_farm}]** -> " \
+                                         f"**[{self.item_amount_farmed + temp_amount} / {self.item_amount_to_farm}]**"
 
                     self.discord_queue.put(discord_string)
 
@@ -781,7 +781,7 @@ class Game:
 
             # Check for certain popups for certain Farming Modes.
             if (self.farming_mode == "Rise of the Beasts" and self._rise_of_the_beasts.check_for_rotb_extreme_plus()) or (
-                    self.farming_mode == "Special" and self.mission_name == "VH Angel Halo" and self._item_name == "Angel Halo Weapons" and self._special.check_for_dimensional_halo()) or (
+                    self.farming_mode == "Special" and self.mission_name == "VH Angel Halo" and self.item_name == "Angel Halo Weapons" and self._special.check_for_dimensional_halo()) or (
                     (self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)") and self._event.check_for_event_nightmare()) or (
                     self.farming_mode == "Xeno Clash" and self._xeno_clash.check_for_xeno_clash_nightmare()):
                 return True
@@ -890,41 +890,43 @@ class Game:
             None
         """
         try:
-            if self._item_name != "EXP":
+            if self.item_name != "EXP":
                 self.print_and_save("\n################################################################################")
                 self.print_and_save("################################################################################")
                 self.print_and_save(f"[FARM] Starting Farming Mode for {self.farming_mode}.")
-                self.print_and_save(f"[FARM] Farming {self._item_amount_to_farm}x {self._item_name} at {self.mission_name}.")
+                self.print_and_save(f"[FARM] Farming {self.item_amount_to_farm}x {self.item_name} at {self.mission_name}.")
                 self.print_and_save("################################################################################")
                 self.print_and_save("################################################################################\n")
             else:
                 self.print_and_save("\n################################################################################")
                 self.print_and_save("################################################################################")
                 self.print_and_save(f"[FARM] Starting Farming Mode for {self.farming_mode}.")
-                self.print_and_save(f"[FARM] Doing {self._item_amount_to_farm}x runs for {self._item_name} at {self.mission_name}.")
+                self.print_and_save(f"[FARM] Doing {self.item_amount_to_farm}x runs for {self.item_name} at {self.mission_name}.")
                 self.print_and_save("################################################################################")
                 self.print_and_save("################################################################################\n")
 
             first_run = True
-            while self._item_amount_farmed < self._item_amount_to_farm:
+            while self.item_amount_farmed < self.item_amount_to_farm:
                 if self.farming_mode == "Quest":
-                    self._item_amount_farmed += self._quest.start(first_run)
+                    self.item_amount_farmed += self._quest.start(first_run)
                 elif self.farming_mode == "Special":
-                    self._item_amount_farmed += self._special.start(first_run)
+                    self.item_amount_farmed += self._special.start(first_run)
                 elif self.farming_mode == "Coop":
-                    self._item_amount_farmed += self._coop.start(first_run)
+                    self.item_amount_farmed += self._coop.start(first_run)
                 elif self.farming_mode == "Raid":
-                    self._item_amount_farmed += self._raid.start(first_run)
+                    self.item_amount_farmed += self._raid.start(first_run)
                 elif self.farming_mode == "Event" or self.farming_mode == "Event (Token Drawboxes)":
-                    self._item_amount_farmed += self._event.start(first_run)
+                    self.item_amount_farmed += self._event.start(first_run)
                 elif self.farming_mode == "Rise of the Beasts":
-                    self._item_amount_farmed += self._rise_of_the_beasts.start(first_run)
+                    self.item_amount_farmed += self._rise_of_the_beasts.start(first_run)
                 elif self.farming_mode == "Guild Wars":
-                    self._item_amount_farmed += self._guild_wars.start(first_run)
+                    self.item_amount_farmed += self._guild_wars.start(first_run)
                 elif self.farming_mode == "Dread Barrage":
-                    self._item_amount_farmed += self._dread_barrage.start(first_run)
+                    self.item_amount_farmed += self._dread_barrage.start(first_run)
+                elif self.farming_mode == "Proving Grounds":
+                    self.item_amount_farmed += self._proving_grounds.start(first_run)
 
-                if self._item_amount_farmed < self._item_amount_to_farm:
+                if self.item_amount_farmed < self.item_amount_to_farm:
                     # Generate a resting period if the user enabled it.
                     self._delay_between_runs()
 

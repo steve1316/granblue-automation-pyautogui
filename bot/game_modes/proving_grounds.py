@@ -9,6 +9,7 @@ class ProvingGrounds:
 
         self._game = game
         self._mission_name: str = mission_name
+        self._first_time = True
 
     def _navigate(self):
         # Go to the Home screen.
@@ -54,24 +55,16 @@ class ProvingGrounds:
         number_of_items_dropped: int = 0
 
         # Start the navigation process.
-        if first_run:
+        if first_run and self._first_time:
             self._navigate()
-        elif self._game.find_and_click_button("play_again"):
+        elif self._first_time and self._game.find_and_click_button("play_again"):
             self._game.print_and_save("\n[INFO] Starting Proving Grounds Mission again...")
-        else:
-            # If the bot cannot find the "Play Again" button, check for Pending Battles and then perform navigation again.
-            self._game.check_for_pending()
-
-            # Click the "Next Battle" button if there are any battles left.
-            if self._game.find_and_click_button("proving_grounds_next_battle", suppress_error = True):
-                self._game.print_and_save("\n[INFO] Moving onto the next battle for Proving Grounds...")
-                self._game.find_and_click_button("ok")
 
         # Check for AP.
         self._game.check_for_ap()
 
         # Check if the bot is at the Summon Selection screen.
-        if first_run and self._game.image_tools.confirm_location("proving_grounds_summon_selection"):
+        if (first_run or self._first_time) and self._game.image_tools.confirm_location("proving_grounds_summon_selection"):
             summon_check = self._game.select_summon(self._game.summon_list, self._game.summon_element_list)
             if summon_check:
                 self._game.wait(1)
@@ -87,16 +80,17 @@ class ProvingGrounds:
                     number_of_items_dropped = self._game.collect_loot()
 
                     # Click the "Next Battle" button if there are any battles left.
-                    if self._game.find_and_click_button("proving_grounds_next_battle", suppress_error = True):
+                    if self._game.find_and_click_button("proving_grounds_next_battle"):
                         self._game.print_and_save("\n[INFO] Moving onto the next battle for Proving Grounds...")
                         self._game.find_and_click_button("ok")
-        elif first_run is False:
+                        self._first_time = False
+        elif first_run is False and self._first_time is False:
             # No need to select a Summon again as it is reused.
             if self._game.combat_mode.start_combat_mode(self._game.combat_script):
                 number_of_items_dropped = self._game.collect_loot()
 
                 # Click the "Next Battle" button if there are any battles left.
-                if self._game.find_and_click_button("proving_grounds_next_battle", suppress_error = True):
+                if self._game.find_and_click_button("proving_grounds_next_battle"):
                     self._game.print_and_save("\n[INFO] Moving onto the next battle for Proving Grounds...")
                     self._game.find_and_click_button("ok")
                 else:
@@ -110,11 +104,11 @@ class ProvingGrounds:
                     if self._game.image_tools.confirm_location("proving_grounds_completion_loot"):
                         self._game.print_and_save("\n[INFO] Completion rewards has been acquired.")
 
-                        # # Reset the First Time flag so the bot can select a Summon and select the Mission again.
-                        # if self._game.item_amount_farmed < item_amount_to_farm:
-                        #     self._game.print_and_save("\n[INFO] Starting Proving Grounds Mission again...")
-                        #     proving_grounds_first_time = True
-                        #     self._game.find_and_click_button("play_again")
+                        # Reset the First Time flag so the bot can select a Summon and select the Mission again.
+                        if self._game.item_amount_farmed < self._game.item_amount_to_farm:
+                            self._first_time = True
+                    else:
+                        raise ProvingGroundsException("Failed to detect the Completion Loot screen for completing this Proving Grounds mission.")
         else:
             raise ProvingGroundsException("Failed to arrive at the Summon Selection screen.")
 
