@@ -1,8 +1,28 @@
-import datetime
 import traceback
 from typing import List
 
 import tweepy
+
+
+class RoomStreamException(Exception):
+    pass
+
+
+class RoomStreamListener(tweepy.StreamListener):
+    def __init__(self, number_of_tweets: int):
+        super().__init__()
+        self.tweets = []
+        self._number_of_tweets = number_of_tweets
+
+    def on_status(self, status):
+        print(f"[DEBUG] Stream found: {status.text}")
+        self.tweets.append(status)
+        if len(self.tweets) >= self._number_of_tweets:
+            raise RoomStreamException
+
+    def on_error(self, status_code):
+        print(f"[ERROR] Stream API encountered Error Code {status_code}. Closing the stream...")
+        return False
 
 
 class TwitterRoomFinder:
@@ -11,19 +31,19 @@ class TwitterRoomFinder:
 
     Attributes
     ----------
-        bot (bot.Game): The Game object.
+    bot (bot.Game): The Game object.
 
-        is_bot_running (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
+    is_bot_running (int): Flag in shared memory that signals the frontend that the bot has finished/exited.
 
-        consumer_key (str): Consumer API key from the user's personal Twitter Developer app.
+    consumer_key (str): Consumer API key from the user's personal Twitter Developer app.
 
-        consumer_secret (str): Consumer Secret API key from the user's personal Twitter Developer app.
+    consumer_secret (str): Consumer Secret API key from the user's personal Twitter Developer app.
 
-        access_token (str): Access token from the user's personal Twitter Developer app.
+    access_token (str): Access token from the user's personal Twitter Developer app.
 
-        access_token_secret (str): Secret Access token from the user's personal Twitter Developer app.
+    access_token_secret (str): Secret Access token from the user's personal Twitter Developer app.
 
-        debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
+    debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
 
     """
 
@@ -156,7 +176,6 @@ class TwitterRoomFinder:
 
     def _connect_to_twitter_api(self):
         """Connect to Twitter API using provided consumer keys and tokens.
-
         Returns:
             None
         """
@@ -176,64 +195,54 @@ class TwitterRoomFinder:
                     f"\n[ERROR] Connection to the Twitter API failed. Check the config.ini and verify that the keys and tokens are correct. Exact error is: \n{traceback.format_exc()}")
                 self._is_bot_running.value = 1
 
-    def find_most_recent(self, raid_name: str, count: int = 10):
-        """Start listening to tweets containing room codes starting with JP and then EN tweets if there was not enough collected tweets from JP.
-
+    def find_most_recent(self, raid_name: str, count: int = 3):
+        """Start listening to tweets containing room codes using the Stream API.
         Args:
             raid_name (str): Name and level of the raid that appears in tweets containing the room code to it.
-            count (int): Number of most recent tweets to grab. Defaults to 10.
-
+            count (int): Number of most recent tweets to grab. Defaults to 3.
         Returns:
-            tweets (List[str]): List of most recent tweets that match the query.
+            (List[str]): List of room codes cleaned of all other text.
         """
         # Connect to Twitter API if bot has not already done so.
         self._connect_to_twitter_api()
 
-        self._game.print_and_save(f"\n[TWITTER] Now finding the {count} most recent tweets for {raid_name}.")
-
-        today = datetime.datetime.today()
-        query_en = f"+(:Battle ID) AND +({raid_name})"
-        query_jp = f"+(:参戦ID) AND +({self._list_of_raids[raid_name]})"
+        self._game.print_and_save(f"\n[TWITTER] Now finding the {count} most recent tweets for {raid_name} using Stream API.")
 
         # Example of expected tweet:
         #   CUSTOM_USER_MESSAGE XXXXXXXX :Battle ID
         #   I need backup!
         #   LEVEL and NAME OF RAID
 
-        tweets = []
-
         try:
-            # Search JP tweets first and filter for tweets that the bot has not processed yet.
-            tweet_jp = self._api.search(q = query_jp, since = today.strftime('%Y-%m-%d'), count = count)
-            for tweet in tweet_jp:
-                if tweet.id not in self._list_of_id and len(tweets) < count:
-                    tweets.append(tweet)
-                    self._list_of_id.append(tweet.id)
+            # Create the listener and stream objects.
+            listener = RoomStreamListener(count)
+            stream = tweepy.Stream(auth = self._api.auth, listener = listener)
 
-            # Search EN tweets only if the filtered JP tweets was less than the desired amount.
-            if len(tweets) < count:
-                tweet_en = self._api.search(q = query_en, since = today.strftime('%Y-%m-%d'), count = count)
-                for tweet in tweet_en:
-                    if tweet.id not in self._list_of_id and len(tweets) < count:
-                        tweets.append(tweet)
-                        self._list_of_id.append(tweet.id)
+            # Keep listening to the stream until the listener acquires the necessary amount of tweets.
+            try:
+                self._game.print_and_save(f"\n[TWITTER] Now listening onto the Stream API for {count} newest tweets for {raid_name}.")
+                stream.filter(track = [raid_name, self._list_of_raids[raid_name]], filter_level = "none")
+            except RoomStreamException:
+                print("\n[DEBUG] Closed Twitter stream.")
 
-            return tweets
+            return self._clean_tweets(listener.tweets)
         except Exception:
             self._game.print_and_save(f"[ERROR] Bot got rate-limited or Twitter failed to respond after a certain amount of time. Exact error is: \n{traceback.format_exc()}")
             self._is_bot_running.value = 1
 
-    def clean_tweets(self, tweets: List[str]):
+    def _clean_tweets(self, tweets: List[str]):
         """Clean the tweets passed to this function and parse out the room codes from them.
-
         Args:
             tweets (List[str]): List of tweets with its text unchanged.
-
         Returns:
-            room_codes (Iterable[str]): List of room codes cleaned of all other text.
+            (List[str]): List of room codes cleaned of all other text.
         """
+        if len(tweets) == 0:
+            self._game.print_and_save(f"[TWITTER] There are no recent or detected tweets available for the given raid.")
+            return []
+
         try:
-            self._game.print_and_save(f"\n[TWITTER] Now cleaning up the tweets and parsing for room codes...\n")
+            self._game.print_and_save(f"[TWITTER] Now cleaning up the tweets and parsing for room codes...")
             room_codes = []
 
             for tweet in tweets:
