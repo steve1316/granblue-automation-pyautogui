@@ -199,6 +199,12 @@ class Arcarum:
                         self._game.find_and_click_button("arcarum")
                         self._game.print_and_save(f"[ARCARUM] Expedition is complete.")
                         runs_completed += 1
+
+                        self._game.wait(1)
+
+                        if self._game.image_tools.confirm_location("skyscope", tries = 1):
+                            self._game.find_and_click_button("close")
+
                         break
                 elif action == "Boss Detected":
                     self._game.print_and_save(f"[ARCARUM] Boss has been detected. Stopping the bot.")
