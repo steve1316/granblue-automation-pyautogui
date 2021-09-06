@@ -167,6 +167,8 @@ class Game:
             self.go_back_home(confirm_location_check = True, display_info_check = True)
         else:
             self.home_button_location = self.image_tools.find_button("home")
+            if self.home_button_location is None:
+                raise RuntimeError("Calibration of window dimensions failed. Is the Home button on the bottom bar visible?")
 
     def _print_time(self):
         """Formats the time since the bot started into a readable, printable HH:MM:SS format using timedelta.
@@ -203,15 +205,23 @@ class Game:
         Returns:
             None
         """
-        if self._debug_mode:
-            self.print_and_save("\n[DEBUG] Recalibrating the dimensions of the bot window...")
+        self.print_and_save("\n[INFO] Recalibrating the dimensions of the window...")
 
         # Save the location of the "Home" button at the bottom of the bot window.
         self.home_button_location = self.image_tools.find_button("home")
 
+        if self.home_button_location is None:
+            raise RuntimeError("Calibration of window dimensions failed. Is the Home button on the bottom bar visible?")
+
         # Set the dimensions of the bot window and save it in ImageUtils so that future operations do not go out of bounds.
         home_news_button = self.image_tools.find_button("home_news")
         home_menu_button = self.image_tools.find_button("home_menu")
+
+        if home_news_button is None:
+            raise RuntimeError("Calibration of window dimensions failed. Is the News button visible on the Home screen?")
+
+        if home_menu_button is None:
+            raise RuntimeError("Calibration of window dimensions failed. Is the Menu button visible on the Home screen?")
 
         # Use the locations of the "News" and "Menu" buttons on the Home screen to calculate the dimensions of the bot window in the following
         # format:
@@ -222,8 +232,7 @@ class Game:
 
         self.image_tools.update_window_dimensions(window_left, window_top, window_width, window_height)
 
-        if self._debug_mode:
-            self.print_and_save("[SUCCESS] Dimensions of the bot window has been successfully recalibrated.")
+        self.print_and_save("[SUCCESS] Dimensions of the window has been successfully recalibrated.")
 
         if display_info_check:
             window_dimensions = self.image_tools.get_window_dimensions()
@@ -250,7 +259,7 @@ class Game:
         if not self.image_tools.confirm_location("home"):
             self.print_and_save("\n[INFO] Moving back to the Home screen...")
             if self.find_and_click_button("home") is False:
-                raise (Exception("Home button located on the bottom bar is not visible. Is the browser window properly visible?"))
+                raise RuntimeError("Home button located on the bottom bar is not visible. Is the browser window properly visible?")
         else:
             self.print_and_save("[INFO] Bot is at the Home screen.")
 
@@ -348,7 +357,7 @@ class Game:
             if self.image_tools.confirm_location("captcha"):
                 raise RuntimeError("CAPTCHA DETECTED!")
             else:
-                self.print_and_save("\n[CAPTCHA] CAPTCHA not detected. Moving on to Party Selection...")
+                self.print_and_save("\n[CAPTCHA] CAPTCHA not detected.")
 
             return None
         except RuntimeError:
@@ -482,6 +491,8 @@ class Game:
         """
         # Repeat runs already have the same party already selected.
         if self._party_selection_first_run:
+            self.print_and_save(f"\n[INFO] Starting process to select Group {group_number}, Party {party_number}...")
+
             # Find the Group that the Party is in first. If the specified Group number is less than 8, it is in Set A. Otherwise, it is in Set B. If failed, alternate searching for Set A / Set B until
             # found or tries are depleted.
             set_location = None
@@ -491,7 +502,7 @@ class Game:
                     if set_location is None:
                         tries -= 1
                         if tries <= 0:
-                            raise Exception("Could not find Set A.")
+                            raise RuntimeError("Could not find Set A.")
 
                         # See if the user had Set B active instead of Set A if matching failed.
                         set_location = self.image_tools.find_button("party_set_b", tries = 1)
@@ -501,14 +512,14 @@ class Game:
                     if set_location is None:
                         tries -= 1
                         if tries <= 0:
-                            raise Exception("Could not find Set B.")
+                            raise RuntimeError("Could not find Set B.")
 
                         # See if the user had Set A active instead of Set B if matching failed.
                         set_location = self.image_tools.find_button("party_set_a", tries = 1)
 
             # Center the mouse on the "Set A" / "Set B" button and then click the correct Group tab.
             if self._debug_mode:
-                self.print_and_save(f"\n[DEBUG] Successfully selected the correct Set. Now selecting Group {group_number}...")
+                self.print_and_save(f"[DEBUG] Successfully selected the correct Set. Now selecting Group {group_number}...")
 
             if group_number == 1:
                 x = set_location[0] - 350
@@ -552,7 +563,7 @@ class Game:
 
             self.print_and_save(f"[INFO] Successfully selected Group {group_number}, Party {party_number}. Now starting the mission.")
         else:
-            self.print_and_save("[INFO] Reusing the same Party.")
+            self.print_and_save("\n[INFO] Reusing the same Party.")
 
         # Find and click the "OK" button to start the mission.
         self.find_and_click_button("ok")
@@ -809,6 +820,8 @@ class Game:
             (bool): Return True if a Pending Battle was successfully processed. Otherwise, return False.
         """
         if self.find_and_click_button("tap_here_to_see_rewards", tries = 1):
+            self.print_and_save(f"[INFO] Clearing this Pending Battle...")
+
             self.wait(1)
 
             # If there is loot available, start loot detection and decrement number of raids joined as necessary.
@@ -894,19 +907,19 @@ class Game:
         """
         try:
             if self.item_name != "EXP":
-                self.print_and_save("\n################################################################################")
-                self.print_and_save("################################################################################")
+                self.print_and_save("\n######################################################################")
+                self.print_and_save("######################################################################")
                 self.print_and_save(f"[FARM] Starting Farming Mode for {self.farming_mode}.")
                 self.print_and_save(f"[FARM] Farming {self.item_amount_to_farm}x {self.item_name} at {self.mission_name}.")
-                self.print_and_save("################################################################################")
-                self.print_and_save("################################################################################\n")
+                self.print_and_save("######################################################################")
+                self.print_and_save("######################################################################\n")
             else:
-                self.print_and_save("\n################################################################################")
-                self.print_and_save("################################################################################")
+                self.print_and_save("\n######################################################################")
+                self.print_and_save("######################################################################")
                 self.print_and_save(f"[FARM] Starting Farming Mode for {self.farming_mode}.")
                 self.print_and_save(f"[FARM] Doing {self.item_amount_to_farm}x runs for {self.item_name} at {self.mission_name}.")
-                self.print_and_save("################################################################################")
-                self.print_and_save("################################################################################\n")
+                self.print_and_save("######################################################################")
+                self.print_and_save("######################################################################\n")
 
             first_run = True
             while self.item_amount_farmed < self.item_amount_to_farm:
@@ -936,18 +949,17 @@ class Game:
                 if self.item_amount_farmed < self.item_amount_to_farm:
                     # Generate a resting period if the user enabled it.
                     self._delay_between_runs()
-
                     first_run = False
 
         except Exception as e:
             self.print_and_save(f"\n[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
             self.discord_queue.put(f"> Bot encountered exception in Farming Mode: \n{e}")
 
-        self.print_and_save("\n################################################################################")
-        self.print_and_save("################################################################################")
+        self.print_and_save("\n######################################################################")
+        self.print_and_save("######################################################################")
         self.print_and_save("[FARM] Ending Farming Mode.")
-        self.print_and_save("################################################################################")
-        self.print_and_save("################################################################################\n")
+        self.print_and_save("######################################################################")
+        self.print_and_save("######################################################################\n")
 
         self.is_bot_running.value = 1
         return None
