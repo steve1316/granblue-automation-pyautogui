@@ -69,12 +69,13 @@ class Test(unittest.TestCase):
         self.assertEqual(amount, 0)
 
     def test_avatar_detection(self):
-        print("Running test for navigation to Lvl 120 Avatar.")
+        print("Running Twitter functionality by finding 5 Lvl 120 Avatar room codes.")
         game_object = game.Game(self.queue, self.discord_queue, self.is_bot_running, test_mode = True)
-        tweets = game_object.room_finder.find_most_recent("Lvl 120 Avatar", 10)
+
+        tweets = game_object.room_finder.find_most_recent("Lvl 120 Avatar", 5)
         print(f"Found tweets: {tweets}")
-        room_codes = game_object.room_finder.clean_tweets(tweets)
-        self.assertGreaterEqual(len(room_codes), 1)
+
+        self.assertGreaterEqual(len(tweets), 1)
 
     def test_combat_mode1(self):
         print("Running test for Combat Mode in Old Lignoid.")
