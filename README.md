@@ -1,6 +1,8 @@
 # Granblue Automation using Template Matching (It is like Full Auto, but with Full Customization!)
 ![GitHub commit activity](https://img.shields.io/github/commit-activity/m/steve1316/granblue-automation-pyautogui?logo=GitHub) ![GitHub last commit](https://img.shields.io/github/last-commit/steve1316/granblue-automation-pyautogui?logo=GitHub) ![GitHub issues](https://img.shields.io/github/issues/steve1316/granblue-automation-pyautogui?logo=GitHub) ![GitHub pull requests](https://img.shields.io/github/issues-pr/steve1316/granblue-automation-pyautogui?logo=GitHub) ![GitHub](https://img.shields.io/github/license/steve1316/granblue-automation-pyautogui?logo=GitHub)
 
+> Discord here: https://discord.gg/nmBDMqwr
+
 > Android version here: https://github.com/steve1316/granblue-automation-android
 
 https://user-images.githubusercontent.com/18709555/118408116-db622c00-b638-11eb-9a24-5edc59cef34e.mp4
