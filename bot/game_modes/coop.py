@@ -28,11 +28,13 @@ class Coop:
         self._coop_ex4_list = ["Amidst the Waves", "Amidst the Petals", "Amidst Severe Cliffs", "Amidst the Flames"]
 
     def _navigate(self):
-        """Navigates to the specified Quest mission.
+        """Navigates to the specified Coop mission.
 
         Returns:
             None
         """
+        self._game.print_and_save(f"\n[COOP] Beginning process to navigate to the mission: {self._mission_name}...")
+
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
@@ -53,10 +55,10 @@ class Coop:
                 if self._game.image_tools.find_button("coop_hard_selected") is None:
                     self._game.find_and_click_button("coop_hard")
 
-                self._game.print_and_save(f"\n[INFO] Hard difficulty for Coop is now selected.")
+                self._game.print_and_save(f"\n[COOP] Hard difficulty for Coop is now selected.")
 
                 # Select the category, "Save the Oceans", which should be the 3rd category.
-                self._game.print_and_save(f"[INFO] Now navigating to \"{self._mission_name}\" for Hard difficulty.")
+                self._game.print_and_save(f"[COOP] Now navigating to \"{self._mission_name}\" for Hard difficulty.")
                 self._game.mouse_tools.move_and_click_point(host_quest_button_locations[2][0], host_quest_button_locations[2][1], "coop_host_quest")
 
                 if self._game.image_tools.confirm_location("coop_save_the_oceans"):
@@ -69,55 +71,55 @@ class Coop:
                 if self._game.image_tools.find_button("coop_extra_selected") is None:
                     self._game.find_and_click_button("coop_extra")
 
-                self._game.print_and_save(f"\n[INFO] Extra difficulty for Coop is now selected.")
+                self._game.print_and_save(f"\n[COOP] Extra difficulty for Coop is now selected.")
 
                 # Make the specified EX category active. Then click the mission's button while making sure that the first mission in each category is skipped.
                 if self._mission_name in self._coop_ex1_list:
-                    self._game.print_and_save(f"\n[INFO] Now navigating to \"{self._mission_name}\" from EX1...")
+                    self._game.print_and_save(f"\n[COOP] Now navigating to \"{self._mission_name}\" from EX1...")
                     self._game.mouse_tools.move_and_click_point(host_quest_button_locations[0][0], host_quest_button_locations[0][1], "coop_host_quest")
 
                     if self._game.image_tools.confirm_location("coop_ex1"):
-                        self._game.print_and_save(f"\n[INFO] Now selecting Coop mission: \"{self._mission_name}\"")
+                        self._game.print_and_save(f"\n[COOP] Now selecting Coop mission: \"{self._mission_name}\"")
                         coop_host_locations = self._game.image_tools.find_all("coop_host_quest_circle")
                         self._game.mouse_tools.move_and_click_point(coop_host_locations[self._coop_ex1_list.index(self._mission_name)][0],
                                                                     coop_host_locations[self._coop_ex1_list.index(self._mission_name)][1],
                                                                     "coop_host_quest")
 
                 elif self._mission_name in self._coop_ex2_list:
-                    self._game.print_and_save(f"\n[INFO] Now navigating to \"{self._mission_name}\" from EX2...")
+                    self._game.print_and_save(f"\n[COOP] Now navigating to \"{self._mission_name}\" from EX2...")
                     self._game.mouse_tools.move_and_click_point(host_quest_button_locations[1][0], host_quest_button_locations[1][1], "coop_host_quest")
 
                     if self._game.image_tools.confirm_location("coop_ex2"):
-                        self._game.print_and_save(f"\n[INFO] Now selecting Coop mission: \"{self._mission_name}\"")
+                        self._game.print_and_save(f"\n[COOP] Now selecting Coop mission: \"{self._mission_name}\"")
                         coop_host_locations = self._game.image_tools.find_all("coop_host_quest_circle")
                         self._game.mouse_tools.move_and_click_point(coop_host_locations[self._coop_ex2_list.index(self._mission_name) + 1][0],
                                                                     coop_host_locations[self._coop_ex2_list.index(self._mission_name) + 1][1],
                                                                     "coop_host_quest")
 
                 elif self._mission_name in self._coop_ex3_list:
-                    self._game.print_and_save(f"\n[INFO] Now navigating to \"{self._mission_name}\" from EX3.")
+                    self._game.print_and_save(f"\n[COOP] Now navigating to \"{self._mission_name}\" from EX3.")
                     self._game.mouse_tools.move_and_click_point(host_quest_button_locations[2][0], host_quest_button_locations[2][1], "coop_host_quest")
 
                     if self._game.image_tools.confirm_location("coop_ex3"):
-                        self._game.print_and_save(f"\n[INFO] Now selecting Coop mission: \"{self._mission_name}\"")
+                        self._game.print_and_save(f"\n[COOP] Now selecting Coop mission: \"{self._mission_name}\"")
                         coop_host_locations = self._game.image_tools.find_all("coop_host_quest_circle")
                         self._game.mouse_tools.move_and_click_point(coop_host_locations[self._coop_ex3_list.index(self._mission_name) + 1][0],
                                                                     coop_host_locations[self._coop_ex3_list.index(self._mission_name) + 1][1],
                                                                     "coop_host_quest")
 
                 elif self._mission_name in self._coop_ex4_list:
-                    self._game.print_and_save(f"\n[INFO] Now navigating to \"{self._mission_name}\" from EX4.")
+                    self._game.print_and_save(f"\n[COOP] Now navigating to \"{self._mission_name}\" from EX4.")
                     self._game.mouse_tools.move_and_click_point(host_quest_button_locations[3][0], host_quest_button_locations[3][1], "coop_host_quest")
 
                     if self._game.image_tools.confirm_location("coop_ex4"):
-                        self._game.print_and_save(f"\n[INFO] Now selecting Coop mission: \"{self._mission_name}\"")
+                        self._game.print_and_save(f"\n[COOP] Now selecting Coop mission: \"{self._mission_name}\"")
                         coop_host_locations = self._game.image_tools.find_all("coop_host_quest_circle")
                         self._game.mouse_tools.move_and_click_point(coop_host_locations[self._coop_ex4_list.index(self._mission_name) + 1][0],
                                                                     coop_host_locations[self._coop_ex4_list.index(self._mission_name) + 1][1],
                                                                     "coop_host_quest")
 
             # After clicking on the Coop mission, create a new Room.
-            self._game.print_and_save(f"\n[INFO] Opening up a new Coop room...")
+            self._game.print_and_save(f"\n[COOP] Opening up a new Coop room...")
             self._game.find_and_click_button("coop_post_to_crew_chat")
 
             # Scroll down the screen to see the "OK" button just in case of smaller screens.
@@ -130,7 +132,7 @@ class Coop:
             if self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries = 1):
                 self._game.find_and_click_button("ok")
 
-            self._game.print_and_save(f"\n[INFO] Selecting a Party for Coop mission: \"{self._mission_name}\".")
+            self._game.print_and_save(f"\n[COOP] Selecting a Party for Coop mission: \"{self._mission_name}\".")
             self._game.find_and_click_button("coop_select_party")
 
         return None
@@ -163,7 +165,7 @@ class Coop:
 
             # Now that the bot is back at the Coop Room/Lobby, check if it closed due to time running out.
             if self._game.image_tools.confirm_location("coop_room_closed", tries = 1):
-                self._game.print_and_save("\n[INFO] Coop room has closed due to time running out.")
+                self._game.print_and_save("\n[COOP] Coop room has closed due to time running out.")
                 return -1
 
             # Start the Coop Mission again.
@@ -188,7 +190,7 @@ class Coop:
             if self._game.combat_mode.start_combat_mode(self._game.combat_script):
                 number_of_items_dropped = self._game.collect_loot()
         elif first_run is False:
-            self._game.print_and_save("\n[INFO] Starting Coop Mission again.")
+            self._game.print_and_save("\n[COOP] Starting Coop Mission again.")
 
             # Now start Combat Mode and detect any item drops.
             if self._game.combat_mode.start_combat_mode(self._game.combat_script):

@@ -7,6 +7,17 @@ class EventException(Exception):
 
 
 class Event:
+    """
+    Provides the navigation and any necessary utility functions to handle the Event or Event (Token Drawboxes) game mode.
+
+    Attributes
+    ----------
+    game_object (bot.Game): The Game object.
+
+    mission_name (str): The name of the Event mission.
+
+    """
+
     def __init__(self, game, mission_name: str):
         super().__init__()
 
@@ -15,7 +26,7 @@ class Event:
 
         ##########################
         # #### Advanced Setup ####
-        self._game.print_and_save("\n[INFO] Initializing settings for Event...")
+        self._game.print_and_save("\n[EVENT] Initializing settings for Event...")
 
         # #### config.ini ####
         config = ConfigParser()
@@ -36,31 +47,31 @@ class Event:
             self._event_nightmare_party_number = config.get("event", "event_nightmare_party_number")
 
             if self._event_nightmare_combat_script == "":
-                self._game.print_and_save("[INFO] Combat Script for Event will reuse the one for Farming Mode.")
+                self._game.print_and_save("[EVENT] Combat Script for Event will reuse the one for Farming Mode.")
                 self._event_nightmare_combat_script = self._game.combat_script
 
             if len(self._event_nightmare_summon_element_list) == 0:
-                self._game.print_and_save("[INFO] Summon Elements for Event will reuse the ones for Farming Mode.")
+                self._game.print_and_save("[EVENT] Summon Elements for Event will reuse the ones for Farming Mode.")
                 self._event_nightmare_summon_element_list = self._game.summon_element_list
 
             if len(self._event_nightmare_summon_list) == 0:
-                self._game.print_and_save("[INFO] Summons for Event will reuse the ones for Farming Mode.")
+                self._game.print_and_save("[EVENT] Summons for Event will reuse the ones for Farming Mode.")
                 self._event_nightmare_summon_list = self._game.summon_list
 
             if self._event_nightmare_group_number == "":
-                self._game.print_and_save("[INFO] Group Number for Event will reuse the one for Farming Mode.")
+                self._game.print_and_save("[EVENT] Group Number for Event will reuse the one for Farming Mode.")
                 self._event_nightmare_group_number = self._game.group_number
             else:
                 self._event_nightmare_group_number = int(self._event_nightmare_group_number)
 
             if self._event_nightmare_party_number == "":
-                self._game.print_and_save("[INFO] Party Number for Event will reuse the one for Farming Mode.")
+                self._game.print_and_save("[EVENT] Party Number for Event will reuse the one for Farming Mode.")
                 self._event_nightmare_party_number = self._game.party_number
             else:
                 self._event_nightmare_party_number = int(self._event_nightmare_party_number)
         # #### end of config.ini ####
 
-        self._game.print_and_save("[INFO] Settings initialized for Event...")
+        self._game.print_and_save("[EVENT] Settings initialized for Event...")
         # #### end of Advanced Setup ####
         #################################
 
@@ -129,6 +140,8 @@ class Event:
         Returns:
             None
         """
+        self._game.print_and_save(f"[EVENT.TOKEN.DRAWBOXES] Now beginning process to navigate to the mission: {self._mission_name}...")
+
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
@@ -145,7 +158,7 @@ class Event:
 
         # Check and click away the "Daily Missions" popup.
         if self._game.image_tools.confirm_location("event_daily_missions", tries = 1):
-            self._game.print_and_save(f"\n[INFO] Detected \"Daily Missions\" popup. Clicking it away...")
+            self._game.print_and_save(f"\n[EVENT.TOKEN.DRAWBOXES] Detected \"Daily Missions\" popup. Clicking it away...")
             self._game.find_and_click_button("close")
 
         # Remove the difficulty prefix from the mission name.
@@ -165,7 +178,7 @@ class Event:
         self._game.mouse_tools.scroll_screen_from_home_button(-200)
 
         if formatted_mission_name == "Event Quest":
-            self._game.print_and_save(f"[INFO] Now hosting Event Quest...")
+            self._game.print_and_save(f"[EVENT.TOKEN.DRAWBOXES] Now hosting Event Quest...")
             self._game.find_and_click_button("event_quests")
 
             self._game.wait(1)
@@ -177,7 +190,7 @@ class Event:
             self._game.mouse_tools.move_and_click_point(quest_play_locations[3][0], quest_play_locations[3][1], "play_round_button")
         elif formatted_mission_name == "Event Raid":
             # Bring up the "Raid Battle" popup. Then scroll down the screen a bit for screens less than 1440p to see the entire popup.
-            self._game.print_and_save(f"[INFO] Now hosting Event Raid...")
+            self._game.print_and_save(f"[EVENT.TOKEN.DRAWBOXES] Now hosting Event Raid...")
             if not self._game.find_and_click_button("event_raid_battle"):
                 self._game.image_tools.generate_alert(
                     "Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
@@ -208,7 +221,7 @@ class Event:
                         self._game.mouse_tools.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap")
 
             # If the user does not have enough Treasures to host a Extreme or an Impossible Raid, host a Very Hard Raid instead.
-            self._game.print_and_save(f"[INFO] Not enough materials to host {difficulty}. Hosting Very Hard instead...")
+            self._game.print_and_save(f"[EVENT.TOKEN.DRAWBOXES] Not enough materials to host {difficulty}. Hosting Very Hard instead...")
             self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
             if not self._game.image_tools.wait_vanish("close", timeout = 3):
                 self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
@@ -225,6 +238,8 @@ class Event:
         if self._game.farming_mode == "Event (Token Drawboxes)":
             self._navigate_token_drawboxes()
         else:
+            self._game.print_and_save(f"[EVENT] Now beginning process to navigate to the mission: {self._mission_name}...")
+
             # Go to the Home screen.
             self._game.go_back_home(confirm_location_check = True)
 
@@ -241,7 +256,7 @@ class Event:
 
             # Check and click away the "Daily Missions" popup.
             if self._game.image_tools.confirm_location("event_daily_missions", tries = 1):
-                self._game.print_and_save(f"\n[INFO] Detected \"Daily Missions\" popup. Clicking it away...")
+                self._game.print_and_save(f"\n[EVENT] Detected \"Daily Missions\" popup. Clicking it away...")
                 self._game.find_and_click_button("close")
 
             # Remove the difficulty prefix from the mission name.
@@ -277,10 +292,10 @@ class Event:
 
                 # Select the Event Quest or Event Raid. Additionally, offset the locations by 1 if there is a Nightmare available.
                 if formatted_mission_name == "Event Quest":
-                    self._game.print_and_save(f"[INFO] Now hosting Event Quest...")
+                    self._game.print_and_save(f"[EVENT] Now hosting Event Quest...")
                     self._game.mouse_tools.move_and_click_point(select_button_locations[0 + nightmare_is_available][0], select_button_locations[0 + nightmare_is_available][1], "select")
                 elif formatted_mission_name == "Event Raid":
-                    self._game.print_and_save(f"[INFO] Now hosting Event Raid...")
+                    self._game.print_and_save(f"[EVENT] Now hosting Event Raid...")
                     self._game.mouse_tools.move_and_click_point(select_button_locations[1 + nightmare_is_available][0], select_button_locations[1 + nightmare_is_available][1], "play_round_button")
 
                 self._game.wait(1)
@@ -305,7 +320,7 @@ class Event:
             first_run (bool): Flag that determines whether or not to run the navigation process again. Should be False if the Farming Mode supports the "Play Again" feature for repeated runs.
 
         Returns:
-            (int): Number of items detected.
+            (int): Number of runs completed.
         """
         number_of_items_dropped: int = 0
 

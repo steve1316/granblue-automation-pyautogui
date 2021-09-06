@@ -4,6 +4,17 @@ class GuildWarsException(Exception):
 
 
 class GuildWars:
+    """
+    Provides the navigation and any necessary utility functions to handle the Guild Wars game mode.
+
+    Attributes
+    ----------
+    game_object (bot.Game): The Game object.
+
+    mission_name (str): The name of the Guild Wars mission.
+
+    """
+
     def __init__(self, game, mission_name: str):
         super().__init__()
 
@@ -11,10 +22,15 @@ class GuildWars:
         self._mission_name: str = mission_name
 
     def _navigate(self):
+        """Navigates to the specified Guild Wars mission.
+
+        Returns:
+            None
+        """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
-        self._game.print_and_save(f"\n[INFO] Now navigating to Guild Wars...")
+        self._game.print_and_save(f"\n[GUILD.WARS] Now navigating to Guild Wars...")
 
         # Go to the Event by clicking on the "Menu" button and then click the very first banner.
         self._game.find_and_click_button("home_menu")
@@ -47,7 +63,7 @@ class GuildWars:
 
             # Perform different navigation actions based on whether the user wants to farm meat or to farm Nightmares.
             if difficulty == "Very Hard" or difficulty == "Extreme" or difficulty == "Extreme+":
-                self._game.print_and_save(f"\n[INFO] Now proceeding to farm meat.")
+                self._game.print_and_save(f"\n[GUILD.WARS] Now proceeding to farm meat.")
 
                 # Click on the banner to farm meat.
                 self._game.find_and_click_button("guild_wars_meat", grayscale = True)
@@ -55,17 +71,17 @@ class GuildWars:
                 if self._game.image_tools.confirm_location("guild_wars_meat"):
                     # Now click on the specified Mission to start.
                     if difficulty == "Very Hard":
-                        self._game.print_and_save(f"[INFO] Now hosting Very Hard now...")
+                        self._game.print_and_save(f"[GUILD.WARS] Now hosting Very Hard now...")
                         self._game.find_and_click_button("guild_wars_meat_very_hard")
                         self._game.wait(0.5)
                         self._game.find_and_click_button("guild_wars_meat_very_hard", tries = 1, suppress_error = True)
                     elif difficulty == "Extreme":
-                        self._game.print_and_save(f"[INFO] Now hosting Extreme now...")
+                        self._game.print_and_save(f"[GUILD.WARS] Now hosting Extreme now...")
                         self._game.find_and_click_button("guild_wars_meat_extreme")
                         self._game.wait(0.5)
                         self._game.find_and_click_button("guild_wars_meat_extreme", tries = 1, suppress_error = True)
                     elif difficulty == "Extreme+":
-                        self._game.print_and_save(f"[INFO] Now hosting Extreme+ now...")
+                        self._game.print_and_save(f"[GUILD.WARS] Now hosting Extreme+ now...")
                         self._game.find_and_click_button("guild_wars_meat_extreme+")
                         self._game.wait(0.5)
                         self._game.find_and_click_button("guild_wars_meat_extreme+", tries = 1, suppress_error = True)
@@ -76,14 +92,14 @@ class GuildWars:
                             raise GuildWarsException("You did not unlock Extreme+ yet!")
 
             else:
-                self._game.print_and_save(f"\n[INFO] Now proceeding to farm Nightmares.")
+                self._game.print_and_save(f"\n[GUILD.WARS] Now proceeding to farm Nightmares.")
 
                 # Click on the banner to farm Nightmares.
                 if difficulty != "NM150":
                     self._game.find_and_click_button("guild_wars_nightmare")
                     self._game.find_and_click_button("guild_wars_nightmare", tries = 1, suppress_error = True)
                 else:
-                    self._game.print_and_save(f"\n[INFO] Now hosting NM150 now...")
+                    self._game.print_and_save(f"\n[GUILD.WARS] Now hosting NM150 now...")
                     self._game.find_and_click_button("guild_wars_nightmare_150")
                     self._game.find_and_click_button("guild_wars_nightmare_150", tries = 1, suppress_error = True)
 
@@ -95,7 +111,7 @@ class GuildWars:
 
                     # If today is the first/second day of Guild Wars, only NM90 will be available.
                     if self._game.image_tools.confirm_location("guild_wars_nightmare_first_day", tries = 1):
-                        self._game.print_and_save(f"[INFO] Today is the first/second day so hosting NM90.")
+                        self._game.print_and_save(f"[GUILD.WARS] Today is the first/second day so hosting NM90.")
                         self._game.find_and_click_button("ok")
 
                         # Alert the user if they lack the meat to host this and stop the bot.
@@ -105,18 +121,18 @@ class GuildWars:
 
                     # If it is not the first/second day of Guild Wars, that means that other difficulties are now available.
                     elif difficulty == "NM90":
-                        self._game.print_and_save(f"[INFO] Now hosting NM90 now...")
+                        self._game.print_and_save(f"[GUILD.WARS] Now hosting NM90 now...")
                         self._game.mouse_tools.move_and_click_point(nightmare_locations[0][0], nightmare_locations[0][1], "guild_wars_nightmares")
                     elif difficulty == "NM95":
-                        self._game.print_and_save(f"[INFO] Now hosting NM95 now...")
+                        self._game.print_and_save(f"[GUILD.WARS] Now hosting NM95 now...")
                         self._game.mouse_tools.move_and_click_point(nightmare_locations[1][0], nightmare_locations[1][1], "guild_wars_nightmares")
                     elif difficulty == "NM100":
-                        self._game.print_and_save(f"[INFO] Now hosting NM100 now...")
+                        self._game.print_and_save(f"[GUILD.WARS] Now hosting NM100 now...")
                         self._game.mouse_tools.move_and_click_point(nightmare_locations[2][0], nightmare_locations[2][1], "guild_wars_nightmares")
 
                 else:
                     # If there is not enough meat to host, host Extreme+ instead.
-                    self._game.print_and_save(f"\n[INFO] User lacks meat to host the Nightmare. Hosting Extreme+ instead...")
+                    self._game.print_and_save(f"\n[GUILD.WARS] User lacks meat to host the Nightmare. Hosting Extreme+ instead...")
 
                     if difficulty != "NM150":
                         self._game.find_and_click_button("close")
@@ -127,7 +143,7 @@ class GuildWars:
                     self._game.find_and_click_button("guild_wars_meat")
 
                     if self._game.image_tools.confirm_location("guild_wars_meat"):
-                        self._game.print_and_save(f"[INFO] Now hosting Extreme+ now...")
+                        self._game.print_and_save(f"[GUILD.WARS] Now hosting Extreme+ now...")
                         self._game.find_and_click_button("guild_wars_meat_extreme+")
 
                         # Alert the user if they did not unlock Extreme+ and stop the bot.
@@ -144,7 +160,7 @@ class GuildWars:
             first_run (bool): Flag that determines whether or not to run the navigation process again. Should be False if the Farming Mode supports the "Play Again" feature for repeated runs.
 
         Returns:
-            (int): Number of items detected.
+            (int): Number of runs completed.
         """
         number_of_items_dropped: int = 0
 

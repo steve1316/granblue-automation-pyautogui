@@ -7,6 +7,17 @@ class XenoClashException(Exception):
 
 
 class XenoClash:
+    """
+    Provides the navigation and any necessary utility functions to handle the Xeno Clash game mode.
+
+    Attributes
+    ----------
+    game_object (bot.Game): The Game object.
+
+    mission_name (str): The name of the Xeno Clash mission.
+
+    """
+
     def __init__(self, game, mission_name: str):
         super().__init__()
 
@@ -18,7 +29,7 @@ class XenoClash:
 
         #########################
         # #### Advanced Setup ####
-        self._game.print_and_save("\n[INFO] Initializing settings for Xeno Clash Nightmare...")
+        self._game.print_and_save("\n[XENO.CLASH] Initializing settings for Xeno Clash Nightmare...")
 
         # #### config.ini ####
         self._enable_xeno_clash_nightmare = config.getboolean("xeno_clash", "enable_xeno_clash_nightmare")
@@ -38,30 +49,30 @@ class XenoClash:
         # #### end of config.ini ####
 
         if self._xeno_clash_nightmare_combat_script == "":
-            self._game.print_and_save("[INFO] Combat Script for Xeno Clash Nightmare will reuse the one for Farming Mode.")
+            self._game.print_and_save("[XENO.CLASH] Combat Script for Xeno Clash Nightmare will reuse the one for Farming Mode.")
             self._xeno_clash_nightmare_combat_script = self._game.combat_script
 
         if len(self._xeno_clash_nightmare_summon_element_list) == 0:
-            self._game.print_and_save("[INFO] Summon Elements for Xeno Clash Nightmare will reuse the ones for Farming Mode.")
+            self._game.print_and_save("[XENO.CLASH] Summon Elements for Xeno Clash Nightmare will reuse the ones for Farming Mode.")
             self._xeno_clash_nightmare_summon_element_list = self._game.summon_element_list
 
         if len(self._xeno_clash_nightmare_summon_list) == 0:
-            self._game.print_and_save("[INFO] Summons for Xeno Clash Nightmare will reuse the ones for Farming Mode.")
+            self._game.print_and_save("[XENO.CLASH] Summons for Xeno Clash Nightmare will reuse the ones for Farming Mode.")
             self._xeno_clash_nightmare_summon_list = self._game.summon_list
 
         if self._xeno_clash_nightmare_group_number == "":
-            self._game.print_and_save("[INFO] Group Number for Xeno Clash Nightmare will reuse the one for Farming Mode.")
+            self._game.print_and_save("[XENO.CLASH] Group Number for Xeno Clash Nightmare will reuse the one for Farming Mode.")
             self._xeno_clash_nightmare_group_number = self._game.group_number
         else:
             self._xeno_clash_nightmare_number = int(self._xeno_clash_nightmare_group_number)
 
         if self._xeno_clash_nightmare_party_number == "":
-            self._game.print_and_save("[INFO] Party Number for Xeno Clash Nightmare will reuse the one for Farming Mode.")
+            self._game.print_and_save("[XENO.CLASH] Party Number for Xeno Clash Nightmare will reuse the one for Farming Mode.")
             self._xeno_clash_nightmare_party_number = self._game.party_number
         else:
             self._xeno_clash_nightmare_party_number = int(self._xeno_clash_nightmare_party_number)
 
-        self._game.print_and_save("[INFO] Settings initialized for Xeno Clash Nightmare...")
+        self._game.print_and_save("[XENO.CLASH] Settings initialized for Xeno Clash Nightmare...")
         # #### end of Advanced Setup ####
         #################################
 
@@ -131,10 +142,15 @@ class XenoClash:
         return False
 
     def _navigate(self):
+        """Navigates to the specified Xeno Clash mission.
+
+        Returns:
+            None
+        """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
-        self._game.print_and_save(f"\n[INFO] Now navigating to Xeno Clash...")
+        self._game.print_and_save(f"\n[XENO.CLASH] Now navigating to Xeno Clash...")
 
         # Go to the Event by clicking on the "Menu" button and then click the very first banner.
         self._game.find_and_click_button("home_menu")
@@ -155,13 +171,13 @@ class XenoClash:
             select_button_locations = self._game.image_tools.find_all("select")
 
             if self._mission_name == "Xeno Clash Extreme":
-                self._game.print_and_save(f"[INFO] Now hosting Xeno Clash Extreme...")
+                self._game.print_and_save(f"[XENO.CLASH] Now hosting Xeno Clash Extreme...")
                 self._game.mouse_tools.move_and_click_point(select_button_locations[1 + nightmare_is_available][0], select_button_locations[1 + nightmare_is_available][1], "select")
 
                 difficulty_button_locations = self._game.image_tools.find_all("play_round_button")
                 self._game.mouse_tools.move_and_click_point(difficulty_button_locations[0][0], difficulty_button_locations[0][1], "play_round_button")
             elif self._mission_name == "Xeno Clash Raid":
-                self._game.print_and_save(f"[INFO] Now hosting Xeno Clash Raid...")
+                self._game.print_and_save(f"[XENO.CLASH] Now hosting Xeno Clash Raid...")
                 self._game.mouse_tools.move_and_click_point(select_button_locations[2 + nightmare_is_available][0], select_button_locations[2 + nightmare_is_available][1], "select")
 
                 self._game.wait(1)
@@ -177,7 +193,7 @@ class XenoClash:
             first_run (bool): Flag that determines whether or not to run the navigation process again. Should be False if the Farming Mode supports the "Play Again" feature for repeated runs.
 
         Returns:
-            (int): Number of items detected.
+            (int): Number of runs completed.
         """
         number_of_items_dropped: int = 0
 

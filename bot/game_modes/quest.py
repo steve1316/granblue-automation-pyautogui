@@ -40,6 +40,8 @@ class Quest:
         Returns:
             (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
         """
+        self._game.print_and_save(f"\n[QUEST] Beginning process to navigate to the island: {map_name}...")
+
         # Phantagrande Skydom Page 1
         if self._page_1_list.__contains__(map_name):
             # Switch pages if needed.
@@ -93,6 +95,8 @@ class Quest:
         Returns:
             None
         """
+        self._game.print_and_save(f"\n[QUEST] Beginning process to navigate to the mission: {self._mission_name}...")
+
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
@@ -101,10 +105,10 @@ class Quest:
 
         # Check which island the bot is at.
         if self._game.image_tools.confirm_location(f"map_{formatted_map_name}", tries = 2):
-            self._game.print_and_save(f"\n[INFO] Bot is currently on the correct island.")
+            self._game.print_and_save(f"[QUEST] Bot is currently on the correct island.")
             check_location = True
         else:
-            self._game.print_and_save(f"\n[INFO] Bot is currently not on the correct island.")
+            self._game.print_and_save(f"[QUEST] Bot is currently not on the correct island.")
             check_location = False
 
             location_list = ["Zinkenstill", "Port Breeze Archipelago", "Valtz Duchy", "Auguste Isles", "Lumacie Archipelago", "Albion Citadel", "Mist-Shrouded Isle", "Golonzo Island",
@@ -115,7 +119,7 @@ class Quest:
                 temp_formatted_map_location = temp_map_location.lower().replace(" ", "_").replace("-", "_")
 
                 if self._game.image_tools.confirm_location(f"map_{temp_formatted_map_location}", tries = 1):
-                    self._game.print_and_save(f"\n[INFO] Bot's current location is at {temp_map_location}. Now moving to {self._map_name}...")
+                    self._game.print_and_save(f"[QUEST] Bot's current location is at {temp_map_location}. Now moving to {self._map_name}...")
                     current_location = temp_map_location
                     break
 
@@ -147,44 +151,43 @@ class Quest:
 
             # Now that the bot is on the correct island and is at the Quest screen, click the correct chapter node.
             if self._mission_name == "Scattered Cargo":
-                self._game.print_and_save(f"\n[INFO] Moving to Chapter 1 (115) node at ({world_location[0] + 97}, {world_location[1] + 97})...")
+                self._game.print_and_save(f"\n[QUEST] Moving to Chapter 1 (115) node at ({world_location[0] + 97}, {world_location[1] + 97})...")
                 self._game.mouse_tools.move_and_click_point(world_location[0] + 97, world_location[1] + 97, "template_node")
             elif self._mission_name == "Lucky Charm Hunt":
-                self._game.print_and_save(f"\n[INFO] Moving to Chapter 6 (122) node...")
+                self._game.print_and_save(f"\n[QUEST] Moving to Chapter 6 (122) node...")
                 self._game.mouse_tools.move_and_click_point(world_location[0] + 332, world_location[1] + 16, "template_node")
             elif self._mission_name == "Special Op's Request":
-                self._game.print_and_save(f"\n[INFO] Moving to Chapter 8 node...")
+                self._game.print_and_save(f"\n[QUEST] Moving to Chapter 8 node...")
                 self._game.mouse_tools.move_and_click_point(world_location[0] + 258, world_location[1] + 151, "template_node")
             elif self._mission_name == "Threat to the Fisheries":
-                self._game.print_and_save(f"\n[INFO] Moving to Chapter 9 node...")
+                self._game.print_and_save(f"\n[QUEST] Moving to Chapter 9 node...")
                 self._game.mouse_tools.move_and_click_point(world_location[0] + 216, world_location[1] + 113, "template_node")
             elif self._mission_name == "The Fruit of Lumacie" or self._mission_name == "Whiff of Danger":
-                self._game.print_and_save(f"\n[INFO] Moving to Chapter 13 (39/52) node...")
+                self._game.print_and_save(f"\n[QUEST] Moving to Chapter 13 (39/52) node...")
                 self._game.mouse_tools.move_and_click_point(world_location[0] + 78, world_location[1] + 92, "template_node")
             elif self._mission_name == "I Challenge You!":
-                self._game.print_and_save(f"\n[INFO] Moving to Chapter 17 node...")
+                self._game.print_and_save(f"\n[QUEST] Moving to Chapter 17 node...")
                 self._game.mouse_tools.move_and_click_point(world_location[0] + 119, world_location[1] + 121, "template_node")
             elif self._mission_name == "For Whom the Bell Tolls":
-                self._game.print_and_save(f"\n[INFO] Moving to Chapter 22 node...")
+                self._game.print_and_save(f"\n[QUEST] Moving to Chapter 22 node...")
                 self._game.mouse_tools.move_and_click_point(world_location[0] + 178, world_location[1] + 33, "template_node")
             elif self._mission_name == "Golonzo's Battles of Old":
-                self._game.print_and_save(f"\n[INFO] Moving to Chapter 25 node...")
+                self._game.print_and_save(f"\n[QUEST] Moving to Chapter 25 node...")
                 self._game.mouse_tools.move_and_click_point(world_location[0] + 196, world_location[1] + 5, "template_node")
             elif self._mission_name == "The Dungeon Diet":
-                self._game.print_and_save(f"\n[INFO] Moving to Chapter 30 (44/65) node...")
+                self._game.print_and_save(f"\n[QUEST] Moving to Chapter 30 (44/65) node...")
                 self._game.mouse_tools.move_and_click_point(world_location[0] + 242, world_location[1] + 24, "template_node")
             elif self._mission_name == "Trust Busting Dustup":
-                self._game.print_and_save(f"\n[INFO] Moving to Chapter 36 (123) node...")
+                self._game.print_and_save(f"\n[QUEST] Moving to Chapter 36 (123) node...")
                 self._game.mouse_tools.move_and_click_point(world_location[0] + 319, world_location[1] + 13, "template_node")
             elif self._mission_name == "Erste Kingdom Episode 4":
-                self._game.print_and_save(f"\n[INFO] Moving to Chapter 70 node...")
+                self._game.print_and_save(f"\n[QUEST] Moving to Chapter 70 node...")
                 self._game.mouse_tools.move_and_click_point(world_location[0] + 253, world_location[1] + 136, "template_node")
             elif self._mission_name == "Imperial Wanderer's Soul":
-                self._game.print_and_save(f"\n[INFO] Moving to Chapter 55 node...")
+                self._game.print_and_save(f"\n[QUEST] Moving to Chapter 55 node...")
                 self._game.mouse_tools.move_and_click_point(world_location[0] + 162, world_location[1] + 143, "template_node")
 
             # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
-            self._game.print_and_save(f"\n[INFO] Now bringing up Summon Selection screen for \"{self._mission_name}\"...")
             self._game.mouse_tools.scroll_screen(self._game.home_button_location[0], self._game.home_button_location[1] - 50, -1000)
             self._game.find_and_click_button(self._mission_name.replace(" ", "_"))
 

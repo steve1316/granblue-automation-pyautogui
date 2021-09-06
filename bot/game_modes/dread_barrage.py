@@ -4,6 +4,17 @@ class DreadBarrageException(Exception):
 
 
 class DreadBarrage:
+    """
+    Provides the navigation and any necessary utility functions to handle the Dread Barrage game mode.
+
+    Attributes
+    ----------
+    game_object (bot.Game): The Game object.
+
+    mission_name (str): The name of the Dread Barrage mission.
+
+    """
+
     def __init__(self, game, mission_name: str):
         super().__init__()
 
@@ -11,11 +22,16 @@ class DreadBarrage:
         self._mission_name: str = mission_name
 
     def _navigate(self):
+        """Navigates to the specified Dread Barrage mission.
+
+        Returns:
+            None
+        """
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
         # Scroll down the screen a little bit and then click the Dread Barrage banner.
-        self._game.print_and_save(f"\n[INFO] Now navigating to Dread Barrage...")
+        self._game.print_and_save(f"\n[DREAD.BARRAGE] Now navigating to Dread Barrage...")
         self._game.mouse_tools.scroll_screen_from_home_button(-400)
         self._game.find_and_click_button("dread_barrage")
 
@@ -61,19 +77,19 @@ class DreadBarrage:
 
             # Navigate to the specified difficulty.
             if difficulty == "1 Star":
-                self._game.print_and_save(f"[INFO] Now starting 1 Star Dread Barrage Raid...")
+                self._game.print_and_save(f"[DREAD.BARRAGE] Now starting 1 Star Dread Barrage Raid...")
                 self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[0][0], dread_barrage_play_button_locations[0][1], "dread_barrage_play")
             elif difficulty == "2 Star":
-                self._game.print_and_save(f"[INFO] Now starting 2 Star Dread Barrage Raid...")
+                self._game.print_and_save(f"[DREAD.BARRAGE] Now starting 2 Star Dread Barrage Raid...")
                 self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[1][0], dread_barrage_play_button_locations[1][1], "dread_barrage_play")
             elif difficulty == "3 Star":
-                self._game.print_and_save(f"[INFO] Now starting 3 Star Dread Barrage Raid...")
+                self._game.print_and_save(f"[DREAD.BARRAGE] Now starting 3 Star Dread Barrage Raid...")
                 self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[2][0], dread_barrage_play_button_locations[2][1], "dread_barrage_play")
             elif difficulty == "4 Star":
-                self._game.print_and_save(f"[INFO] Now starting 4 Star Dread Barrage Raid...")
+                self._game.print_and_save(f"[DREAD.BARRAGE] Now starting 4 Star Dread Barrage Raid...")
                 self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[3][0], dread_barrage_play_button_locations[3][1], "dread_barrage_play")
             elif difficulty == "5 Star":
-                self._game.print_and_save(f"[INFO] Now starting 5 Star Dread Barrage Raid...")
+                self._game.print_and_save(f"[DREAD.BARRAGE] Now starting 5 Star Dread Barrage Raid...")
                 self._game.mouse_tools.move_and_click_point(dread_barrage_play_button_locations[4][0], dread_barrage_play_button_locations[4][1], "dread_barrage_play")
 
             self._game.wait(2)
@@ -85,7 +101,7 @@ class DreadBarrage:
             first_run (bool): Flag that determines whether or not to run the navigation process again. Should be False if the Farming Mode supports the "Play Again" feature for repeated runs.
 
         Returns:
-            (int): Number of items detected.
+            (int): Number of runs completed.
         """
         number_of_items_dropped: int = 0
 

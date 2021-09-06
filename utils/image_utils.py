@@ -19,7 +19,7 @@ class ImageUtils:
 
     Attributes
     ----------
-    bot (bot.Game): The Game object.
+    game (bot.Game): The Game object.
 
     debug_mode (bool, optional): Optional flag to print debug messages related to this class. Defaults to False.
 
@@ -66,12 +66,10 @@ class ImageUtils:
         Returns:
             None
         """
-        self._game.print_and_save(f"\n[INFO] Optimizing window dimensions...")
         self._window_left = window_left
         self._window_top = window_top
         self._window_width = window_width
         self._window_height = window_height
-        self._game.print_and_save(f"[INFO] Optimizing window dimensions complete.")
 
         return None
 

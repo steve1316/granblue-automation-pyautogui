@@ -4,6 +4,17 @@ class RaidException(Exception):
 
 
 class Raid:
+    """
+    Provides the navigation and any necessary utility functions to handle the Raid game mode.
+
+    Attributes
+    ----------
+    game_object (bot.Game): The Game object.
+
+    mission_name (str): The name of the Raid mission.
+
+    """
+
     def __init__(self, game, mission_name: str):
         super().__init__()
 
@@ -23,7 +34,7 @@ class Raid:
 
         if joined_locations is not None:
             self._raids_joined = len(joined_locations)
-            self._game.print_and_save(f"\n[INFO] There are currently {self._raids_joined} raids joined.")
+            self._game.print_and_save(f"\n[RAID] There are currently {self._raids_joined} raids joined.")
 
         return None
 
@@ -35,7 +46,7 @@ class Raid:
         """
         # If the maximum number of raids has been joined, collect any pending rewards with a interval of 30 seconds in between until the number of joined raids is below 3.
         while self._raids_joined >= 3:
-            self._game.print_and_save(f"\n[INFO] Maximum raids of 3 has been joined. Waiting 30 seconds to see if any finish.")
+            self._game.print_and_save(f"\n[RAID] Maximum raids of 3 has been joined. Waiting 30 seconds to see if any finish.")
             self._game.wait(30)
 
             self._game.go_back_home(confirm_location_check = True)
@@ -110,6 +121,8 @@ class Raid:
         Returns:
             None
         """
+        self._game.print_and_save(f"\n[RAID] Beginning process to navigate to the raid: {self._mission_name}...")
+
         # Head to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
@@ -135,7 +148,7 @@ class Raid:
             self._clear_joined_raids()
 
             # Click on the "Enter ID" button and then start the process to join a raid.
-            self._game.print_and_save(f"\n[INFO] Now moving to the \"Enter ID\" screen.")
+            self._game.print_and_save(f"\n[RAID] Now moving to the \"Enter ID\" screen.")
             if self._game.find_and_click_button("enter_id"):
                 self._join_raid()
         else:
@@ -174,13 +187,13 @@ class Raid:
 
                     # Handle the rare case where joining the Raid after selecting the Summon and Party led the bot to the Quest Results screen with no loot to collect.
                     if self._game.image_tools.confirm_location("no_loot", tries = 1):
-                        self._game.print_and_save("\n[INFO] Seems that the Raid just ended. Moving back to the Home screen and joining another Raid...")
+                        self._game.print_and_save("\n[RAID] Seems that the Raid just ended. Moving back to the Home screen and joining another Raid...")
                     else:
                         # Now start Combat Mode and detect any item drops.
                         if self._game.combat_mode.start_combat_mode(self._game.combat_script):
                             number_of_items_dropped = self._game.collect_loot()
                 else:
-                    self._game.print_and_save("\n[INFO] Seems that the Raid ended before the bot was able to join. Now looking for another Raid to join...")
+                    self._game.print_and_save("\n[RAID] Seems that the Raid ended before the bot was able to join. Now looking for another Raid to join...")
         else:
             raise RaidException("Failed to arrive at the Summon Selection screen.")
 

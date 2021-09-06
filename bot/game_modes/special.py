@@ -32,7 +32,7 @@ class Special:
 
         ##########################
         # #### Advanced Setup ####
-        self._game.print_and_save("\n[INFO] Initializing settings for Dimensional Halo...")
+        self._game.print_and_save("\n[SPECIAL] Initializing settings for Dimensional Halo...")
 
         # #### config.ini ####
         self._enable_dimensional_halo = config.getboolean("dimensional_halo", "enable_dimensional_halo")
@@ -53,30 +53,30 @@ class Special:
         # #### end of config.ini ####
 
         if self._dimensional_halo_combat_script == "":
-            self._game.print_and_save("[INFO] Combat Script for Dimensional Halo will reuse the one for Farming Mode.")
+            self._game.print_and_save("[SPECIAL] Combat Script for Dimensional Halo will reuse the one for Farming Mode.")
             self._dimensional_halo_combat_script = self._game.combat_script
 
         if len(self._dimensional_halo_summon_element_list) == 0:
-            self._game.print_and_save("[INFO] Summon Elements for Dimensional Halo will reuse the ones for Farming Mode.")
+            self._game.print_and_save("[SPECIAL] Summon Elements for Dimensional Halo will reuse the ones for Farming Mode.")
             self._dimensional_halo_summon_element_list = self._game.summon_element_list
 
         if len(self._dimensional_halo_summon_list) == 0:
-            self._game.print_and_save("[INFO] Summons for Dimensional Halo will reuse the ones for Farming Mode.")
+            self._game.print_and_save("[SPECIAL] Summons for Dimensional Halo will reuse the ones for Farming Mode.")
             self._dimensional_halo_summon_list = self._game.summon_list
 
         if self._dimensional_halo_group_number == "":
-            self._game.print_and_save("[INFO] Group Number for Dimensional Halo will reuse the one for Farming Mode.")
+            self._game.print_and_save("[SPECIAL] Group Number for Dimensional Halo will reuse the one for Farming Mode.")
             self._dimensional_halo_group_number = self._game.group_number
         else:
             self._dimensional_halo_group_number = int(self._dimensional_halo_group_number)
 
         if self._dimensional_halo_party_number == "":
-            self._game.print_and_save("[INFO] Party Number for Dimensional Halo will reuse the one for Farming Mode.")
+            self._game.print_and_save("[SPECIAL] Party Number for Dimensional Halo will reuse the one for Farming Mode.")
             self._dimensional_halo_party_number = self._game.party_number
         else:
             self._dimensional_halo_party_number = int(self._dimensional_halo_party_number)
 
-        self._game.print_and_save("[INFO] Settings initialized for Special...")
+        self._game.print_and_save("[SPECIAL] Settings initialized for Special...")
         # #### end of Advanced Setup ####
         #################################
 
@@ -126,11 +126,13 @@ class Special:
         return False
 
     def _navigate(self):
-        """Navigates to the specified Quest mission.
+        """Navigates to the specified Special mission.
 
         Returns:
             None
         """
+        self._game.print_and_save(f"\n[SPECIAL] Beginning process to navigate to the mission: {self._mission_name}...")
+
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
@@ -173,7 +175,7 @@ class Special:
 
                     mission_select_button = self._game.image_tools.find_button(self._map_name.lower().replace(" ", "_").replace("-", "_"))
                     if mission_select_button is not None:
-                        self._game.print_and_save(f"\n[INFO] Navigating to {self._map_name}...")
+                        self._game.print_and_save(f"[SPECIAL] Navigating to {self._map_name}...")
 
                         # Move to the specified Special by clicking its "Select" button.
                         special_quest_select_button = (mission_select_button[0] + 145, mission_select_button[1] + 75)
@@ -186,21 +188,21 @@ class Special:
 
                             if formatted_mission_name == "Scarlet Trial":
                                 # Navigate to Scarlet Trial.
-                                self._game.print_and_save(f"[INFO] Selecting Scarlet Trial...")
+                                self._game.print_and_save(f"[SPECIAL] Selecting Scarlet Trial...")
                                 self._game.mouse_tools.move_and_click_point(locations[0][0], locations[0][1], "play_round_button")
                             elif formatted_mission_name == "Cerulean Trial":
                                 # Navigate to Cerulean Trial.
-                                self._game.print_and_save(f"[INFO] Selecting Cerulean Trial...")
+                                self._game.print_and_save(f"[SPECIAL] Selecting Cerulean Trial...")
                                 self._game.mouse_tools.move_and_click_point(locations[1][0], locations[1][1], "play_round_button")
                             elif formatted_mission_name == "Violet Trial":
                                 # Navigate to Violet Trial.
-                                self._game.print_and_save(f"[INFO] Selecting Violet Trial...")
+                                self._game.print_and_save(f"[SPECIAL] Selecting Violet Trial...")
                                 self._game.mouse_tools.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
 
                             self._game.wait(1)
 
                             # Now start the Trial with the specified difficulty.
-                            self._game.print_and_save(f"[INFO] Now navigating to {difficulty}...")
+                            self._game.print_and_save(f"[SPECIAL] Now navigating to {difficulty}...")
                             locations = self._game.image_tools.find_all("play_round_button")
 
                             if difficulty == "Normal":
@@ -212,7 +214,7 @@ class Special:
 
                         elif self._map_name == "Shiny Slime Search!":
                             # Start up the Shiny Slime Search! mission by selecting its difficulty.
-                            self._game.print_and_save(f"[INFO] Selecting {difficulty} Shiny Slime Search!...")
+                            self._game.print_and_save(f"[SPECIAL] Selecting {difficulty} Shiny Slime Search!...")
                             locations = self._game.image_tools.find_all("play_round_button")
 
                             if difficulty == "Normal":
@@ -224,7 +226,7 @@ class Special:
 
                         elif self._map_name == "Six Dragon Trial":
                             # Start up the Six Dragon Trial mission by selecting its difficulty.
-                            self._game.print_and_save(f"[INFO] Selecting {difficulty} Six Dragon Trial...")
+                            self._game.print_and_save(f"[SPECIAL] Selecting {difficulty} Six Dragon Trial...")
                             locations = self._game.image_tools.find_all("play_round_button")
 
                             if difficulty == "Normal":
@@ -236,7 +238,7 @@ class Special:
 
                         elif self._map_name == "Elemental Treasure Quests":
                             # Start up the specified Elemental Treasure Quest mission.
-                            self._game.print_and_save(f"[INFO] Selecting {self._mission_name}...")
+                            self._game.print_and_save(f"[SPECIAL] Selecting {self._mission_name}...")
                             locations = self._game.image_tools.find_all("play_round_button")
 
                             if formatted_mission_name == "The Hellfire Trial":
@@ -257,32 +259,32 @@ class Special:
 
                             if formatted_mission_name == "Ifrit Showdown":
                                 # Navigate to Ifrit Showdown.
-                                self._game.print_and_save(f"[INFO] Selecting Ifrit Showdown...")
+                                self._game.print_and_save(f"[SPECIAL] Selecting Ifrit Showdown...")
                                 self._game.mouse_tools.move_and_click_point(locations[0][0], locations[0][1], "play_round_button")
                             elif formatted_mission_name == "Cocytus Showdown":
                                 # Navigate to Cocytus Showdown.
-                                self._game.print_and_save(f"[INFO] Selecting Cocytus Showdown...")
+                                self._game.print_and_save(f"[SPECIAL] Selecting Cocytus Showdown...")
                                 self._game.mouse_tools.move_and_click_point(locations[1][0], locations[1][1], "play_round_button")
                             elif formatted_mission_name == "Vohu Manah Showdown":
                                 # Navigate to Vohu Manah Showdown.
-                                self._game.print_and_save(f"[INFO] Selecting Vohu Manah Showdown...")
+                                self._game.print_and_save(f"[SPECIAL] Selecting Vohu Manah Showdown...")
                                 self._game.mouse_tools.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
                             elif formatted_mission_name == "Sagittarius Showdown":
                                 # Navigate to Sagittarius Showdown.
-                                self._game.print_and_save(f"[INFO] Selecting Sagittarius Showdown...")
+                                self._game.print_and_save(f"[SPECIAL] Selecting Sagittarius Showdown...")
                                 self._game.mouse_tools.move_and_click_point(locations[3][0], locations[3][1], "play_round_button")
                             elif formatted_mission_name == "Corow Showdown":
                                 # Navigate to Corow Showdown.
-                                self._game.print_and_save(f"[INFO] Selecting Corow Showdown...")
+                                self._game.print_and_save(f"[SPECIAL] Selecting Corow Showdown...")
                                 self._game.mouse_tools.move_and_click_point(locations[4][0], locations[4][1], "play_round_button")
                             elif formatted_mission_name == "Diablo Showdown":
                                 # Navigate to Diablo Showdown.
-                                self._game.print_and_save(f"[INFO] Selecting Diablo Showdown...")
+                                self._game.print_and_save(f"[SPECIAL] Selecting Diablo Showdown...")
                                 self._game.mouse_tools.move_and_click_point(locations[5][0], locations[5][1], "play_round_button")
 
                             # Now start the Showdown with the specified difficulty.
                             self._game.wait(1)
-                            self._game.print_and_save(f"[INFO] Now navigating to {difficulty}...")
+                            self._game.print_and_save(f"[SPECIAL] Now navigating to {difficulty}...")
                             locations = self._game.image_tools.find_all("play_round_button")
 
                             if difficulty == "Hard":
@@ -293,7 +295,7 @@ class Special:
                                 self._game.mouse_tools.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
 
                         elif self._map_name == "Campaign-Exclusive Quest":
-                            self._game.print_and_save(f"[INFO] Selecting Campaign-Exclusive Quest...")
+                            self._game.print_and_save(f"[SPECIAL] Selecting Campaign-Exclusive Quest...")
                             locations = self._game.image_tools.find_all("play_round_button")
 
                             # There is only one round "Play" button for this time-limited quest.
@@ -301,7 +303,7 @@ class Special:
 
                         else:
                             # Start up the Angel Halo mission by selecting its difficulty.
-                            self._game.print_and_save(f"[INFO] Selecting {difficulty} Angel Halo...")
+                            self._game.print_and_save(f"[SPECIAL] Selecting {difficulty} Angel Halo...")
                             locations = self._game.image_tools.find_all("play_round_button")
 
                             if difficulty == "Normal":

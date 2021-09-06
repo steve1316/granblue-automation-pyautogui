@@ -7,6 +7,17 @@ class RiseOfTheBeastsException(Exception):
 
 
 class RiseOfTheBeasts:
+    """
+    Provides the navigation and any necessary utility functions to handle the Rise of the Beasts game mode.
+
+    Attributes
+    ----------
+    game_object (bot.Game): The Game object.
+
+    mission_name (str): The name of the Rise of the Beasts mission.
+
+    """
+
     def __init__(self, game, mission_name: str):
         super().__init__()
 
@@ -18,7 +29,7 @@ class RiseOfTheBeasts:
 
         ##########################
         # #### Advanced Setup ####
-        self._game.print_and_save("\n[INFO] Initializing settings for Rise of the Beasts Extreme+...")
+        self._game.print_and_save("\n[ROTB] Initializing settings for Rise of the Beasts Extreme+...")
 
         # #### config.ini ####
         self._enable_rotb_extreme_plus = config.getboolean("rise_of_the_beasts", "enable_rotb_extreme_plus")
@@ -39,30 +50,30 @@ class RiseOfTheBeasts:
         # #### end of config.ini ####
 
         if self._rotb_extreme_plus_combat_script == "":
-            self._game.print_and_save("[INFO] Combat Script for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
+            self._game.print_and_save("[ROTB] Combat Script for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
             self._rotb_extreme_plus_combat_script = self._game.combat_script
 
         if len(self._rotb_extreme_plus_summon_element_list) == 0:
-            self._game.print_and_save("[INFO] Summon Elements for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
+            self._game.print_and_save("[ROTB] Summon Elements for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
             self._rotb_extreme_plus_summon_element_list = self._game.summon_element_list
 
         if len(self._rotb_extreme_plus_summon_list) == 0:
-            self._game.print_and_save("[INFO] Summons for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
+            self._game.print_and_save("[ROTB] Summons for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
             self._rotb_extreme_plus_summon_list = self._game.summon_list
 
         if self._rotb_extreme_plus_group_number == "":
-            self._game.print_and_save("[INFO] Group Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
+            self._game.print_and_save("[ROTB] Group Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
             self._rotb_extreme_plus_group_number = self._game.group_number
         else:
             self._rotb_extreme_plus_group_number = int(self._rotb_extreme_plus_group_number)
 
         if self._rotb_extreme_plus_party_number == "":
-            self._game.print_and_save("[INFO] Party Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
+            self._game.print_and_save("[ROTB] Party Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
             self._rotb_extreme_plus_party_number = self._game.party_number
         else:
             self._rotb_extreme_plus_party_number = int(self._rotb_extreme_plus_party_number)
 
-        self._game.print_and_save("[INFO] Settings initialized for Rise of the Beasts Extreme+...")
+        self._game.print_and_save("[ROTB] Settings initialized for Rise of the Beasts Extreme+...")
         # #### end of Advanced Setup ####
         #################################
 
@@ -119,7 +130,7 @@ class RiseOfTheBeasts:
         # Go to the Home screen.
         self._game.go_back_home(confirm_location_check = True)
 
-        self._game.print_and_save(f"\n[INFO] Now navigating to Rise of the Beasts...")
+        self._game.print_and_save(f"\n[ROTB] Now navigating to Rise of the Beasts...")
 
         # Go to the Event by clicking on the "Menu" button and then click the very first banner.
         self._game.find_and_click_button("home_menu")
@@ -142,34 +153,34 @@ class RiseOfTheBeasts:
             # Only Raids are marked with Extreme difficulty.
             if difficulty == "Extreme":
                 # Click on the Raid banner.
-                self._game.print_and_save(f"[INFO] Now hosting {temp_mission_name} Raid...")
+                self._game.print_and_save(f"[ROTB] Now hosting {temp_mission_name} Raid...")
                 self._game.find_and_click_button("rotb_extreme")
 
                 if self._game.image_tools.confirm_location("rotb_battle_the_beasts"):
                     if temp_mission_name == "Zhuque":
-                        self._game.print_and_save(f"[INFO] Now starting EX Zhuque Raid...")
+                        self._game.print_and_save(f"[ROTB] Now starting EX Zhuque Raid...")
                         self._game.find_and_click_button("rotb_raid_zhuque")
                     elif temp_mission_name == "Xuanwu":
-                        self._game.print_and_save(f"[INFO] Now starting EX Xuanwu Raid...")
+                        self._game.print_and_save(f"[ROTB] Now starting EX Xuanwu Raid...")
                         self._game.find_and_click_button("rotb_raid_xuanwu")
                     elif temp_mission_name == "Baihu":
-                        self._game.print_and_save(f"[INFO] Now starting EX Baihu Raid...")
+                        self._game.print_and_save(f"[ROTB] Now starting EX Baihu Raid...")
                         self._game.find_and_click_button("rotb_raid_baihu")
                     elif temp_mission_name == "Qinglong":
-                        self._game.print_and_save(f"[INFO] Now starting EX Qinglong Raid...")
+                        self._game.print_and_save(f"[ROTB] Now starting EX Qinglong Raid...")
                         self._game.find_and_click_button("rotb_raid_qinglong")
 
             elif self._mission_name == "Lvl 100 Shenxian":
                 # Click on Shenxian to host.
-                self._game.print_and_save(f"[INFO] Now hosting Shenxian Raid...")
+                self._game.print_and_save(f"[ROTB] Now hosting Shenxian Raid...")
                 self._game.find_and_click_button("rotb_shenxian_host")
 
                 if self._game.image_tools.wait_vanish("rotb_shenxian_host", timeout = 10) is False:
-                    self._game.print_and_save(f"[INFO] There are no more Shenxian hosts left. Alerting user...")
-                    raise Exception("There are no more Shenxian hosts left.")
+                    self._game.print_and_save(f"[ROTB] There are no more Shenxian hosts left. Alerting user...")
+                    raise RiseOfTheBeastsException("There are no more Shenxian hosts left.")
 
             else:
-                self._game.print_and_save(f"[INFO] Now hosting {temp_mission_name} Quest...")
+                self._game.print_and_save(f"[ROTB] Now hosting {temp_mission_name} Quest...")
 
                 # Scroll the screen down to make way for smaller screens.
                 self._game.mouse_tools.scroll_screen_from_home_button(-400)
@@ -208,7 +219,7 @@ class RiseOfTheBeasts:
             first_run (bool): Flag that determines whether or not to run the navigation process again. Should be False if the Farming Mode supports the "Play Again" feature for repeated runs.
 
         Returns:
-            (int): Number of items detected.
+            (int): Number of runs completed.
         """
         number_of_items_dropped: int = 0
 
