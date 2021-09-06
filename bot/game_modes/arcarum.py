@@ -99,9 +99,6 @@ class Arcarum:
 
         tries = 3
         while tries > 0:
-            if self._check_for_boss():
-                return "Boss Detected"
-
             # Prioritise any enemies/chests/thorns that are available on the current node.
             if self._game.find_and_click_button("arcarum_action", tries = 1):
                 self._game.wait(2)
@@ -126,6 +123,10 @@ class Arcarum:
             if self._game.find_and_click_button("arcarum_node", tries = 1):
                 self._game.wait(1)
                 return "Navigating"
+
+            # Check if a Arcarum boss has appeared. This is after checking for available actions and before searching for a node to move to avoid false positives.
+            if self._check_for_boss():
+                return "Boss Detected"
 
             # Next, attempt to navigate to a node that is occupied by mob(s).
             self._game.print_and_save(f"[ARCARUM] No available node to move to. Looking for nodes with mobs on them...")
