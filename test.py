@@ -38,10 +38,23 @@ class Test(unittest.TestCase):
         self.assertEqual(result, 4)
 
     def test_twitter_functionality(self):
-        tweets = self.game_object.room_finder.find_most_recent("Lvl 120 Avatar", 5)
-        print(f"\nFound room codes: {tweets}")
+        self.game_object.wait(5)
 
-        self.assertGreaterEqual(len(tweets), 1)
+        tries = 30
+        room_codes = []
+        while tries > 0:
+            code = self.game_object.room_finder.get_room_code()
+            if code != "":
+                room_codes.append(code)
+                if len(room_codes) >= 5:
+                    break
+
+            tries -= 1
+            self.game_object.wait(1)
+
+        self.game_object.room_finder.disconnect()
+        print(f"\nFound room codes: {room_codes}")
+        self.assertGreaterEqual(len(room_codes), 5)
 
     def test_combat_mode_old_lignoid(self):
         # Make sure the bot is at the Home screen and go to the Trial Battles screen.
@@ -146,13 +159,16 @@ if __name__ == "__main__":
                 item_name = "Wind Orb"
             elif option == 7:
                 item_name = "Sagittarius Omega Anima"
-
-            game = Game(queue = multiprocessing.Queue(), discord_queue = multiprocessing.Queue(), is_bot_running = multiprocessing.Value("i", 0), item_name = item_name, item_amount_to_farm = amount,
-                        farming_mode = mode, map_name = map_name, mission_name = mission_name, summon_element_list = summon_element_list, summon_list = summon_list, group_number = group,
-                        party_number = party, combat_script = combat_script)
-            test = Test(game)
+            elif option == 8:
+                mission_name = "Lvl 120 Avatar"
 
             try:
+                game = Game(queue = multiprocessing.Queue(), discord_queue = multiprocessing.Queue(), is_bot_running = multiprocessing.Value("i", 0), item_name = item_name,
+                            item_amount_to_farm = amount,
+                            farming_mode = mode, map_name = map_name, mission_name = mission_name, summon_element_list = summon_element_list, summon_list = summon_list, group_number = group,
+                            party_number = party, combat_script = combat_script)
+                test = Test(game)
+
                 if option == 1:
                     test.test_quest_navigation1()
                 elif option == 2:
