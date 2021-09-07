@@ -1,23 +1,17 @@
-from typing import List
-
 import tweepy
 
 
-class RoomStreamException(Exception):
-    pass
-
-
 class RoomStreamListener(tweepy.StreamListener):
-    def __init__(self, number_of_tweets: int):
+    def __init__(self, game):
         super().__init__()
+        self._game = game
         self.tweets = []
-        self._number_of_tweets = number_of_tweets
 
     def on_status(self, status):
-        print(f"[DEBUG] Stream found: {status.text}")
+        if self._game.debug_mode:
+            print(f"[DEBUG] Stream found: {status.text}")
+
         self.tweets.append(status)
-        if len(self.tweets) >= self._number_of_tweets:
-            raise RoomStreamException
 
     def on_error(self, status_code):
         print(f"[ERROR] Stream API encountered Error Code {status_code}. Closing the stream...")
@@ -52,8 +46,6 @@ class TwitterRoomFinder:
         self._consumer_secret = consumer_secret
         self._access_token = access_token
         self._access_token_secret = access_token_secret
-
-        self._api = None
 
         self._already_visited = []
         self._list_of_raids = {
@@ -166,73 +158,58 @@ class TwitterRoomFinder:
             "Lvl 100 Xeno Diablo": "Lv100 ゼノ・ディアボロス"
         }
 
-    def _connect_to_twitter_api(self):
-        """Connect to Twitter API using provided consumer keys and tokens.
+        self._game.print_and_save(f"\n[TWITTER] Authenticating provided consumer keys and tokens with the Twitter API...")
+        auth = tweepy.OAuthHandler(self._consumer_key, self._consumer_secret)
+        auth.set_access_token(self._access_token, self._access_token_secret)
+        self._api = tweepy.API(auth)
 
-        Returns:
-            None
-        """
-        # Connect to Twitter's API if this is the first run.
-        if self._api is None:
-            self._game.print_and_save(f"\n[TWITTER] Authenticating provided consumer keys and tokens with the Twitter API...")
-            auth = tweepy.OAuthHandler(self._consumer_key, self._consumer_secret)
-            auth.set_access_token(self._access_token, self._access_token_secret)
-            self._api = tweepy.API(auth)
+        # Check to see if connection to Twitter's API was successful.
+        self._api.home_timeline()
+        self._game.print_and_save(f"[TWITTER] Successfully connected to the Twitter API.")
 
-            # Check to see if connection to Twitter's API was successful.
-            self._api.home_timeline()
-            self._game.print_and_save(f"[TWITTER] Successfully connected to the Twitter API.")
+        # Create the listener object for the Twitter Stream API.
+        self._listener = RoomStreamListener(self._game)
+        # Create the listener and stream objects.
+        self._stream = tweepy.Stream(auth = self._api.auth, listener = self._listener)
 
-    def find_most_recent(self, raid_name: str, count: int = 3):
+        # Start asynchronous process of listening to tweets for the specified raid.
+        self._find_most_recent(self._game.mission_name)
+
+    def _find_most_recent(self, raid_name: str):
         """Start listening to tweets containing room codes using the Stream API.
 
         Args:
             raid_name (str): Name and level of the raid that appears in tweets containing the room code to it.
-            count (int): Number of most recent tweets to grab. Defaults to 3.
 
         Returns:
-            (List[str]): List of room codes cleaned of all other text.
+            None
         """
-        # Connect to Twitter API if bot has not already done so.
-        self._connect_to_twitter_api()
-
-        self._game.print_and_save(f"\n[TWITTER] Now finding the {count} most recent tweets for {raid_name} using Stream API.")
-
         # Example of expected tweet:
         #   CUSTOM_USER_MESSAGE XXXXXXXX :Battle ID
         #   I need backup!
         #   LEVEL and NAME OF RAID
 
-        # Create the listener and stream objects.
-        listener = RoomStreamListener(count)
-        stream = tweepy.Stream(auth = self._api.auth, listener = listener)
+        # Keep listening to the stream asynchronously until the listener acquires the necessary amount of tweets.
+        self._game.print_and_save(f"\n[TWITTER] Now listening onto the Stream API for the newest tweets for {raid_name}.")
+        self._stream.filter(track = [raid_name, self._list_of_raids[raid_name]], is_async = True, filter_level = "none")
 
-        # Keep listening to the stream until the listener acquires the necessary amount of tweets.
-        try:
-            self._game.print_and_save(f"\n[TWITTER] Now listening onto the Stream API for {count} newest tweets for {raid_name}.")
-            stream.filter(track = [raid_name, self._list_of_raids[raid_name]], filter_level = "none")
-        except RoomStreamException:
-            print("\n[DEBUG] Closed Twitter stream.")
+        return None
 
-        return self._clean_tweets(listener.tweets)
-
-    def _clean_tweets(self, tweets: List[str]):
+    def get_room_code(self):
         """Clean the tweets passed to this function and parse out the room codes from them.
 
-        Args:
-            tweets (List[str]): List of tweets with its text unchanged.
-
         Returns:
-            (List[str]): List of room codes cleaned of all other text.
+            (str): A single room code that has not been visited.
         """
-        if len(tweets) == 0:
+        if len(self._listener.tweets) == 0:
             self._game.print_and_save(f"[TWITTER] There are no recent or detected tweets available for the given raid.")
-            return []
+            return ""
 
         self._game.print_and_save(f"[TWITTER] Now cleaning up the tweets and parsing for room codes...")
-        room_codes = []
 
-        for tweet in tweets:
+        while len(self._listener.tweets) > 0:
+            tweet = self._listener.tweets.pop()
+
             # Split up the tweet's text by whitespaces.
             split_text = tweet.text.split(" ")
 
@@ -242,10 +219,18 @@ class TwitterRoomFinder:
                     parsed_code = split_text[i - 1]
                     if parsed_code not in self._already_visited:
                         self._game.print_and_save(f"[TWITTER] Found {parsed_code} created at {tweet.created_at}")
-                        room_codes.append(parsed_code)
                         self._already_visited.append(parsed_code)
-                        break
+                        return parsed_code
                     else:
                         self._game.print_and_save(f"[TWITTER] Already visited {parsed_code} before in this session. Skipping this code...")
 
-        return room_codes
+        return ""
+
+    def disconnect(self):
+        """Disconnect from the Stream API.
+
+        Returns:
+            None
+        """
+        self._stream.disconnect()
+        return None

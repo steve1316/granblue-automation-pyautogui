@@ -69,6 +69,24 @@ class Game:
                  debug_mode: bool = False):
         super().__init__()
 
+        # Keep track of the following for Combat Mode.
+        self.combat_script = combat_script
+
+        # Keep track of the following for Farming Mode.
+        self.item_name = item_name
+        self.item_amount_to_farm = item_amount_to_farm
+        self.item_amount_farmed = 0
+        self.farming_mode = farming_mode
+        self.map_name = map_name
+        self.mission_name = mission_name
+        self.difficulty = ""
+        self.summon_element_list = summon_element_list
+        self.summon_list = summon_list
+        self.group_number = group_number
+        self.party_number = party_number
+        self._amount_of_runs_finished = 0
+        self._party_selection_first_run = True
+
         # ################## config.ini ###################
         # Grab the Twitter API keys and tokens from config.ini. The list order is: [consumer key, consumer secret key, access token, access secret token].
         config = ConfigParser()
@@ -109,34 +127,16 @@ class Game:
         self.is_bot_running = is_bot_running
 
         # Set a debug flag to determine whether or not to print debugging messages.
-        self._debug_mode = debug_mode
+        self.debug_mode = debug_mode
 
         # Initialize the objects of helper classes.
-        self.combat_mode = CombatMode(self, is_bot_running, debug_mode = self._debug_mode)
+        self.combat_mode = CombatMode(self, is_bot_running, debug_mode = self.debug_mode)
         self.room_finder = TwitterRoomFinder(self, keys_tokens[0], keys_tokens[1], keys_tokens[2], keys_tokens[3])
-        self.image_tools = ImageUtils(self, debug_mode = self._debug_mode)
-        self.mouse_tools = MouseUtils(self, enable_bezier_curve = enable_bezier_curve_mouse_movement, mouse_speed = custom_mouse_speed, debug_mode = self._debug_mode)
+        self.image_tools = ImageUtils(self, debug_mode = self.debug_mode)
+        self.mouse_tools = MouseUtils(self, enable_bezier_curve = enable_bezier_curve_mouse_movement, mouse_speed = custom_mouse_speed, debug_mode = self.debug_mode)
 
         # Save the locations of the "Home" button for use in other classes.
         self.home_button_location = None
-
-        # Keep track of the following for Combat Mode.
-        self.combat_script = combat_script
-
-        # Keep track of the following for Farming Mode.
-        self.item_name = item_name
-        self.item_amount_to_farm = item_amount_to_farm
-        self.item_amount_farmed = 0
-        self.farming_mode = farming_mode
-        self.map_name = map_name
-        self.mission_name = mission_name
-        self.difficulty = ""
-        self.summon_element_list = summon_element_list
-        self.summon_list = summon_list
-        self.group_number = group_number
-        self.party_number = party_number
-        self._amount_of_runs_finished = 0
-        self._party_selection_first_run = True
 
         # Construct the object of the specified Farming Mode.
         if self.farming_mode == "Quest":
@@ -298,7 +298,7 @@ class Game:
         Returns:
             (bool): Return True if the button was found and clicked. Otherwise, return False.
         """
-        if self._debug_mode:
+        if self.debug_mode:
             self.print_and_save(f"[DEBUG] Attempting to find and click the button: \"{button_name}\".")
 
         if button_name.lower() == "quest":
@@ -518,7 +518,7 @@ class Game:
                         set_location = self.image_tools.find_button("party_set_a", tries = 1)
 
             # Center the mouse on the "Set A" / "Set B" button and then click the correct Group tab.
-            if self._debug_mode:
+            if self.debug_mode:
                 self.print_and_save(f"[DEBUG] Successfully selected the correct Set. Now selecting Group {group_number}...")
 
             if group_number == 1:
@@ -540,7 +540,7 @@ class Game:
             self.mouse_tools.move_and_click_point(x, y, "template_group", mouse_clicks = 2)
 
             # Now select the correct Party.
-            if self._debug_mode:
+            if self.debug_mode:
                 self.print_and_save(f"[DEBUG] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
 
             if party_number == 1:
@@ -961,6 +961,9 @@ class Game:
             self.print_and_save("######################################################################")
             self.print_and_save("######################################################################\n")
 
+            if self.farming_mode == "Raid":
+                self.room_finder.disconnect()
+
             self.is_bot_running.value = 1
             return False
 
@@ -969,6 +972,9 @@ class Game:
         self.print_and_save("[FARM] Ending Farming Mode.")
         self.print_and_save("######################################################################")
         self.print_and_save("######################################################################\n")
+
+        if self.farming_mode == "Raid":
+            self.room_finder.disconnect()
 
         self.is_bot_running.value = 1
         return True
