@@ -73,23 +73,27 @@ class GuildWars:
                     if difficulty == "Very Hard":
                         self._game.print_and_save(f"[GUILD.WARS] Now hosting Very Hard now...")
                         self._game.find_and_click_button("guild_wars_meat_very_hard")
-                        self._game.wait(0.5)
-                        self._game.find_and_click_button("guild_wars_meat_very_hard", tries = 1, suppress_error = True)
+                        if not self._game.image_tools.wait_vanish("guild_wars_meat_very_hard", 3):
+                            self._game.find_and_click_button("guild_wars_meat_very_hard")
+                        else:
+                            return None
                     elif difficulty == "Extreme":
                         self._game.print_and_save(f"[GUILD.WARS] Now hosting Extreme now...")
                         self._game.find_and_click_button("guild_wars_meat_extreme")
-                        self._game.wait(0.5)
-                        self._game.find_and_click_button("guild_wars_meat_extreme", tries = 1, suppress_error = True)
+                        if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme", 3):
+                            self._game.find_and_click_button("guild_wars_meat_extreme")
+                        else:
+                            return None
                     elif difficulty == "Extreme+":
                         self._game.print_and_save(f"[GUILD.WARS] Now hosting Extreme+ now...")
                         self._game.find_and_click_button("guild_wars_meat_extreme+")
-                        self._game.wait(0.5)
-                        self._game.find_and_click_button("guild_wars_meat_extreme+", tries = 1, suppress_error = True)
+                        if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 3):
+                            self._game.find_and_click_button("guild_wars_meat_extreme+")
 
-                        # Alert the user if they did not unlock Extreme+ and stop the bot.
-                        if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 5):
-                            self._game.image_tools.generate_alert("You did not unlock Extreme+ yet!")
-                            raise GuildWarsException("You did not unlock Extreme+ yet!")
+                            # Alert the user if they did not unlock Extreme+ and stop the bot.
+                            if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 3):
+                                self._game.image_tools.generate_alert("You did not unlock Extreme+ yet!")
+                                raise GuildWarsException("You did not unlock Extreme+ yet!")
 
             else:
                 self._game.print_and_save(f"\n[GUILD.WARS] Now proceeding to farm Nightmares.")
@@ -97,11 +101,13 @@ class GuildWars:
                 # Click on the banner to farm Nightmares.
                 if difficulty != "NM150":
                     self._game.find_and_click_button("guild_wars_nightmare")
-                    self._game.find_and_click_button("guild_wars_nightmare", tries = 1, suppress_error = True)
+                    if not self._game.image_tools.wait_vanish("guild_wars_nightmare", 3):
+                        self._game.find_and_click_button("guild_wars_nightmare")
                 else:
                     self._game.print_and_save(f"\n[GUILD.WARS] Now hosting NM150 now...")
                     self._game.find_and_click_button("guild_wars_nightmare_150")
-                    self._game.find_and_click_button("guild_wars_nightmare_150", tries = 1, suppress_error = True)
+                    if not self._game.image_tools.wait_vanish("guild_wars_nightmare_150", 3):
+                        self._game.find_and_click_button("guild_wars_nightmare_150")
 
                     if self._game.image_tools.confirm_location("guild_wars_nightmare"):
                         self._game.find_and_click_button("start")
