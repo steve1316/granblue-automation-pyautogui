@@ -158,22 +158,23 @@ class TwitterRoomFinder:
             "Lvl 100 Xeno Diablo": "Lv100 ゼノ・ディアボロス"
         }
 
-        self._game.print_and_save(f"\n[TWITTER] Authenticating provided consumer keys and tokens with the Twitter API...")
-        auth = tweepy.OAuthHandler(self._consumer_key, self._consumer_secret)
-        auth.set_access_token(self._access_token, self._access_token_secret)
-        self._api = tweepy.API(auth)
+        if self._game.farming_mode == "Raid":
+            self._game.print_and_save(f"\n[TWITTER] Authenticating provided consumer keys and tokens with the Twitter API...")
+            auth = tweepy.OAuthHandler(self._consumer_key, self._consumer_secret)
+            auth.set_access_token(self._access_token, self._access_token_secret)
+            self._api = tweepy.API(auth)
 
-        # Check to see if connection to Twitter's API was successful.
-        self._api.home_timeline()
-        self._game.print_and_save(f"[TWITTER] Successfully connected to the Twitter API.")
+            # Check to see if connection to Twitter's API was successful.
+            self._api.home_timeline()
+            self._game.print_and_save(f"[TWITTER] Successfully connected to the Twitter API.")
 
-        # Create the listener object for the Twitter Stream API.
-        self._listener = RoomStreamListener(self._game)
-        # Create the listener and stream objects.
-        self._stream = tweepy.Stream(auth = self._api.auth, listener = self._listener)
+            # Create the listener object for the Twitter Stream API.
+            self._listener = RoomStreamListener(self._game)
+            # Create the listener and stream objects.
+            self._stream = tweepy.Stream(auth = self._api.auth, listener = self._listener)
 
-        # Start asynchronous process of listening to tweets for the specified raid.
-        self._find_most_recent(self._game.mission_name)
+            # Start asynchronous process of listening to tweets for the specified raid.
+            self._find_most_recent(self._game.mission_name)
 
     def _find_most_recent(self, raid_name: str):
         """Start listening to tweets containing room codes using the Stream API.
