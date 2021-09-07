@@ -903,7 +903,7 @@ class Game:
         """Start the Farming Mode using the given parameters.
 
         Returns:
-            None
+            (bool): True if Farming Mode ended successfully.
         """
         try:
             if self.item_name != "EXP":
@@ -955,6 +955,15 @@ class Game:
             self.print_and_save(f"\n[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
             self.discord_queue.put(f"> Bot encountered exception in Farming Mode: \n{e}")
 
+            self.print_and_save("\n######################################################################")
+            self.print_and_save("######################################################################")
+            self.print_and_save("[FARM] Ending Farming Mode.")
+            self.print_and_save("######################################################################")
+            self.print_and_save("######################################################################\n")
+
+            self.is_bot_running.value = 1
+            return False
+
         self.print_and_save("\n######################################################################")
         self.print_and_save("######################################################################")
         self.print_and_save("[FARM] Ending Farming Mode.")
@@ -962,4 +971,4 @@ class Game:
         self.print_and_save("######################################################################\n")
 
         self.is_bot_running.value = 1
-        return None
+        return True
