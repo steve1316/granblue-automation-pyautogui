@@ -12,7 +12,7 @@ class MouseUtils:
 
     Attributes
     ----------
-    bot (bot.Game): The Game object.
+    game (bot.Game): The Game object.
     
     enable_bezier_curve (bool): Enables the usage of the Bezier Curve to allow the bot to utilize human-like but slow mouse movement.
 
