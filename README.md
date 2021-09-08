@@ -7,9 +7,9 @@
 
 https://user-images.githubusercontent.com/18709555/118408116-db622c00-b638-11eb-9a24-5edc59cef34e.mp4
 
-This Python application is designed for educational research purposes on studying how to automate certain workflows via image template matching using PyAutoGUI and GuiBot. PyAutoGUI accomplishes this by taking over the mouse, hence why it is recommended to run this on a separate machine than the one that you use daily. This can be circumvented by running this on a virtual machine like VMWare Workstation Player so you can keep using your main computer without interruption.
+This Python application is designed for educational research purposes on studying how to automate certain workflows via image template matching using PyAutoGUI. PyAutoGUI accomplishes this by taking over the mouse, hence why it is recommended to run this on a separate machine than the one that you use daily. This can be circumvented by running this on a virtual machine like VMWare Workstation Player so you can keep using your main computer without interruption.
 
-Screenshots are taken and cropped for PyAutoGUI to perform image template matching. This will determine where the bot is currently at and will inform the bot on what to do next from there. Should PyAutoGUI fail to template match, GuiBot will take over. I have found that on default settings, GuiBot performs admirably well compared to PyAutoGUI in terms of template matching.
+Screenshots are taken and cropped for PyAutoGUI to perform image template matching. This will determine where the bot is currently at and will inform the bot on what to do next from there.
 
 There is a feature already in-game that can automate gameplay called "Semi/Full Auto" but does not offer any way to customize what each character does on a turn-by-turn basis. This program's primary goal is to provide that customization. Users can create their own combat scripts using predefined case-insensitive keywords and can indicate which turns the bot will execute their script, somewhat akin to constructing pseudocode.
 
@@ -90,12 +90,10 @@ Visit the [Wiki here](https://github.com/steve1316/granblue-automation-pyautogui
 pip install -r requirements.txt
 ```
 - [PyTorch 1.7.1](https://pytorch.org/) (Installing the CUDA version will improve the speed of template matching if you have a CUDA-compatible GPU)
-- [GuiBot 0.41.1+](https://pypi.org/project/guibot/)
 - [PyAutoGUI 0.9.52+](https://pypi.org/project/PyAutoGUI/)
 - [EasyOCR 1.2.1+](https://pypi.org/project/easyocr/)
 - [PySide2 5.15.2+](https://pypi.org/project/PySide2/)
 - [PyYAML 5.3.1+](https://pypi.org/project/PyYAML/)
-- [autopy 4.0.0+](https://pypi.org/project/autopy/)
 - [tweepy 3.10.0+](https://pypi.org/project/tweepy)
 - [pyclick 0.0.2+](https://pypi.org/project/pyclick/)
 - [playsound 1.2.2+](https://pypi.org/project/playsound/)
@@ -145,9 +143,8 @@ pip install -r requirements.txt
 2. [Qt - Application development framework for the GUI](https://www.qt.io/product/development-tools)
 3. [PyAutoGUI - For image template matching and mouse control](https://pyautogui.readthedocs.io/en/latest/)
 4. [pyclick - For making mouse movements human-like via Bezier Curves](https://pypi.org/project/pyclick/)
-5. [GuiBot - For image template matching if PyAutoGui fails](https://guibot.readthedocs.io/en/latest/README.html)
-6. [OpenCV-Python - Provides the confidence (accuracy) argument for PyAutoGUI](https://pypi.org/project/opencv-python/)
-7. [EasyOCR - For text recognition and detection](https://github.com/JaidedAI/EasyOCR)
-8. [Twitter Standard API 1.1 - For searching and parsing texts for Raid room codes to join](https://developer.twitter.com/en/docs/twitter-api/v1)
-9. [VMWare Workstation Player - For virtualizing the program to circumvent control of the main cursor](https://www.vmware.com/products/workstation-player.html)
+5. [OpenCV-Python - Provides the confidence (accuracy) argument for PyAutoGUI](https://pypi.org/project/opencv-python/)
+6. [EasyOCR - For text recognition and detection](https://github.com/JaidedAI/EasyOCR)
+7. [Twitter Standard API 1.1 - For searching and parsing texts for Raid room codes to join](https://developer.twitter.com/en/docs/twitter-api/v1)
+8. [VMWare Workstation Player - For virtualizing the program to circumvent control of the main cursor](https://www.vmware.com/products/workstation-player.html)
 
