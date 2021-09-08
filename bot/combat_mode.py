@@ -703,6 +703,16 @@ class CombatMode:
 
                             # Advance the Turn number by 1.
                             turn_number += 1
+                        elif "reload" in command:
+                            self._game.print_and_save("[COMBAT] Bot will now attempt to manually reload...")
+
+                            # Press the "Attack" button in order to show the "Cancel" button. Once that disappears, manually reload the page.
+                            if self._game.find_and_click_button("attack"):
+                                if self._game.image_tools.wait_vanish("combat_cancel", timeout = 10):
+                                    self._game.find_and_click_button("reload")
+                                else:
+                                    # If the "Cancel" button fails to disappear after 10 tries, reload anyways.
+                                    self._game.find_and_click_button("reload")
 
                         if self._game.find_and_click_button("next", tries = 1, suppress_error = True):
                             break
