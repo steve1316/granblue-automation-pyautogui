@@ -305,10 +305,6 @@ class Game:
             temp_location = self.image_tools.find_button("quest_blue", tries = tries, suppress_error = suppress_error)
             if temp_location is None:
                 temp_location = self.image_tools.find_button("quest_red", tries = tries, suppress_error = suppress_error)
-            if temp_location is None:
-                temp_location = self.image_tools.find_button("quest_blue_strike_time", tries = tries, suppress_error = suppress_error)
-            if temp_location is None:
-                temp_location = self.image_tools.find_button("quest_red_strike_time", tries = tries, suppress_error = suppress_error)
 
             if temp_location is not None:
                 self.mouse_tools.move_and_click_point(temp_location[0], temp_location[1], "quest_blue", mouse_clicks = clicks)
