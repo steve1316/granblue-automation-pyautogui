@@ -403,9 +403,10 @@ class ImageUtils:
         """
         self._game.print_and_save(f"\n[INFO] Now waiting for {image_name} to vanish from screen...")
 
-        if self.find_button(image_name, tries = timeout) is None:
-            self._game.print_and_save(f"[SUCCESS] Image successfully vanished from screen...")
-            return True
+        for _ in range(timeout):
+            if pyautogui.locateCenterOnScreen(f"images/buttons/{image_name.lower()}.png") is None:
+                self._game.print_and_save(f"[SUCCESS] Image successfully vanished from screen...")
+                return True
 
         if suppress_error is False:
             self._game.print_and_save(f"[WARNING] Image did not vanish from screen...")
