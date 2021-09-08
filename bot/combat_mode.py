@@ -98,7 +98,10 @@ class CombatMode:
         Returns:
             None
         """
-        dialog_location = self._game.image_tools.find_dialog(self._attack_button_location[0], self._attack_button_location[1], tries = 1)
+        dialog_location = self._game.image_tools.find_button("dialog_lyria", tries = 1)
+        if dialog_location is None:
+            dialog_location = self._game.image_tools.find_button("dialog_vyrn", tries = 1)
+
         if dialog_location is not None:
             self._game.mouse_tools.move_and_click_point(dialog_location[0] + 180, dialog_location[1] - 51, "template_dialog")
 
