@@ -8,7 +8,6 @@ PyAutoGUI==0.9.52
 easyocr==1.2.1
 PySide2==5.15.2
 PyYAML==5.3.1
-autopy==4.0.0
 tweepy==3.10.0
 pyclick==0.0.2
 playsound==1.2.2
