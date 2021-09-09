@@ -5,6 +5,7 @@ import time
 from datetime import date
 from typing import List, Tuple
 
+import cv2
 import easyocr
 import pyautogui
 from PIL import Image
@@ -30,6 +31,8 @@ class ImageUtils:
         self._debug_mode = debug_mode
 
         # The dimensions are set in calibrate_game_window() in Game class.
+        self._calibration_complete = False
+        self._additional_calibration_required = False
         self._window_left = None
         self._window_top = None
         self._window_width = None
@@ -48,7 +51,10 @@ class ImageUtils:
         self._summon_selection_first_run = True
         self._summon_selection_same_element = False
 
-    def update_window_dimensions(self, window_left: int, window_top: int, window_width: int, window_height: int):
+        self._match_method = cv2.TM_CCOEFF_NORMED
+        self._match_location = None
+
+    def update_window_dimensions(self, window_left: int, window_top: int, window_width: int, window_height: int, additional_calibration_required: bool = False):
         """Updates the window dimensions for PyAutoGUI to perform faster operations in.
 
         Args:
@@ -56,6 +62,7 @@ class ImageUtils:
             window_top (int): The y-coordinate of the top edge of the region for image matching.
             window_width (int): The width of the region for image matching.
             window_height (int): The height of the region for image matching.
+            additional_calibration_required (bool, optional): Flag that allows for compensation of x-coordinates of all matches to fit the right hand side of the computer screen.
 
         Returns:
             None
@@ -64,7 +71,8 @@ class ImageUtils:
         self._window_top = window_top
         self._window_width = window_width
         self._window_height = window_height
-
+        self._calibration_complete = True
+        self._additional_calibration_required = additional_calibration_required
         return None
 
     def get_window_dimensions(self):
@@ -75,91 +83,123 @@ class ImageUtils:
         """
         return self._window_left, self._window_top, self._window_width, self._window_height
 
-    def find_button(self, button_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, confirm_location_check: bool = False, tries: int = 3, sleep_time: int = 1,
-                    suppress_error: bool = False):
+    def _match(self, template, confidence: float = 0.8) -> bool:
+        match_check = False
+        if self._window_left is not None and self._window_top is not None and self._window_width is not None and self._window_height is not None:
+            pyautogui.screenshot(f"images/temp/source.png", region = (self._window_left, self._window_top, self._window_width, self._window_height))
+        else:
+            pyautogui.screenshot(f"images/temp/source.png")
+
+        src = cv2.imread(f"images/temp/source.png", 0)
+        height, width = template.shape
+        result = cv2.matchTemplate(src, template, self._match_method)
+        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+
+        if (self._match_method == cv2.TM_SQDIFF or self._match_method == cv2.TM_SQDIFF_NORMED) and min_val <= 1.0 - confidence:
+            self._match_location = min_loc
+            match_check = True
+        elif self._match_method != cv2.TM_SQDIFF and self._match_method != cv2.TM_SQDIFF_NORMED and max_val >= confidence:
+            self._match_location = max_loc
+            match_check = True
+        else:
+            if self._debug_mode:
+                if self._match_method == cv2.TM_SQDIFF or self._match_method == cv2.TM_SQDIFF_NORMED:
+                    self._game.print_and_save(f"[WARNING] Match not found with {min_val} not <= {1.0 - confidence} at Point {min_loc}.")
+                else:
+                    self._game.print_and_save(f"[WARNING] Match not found with {max_val} not >= {confidence} at Point {max_loc}.")
+
+        if match_check:
+            region = (self._match_location[0] + width, self._match_location[1] + height)
+            cv2.rectangle(src, self._match_location, region, 255, 5)
+            cv2.imwrite("images/temp/match.png", src)
+
+            if self._calibration_complete is False:
+                temp_location = list(self._match_location)
+                temp_location[0] += int(width / 2)
+                temp_location[1] += int(height / 2)
+                self._match_location = tuple(temp_location)
+            elif self._additional_calibration_required:
+                temp_location = list(self._match_location)
+                temp_location[0] += int(pyautogui.size()[0] - (pyautogui.size()[0] / 3)) + int(width / 2)
+                temp_location[1] += int(height / 2)
+                self._match_location = tuple(temp_location)
+
+            if self._match_method == cv2.TM_SQDIFF or self._match_method == cv2.TM_SQDIFF_NORMED:
+                if self._game.debug_mode:
+                    self._game.print_and_save(f"[DEBUG] Match found with {min_val} <= {confidence} at Point {self._match_location}")
+            else:
+                if self._game.debug_mode:
+                    self._game.print_and_save(f"[DEBUG] Match found with {max_val} >= {confidence} at Point {self._match_location}")
+
+        return match_check
+
+    def find_button(self, image_name: str, custom_confidence: float = 0.8, tries: int = 5, suppress_error: bool = False):
         """Find the location of the specified button.
 
         Args:
-            button_name (str): Name of the button image file in the /images/buttons/ folder.
-            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
-            grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
-            confirm_location_check (bool, optional): Check to see if the location is correct. Defaults to False.
-            tries (int, optional): Number of tries before failing. Defaults to 3.
-            sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
+            image_name (str): Name of the button image file in the /images/buttons/ folder.
+            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
+            tries (int, optional): Number of tries before failing. Defaults to 5.
             suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
 
         Returns:
             location (int, int): Tuple of coordinates of where the center of the button is located if image matching was successful. Otherwise, return None.
         """
-        button_location = None
-        while button_location is None:
-            if self._window_left is not None or self._window_top is not None or self._window_width is not None or self._window_height is not None:
-                button_location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence = custom_confidence, grayscale = grayscale_check,
-                                                                 region = (self._window_left, self._window_top, self._window_width, self._window_height))
-            else:
-                button_location = pyautogui.locateCenterOnScreen(f"images/buttons/{button_name.lower()}.png", confidence = custom_confidence, grayscale = grayscale_check)
+        if self._game.debug_mode:
+            self._game.print_and_save(f"\n[DEBUG] Starting process to find the {image_name.upper()} button image...")
 
-            if button_location is None:
+        template = cv2.imread(f"images/buttons/{image_name.lower()}.png", 0)
+
+        while tries > 0:
+            result_flag = self._match(template, custom_confidence)
+
+            if result_flag is False:
                 tries -= 1
                 if tries <= 0:
                     if not suppress_error:
-                        self._game.print_and_save(f"[WARNING] Failed to find the {button_name.upper()} button.")
+                        self._game.print_and_save(f"[WARNING] Failed to find the {image_name.upper()} button.")
                     return None
 
-                if self._debug_mode:
-                    self._game.print_and_save(f"[WARNING] Could not locate the {button_name.upper()} button. Trying again in {sleep_time} seconds...")
+                time.sleep(0.5)
+            else:
+                return self._match_location
 
-                time.sleep(sleep_time)
+        return None
 
-        if self._debug_mode:
-            self._game.print_and_save(f"[SUCCESS] Found the {button_name.upper()} button at {button_location}.")
-
-        if confirm_location_check:
-            self.confirm_location(button_name)
-
-        return button_location
-
-    def confirm_location(self, location_name: str, custom_confidence: float = 0.9, grayscale_check: bool = False, tries: int = 3, sleep_time: int = 1):
+    def confirm_location(self, image_name: str, custom_confidence: float = 0.8, tries: int = 5, suppress_error: bool = False):
         """Confirm the position of the bot by searching for the header image.
 
         Args:
-            location_name (str): Name of the header image file in the /images/headers/ folder.
-            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
-            grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
-            tries (int, optional): Number of tries before failing. Defaults to 3.
-            sleep_time (int, optional): Number of seconds for execution to pause for in cases of image match fail. Defaults to 1.
+            image_name (str): Name of the header image file in the /images/headers/ folder.
+            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
+            tries (int, optional): Number of tries before failing. Defaults to 5.
+            suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
 
         Returns:
             (bool): True if current location is confirmed. Otherwise, False.
         """
-        header_location = None
-        while header_location is None:
-            if self._window_left is not None or self._window_top is not None or self._window_width is not None or self._window_height is not None:
-                header_location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence = custom_confidence, grayscale = grayscale_check,
-                                                                 region = (self._window_left, self._window_top, self._window_width, self._window_height))
-            else:
-                header_location = pyautogui.locateCenterOnScreen(f"images/headers/{location_name.lower()}_header.png", confidence = custom_confidence, grayscale = grayscale_check)
+        if self._game.debug_mode:
+            self._game.print_and_save(f"\n[DEBUG] Starting process to find the {image_name.upper()} button image...")
 
-            if header_location is None:
+        template = cv2.imread(f"images/headers/{image_name.lower()}_header.png", 0)
+
+        while tries > 0:
+            result_flag = self._match(template, custom_confidence)
+
+            if result_flag is False:
                 tries -= 1
                 if tries <= 0:
-                    # If tries ran out, return False.
-                    if self._debug_mode:
-                        self._game.print_and_save(f"[WARNING] Failed to confirm the bot's location at {location_name.upper()}.")
+                    if not suppress_error:
+                        self._game.print_and_save(f"[WARNING] Failed to confirm the bot's location at {image_name.upper()}.")
                     return False
 
-                if self._debug_mode:
-                    self._game.print_and_save(f"[WARNING] Could not confirm the bot's location at {location_name.upper()}. Trying again in {sleep_time} seconds...")
+                time.sleep(0.5)
+            else:
+                return True
 
-                time.sleep(sleep_time)
+        return False
 
-        if self._debug_mode:
-            self._game.print_and_save(f"[SUCCESS] Bot's current location is at {location_name.upper()}.")
-
-        return True
-
-    def find_summon(self, summon_list: List[str], summon_element_list: List[str], home_button_x: int, home_button_y: int, custom_confidence: float = 0.9, grayscale_check: bool = False,
-                    suppress_error: bool = False):
+    def find_summon(self, summon_list: List[str], summon_element_list: List[str], home_button_x: int, home_button_y: int, custom_confidence: float = 0.8, suppress_error: bool = False):
         """Find the location of the specified Summon. Will attempt to scroll the screen down to see more Summons if the initial screen position yielded no matches.
 
         Args:
@@ -167,8 +207,7 @@ class ImageUtils:
             summon_element_list (List[str]): List of names of the Summon element image file in the /images/buttons/ folder.
             home_button_x (int): X coordinate of where the center of the Home Button is.
             home_button_y (int): Y coordinate of where the center of the Home Button is.
-            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
-            grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
+            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
             suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
 
         Returns:
@@ -183,7 +222,7 @@ class ImageUtils:
         summon_index = 0
 
         # Make sure that the bot is at the Summon Selection screen.
-        tries = 3
+        tries = 10
         while not self.confirm_location("select_a_summon"):
             self._game.find_and_click_button('reload')
             tries -= 1
@@ -203,35 +242,27 @@ class ImageUtils:
                 self._summon_selection_first_run = False
 
             summon_index = 0
-            while summon_index <= len(summon_list):
+            while summon_index < len(summon_list):
                 # Now try and find the Summon at the current index.
-                if self._window_left is not None or self._window_top is not None or self._window_width is not None or self._window_height is not None:
-                    summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_list[summon_index]}.png", confidence = custom_confidence, grayscale = grayscale_check,
-                                                                     region = (self._window_left, self._window_top, self._window_width, self._window_height))
-                else:
-                    summon_location = pyautogui.locateCenterOnScreen(f"images/summons/{summon_list[summon_index]}.png", confidence = custom_confidence, grayscale = grayscale_check)
+                template = cv2.imread(f"images/summons/{summon_list[summon_index]}.png", 0)
+                result_flag = self._match(template, custom_confidence)
 
-                if summon_location is None:
+                if result_flag:
+                    return self._match_location
+                else:
                     if suppress_error is False:
                         self._game.print_and_save(f"[WARNING] Could not locate {summon_list[summon_index].upper()} Summon.")
 
-                    if summon_index + 1 >= len(summon_list):
-                        break
-                    else:
-                        summon_index += 1
-                else:
-                    break
+                    summon_index += 1
 
-            if summon_location is not None:
-                break
+                    # If the bot reached the bottom of the page, scroll back up to the top and start searching for the next Summon.
+                    if self.find_button("bottom_of_summon_selection", tries = 1) is not None:
+                        self._game.print_and_save(f"[WARNING] Bot has reached the bottom of the page and found no suitable Summons. Resetting Summons now...")
+                        return None
 
-            # If the bot reached the bottom of the page, scroll back up to the top and start searching for the next Summon.
-            if self.find_button("bottom_of_summon_selection", tries = 1) is not None:
-                self._game.print_and_save(f"[WARNING] Bot has reached the bottom of the page and found no suitable Summons. Resetting Summons now...")
-                return None
-
-            # If matching failed, scroll the screen down to see more Summons.
-            self._game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
+                    # If matching failed, scroll the screen down to see more Summons.
+                    self._game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
+                    self._game.wait(1.0)
 
         self._game.print_and_save(f"[SUCCESS] Found {summon_list[summon_index].upper()} Summon at {summon_location}.")
         return summon_location
@@ -390,12 +421,12 @@ class ImageUtils:
         self._game.print_and_save(f"[INFO] Detection of item rewards finished.")
         return total_amount_farmed
 
-    def wait_vanish(self, image_name: str, timeout: int = 5, suppress_error: bool = False):
+    def wait_vanish(self, image_name: str, timeout: int = 10, suppress_error: bool = False):
         """Check if the provided image vanishes from the screen after a certain amount of time.
 
         Args:
             image_name (str): Name of the image file in the /images/buttons/ folder.
-            timeout (int, optional): Timeout in tries. Defaults to 5.
+            timeout (int, optional): Timeout in tries. Defaults to 10.
             suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
 
         Returns:
