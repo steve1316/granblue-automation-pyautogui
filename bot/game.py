@@ -205,10 +205,10 @@ class Game:
         Returns:
             None
         """
-        self.print_and_save("\n[INFO] Recalibrating the dimensions of the window...")
-
         # Save the location of the "Home" button at the bottom of the bot window.
         self.home_button_location = self.image_tools.find_button("home")
+
+        self.print_and_save("\n[INFO] Recalibrating the dimensions of the window...")
 
         if self.home_button_location is None:
             raise RuntimeError("Calibration of window dimensions failed. Is the Home button on the bottom bar visible?")
@@ -223,14 +223,26 @@ class Game:
         if home_menu_button is None:
             raise RuntimeError("Calibration of window dimensions failed. Is the Menu button visible on the Home screen?")
 
-        # Use the locations of the "News" and "Menu" buttons on the Home screen to calculate the dimensions of the bot window in the following
-        # format:
-        window_left = home_news_button[0] - 35  # The x-coordinate of the left edge.
-        window_top = home_menu_button[1] - 24  # The y-coordinate of the top edge.
-        window_width = window_left + 410  # The width of the region.
-        window_height = (self.home_button_location[1] + 24) - window_top  # The height of the region.
+        width, height = pyautogui.size()
+        additional_calibration_required = False
+        if self.home_button_location[0] < (width / 2):
+            window_left = 0
+            window_top = 0
+            window_width = int(width / 3)
+            window_height = height
+        elif self.home_button_location[0] > (width - (width / 2)):
+            window_left = int(width - width / 3)
+            window_top = 0
+            window_width = int(width / 3)
+            window_height = height
+            additional_calibration_required = True
+        else:
+            window_left = 0
+            window_top = 0
+            window_width = width
+            window_height = height
 
-        self.image_tools.update_window_dimensions(window_left, window_top, window_width, window_height)
+        self.image_tools.update_window_dimensions(window_left, window_top, window_width, window_height, additional_calibration_required)
 
         self.print_and_save("[SUCCESS] Dimensions of the window has been successfully recalibrated.")
 
