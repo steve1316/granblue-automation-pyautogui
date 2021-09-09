@@ -209,7 +209,7 @@ class Arcarum:
                         break
                 elif action == "Boss Detected":
                     self._game.print_and_save(f"[ARCARUM] Boss has been detected. Stopping the bot.")
-                    return True
+                    raise ArcarumException("Boss has been detected. Stopping the bot.")
 
                 self._game.wait(1)
 
