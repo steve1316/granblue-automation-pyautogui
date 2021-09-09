@@ -54,6 +54,8 @@ class ImageUtils:
         self._match_method = cv2.TM_CCOEFF_NORMED
         self._match_location = None
 
+        self._process = multiprocessing.Process(target = ImageUtils._play_captcha_sound)
+
     def update_window_dimensions(self, window_left: int, window_top: int, window_width: int, window_height: int, additional_calibration_required: bool = False):
         """Updates the window dimensions for PyAutoGUI to perform faster operations in.
 
@@ -499,27 +501,31 @@ class ImageUtils:
         playsound("CAPTCHA.mp3")
         return None
 
-    @staticmethod
-    def generate_alert_for_captcha():
+    def generate_alert_for_captcha(self):
         """Displays a alert that will inform users that a CAPTCHA was detected.
 
         Returns:
             None
         """
-        # Play the CAPTCHA.mp3 using playsound.
-        process = multiprocessing.Process(target = ImageUtils._play_captcha_sound)
-        process.start()
+        # Play the CAPTCHA.mp3.
+        if self._process.is_alive() is False:
+            self._process.start()
 
-        pyautogui.alert(
-            text = "Stopping bot. Please enter the CAPTCHA yourself and play this mission manually to its completion. \n\nIt is now highly recommended that you take a break of several hours and "
-                   "in the future, please reduce the amount of hours that you use this program consecutively without breaks in between.",
-            title = "CAPTCHA Detected!", button = "OK")
+            pyautogui.alert(
+                text = "Stopping bot. Please enter the CAPTCHA yourself and play this mission manually to its completion. \n\nIt is now highly recommended that you take a break of several hours and "
+                       "in the future, please reduce the amount of hours that you use this program consecutively without breaks in between.",
+                title = "CAPTCHA Detected!", button = "OK")
 
-        process.terminate()
+            self._process.terminate()
+        else:
+            pyautogui.alert(
+                text = "Stopping bot. Please enter the CAPTCHA yourself and play this mission manually to its completion. \n\nIt is now highly recommended that you take a break of several hours and "
+                       "in the future, please reduce the amount of hours that you use this program consecutively without breaks in between.",
+                title = "CAPTCHA Detected!", button = "OK")
+
         return None
 
-    @staticmethod
-    def generate_alert(message: str):
+    def generate_alert(self, message: str):
         """Displays a alert that will inform users about various user errors that may occur.
 
         Args:
@@ -528,5 +534,11 @@ class ImageUtils:
         Returns:
             None
         """
-        pyautogui.alert(text = message, button = "OK")
+        if self._process.is_alive() is False:
+            self._process.start()
+            pyautogui.alert(text = message, title = "Exception Encountered", button = "OK")
+            self._process.terminate()
+        else:
+            pyautogui.alert(text = message, title = "Exception Encountered", button = "OK")
+
         return None

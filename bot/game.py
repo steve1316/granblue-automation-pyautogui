@@ -162,13 +162,19 @@ class Game:
         elif self.farming_mode == "Arcarum":
             self._arcarum = Arcarum(self, self.mission_name)
 
-        if test_mode is False:
-            # Calibrate the dimensions of the bot window on bot launch.
-            self.go_back_home(confirm_location_check = True, display_info_check = True)
-        else:
-            self.home_button_location = self.image_tools.find_button("home")
-            if self.home_button_location is None:
-                raise RuntimeError("Calibration of window dimensions failed. Is the Home button on the bottom bar visible?")
+        try:
+            if test_mode is False:
+                # Calibrate the dimensions of the bot window on bot launch.
+                self.go_back_home(confirm_location_check = True, display_info_check = True)
+            else:
+                self.home_button_location = self.image_tools.find_button("home")
+                if self.home_button_location is None:
+                    raise RuntimeError("Calibration of window dimensions failed. Is the Home button on the bottom bar visible?")
+        except Exception as e:
+            self.print_and_save(f"\n[ERROR] Bot encountered exception while setting up: \n{traceback.format_exc()}")
+            self.discord_queue.put(f"> Bot encountered exception while setting up: \n{e}")
+            self.image_tools.generate_alert(f"Bot encountered exception while setting up: \n{e}")
+            self.is_bot_running.value = 1
 
     def _print_time(self):
         """Formats the time since the bot started into a readable, printable HH:MM:SS format using timedelta.
@@ -1014,6 +1020,7 @@ class Game:
             if self.farming_mode == "Raid":
                 self.room_finder.disconnect()
 
+            self.image_tools.generate_alert(f"Bot encountered exception in Farming Mode: \n{e}")
             self.is_bot_running.value = 1
             return False
 
