@@ -872,7 +872,7 @@ class Game:
 
             self.wait(1)
 
-            # If there is loot available, start loot detection and decrement number of raids joined as necessary.
+            # If there is loot available, start loot detection.
             if self.image_tools.confirm_location("no_loot", tries = 1):
                 self.print_and_save(f"[INFO] No loot can be collected.")
 

@@ -168,9 +168,8 @@ class TwitterRoomFinder:
             self._api.home_timeline()
             self._game.print_and_save(f"[TWITTER] Successfully connected to the Twitter API.")
 
-            # Create the listener object for the Twitter Stream API.
+            # Create the listener and stream objects. for the Twitter Stream API.
             self._listener = RoomStreamListener(self._game)
-            # Create the listener and stream objects.
             self._stream = tweepy.Stream(auth = self._api.auth, listener = self._listener)
 
             # Start asynchronous process of listening to tweets for the specified raid.
