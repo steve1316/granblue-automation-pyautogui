@@ -104,7 +104,7 @@ class Quest:
         formatted_map_name = self._map_name.lower().replace(" ", "_").replace("-", "_")
 
         # Check which island the bot is at.
-        if self._game.image_tools.confirm_location(f"map_{formatted_map_name}", tries = 2):
+        if self._game.image_tools.confirm_location(f"map_{formatted_map_name}", tries = 5):
             self._game.print_and_save(f"[QUEST] Bot is currently on the correct island.")
             check_location = True
         else:
@@ -118,7 +118,7 @@ class Quest:
                 temp_map_location = location_list.pop(0)
                 temp_formatted_map_location = temp_map_location.lower().replace(" ", "_").replace("-", "_")
 
-                if self._game.image_tools.confirm_location(f"map_{temp_formatted_map_location}", tries = 1):
+                if self._game.image_tools.confirm_location(f"map_{temp_formatted_map_location}", tries = 5):
                     self._game.print_and_save(f"[QUEST] Bot's current location is at {temp_map_location}. Now moving to {self._map_name}...")
                     current_location = temp_map_location
                     break
@@ -129,7 +129,7 @@ class Quest:
         self._game.wait(1)
 
         # Check for the "You retreated from the raid battle" popup.
-        if self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries = 1):
+        if self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries = 3):
             self._game.find_and_click_button("ok")
 
         if self._game.image_tools.confirm_location("quest"):
@@ -145,9 +145,9 @@ class Quest:
                 self._game.find_and_click_button("go")
 
             # Grab the location of the "World" button.
-            world_location = self._game.image_tools.find_button("world", tries = 2)
+            world_location = self._game.image_tools.find_button("world", tries = 5)
             if world_location is None:
-                world_location = self._game.image_tools.find_button("world2", tries = 2)
+                world_location = self._game.image_tools.find_button("world2", tries = 5)
 
             # Now that the bot is on the correct island and is at the Quest screen, click the correct chapter node.
             if self._mission_name == "Scattered Cargo":

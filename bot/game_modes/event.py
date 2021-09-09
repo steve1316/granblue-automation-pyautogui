@@ -199,7 +199,7 @@ class Event:
 
             self._game.wait(1)
 
-            ap_locations = self._game.image_tools.find_all("ap", custom_confidence = 0.8, grayscale_check = True)
+            ap_locations = self._game.image_tools.find_all("ap")
 
             if difficulty == "Very Hard":
                 self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")

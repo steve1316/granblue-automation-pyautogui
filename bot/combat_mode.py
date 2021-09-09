@@ -178,7 +178,7 @@ class CombatMode:
             # Wait for the healing animation to finish.
             self._game.wait(1)
 
-            if not self._game.image_tools.confirm_location("use_item", tries = 1):
+            if not self._game.image_tools.confirm_location("use_item", tries = 5):
                 self._game.print_and_save(f"[SUCCESS] Using healing item was successful.")
             else:
                 self._game.print_and_save(f"[WARNING] Using healing item was not successful. Canceling it now...")
@@ -216,7 +216,7 @@ class CombatMode:
         self._game.wait(1)
 
         # If requesting backup was successful, click "OK" to close the popup.
-        if self._game.image_tools.confirm_location("request_backup_success", tries = 1):
+        if self._game.image_tools.confirm_location("request_backup_success", tries = 5):
             self._game.print_and_save(f"[COMBAT] Successfully requested Backup.")
             self._game.find_and_click_button("ok")
         else:
@@ -249,7 +249,7 @@ class CombatMode:
         self._game.wait(1)
 
         # If requesting backup via Twitter was successful, click "OK" to close the popup. Otherwise, click "Cancel".
-        if self._game.image_tools.confirm_location("request_backup_tweet_success", tries = 1):
+        if self._game.image_tools.confirm_location("request_backup_tweet_success", tries = 5):
             self._game.print_and_save(f"[COMBAT] Successfully requested Backup via Twitter.")
             self._game.find_and_click_button("ok")
         else:
@@ -350,7 +350,7 @@ class CombatMode:
             self._game.mouse_tools.move_and_click_point(x, y, "template_skill", mouse_clicks = 2)
 
             # Check if the skill requires a target.
-            if len(skill_command_list) > 0 and self._game.image_tools.confirm_location("use_skill", tries = 1):
+            if len(skill_command_list) > 0 and self._game.image_tools.confirm_location("use_skill", tries = 3):
                 self._game.print_and_save(f"[COMBAT] Skill is awaiting a target...")
                 target = skill_command_list.pop(0)
 
@@ -375,7 +375,7 @@ class CombatMode:
                     self._game.mouse_tools.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 250, "template_target")
 
             # Else, check if the character is skill-sealed.
-            elif self._game.image_tools.confirm_location("skill_unusable", tries = 1):
+            elif self._game.image_tools.confirm_location("skill_unusable", tries = 3):
                 self._game.print_and_save("[COMBAT] Character is currently skill-sealed. Unable to execute command.")
                 self._game.find_and_click_button("cancel")
 
@@ -540,7 +540,7 @@ class CombatMode:
             self._game.find_and_click_button("arcarum_stage_effect_active", tries = 5)
 
         # Save the positions of the "Attack" and "Back" button.
-        self._attack_button_location = self._game.image_tools.find_button("attack", tries = 10)
+        self._attack_button_location = self._game.image_tools.find_button("attack", tries = 30)
         if self._attack_button_location is not None:
             self._back_button_location = (self._attack_button_location[0] - 322, self._attack_button_location[1])
         else:
