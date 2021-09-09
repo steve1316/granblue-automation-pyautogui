@@ -469,6 +469,8 @@ class Game:
 
         summon_location = self.image_tools.find_summon(summon_list, summon_element_list, self.home_button_location[0], self.home_button_location[1])
         if summon_location is not None:
+            # Click two times to avoid possible deadzone.
+            self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1], "template_support_summon")
             self.mouse_tools.move_and_click_point(summon_location[0], summon_location[1], "template_support_summon")
 
             # Check for CAPTCHA here. If detected, stop the bot and alert the user.
