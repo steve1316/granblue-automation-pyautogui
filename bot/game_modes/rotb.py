@@ -145,9 +145,11 @@ class RiseOfTheBeasts:
             # Remove the difficulty prefix from the mission name.
             difficulty = ""
             temp_mission_name = ""
-            if difficulty == "Very Hard":
+            if self._mission_name.find("VH ") == 0:
+                difficulty = "Very Hard"
                 temp_mission_name = self._mission_name[3:]
-            elif difficulty == "Extreme":
+            elif self._mission_name.find("EX ") == 0:
+                difficulty = "Extreme"
                 temp_mission_name = self._mission_name[3:]
 
             # Only Raids are marked with Extreme difficulty.
