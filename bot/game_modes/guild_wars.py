@@ -66,7 +66,9 @@ class GuildWars:
                 self._game.print_and_save(f"\n[GUILD.WARS] Now proceeding to farm meat.")
 
                 # Click on the banner to farm meat.
-                self._game.find_and_click_button("guild_wars_meat", grayscale = True)
+                self._game.find_and_click_button("guild_wars_meat")
+
+                self._game.wait(1.0)
 
                 if self._game.image_tools.confirm_location("guild_wars_meat"):
                     # Now click on the specified Mission to start. Also attempt at fixing the deadzone issue by looping.
