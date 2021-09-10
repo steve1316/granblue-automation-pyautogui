@@ -61,6 +61,8 @@ class GuildWars:
             # Scroll the screen down a little bit.
             self._game.mouse_tools.scroll_screen_from_home_button(-200)
 
+            self._game.wait(1.0)
+
             # Perform different navigation actions based on whether the user wants to farm meat or to farm Nightmares.
             if difficulty == "Very Hard" or difficulty == "Extreme" or difficulty == "Extreme+":
                 self._game.print_and_save(f"\n[GUILD.WARS] Now proceeding to farm meat.")
@@ -77,6 +79,8 @@ class GuildWars:
                     self._game.print_and_save(f"[GUILD.WARS] Now hosting {difficulty} now...")
                     while self._game.image_tools.wait_vanish("ap_30", 3) is False:
                         self._game.find_and_click_button(f"guild_wars_meat_{formatted_mission_name}")
+
+                        self._game.wait(3)
 
                         tries -= 1
                         if tries <= 0:
