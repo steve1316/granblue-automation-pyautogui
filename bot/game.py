@@ -259,12 +259,12 @@ class Game:
 
         if display_info_check:
             window_dimensions = self.image_tools.get_window_dimensions()
-            self.print_and_save("\n********************************************************************************")
-            self.print_and_save("********************************************************************************")
+            self.print_and_save("\n**********************************************************************")
+            self.print_and_save("**********************************************************************")
             self.print_and_save(f"[INFO] Screen Size: {pyautogui.size()}")
             self.print_and_save(f"[INFO] Game Window Dimensions: Region({window_dimensions[0]}, {window_dimensions[1]}, {window_dimensions[2]}, {window_dimensions[3]})")
-            self.print_and_save("********************************************************************************")
-            self.print_and_save("********************************************************************************")
+            self.print_and_save("**********************************************************************")
+            self.print_and_save("**********************************************************************")
 
         return None
 
@@ -770,16 +770,16 @@ class Game:
 
         if not is_pending_battle and not is_event_nightmare and not skip_info:
             if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
-                self.print_and_save("\n********************************************************************************")
-                self.print_and_save("********************************************************************************")
+                self.print_and_save("\n**********************************************************************")
+                self.print_and_save("**********************************************************************")
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"[FARM] Mission: {self.mission_name}")
                 self.print_and_save(f"[FARM] Summons: {self.summon_list}")
                 self.print_and_save(f"[FARM] Amount of {self.item_name} gained from this run: {temp_amount}")
                 self.print_and_save(f"[FARM] Amount of {self.item_name} gained in total: {self.item_amount_farmed + temp_amount} / {self.item_amount_to_farm}")
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished}")
-                self.print_and_save("********************************************************************************")
-                self.print_and_save("********************************************************************************\n")
+                self.print_and_save("**********************************************************************")
+                self.print_and_save("**********************************************************************\n")
 
                 if temp_amount != 0:
                     if self.item_amount_farmed >= self.item_amount_to_farm:
@@ -791,14 +791,14 @@ class Game:
 
                     self.discord_queue.put(discord_string)
             else:
-                self.print_and_save("\n********************************************************************************")
-                self.print_and_save("********************************************************************************")
+                self.print_and_save("\n**********************************************************************")
+                self.print_and_save("**********************************************************************")
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"[FARM] Mission: {self.mission_name}")
                 self.print_and_save(f"[FARM] Summons: {self.summon_list}")
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished} / {self.item_amount_to_farm}")
-                self.print_and_save("********************************************************************************")
-                self.print_and_save("********************************************************************************\n")
+                self.print_and_save("**********************************************************************")
+                self.print_and_save("**********************************************************************\n")
 
                 if self._amount_of_runs_finished >= self.item_amount_to_farm:
                     discord_string = f"> Runs completed for __{self.mission_name}__: **[{self._amount_of_runs_finished - 1} / {self.item_amount_to_farm}]** -> " \
@@ -810,16 +810,16 @@ class Game:
                 self.discord_queue.put(discord_string)
         elif is_pending_battle and temp_amount > 0 and not skip_info:
             if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
-                self.print_and_save("\n********************************************************************************")
-                self.print_and_save("********************************************************************************")
+                self.print_and_save("\n**********************************************************************")
+                self.print_and_save("**********************************************************************")
                 self.print_and_save(f"[FARM] Farming Mode: {self.farming_mode}")
                 self.print_and_save(f"[FARM] Mission: {self.mission_name}")
                 self.print_and_save(f"[FARM] Summons: {self.summon_list}")
                 self.print_and_save(f"[FARM] Amount of {self.item_name} gained from this pending battle: {temp_amount}")
                 self.print_and_save(f"[FARM] Amount of {self.item_name} gained in total: {self.item_amount_farmed} / {self.item_amount_to_farm}")
                 self.print_and_save(f"[FARM] Amount of runs completed: {self._amount_of_runs_finished}")
-                self.print_and_save("********************************************************************************")
-                self.print_and_save("********************************************************************************\n")
+                self.print_and_save("**********************************************************************")
+                self.print_and_save("**********************************************************************\n")
 
                 if temp_amount != 0:
                     if self.item_amount_farmed >= self.item_amount_to_farm:
