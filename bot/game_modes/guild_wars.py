@@ -74,8 +74,8 @@ class GuildWars:
                     # Now click on the specified Mission to start. Also attempt at fixing the deadzone issue by looping.
                     formatted_mission_name = difficulty.replace(" ", "_")
                     tries = 10
-                    while self._game.image_tools.wait_vanish(f"guild_wars_meat_{formatted_mission_name}", 3) is False:
-                        self._game.print_and_save(f"[GUILD.WARS] Now hosting {difficulty} now...")
+                    self._game.print_and_save(f"[GUILD.WARS] Now hosting {difficulty} now...")
+                    while self._game.image_tools.wait_vanish("ap_30", 3) is False:
                         self._game.find_and_click_button(f"guild_wars_meat_{formatted_mission_name}")
 
                         tries -= 1
