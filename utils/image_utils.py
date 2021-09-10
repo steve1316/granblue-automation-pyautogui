@@ -125,12 +125,12 @@ class ImageUtils:
                 temp_location = list(self._match_location)
                 temp_location[0] += int(width / 2)
                 temp_location[1] += int(height / 2)
-                self._match_location = tuple(temp_location)
             else:
                 temp_location = list(self._match_location)
                 temp_location[0] += int(pyautogui.size()[0] - (pyautogui.size()[0] / 3)) + int(width / 2)
                 temp_location[1] += int(height / 2)
-                self._match_location = tuple(temp_location)
+
+            self._match_location = tuple(temp_location)
 
             if self._match_method == cv2.TM_SQDIFF or self._match_method == cv2.TM_SQDIFF_NORMED:
                 if self._game.debug_mode:
@@ -140,6 +140,63 @@ class ImageUtils:
                     self._game.print_and_save(f"[DEBUG] Match found with {max_val} >= {confidence} at Point {self._match_location}")
 
         return match_check
+
+    def _match_all(self, template, confidence: float = 0.8) -> List:
+        if self._window_left is not None and self._window_top is not None and self._window_width is not None and self._window_height is not None:
+            pyautogui.screenshot(f"images/temp/source.png", region = (self._window_left, self._window_top, self._window_width, self._window_height))
+        else:
+            pyautogui.screenshot(f"images/temp/source.png")
+
+        match_check = True
+        match_locations = []
+
+        src = cv2.imread(f"images/temp/source.png", 0)
+        height, width = template.shape
+
+        while match_check:
+            result = cv2.matchTemplate(src, template, self._match_method)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+
+            if (self._match_method == cv2.TM_SQDIFF or self._match_method == cv2.TM_SQDIFF_NORMED) and min_val <= 1.0 - confidence:
+                self._match_location = min_loc
+                match_check = True
+            elif self._match_method != cv2.TM_SQDIFF and self._match_method != cv2.TM_SQDIFF_NORMED and max_val >= confidence:
+                self._match_location = max_loc
+                match_check = True
+            else:
+                if self._debug_mode:
+                    if self._match_method == cv2.TM_SQDIFF or self._match_method == cv2.TM_SQDIFF_NORMED:
+                        self._game.print_and_save(f"[WARNING] Match not found with {min_val} not <= {1.0 - confidence} at Point {min_loc}.")
+                    else:
+                        self._game.print_and_save(f"[WARNING] Match not found with {max_val} not >= {confidence} at Point {max_loc}.")
+
+                match_check = False
+
+            if match_check:
+                region = (self._match_location[0] + width, self._match_location[1] + height)
+                cv2.rectangle(src, self._match_location, region, 255, 5)
+                cv2.imwrite("images/temp/matchAll.png", src)
+
+                if self._additional_calibration_required is False:
+                    temp_location = list(self._match_location)
+                    temp_location[0] += int(width / 2)
+                    temp_location[1] += int(height / 2)
+                else:
+                    temp_location = list(self._match_location)
+                    temp_location[0] += int(pyautogui.size()[0] - (pyautogui.size()[0] / 3)) + int(width / 2)
+                    temp_location[1] += int(height / 2)
+
+                self._match_location = tuple(temp_location)
+                match_locations.append(self._match_location)
+
+                if self._match_method == cv2.TM_SQDIFF or self._match_method == cv2.TM_SQDIFF_NORMED:
+                    if self._game.debug_mode:
+                        self._game.print_and_save(f"[DEBUG] Match found with {min_val} <= {confidence} at Point {self._match_location}")
+                else:
+                    if self._game.debug_mode:
+                        self._game.print_and_save(f"[DEBUG] Match found with {max_val} >= {confidence} at Point {self._match_location}")
+
+        return match_locations
 
     def find_button(self, image_name: str, custom_confidence: float = 0.8, tries: int = 5, suppress_error: bool = False):
         """Find the location of the specified button.
@@ -275,15 +332,13 @@ class ImageUtils:
         self._game.print_and_save(f"[SUCCESS] Found {summon_list[summon_index].upper()} Summon at {summon_location}.")
         return summon_location
 
-    def find_all(self, image_name: str, is_item: bool = False, custom_region: Tuple[int, int, int, int] = None, custom_confidence: float = 0.9, grayscale_check: bool = False, hide_info: bool = False):
+    def find_all(self, image_name: str, is_item: bool = False, custom_confidence: float = 0.8, hide_info: bool = False):
         """Find the specified image file by locating all occurrences on the screen.
 
         Args:
             image_name (str): Name of the image file in the /images/buttons folder.
             is_item (bool, optional): Determines whether to search for the image file in the images/buttons/ or images/items/ folder. Defaults to False.
-            custom_region (tuple[int, int, int, int], optional): Region tuple of integers to look for a occurrence in. Defaults to None.
-            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.9.
-            grayscale_check (bool, optional): Match by converting screenshots to grayscale. This may lead to inaccuracies however. Defaults to False.
+            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
             hide_info (bool, optional): Whether or not to print the matches' locations. Defaults to False.
 
         Returns:
@@ -294,29 +349,28 @@ class ImageUtils:
         else:
             folder_name = "buttons"
 
-        if custom_region is None:
-            locations = list(pyautogui.locateAllOnScreen(f"images/{folder_name}/{image_name}.png", confidence = custom_confidence, grayscale = grayscale_check))
-        else:
-            locations = list(pyautogui.locateAllOnScreen(f"images/{folder_name}/{image_name}.png", confidence = custom_confidence, grayscale = grayscale_check, region = custom_region))
+        template = cv2.imread(f"images/{folder_name}/{image_name}.png", 0)
 
-        centered_locations = []
+        locations = self._match_all(template, custom_confidence)
+        filtered_locations = []
+
         if len(locations) != 0:
             for (index, location) in enumerate(locations):
                 if index > 0:
                     # Filter out duplicate locations where they are 1 pixel away from each other.
                     if location[0] != (locations[index - 1][0] + 1) and location[1] != (locations[index - 1][1] + 1):
-                        centered_locations.append(pyautogui.center(location))
+                        filtered_locations.append(location)
                 else:
-                    centered_locations.append(pyautogui.center(location))
+                    filtered_locations.append(location)
 
             if not hide_info:
-                for location in centered_locations:
+                for location in filtered_locations:
                     self._game.print_and_save(f"[INFO] Occurrence for {image_name.upper()} found at: " + str(location))
         else:
             if self._debug_mode:
                 self._game.print_and_save(f"[DEBUG] Failed to detect any occurrences of {image_name.upper()} images.")
 
-        return centered_locations
+        return filtered_locations
 
     def find_farmed_items(self, item_name: str, take_screenshot: bool = True):
         """Detect amounts of items gained according to the desired items specified.
