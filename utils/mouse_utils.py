@@ -78,7 +78,13 @@ class MouseUtils:
             None
         """
         try:
+            if self._debug_mode:
+                self._game.print_and_save(f"[DEBUG] Old coordinates: ({x}, {y})")
+
             new_x, new_y = self._randomize_point(x, y, image_name)
+
+            if self._debug_mode:
+                self._game.print_and_save(f"[DEBUG] New coordinates: ({new_x}, {new_y})")
 
             # Move the mouse to the specified coordinates.
             if self._enable_bezier_curve:
