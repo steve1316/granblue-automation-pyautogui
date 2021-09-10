@@ -231,22 +231,27 @@ class Game:
 
         width, height = pyautogui.size()
         additional_calibration_required = False
-        if self.home_button_location[0] < (width / 2):
-            window_left = 0
-            window_top = 0
-            window_width = int(width / 3)
-            window_height = height
-        elif self.home_button_location[0] > (width - (width / 2)):
-            window_left = int(width - width / 3)
-            window_top = 0
-            window_width = int(width / 3)
-            window_height = height
-            additional_calibration_required = True
-        else:
-            window_left = 0
-            window_top = 0
-            window_width = width
-            window_height = height
+        # if self.home_button_location[0] < (width / 2):
+        #     window_left = 0
+        #     window_top = 0
+        #     window_width = int(width / 3)
+        #     window_height = height
+        # elif self.home_button_location[0] > (width - (width / 2)):
+        #     window_left = int(width - width / 3)
+        #     window_top = 0
+        #     window_width = int(width / 3)
+        #     window_height = height
+        #     additional_calibration_required = True
+        # else:
+        #     window_left = 0
+        #     window_top = 0
+        #     window_width = width
+        #     window_height = height
+
+        window_left = 0
+        window_top = 0
+        window_width = width
+        window_height = height
 
         self.image_tools.update_window_dimensions(window_left, window_top, window_width, window_height, additional_calibration_required)
 
