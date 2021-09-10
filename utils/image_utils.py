@@ -436,8 +436,10 @@ class ImageUtils:
         """
         self._game.print_and_save(f"\n[INFO] Now waiting for {image_name} to vanish from screen...")
 
+        template = cv2.imread(f"images/buttons/{image_name.lower()}.png", 0)
+
         for _ in range(timeout):
-            if pyautogui.locateCenterOnScreen(f"images/buttons/{image_name.lower()}.png") is None:
+            if self._match(template) is False:
                 self._game.print_and_save(f"[SUCCESS] Image successfully vanished from screen...")
                 return True
 
