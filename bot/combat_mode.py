@@ -27,7 +27,6 @@ class CombatMode:
 
         # Save some variables for use throughout the class.
         self._attack_button_location = None
-        self._back_button_location = None
         self._retreat_check = False
         self._is_bot_running = is_bot_running
         self._debug_mode = debug_mode
@@ -419,8 +418,8 @@ class CombatMode:
                         self._game.print_and_save("[COMBAT] Summon #{j} cannot be invoked due to current restrictions.")
                         self._game.find_and_click_button("cancel")
 
-                        # Click the "Back" button to return.
-                        self._game.mouse_tools.move_and_click_point(self._back_button_location[0], self._back_button_location[1], "back")
+                # Click the "Back" button to return.
+                self._game.find_and_click_button("back", tries = 1)
 
         return None
 
@@ -557,7 +556,6 @@ class CombatMode:
 
         # Reset the saved locations of the "Attack" and "Back" buttons.
         self._attack_button_location = None
-        self._back_button_location = None
 
         # If current Farming Mode is Arcarum, attempt to dismiss potential stage effect popup like "Can't use Charge Attacks".
         if self._game.farming_mode == "Arcarum":
@@ -565,9 +563,7 @@ class CombatMode:
 
         # Save the positions of the "Attack" and "Back" button.
         self._attack_button_location = self._game.image_tools.find_button("attack", tries = 30)
-        if self._attack_button_location is not None:
-            self._back_button_location = (self._attack_button_location[0] - 322, self._attack_button_location[1])
-        else:
+        if self._attack_button_location is None:
             self._game.print_and_save(f"\n[ERROR] Cannot find Attack button. Raid must have just ended.")
             return False
 
