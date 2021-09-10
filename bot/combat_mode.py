@@ -570,14 +570,14 @@ class CombatMode:
         # This is where the main workflow of Combat Mode is located.
         while len(command_list) > 0 and self._retreat_check is False and semi_auto is False and full_auto is False:
             # Check if the Battle has ended.
-            if self._retreat_check or self._game.image_tools.confirm_location("no_loot", tries = 1):
+            if self._retreat_check or self._game.image_tools.confirm_location("no_loot", tries = 1, suppress_error = True):
                 self._game.print_and_save("\n######################################################################")
                 self._game.print_and_save("######################################################################")
                 self._game.print_and_save("[COMBAT] Combat Mode has ended with no loot.")
                 self._game.print_and_save("######################################################################")
                 self._game.print_and_save("######################################################################")
                 return False
-            elif self._game.image_tools.confirm_location("battle_concluded", tries = 1):
+            elif self._game.image_tools.confirm_location("battle_concluded", tries = 1, suppress_error = True):
                 self._game.print_and_save("\n[COMBAT] Battle concluded suddenly.")
                 self._game.print_and_save("\n######################################################################")
                 self._game.print_and_save("######################################################################")
@@ -586,7 +586,7 @@ class CombatMode:
                 self._game.print_and_save("######################################################################")
                 self._game.find_and_click_button("reload")
                 return True
-            elif self._game.image_tools.confirm_location("exp_gained", tries = 1):
+            elif self._game.image_tools.confirm_location("exp_gained", tries = 1, suppress_error = True):
                 self._game.print_and_save("\n######################################################################")
                 self._game.print_and_save("######################################################################")
                 self._game.print_and_save("[COMBAT] Ending Combat Mode.")
@@ -759,14 +759,14 @@ class CombatMode:
             turn_number += 1
 
             # Check if the Battle has ended.
-            if self._retreat_check or self._game.image_tools.confirm_location("no_loot", tries = 1):
+            if self._retreat_check or self._game.image_tools.confirm_location("no_loot", tries = 1, suppress_error = True):
                 self._game.print_and_save("\n######################################################################")
                 self._game.print_and_save("######################################################################")
                 self._game.print_and_save("[COMBAT] Combat Mode has ended with no loot")
                 self._game.print_and_save("######################################################################")
                 self._game.print_and_save("######################################################################")
                 return False
-            elif self._game.image_tools.confirm_location("battle_concluded", tries = 1):
+            elif self._game.image_tools.confirm_location("battle_concluded", tries = 1, suppress_error = True):
                 self._game.print_and_save("\n[COMBAT] Battle concluded suddenly.")
                 self._game.print_and_save("\n######################################################################")
                 self._game.print_and_save("######################################################################")
@@ -775,7 +775,7 @@ class CombatMode:
                 self._game.print_and_save("######################################################################")
                 self._game.find_and_click_button("reload")
                 return True
-            elif self._game.image_tools.confirm_location("exp_gained", tries = 1):
+            elif self._game.image_tools.confirm_location("exp_gained", tries = 1, suppress_error = True):
                 self._game.print_and_save("\n######################################################################")
                 self._game.print_and_save("######################################################################")
                 self._game.print_and_save("[COMBAT] Ending Combat Mode.")
@@ -809,14 +809,14 @@ class CombatMode:
         # Main workflow loop for both Semi Auto and Full Auto. The bot will progress the Quest/Raid until it ends or the Party wipes.
         while not self._retreat_check and (full_auto or semi_auto):
             # Check if the Battle has ended.
-            if self._retreat_check or self._game.image_tools.confirm_location("no_loot", tries = 1):
+            if self._retreat_check or self._game.image_tools.confirm_location("no_loot", tries = 1, suppress_error = True):
                 self._game.print_and_save("\n######################################################################")
                 self._game.print_and_save("######################################################################")
                 self._game.print_and_save("[COMBAT] Combat Mode has ended with no loot.")
                 self._game.print_and_save("######################################################################")
                 self._game.print_and_save("######################################################################")
                 return False
-            elif self._game.image_tools.confirm_location("battle_concluded", tries = 1):
+            elif self._game.image_tools.confirm_location("battle_concluded", tries = 1, suppress_error = True):
                 self._game.print_and_save("\n[COMBAT] Battle concluded suddenly.")
                 self._game.print_and_save("\n######################################################################")
                 self._game.print_and_save("######################################################################")
@@ -825,7 +825,7 @@ class CombatMode:
                 self._game.print_and_save("######################################################################")
                 self._game.find_and_click_button("reload")
                 return True
-            elif self._game.image_tools.confirm_location("exp_gained", tries = 1):
+            elif self._game.image_tools.confirm_location("exp_gained", tries = 1, suppress_error = True):
                 self._game.print_and_save("\n######################################################################")
                 self._game.print_and_save("######################################################################")
                 self._game.print_and_save("[COMBAT] Ending Combat Mode.")
