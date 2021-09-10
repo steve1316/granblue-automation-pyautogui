@@ -56,6 +56,12 @@ class ImageUtils:
 
         self._process = multiprocessing.Process(target = ImageUtils._play_captcha_sound)
 
+        # Check if the temp folder is created in the images folder.
+        current_dir = os.getcwd()
+        temp_dir = os.path.join(current_dir, r"images/temp")
+        if not os.path.exists(temp_dir):
+            os.makedirs(temp_dir)
+
     def update_window_dimensions(self, window_left: int, window_top: int, window_width: int, window_height: int, additional_calibration_required: bool = False):
         """Updates the window dimensions for PyAutoGUI to perform faster operations in.
 
@@ -387,12 +393,6 @@ class ImageUtils:
                 top = location[1] - 5
                 width = 30
                 height = 25
-
-                # Create the /temp/ folder in the /images/ folder to house the taken screenshots.
-                current_dir = os.getcwd()
-                temp_dir = os.path.join(current_dir, r"images/temp")
-                if not os.path.exists(temp_dir):
-                    os.makedirs(temp_dir)
 
                 # Create a screenshot in the specified region named "test" and save it in the /temp/ folder. Then use EasyOCR to extract text from it into a list.
                 test_image = pyautogui.screenshot("images/temp/test.png", region = (left, top, width, height))
