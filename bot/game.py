@@ -728,8 +728,6 @@ class Game:
         """
         temp_amount = 0
 
-        print("COLLECTING LOOT NOWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
-
         # Click away the "EXP Gained" popup and any other popups until the bot reaches the Loot Collected screen.
         if self.image_tools.confirm_location("exp_gained"):
             while not self.image_tools.confirm_location("loot_collected", tries = 1):
