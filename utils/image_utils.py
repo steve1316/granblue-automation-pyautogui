@@ -115,12 +115,12 @@ class ImageUtils:
             cv2.rectangle(src, self._match_location, region, 255, 5)
             cv2.imwrite("images/temp/match.png", src)
 
-            if self._calibration_complete is False:
+            if self._additional_calibration_required is False:
                 temp_location = list(self._match_location)
                 temp_location[0] += int(width / 2)
                 temp_location[1] += int(height / 2)
                 self._match_location = tuple(temp_location)
-            elif self._additional_calibration_required:
+            else:
                 temp_location = list(self._match_location)
                 temp_location[0] += int(pyautogui.size()[0] - (pyautogui.size()[0] / 3)) + int(width / 2)
                 temp_location[1] += int(height / 2)
