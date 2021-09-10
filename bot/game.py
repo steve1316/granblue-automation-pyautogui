@@ -296,11 +296,11 @@ class Game:
         return None
 
     @staticmethod
-    def wait(seconds: int = 3):
+    def wait(seconds: float = 3.0):
         """Wait the specified seconds to account for ping or loading.
 
         Args:
-            seconds (int, optional): Number of seconds for the execution to wait for. Defaults to 3.
+            seconds (float, optional): Number of seconds for the execution to wait for. Defaults to 3.0.
 
         Returns:
             None
@@ -727,6 +727,8 @@ class Game:
             (int): Number of specified items dropped.
         """
         temp_amount = 0
+
+        print("COLLECTING LOOT NOWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW")
 
         # Click away the "EXP Gained" popup and any other popups until the bot reaches the Loot Collected screen.
         if self.image_tools.confirm_location("exp_gained"):
