@@ -603,8 +603,7 @@ class CombatMode:
 
             back_flag = False
 
-            self._game.print_and_save(f"[COMBAT] Starting Turn {turn_number}.")
-            self._game.print_and_save(f"[COMBAT] Reading command: {command}")
+            self._game.print_and_save(f"\n[COMBAT] Reading command: \"{command}\"")
 
             if command.__contains__("turn"):
                 # Clear any detected dialog popups that might obstruct the "Attack" button.
@@ -618,6 +617,8 @@ class CombatMode:
                     self._game.print_and_save(f"[COMBAT] Attacking until the bot reaches Turn {command_turn_number}.")
                     while turn_number != command_turn_number:
                         turn_number = self._process_incorrect_turn(turn_number)
+                else:
+                    self._game.print_and_save(f"\n[COMBAT] Starting Turn {turn_number}.")
 
             elif turn_number == command_turn_number:
                 # Process all commands here that belong inside a Turn block.
@@ -650,8 +651,14 @@ class CombatMode:
                     self._tweet_backup()
                 elif self._healing_item_commands.__contains__(command):
                     self._use_combat_healing_item(command)
-                elif command.__contains__("summon"):
+                elif command.__contains__("summon") and command != "quicksummon":
                     self._use_summon(command)
+                elif command == "quicksummon":
+                    self._game.print_and_save("[COMBAT] Quick Summoning now...")
+                    if self._game.find_and_click_button("quick_summon"):
+                        self._game.print_and_save("[COMBAT] Successfully quick summoned!")
+                    else:
+                        self._game.print_and_save("[COMBAT] Was not able to quick summon this Turn.")
                 elif command == "enablesemiauto":
                     self._game.print_and_save("[COMBAT] Bot will now attempt to enable Semi Auto...")
                     semi_auto = True
