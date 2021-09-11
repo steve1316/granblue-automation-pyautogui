@@ -99,6 +99,7 @@ pip install -r requirements.txt
 - [playsound 1.2.2+](https://pypi.org/project/playsound/)
 - [pyperclip 1.8.1+](https://pypi.org/project/pyperclip/)
 - [discord.py 1.7.3+](https://pypi.org/project/discord.py/)
+- [opencv-python 4.5.1.48+](https://pypi.org/project/opencv-python/)
 
 # Instructions
 1. Download the entire project folder.

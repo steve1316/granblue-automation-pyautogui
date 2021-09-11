@@ -14,3 +14,4 @@ playsound==1.2.2
 Pillow==8.1.0
 pyperclip==1.8.1
 discord.py==1.7.3
+opencv-python==4.5.1.48
