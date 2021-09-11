@@ -439,17 +439,16 @@ class ImageUtils:
                         check = True
 
             if not check:
-                if item_name not in blacklisted_items and item_name not in lite_blacklisted_items:
-                    location = (location.target.x, location.target.y)
-
-                # Adjust the width and height variables if EasyOCR cannot detect the numbers correctly.
-                left = location[0] + 10
-                top = location[1] - 5
-                width = 30
-                height = 25
-
-                # Create a screenshot in the specified region named "test" and save it in the /temp/ folder. Then use EasyOCR to extract text from it into a list.
-                test_image = pyautogui.screenshot("images/temp/test.png", region = (left, top, width, height))
+                # if item_name not in blacklisted_items and item_name not in lite_blacklisted_items:
+                #     location = (location.target.x, location.target.y)
+                #
+                # # Create a screenshot in the specified region named "test" and save it in the /temp/ folder. Then use EasyOCR to extract text from it into a list.
+                # # Adjust the width and height variables if EasyOCR cannot detect the numbers correctly.
+                # left = location[0] + 10
+                # top = location[1] - 5
+                # width = 30
+                # height = 25
+                # test_image = pyautogui.screenshot("images/temp/test.png", region = (left, top, width, height))
                 # test_image.show() # Uncomment this line of code to see what the bot captured for the region of the detected text.
                 result = self._reader.readtext("images/temp/test.png", detail = 0)
 
