@@ -3,7 +3,7 @@ import multiprocessing
 import os
 import time
 from datetime import date
-from typing import List, Tuple
+from typing import List
 
 import cv2
 import easyocr
@@ -369,6 +369,9 @@ class ImageUtils:
         else:
             if self._debug_mode:
                 self._game.print_and_save(f"[DEBUG] Failed to detect any occurrences of {image_name.upper()} images.")
+
+        # Sort the matched locations.
+        filtered_locations.sort()
 
         return filtered_locations
 
