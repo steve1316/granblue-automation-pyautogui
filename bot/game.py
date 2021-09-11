@@ -628,7 +628,7 @@ class Game:
         self.find_and_click_button("ok")
 
         # If a popup appears and says "This raid battle has already ended. The Home screen will now appear.", return False.
-        if self.farming_mode.lower() == "raid" and self.image_tools.confirm_location("raid_just_ended_home_redirect"):
+        if self.farming_mode.lower() == "raid" and self.image_tools.confirm_location("raids"):
             self.print_and_save("\n[WARNING] Raid unfortunately just ended. Backing out now...")
             self.find_and_click_button("ok")
             return False
