@@ -1,5 +1,4 @@
 import datetime
-import multiprocessing
 import os
 import time
 from datetime import date
@@ -53,8 +52,6 @@ class ImageUtils:
 
         self._match_method = cv2.TM_CCOEFF_NORMED
         self._match_location = None
-
-        self._process = multiprocessing.Process(target = ImageUtils._play_captcha_sound)
 
         # Check if the temp folder is created in the images folder.
         current_dir = os.getcwd()
@@ -557,7 +554,7 @@ class ImageUtils:
 
     @staticmethod
     def _play_captcha_sound():
-        playsound("CAPTCHA.mp3")
+        playsound("CAPTCHA.mp3", block = False)
         return None
 
     def generate_alert_for_captcha(self):
@@ -566,21 +563,11 @@ class ImageUtils:
         Returns:
             None
         """
-        # Play the CAPTCHA.mp3.
-        if self._process.is_alive() is False:
-            self._process.start()
-
-            pyautogui.alert(
-                text = "Stopping bot. Please enter the CAPTCHA yourself and play this mission manually to its completion. \n\nIt is now highly recommended that you take a break of several hours and "
-                       "in the future, please reduce the amount of hours that you use this program consecutively without breaks in between.",
-                title = "CAPTCHA Detected!", button = "OK")
-
-            self._process.terminate()
-        else:
-            pyautogui.alert(
-                text = "Stopping bot. Please enter the CAPTCHA yourself and play this mission manually to its completion. \n\nIt is now highly recommended that you take a break of several hours and "
-                       "in the future, please reduce the amount of hours that you use this program consecutively without breaks in between.",
-                title = "CAPTCHA Detected!", button = "OK")
+        self._play_captcha_sound()
+        pyautogui.alert(
+            text = "Stopping bot. Please enter the CAPTCHA yourself and play this mission manually to its completion. \n\nIt is now highly recommended that you take a break of several hours and "
+                   "in the future, please reduce the amount of hours that you use this program consecutively without breaks in between.",
+            title = "CAPTCHA Detected!", button = "OK")
 
         return None
 
@@ -593,11 +580,7 @@ class ImageUtils:
         Returns:
             None
         """
-        if self._process.is_alive() is False:
-            self._process.start()
-            pyautogui.alert(text = message, title = "Exception Encountered", button = "OK")
-            self._process.terminate()
-        else:
-            pyautogui.alert(text = message, title = "Exception Encountered", button = "OK")
+        self._play_captcha_sound()
+        pyautogui.alert(text = message, title = "Exception Encountered", button = "OK")
 
         return None
