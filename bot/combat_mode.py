@@ -684,7 +684,7 @@ class CombatMode:
                             # If the "Cancel" button fails to disappear after 10 tries, reload anyways.
                             self._game.find_and_click_button("reload")
                 elif command == "end":
-                    break
+                    continue
                 elif command == "exit":
                     # End Combat Mode by heading back to the Home screen without retreating.
                     self._game.print_and_save("\n[COMBAT] Leaving this Raid without retreating.")
