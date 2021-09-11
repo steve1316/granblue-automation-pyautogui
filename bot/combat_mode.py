@@ -601,8 +601,6 @@ class CombatMode:
             if command == "" or command[0] == "#" or command[0] == "/":
                 continue
 
-            back_flag = False
-
             self._game.print_and_save(f"\n[COMBAT] Reading command: \"{command}\"")
 
             if command.__contains__("turn"):
@@ -678,7 +676,6 @@ class CombatMode:
                 elif "back" in command and self._game.find_and_click_button("home_back", tries = 1):
                     self._game.print_and_save("[COMBAT] Tapped the Back button.")
                     self._wait_for_attack()
-                    back_flag = True
 
                     # Advance the Turn number by 1.
                     turn_number += 1
@@ -692,7 +689,7 @@ class CombatMode:
                         else:
                             # If the "Cancel" button fails to disappear after 10 tries, reload anyways.
                             self._game.find_and_click_button("reload")
-                elif semi_auto is False and full_auto is False and command == "end" and back_flag is False:
+                elif semi_auto is False and full_auto is False and command == "end":
                     # Click the "Attack" button once every command inside the Turn Block has been processed.
                     self._game.print_and_save(f"[COMBAT] Ending Turn {turn_number}.")
                     self._game.find_and_click_button("attack", tries = 10)
