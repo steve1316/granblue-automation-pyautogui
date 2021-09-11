@@ -97,9 +97,9 @@ class CombatMode:
         Returns:
             None
         """
-        dialog_location = self._game.image_tools.find_button("dialog_lyria", tries = 1)
+        dialog_location = self._game.image_tools.find_button("dialog_lyria", tries = 1, suppress_error = True)
         if dialog_location is None:
-            dialog_location = self._game.image_tools.find_button("dialog_vyrn", tries = 1)
+            dialog_location = self._game.image_tools.find_button("dialog_vyrn", tries = 1, suppress_error = True)
 
         if dialog_location is not None:
             self._game.mouse_tools.move_and_click_point(dialog_location[0] + 180, dialog_location[1] - 51, "template_dialog")
@@ -431,7 +431,8 @@ class CombatMode:
         """
         self._game.print_and_save("\n[COMBAT] Now waiting for attack to end...")
         tries = 10
-        while tries > 0 and not self._retreat_check and self._game.image_tools.find_button("attack", tries = 1) is None and self._game.image_tools.find_button("next", tries = 1) is None:
+        while tries > 0 and not self._retreat_check and self._game.image_tools.find_button("attack", tries = 1, suppress_error = True) is None and \
+                self._game.image_tools.find_button("next", tries = 1, suppress_error = True) is None:
             # Stagger the checks for dialog popups.
             if tries % 2 == 0:
                 self._find_dialog_in_combat()
@@ -439,7 +440,8 @@ class CombatMode:
                 # Check if the Party wiped after attacking.
                 self._party_wipe_check()
 
-                if self._game.image_tools.confirm_location("battle_concluded", tries = 1) is True or self._game.image_tools.confirm_location("exp_gained", tries = 1) is True:
+                if self._game.image_tools.confirm_location("battle_concluded", tries = 1, suppress_error = True) is True or \
+                        self._game.image_tools.confirm_location("exp_gained", tries = 1, suppress_error = True) is True:
                     break
 
             tries -= 1
