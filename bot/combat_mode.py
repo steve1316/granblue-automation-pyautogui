@@ -683,8 +683,27 @@ class CombatMode:
                         else:
                             # If the "Cancel" button fails to disappear after 10 tries, reload anyways.
                             self._game.find_and_click_button("reload")
-                elif command == "end":
-                    continue
+                elif semi_auto is False and full_auto is False and command == "end" and back_flag is False:
+                    # Click the "Attack" button once every command inside the Turn Block has been processed.
+                    self._game.print_and_save(f"[COMBAT] Ending Turn {turn_number}.")
+                    self._game.find_and_click_button("attack", tries = 10)
+
+                    # Wait until the "Cancel" button vanishes from the screen.
+                    if self._game.image_tools.find_button("combat_cancel", tries = 3) is not None:
+                        while self._game.image_tools.wait_vanish("combat_cancel", timeout = 5) is False:
+                            if self._debug_mode:
+                                self._game.print_and_save("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
+                            self._game.wait(1)
+
+                    self._reload_for_attack()
+                    self._wait_for_attack()
+
+                    self._game.print_and_save(f"[COMBAT] Turn {turn_number} has ended.")
+
+                    turn_number += 1
+
+                    if self._game.find_and_click_button("next", tries = 1, suppress_error = True):
+                        self._game.wait(3)
                 elif command == "exit":
                     # End Combat Mode by heading back to the Home screen without retreating.
                     self._game.print_and_save("\n[COMBAT] Leaving this Raid without retreating.")
@@ -710,27 +729,6 @@ class CombatMode:
                     self._game.print_and_save("[COMBAT] Bot failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
                     semi_auto = True
                 break
-            elif semi_auto is False and full_auto is False and command == "end" and back_flag is False:
-                # Click the "Attack" button once every command inside the Turn Block has been processed.
-                self._game.print_and_save(f"[COMBAT] Ending Turn {turn_number}.")
-                self._game.find_and_click_button("attack", tries = 10)
-
-                # Wait until the "Cancel" button vanishes from the screen.
-                if self._game.image_tools.find_button("combat_cancel", tries = 3) is not None:
-                    while self._game.image_tools.wait_vanish("combat_cancel", timeout = 5) is False:
-                        if self._debug_mode:
-                            self._game.print_and_save("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
-                        self._game.wait(1)
-
-                self._reload_for_attack()
-                self._wait_for_attack()
-
-                self._game.print_and_save(f"[COMBAT] Turn {turn_number} has ended.")
-
-                turn_number += 1
-
-                if self._game.find_and_click_button("next", tries = 1, suppress_error = True):
-                    self._game.wait(3)
 
         # When the bot reaches here, all the commands in the combat script has been processed.
         self._game.print_and_save("\n[COMBAT] Bot has reached end of script. Automatically attacking until battle ends or Party wipes...")
