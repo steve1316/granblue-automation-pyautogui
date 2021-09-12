@@ -317,14 +317,14 @@ class ImageUtils:
 
                     summon_index += 1
 
-                    # If the bot reached the bottom of the page, scroll back up to the top and start searching for the next Summon.
-                    if self.find_button("bottom_of_summon_selection", tries = 1) is not None:
-                        self._game.print_and_save(f"[WARNING] Bot has reached the bottom of the page and found no suitable Summons. Resetting Summons now...")
-                        return None
+            # If the bot reached the bottom of the page, scroll back up to the top and start searching for the next Summon.
+            if self.find_button("bottom_of_summon_selection", tries = 1) is not None:
+                self._game.print_and_save(f"[WARNING] Bot has reached the bottom of the page and found no suitable Summons. Resetting Summons now...")
+                return None
 
-                    # If matching failed, scroll the screen down to see more Summons.
-                    self._game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
-                    self._game.wait(1.0)
+            # If matching failed, scroll the screen down to see more Summons.
+            self._game.mouse_tools.scroll_screen(home_button_x, home_button_y - 50, -700)
+            self._game.wait(1.0)
 
         self._game.print_and_save(f"[SUCCESS] Found {summon_list[summon_index].upper()} Summon at {summon_location}.")
         return summon_location
