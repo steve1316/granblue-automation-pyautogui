@@ -307,6 +307,11 @@ class ImageUtils:
             while summon_index < len(summon_list):
                 # Now try and find the Summon at the current index.
                 template = cv2.imread(f"images/summons/{summon_list[summon_index]}.png", 0)
+
+                # Crop the summon template image so that plus marks would not potentially obscure any match.
+                height, width = template.shape
+                template = template[0:height, 0:width - 40]
+
                 result_flag = self._match(template, custom_confidence)
 
                 if result_flag:
