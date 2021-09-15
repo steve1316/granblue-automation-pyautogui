@@ -763,6 +763,15 @@ class CombatMode:
                     semi_auto = True
                 break
 
+        # Deal with any the situation where high-profile raids end right when the bot loads in and all it sees is the "Next" button.
+        if self._game.farming_mode == "Raid" and self._game.find_and_click_button("next", tries = 3):
+            self._game.print_and_save("\n######################################################################")
+            self._game.print_and_save("######################################################################")
+            self._game.print_and_save("[COMBAT] Ending Combat Mode.")
+            self._game.print_and_save("######################################################################")
+            self._game.print_and_save("######################################################################")
+            return True
+
         # When the bot reaches here, all the commands in the combat script has been processed.
         self._game.print_and_save("\n[COMBAT] Bot has reached end of script. Automatically attacking until battle ends or Party wipes...")
 
@@ -863,6 +872,9 @@ class CombatMode:
                 self._game.print_and_save("######################################################################")
                 self._game.print_and_save("######################################################################")
                 return True
+
+            if self._game.find_and_click_button("next", tries = 1, suppress_error = True):
+                self._game.wait(3)
 
             self._party_wipe_check()
             self._game.wait(1)
