@@ -286,6 +286,9 @@ class Game:
         else:
             self.print_and_save("[INFO] Bot is at the Home screen.")
 
+        # Handle any misc popups on the Home screen.
+        self.find_and_click_button("close")
+
         # Recalibrate the dimensions of the bot window.
         if display_info_check:
             self._calibrate_game_window(display_info_check = True)
