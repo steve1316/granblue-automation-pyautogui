@@ -1,4 +1,5 @@
 import tweepy
+import re
 
 
 class RoomStreamListener(tweepy.StreamListener):
@@ -210,19 +211,22 @@ class TwitterRoomFinder:
         while len(self._listener.tweets) > 0:
             tweet = self._listener.tweets.pop()
 
-            # Split up the tweet's text by whitespaces.
-            split_text = tweet.text.split(" ")
+            if re.search(rf"\b{self._game.mission_name}\b", tweet.text) or re.search(rf"\b{self._list_of_raids[self._game.mission_name]}\b", tweet.text):
+                # Split up the tweet's text by whitespaces.
+                split_text = tweet.text.split(" ")
 
-            # Parse the room code and if it has not been visited yet, append it to the list.
-            for i, identifier in enumerate(split_text):
-                if (":Battle" in identifier) or (":参戦ID" in identifier):
-                    parsed_code = split_text[i - 1]
-                    if parsed_code not in self._already_visited:
-                        self._game.print_and_save(f"[TWITTER] Found {parsed_code} created at {tweet.created_at}")
-                        self._already_visited.append(parsed_code)
-                        return parsed_code
-                    else:
-                        self._game.print_and_save(f"[TWITTER] Already visited {parsed_code} before in this session. Skipping this code...")
+                # Parse the room code and if it has not been visited yet, append it to the list.
+                for i, identifier in enumerate(split_text):
+                    if (":Battle" in identifier) or (":参戦ID" in identifier):
+                        parsed_code = split_text[i - 1]
+                        if parsed_code not in self._already_visited:
+                            self._game.print_and_save(f"[TWITTER] Found {parsed_code} created at {tweet.created_at}")
+                            self._already_visited.append(parsed_code)
+                            return parsed_code
+                        else:
+                            self._game.print_and_save(f"[TWITTER] Already visited {parsed_code} before in this session. Skipping this code...")
+            else:
+                self._game.print_and_save(f"[TWITTER] Skipping tweet as it is for a different raid.")
 
         return ""
 
