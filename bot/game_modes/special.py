@@ -36,7 +36,7 @@ class Special:
 
         # #### config.ini ####
         self._enable_dimensional_halo = config.getboolean("dimensional_halo", "enable_dimensional_halo")
-        if self._enable_dimensional_halo:
+        if self._enable_dimensional_halo and self._mission_name == "VH Angel Halo":
             self._dimensional_halo_combat_script = config.get("dimensional_halo", "dimensional_halo_combat_script")
 
             self._dimensional_halo_summon_list = config.get("dimensional_halo", "dimensional_halo_summon_list").replace(" ", "_").split(",")
@@ -50,31 +50,31 @@ class Special:
             self._dimensional_halo_group_number = config.get("dimensional_halo", "dimensional_halo_group_number")
             self._dimensional_halo_party_number = config.get("dimensional_halo", "dimensional_halo_party_number")
             self._dimensional_halo_amount = 0
+
+            if self._dimensional_halo_combat_script == "":
+                self._game.print_and_save("[SPECIAL] Combat Script for Dimensional Halo will reuse the one for Farming Mode.")
+                self._dimensional_halo_combat_script = self._game.combat_script
+
+            if len(self._dimensional_halo_summon_element_list) == 0:
+                self._game.print_and_save("[SPECIAL] Summon Elements for Dimensional Halo will reuse the ones for Farming Mode.")
+                self._dimensional_halo_summon_element_list = self._game.summon_element_list
+
+            if len(self._dimensional_halo_summon_list) == 0:
+                self._game.print_and_save("[SPECIAL] Summons for Dimensional Halo will reuse the ones for Farming Mode.")
+                self._dimensional_halo_summon_list = self._game.summon_list
+
+            if self._dimensional_halo_group_number == "":
+                self._game.print_and_save("[SPECIAL] Group Number for Dimensional Halo will reuse the one for Farming Mode.")
+                self._dimensional_halo_group_number = self._game.group_number
+            else:
+                self._dimensional_halo_group_number = int(self._dimensional_halo_group_number)
+
+            if self._dimensional_halo_party_number == "":
+                self._game.print_and_save("[SPECIAL] Party Number for Dimensional Halo will reuse the one for Farming Mode.")
+                self._dimensional_halo_party_number = self._game.party_number
+            else:
+                self._dimensional_halo_party_number = int(self._dimensional_halo_party_number)
         # #### end of config.ini ####
-
-        if self._dimensional_halo_combat_script == "":
-            self._game.print_and_save("[SPECIAL] Combat Script for Dimensional Halo will reuse the one for Farming Mode.")
-            self._dimensional_halo_combat_script = self._game.combat_script
-
-        if len(self._dimensional_halo_summon_element_list) == 0:
-            self._game.print_and_save("[SPECIAL] Summon Elements for Dimensional Halo will reuse the ones for Farming Mode.")
-            self._dimensional_halo_summon_element_list = self._game.summon_element_list
-
-        if len(self._dimensional_halo_summon_list) == 0:
-            self._game.print_and_save("[SPECIAL] Summons for Dimensional Halo will reuse the ones for Farming Mode.")
-            self._dimensional_halo_summon_list = self._game.summon_list
-
-        if self._dimensional_halo_group_number == "":
-            self._game.print_and_save("[SPECIAL] Group Number for Dimensional Halo will reuse the one for Farming Mode.")
-            self._dimensional_halo_group_number = self._game.group_number
-        else:
-            self._dimensional_halo_group_number = int(self._dimensional_halo_group_number)
-
-        if self._dimensional_halo_party_number == "":
-            self._game.print_and_save("[SPECIAL] Party Number for Dimensional Halo will reuse the one for Farming Mode.")
-            self._dimensional_halo_party_number = self._game.party_number
-        else:
-            self._dimensional_halo_party_number = int(self._dimensional_halo_party_number)
 
         self._game.print_and_save("[SPECIAL] Settings initialized for Special...")
         # #### end of Advanced Setup ####

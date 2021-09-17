@@ -47,31 +47,31 @@ class RiseOfTheBeasts:
             self._rotb_extreme_plus_group_number = config.get("rise_of_the_beasts", "rotb_extreme_plus_group_number")
             self._rotb_extreme_plus_party_number = config.get("rise_of_the_beasts", "rotb_extreme_plus_party_number")
             self._rotb_extreme_plus_amount = 0
+
+            if self._rotb_extreme_plus_combat_script == "":
+                self._game.print_and_save("[ROTB] Combat Script for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
+                self._rotb_extreme_plus_combat_script = self._game.combat_script
+
+            if len(self._rotb_extreme_plus_summon_element_list) == 0:
+                self._game.print_and_save("[ROTB] Summon Elements for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
+                self._rotb_extreme_plus_summon_element_list = self._game.summon_element_list
+
+            if len(self._rotb_extreme_plus_summon_list) == 0:
+                self._game.print_and_save("[ROTB] Summons for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
+                self._rotb_extreme_plus_summon_list = self._game.summon_list
+
+            if self._rotb_extreme_plus_group_number == "":
+                self._game.print_and_save("[ROTB] Group Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
+                self._rotb_extreme_plus_group_number = self._game.group_number
+            else:
+                self._rotb_extreme_plus_group_number = int(self._rotb_extreme_plus_group_number)
+
+            if self._rotb_extreme_plus_party_number == "":
+                self._game.print_and_save("[ROTB] Party Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
+                self._rotb_extreme_plus_party_number = self._game.party_number
+            else:
+                self._rotb_extreme_plus_party_number = int(self._rotb_extreme_plus_party_number)
         # #### end of config.ini ####
-
-        if self._rotb_extreme_plus_combat_script == "":
-            self._game.print_and_save("[ROTB] Combat Script for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
-            self._rotb_extreme_plus_combat_script = self._game.combat_script
-
-        if len(self._rotb_extreme_plus_summon_element_list) == 0:
-            self._game.print_and_save("[ROTB] Summon Elements for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
-            self._rotb_extreme_plus_summon_element_list = self._game.summon_element_list
-
-        if len(self._rotb_extreme_plus_summon_list) == 0:
-            self._game.print_and_save("[ROTB] Summons for Rise of the Beasts Extreme+ will reuse the ones for Farming Mode.")
-            self._rotb_extreme_plus_summon_list = self._game.summon_list
-
-        if self._rotb_extreme_plus_group_number == "":
-            self._game.print_and_save("[ROTB] Group Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
-            self._rotb_extreme_plus_group_number = self._game.group_number
-        else:
-            self._rotb_extreme_plus_group_number = int(self._rotb_extreme_plus_group_number)
-
-        if self._rotb_extreme_plus_party_number == "":
-            self._game.print_and_save("[ROTB] Party Number for Rise of the Beasts Extreme+ will reuse the one for Farming Mode.")
-            self._rotb_extreme_plus_party_number = self._game.party_number
-        else:
-            self._rotb_extreme_plus_party_number = int(self._rotb_extreme_plus_party_number)
 
         self._game.print_and_save("[ROTB] Settings initialized for Rise of the Beasts Extreme+...")
         # #### end of Advanced Setup ####

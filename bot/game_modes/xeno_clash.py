@@ -46,31 +46,31 @@ class XenoClash:
 
             self._xeno_clash_nightmare_group_number = config.get("xeno_clash", "xeno_clash_nightmare_group_number")
             self._xeno_clash_nightmare_party_number = config.get("xeno_clash", "xeno_clash_nightmare_party_number")
+
+            if self._xeno_clash_nightmare_combat_script == "":
+                self._game.print_and_save("[XENO.CLASH] Combat Script for Xeno Clash Nightmare will reuse the one for Farming Mode.")
+                self._xeno_clash_nightmare_combat_script = self._game.combat_script
+
+            if len(self._xeno_clash_nightmare_summon_element_list) == 0:
+                self._game.print_and_save("[XENO.CLASH] Summon Elements for Xeno Clash Nightmare will reuse the ones for Farming Mode.")
+                self._xeno_clash_nightmare_summon_element_list = self._game.summon_element_list
+
+            if len(self._xeno_clash_nightmare_summon_list) == 0:
+                self._game.print_and_save("[XENO.CLASH] Summons for Xeno Clash Nightmare will reuse the ones for Farming Mode.")
+                self._xeno_clash_nightmare_summon_list = self._game.summon_list
+
+            if self._xeno_clash_nightmare_group_number == "":
+                self._game.print_and_save("[XENO.CLASH] Group Number for Xeno Clash Nightmare will reuse the one for Farming Mode.")
+                self._xeno_clash_nightmare_group_number = self._game.group_number
+            else:
+                self._xeno_clash_nightmare_number = int(self._xeno_clash_nightmare_group_number)
+
+            if self._xeno_clash_nightmare_party_number == "":
+                self._game.print_and_save("[XENO.CLASH] Party Number for Xeno Clash Nightmare will reuse the one for Farming Mode.")
+                self._xeno_clash_nightmare_party_number = self._game.party_number
+            else:
+                self._xeno_clash_nightmare_party_number = int(self._xeno_clash_nightmare_party_number)
         # #### end of config.ini ####
-
-        if self._xeno_clash_nightmare_combat_script == "":
-            self._game.print_and_save("[XENO.CLASH] Combat Script for Xeno Clash Nightmare will reuse the one for Farming Mode.")
-            self._xeno_clash_nightmare_combat_script = self._game.combat_script
-
-        if len(self._xeno_clash_nightmare_summon_element_list) == 0:
-            self._game.print_and_save("[XENO.CLASH] Summon Elements for Xeno Clash Nightmare will reuse the ones for Farming Mode.")
-            self._xeno_clash_nightmare_summon_element_list = self._game.summon_element_list
-
-        if len(self._xeno_clash_nightmare_summon_list) == 0:
-            self._game.print_and_save("[XENO.CLASH] Summons for Xeno Clash Nightmare will reuse the ones for Farming Mode.")
-            self._xeno_clash_nightmare_summon_list = self._game.summon_list
-
-        if self._xeno_clash_nightmare_group_number == "":
-            self._game.print_and_save("[XENO.CLASH] Group Number for Xeno Clash Nightmare will reuse the one for Farming Mode.")
-            self._xeno_clash_nightmare_group_number = self._game.group_number
-        else:
-            self._xeno_clash_nightmare_number = int(self._xeno_clash_nightmare_group_number)
-
-        if self._xeno_clash_nightmare_party_number == "":
-            self._game.print_and_save("[XENO.CLASH] Party Number for Xeno Clash Nightmare will reuse the one for Farming Mode.")
-            self._xeno_clash_nightmare_party_number = self._game.party_number
-        else:
-            self._xeno_clash_nightmare_party_number = int(self._xeno_clash_nightmare_party_number)
 
         self._game.print_and_save("[XENO.CLASH] Settings initialized for Xeno Clash Nightmare...")
         # #### end of Advanced Setup ####
