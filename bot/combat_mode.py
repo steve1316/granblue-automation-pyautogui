@@ -53,7 +53,7 @@ class CombatMode:
                 self._game.find_and_click_button("cancel")
                 self._game.find_and_click_button("retreat_confirmation")
                 self._retreat_check = True
-            elif (self._game.farming_mode == "Raid" or self._game.farming_mode == "Dread barrage") and self._game.image_tools.confirm_location("salute_participants"):
+            elif self._game.farming_mode == "Raid" or self._game.farming_mode == "Dread barrage":
                 self._game.print_and_save(f"[WARNING] Party has unfortunately wiped during Combat Mode. Backing out now without retreating...")
 
                 # Head back to the Home screen.
