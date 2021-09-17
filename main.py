@@ -582,6 +582,7 @@ api_key =
 api_key_secret = 
 access_token = 
 access_token_secret = 
+set_stream_api_default = True
 
 [refill]
 ############################################################
