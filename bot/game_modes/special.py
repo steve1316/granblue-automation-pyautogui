@@ -163,6 +163,8 @@ class Special:
             elif self._mission_name.find("EX ") == 0:
                 difficulty = "Extreme"
                 formatted_mission_name = self._mission_name[3:]
+            else:
+                formatted_mission_name = self._mission_name
 
             if self._game.image_tools.confirm_location("special"):
                 tries = 2
