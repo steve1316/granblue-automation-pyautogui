@@ -109,6 +109,9 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.idea/
+.cache/
+.vs/
 
 # Spyder project settings
 .spyderproject
@@ -139,3 +142,4 @@ config.ini
 
 # Scripts folder
 scripts/
+
