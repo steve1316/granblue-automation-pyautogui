@@ -337,8 +337,9 @@ class Special:
         # Start the navigation process.
         if first_run:
             self._navigate()
-        elif self._game.find_and_click_button("play_again") and self._game.check_for_popups():
-            self._navigate()
+        elif self._game.find_and_click_button("play_again"):
+            if self._game.check_for_popups():
+                self._navigate()
         else:
             # If the bot cannot find the "Play Again" button, check for Pending Battles and then perform navigation again.
             self._game.check_for_pending()
