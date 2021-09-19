@@ -15,3 +15,8 @@ Pillow==8.1.0
 pyperclip==1.8.1
 discord.py==1.7.3
 opencv-python==4.5.1.48
+
+setuptools
+pywebview
+pyinstaller; sys_platform != 'darwin'
+py2app; sys_platform == 'darwin'
