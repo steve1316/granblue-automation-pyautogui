@@ -143,3 +143,8 @@ config.ini
 # Scripts folder
 scripts/
 
+# Frontend
+gui/build/
+gui/node_modules/
+gui/src-tauri/WixTools/
+gui/src-tauri/target/
