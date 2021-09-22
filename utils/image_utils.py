@@ -365,15 +365,14 @@ class ImageUtils:
                 else:
                     filtered_locations.append(location)
 
+            # Sort the matched locations.
+            filtered_locations.sort()
+
             if not hide_info:
-                for location in filtered_locations:
-                    self._game.print_and_save(f"[INFO] Occurrence for {image_name.upper()} found at: " + str(location))
+                self._game.print_and_save(f"[INFO] Occurrence for {image_name.upper()} found at: {filtered_locations}")
         else:
             if self._debug_mode:
                 self._game.print_and_save(f"[DEBUG] Failed to detect any occurrences of {image_name.upper()} images.")
-
-        # Sort the matched locations.
-        filtered_locations.sort()
 
         return filtered_locations
 
