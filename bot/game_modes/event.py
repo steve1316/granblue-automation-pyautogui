@@ -147,9 +147,9 @@ class Event:
 
         # Go to the Event by clicking on the "Menu" button and then click the very first banner.
         self._game.find_and_click_button("home_menu")
-        banner_locations = self._game.image_tools.find_all("event_banner")
+        banner_locations = self._game.image_tools.find_all("event_banner", custom_confidence = 0.7)
         if len(banner_locations) == 0:
-            banner_locations = self._game.image_tools.find_all("event_banner_blue")
+            banner_locations = self._game.image_tools.find_all("event_banner_blue", custom_confidence = 0.7)
             if len(banner_locations) == 0:
                 raise EventException("Failed to find the Event banner.")
         self._game.mouse_tools.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
@@ -245,9 +245,9 @@ class Event:
 
             # Go to the Event by clicking on the "Menu" button and then click the very first banner.
             self._game.find_and_click_button("home_menu")
-            banner_locations = self._game.image_tools.find_all("event_banner")
+            banner_locations = self._game.image_tools.find_all("event_banner", custom_confidence = 0.7)
             if len(banner_locations) == 0:
-                banner_locations = self._game.image_tools.find_all("event_banner_blue")
+                banner_locations = self._game.image_tools.find_all("event_banner_blue", custom_confidence = 0.7)
                 if len(banner_locations) == 0:
                     raise EventException("Failed to find the Event banner.")
             self._game.mouse_tools.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")

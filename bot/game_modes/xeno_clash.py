@@ -154,9 +154,9 @@ class XenoClash:
 
         # Go to the Event by clicking on the "Menu" button and then click the very first banner.
         self._game.find_and_click_button("home_menu")
-        event_banner_locations = self._game.image_tools.find_all("event_banner")
+        event_banner_locations = self._game.image_tools.find_all("event_banner", custom_confidence = 0.7)
         if len(event_banner_locations) == 0:
-            event_banner_locations = self._game.image_tools.find_all("event_banner_blue")
+            event_banner_locations = self._game.image_tools.find_all("event_banner_blue", custom_confidence = 0.7)
         self._game.mouse_tools.move_and_click_point(event_banner_locations[0][0], event_banner_locations[0][1], "event_banner")
 
         self._game.wait(1)
