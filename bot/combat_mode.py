@@ -77,6 +77,33 @@ class CombatMode:
                 self._retreat_check = True
         elif party_wipe_indicator is None and self._debug_mode:
             self._game.print_and_save(f"[DEBUG] Party has not wiped.")
+        elif self._game.image_tools.confirm_location("salute_participants", tries = 1):
+            if (self._game.farming_mode != "Raid" and self._game.farming_mode != "Dread Barrage") and self._game.image_tools.confirm_location("continue"):
+                self._game.print_and_save(f"[WARNING] Party has unfortunately wiped during Combat Mode. Retreating now...")
+
+                # Cancel the popup that asks you if you want to use a Full Elixir to come back. Then click the red "Retreat" button.
+                self._game.find_and_click_button("cancel")
+                self._game.find_and_click_button("retreat_confirmation")
+                self._retreat_check = True
+            elif self._game.farming_mode == "Raid" or self._game.farming_mode == "Dread barrage":
+                self._game.print_and_save(f"[WARNING] Party has unfortunately wiped during Combat Mode. Backing out now without retreating...")
+
+                # Head back to the Home screen.
+                self._game.go_back_home(confirm_location_check = True)
+                self._retreat_check = True
+            elif self._game.farming_mode == "Coop":
+                # Salute the participants.
+                self._game.print_and_save(f"[WARNING] Party has unfortunately wiped during Combat Mode. Leaving the Coop room...")
+                self._game.find_and_click_button("salute")
+                self._game.find_and_click_button("ok")
+
+                # Then cancel the popup that asks you if you want to use a Full Elixir to come back.
+                self._game.find_and_click_button("cancel")
+
+                # Then click the "Leave" button.
+                self._game.find_and_click_button("leave")
+
+                self._retreat_check = True
 
         return None
 
