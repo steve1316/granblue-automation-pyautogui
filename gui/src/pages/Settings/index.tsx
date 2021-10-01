@@ -11,6 +11,7 @@ const Settings = () => {
     const [fileName, setFileName] = useState("")
     const [farmingMode, setFarmingMode] = useState("")
     const [item, setItem] = useState("")
+    const [mission, setMission] = useState("")
 
     const loadCombatScript = (event: React.ChangeEvent<HTMLInputElement>) => {
         var files = event.currentTarget.files
@@ -31,6 +32,7 @@ const Settings = () => {
 
     const farmingModes = ["Quest", "Special"]
     const itemsForQuest = ["Satin Feather", "Zephyr Feather", "Flying Sprout"]
+    const missionsForQuest = ["test1"]
 
     return (
         <Fade in={true}>
@@ -77,6 +79,15 @@ const Settings = () => {
                             />
                         )}
                     />
+
+                    {/* Select Mission */}
+                    <TextField select label="Mission" value={mission} onChange={(e) => setMission(e.target.value)} helperText="Please select the Mission">
+                        {missionsForQuest.map((mode) => (
+                            <MenuItem key={mode} value={mode}>
+                                {mode}
+                            </MenuItem>
+                        ))}
+                    </TextField>
                 </Stack>
             </Box>
         </Fade>
