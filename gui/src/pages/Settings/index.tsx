@@ -12,6 +12,7 @@ const Settings = () => {
     const [farmingMode, setFarmingMode] = useState("")
     const [item, setItem] = useState("")
     const [mission, setMission] = useState("")
+    const [itemAmount, setItemAmount] = useState(0)
 
     const loadCombatScript = (event: React.ChangeEvent<HTMLInputElement>) => {
         var files = event.currentTarget.files
@@ -88,6 +89,16 @@ const Settings = () => {
                             </MenuItem>
                         ))}
                     </TextField>
+
+                    {/* Select # of Items to farm */}
+                    <TextField
+                        label="# of Items"
+                        type="number"
+                        value={itemAmount}
+                        onChange={(e) => setItemAmount(e.target.value === "" ? 0 : parseInt(e.target.value))}
+                        inputProps={{ min: 0 }}
+                        helperText="Please select the amount of Items to farm"
+                    />
                 </Stack>
             </Box>
         </Fade>
