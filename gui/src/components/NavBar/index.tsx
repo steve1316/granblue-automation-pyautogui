@@ -40,13 +40,34 @@ const NavBar = () => {
                 </Typography>
                 <div className="emptyDivider" />
                 <ButtonGroup variant="outlined">
-                    <Button className="navButton" onClick={() => appWindow.minimize()}>
+                    <Button
+                        className="navButton"
+                        onClick={() =>
+                            setTimeout(() => {
+                                appWindow.minimize()
+                            }, 125)
+                        }
+                    >
                         <Minimize />
                     </Button>
-                    <Button className="navButton" onClick={() => appWindow.toggleMaximize()}>
+                    <Button
+                        className="navButton"
+                        onClick={() =>
+                            setTimeout(() => {
+                                appWindow.toggleMaximize()
+                            }, 125)
+                        }
+                    >
                         <CropSquare />
                     </Button>
-                    <Button className="navButton" onClick={() => appWindow.close()}>
+                    <Button
+                        className="navButton"
+                        onClick={() =>
+                            setTimeout(() => {
+                                appWindow.close()
+                            }, 125)
+                        }
+                    >
                         <Close />
                     </Button>
                 </ButtonGroup>
