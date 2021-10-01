@@ -1,3 +1,4 @@
+import { Fade } from "@mui/material"
 import "./index.scss"
 
 const Home = () => {
@@ -11,11 +12,13 @@ const Home = () => {
     \n\n***************************`
 
     return (
-        <div className="logOuterContainer">
-            <div className="logInnerContainer">
-                <p id="log">{initialMessage}</p>
+        <Fade in={true}>
+            <div className="logOuterContainer">
+                <div className="logInnerContainer">
+                    <p id="log">{initialMessage}</p>
+                </div>
             </div>
-        </div>
+        </Fade>
     )
 }
 
