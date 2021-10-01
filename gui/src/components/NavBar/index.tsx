@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { AppBar, Button, ButtonGroup, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material"
-import { Close, CropSquare, HomeRounded, Menu, Minimize } from "@mui/icons-material"
+import { Close, CropSquare, HomeRounded, Menu, Minimize, Settings } from "@mui/icons-material"
 import { Link as RouterLink, useHistory } from "react-router-dom"
 import "./index.scss"
 import { appWindow } from "@tauri-apps/api/window"
