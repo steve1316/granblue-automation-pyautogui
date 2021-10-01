@@ -1,11 +1,7 @@
 $baseColor: #01bf71;
 
-.body {
+.toolbar {
     background-color: #242424;
-}
-
-.drawer {
-    background-color: $baseColor;
 }
 
 .link {
@@ -41,7 +37,9 @@ $baseColor: #01bf71;
 .navButton {
     width: 30px;
     height: 30px;
-    &:hover {
-        background: #2f2f2f;
-    }
+}
+
+.list {
+    height: 100%;
+    background-color: rgba(120, 120, 120, 0.2);
 }
