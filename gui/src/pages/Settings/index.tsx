@@ -10,6 +10,7 @@ const Input = styled("input")({
 const Settings = () => {
     const [fileName, setFileName] = useState("")
     const [farmingMode, setFarmingMode] = useState("")
+    const [item, setItem] = useState("")
 
     const loadCombatScript = (event: React.ChangeEvent<HTMLInputElement>) => {
         var files = event.currentTarget.files
@@ -71,6 +72,7 @@ const Settings = () => {
                                     ...params.InputProps,
                                     type: "search",
                                 }}
+                                onChange={(e) => setItem(e.target.value)}
                                 helperText="Please select/search the Item to farm"
                             />
                         )}
