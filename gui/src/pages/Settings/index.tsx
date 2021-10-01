@@ -38,21 +38,22 @@ const Settings = () => {
     return (
         <Fade in={true}>
             <Box className="container">
-                <Grid container spacing={2} justifyContent="center" alignItems="center">
-                    {/* Load Combat Script */}
-                    <Grid item xs={4}>
-                        <TextField variant="filled" value={fileName} disabled />
+                <Stack spacing={2}>
+                    <Grid container spacing={4} justifyContent="center" alignItems="center">
+                        {/* Load Combat Script */}
+                        <Grid item md>
+                            <TextField variant="filled" label="Combat Script" value={fileName} inputProps={{ readOnly: true }} helperText="Selected Combat Script" />
+                        </Grid>
+                        <Grid item xs>
+                            <label htmlFor="combat-script-loader">
+                                <Input accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadCombatScript(e)} />
+                                <Button variant="contained" component="span">
+                                    Load Combat Script
+                                </Button>
+                            </label>
+                        </Grid>
                     </Grid>
-                    <Grid item xs={4}>
-                        <label htmlFor="combat-script-loader">
-                            <Input accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadCombatScript(e)} />
-                            <Button variant="contained" component="span">
-                                Load Combat Script
-                            </Button>
-                        </label>
-                    </Grid>
-                </Grid>
-                <Stack spacing={2} sx={{ marginTop: "30px" }}>
+
                     {/* Select Farming Mode */}
                     <TextField select label="Farming Mode" value={farmingMode} onChange={(e) => setFarmingMode(e.target.value)} helperText="Please select the Farming Mode">
                         {farmingModes.map((mode) => (

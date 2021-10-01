@@ -7,8 +7,11 @@
     margin: 80px 40px 40px 40px;
     display: flex;
     flex-direction: column;
-    align-self: flex-start;
-    justify-content: center;
-    align-items: center;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: scroll;
+}
+
+.container > * {
+    margin-left: 200px;
+    margin-right: 200px;
 }
