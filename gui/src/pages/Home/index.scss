@@ -1,0 +1,23 @@
+.logOuterContainer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-style: ridge;
+    margin: 100px 40px 40px 40px;
+}
+
+.logInnerContainer {
+    position: relative;
+    height: 100%;
+    overflow: auto;
+    background-color: #2f2f2f;
+}
+
+p {
+    color: white;
+    margin: 20px;
+    font-size: 10pt;
+    white-space: pre-wrap;
+}
