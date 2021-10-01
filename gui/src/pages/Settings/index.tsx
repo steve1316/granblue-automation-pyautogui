@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Box, Button, Fade, Grid, MenuItem, Stack, TextField } from "@mui/material"
+import { Autocomplete, Box, Button, Fade, Grid, MenuItem, Stack, TextField } from "@mui/material"
 import { styled } from "@mui/system"
 import "./index.scss"
 
@@ -29,6 +29,7 @@ const Settings = () => {
     }
 
     const farmingModes = ["Quest", "Special"]
+    const itemsForQuest = ["Satin Feather", "Zephyr Feather", "Flying Sprout"]
 
     return (
         <Fade in={true}>
@@ -56,6 +57,24 @@ const Settings = () => {
                             </MenuItem>
                         ))}
                     </TextField>
+
+                    {/* Select Item */}
+                    <Autocomplete
+                        freeSolo
+                        disableClearable
+                        options={itemsForQuest.map((element) => element)}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Select Item"
+                                InputProps={{
+                                    ...params.InputProps,
+                                    type: "search",
+                                }}
+                                helperText="Please select/search the Item to farm"
+                            />
+                        )}
+                    />
                 </Stack>
             </Box>
         </Fade>
