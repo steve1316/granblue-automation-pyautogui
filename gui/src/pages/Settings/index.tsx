@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Box, Button, Fade } from "@mui/material"
+import { Box, Button, Fade, Grid, MenuItem, Stack, TextField } from "@mui/material"
 import { styled } from "@mui/system"
 import "./index.scss"
 
@@ -9,6 +9,7 @@ const Input = styled("input")({
 
 const Settings = () => {
     const [fileName, setFileName] = useState("")
+    const [farmingMode, setFarmingMode] = useState("")
 
     const loadCombatScript = (event: React.ChangeEvent<HTMLInputElement>) => {
         var files = event.currentTarget.files
@@ -27,16 +28,35 @@ const Settings = () => {
         }
     }
 
+    const farmingModes = ["Quest", "Special"]
+
     return (
         <Fade in={true}>
             <Box className="container">
-                {/* Load Combat Script */}
-                <label htmlFor="combat-script-loader">
-                    <Input accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadCombatScript(e)} />
-                    <Button variant="contained" component="span">
-                        Load Combat Script
-                    </Button>
-                </label>
+                <Grid container spacing={2} justifyContent="center" alignItems="center">
+                    {/* Load Combat Script */}
+                    <Grid item xs={4}>
+                        <TextField variant="filled" value={fileName} disabled />
+                    </Grid>
+                    <Grid item xs={4}>
+                        <label htmlFor="combat-script-loader">
+                            <Input accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadCombatScript(e)} />
+                            <Button variant="contained" component="span">
+                                Load Combat Script
+                            </Button>
+                        </label>
+                    </Grid>
+                </Grid>
+                <Stack spacing={2} sx={{ marginTop: "30px" }}>
+                    {/* Select Farming Mode */}
+                    <TextField select label="Farming Mode" value={farmingMode} onChange={(e) => setFarmingMode(e.target.value)} helperText="Please select the Farming Mode">
+                        {farmingModes.map((mode) => (
+                            <MenuItem key={mode} value={mode}>
+                                {mode}
+                            </MenuItem>
+                        ))}
+                    </TextField>
+                </Stack>
             </Box>
         </Fade>
     )
