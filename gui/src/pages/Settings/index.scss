@@ -4,14 +4,28 @@
     left: 0;
     right: 0;
     bottom: 0;
-    margin: 80px 40px 40px 40px;
-    display: flex;
-    flex-direction: column;
-    overflow-x: hidden;
-    overflow-y: scroll;
+    margin-top: 50px;
+    background-color: rgba(120, 120, 120, 0.2);
 }
 
 .container > * {
     margin-left: 200px;
     margin-right: 200px;
+}
+
+.modal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.box {
+    height: 50vh;
+    width: 50vw;
+    top: 50%;
+    margin: auto;
+    background-color: rgba(120, 120, 120, 0.2);
+    border-radius: 20px;
+    border: 1px dashed grey;
+    padding: 2;
 }

@@ -1,7 +1,8 @@
 import { useState } from "react"
-import { Autocomplete, Box, Button, Fade, Grid, MenuItem, Stack, TextField } from "@mui/material"
-import { styled } from "@mui/system"
+import { Autocomplete, Button, Container, Fade, Grid, MenuItem, Modal, Stack, TextField } from "@mui/material"
+import { Box, styled } from "@mui/system"
 import "./index.scss"
+import TransferList from "../../components/TransferList"
 
 const Input = styled("input")({
     display: "none",
@@ -13,6 +14,7 @@ const Settings = () => {
     const [item, setItem] = useState("")
     const [mission, setMission] = useState("")
     const [itemAmount, setItemAmount] = useState(0)
+    const [isModalOpen, setIsModalOpen] = useState(false)
 
     const farmingModes = ["Quest", "Special"]
     const itemsForQuest = ["Satin Feather", "Zephyr Feather", "Flying Sprout"]
@@ -47,7 +49,7 @@ const Settings = () => {
 
     return (
         <Fade in={true}>
-            <Box className="container">
+            <Container className="container" id="settingsContainer">
                 <Stack spacing={2}>
                     <Grid container spacing={4} justifyContent="center" alignItems="center">
                         {/* Load Combat Script */}
@@ -110,8 +112,18 @@ const Settings = () => {
                         inputProps={{ min: 0 }}
                         helperText="Please select the amount of Items to farm"
                     />
+
+                    {/* Select Summon(s) */}
+                    <Button variant="contained" onClick={handleModalOpen}>
+                        Select Summons
+                    </Button>
+                    <Modal className="modal" open={isModalOpen} onClose={handleModalClose}>
+                        <Box className="box">
+                            <TransferList />
+                        </Box>
+                    </Modal>
                 </Stack>
-            </Box>
+            </Container>
         </Fade>
     )
 }
