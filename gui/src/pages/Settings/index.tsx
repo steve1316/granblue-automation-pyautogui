@@ -14,26 +14,36 @@ const Settings = () => {
     const [mission, setMission] = useState("")
     const [itemAmount, setItemAmount] = useState(0)
 
+    const farmingModes = ["Quest", "Special"]
+    const itemsForQuest = ["Satin Feather", "Zephyr Feather", "Flying Sprout"]
+    const missionsForQuest = ["test1"]
+
     const loadCombatScript = (event: React.ChangeEvent<HTMLInputElement>) => {
         var files = event.currentTarget.files
         if (files != null) {
             var file = files[0]
-            setFileName(file.name)
+            if (file == null) {
+                // Reset the combat script selected if none was selected from the file picker dialog.
+                setFileName("")
+            } else {
+                setFileName(file.name)
 
-            // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
-            var reader = new FileReader()
-            reader.onload = function (loadedEvent) {
-                console.log(loadedEvent.target?.result)
+                // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
+                var reader = new FileReader()
+                reader.onload = function (loadedEvent) {
+                    console.log(loadedEvent.target?.result)
+                }
+
+                // Read the text contents of the file.
+                reader.readAsText(file)
+
+                // TODO: Send contents of combat script file to backend.
             }
-
-            // Read the text contents of the file.
-            reader.readAsText(file)
         }
     }
 
-    const farmingModes = ["Quest", "Special"]
-    const itemsForQuest = ["Satin Feather", "Zephyr Feather", "Flying Sprout"]
-    const missionsForQuest = ["test1"]
+    const handleModalOpen = () => setIsModalOpen(true)
+    const handleModalClose = () => setIsModalOpen(false)
 
     return (
         <Fade in={true}>
