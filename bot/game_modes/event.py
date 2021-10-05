@@ -203,19 +203,19 @@ class Event:
 
             if difficulty == "Very Hard":
                 self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
-                if not self._game.image_tools.wait_vanish("close", timeout = 3):
+                if not self._game.image_tools.wait_vanish("close", timeout = 10):
                     self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
                 else:
                     return None
             elif difficulty == "Extreme":
                 self._game.mouse_tools.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap")
-                if not self._game.image_tools.wait_vanish("close", timeout = 3):
+                if not self._game.image_tools.wait_vanish("close", timeout = 10):
                     self._game.mouse_tools.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap")
                 else:
                     return None
             elif difficulty == "Impossible":
                 self._game.mouse_tools.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap")
-                if not self._game.image_tools.wait_vanish("close", timeout = 3):
+                if not self._game.image_tools.wait_vanish("close", timeout = 10):
                     self._game.mouse_tools.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap")
                 else:
                     return None
@@ -223,7 +223,7 @@ class Event:
             # If the user does not have enough Treasures to host a Extreme or an Impossible Raid, host a Very Hard Raid instead.
             self._game.print_and_save(f"[EVENT.TOKEN.DRAWBOXES] Not enough materials to host {difficulty}. Hosting Very Hard instead...")
             self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
-            if not self._game.image_tools.wait_vanish("close", timeout = 3):
+            if not self._game.image_tools.wait_vanish("close", timeout = 10):
                 self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
 
         return None
