@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Autocomplete, Button, Fade, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
+import { Autocomplete, Button, Container, Fade, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
 import { Box, styled } from "@mui/system"
 import "./index.scss"
 import TransferList from "../../components/TransferList"
@@ -14,6 +14,8 @@ const Settings = () => {
     const [item, setItem] = useState("")
     const [mission, setMission] = useState("")
     const [itemAmount, setItemAmount] = useState(0)
+    const [groupNumber, setGroupNumber] = useState(1)
+    const [partyNumber, setPartyNumber] = useState(1)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const farmingModes = ["Quest", "Special"]
@@ -125,6 +127,35 @@ const Settings = () => {
                             </Box>
                         </div>
                     </Modal>
+
+                    {/* Select Group and Party */}
+                    <Grid container justifyContent="center" alignItems="center">
+                        <Grid item id="gridItemGroup" xs={4}>
+                            <TextField
+                                label="Group #"
+                                type="number"
+                                error={groupNumber < 1 || groupNumber > 7}
+                                defaultValue={1}
+                                inputProps={{ min: 1, max: 7 }}
+                                onChange={(e) => setGroupNumber(parseInt(e.target.value))}
+                                helperText="From 1 to 7"
+                                className="textfield"
+                            />
+                        </Grid>
+                        <Grid item md></Grid>
+                        <Grid item id="gridItemParty" xs={4}>
+                            <TextField
+                                label="Party #"
+                                type="number"
+                                error={partyNumber < 1 || partyNumber > 6}
+                                defaultValue={1}
+                                inputProps={{ min: 1, max: 6 }}
+                                onChange={(e) => setPartyNumber(parseInt(e.target.value))}
+                                helperText="From 1 to 6"
+                                className="textfield"
+                            />
+                        </Grid>
+                    </Grid>
                 </Stack>
             </Box>
         </Fade>
