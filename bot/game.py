@@ -681,7 +681,6 @@ class Game:
             self.print_and_save("\n[INFO] AP is available. Continuing...")
         else:
             self.print_and_save("\n[INFO] AP was auto-restored according to your config.ini. Continuing...")
-            self.wait(2)
 
         return None
 
@@ -716,7 +715,6 @@ class Game:
             self.print_and_save("[INFO] EP is available. Continuing...")
         else:
             self.print_and_save("[INFO] EP was auto-restored according to your config.ini. Continuing...")
-            self.wait(2)
 
         return None
 
