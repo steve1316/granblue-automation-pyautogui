@@ -1,8 +1,10 @@
 import { useState } from "react"
-import { Autocomplete, Button, Checkbox, Container, Fade, FormControlLabel, FormGroup, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
+import { Autocomplete, Button, Checkbox, Fade, FormControlLabel, FormGroup, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
 import { Box, styled } from "@mui/system"
 import "./index.scss"
 import TransferList from "../../components/TransferList"
+import parse from "autosuggest-highlight/parse"
+import match from "autosuggest-highlight/match"
 
 const Input = styled("input")({
     display: "none",
@@ -83,6 +85,7 @@ const Settings = () => {
                         freeSolo
                         disableClearable
                         options={itemsForQuest.map((element) => element)}
+                        getOptionLabel={(option) => option}
                         renderInput={(params) => (
                             <TextField
                                 {...params}
@@ -95,6 +98,22 @@ const Settings = () => {
                                 helperText="Please select/search the Item to farm"
                             />
                         )}
+                        renderOption={(props, option, { inputValue }) => {
+                            const matches = match(option, inputValue)
+                            const parts = parse(option, matches)
+
+                            return (
+                                <li {...props}>
+                                    <div>
+                                        {parts.map((part, index) => (
+                                            <span key={index} style={{ fontWeight: part.highlight ? 1000 : 400 }}>
+                                                {part.text}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </li>
+                            )
+                        }}
                     />
 
                     {/* Select Mission */}
