@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Autocomplete, Button, Container, Fade, Grid, MenuItem, Modal, Stack, TextField } from "@mui/material"
+import { Autocomplete, Button, Fade, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
 import { Box, styled } from "@mui/system"
 import "./index.scss"
 import TransferList from "../../components/TransferList"
@@ -49,7 +49,7 @@ const Settings = () => {
 
     return (
         <Fade in={true}>
-            <Container className="container" id="settingsContainer">
+            <Box className="container" id="settingsContainer">
                 <Stack spacing={2}>
                     <Grid container spacing={4} justifyContent="center" alignItems="center">
                         {/* Load Combat Script */}
@@ -118,12 +118,15 @@ const Settings = () => {
                         Select Summons
                     </Button>
                     <Modal className="modal" open={isModalOpen} onClose={handleModalClose}>
-                        <Box className="box">
-                            <TransferList />
-                        </Box>
+                        <div>
+                            <Typography>Select Support Summon(s)</Typography>
+                            <Box id="modalContainer" className="box">
+                                <TransferList />
+                            </Box>
+                        </div>
                     </Modal>
                 </Stack>
-            </Container>
+            </Box>
         </Fade>
     )
 }

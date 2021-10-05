@@ -1,8 +1,9 @@
 import { useState } from "react"
-import { Grid, List, ListItem, ListItemText, Paper } from "@mui/material"
+import { Card, CardActionArea, CardMedia, Divider, Grid, Grow, List, ListItem, ListItemText, Paper, Tooltip, Typography, Zoom } from "@mui/material"
+import "./index.scss"
 
 const TransferList = () => {
-    const [leftList, setLeftList] = useState<number[]>([1, 2, 3])
+    const [leftList, setLeftList] = useState<number[]>([1, 2, 31, 2, 31, 2, 3])
     const [rightList, setRightList] = useState<number[]>([4])
 
     const handleChecked = (value: number, isLeftList: boolean) => () => {
@@ -30,26 +31,50 @@ const TransferList = () => {
     }
 
     const customList = (items: number[], isLeftList: boolean) => (
-        <Paper>
-            <List dense component="div">
+        <Card className="card">
+            <Paper elevation={2}>
+                <Typography variant="h5" component="div" className="cardHeader">
+                    {isLeftList ? "Available Support Summons" : "Selected Support Summons"}
+                </Typography>
+            </Paper>
+
+            <Divider />
+            <List
+                dense
+                component="div"
+                sx={{
+                    width: "100%",
+                    height: 200,
+                    overflow: "auto",
+                }}
+            >
                 {items.map((value: number) => {
-                    const labelID = `list-item-${value}-label`
+                    const name = `test-${value}`
                     return (
-                        <ListItem key={value} button onClick={handleChecked(value, isLeftList)}>
-                            <ListItemText id={labelID} primary={value} />
-                        </ListItem>
+                        <Tooltip title={name} placement="left" arrow TransitionComponent={Zoom} TransitionProps={{ timeout: 200 }}>
+                            <Grow in={true}>
+                                <ListItem key={value} button onClick={handleChecked(value, isLeftList)}>
+                                    <Card className="supportSummonCard">
+                                        <CardActionArea>
+                                            <CardMedia component="img" image={require("../../images/agni.png").default} />
+                                        </CardActionArea>
+                                    </Card>
+                                    <ListItemText className="listItemText" primary={value} />
+                                </ListItem>
+                            </Grow>
+                        </Tooltip>
                     )
                 })}
             </List>
-        </Paper>
+        </Card>
     )
 
     return (
-        <Grid id="hello" container spacing={2} className="grid">
-            <Grid item className="gridItem">
+        <Grid id="supportSummonGrid" container justifyContent="center" alignItems="center">
+            <Grid item id="gridItem1">
                 {customList(leftList, true)}
             </Grid>
-            <Grid item className="gridItem">
+            <Grid item id="gridItem2">
                 {customList(rightList, false)}
             </Grid>
         </Grid>

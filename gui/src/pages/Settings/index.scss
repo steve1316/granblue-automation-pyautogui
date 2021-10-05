@@ -4,13 +4,11 @@
     left: 0;
     right: 0;
     bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     margin-top: 50px;
     background-color: rgba(120, 120, 120, 0.2);
-}
-
-.container > * {
-    margin-left: 200px;
-    margin-right: 200px;
 }
 
 .modal {
@@ -20,12 +18,13 @@
 }
 
 .box {
-    height: 50vh;
-    width: 50vw;
+    height: 100%;
+    width: 100%;
     top: 50%;
-    margin: auto;
     background-color: rgba(120, 120, 120, 0.2);
     border-radius: 20px;
     border: 1px dashed grey;
-    padding: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
