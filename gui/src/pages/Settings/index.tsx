@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Autocomplete, Button, Container, Fade, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
+import { Autocomplete, Button, Checkbox, Container, Fade, FormControlLabel, FormGroup, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
 import { Box, styled } from "@mui/system"
 import "./index.scss"
 import TransferList from "../../components/TransferList"
@@ -16,6 +16,7 @@ const Settings = () => {
     const [itemAmount, setItemAmount] = useState(0)
     const [groupNumber, setGroupNumber] = useState(1)
     const [partyNumber, setPartyNumber] = useState(1)
+    const [debugMode, setDebugMode] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
     const farmingModes = ["Quest", "Special"]
@@ -156,6 +157,11 @@ const Settings = () => {
                             />
                         </Grid>
                     </Grid>
+
+                    {/* Debug Mode */}
+                    <FormGroup>
+                        <FormControlLabel control={<Checkbox onChange={(e) => setDebugMode(e.target.checked)} />} label="Debug Mode" />
+                    </FormGroup>
                 </Stack>
             </Box>
         </Fade>
