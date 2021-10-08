@@ -96,6 +96,8 @@ class ProvingGrounds:
                 # No need to select a Party. Just click "OK" to start the mission and confirming the selected summon.
                 self._game.find_and_click_button("ok")
 
+                self._game.wait(1.0)
+
                 self._game.print_and_save("\n[PROVING.GROUNDS] Now starting Mission for Proving Grounds...")
                 self._game.find_and_click_button("proving_grounds_start")
 
@@ -122,8 +124,12 @@ class ProvingGrounds:
                     self._game.print_and_save("\n[PROVING.GROUNDS] Proving Grounds Mission has been completed.")
                     self._game.find_and_click_button("event")
 
+                    # Check for trophy.
+                    self._game.find_and_click_button("close", tries = 1, suppress_error = True)
+
                     self._game.wait(2)
-                    self._game.find_and_click_button("proving_grounds_open_chest", tries = 5)
+                    self._game.find_and_click_button("proving_grounds_open_chest")
+                    self._game.find_and_click_button("proving_grounds_open_chest")
 
                     if self._game.image_tools.confirm_location("proving_grounds_completion_loot"):
                         self._game.print_and_save("\n[PROVING.GROUNDS] Completion rewards has been acquired.")
