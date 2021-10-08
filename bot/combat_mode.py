@@ -681,7 +681,7 @@ class CombatMode:
                     self._use_summon(command)
                 elif command == "quicksummon":
                     self._game.print_and_save("[COMBAT] Quick Summoning now...")
-                    if self._game.find_and_click_button("quick_summon"):
+                    if self._game.find_and_click_button("quick_summon1") or self._game.find_and_click_button("quick_summon2"):
                         self._game.print_and_save("[COMBAT] Successfully quick summoned!")
                     else:
                         self._game.print_and_save("[COMBAT] Was not able to quick summon this Turn.")
