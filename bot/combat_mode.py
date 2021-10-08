@@ -77,7 +77,7 @@ class CombatMode:
                 self._retreat_check = True
         elif party_wipe_indicator is None and self._debug_mode:
             self._game.print_and_save(f"[DEBUG] Party has not wiped.")
-        elif self._game.image_tools.confirm_location("salute_participants", tries = 1, supppress_error = True):
+        elif self._game.image_tools.confirm_location("salute_participants", tries = 1, suppress_error = True):
             if (self._game.farming_mode != "Raid" and self._game.farming_mode != "Dread Barrage") and self._game.image_tools.confirm_location("continue"):
                 self._game.print_and_save(f"[WARNING] Party has unfortunately wiped during Combat Mode. Retreating now...")
 
