@@ -718,58 +718,50 @@ class Game:
 
         return None
 
-    def collect_loot(self, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False):
+    def collect_loot(self, is_completed: bool, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False, skip_popup_check: bool = False):
         """Collect the loot from the Results screen while clicking away any dialog popups. Primarily for raids.
         
         Args:
+            is_completed (bool): Allows incrementing of number of runs completed. This is for Farming Modes who have multi-part sections to them to prevent unnecessary incrementing of runs when it wasn't finished with 1 yet.
             is_pending_battle (bool): Skip the incrementation of runs attempted if this was a Pending Battle. Defaults to False.
             is_event_nightmare (bool): Skip the incrementation of runs attempted if this was a Event Nightmare. Defaults to False.
             skip_info (bool): Skip printing the information of the run. Defaults to False.
+            skip_popup_check (bool): Skip checking for popups to get to the Loot Collected screen. Defaults to False.
 
         Returns:
             (int): Number of specified items dropped.
         """
         temp_amount = 0
 
-        # Click away the "EXP Gained" popup and any other popups until the bot reaches the Loot Collected screen.
-        if self.image_tools.confirm_location("exp_gained"):
+        # Close all popups until the bot reaches the Loot Collected screen.
+        if skip_popup_check is False:
             while not self.image_tools.confirm_location("loot_collected", tries = 1):
+                self.find_and_click_button("ok", tries = 1, suppress_error = True)
                 self.find_and_click_button("close", tries = 1, suppress_error = True)
                 self.find_and_click_button("cancel", tries = 1, suppress_error = True)
-                self.find_and_click_button("ok", tries = 1, suppress_error = True)
 
                 # Search for and click on the "Extended Mastery" popup.
                 self.find_and_click_button("new_extended_mastery_level", tries = 1, suppress_error = True)
 
-            # Now that the bot is at the Loot Collected screen, detect any user-specified items.
-            if not is_pending_battle and not is_event_nightmare:
-                self.print_and_save("\n[INFO] Detecting if any user-specified loot dropped from this run...")
-                if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
-                    temp_amount = self.image_tools.find_farmed_items(self.item_name)
-                else:
-                    temp_amount = 1
+        # Now that the bot is at the Loot Collected screen, detect any user-specified items.
+        if is_completed and not is_pending_battle and not is_event_nightmare:
+            self.print_and_save("\n[INFO] Detecting if any user-specified loot dropped from this run...")
+            if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
+                temp_amount = self.image_tools.find_farmed_items(self.item_name)
+            else:
+                temp_amount = 1
 
-                # Only increment number of runs for Proving Grounds when the bot acquires the Completion Rewards.
-                # Currently for Proving Grounds, completing 2 battles per difficulty nets you the Completion Rewards.
-                if self.farming_mode == "Proving Grounds":
-                    if self.item_amount_farmed != 0 and self.item_amount_farmed % 2 == 0:
-                        self.item_amount_farmed = 0
-                        self._amount_of_runs_finished += 1
-                else:
-                    self._amount_of_runs_finished += 1
-            elif is_pending_battle:
-                self.print_and_save("\n[INFO] Detecting if any user-specified loot dropped from this pending battle...")
-                if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
-                    temp_amount = self.image_tools.find_farmed_items(self.item_name)
-                else:
-                    temp_amount = 0
+            self._amount_of_runs_finished += 1
+        elif is_pending_battle:
+            self.print_and_save("\n[INFO] Detecting if any user-specified loot dropped from this pending battle...")
+            if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
+                temp_amount = self.image_tools.find_farmed_items(self.item_name)
+            else:
+                temp_amount = 0
 
-                self.item_amount_farmed += temp_amount
-        else:
-            # If the bot reached here, that means the raid ended without the bot being able to take action so no loot dropped.
-            temp_amount = 0
+            self.item_amount_farmed += temp_amount
 
-        if not is_pending_battle and not is_event_nightmare and not skip_info:
+        if is_completed and not is_pending_battle and not is_event_nightmare and not skip_info:
             if self.item_name != "EXP" and self.item_name != "Angel Halo Weapons" and self.item_name != "Repeated Runs":
                 self.print_and_save("\n**********************************************************************")
                 self.print_and_save("**********************************************************************")

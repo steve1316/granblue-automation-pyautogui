@@ -129,7 +129,7 @@ class DreadBarrage:
 
                 # Now start Combat Mode and detect any item drops.
                 if self._game.combat_mode.start_combat_mode(self._game.combat_script):
-                    number_of_items_dropped = self._game.collect_loot()
+                    number_of_items_dropped = self._game.collect_loot(is_completed = True)
         else:
             raise DreadBarrageException("Failed to arrive at the Summon Selection screen.")
 

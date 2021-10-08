@@ -110,7 +110,7 @@ class RiseOfTheBeasts:
 
                 # Once preparations are completed, start Combat mode.
                 if start_check and self._game.combat_mode.start_combat_mode(self._rotb_extreme_plus_combat_script, is_nightmare = True):
-                    self._game.collect_loot()
+                    self._game.collect_loot(is_completed = False, is_event_nightmare = True)
                     return True
 
         elif not self._enable_rotb_extreme_plus and self._game.image_tools.confirm_location("rotb_extreme_plus", tries = 2):
@@ -223,7 +223,7 @@ class RiseOfTheBeasts:
         Returns:
             (int): Number of runs completed.
         """
-        number_of_items_dropped: int = 0
+        runs_completed: int = 0
 
         # Start the navigation process.
         if first_run:
@@ -250,8 +250,8 @@ class RiseOfTheBeasts:
 
                 # Now start Combat Mode and detect any item drops.
                 if self._game.combat_mode.start_combat_mode(self._game.combat_script):
-                    number_of_items_dropped = self._game.collect_loot()
+                    runs_completed = self._game.collect_loot(is_completed = True)
         else:
             raise RiseOfTheBeastsException("Failed to arrive at the Summon Selection screen.")
 
-        return number_of_items_dropped
+        return runs_completed

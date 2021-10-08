@@ -164,7 +164,7 @@ class GuildWars:
         Returns:
             (int): Number of runs completed.
         """
-        number_of_items_dropped: int = 0
+        runs_completed: int = 0
 
         # Start the navigation process.
         if first_run:
@@ -190,8 +190,8 @@ class GuildWars:
 
                 # Now start Combat Mode and detect any item drops.
                 if self._game.combat_mode.start_combat_mode(self._game.combat_script):
-                    number_of_items_dropped = self._game.collect_loot()
+                    runs_completed = self._game.collect_loot(is_completed = True)
         else:
             raise GuildWarsException("Failed to arrive at the Summon Selection screen.")
 
-        return number_of_items_dropped
+        return runs_completed

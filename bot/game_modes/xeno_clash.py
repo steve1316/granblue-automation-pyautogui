@@ -88,7 +88,7 @@ class XenoClash:
             if event_claim_loot_location is not None:
                 self._game.print_and_save("\n[XENO] Skippable Xeno Clash Nightmare detected. Claiming it now...")
                 self._game.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
-                self._game.collect_loot(is_event_nightmare = True)
+                self._game.collect_loot(is_completed = False, is_event_nightmare = True)
                 return True
             else:
                 self._game.print_and_save("\n[XENO] Detected Xeno Clash Nightmare. Starting it now...")
@@ -122,7 +122,7 @@ class XenoClash:
 
                     # Once preparations are completed, start Combat Mode.
                     if start_check and self._game.combat_mode.start_combat_mode(self._xeno_clash_nightmare_combat_script, is_nightmare = True):
-                        self._game.collect_loot(is_event_nightmare = True)
+                        self._game.collect_loot(is_completed = False, is_event_nightmare = True)
                         return True
 
         elif not self._enable_xeno_clash_nightmare and self._game.image_tools.confirm_location("limited_time_quests", tries = 1):
@@ -131,7 +131,7 @@ class XenoClash:
             if event_claim_loot_location is not None:
                 self._game.print_and_save("\n[XENO] Skippable Xeno Clash Nightmare detected but user opted to not run it. Claiming it regardless...")
                 self._game.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
-                self._game.collect_loot(is_event_nightmare = True)
+                self._game.collect_loot(is_completed = False, is_event_nightmare = True)
                 return True
             else:
                 self._game.print_and_save("\n[XENO] Xeno Clash Nightmare detected but user opted to not run it. Moving on...")
@@ -195,7 +195,7 @@ class XenoClash:
         Returns:
             (int): Number of runs completed.
         """
-        number_of_items_dropped: int = 0
+        runs_completed: int = 0
 
         # Start the navigation process.
         if first_run:
@@ -222,8 +222,8 @@ class XenoClash:
 
                 # Now start Combat Mode and detect any item drops.
                 if self._game.combat_mode.start_combat_mode(self._game.combat_script):
-                    number_of_items_dropped = self._game.collect_loot()
+                    runs_completed = self._game.collect_loot(is_completed = True)
         else:
             raise XenoClashException("Failed to arrive at the Summon Selection screen.")
 
-        return number_of_items_dropped
+        return runs_completed

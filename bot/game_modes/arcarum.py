@@ -186,7 +186,7 @@ class Arcarum:
 
                         self._game.wait(3)
                         if self._game.combat_mode.start_combat_mode(self._game.combat_script):
-                            self._game.collect_loot(skip_info = True)
+                            self._game.collect_loot(is_completed = False, skip_info = True)
                             self._game.find_and_click_button("expedition")
                 elif action == "Navigating":
                     # Move to the next available node.
