@@ -8,7 +8,16 @@
     align-items: center;
     justify-content: center;
     overflow: auto;
-    background-color: rgba(120, 120, 120, 0.2);
+
+    // Set the animated svg background with the appropriate settings to keep it centered.
+    background: url("./bg.svg") no-repeat center center fixed;
+    background-size: cover;
+
+    // Add some padding to prevent the wrapper getting cut off by the navbar.
+    @media screen and (max-height: 900px) {
+        padding-top: 200px;
+    }
+}
 
 .wrapper {
     padding: 25px;
