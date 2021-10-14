@@ -1,16 +1,20 @@
 .container {
     position: absolute;
-    top: 0;
+    top: 50px;
     left: 0;
     right: 0;
     bottom: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-top: 50px;
-    padding-top: 100px;
     overflow: auto;
     background-color: rgba(120, 120, 120, 0.2);
+
+.wrapper {
+    padding: 25px;
+    margin-bottom: 50px;
+    background-color: rgba(200, 200, 200, 1);
+    border-radius: 50px;
 }
 
 .modal {

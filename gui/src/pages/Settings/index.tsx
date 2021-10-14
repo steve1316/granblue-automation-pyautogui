@@ -55,7 +55,7 @@ const Settings = () => {
     return (
         <Fade in={true}>
             <Box className="container" id="settingsContainer">
-                <Stack spacing={2}>
+                <Stack spacing={2} className="wrapper">
                     <Grid container spacing={4} justifyContent="center" alignItems="center">
                         {/* Load Combat Script */}
                         <Grid item md>
