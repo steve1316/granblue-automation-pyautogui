@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { Autocomplete, Button, Checkbox, Fade, FormControlLabel, FormGroup, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
+import { Autocomplete, Button, Checkbox, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
 import { Box, styled } from "@mui/system"
 import "./index.scss"
 import TransferList from "../../components/TransferList"
@@ -72,7 +72,7 @@ const Settings = () => {
                     </Grid>
 
                     {/* Select Farming Mode */}
-                    <TextField select label="Farming Mode" value={farmingMode} onChange={(e) => setFarmingMode(e.target.value)} helperText="Please select the Farming Mode">
+                    <TextField select label="Farming Mode" variant="filled" value={farmingMode} onChange={(e) => setFarmingMode(e.target.value)} helperText="Please select the Farming Mode">
                         {farmingModes.map((mode) => (
                             <MenuItem key={mode} value={mode}>
                                 {mode}
@@ -90,6 +90,7 @@ const Settings = () => {
                             <TextField
                                 {...params}
                                 label="Select Item"
+                                variant="filled"
                                 InputProps={{
                                     ...params.InputProps,
                                     type: "search",
@@ -117,7 +118,7 @@ const Settings = () => {
                     />
 
                     {/* Select Mission */}
-                    <TextField select label="Mission" value={mission} onChange={(e) => setMission(e.target.value)} helperText="Please select the Mission">
+                    <TextField select label="Mission" variant="filled" value={mission} onChange={(e) => setMission(e.target.value)} helperText="Please select the Mission">
                         {missionsForQuest.map((mode) => (
                             <MenuItem key={mode} value={mode}>
                                 {mode}
@@ -129,6 +130,7 @@ const Settings = () => {
                     <TextField
                         label="# of Items"
                         type="number"
+                        variant="filled"
                         value={itemAmount}
                         onChange={(e) => setItemAmount(e.target.value === "" ? 0 : parseInt(e.target.value))}
                         inputProps={{ min: 0 }}
@@ -153,6 +155,7 @@ const Settings = () => {
                         <Grid item id="gridItemGroup" xs={4}>
                             <TextField
                                 label="Group #"
+                                variant="filled"
                                 type="number"
                                 error={groupNumber < 1 || groupNumber > 7}
                                 defaultValue={1}
@@ -166,6 +169,7 @@ const Settings = () => {
                         <Grid item id="gridItemParty" xs={4}>
                             <TextField
                                 label="Party #"
+                                variant="filled"
                                 type="number"
                                 error={partyNumber < 1 || partyNumber > 6}
                                 defaultValue={1}
@@ -179,7 +183,8 @@ const Settings = () => {
 
                     {/* Debug Mode */}
                     <FormGroup>
-                        <FormControlLabel control={<Checkbox onChange={(e) => setDebugMode(e.target.checked)} />} label="Debug Mode" />
+                        <FormControlLabel control={<Checkbox onChange={(e) => setDebugMode(e.target.checked)} />} label="Enable Debug Mode" />
+                        <FormHelperText>Enables debugging messages to show up in the log</FormHelperText>
                     </FormGroup>
                 </Stack>
             </Box>
