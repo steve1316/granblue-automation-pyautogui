@@ -87,7 +87,7 @@ class Event:
             if event_claim_loot_location is not None:
                 self._game.print_and_save("\n[EVENT] Skippable Event Nightmare detected. Claiming it now...")
                 self._game.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
-                self._game.collect_loot(is_event_nightmare = True)
+                self._game.collect_loot(is_completed = False, is_event_nightmare = True)
                 return True
             else:
                 self._game.print_and_save("\n[EVENT] Detected Event Nightmare. Starting it now...")
@@ -115,7 +115,7 @@ class Event:
 
                     # Once preparations are completed, start Combat Mode.
                     if start_check and self._game.combat_mode.start_combat_mode(self._event_nightmare_combat_script, is_nightmare = True):
-                        self._game.collect_loot(is_event_nightmare = True)
+                        self._game.collect_loot(is_completed = False, is_event_nightmare = True)
                         return True
 
         elif not self._enable_event_nightmare and self._game.image_tools.confirm_location("limited_time_quests", tries = 1):
@@ -124,7 +124,7 @@ class Event:
             if event_claim_loot_location is not None:
                 self._game.print_and_save("\n[EVENT] Skippable Event Nightmare detected but user opted to not run it. Claiming it regardless...")
                 self._game.mouse_tools.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
-                self._game.collect_loot(is_event_nightmare = True)
+                self._game.collect_loot(is_completed = False, is_event_nightmare = True)
                 return True
             else:
                 self._game.print_and_save("\n[EVENT] Event Nightmare detected but user opted to not run it. Moving on...")
@@ -203,19 +203,19 @@ class Event:
 
             if difficulty == "Very Hard":
                 self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
-                if not self._game.image_tools.wait_vanish("close", timeout = 3):
+                if not self._game.image_tools.wait_vanish("close", timeout = 10):
                     self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
                 else:
                     return None
             elif difficulty == "Extreme":
                 self._game.mouse_tools.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap")
-                if not self._game.image_tools.wait_vanish("close", timeout = 3):
+                if not self._game.image_tools.wait_vanish("close", timeout = 10):
                     self._game.mouse_tools.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap")
                 else:
                     return None
             elif difficulty == "Impossible":
                 self._game.mouse_tools.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap")
-                if not self._game.image_tools.wait_vanish("close", timeout = 3):
+                if not self._game.image_tools.wait_vanish("close", timeout = 10):
                     self._game.mouse_tools.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap")
                 else:
                     return None
@@ -223,7 +223,7 @@ class Event:
             # If the user does not have enough Treasures to host a Extreme or an Impossible Raid, host a Very Hard Raid instead.
             self._game.print_and_save(f"[EVENT.TOKEN.DRAWBOXES] Not enough materials to host {difficulty}. Hosting Very Hard instead...")
             self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
-            if not self._game.image_tools.wait_vanish("close", timeout = 3):
+            if not self._game.image_tools.wait_vanish("close", timeout = 10):
                 self._game.mouse_tools.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap")
 
         return None
@@ -322,7 +322,7 @@ class Event:
         Returns:
             (int): Number of runs completed.
         """
-        number_of_items_dropped: int = 0
+        runs_completed: int = 0
 
         # Start the navigation process.
         if first_run:
@@ -350,8 +350,8 @@ class Event:
 
                 # Now start Combat Mode and detect any item drops.
                 if self._game.combat_mode.start_combat_mode(self._game.combat_script):
-                    number_of_items_dropped = self._game.collect_loot()
+                    runs_completed = self._game.collect_loot(is_completed = True)
         else:
             raise EventException("Failed to arrive at the Summon Selection screen.")
 
-        return number_of_items_dropped
+        return runs_completed

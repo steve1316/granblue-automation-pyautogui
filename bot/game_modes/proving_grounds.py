@@ -76,7 +76,7 @@ class ProvingGrounds:
         Returns:
             (int): Number of runs completed.
         """
-        number_of_items_dropped: int = 0
+        runs_completed: int = 0
 
         # Start the navigation process.
         if first_run and self._first_time:
@@ -96,12 +96,14 @@ class ProvingGrounds:
                 # No need to select a Party. Just click "OK" to start the mission and confirming the selected summon.
                 self._game.find_and_click_button("ok")
 
+                self._game.wait(1.0)
+
                 self._game.print_and_save("\n[PROVING.GROUNDS] Now starting Mission for Proving Grounds...")
                 self._game.find_and_click_button("proving_grounds_start")
 
                 # Now start Combat Mode and detect any item drops.
                 if self._game.combat_mode.start_combat_mode(self._game.combat_script):
-                    number_of_items_dropped = self._game.collect_loot()
+                    runs_completed = self._game.collect_loot(is_completed = False)
 
                     # Click the "Next Battle" button if there are any battles left.
                     if self._game.find_and_click_button("proving_grounds_next_battle"):
@@ -111,7 +113,7 @@ class ProvingGrounds:
         elif first_run is False and self._first_time is False:
             # No need to select a Summon again as it is reused.
             if self._game.combat_mode.start_combat_mode(self._game.combat_script):
-                number_of_items_dropped = self._game.collect_loot()
+                runs_completed = self._game.collect_loot(is_completed = False)
 
                 # Click the "Next Battle" button if there are any battles left.
                 if self._game.find_and_click_button("proving_grounds_next_battle"):
@@ -122,11 +124,15 @@ class ProvingGrounds:
                     self._game.print_and_save("\n[PROVING.GROUNDS] Proving Grounds Mission has been completed.")
                     self._game.find_and_click_button("event")
 
+                    # Check for trophy.
+                    self._game.find_and_click_button("close", tries = 1, suppress_error = True)
+
                     self._game.wait(2)
-                    self._game.find_and_click_button("proving_grounds_open_chest", tries = 5)
+                    self._game.find_and_click_button("proving_grounds_open_chest")
 
                     if self._game.image_tools.confirm_location("proving_grounds_completion_loot"):
                         self._game.print_and_save("\n[PROVING.GROUNDS] Completion rewards has been acquired.")
+                        runs_completed = self._game.collect_loot(is_completed = True, skip_popup_check = True)
 
                         # Reset the First Time flag so the bot can select a Summon and select the Mission again.
                         if self._game.item_amount_farmed < self._game.item_amount_to_farm:
@@ -136,4 +142,4 @@ class ProvingGrounds:
         else:
             raise ProvingGroundsException("Failed to arrive at the Summon Selection screen.")
 
-        return number_of_items_dropped
+        return runs_completed

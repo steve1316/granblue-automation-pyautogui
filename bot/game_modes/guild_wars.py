@@ -77,7 +77,7 @@ class GuildWars:
                     formatted_mission_name = difficulty.replace(" ", "_")
                     tries = 10
                     self._game.print_and_save(f"[GUILD.WARS] Now hosting {difficulty} now...")
-                    while self._game.image_tools.wait_vanish("ap_30", 3) is False:
+                    while self._game.image_tools.wait_vanish("ap_30", timeout = 10) is False:
                         self._game.find_and_click_button(f"guild_wars_meat_{formatted_mission_name}")
 
                         self._game.wait(3)
@@ -97,12 +97,12 @@ class GuildWars:
                 # Click on the banner to farm Nightmares.
                 if difficulty != "NM150":
                     self._game.find_and_click_button("guild_wars_nightmare")
-                    if not self._game.image_tools.wait_vanish("guild_wars_nightmare", 3):
+                    if not self._game.image_tools.wait_vanish("guild_wars_nightmare", timeout = 10):
                         self._game.find_and_click_button("guild_wars_nightmare")
                 else:
                     self._game.print_and_save(f"\n[GUILD.WARS] Now hosting NM150 now...")
                     self._game.find_and_click_button("guild_wars_nightmare_150")
-                    if not self._game.image_tools.wait_vanish("guild_wars_nightmare_150", 3):
+                    if not self._game.image_tools.wait_vanish("guild_wars_nightmare_150", timeout = 10):
                         self._game.find_and_click_button("guild_wars_nightmare_150")
 
                     if self._game.image_tools.confirm_location("guild_wars_nightmare"):
@@ -117,7 +117,7 @@ class GuildWars:
                         self._game.find_and_click_button("ok")
 
                         # Alert the user if they lack the meat to host this and stop the bot.
-                        if not self._game.image_tools.wait_vanish("ok", 5):
+                        if not self._game.image_tools.wait_vanish("ok", timeout = 10):
                             self._game.image_tools.generate_alert("You do not have enough meat to host this NM90!")
                             raise GuildWarsException("You do not have enough meat to host this NM90!")
 
@@ -149,7 +149,7 @@ class GuildWars:
                         self._game.find_and_click_button("guild_wars_meat_extreme+")
 
                         # Alert the user if they did not unlock Extreme+ and stop the bot.
-                        if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", 5):
+                        if not self._game.image_tools.wait_vanish("guild_wars_meat_extreme+", timeout = 10):
                             self._game.image_tools.generate_alert("You did not unlock Extreme+ yet!")
                             raise GuildWarsException("You did not unlock Extreme+ yet!")
 
@@ -164,7 +164,7 @@ class GuildWars:
         Returns:
             (int): Number of runs completed.
         """
-        number_of_items_dropped: int = 0
+        runs_completed: int = 0
 
         # Start the navigation process.
         if first_run:
@@ -190,8 +190,8 @@ class GuildWars:
 
                 # Now start Combat Mode and detect any item drops.
                 if self._game.combat_mode.start_combat_mode(self._game.combat_script):
-                    number_of_items_dropped = self._game.collect_loot()
+                    runs_completed = self._game.collect_loot(is_completed = True)
         else:
             raise GuildWarsException("Failed to arrive at the Summon Selection screen.")
 
-        return number_of_items_dropped
+        return runs_completed

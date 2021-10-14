@@ -196,7 +196,7 @@ class Raid:
                     else:
                         # Now start Combat Mode and detect any item drops.
                         if self._game.combat_mode.start_combat_mode(self._game.combat_script):
-                            number_of_items_dropped = self._game.collect_loot()
+                            number_of_items_dropped = self._game.collect_loot(is_completed = True)
                 else:
                     self._game.print_and_save("\n[RAID] Seems that the Raid ended before the bot was able to join. Now looking for another Raid to join...")
         else:
