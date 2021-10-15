@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Autocomplete, Button, Checkbox, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
 import { Box, styled } from "@mui/system"
 import "./index.scss"
@@ -6,6 +6,7 @@ import TransferList from "../../components/TransferList"
 import parse from "autosuggest-highlight/parse"
 import match from "autosuggest-highlight/match"
 import { ReadyContext } from "../../context/ReadyContext"
+import { FsTextFileOption, readTextFile, writeFile } from "@tauri-apps/api/fs"
 
 const Input = styled("input")({
     display: "none",
@@ -13,8 +14,9 @@ const Input = styled("input")({
 
 const Settings = () => {
     const [fileName, setFileName] = useState("")
+    const [combatScript, setCombatScript] = useState("")
     const [farmingMode, setFarmingMode] = useState("")
-    const [item, setItem] = useState("")
+    const [item, setItem] = useState<string | null>(null)
     const [mission, setMission] = useState("")
     const [itemAmount, setItemAmount] = useState(0)
     const [groupNumber, setGroupNumber] = useState(1)
@@ -22,7 +24,7 @@ const Settings = () => {
     const [debugMode, setDebugMode] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
-    const { status, setStatus } = useContext(ReadyContext)
+    const { setStatus } = useContext(ReadyContext)
 
     const farmingModes = ["Quest", "Special"]
     const itemsForQuest = ["Satin Feather", "Zephyr Feather", "Flying Sprout"]
@@ -41,7 +43,14 @@ const Settings = () => {
                 // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
                 var reader = new FileReader()
                 reader.onload = function (loadedEvent) {
-                    console.log(loadedEvent.target?.result)
+                    if (loadedEvent.target?.result != null) {
+                        console.log(loadedEvent.target?.result)
+                        setCombatScript(loadedEvent.target?.result?.toString())
+                    } else {
+                        console.log("Failed to read combat script. Reseting to default empty combat script...")
+                        setFileName("")
+                        setCombatScript("")
+                    }
                 }
 
                 // Read the text contents of the file.
@@ -51,6 +60,75 @@ const Settings = () => {
             }
         }
     }
+
+    useEffect(() => {
+        try {
+            // Load settings from JSON file.
+            readTextFile("settings.json")
+                .then((settings) => {
+                    interface ParsedSettings {
+                        currentCombatScriptName: string
+                        currentCombatScript: string
+                        farmingMode: string
+                        item: string
+                        mission: string
+                        itemAmount: number
+                        groupNumber: number
+                        partyNumber: number
+                        debugMode: boolean
+                    }
+
+                    const decoded: ParsedSettings = JSON.parse(settings)
+                    console.log(`Loaded settings: ${settings}`)
+
+                    setFileName(decoded.currentCombatScriptName)
+                    setCombatScript(decoded.currentCombatScript)
+                    setFarmingMode(decoded.farmingMode)
+                    setItem(decoded.item)
+                    setMission(decoded.mission)
+                    setItemAmount(decoded.itemAmount)
+                    setGroupNumber(decoded.groupNumber)
+                    setPartyNumber(decoded.partyNumber)
+                    setDebugMode(decoded.debugMode)
+                })
+                .catch((err) => {
+                    console.log(`Encountered read exception: ${err}`)
+                })
+        } catch (e) {
+            console.log(`Encountered exception while loading settings from local JSON file:\n${e}`)
+        }
+    }, [])
+
+    useEffect(() => {
+        try {
+            // Save current settings to JSON file.
+            const settings = {
+                currentCombatScriptName: fileName,
+                currentCombatScript: combatScript,
+                farmingMode: farmingMode,
+                item: item,
+                mission: mission,
+                itemAmount: itemAmount,
+                groupNumber: groupNumber,
+                partyNumber: partyNumber,
+                debugMode: debugMode,
+            }
+
+            const jsonString = JSON.stringify(settings, null, 4)
+
+            const settingsFile: FsTextFileOption = { path: "settings.json", contents: jsonString }
+
+            writeFile(settingsFile)
+                .then(() => {
+                    console.log(`Successfully saved settings to settings.json`)
+                })
+                .catch((err) => {
+                    console.log(`Encountered write exception: ${err}`)
+                })
+        } catch (e) {
+            console.log(`Encountered exception while saving settings to local JSON file:\n${e}`)
+        }
+    }, [fileName, combatScript, farmingMode, item, mission, itemAmount, groupNumber, partyNumber, debugMode])
 
     const handleModalOpen = () => setIsModalOpen(true)
     const handleModalClose = () => setIsModalOpen(false)
@@ -85,23 +163,11 @@ const Settings = () => {
 
                     {/* Select Item */}
                     <Autocomplete
-                        freeSolo
-                        disableClearable
                         options={itemsForQuest.map((element) => element)}
+                        value={item}
+                        onChange={(_e, value) => setItem(value)}
                         getOptionLabel={(option) => option}
-                        renderInput={(params) => (
-                            <TextField
-                                {...params}
-                                label="Select Item"
-                                variant="filled"
-                                InputProps={{
-                                    ...params.InputProps,
-                                    type: "search",
-                                }}
-                                onChange={(e) => setItem(e.target.value)}
-                                helperText="Please select/search the Item to farm"
-                            />
-                        )}
+                        renderInput={(params) => <TextField {...params} label="Select Item" variant="filled" helperText="Please select/search the Item to farm" />}
                         renderOption={(props, option, { inputValue }) => {
                             const matches = match(option, inputValue)
                             const parts = parse(option, matches)
