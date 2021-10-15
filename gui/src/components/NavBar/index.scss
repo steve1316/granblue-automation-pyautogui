@@ -43,3 +43,9 @@ $baseColor: #01bf71;
     height: 100%;
     background-color: rgba(120, 120, 120, 0.2);
 }
+
+.group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

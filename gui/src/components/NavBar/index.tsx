@@ -1,13 +1,24 @@
-import { useState } from "react"
-import { AppBar, Button, ButtonGroup, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material"
+import { createContext, useState, useEffect, useContext } from "react"
+import { AppBar, Button, ButtonGroup, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Stack, Toolbar, Typography } from "@mui/material"
 import { Close, CropSquare, HomeRounded, Menu, Minimize, Settings } from "@mui/icons-material"
 import { Link as RouterLink, useHistory } from "react-router-dom"
 import "./index.scss"
 import { appWindow } from "@tauri-apps/api/window"
+import { ReadyContext } from "../../context/ReadyContext"
 
 const NavBar = () => {
     const history = useHistory()
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+    const [readyStatus, setReadyStatus] = useState("Status: Not Ready")
+
+    const { status, setStatus } = useContext(ReadyContext)
+    useEffect(() => {
+        if (status) {
+            setReadyStatus("Status: Ready")
+        } else {
+            setReadyStatus("Status: Not Ready")
+        }
+    }, [status])
 
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen)
@@ -51,7 +62,17 @@ const NavBar = () => {
                     Granblue Automation
                 </Typography>
                 <div className="emptyDivider" />
-                <ButtonGroup variant="outlined">
+                <ButtonGroup variant="outlined" className="group">
+                    {status ? (
+                        <Typography variant="caption" sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", marginRight: "10px", color: "#76ff03" }}>
+                            {readyStatus}
+                        </Typography>
+                    ) : (
+                        <Typography variant="caption" sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", marginRight: "10px", color: "red" }}>
+                            {readyStatus}
+                        </Typography>
+                    )}
+
                     <Button
                         className="navButton"
                         onClick={() =>

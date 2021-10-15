@@ -1,10 +1,11 @@
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Autocomplete, Button, Checkbox, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
 import { Box, styled } from "@mui/system"
 import "./index.scss"
 import TransferList from "../../components/TransferList"
 import parse from "autosuggest-highlight/parse"
 import match from "autosuggest-highlight/match"
+import { ReadyContext } from "../../context/ReadyContext"
 
 const Input = styled("input")({
     display: "none",
@@ -20,6 +21,8 @@ const Settings = () => {
     const [partyNumber, setPartyNumber] = useState(1)
     const [debugMode, setDebugMode] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
+
+    const { status, setStatus } = useContext(ReadyContext)
 
     const farmingModes = ["Quest", "Special"]
     const itemsForQuest = ["Satin Feather", "Zephyr Feather", "Flying Sprout"]
@@ -183,7 +186,17 @@ const Settings = () => {
 
                     {/* Debug Mode */}
                     <FormGroup>
-                        <FormControlLabel control={<Checkbox onChange={(e) => setDebugMode(e.target.checked)} />} label="Enable Debug Mode" />
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    onChange={(e) => {
+                                        setDebugMode(e.target.checked)
+                                        setStatus(e.target.checked)
+                                    }}
+                                />
+                            }
+                            label="Enable Debug Mode"
+                        />
                         <FormHelperText>Enables debugging messages to show up in the log</FormHelperText>
                     </FormGroup>
                 </Stack>
