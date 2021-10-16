@@ -78,7 +78,7 @@ By downloading this program, you consent to your account potentially getting fla
 Visit the [Wiki here](https://github.com/steve1316/granblue-automation-pyautogui/wiki) for detailed documentation and examples.
 
 # Requirements
-1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
+1. [Python 3.8.3 (any version higher than this breaks PyTorch)](https://www.python.org/downloads/release/python-383/)
 2. [Granblue Fantasy account](http://game.granbluefantasy.jp/)
 3. [Twitter Developer account (optional, needed to farm Raids)](https://developer.twitter.com/en)
 4. [VMware Workstation Player (optional, if your computer is strong enough to support virtualization)](https://www.vmware.com/products/workstation-player.html)
