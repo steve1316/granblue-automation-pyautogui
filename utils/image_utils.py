@@ -366,7 +366,9 @@ class ImageUtils:
                     filtered_locations.append(location)
 
             # Sort the matched locations.
-            filtered_locations.sort()
+            def second(point):
+                return point[1]
+            filtered_locations.sort(key=second)
 
             if not hide_info:
                 self._game.print_and_save(f"[INFO] Occurrence for {image_name.upper()} found at: {filtered_locations}")
