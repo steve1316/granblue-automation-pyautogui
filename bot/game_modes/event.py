@@ -24,6 +24,9 @@ class Event:
         self._game = game
         self._mission_name: str = mission_name
 
+        self._move_one_down: bool = True
+        self._fallback: bool = True
+
         ##########################
         # #### Advanced Setup ####
         self._game.print_and_save("\n[EVENT] Initializing settings for Event...")
@@ -277,9 +280,13 @@ class Event:
 
             # Click on the "Special Quest" button to head to the Special screen.
             if not self._game.find_and_click_button("event_special_quest"):
-                self._game.image_tools.generate_alert(
-                    "Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
-                raise EventException("Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
+                if self._fallback:
+                    home_button_location = self._game.image_tools.find_button("home")
+                    self._game.mouse_tools.move_and_click_point(home_button_location[0] - 30, home_button_location[1] - 847, "event_special_quest")
+                else:
+                    self._game.image_tools.generate_alert(
+                        "Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
+                    raise EventException("Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
 
             if self._game.image_tools.confirm_location("special"):
                 # Check to see if the user already has a Nightmare available.
@@ -289,14 +296,18 @@ class Event:
 
                 # Find all the "Select" buttons.
                 select_button_locations = self._game.image_tools.find_all("select")
+                if self._move_one_down:
+                    position = 1
+                else:
+                    position = 0
 
                 # Select the Event Quest or Event Raid. Additionally, offset the locations by 1 if there is a Nightmare available.
                 if formatted_mission_name == "Event Quest":
                     self._game.print_and_save(f"[EVENT] Now hosting Event Quest...")
-                    self._game.mouse_tools.move_and_click_point(select_button_locations[0 + nightmare_is_available][0], select_button_locations[0 + nightmare_is_available][1], "select")
+                    self._game.mouse_tools.move_and_click_point(select_button_locations[position + nightmare_is_available][0], select_button_locations[position + nightmare_is_available][1], "select")
                 elif formatted_mission_name == "Event Raid":
                     self._game.print_and_save(f"[EVENT] Now hosting Event Raid...")
-                    self._game.mouse_tools.move_and_click_point(select_button_locations[1 + nightmare_is_available][0], select_button_locations[1 + nightmare_is_available][1], "play_round_button")
+                    self._game.mouse_tools.move_and_click_point(select_button_locations[(position + 1) + nightmare_is_available][0], select_button_locations[(position + 1) + nightmare_is_available][1], "play_round_button")
 
                 self._game.wait(1)
 
