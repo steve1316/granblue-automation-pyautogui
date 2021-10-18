@@ -246,21 +246,19 @@ class Event:
             # Go to the Home screen.
             self._game.go_back_home(confirm_location_check = True)
 
-            # Go to the Event by clicking on the "Menu" button and then click the very first banner.
-            self._game.find_and_click_button("home_menu")
-            banner_locations = self._game.image_tools.find_all("event_banner", custom_confidence = 0.7)
-            if len(banner_locations) == 0:
-                banner_locations = self._game.image_tools.find_all("event_banner_blue", custom_confidence = 0.7)
-                if len(banner_locations) == 0:
-                    raise EventException("Failed to find the Event banner.")
-            self._game.mouse_tools.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
+            self._game.find_and_click_button("quest")
 
             self._game.wait(1)
 
-            # Check and click away the "Daily Missions" popup.
-            if self._game.image_tools.confirm_location("event_daily_missions", tries = 1):
-                self._game.print_and_save(f"\n[EVENT] Detected \"Daily Missions\" popup. Clicking it away...")
-                self._game.find_and_click_button("close")
+            # Check for the "You retreated from the raid battle" popup.
+            if self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries = 3):
+                self._game.find_and_click_button("ok")
+
+            # Go to the Special screen.
+            self._game.find_and_click_button("special")
+            self._game.wait(3.0)
+
+            self._game.find_and_click_button("special_event")
 
             # Remove the difficulty prefix from the mission name.
             difficulty = ""
@@ -277,16 +275,6 @@ class Event:
             elif self._mission_name.find("EX ") == 0:
                 difficulty = "Extreme"
                 formatted_mission_name = self._mission_name[3:]
-
-            # Click on the "Special Quest" button to head to the Special screen.
-            if not self._game.find_and_click_button("event_special_quest"):
-                if self._fallback:
-                    home_button_location = self._game.image_tools.find_button("home")
-                    self._game.mouse_tools.move_and_click_point(home_button_location[0] - 30, home_button_location[1] - 847, "event_special_quest")
-                else:
-                    self._game.image_tools.generate_alert(
-                        "Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
-                    raise EventException("Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
 
             if self._game.image_tools.confirm_location("special"):
                 # Check to see if the user already has a Nightmare available.
