@@ -24,6 +24,9 @@ class Event:
         self._game = game
         self._mission_name: str = mission_name
 
+        self._move_one_down: bool = True
+        self._fallback: bool = True
+
         ##########################
         # #### Advanced Setup ####
         self._game.print_and_save("\n[EVENT] Initializing settings for Event...")
@@ -243,21 +246,19 @@ class Event:
             # Go to the Home screen.
             self._game.go_back_home(confirm_location_check = True)
 
-            # Go to the Event by clicking on the "Menu" button and then click the very first banner.
-            self._game.find_and_click_button("home_menu")
-            banner_locations = self._game.image_tools.find_all("event_banner", custom_confidence = 0.7)
-            if len(banner_locations) == 0:
-                banner_locations = self._game.image_tools.find_all("event_banner_blue", custom_confidence = 0.7)
-                if len(banner_locations) == 0:
-                    raise EventException("Failed to find the Event banner.")
-            self._game.mouse_tools.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
+            self._game.find_and_click_button("quest")
 
             self._game.wait(1)
 
-            # Check and click away the "Daily Missions" popup.
-            if self._game.image_tools.confirm_location("event_daily_missions", tries = 1):
-                self._game.print_and_save(f"\n[EVENT] Detected \"Daily Missions\" popup. Clicking it away...")
-                self._game.find_and_click_button("close")
+            # Check for the "You retreated from the raid battle" popup.
+            if self._game.image_tools.confirm_location("you_retreated_from_the_raid_battle", tries = 3):
+                self._game.find_and_click_button("ok")
+
+            # Go to the Special screen.
+            self._game.find_and_click_button("special")
+            self._game.wait(3.0)
+
+            self._game.find_and_click_button("special_event")
 
             # Remove the difficulty prefix from the mission name.
             difficulty = ""
@@ -275,12 +276,6 @@ class Event:
                 difficulty = "Extreme"
                 formatted_mission_name = self._mission_name[3:]
 
-            # Click on the "Special Quest" button to head to the Special screen.
-            if not self._game.find_and_click_button("event_special_quest"):
-                self._game.image_tools.generate_alert(
-                    "Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
-                raise EventException("Failed to detect layout for this Event. Are you sure this Event has no Token Drawboxes? If not, switch to \"Event (Token Drawboxes)\" Farming Mode.")
-
             if self._game.image_tools.confirm_location("special"):
                 # Check to see if the user already has a Nightmare available.
                 nightmare_is_available = 0
@@ -289,14 +284,18 @@ class Event:
 
                 # Find all the "Select" buttons.
                 select_button_locations = self._game.image_tools.find_all("select")
+                if self._move_one_down:
+                    position = 1
+                else:
+                    position = 0
 
                 # Select the Event Quest or Event Raid. Additionally, offset the locations by 1 if there is a Nightmare available.
                 if formatted_mission_name == "Event Quest":
                     self._game.print_and_save(f"[EVENT] Now hosting Event Quest...")
-                    self._game.mouse_tools.move_and_click_point(select_button_locations[0 + nightmare_is_available][0], select_button_locations[0 + nightmare_is_available][1], "select")
+                    self._game.mouse_tools.move_and_click_point(select_button_locations[position + nightmare_is_available][0], select_button_locations[position + nightmare_is_available][1], "select")
                 elif formatted_mission_name == "Event Raid":
                     self._game.print_and_save(f"[EVENT] Now hosting Event Raid...")
-                    self._game.mouse_tools.move_and_click_point(select_button_locations[1 + nightmare_is_available][0], select_button_locations[1 + nightmare_is_available][1], "play_round_button")
+                    self._game.mouse_tools.move_and_click_point(select_button_locations[(position + 1) + nightmare_is_available][0], select_button_locations[(position + 1) + nightmare_is_available][1], "play_round_button")
 
                 self._game.wait(1)
 

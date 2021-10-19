@@ -124,6 +124,9 @@ class ProvingGrounds:
                     self._game.print_and_save("\n[PROVING.GROUNDS] Proving Grounds Mission has been completed.")
                     self._game.find_and_click_button("event")
 
+                    # Check for friend request.
+                    self._game.find_and_click_button("cancel", tries = 1, suppress_error = True)
+
                     # Check for trophy.
                     self._game.find_and_click_button("close", tries = 1, suppress_error = True)
 
