@@ -888,9 +888,9 @@ class Game:
                 return True
             else:
                 if self.farming_mode == "Raid":
-                    self.collect_loot()
+                    self.collect_loot(is_completed = true)
                 else:
-                    self.collect_loot(is_pending_battle = True)
+                    self.collect_loot(is_completed = false, is_pending_battle = True)
 
                 self.find_and_click_button("close", tries = 1)
                 self.find_and_click_button("ok", tries = 1)
