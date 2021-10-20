@@ -275,6 +275,9 @@ class Event:
             elif self._mission_name.find("EX ") == 0:
                 difficulty = "Extreme"
                 formatted_mission_name = self._mission_name[3:]
+            elif self._mission_name.find("EX+ ") == 0:
+                difficulty = "Extreme+"
+                formatted_mission_name = self._mission_name[4:]
 
             if self._game.image_tools.confirm_location("special"):
                 # Check to see if the user already has a Nightmare available.
@@ -307,6 +310,8 @@ class Event:
                     self._game.mouse_tools.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1], "play_round_button")
                 elif difficulty == "Extreme":
                     self._game.mouse_tools.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1], "play_round_button")
+                elif difficulty == "Extreme+":
+                    self._game.mouse_tools.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1], "play_round_button")
             else:
                 raise EventException("Failed to arrive at the Special Quest screen.")
 

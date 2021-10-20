@@ -1673,8 +1673,10 @@ Item{
                             { text: "Event Raid", enabled: false },
                             { text: "VH Event Raid", map: "", enabled: true },
                             { text: "EX Event Raid", map: "", enabled: true },
+                            { text: "EX+ Event Raid", map: "", enabled: true },
                             { text: "Event Quest", enabled: false },
                             { text: "EX Event Quest", map: "", enabled: true },
+                            { text: "EX+ Event Quest", map: "", enabled: true },
                         ]
                     } else if(farmingModeComboBox.displayText === "Dread Barrage" && itemSelectionComboBox.displayText === "Repeated Runs") {
                         missionSelectionComboBox.model = [
