@@ -261,6 +261,8 @@ const Settings = () => {
                                 <Checkbox
                                     onChange={(e) => {
                                         setDebugMode(e.target.checked)
+
+                                        // TODO: Create proper logic to enable the ready status.
                                         setReadyStatus(e.target.checked)
                                     }}
                                     checked={debugMode}

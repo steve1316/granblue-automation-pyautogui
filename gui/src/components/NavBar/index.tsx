@@ -40,6 +40,7 @@ const NavBar = () => {
 
                     const decoded: ParsedSettings = JSON.parse(settings)
 
+                    // TODO: Create proper logic to enable the ready status.
                     setReadyStatus(decoded.debugMode)
                 })
                 .catch((err) => {
