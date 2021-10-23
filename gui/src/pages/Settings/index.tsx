@@ -47,7 +47,7 @@ const Settings = () => {
                 var reader = new FileReader()
                 reader.onload = function (loadedEvent) {
                     if (loadedEvent.target?.result != null) {
-                        console.log(loadedEvent.target?.result)
+                        console.log("Loaded Combat Script: ", loadedEvent.target?.result)
                         setCombatScript(loadedEvent.target?.result?.toString())
                     } else {
                         console.log("Failed to read combat script. Reseting to default empty combat script...")

@@ -7,10 +7,13 @@ import { BotStateContext } from "../../context/BotStateContext"
 
 const Home = () => {
     const { status, running, start, stop } = useContext(BotStateContext)
-    const { log, start } = useContext(MessageLogContext)
-    const [messageLog, _setMessageLog] = log
-    const [readyStatus, setReadyStatus] = status
-    const [_startFlag, setStartFlag] = start
+    const { log, message } = useContext(MessageLogContext)
+    const [messageLog, setMessageLog] = log
+    const [, setAsyncMessages] = message
+    const [readyStatus] = status
+    const [isBotRunning] = running
+    const [, setStartBot] = start
+    const [, setStopBot] = stop
 
     const initialMessage = `****************************************\nWelcome to Granblue Automation!\n****************************************\nInstructions\n----------------\nNote: The START button is disabled until the following steps are followed through.\n
     1. Have your game window and the Bottom Menu visible. Set the game window size set to the second "notch". 
@@ -18,9 +21,18 @@ const Home = () => {
     3. You can now head back to the Home Page of the bot and click START.
     \nWarning: Do not refresh/F5 the program's "page" while the bot process is running. Otherwise in order to stop it, you will need to kill it using CTRL+C via the terminal.\n****************************************`
 
-    // Start the bot process. Actual logic is based in Start.tsx component.
-    const handleClick = () => {
-        setStartFlag(true)
+    // Reset message log and then start the bot process. Actual logic is based in Start.tsx component.
+    const handleStart = () => {
+        setMessageLog([""])
+        setAsyncMessages([""])
+        setStartBot(true)
+        setStopBot(false)
+    }
+
+    // Stop the bot process. Actual logic is based in Start.tsx component.
+    const handleStop = () => {
+        setStopBot(true)
+        setStartBot(false)
     }
 
     return (
@@ -34,9 +46,15 @@ const Home = () => {
                     </div>
                     <div className="rightOuterContainer">
                         <div className="rightContainer">
-                            <Button disabled={!readyStatus} variant="contained" onClick={handleClick}>
-                                {readyStatus ? "Start" : "Not Ready"}
-                            </Button>
+                            {isBotRunning ? (
+                                <Button color="error" variant="contained" onClick={handleStop}>
+                                    Stop
+                                </Button>
+                            ) : (
+                                <Button disabled={!readyStatus} variant="contained" onClick={handleStart}>
+                                    {readyStatus ? "Start" : "Not Ready"}
+                                </Button>
+                            )}
                         </div>
                     </div>
                 </Stack>
