@@ -1,9 +1,10 @@
-import React, { createContext, useState } from "react"
+import { createContext, useState } from "react"
 
 export const ReadyContext = createContext()
 
 export const ReadyProvider = ({ children }) => {
-    const [status, setStatus] = useState(false)
+    const [readyStatus, setReadyStatus] = useState(false)
+    const [refreshAlert, setRefreshAlert] = useState(false)
 
-    return <ReadyContext.Provider value={{ status, setStatus }}>{children}</ReadyContext.Provider>
+    return <ReadyContext.Provider value={{ status: [readyStatus, setReadyStatus], alert: [refreshAlert, setRefreshAlert] }}>{children}</ReadyContext.Provider>
 }

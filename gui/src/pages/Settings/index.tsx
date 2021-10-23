@@ -8,6 +8,7 @@ import match from "autosuggest-highlight/match"
 import { ReadyContext } from "../../context/ReadyContext"
 import { FsTextFileOption, readTextFile, writeFile } from "@tauri-apps/api/fs"
 
+// Custom input component for combat script file selection.
 const Input = styled("input")({
     display: "none",
 })
@@ -24,12 +25,14 @@ const Settings = () => {
     const [debugMode, setDebugMode] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
-    const { setStatus } = useContext(ReadyContext)
+    const { status } = useContext(ReadyContext)
+    const [_readyStatus, setReadyStatus] = status
 
     const farmingModes = ["Quest", "Special"]
     const itemsForQuest = ["Satin Feather", "Zephyr Feather", "Flying Sprout"]
     const missionsForQuest = ["test1"]
 
+    // Load the selected combat script text file.
     const loadCombatScript = (event: React.ChangeEvent<HTMLInputElement>) => {
         var files = event.currentTarget.files
         if (files != null) {
@@ -61,9 +64,9 @@ const Settings = () => {
         }
     }
 
+    // Load settings from JSON file.
     useEffect(() => {
         try {
-            // Load settings from JSON file.
             readTextFile("settings.json")
                 .then((settings) => {
                     interface ParsedSettings {
@@ -99,9 +102,9 @@ const Settings = () => {
         }
     }, [])
 
+    // Save current settings to JSON file.
     useEffect(() => {
         try {
-            // Save current settings to JSON file.
             const settings = {
                 currentCombatScriptName: fileName,
                 currentCombatScript: combatScript,
@@ -114,8 +117,8 @@ const Settings = () => {
                 debugMode: debugMode,
             }
 
+            // Stringify the contents and prepare for writing to the specified file.
             const jsonString = JSON.stringify(settings, null, 4)
-
             const settingsFile: FsTextFileOption = { path: "settings.json", contents: jsonString }
 
             writeFile(settingsFile)
@@ -130,6 +133,7 @@ const Settings = () => {
         }
     }, [fileName, combatScript, farmingMode, item, mission, itemAmount, groupNumber, partyNumber, debugMode])
 
+    // Show or hide the Support Summon Selection component.
     const handleModalOpen = () => setIsModalOpen(true)
     const handleModalClose = () => setIsModalOpen(false)
 
@@ -257,8 +261,9 @@ const Settings = () => {
                                 <Checkbox
                                     onChange={(e) => {
                                         setDebugMode(e.target.checked)
-                                        setStatus(e.target.checked)
+                                        setReadyStatus(e.target.checked)
                                     }}
+                                    checked={debugMode}
                                 />
                             }
                             label="Enable Debug Mode"

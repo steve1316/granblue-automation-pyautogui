@@ -1,24 +1,55 @@
 import { useState, useEffect, useContext } from "react"
-import { AppBar, Button, ButtonGroup, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Toolbar, Typography } from "@mui/material"
+import { Alert, AppBar, Button, ButtonGroup, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Snackbar, Toolbar, Typography } from "@mui/material"
 import { Close, CropSquare, HomeRounded, Menu, Minimize, Settings } from "@mui/icons-material"
 import { Link as RouterLink, useHistory } from "react-router-dom"
 import "./index.scss"
 import { appWindow } from "@tauri-apps/api/window"
 import { ReadyContext } from "../../context/ReadyContext"
+import { readTextFile } from "@tauri-apps/api/fs"
 
 const NavBar = () => {
     const history = useHistory()
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-    const [readyStatus, setReadyStatus] = useState("Status: Not Ready")
 
-    const { status } = useContext(ReadyContext)
+    const { status, alert } = useContext(ReadyContext)
+    const [refreshAlert, setRefreshAlert] = alert
+    const [readyStatus, setReadyStatus] = status
+
+    // Warn the user about refreshing the page.
+    window.onbeforeunload = function (e) {
+        setRefreshAlert(true)
+        return false
+    }
+
+    // Load settings from JSON file on program start.
     useEffect(() => {
-        if (status) {
-            setReadyStatus("Status: Ready")
-        } else {
-            setReadyStatus("Status: Not Ready")
+        try {
+            readTextFile("settings.json")
+                .then((settings) => {
+                    interface ParsedSettings {
+                        currentCombatScriptName: string
+                        currentCombatScript: string
+                        farmingMode: string
+                        item: string
+                        mission: string
+                        itemAmount: number
+                        groupNumber: number
+                        partyNumber: number
+                        debugMode: boolean
+                    }
+
+                    const decoded: ParsedSettings = JSON.parse(settings)
+
+                    setReadyStatus(decoded.debugMode)
+                })
+                .catch((err) => {
+                    console.log(`Encountered read exception: ${err}`)
+                })
+        } catch (e) {
+            console.log(`Encountered exception while loading settings from local JSON file:\n${e}`)
         }
-    }, [status])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen)
@@ -26,6 +57,15 @@ const NavBar = () => {
 
     return (
         <AppBar position="fixed" id="header">
+            <Snackbar
+                open={refreshAlert}
+                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                autoHideDuration={10000}
+                onClose={() => setRefreshAlert(false)}
+                onClick={() => setRefreshAlert(false)}
+            >
+                <Alert severity="error">Do NOT reload/F5/refresh the "page" while the bot is RUNNING. You will have a runaway program.</Alert>
+            </Snackbar>
             <Toolbar variant="dense" className="toolbar" data-tauri-drag-region>
                 <IconButton className="menuButton" size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={toggleDrawer}>
                     <Menu />
@@ -62,13 +102,13 @@ const NavBar = () => {
                     Granblue Automation
                 </Typography>
                 <div className="emptyDivider" />
-                {status ? (
+                {readyStatus ? (
                     <Typography variant="caption" sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", marginRight: "10px", color: "#76ff03" }}>
-                        {readyStatus}
+                        Status: Ready
                     </Typography>
                 ) : (
                     <Typography variant="caption" sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", marginRight: "10px", color: "red" }}>
-                        {readyStatus}
+                        Status: Not Ready
                     </Typography>
                 )}
                 <ButtonGroup variant="outlined" className="group">
