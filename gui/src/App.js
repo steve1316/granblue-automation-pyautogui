@@ -2,14 +2,14 @@ import Home from "./pages/Home"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import NavBar from "./components/NavBar"
 import Settings from "./pages/Settings"
-import { ReadyProvider } from "./context/ReadyContext"
+import { BotStateProvider } from "./context/BotStateContext"
 import { MessageLogProvider } from "./context/MessageLogContext"
 import Start from "./components/Start"
 
 function App() {
     return (
         <Router>
-            <ReadyProvider>
+            <BotStateProvider>
                 <MessageLogProvider>
                     <NavBar />
                     <Start />
@@ -22,7 +22,7 @@ function App() {
                         </Route>
                     </Switch>
                 </MessageLogProvider>
-            </ReadyProvider>
+            </BotStateProvider>
         </Router>
     )
 }

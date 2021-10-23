@@ -1,9 +1,11 @@
 import { Command } from "@tauri-apps/api/shell"
 import { useContext, useEffect } from "react"
 import { MessageLogContext } from "../../context/MessageLogContext"
+import { BotStateContext } from "../../context/BotStateContext"
 
 const Start = () => {
     const { log, message, start } = useContext(MessageLogContext)
+    const { running, start, stop } = useContext(BotStateContext)
     const [messageLog, setMessageLog] = log
     const [asyncMessages, setAsyncMessages] = message
     const [startFlag, _setStartFlag] = start

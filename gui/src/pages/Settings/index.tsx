@@ -5,7 +5,7 @@ import "./index.scss"
 import TransferList from "../../components/TransferList"
 import parse from "autosuggest-highlight/parse"
 import match from "autosuggest-highlight/match"
-import { ReadyContext } from "../../context/ReadyContext"
+import { BotStateContext } from "../../context/BotStateContext"
 import { FsTextFileOption, readTextFile, writeFile } from "@tauri-apps/api/fs"
 
 // Custom input component for combat script file selection.
@@ -25,8 +25,8 @@ const Settings = () => {
     const [debugMode, setDebugMode] = useState(false)
     const [isModalOpen, setIsModalOpen] = useState(false)
 
-    const { status } = useContext(ReadyContext)
-    const [_readyStatus, setReadyStatus] = status
+    const { status } = useContext(BotStateContext)
+    const [, setReadyStatus] = status
 
     const farmingModes = ["Quest", "Special"]
     const itemsForQuest = ["Satin Feather", "Zephyr Feather", "Flying Sprout"]

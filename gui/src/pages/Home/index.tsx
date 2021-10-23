@@ -3,10 +3,10 @@ import { Button, Fade, Stack } from "@mui/material"
 import { Box } from "@mui/system"
 import "./index.scss"
 import { MessageLogContext } from "../../context/MessageLogContext"
-import { ReadyContext } from "../../context/ReadyContext"
+import { BotStateContext } from "../../context/BotStateContext"
 
 const Home = () => {
-    const { status } = useContext(ReadyContext)
+    const { status, running, start, stop } = useContext(BotStateContext)
     const { log, start } = useContext(MessageLogContext)
     const [messageLog, _setMessageLog] = log
     const [readyStatus, setReadyStatus] = status

@@ -4,14 +4,14 @@ import { Close, CropSquare, HomeRounded, Menu, Minimize, Settings } from "@mui/i
 import { Link as RouterLink, useHistory } from "react-router-dom"
 import "./index.scss"
 import { appWindow } from "@tauri-apps/api/window"
-import { ReadyContext } from "../../context/ReadyContext"
+import { BotStateContext } from "../../context/BotStateContext"
 import { readTextFile } from "@tauri-apps/api/fs"
 
 const NavBar = () => {
     const history = useHistory()
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-    const { status, alert } = useContext(ReadyContext)
+    const { status, alert } = useContext(BotStateContext)
     const [refreshAlert, setRefreshAlert] = alert
     const [readyStatus, setReadyStatus] = status
 
