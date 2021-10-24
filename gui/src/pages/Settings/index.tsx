@@ -8,6 +8,8 @@ import match from "autosuggest-highlight/match"
 import { BotStateContext } from "../../context/BotStateContext"
 import { FsTextFileOption, readTextFile, writeFile } from "@tauri-apps/api/fs"
 
+import data from "../../data/data.json"
+
 // Custom input component for combat script file selection.
 const Input = styled("input")({
     display: "none",
@@ -17,8 +19,10 @@ const Settings = () => {
     const [fileName, setFileName] = useState("")
     const [combatScript, setCombatScript] = useState("")
     const [farmingMode, setFarmingMode] = useState("")
-    const [item, setItem] = useState<string | null>(null)
+    const [item, setItem] = useState("")
+    const [itemList, setItemList] = useState<string[]>([])
     const [mission, setMission] = useState("")
+    const [missionList, setMissionList] = useState<string[]>([])
     const [itemAmount, setItemAmount] = useState(0)
     const [groupNumber, setGroupNumber] = useState(1)
     const [partyNumber, setPartyNumber] = useState(1)
@@ -28,9 +32,7 @@ const Settings = () => {
     const { status } = useContext(BotStateContext)
     const [, setReadyStatus] = status
 
-    const farmingModes = ["Quest", "Special"]
-    const itemsForQuest = ["Satin Feather", "Zephyr Feather", "Flying Sprout"]
-    const missionsForQuest = ["test1"]
+    const farmingModes = ["Quest", "Special", "Coop", "Raid", "Event", "Event (Token Drawboxes)", "Rise of the Beasts", "Guild Wars", "Dread Barrage", "Proving Grounds", "Xeno Clash", "Arcarum"]
 
     // Load the selected combat script text file.
     const loadCombatScript = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -133,6 +135,66 @@ const Settings = () => {
         }
     }, [fileName, combatScript, farmingMode, item, mission, itemAmount, groupNumber, partyNumber, debugMode])
 
+    // Populate the item list after selecting the Farming Mode.
+    useEffect(() => {
+        // Reset the selections for item and mission.
+        setItem("")
+        setMission("")
+
+        var newItemList: string[] = []
+
+        if (
+            farmingMode === "Quest" ||
+            farmingMode === "Special" ||
+            farmingMode === "Coop" ||
+            farmingMode === "Raid" ||
+            farmingMode === "Event" ||
+            farmingMode === "Event (Token Drawboxes)" ||
+            farmingMode === "Rise of the Beasts" ||
+            farmingMode === "Guild Wars" ||
+            farmingMode === "Dread Barrage" ||
+            farmingMode === "Proving Grounds" ||
+            farmingMode === "Xeno Clash" ||
+            farmingMode === "Arcarum"
+        ) {
+            Object.values(data[farmingMode]).forEach((tempItems) => {
+                newItemList = newItemList.concat(tempItems.items)
+            })
+        }
+
+        const filteredNewItemList = Array.from(new Set(newItemList))
+        setItemList(filteredNewItemList)
+    }, [farmingMode])
+
+    // Populate the mission list after selecting the item.
+    useEffect(() => {
+        var newMissionList: string[] = []
+
+        if (
+            farmingMode === "Quest" ||
+            farmingMode === "Special" ||
+            farmingMode === "Coop" ||
+            farmingMode === "Raid" ||
+            farmingMode === "Event" ||
+            farmingMode === "Event (Token Drawboxes)" ||
+            farmingMode === "Rise of the Beasts" ||
+            farmingMode === "Guild Wars" ||
+            farmingMode === "Dread Barrage" ||
+            farmingMode === "Proving Grounds" ||
+            farmingMode === "Xeno Clash" ||
+            farmingMode === "Arcarum"
+        ) {
+            Object.entries(data[farmingMode]).forEach((obj) => {
+                if (obj[1].items.indexOf(item) !== -1) {
+                    newMissionList = newMissionList.concat(obj[0])
+                }
+            })
+        }
+
+        const filteredNewMissionList = Array.from(new Set(newMissionList))
+        setMissionList(filteredNewMissionList)
+    }, [item])
+
     // Show or hide the Support Summon Selection component.
     const handleModalOpen = () => setIsModalOpen(true)
     const handleModalClose = () => setIsModalOpen(false)
@@ -167,9 +229,15 @@ const Settings = () => {
 
                     {/* Select Item */}
                     <Autocomplete
-                        options={itemsForQuest.map((element) => element)}
+                        options={itemList.map((element) => element)}
                         value={item}
-                        onChange={(_e, value) => setItem(value)}
+                        onChange={(_e, value) => {
+                            if (value === null) {
+                                setItem("")
+                            } else {
+                                setItem(value)
+                            }
+                        }}
                         getOptionLabel={(option) => option}
                         renderInput={(params) => <TextField {...params} label="Select Item" variant="filled" helperText="Please select/search the Item to farm" />}
                         renderOption={(props, option, { inputValue }) => {
@@ -192,9 +260,9 @@ const Settings = () => {
 
                     {/* Select Mission */}
                     <TextField select label="Mission" variant="filled" value={mission} onChange={(e) => setMission(e.target.value)} helperText="Please select the Mission">
-                        {missionsForQuest.map((mode) => (
-                            <MenuItem key={mode} value={mode}>
-                                {mode}
+                        {missionList.map((selectableMission) => (
+                            <MenuItem key={selectableMission} value={selectableMission}>
+                                {selectableMission}
                             </MenuItem>
                         ))}
                     </TextField>
