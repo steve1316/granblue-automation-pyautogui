@@ -15,8 +15,12 @@ const NavBar = () => {
 
     // Warn the user about refreshing the page.
     window.onbeforeunload = function (e) {
-        setRefreshAlert(true)
-        return false
+        if (!botStateContext?.refreshAlert) {
+            botStateContext?.setRefreshAlert(true)
+            return false
+        } else {
+            return true
+        }
     }
 
     // Load settings from JSON file on program start.
