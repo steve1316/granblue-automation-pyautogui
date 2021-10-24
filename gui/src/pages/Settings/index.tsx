@@ -275,13 +275,36 @@ const Settings = () => {
                     />
 
                     {/* Select Mission */}
-                    <TextField select label="Mission" variant="filled" value={mission} onChange={(e) => setMission(e.target.value)} helperText="Please select the Mission">
-                        {missionList.map((selectableMission) => (
-                            <MenuItem key={selectableMission} value={selectableMission}>
-                                {selectableMission}
-                            </MenuItem>
-                        ))}
-                    </TextField>
+                    <Autocomplete
+                        options={missionList.map((element) => element)}
+                        value={mission}
+                        onChange={(_e, value) => {
+                            if (value === null) {
+                                setMission("")
+                            } else {
+                                setMission(value)
+                            }
+                        }}
+                        getOptionLabel={(option) => option}
+                        isOptionEqualToValue={(option) => option !== ""}
+                        renderInput={(params) => <TextField {...params} label="Select Mission" variant="filled" helperText="Please select the Mission" />}
+                        renderOption={(props, option, { inputValue }) => {
+                            const matches = match(option, inputValue)
+                            const parts = parse(option, matches)
+
+                            return (
+                                <li {...props}>
+                                    <div>
+                                        {parts.map((part, index) => (
+                                            <span key={index} style={{ fontWeight: part.highlight ? 1000 : 400 }}>
+                                                {part.text}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </li>
+                            )
+                        }}
+                    />
 
                     {/* Select # of Items to farm */}
                     <TextField
