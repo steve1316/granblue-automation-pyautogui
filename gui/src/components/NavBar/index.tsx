@@ -1,11 +1,10 @@
-import { useState, useEffect, useContext } from "react"
+import { useState, useContext } from "react"
 import { Alert, AppBar, Button, ButtonGroup, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Snackbar, Toolbar, Typography } from "@mui/material"
 import { Close, CropSquare, HomeRounded, Menu, Minimize, Settings } from "@mui/icons-material"
 import { Link as RouterLink, useHistory } from "react-router-dom"
 import "./index.scss"
 import { appWindow } from "@tauri-apps/api/window"
 import { BotStateContext } from "../../context/BotStateContext"
-import { readTextFile } from "@tauri-apps/api/fs"
 
 const NavBar = () => {
     const history = useHistory()
@@ -26,37 +25,6 @@ const NavBar = () => {
             botStateContext?.setRefreshAlert(true)
         }
     })
-
-    // Load settings from JSON file on program start.
-    useEffect(() => {
-        try {
-            readTextFile("settings.json")
-                .then((settings) => {
-                    interface ParsedSettings {
-                        currentCombatScriptName: string
-                        currentCombatScript: string
-                        farmingMode: string
-                        item: string
-                        mission: string
-                        itemAmount: number
-                        groupNumber: number
-                        partyNumber: number
-                        debugMode: boolean
-                    }
-
-                    const decoded: ParsedSettings = JSON.parse(settings)
-
-                    // TODO: Create proper logic to enable the ready status.
-                    botStateContext?.setReadyStatus(decoded.debugMode)
-                })
-                .catch((err) => {
-                    console.log(`Encountered read exception: ${err}`)
-                })
-        } catch (e) {
-            console.log(`Encountered exception while loading settings from local JSON file:\n${e}`)
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
 
     const toggleDrawer = () => {
         setIsDrawerOpen(!isDrawerOpen)
