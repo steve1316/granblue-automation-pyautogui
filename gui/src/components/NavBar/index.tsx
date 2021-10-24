@@ -11,9 +11,7 @@ const NavBar = () => {
     const history = useHistory()
     const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
-    const { status, alert } = useContext(BotStateContext)
-    const [refreshAlert, setRefreshAlert] = alert
-    const [readyStatus, setReadyStatus] = status
+    const botStateContext = useContext(BotStateContext)
 
     // Warn the user about refreshing the page.
     window.onbeforeunload = function (e) {
@@ -41,7 +39,7 @@ const NavBar = () => {
                     const decoded: ParsedSettings = JSON.parse(settings)
 
                     // TODO: Create proper logic to enable the ready status.
-                    setReadyStatus(decoded.debugMode)
+                    botStateContext?.setReadyStatus(decoded.debugMode)
                 })
                 .catch((err) => {
                     console.log(`Encountered read exception: ${err}`)
@@ -59,11 +57,11 @@ const NavBar = () => {
     return (
         <AppBar position="fixed" id="header">
             <Snackbar
-                open={refreshAlert}
+                open={botStateContext?.refreshAlert}
                 anchorOrigin={{ vertical: "top", horizontal: "center" }}
                 autoHideDuration={10000}
-                onClose={() => setRefreshAlert(false)}
-                onClick={() => setRefreshAlert(false)}
+                onClose={() => botStateContext?.setRefreshAlert(false)}
+                onClick={() => botStateContext?.setRefreshAlert(false)}
             >
                 <Alert severity="error">Do NOT reload/F5/refresh the "page" while the bot is RUNNING. You will have a runaway program.</Alert>
             </Snackbar>
@@ -103,7 +101,7 @@ const NavBar = () => {
                     Granblue Automation
                 </Typography>
                 <div className="emptyDivider" />
-                {readyStatus ? (
+                {botStateContext?.readyStatus ? (
                     <Typography variant="caption" sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", marginRight: "10px", color: "#76ff03" }}>
                         Status: Ready
                     </Typography>
@@ -118,7 +116,7 @@ const NavBar = () => {
                         onClick={() =>
                             setTimeout(() => {
                                 appWindow.minimize()
-                            }, 125)
+                            }, 100)
                         }
                     >
                         <Minimize />
@@ -128,7 +126,7 @@ const NavBar = () => {
                         onClick={() =>
                             setTimeout(() => {
                                 appWindow.toggleMaximize()
-                            }, 125)
+                            }, 100)
                         }
                     >
                         <CropSquare />
@@ -138,7 +136,7 @@ const NavBar = () => {
                         onClick={() =>
                             setTimeout(() => {
                                 appWindow.close()
-                            }, 125)
+                            }, 100)
                         }
                     >
                         <Close />

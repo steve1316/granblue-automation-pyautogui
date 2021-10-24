@@ -16,23 +16,35 @@ const Input = styled("input")({
 })
 
 const Settings = () => {
-    const [fileName, setFileName] = useState("")
-    const [combatScript, setCombatScript] = useState("")
-    const [farmingMode, setFarmingMode] = useState("")
-    const [item, setItem] = useState("")
+    const [fileName, setFileName] = useState<string>("")
+    const [combatScript, setCombatScript] = useState<string>("")
+    const [farmingMode, setFarmingMode] = useState<string>("")
+    const [item, setItem] = useState<string>("")
     const [itemList, setItemList] = useState<string[]>([])
-    const [mission, setMission] = useState("")
+    const [mission, setMission] = useState<string>("")
     const [missionList, setMissionList] = useState<string[]>([])
-    const [itemAmount, setItemAmount] = useState(0)
-    const [groupNumber, setGroupNumber] = useState(1)
-    const [partyNumber, setPartyNumber] = useState(1)
-    const [debugMode, setDebugMode] = useState(false)
-    const [isModalOpen, setIsModalOpen] = useState(false)
+    const [itemAmount, setItemAmount] = useState<number>(0)
+    const [groupNumber, setGroupNumber] = useState<number>(1)
+    const [partyNumber, setPartyNumber] = useState<number>(1)
+    const [debugMode, setDebugMode] = useState<boolean>(false)
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
-    const { status } = useContext(BotStateContext)
-    const [, setReadyStatus] = status
+    const botStateContext = useContext(BotStateContext)
 
-    const farmingModes = ["Quest", "Special", "Coop", "Raid", "Event", "Event (Token Drawboxes)", "Rise of the Beasts", "Guild Wars", "Dread Barrage", "Proving Grounds", "Xeno Clash", "Arcarum"]
+    const farmingModes: string[] = [
+        "Quest",
+        "Special",
+        "Coop",
+        "Raid",
+        "Event",
+        "Event (Token Drawboxes)",
+        "Rise of the Beasts",
+        "Guild Wars",
+        "Dread Barrage",
+        "Proving Grounds",
+        "Xeno Clash",
+        "Arcarum",
+    ]
 
     // Load the selected combat script text file.
     const loadCombatScript = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -169,6 +181,7 @@ const Settings = () => {
     // Populate the mission list after selecting the item.
     useEffect(() => {
         var newMissionList: string[] = []
+        setMission("")
 
         if (
             farmingMode === "Quest" ||
@@ -193,6 +206,8 @@ const Settings = () => {
 
         const filteredNewMissionList = Array.from(new Set(newMissionList))
         setMissionList(filteredNewMissionList)
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [item])
 
     // Show or hide the Support Summon Selection component.
@@ -239,6 +254,7 @@ const Settings = () => {
                             }
                         }}
                         getOptionLabel={(option) => option}
+                        isOptionEqualToValue={(option) => option !== ""}
                         renderInput={(params) => <TextField {...params} label="Select Item" variant="filled" helperText="Please select/search the Item to farm" />}
                         renderOption={(props, option, { inputValue }) => {
                             const matches = match(option, inputValue)
@@ -331,7 +347,7 @@ const Settings = () => {
                                         setDebugMode(e.target.checked)
 
                                         // TODO: Create proper logic to enable the ready status.
-                                        setReadyStatus(e.target.checked)
+                                        botStateContext?.setReadyStatus(e.target.checked)
                                     }}
                                     checked={debugMode}
                                 />
