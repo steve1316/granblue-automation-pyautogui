@@ -1,12 +1,11 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Autocomplete, Button, Checkbox, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
+import { Autocomplete, Button, Checkbox, Divider, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
 import { Box, styled } from "@mui/system"
 import "./index.scss"
 import TransferList from "../../components/TransferList"
 import parse from "autosuggest-highlight/parse"
 import match from "autosuggest-highlight/match"
 import { BotStateContext } from "../../context/BotStateContext"
-import { FsTextFileOption, readTextFile, writeFile } from "@tauri-apps/api/fs"
 
 import data from "../../data/data.json"
 
@@ -16,17 +15,8 @@ const Input = styled("input")({
 })
 
 const Settings = () => {
-    const [fileName, setFileName] = useState<string>("")
-    const [combatScript, setCombatScript] = useState<string>("")
-    const [farmingMode, setFarmingMode] = useState<string>("")
-    const [item, setItem] = useState<string>("")
     const [itemList, setItemList] = useState<string[]>([])
-    const [mission, setMission] = useState<string>("")
     const [missionList, setMissionList] = useState<string[]>([])
-    const [itemAmount, setItemAmount] = useState<number>(0)
-    const [groupNumber, setGroupNumber] = useState<number>(1)
-    const [partyNumber, setPartyNumber] = useState<number>(1)
-    const [debugMode, setDebugMode] = useState<boolean>(false)
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
     const botStateContext = useContext(BotStateContext)
@@ -53,152 +43,77 @@ const Settings = () => {
             var file = files[0]
             if (file == null) {
                 // Reset the combat script selected if none was selected from the file picker dialog.
-                setFileName("")
+                botStateContext?.setCombatScriptName("")
             } else {
-                setFileName(file.name)
+                botStateContext?.setCombatScriptName(file.name)
 
                 // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
                 var reader = new FileReader()
                 reader.onload = function (loadedEvent) {
                     if (loadedEvent.target?.result != null) {
                         console.log("Loaded Combat Script: ", loadedEvent.target?.result)
-                        setCombatScript(loadedEvent.target?.result?.toString())
+                        botStateContext?.setCombatScript(loadedEvent.target?.result?.toString())
                     } else {
                         console.log("Failed to read combat script. Reseting to default empty combat script...")
-                        setFileName("")
-                        setCombatScript("")
+                        botStateContext?.setCombatScriptName("")
+                        botStateContext?.setCombatScript("")
                     }
                 }
 
                 // Read the text contents of the file.
                 reader.readAsText(file)
-
-                // TODO: Send contents of combat script file to backend.
             }
         }
     }
 
-    // Load settings from JSON file.
-    useEffect(() => {
-        try {
-            readTextFile("settings.json")
-                .then((settings) => {
-                    interface ParsedSettings {
-                        currentCombatScriptName: string
-                        currentCombatScript: string
-                        farmingMode: string
-                        item: string
-                        mission: string
-                        itemAmount: number
-                        groupNumber: number
-                        partyNumber: number
-                        debugMode: boolean
-                    }
-
-                    const decoded: ParsedSettings = JSON.parse(settings)
-                    console.log(`Loaded settings: ${settings}`)
-
-                    setFileName(decoded.currentCombatScriptName)
-                    setCombatScript(decoded.currentCombatScript)
-                    setFarmingMode(decoded.farmingMode)
-                    setItem(decoded.item)
-                    setMission(decoded.mission)
-                    setItemAmount(decoded.itemAmount)
-                    setGroupNumber(decoded.groupNumber)
-                    setPartyNumber(decoded.partyNumber)
-                    setDebugMode(decoded.debugMode)
-                })
-                .catch((err) => {
-                    console.log(`Encountered read exception: ${err}`)
-                })
-        } catch (e) {
-            console.log(`Encountered exception while loading settings from local JSON file:\n${e}`)
-        }
-    }, [])
-
-    // Save current settings to JSON file.
-    useEffect(() => {
-        try {
-            const settings = {
-                currentCombatScriptName: fileName,
-                currentCombatScript: combatScript,
-                farmingMode: farmingMode,
-                item: item,
-                mission: mission,
-                itemAmount: itemAmount,
-                groupNumber: groupNumber,
-                partyNumber: partyNumber,
-                debugMode: debugMode,
-            }
-
-            // Stringify the contents and prepare for writing to the specified file.
-            const jsonString = JSON.stringify(settings, null, 4)
-            const settingsFile: FsTextFileOption = { path: "settings.json", contents: jsonString }
-
-            writeFile(settingsFile)
-                .then(() => {
-                    console.log(`Successfully saved settings to settings.json`)
-                })
-                .catch((err) => {
-                    console.log(`Encountered write exception: ${err}`)
-                })
-        } catch (e) {
-            console.log(`Encountered exception while saving settings to local JSON file:\n${e}`)
-        }
-    }, [fileName, combatScript, farmingMode, item, mission, itemAmount, groupNumber, partyNumber, debugMode])
-
     // Populate the item list after selecting the Farming Mode.
     useEffect(() => {
-        // Reset the selections for item and mission.
-        setItem("")
-        setMission("")
-
         var newItemList: string[] = []
 
         if (
-            farmingMode === "Quest" ||
-            farmingMode === "Special" ||
-            farmingMode === "Coop" ||
-            farmingMode === "Raid" ||
-            farmingMode === "Event" ||
-            farmingMode === "Event (Token Drawboxes)" ||
-            farmingMode === "Rise of the Beasts" ||
-            farmingMode === "Guild Wars" ||
-            farmingMode === "Dread Barrage" ||
-            farmingMode === "Proving Grounds" ||
-            farmingMode === "Xeno Clash" ||
-            farmingMode === "Arcarum"
+            botStateContext?.farmingMode === "Quest" ||
+            botStateContext?.farmingMode === "Special" ||
+            botStateContext?.farmingMode === "Coop" ||
+            botStateContext?.farmingMode === "Raid" ||
+            botStateContext?.farmingMode === "Event" ||
+            botStateContext?.farmingMode === "Event (Token Drawboxes)" ||
+            botStateContext?.farmingMode === "Rise of the Beasts" ||
+            botStateContext?.farmingMode === "Guild Wars" ||
+            botStateContext?.farmingMode === "Dread Barrage" ||
+            botStateContext?.farmingMode === "Proving Grounds" ||
+            botStateContext?.farmingMode === "Xeno Clash" ||
+            botStateContext?.farmingMode === "Arcarum"
         ) {
-            Object.values(data[farmingMode]).forEach((tempItems) => {
+            Object.values(data[botStateContext?.farmingMode]).forEach((tempItems) => {
                 newItemList = newItemList.concat(tempItems.items)
             })
         }
 
         const filteredNewItemList = Array.from(new Set(newItemList))
         setItemList(filteredNewItemList)
-    }, [farmingMode])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [botStateContext?.farmingMode])
 
     // Populate the mission list after selecting the item.
     useEffect(() => {
         var newMissionList: string[] = []
-        setMission("")
 
         if (
-            farmingMode === "Quest" ||
-            farmingMode === "Special" ||
-            farmingMode === "Coop" ||
-            farmingMode === "Raid" ||
-            farmingMode === "Event" ||
-            farmingMode === "Event (Token Drawboxes)" ||
-            farmingMode === "Rise of the Beasts" ||
-            farmingMode === "Guild Wars" ||
-            farmingMode === "Dread Barrage" ||
-            farmingMode === "Proving Grounds" ||
-            farmingMode === "Xeno Clash" ||
-            farmingMode === "Arcarum"
+            botStateContext?.farmingMode === "Quest" ||
+            botStateContext?.farmingMode === "Special" ||
+            botStateContext?.farmingMode === "Coop" ||
+            botStateContext?.farmingMode === "Raid" ||
+            botStateContext?.farmingMode === "Event" ||
+            botStateContext?.farmingMode === "Event (Token Drawboxes)" ||
+            botStateContext?.farmingMode === "Rise of the Beasts" ||
+            botStateContext?.farmingMode === "Guild Wars" ||
+            botStateContext?.farmingMode === "Dread Barrage" ||
+            botStateContext?.farmingMode === "Proving Grounds" ||
+            botStateContext?.farmingMode === "Xeno Clash" ||
+            botStateContext?.farmingMode === "Arcarum"
         ) {
-            Object.entries(data[farmingMode]).forEach((obj) => {
-                if (obj[1].items.indexOf(item) !== -1) {
+            Object.entries(data[botStateContext?.farmingMode]).forEach((obj) => {
+                if (obj[1].items.indexOf(botStateContext?.item) !== -1) {
                     newMissionList = newMissionList.concat(obj[0])
                 }
             })
@@ -206,9 +121,8 @@ const Settings = () => {
 
         const filteredNewMissionList = Array.from(new Set(newMissionList))
         setMissionList(filteredNewMissionList)
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [item])
+    }, [botStateContext?.item])
 
     // Show or hide the Support Summon Selection component.
     const handleModalOpen = () => setIsModalOpen(true)
@@ -221,7 +135,14 @@ const Settings = () => {
                     <Grid container spacing={4} justifyContent="center" alignItems="center">
                         {/* Load Combat Script */}
                         <Grid item md>
-                            <TextField variant="filled" label="Combat Script" value={fileName} inputProps={{ readOnly: true }} helperText="Selected Combat Script" />
+                            <TextField
+                                variant="filled"
+                                label="Combat Script"
+                                value={botStateContext?.combatScriptName}
+                                inputProps={{ readOnly: true }}
+                                InputLabelProps={{ shrink: true }}
+                                helperText="Selected Combat Script"
+                            />
                         </Grid>
                         <Grid item xs>
                             <label htmlFor="combat-script-loader">
@@ -234,7 +155,18 @@ const Settings = () => {
                     </Grid>
 
                     {/* Select Farming Mode */}
-                    <TextField select label="Farming Mode" variant="filled" value={farmingMode} onChange={(e) => setFarmingMode(e.target.value)} helperText="Please select the Farming Mode">
+                    <TextField
+                        select
+                        label="Farming Mode"
+                        variant="filled"
+                        value={botStateContext?.farmingMode}
+                        onChange={(e) => {
+                            botStateContext?.setFarmingMode(e.target.value)
+                            botStateContext?.setItem("")
+                            botStateContext?.setMission("")
+                        }}
+                        helperText="Please select the Farming Mode"
+                    >
                         {farmingModes.map((mode) => (
                             <MenuItem key={mode} value={mode}>
                                 {mode}
@@ -245,12 +177,12 @@ const Settings = () => {
                     {/* Select Item */}
                     <Autocomplete
                         options={itemList.map((element) => element)}
-                        value={item}
+                        value={botStateContext?.item}
                         onChange={(_e, value) => {
                             if (value === null) {
-                                setItem("")
+                                botStateContext?.setItem("")
                             } else {
-                                setItem(value)
+                                botStateContext?.setItem(value)
                             }
                         }}
                         getOptionLabel={(option) => option}
@@ -277,12 +209,12 @@ const Settings = () => {
                     {/* Select Mission */}
                     <Autocomplete
                         options={missionList.map((element) => element)}
-                        value={mission}
+                        value={botStateContext?.mission}
                         onChange={(_e, value) => {
                             if (value === null) {
-                                setMission("")
+                                botStateContext?.setMission("")
                             } else {
-                                setMission(value)
+                                botStateContext?.setMission(value)
                             }
                         }}
                         getOptionLabel={(option) => option}
@@ -311,14 +243,14 @@ const Settings = () => {
                         label="# of Items"
                         type="number"
                         variant="filled"
-                        value={itemAmount}
-                        onChange={(e) => setItemAmount(e.target.value === "" ? 0 : parseInt(e.target.value))}
-                        inputProps={{ min: 0 }}
+                        value={botStateContext?.itemAmount}
+                        onChange={(e) => botStateContext?.setItemAmount(e.target.value === "" ? 1 : parseInt(e.target.value))}
+                        inputProps={{ min: 1 }}
                         helperText="Please select the amount of Items to farm"
                     />
 
                     {/* Select Summon(s) */}
-                    <Button variant="contained" onClick={handleModalOpen}>
+                    <Button variant="contained" onClick={handleModalOpen} disabled={botStateContext?.farmingMode === "Coop"}>
                         Select Summons
                     </Button>
                     <Modal className="modal" open={isModalOpen} onClose={handleModalClose}>
@@ -337,10 +269,10 @@ const Settings = () => {
                                 label="Group #"
                                 variant="filled"
                                 type="number"
-                                error={groupNumber < 1 || groupNumber > 7}
-                                defaultValue={1}
+                                error={botStateContext?.groupNumber < 1 || botStateContext?.groupNumber > 7}
+                                value={botStateContext?.groupNumber}
                                 inputProps={{ min: 1, max: 7 }}
-                                onChange={(e) => setGroupNumber(parseInt(e.target.value))}
+                                onChange={(e) => botStateContext?.setGroupNumber(parseInt(e.target.value))}
                                 helperText="From 1 to 7"
                                 className="textfield"
                             />
@@ -351,15 +283,17 @@ const Settings = () => {
                                 label="Party #"
                                 variant="filled"
                                 type="number"
-                                error={partyNumber < 1 || partyNumber > 6}
-                                defaultValue={1}
+                                error={botStateContext?.partyNumber < 1 || botStateContext?.partyNumber > 6}
+                                value={botStateContext?.partyNumber}
                                 inputProps={{ min: 1, max: 6 }}
-                                onChange={(e) => setPartyNumber(parseInt(e.target.value))}
+                                onChange={(e) => botStateContext?.setPartyNumber(parseInt(e.target.value))}
                                 helperText="From 1 to 6"
                                 className="textfield"
                             />
                         </Grid>
                     </Grid>
+
+                    <Divider />
 
                     {/* Debug Mode */}
                     <FormGroup>
@@ -367,12 +301,9 @@ const Settings = () => {
                             control={
                                 <Checkbox
                                     onChange={(e) => {
-                                        setDebugMode(e.target.checked)
-
-                                        // TODO: Create proper logic to enable the ready status.
-                                        botStateContext?.setReadyStatus(e.target.checked)
+                                        botStateContext?.setDebugMode(e.target.checked)
                                     }}
-                                    checked={debugMode}
+                                    checked={botStateContext?.debugMode}
                                 />
                             }
                             label="Enable Debug Mode"
