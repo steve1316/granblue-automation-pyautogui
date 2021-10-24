@@ -15,13 +15,17 @@ const NavBar = () => {
 
     // Warn the user about refreshing the page.
     window.onbeforeunload = function (e) {
-        if (!botStateContext?.refreshAlert) {
-            botStateContext?.setRefreshAlert(true)
+        if (botStateContext?.refreshAlert) {
             return false
-        } else {
-            return true
         }
     }
+
+    // This event listener will fire before the onbeforeunload. This is so the Snackbar can show itself before the window popup appears.
+    window.addEventListener("keydown", function (e) {
+        if (e.key === "F5") {
+            botStateContext?.setRefreshAlert(true)
+        }
+    })
 
     // Load settings from JSON file on program start.
     useEffect(() => {
@@ -62,7 +66,7 @@ const NavBar = () => {
         <AppBar position="fixed" id="header">
             <Snackbar
                 open={botStateContext?.refreshAlert}
-                anchorOrigin={{ vertical: "top", horizontal: "center" }}
+                anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                 autoHideDuration={10000}
                 onClose={() => botStateContext?.setRefreshAlert(false)}
                 onClick={() => botStateContext?.setRefreshAlert(false)}
