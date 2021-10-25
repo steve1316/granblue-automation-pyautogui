@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Autocomplete, Button, Checkbox, Divider, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
+import { Autocomplete, Avatar, Button, Checkbox, Divider, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
 import { Box, styled } from "@mui/system"
 import "./index.scss"
 import TransferList from "../../components/TransferList"
 import parse from "autosuggest-highlight/parse"
 import match from "autosuggest-highlight/match"
 import { BotStateContext } from "../../context/BotStateContext"
+import { Settings as SettingsIcon } from "@mui/icons-material"
+import { deepPurple } from "@mui/material/colors"
 
 import data from "../../data/data.json"
 
@@ -154,6 +156,12 @@ const Settings = () => {
                         </Grid>
                     </Grid>
 
+                    <Divider>
+                        <Avatar sx={{ bgcolor: deepPurple[500] }}>
+                            <SettingsIcon />
+                        </Avatar>
+                    </Divider>
+
                     {/* Select Farming Mode */}
                     <TextField
                         select
@@ -293,7 +301,11 @@ const Settings = () => {
                         </Grid>
                     </Grid>
 
-                    <Divider />
+                    <Divider>
+                        <Avatar sx={{ bgcolor: deepPurple[500] }}>
+                            <SettingsIcon />
+                        </Avatar>
+                    </Divider>
 
                     {/* Debug Mode */}
                     <FormGroup>
