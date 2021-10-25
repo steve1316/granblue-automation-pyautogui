@@ -13,17 +13,18 @@
     background: url("./bg.svg") no-repeat center center fixed;
     background-size: cover;
 
-    // Add some padding to prevent the wrapper getting cut off by the navbar.
-    @media screen and (max-height: 850px) {
-        padding-top: 250px;
-    }
+    // This assists in having the children evenly spaced out from the navbar and the bottom of the page.
+    padding: 25px 0 25px 0;
 }
 
 .wrapper {
-    padding: 25px;
-    margin-bottom: 50px;
     background-color: rgba(200, 200, 200, 1);
     border-radius: 50px;
+    padding: 25px;
+
+    // https://css-tricks.com/the-peculiar-magic-of-flexbox-and-auto-margins/
+    // Having the parent container be flex and setting the children have auto margins is what gets rid of the children expanding past the navbar.
+    margin: auto;
 }
 
 .modal {
