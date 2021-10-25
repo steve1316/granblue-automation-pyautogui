@@ -67,8 +67,6 @@ const Start = () => {
                     botStateContext?.setGroupNumber(decoded.groupNumber)
                     botStateContext?.setPartyNumber(decoded.partyNumber)
                     botStateContext?.setDebugMode(decoded.debugMode)
-
-                    handleReady()
                 })
                 .catch((err) => {
                     console.log(`Encountered read exception while loading settings from local JSON file: ${err}`)
@@ -76,6 +74,8 @@ const Start = () => {
         } catch (e) {
             console.log(`Encountered exception while loading settings from local JSON file: ${e}`)
         }
+
+        handleReady()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
