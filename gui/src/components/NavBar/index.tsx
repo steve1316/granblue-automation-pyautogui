@@ -1,16 +1,35 @@
-import { useState, useContext } from "react"
+import { useState, useContext, useEffect } from "react"
 import { Alert, AppBar, Button, ButtonGroup, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Snackbar, Toolbar, Typography } from "@mui/material"
 import { Close, CropSquare, HomeRounded, Menu, Minimize, Settings } from "@mui/icons-material"
 import { Link as RouterLink, useHistory } from "react-router-dom"
 import "./index.scss"
 import { appWindow } from "@tauri-apps/api/window"
+import * as app from "@tauri-apps/api/app"
 import { BotStateContext } from "../../context/BotStateContext"
 
 const NavBar = () => {
     const history = useHistory()
-    const [isDrawerOpen, setIsDrawerOpen] = useState(false)
+    const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
+    const [version, setVersion] = useState<string>("")
 
     const botStateContext = useContext(BotStateContext)
+
+    useEffect(() => {
+        getVersion()
+    }, [])
+
+    // Grab the program version.
+    const getVersion = async () => {
+        await app
+            .getVersion()
+            .then((version) => {
+                console.log("Version is ", version)
+                setVersion(version)
+            })
+            .catch(() => {
+                setVersion("failed to get version")
+            })
+    }
 
     // Warn the user about refreshing the page.
     window.onbeforeunload = function (e) {
@@ -74,7 +93,7 @@ const NavBar = () => {
                         history.push("/")
                     }}
                 >
-                    Granblue Automation
+                    Granblue Automation <Typography variant="caption">v{version}</Typography>
                 </Typography>
                 <div className="emptyDivider" />
                 {botStateContext?.readyStatus ? (
