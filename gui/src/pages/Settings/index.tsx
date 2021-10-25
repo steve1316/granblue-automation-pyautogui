@@ -138,7 +138,7 @@ const Settings = () => {
                             <TextField
                                 variant="filled"
                                 label="Combat Script"
-                                value={botStateContext?.combatScriptName}
+                                value={botStateContext?.combatScriptName ? botStateContext?.combatScriptName : ""}
                                 inputProps={{ readOnly: true }}
                                 InputLabelProps={{ shrink: true }}
                                 helperText="Selected Combat Script"
