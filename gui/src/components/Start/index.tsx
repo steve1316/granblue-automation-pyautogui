@@ -6,6 +6,7 @@ import { FsTextFileOption, readTextFile, writeFile } from "@tauri-apps/api/fs"
 
 const Start = () => {
     const [PID, setPID] = useState(0)
+    const [firstTimeSetup, setFirstTimeSetup] = useState(true)
 
     const messageLogContext = useContext(MessageLogContext)
     const botStateContext = useContext(BotStateContext)
@@ -20,6 +21,7 @@ const Start = () => {
     // Start or stop the bot.
     useEffect(() => {
         if (botStateContext?.startBot && !botStateContext?.isBotRunning) {
+            execute("powershell", "$path=Get-Location \nmd -Force $path/logs/") // Windows-specific
             handleStart()
         } else if (botStateContext?.stopBot && botStateContext?.isBotRunning) {
             if (PID !== 0) {
@@ -29,11 +31,30 @@ const Start = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [botStateContext?.startBot, botStateContext?.stopBot])
 
+    // Get the current date and time for the filename of the text log file.
+    const getCurrentDateAndTime = (separator = "") => {
+        let newDate = new Date()
+        let date = newDate.getDate()
+        let month = newDate.getMonth() + 1
+        let year = newDate.getFullYear()
+
+        let hour = newDate.getHours()
+        let minute = newDate.getMinutes()
+        let second = newDate.getSeconds()
+
+        return `${year}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${date} ${hour < 10 ? `0${hour}` : `${hour}`}${separator}${
+            minute < 10 ? `0${minute}` : `${minute}`
+        }${separator}${second < 10 ? `0${second}` : `${second}`}`
+    }
+
+    // Attempt to kill the bot process if it is still active.
     const handleStop = async () => {
-        console.log("Killing process now...")
-        const output = await new Command("powershell", `taskkill /F /PID ${PID}`).execute() // Windows specific
-        console.log(`Result of killing bot process using PID ${PID}: ${output.code}`)
-        setPID(0)
+        if (PID !== 0) {
+            console.log("Killing process now...")
+            const output = await new Command("powershell", `taskkill /F /PID ${PID}`).execute() // Windows specific
+            console.log(`Result of killing bot process using PID ${PID}: ${output.code}`)
+            setPID(0)
+        }
     }
 
     // Load settings from JSON file on program start.
@@ -55,6 +76,7 @@ const Start = () => {
                     }
 
                     const decoded: ParsedSettings = JSON.parse(settings)
+                    console.log(`Loaded settings from settings.json: ${JSON.stringify(decoded, null, 4)}`)
 
                     // Save the settings to state.
                     botStateContext?.setCombatScriptName(decoded.currentCombatScriptName)
@@ -70,49 +92,55 @@ const Start = () => {
                 })
                 .catch((err) => {
                     console.log(`Encountered read exception while loading settings from local JSON file: ${err}`)
+                    messageLogContext?.setMessageLog([...messageLogContext?.messageLog, `\nEncountered read exception while loading settings from local JSON file: ${err}`])
                 })
         } catch (e) {
             console.log(`Encountered exception while loading settings from local JSON file: ${e}`)
+            messageLogContext?.setMessageLog([...messageLogContext?.messageLog, `\nEncountered exception while loading settings from local JSON file: ${e}`])
         }
 
-        handleReady()
+        setFirstTimeSetup(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
     // Save current settings to JSON file.
     useEffect(() => {
-        try {
-            const settings = {
-                combatScriptName: botStateContext?.combatScriptName,
-                combatScript: botStateContext?.combatScript,
-                farmingMode: botStateContext?.farmingMode,
-                item: botStateContext?.item,
-                mission: botStateContext?.mission,
-                itemAmount: botStateContext?.itemAmount,
-                summons: botStateContext?.summons,
-                groupNumber: botStateContext?.groupNumber,
-                partyNumber: botStateContext?.partyNumber,
-                debugMode: botStateContext?.debugMode,
+        if (!firstTimeSetup) {
+            try {
+                const settings = {
+                    combatScriptName: botStateContext?.combatScriptName,
+                    combatScript: botStateContext?.combatScript,
+                    farmingMode: botStateContext?.farmingMode,
+                    item: botStateContext?.item,
+                    mission: botStateContext?.mission,
+                    itemAmount: botStateContext?.itemAmount,
+                    summons: botStateContext?.summons,
+                    groupNumber: botStateContext?.groupNumber,
+                    partyNumber: botStateContext?.partyNumber,
+                    debugMode: botStateContext?.debugMode,
+                }
+
+                // Stringify the contents and prepare for writing to the specified file.
+                const jsonString = JSON.stringify(settings, null, 4)
+                const settingsFile: FsTextFileOption = { path: "settings.json", contents: jsonString }
+                writeFile(settingsFile)
+                    .then(() => {
+                        console.log(`Successfully saved settings to settings.json`)
+                    })
+                    .catch((err) => {
+                        console.log(`Encountered write exception while saving settings to local JSON file: ${err}`)
+                        messageLogContext?.setMessageLog([
+                            ...messageLogContext?.messageLog,
+                            `\nEncountered write exception: ${err}\nThe current directory or parent directory might be write-protected`,
+                        ])
+                    })
+            } catch (e) {
+                console.log(`Encountered exception while saving settings to local JSON file:\n${e}`)
+                messageLogContext?.setMessageLog([...messageLogContext?.messageLog, `\nEncountered exception while saving settings to local JSON file:\n${e}`])
             }
-
-            // Stringify the contents and prepare for writing to the specified file.
-            const jsonString = JSON.stringify(settings, null, 4)
-            const settingsFile: FsTextFileOption = { path: "settings.json", contents: jsonString }
-
-            console.log(`Saved Settings: ${jsonString}`)
-
-            writeFile(settingsFile)
-                .then(() => {
-                    console.log(`Successfully saved settings to settings.json`)
-                })
-                .catch((err) => {
-                    console.log(`Encountered write exception: ${err}`)
-                })
-
-            handleReady()
-        } catch (e) {
-            console.log(`Encountered exception while saving settings to local JSON file:\n${e}`)
         }
+
+        handleReady()
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [
         botStateContext?.combatScriptName,
@@ -126,6 +154,33 @@ const Start = () => {
         botStateContext?.partyNumber,
         botStateContext?.debugMode,
     ])
+
+    // Save current message log to text file inside the /logs/ folder.
+    useEffect(() => {
+        if (messageLogContext?.messageLog.find((message) => message.includes("Child process finished with code")) !== undefined) {
+            // Save message log to text file.
+            const fileName = `log ${getCurrentDateAndTime("-")}`
+            var fileContent = ""
+            messageLogContext?.messageLog.forEach((message) => {
+                fileContent = fileContent.concat(message)
+            })
+            console.log(`Messages to save: ${messageLogContext?.messageLog}`)
+            const logFile: FsTextFileOption = { path: `logs/${fileName}.txt`, contents: fileContent }
+            writeFile(logFile)
+                .then(() => {
+                    console.log(`Successfully saved message log to ${fileName}.txt`)
+                })
+                .catch((err) => {
+                    console.log(`Encountered write exception: ${err}`)
+                })
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [messageLogContext?.messageLog])
+
+    // Async function to execute a Tauri API command.
+    const execute = async (program: string, args: string | string[]) => {
+        await new Command(program, args).execute()
+    }
 
     // Determine whether the bot is ready to start.
     const handleReady = () => {
@@ -150,22 +205,29 @@ const Start = () => {
     // Note: newlines are not sent over through stdout so they need to be manually added here in the frontend.
     const handleStart = async () => {
         // Construct the shell command using Tauri Command API.
+        // TODO: Replace with main.py to start the bot.
         const command = new Command("python", "backend/test.py")
 
         // Attach event listeners.
         command.on("close", (data) => {
-            let newLog = [...messageLogContext?.asyncMessages, `\nChild process finished with code ${data.code}`]
+            const fileName = `log ${getCurrentDateAndTime("-")}`
+            let newLog = [...messageLogContext?.asyncMessages, `\nWill save message log to ${fileName}.txt`, `\nChild process finished with code ${data.code}`]
             messageLogContext?.setAsyncMessages(newLog)
             botStateContext?.setIsBotRunning(false)
             botStateContext?.setStartBot(false)
             botStateContext?.setStopBot(false)
+
+            handleStop()
         })
         command.on("error", (error) => {
-            let newLog = [...messageLogContext?.asyncMessages, `\nChild process error: ${error}`]
+            const fileName = `log ${getCurrentDateAndTime("-")}`
+            let newLog = [...messageLogContext?.asyncMessages, `\nWill save message log to ${fileName}.txt`, `\nChild process error: ${error}`]
             messageLogContext?.setAsyncMessages(newLog)
             botStateContext?.setIsBotRunning(false)
             botStateContext?.setStartBot(false)
             botStateContext?.setStopBot(false)
+
+            handleStop()
         })
         command.stdout.on("data", (line) => {
             let newLog = [...messageLogContext?.asyncMessages, `\nChild process stdout: "${line}"`]
