@@ -91,11 +91,14 @@ const Start = () => {
                     botStateContext?.setDebugMode(decoded.debugMode)
                 })
                 .catch((err) => {
-                    console.log(`Encountered read exception while loading settings from local JSON file: ${err}`)
-                    messageLogContext?.setMessageLog([...messageLogContext?.messageLog, `\nEncountered read exception while loading settings from local JSON file: ${err}`])
+                    console.log(`Encountered read exception while loading settings from settings.json ${err}`)
+                    messageLogContext?.setMessageLog([
+                        ...messageLogContext?.messageLog,
+                        `\nEncountered read exception while loading settings from settings.json: ${err}\nThe settings.json file might not exist because this is your first time booting up this application.`,
+                    ])
                 })
         } catch (e) {
-            console.log(`Encountered exception while loading settings from local JSON file: ${e}`)
+            console.log(`Encountered exception while loading settings from settings.json: ${e}`)
             messageLogContext?.setMessageLog([...messageLogContext?.messageLog, `\nEncountered exception while loading settings from local JSON file: ${e}`])
         }
 
@@ -128,15 +131,15 @@ const Start = () => {
                         console.log(`Successfully saved settings to settings.json`)
                     })
                     .catch((err) => {
-                        console.log(`Encountered write exception while saving settings to local JSON file: ${err}`)
+                        console.log(`Encountered write exception while saving settings to settings.json: ${err}`)
                         messageLogContext?.setMessageLog([
                             ...messageLogContext?.messageLog,
-                            `\nEncountered write exception: ${err}\nThe current directory or parent directory might be write-protected`,
+                            `\nEncountered write exception while saving settings to settings.json: ${err}\nThe current directory or parent directory might be write-protected`,
                         ])
                     })
             } catch (e) {
-                console.log(`Encountered exception while saving settings to local JSON file:\n${e}`)
-                messageLogContext?.setMessageLog([...messageLogContext?.messageLog, `\nEncountered exception while saving settings to local JSON file:\n${e}`])
+                console.log(`Encountered exception while saving settings to settings.json:\n${e}`)
+                messageLogContext?.setMessageLog([...messageLogContext?.messageLog, `\nEncountered exception while saving settings to settings.json:\n${e}`])
             }
         }
 
