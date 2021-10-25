@@ -7,7 +7,8 @@
         "distDir": "../build",
         "devPath": "http://localhost:3000",
         "beforeDevCommand": "",
-        "beforeBuildCommand": ""
+        "beforeBuildCommand": "",
+        "withGlobalTauri": true
     },
     "tauri": {
         "bundle": {
@@ -15,7 +16,7 @@
             "targets": "all",
             "identifier": "com.steve1316.dev",
             "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
-            "resources": ["backend/test.py"],
+            "resources": ["backend/", "logs/"],
             "externalBin": [],
             "copyright": "",
             "category": "DeveloperTool",
