@@ -103,7 +103,6 @@ const Settings = () => {
         if (
             botStateContext?.farmingMode === "Quest" ||
             botStateContext?.farmingMode === "Special" ||
-            botStateContext?.farmingMode === "Coop" ||
             botStateContext?.farmingMode === "Raid" ||
             botStateContext?.farmingMode === "Event" ||
             botStateContext?.farmingMode === "Event (Token Drawboxes)" ||
@@ -119,10 +118,21 @@ const Settings = () => {
                     newMissionList = newMissionList.concat(obj[0])
                 }
             })
+        } else {
+            Object.entries(data["Coop"]).forEach((obj) => {
+                if (obj[1].items.indexOf(botStateContext?.item) !== -1) {
+                    newMissionList = newMissionList.concat(obj[0])
+                }
+            })
         }
 
         const filteredNewMissionList = Array.from(new Set(newMissionList))
         setMissionList(filteredNewMissionList)
+
+        // Reset selected Mission.
+        botStateContext?.setMission("")
+        botStateContext?.setMap("")
+
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [botStateContext?.item])
 
@@ -223,6 +233,29 @@ const Settings = () => {
                                 botStateContext?.setMission("")
                             } else {
                                 botStateContext?.setMission(value)
+                                if (
+                                    botStateContext?.farmingMode === "Quest" ||
+                                    botStateContext?.farmingMode === "Special" ||
+                                    botStateContext?.farmingMode === "Raid" ||
+                                    botStateContext?.farmingMode === "Event" ||
+                                    botStateContext?.farmingMode === "Event (Token Drawboxes)" ||
+                                    botStateContext?.farmingMode === "Rise of the Beasts" ||
+                                    botStateContext?.farmingMode === "Guild Wars" ||
+                                    botStateContext?.farmingMode === "Dread Barrage" ||
+                                    botStateContext?.farmingMode === "Proving Grounds" ||
+                                    botStateContext?.farmingMode === "Xeno Clash" ||
+                                    botStateContext?.farmingMode === "Arcarum"
+                                ) {
+                                    Object.entries(data[botStateContext?.farmingMode]).every((obj) => {
+                                        if (obj[0] === value) {
+                                            console.log(`MAP: ${obj[1].map}`)
+                                            botStateContext?.setMap(obj[1].map)
+                                            return false
+                                        } else {
+                                            return true
+                                        }
+                                    })
+                                }
                             }
                         }}
                         getOptionLabel={(option) => option}

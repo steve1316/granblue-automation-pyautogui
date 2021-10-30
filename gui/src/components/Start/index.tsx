@@ -68,6 +68,7 @@ const Start = () => {
                         farmingMode: string
                         item: string
                         mission: string
+                        map: string
                         itemAmount: number
                         summons: string[]
                         groupNumber: number
@@ -84,6 +85,7 @@ const Start = () => {
                     botStateContext?.setFarmingMode(decoded.farmingMode)
                     botStateContext?.setItem(decoded.item)
                     botStateContext?.setMission(decoded.mission)
+                    botStateContext?.setMap(decoded.map)
                     botStateContext?.setItemAmount(decoded.itemAmount)
                     botStateContext?.setSummons(decoded.summons)
                     botStateContext?.setGroupNumber(decoded.groupNumber)
@@ -116,6 +118,7 @@ const Start = () => {
                     farmingMode: botStateContext?.farmingMode,
                     item: botStateContext?.item,
                     mission: botStateContext?.mission,
+                    map: botStateContext?.map,
                     itemAmount: botStateContext?.itemAmount,
                     summons: botStateContext?.summons,
                     groupNumber: botStateContext?.groupNumber,
@@ -151,6 +154,7 @@ const Start = () => {
         botStateContext?.farmingMode,
         botStateContext?.item,
         botStateContext?.mission,
+        botStateContext?.map,
         botStateContext?.itemAmount,
         botStateContext?.summons,
         botStateContext?.groupNumber,

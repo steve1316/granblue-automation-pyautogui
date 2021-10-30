@@ -23,6 +23,8 @@ export interface IProviderProps {
     setItem: (item: string) => void
     mission: string
     setMission: (mission: string) => void
+    map: string
+    setMap: (map: string) => void
     itemAmount: number
     setItemAmount: (itemAmount: number) => void
     summons: string[]
@@ -50,6 +52,7 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
     const [farmingMode, setFarmingMode] = useState<string>("")
     const [item, setItem] = useState<string>("")
     const [mission, setMission] = useState<string>("")
+    const [map, setMap] = useState<string>("")
     const [itemAmount, setItemAmount] = useState<number>(1)
     const [summons, setSummons] = useState<string[]>([])
     const [groupNumber, setGroupNumber] = useState<number>(1)
@@ -77,6 +80,8 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
         setItem,
         mission,
         setMission,
+        map,
+        setMap,
         itemAmount,
         setItemAmount,
         summons,
