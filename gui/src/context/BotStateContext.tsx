@@ -15,8 +15,8 @@ export interface IProviderProps {
     // Game settings.
     combatScriptName: string
     setCombatScriptName: (combatScriptName: string) => void
-    combatScript: string
-    setCombatScript: (combatScript: string) => void
+    combatScript: string[]
+    setCombatScript: (combatScript: string[]) => void
     farmingMode: string
     setFarmingMode: (farmingMode: string) => void
     item: string
@@ -48,7 +48,7 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
     const [refreshAlert, setRefreshAlert] = useState<boolean>(false)
 
     const [combatScriptName, setCombatScriptName] = useState<string>("")
-    const [combatScript, setCombatScript] = useState<string>("")
+    const [combatScript, setCombatScript] = useState<string[]>([])
     const [farmingMode, setFarmingMode] = useState<string>("")
     const [item, setItem] = useState<string>("")
     const [mission, setMission] = useState<string>("")

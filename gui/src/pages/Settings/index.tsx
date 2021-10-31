@@ -54,11 +54,12 @@ const Settings = () => {
                 reader.onload = function (loadedEvent) {
                     if (loadedEvent.target?.result != null) {
                         console.log("Loaded Combat Script: ", loadedEvent.target?.result)
-                        botStateContext?.setCombatScript(loadedEvent.target?.result?.toString())
+                        const newCombatScript: string[] = (loadedEvent.target?.result).toString().split("\r\n")
+                        botStateContext?.setCombatScript(newCombatScript)
                     } else {
                         console.log("Failed to read combat script. Reseting to default empty combat script...")
                         botStateContext?.setCombatScriptName("")
-                        botStateContext?.setCombatScript("")
+                        botStateContext?.setCombatScript([])
                     }
                 }
 
