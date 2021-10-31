@@ -63,8 +63,8 @@ const Start = () => {
             readTextFile("settings.json")
                 .then((settings) => {
                     interface ParsedSettings {
-                        currentCombatScriptName: string
-                        currentCombatScript: string
+                        combatScriptName: string
+                        combatScript: string[]
                         farmingMode: string
                         item: string
                         mission: string
@@ -80,8 +80,8 @@ const Start = () => {
                     console.log(`Loaded settings from settings.json: ${JSON.stringify(decoded, null, 4)}`)
 
                     // Save the settings to state.
-                    botStateContext?.setCombatScriptName(decoded.currentCombatScriptName)
-                    botStateContext?.setCombatScript(decoded.currentCombatScript)
+                    botStateContext?.setCombatScriptName(decoded.combatScriptName)
+                    botStateContext?.setCombatScript(decoded.combatScript)
                     botStateContext?.setFarmingMode(decoded.farmingMode)
                     botStateContext?.setItem(decoded.item)
                     botStateContext?.setMission(decoded.mission)
