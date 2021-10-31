@@ -128,11 +128,6 @@ const Settings = () => {
 
         const filteredNewMissionList = Array.from(new Set(newMissionList))
         setMissionList(filteredNewMissionList)
-
-        // Reset selected Mission.
-        botStateContext?.setMission("")
-        botStateContext?.setMap("")
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [botStateContext?.item])
 
@@ -180,8 +175,11 @@ const Settings = () => {
                         value={botStateContext?.farmingMode}
                         onChange={(e) => {
                             botStateContext?.setFarmingMode(e.target.value)
+
+                            // Reset selected Item and Mission.
                             botStateContext?.setItem("")
                             botStateContext?.setMission("")
+                            botStateContext?.setMap("")
                         }}
                         helperText="Please select the Farming Mode"
                     >
@@ -202,6 +200,10 @@ const Settings = () => {
                             } else {
                                 botStateContext?.setItem(value)
                             }
+
+                            // Reset selected Mission.
+                            botStateContext?.setMission("")
+                            botStateContext?.setMap("")
                         }}
                         getOptionLabel={(option) => option}
                         isOptionEqualToValue={(option) => option !== ""}
