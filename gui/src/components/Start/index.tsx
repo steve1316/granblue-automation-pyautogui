@@ -60,7 +60,7 @@ const Start = () => {
     // Load settings from JSON file on program start.
     useEffect(() => {
         try {
-            readTextFile("settings.json")
+            readTextFile("backend/settings.json")
                 .then((settings) => {
                     interface ParsedSettings {
                         combatScriptName: string
@@ -91,6 +91,8 @@ const Start = () => {
                     botStateContext?.setGroupNumber(decoded.groupNumber)
                     botStateContext?.setPartyNumber(decoded.partyNumber)
                     botStateContext?.setDebugMode(decoded.debugMode)
+
+                    setFirstTimeSetup(false)
                 })
                 .catch((err) => {
                     console.log(`Encountered read exception while loading settings from settings.json ${err}`)
@@ -103,8 +105,6 @@ const Start = () => {
             console.log(`Encountered exception while loading settings from settings.json: ${e}`)
             messageLogContext?.setMessageLog([...messageLogContext?.messageLog, `\nEncountered exception while loading settings from local JSON file: ${e}`])
         }
-
-        setFirstTimeSetup(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -128,7 +128,7 @@ const Start = () => {
 
                 // Stringify the contents and prepare for writing to the specified file.
                 const jsonString = JSON.stringify(settings, null, 4)
-                const settingsFile: FsTextFileOption = { path: "settings.json", contents: jsonString }
+                const settingsFile: FsTextFileOption = { path: "backend/settings.json", contents: jsonString }
                 writeFile(settingsFile)
                     .then(() => {
                         console.log(`Successfully saved settings to settings.json`)
