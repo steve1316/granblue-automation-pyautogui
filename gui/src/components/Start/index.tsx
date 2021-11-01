@@ -239,7 +239,7 @@ const Start = () => {
     const handleStart = async () => {
         // Construct the shell command using Tauri Command API.
         // TODO: Replace with main.py to start the bot.
-        const command = new Command("python", "backend/test.py")
+        const command = new Command("python", "backend/main.py")
 
         // Attach event listeners.
         command.on("close", (data) => {
@@ -263,11 +263,11 @@ const Start = () => {
             handleStop()
         })
         command.stdout.on("data", (line) => {
-            let newLog = [...messageLogContext?.asyncMessages, `\nChild process stdout: "${line}"`]
+            let newLog = [...messageLogContext?.asyncMessages, `\n${line}`]
             messageLogContext?.setAsyncMessages(newLog)
         })
         command.stderr.on("data", (line) => {
-            let newLog = [...messageLogContext?.asyncMessages, `\nChild process stderr: "${line}"`]
+            let newLog = [...messageLogContext?.asyncMessages, `\n${line}`]
             messageLogContext?.setAsyncMessages(newLog)
         })
 
