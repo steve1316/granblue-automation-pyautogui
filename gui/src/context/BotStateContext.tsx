@@ -29,6 +29,8 @@ export interface IProviderProps {
     setItemAmount: (itemAmount: number) => void
     summons: string[]
     setSummons: (summons: string[]) => void
+    summonElements: string[]
+    setSummonElements: (summonElements: string[]) => void
     groupNumber: number
     setGroupNumber: (groupNumber: number) => void
     partyNumber: number
@@ -55,6 +57,7 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
     const [map, setMap] = useState<string>("")
     const [itemAmount, setItemAmount] = useState<number>(1)
     const [summons, setSummons] = useState<string[]>([])
+    const [summonElements, setSummonElements] = useState<string[]>([])
     const [groupNumber, setGroupNumber] = useState<number>(1)
     const [partyNumber, setPartyNumber] = useState<number>(1)
     const [debugMode, setDebugMode] = useState<boolean>(false)
@@ -86,6 +89,8 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
         setItemAmount,
         summons,
         setSummons,
+        summonElements,
+        setSummonElements,
         groupNumber,
         setGroupNumber,
         partyNumber,

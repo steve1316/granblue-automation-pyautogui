@@ -63,6 +63,8 @@ const TransferList = () => {
             // Save selected summons to settings.
             botStateContext?.setSummons(newRightList)
         }
+
+        botStateContext?.setSummonElements([])
     }
 
     const customList = (items: string[], isLeftList: boolean) => (

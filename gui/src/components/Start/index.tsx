@@ -4,6 +4,8 @@ import { MessageLogContext } from "../../context/MessageLogContext"
 import { BotStateContext } from "../../context/BotStateContext"
 import { FsTextFileOption, readTextFile, writeFile } from "@tauri-apps/api/fs"
 
+import summonData from "../../data/summons.json"
+
 const Start = () => {
     const [PID, setPID] = useState(0)
     const [firstTimeSetup, setFirstTimeSetup] = useState(true)
@@ -50,9 +52,9 @@ const Start = () => {
     // Attempt to kill the bot process if it is still active.
     const handleStop = async () => {
         if (PID !== 0) {
-            console.log("Killing process now...")
-            const output = await new Command("powershell", `taskkill /F /PID ${PID}`).execute() // Windows specific
-            console.log(`Result of killing bot process using PID ${PID}: ${output.code}`)
+            console.log("Killing process tree now...")
+            const output = await new Command("powershell", `taskkill /F /T /PID ${PID}`).execute() // Windows specific
+            console.log(`Result of killing bot process using PID ${PID}: \n${output.stdout}`)
             setPID(0)
         }
     }
@@ -71,6 +73,7 @@ const Start = () => {
                         map: string
                         itemAmount: number
                         summons: string[]
+                        summonElements: string[]
                         groupNumber: number
                         partyNumber: number
                         debugMode: boolean
@@ -88,11 +91,10 @@ const Start = () => {
                     botStateContext?.setMap(decoded.map)
                     botStateContext?.setItemAmount(decoded.itemAmount)
                     botStateContext?.setSummons(decoded.summons)
+                    botStateContext?.setSummonElements(decoded.summonElements)
                     botStateContext?.setGroupNumber(decoded.groupNumber)
                     botStateContext?.setPartyNumber(decoded.partyNumber)
                     botStateContext?.setDebugMode(decoded.debugMode)
-
-                    setFirstTimeSetup(false)
                 })
                 .catch((err) => {
                     console.log(`Encountered read exception while loading settings from settings.json ${err}`)
@@ -105,6 +107,8 @@ const Start = () => {
             console.log(`Encountered exception while loading settings from settings.json: ${e}`)
             messageLogContext?.setMessageLog([...messageLogContext?.messageLog, `\nEncountered exception while loading settings from local JSON file: ${e}`])
         }
+
+        setFirstTimeSetup(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -112,6 +116,27 @@ const Start = () => {
     useEffect(() => {
         if (!firstTimeSetup) {
             try {
+                var newSummonElementsList: string[] = botStateContext?.summonElements
+                botStateContext?.summons.forEach((summon) => {
+                    if (summonData.Fire.summons.indexOf(summon) !== -1) {
+                        newSummonElementsList = newSummonElementsList.concat("Fire")
+                    } else if (summonData.Water.summons.indexOf(summon) !== -1) {
+                        newSummonElementsList = newSummonElementsList.concat("Water")
+                    } else if (summonData.Earth.summons.indexOf(summon) !== -1) {
+                        newSummonElementsList = newSummonElementsList.concat("Earth")
+                    } else if (summonData.Wind.summons.indexOf(summon) !== -1) {
+                        newSummonElementsList = newSummonElementsList.concat("Wind")
+                    } else if (summonData.Light.summons.indexOf(summon) !== -1) {
+                        newSummonElementsList = newSummonElementsList.concat("Light")
+                    } else if (summonData.Dark.summons.indexOf(summon) !== -1) {
+                        newSummonElementsList = newSummonElementsList.concat("Dark")
+                    } else if (summonData.Misc.summons.indexOf(summon) !== -1) {
+                        newSummonElementsList = newSummonElementsList.concat("Misc")
+                    }
+                })
+
+                botStateContext?.setSummonElements(newSummonElementsList)
+
                 const settings = {
                     combatScriptName: botStateContext?.combatScriptName,
                     combatScript: botStateContext?.combatScript,
@@ -121,6 +146,7 @@ const Start = () => {
                     map: botStateContext?.map,
                     itemAmount: botStateContext?.itemAmount,
                     summons: botStateContext?.summons,
+                    summonElements: newSummonElementsList,
                     groupNumber: botStateContext?.groupNumber,
                     partyNumber: botStateContext?.partyNumber,
                     debugMode: botStateContext?.debugMode,
