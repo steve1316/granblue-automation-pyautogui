@@ -251,7 +251,6 @@ const Settings = () => {
                                 ) {
                                     Object.entries(data[botStateContext?.farmingMode]).every((obj) => {
                                         if (obj[0] === value) {
-                                            console.log(`MAP: ${obj[1].map}`)
                                             botStateContext?.setMap(obj[1].map)
                                             return false
                                         } else {
