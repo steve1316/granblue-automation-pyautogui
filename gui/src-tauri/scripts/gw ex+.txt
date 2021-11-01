@@ -1,0 +1,4 @@
+Turn 1:
+character1.useskill(1).useskill(2).useskill(3).useskill(4)
+quicksummon
+end

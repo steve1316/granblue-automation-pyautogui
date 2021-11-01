@@ -4,6 +4,9 @@ import discord
 from discord import LoginFailure
 from discord.ext.tasks import loop
 
+from utils.settings import Settings
+from utils.message_log import MessageLog
+
 
 class MyClient:
     """
@@ -35,7 +38,8 @@ class MyClient:
         """
         if self.user is not None and not self.queue.empty():
             message: str = self.queue.get()
-            print(f"[DISCORD] Acquired message to send via Discord DM: {message}")
+            if Settings.debug_mode:
+                MessageLog.print_message(f"[DISCORD] Acquired message to send via Discord DM: {message}")
             await self.user.send(content = message)
 
     @print_status.before_loop
@@ -45,16 +49,16 @@ class MyClient:
         Returns:
             None
         """
-        print("\n[DISCORD] Waiting for connection to Discord API...")
+        MessageLog.print_message("\n[DISCORD] Waiting for connection to Discord API...")
         await self.bot.wait_until_ready()
-        print("[DISCORD] Successful connection to Discord API")
+        MessageLog.print_message("[DISCORD] Successful connection to Discord API")
         self.queue.put(f"```diff\n+ Successful connection to Discord API for Granblue Automation\n```")
 
         try:
             self.user = await self.bot.fetch_user(self.user_id)
-            print(f"[DISCORD] Found user: {self.user.name}")
+            MessageLog.print_message(f"[DISCORD] Found user: {self.user.name}")
         except discord.errors.NotFound:
-            print("[DISCORD] Failed to find user.\n")
+            MessageLog.print_message("[DISCORD] Failed to find user.\n")
 
 
 def start_now(token: str, user_id: int, queue: multiprocessing.Queue):
@@ -68,4 +72,4 @@ def start_now(token: str, user_id: int, queue: multiprocessing.Queue):
     try:
         client.run(token)
     except LoginFailure:
-        print("\n[DISCORD] Failed to connect to Discord API. Please double check your token.\n")
+        MessageLog.print_message("\n[DISCORD] Failed to connect to Discord API. Please double check your token.\n")

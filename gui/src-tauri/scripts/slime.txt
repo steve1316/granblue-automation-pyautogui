@@ -1,0 +1,9 @@
+turn 1:
+character1.useskill(1)
+back
+end
+
+turn 2:
+character4.useskill(3)
+back
+end

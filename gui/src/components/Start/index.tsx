@@ -244,7 +244,7 @@ const Start = () => {
         // Attach event listeners.
         command.on("close", (data) => {
             const fileName = `log ${getCurrentDateAndTime("-")}`
-            let newLog = [...messageLogContext?.asyncMessages, `\nWill save message log to ${fileName}.txt`, `\nChild process finished with code ${data.code}`]
+            let newLog = [...messageLogContext?.asyncMessages, `\n\nWill save message log to ${fileName}.txt`, `\nChild process finished with code ${data.code}`]
             messageLogContext?.setAsyncMessages(newLog)
             botStateContext?.setIsBotRunning(false)
             botStateContext?.setStartBot(false)
@@ -254,7 +254,7 @@ const Start = () => {
         })
         command.on("error", (error) => {
             const fileName = `log ${getCurrentDateAndTime("-")}`
-            let newLog = [...messageLogContext?.asyncMessages, `\nWill save message log to ${fileName}.txt`, `\nChild process error: ${error}`]
+            let newLog = [...messageLogContext?.asyncMessages, `\n\nWill save message log to ${fileName}.txt`, `\nChild process error: ${error}`]
             messageLogContext?.setAsyncMessages(newLog)
             botStateContext?.setIsBotRunning(false)
             botStateContext?.setStartBot(false)
