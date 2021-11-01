@@ -191,13 +191,13 @@ const Start = () => {
 
     // Determine whether the bot is ready to start.
     const handleReady = () => {
-        if (botStateContext?.farmingMode !== "Coop" && botStateContext?.farmingMode !== "") {
+        if (botStateContext?.farmingMode !== "Coop" && botStateContext?.farmingMode !== "Arcarum" && botStateContext?.farmingMode !== "") {
             if (botStateContext?.item !== "" && botStateContext?.mission !== "" && botStateContext?.summons.length !== 0) {
                 botStateContext?.setReadyStatus(true)
             } else {
                 botStateContext?.setReadyStatus(false)
             }
-        } else if (botStateContext?.farmingMode === "Coop") {
+        } else if (botStateContext?.farmingMode === "Coop" || botStateContext?.farmingMode === "Arcarum") {
             if (botStateContext?.item !== "" && botStateContext?.mission !== "") {
                 botStateContext?.setReadyStatus(true)
             } else {

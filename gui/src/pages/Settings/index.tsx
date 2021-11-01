@@ -294,7 +294,7 @@ const Settings = () => {
                     />
 
                     {/* Select Summon(s) */}
-                    <Button variant="contained" onClick={handleModalOpen} disabled={botStateContext?.farmingMode === "Coop"}>
+                    <Button variant="contained" onClick={handleModalOpen} disabled={botStateContext?.farmingMode === "Coop" || botStateContext?.farmingMode === "Arcarum"}>
                         Select Summons
                     </Button>
                     <Modal className="modal" open={isModalOpen} onClose={handleModalClose}>
