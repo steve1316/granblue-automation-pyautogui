@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from "react"
 import { Alert, AppBar, Button, ButtonGroup, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Snackbar, Toolbar, Typography } from "@mui/material"
-import { Close, CropSquare, HomeRounded, Menu, Minimize, Settings } from "@mui/icons-material"
+import { Close, CropSquare, HomeRounded, Menu, Minimize, Settings, SettingsSuggest } from "@mui/icons-material"
 import { Link as RouterLink, useHistory } from "react-router-dom"
 import "./index.scss"
 import { appWindow } from "@tauri-apps/api/window"
@@ -81,6 +81,15 @@ const NavBar = () => {
                                     <Settings />
                                 </ListItemIcon>
                                 <ListItemText primary="Settings" />
+                            </ListItem>
+                            <Divider />
+                        </RouterLink>
+                        <RouterLink to="/extrasettings" className="link">
+                            <ListItem button key="extrasettings">
+                                <ListItemIcon>
+                                    <SettingsSuggest />
+                                </ListItemIcon>
+                                <ListItemText primary="Extra Settings" />
                             </ListItem>
                             <Divider />
                         </RouterLink>

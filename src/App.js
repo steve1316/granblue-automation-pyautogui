@@ -5,6 +5,7 @@ import Settings from "./pages/Settings"
 import { BotStateProvider } from "./context/BotStateContext"
 import { MessageLogProvider } from "./context/MessageLogContext"
 import Start from "./components/Start"
+import ExtraSettings from "./pages/ExtraSettings"
 
 function App() {
     return (
@@ -19,6 +20,9 @@ function App() {
                         </Route>
                         <Route path="/settings" exact>
                             <Settings />
+                        </Route>
+                        <Route path="/extrasettings" exact>
+                            <ExtraSettings />
                         </Route>
                     </Switch>
                 </MessageLogProvider>
