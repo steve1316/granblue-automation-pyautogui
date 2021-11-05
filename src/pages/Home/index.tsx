@@ -1,9 +1,9 @@
-import { useContext, useRef, useEffect } from "react"
 import { Button, Fade, Stack } from "@mui/material"
 import { Box } from "@mui/system"
-import "./index.scss"
-import { MessageLogContext } from "../../context/MessageLogContext"
+import { useContext, useEffect, useRef } from "react"
 import { BotStateContext } from "../../context/BotStateContext"
+import { MessageLogContext } from "../../context/MessageLogContext"
+import "./index.scss"
 
 const Home = () => {
     const botStateContext = useContext(BotStateContext)

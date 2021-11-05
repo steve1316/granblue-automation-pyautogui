@@ -1,10 +1,10 @@
+import { Icon as Iconify } from "@iconify/react"
 import { Speed } from "@mui/icons-material"
 import { Button, Checkbox, Divider, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, InputAdornment, Stack, TextField, Typography } from "@mui/material"
 import { Box } from "@mui/system"
-import { Icon as Iconify } from "@iconify/react"
-import "./index.scss"
 import { useContext } from "react"
 import { BotStateContext } from "../../context/BotStateContext"
+import "./index.scss"
 
 const ExtraSettings = () => {
     const bot = useContext(BotStateContext)

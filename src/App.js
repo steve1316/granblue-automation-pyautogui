@@ -1,11 +1,11 @@
-import Home from "./pages/Home"
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom"
 import NavBar from "./components/NavBar"
-import Settings from "./pages/Settings"
+import Start from "./components/Start"
 import { BotStateProvider } from "./context/BotStateContext"
 import { MessageLogProvider } from "./context/MessageLogContext"
-import Start from "./components/Start"
 import ExtraSettings from "./pages/ExtraSettings"
+import Home from "./pages/Home"
+import Settings from "./pages/Settings"
 
 function App() {
     return (

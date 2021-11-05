@@ -1,11 +1,11 @@
-import { useState, useContext, useEffect } from "react"
-import { Alert, AppBar, Button, ButtonGroup, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Snackbar, Toolbar, Typography } from "@mui/material"
 import { Close, CropSquare, HomeRounded, Menu, Minimize, Settings, SettingsSuggest } from "@mui/icons-material"
-import { Link as RouterLink, useHistory } from "react-router-dom"
-import "./index.scss"
-import { appWindow } from "@tauri-apps/api/window"
+import { Alert, AppBar, Button, ButtonGroup, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Snackbar, Toolbar, Typography } from "@mui/material"
 import * as app from "@tauri-apps/api/app"
+import { appWindow } from "@tauri-apps/api/window"
+import { useContext, useEffect, useState } from "react"
+import { Link as RouterLink, useHistory } from "react-router-dom"
 import { BotStateContext } from "../../context/BotStateContext"
+import "./index.scss"
 
 const NavBar = () => {
     const history = useHistory()

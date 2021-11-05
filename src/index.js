@@ -1,8 +1,8 @@
+import { invoke } from "@tauri-apps/api/tauri"
 import React from "react"
 import ReactDOM from "react-dom"
-import "./index.scss"
 import App from "./App"
-import { invoke } from "@tauri-apps/api/tauri"
+import "./index.scss"
 
 // This will wait for the window to load before closing the splashscreen using the following rust command.
 document.addEventListener("DOMContentLoaded", () => {
