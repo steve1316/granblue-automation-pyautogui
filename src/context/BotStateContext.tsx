@@ -37,6 +37,44 @@ export interface IProviderProps {
     setPartyNumber: (partyNumber: number) => void
     debugMode: boolean
     setDebugMode: (debugMode: boolean) => void
+
+    // Extra Settings.
+    twitterAPIKey: string
+    setTwitterAPIKey: (twitterAPIKey: string) => void
+    twitterAPIKeySecret: string
+    setTwitterAPIKeySecret: (twitterAPIKeySecret: string) => void
+    twitterAccessToken: string
+    setTwitterAccessToken: (twitterAccessToken: string) => void
+    twitterAccessTokenSecret: string
+    setTwitterAccessTokenSecret: (twitterAccessTokenSecret: string) => void
+    enableTwitterStreamAPI: boolean
+    setEnableTwitterStreamAPI: (enableTwitterStreamAPI: boolean) => void
+    enableDiscordNotifications: boolean
+    setEnableDiscordNotifications: (enableDiscordNotifications: boolean) => void
+    discordToken: string
+    setDiscordToken: (discordToken: string) => void
+    discordUserID: string
+    setDiscordUserID: (userID: string) => void
+    enableAutoRestore: boolean
+    setEnableAutoRestore: (enableAutoRestore: boolean) => void
+    enableFullElixir: boolean
+    setEnableFullElixir: (enableFullElixir: boolean) => void
+    enableSoulBalm: boolean
+    setEnableSoulBalm: (enableSoulBalm: boolean) => void
+    enableBezierCurveMouseMovement: boolean
+    setEnableBezierCurveMouseMovement: (enableSoulBalm: boolean) => void
+    mouseSpeed: number
+    setMouseSpeed: (enableSoulBalm: number) => void
+    enableDelayBetweenRuns: boolean
+    setEnableDelayBetweenRuns: (enableDelayBetweenRuns: boolean) => void
+    delayBetweenRuns: number
+    setDelayBetweenRuns: (delayBetweenRuns: number) => void
+    enableRandomizedDelayBetweenRuns: boolean
+    setEnableRandomizedDelayBetweenRuns: (enableRandomizedDelayBetweenRuns: boolean) => void
+    delayBetweenRunsLowerBound: number
+    setDelayBetweenRunsLowerBound: (delayBetweenRunsLowerBound: number) => void
+    delayBetweenRunsUpperBound: number
+    setDelayBetweenRunsUpperBound: (delayBetweenRunsUpperBound: number) => void
 }
 
 export const BotStateContext = createContext<IProviderProps>({} as IProviderProps)
@@ -49,6 +87,7 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
     const [stopBot, setStopBot] = useState<boolean>(false)
     const [refreshAlert, setRefreshAlert] = useState<boolean>(false)
 
+    // Game settings.
     const [combatScriptName, setCombatScriptName] = useState<string>("")
     const [combatScript, setCombatScript] = useState<string[]>([])
     const [farmingMode, setFarmingMode] = useState<string>("")
@@ -62,6 +101,26 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
     const [partyNumber, setPartyNumber] = useState<number>(1)
     const [debugMode, setDebugMode] = useState<boolean>(false)
 
+    // Extra Settings.
+    const [twitterAPIKey, setTwitterAPIKey] = useState<string>("")
+    const [twitterAPIKeySecret, setTwitterAPIKeySecret] = useState<string>("")
+    const [twitterAccessToken, setTwitterAccessToken] = useState<string>("")
+    const [twitterAccessTokenSecret, setTwitterAccessTokenSecret] = useState<string>("")
+    const [enableTwitterStreamAPI, setEnableTwitterStreamAPI] = useState<boolean>(true)
+    const [enableDiscordNotifications, setEnableDiscordNotifications] = useState<boolean>(false)
+    const [discordToken, setDiscordToken] = useState<string>("")
+    const [discordUserID, setDiscordUserID] = useState<string>("")
+    const [enableAutoRestore, setEnableAutoRestore] = useState<boolean>(false)
+    const [enableFullElixir, setEnableFullElixir] = useState<boolean>(false)
+    const [enableSoulBalm, setEnableSoulBalm] = useState<boolean>(false)
+    const [enableBezierCurveMouseMovement, setEnableBezierCurveMouseMovement] = useState<boolean>(false)
+    const [mouseSpeed, setMouseSpeed] = useState<number>(0.2)
+    const [enableDelayBetweenRuns, setEnableDelayBetweenRuns] = useState<boolean>(false)
+    const [delayBetweenRuns, setDelayBetweenRuns] = useState<number>(15)
+    const [enableRandomizedDelayBetweenRuns, setEnableRandomizedDelayBetweenRuns] = useState<boolean>(false)
+    const [delayBetweenRunsLowerBound, setDelayBetweenRunsLowerBound] = useState<number>(15)
+    const [delayBetweenRunsUpperBound, setDelayBetweenRunsUpperBound] = useState<number>(60)
+
     const providerValues: IProviderProps = {
         readyStatus,
         setReadyStatus,
@@ -73,6 +132,8 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
         setStopBot,
         refreshAlert,
         setRefreshAlert,
+
+        // Game Settings.
         combatScriptName,
         setCombatScriptName,
         combatScript,
@@ -97,6 +158,44 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
         setPartyNumber,
         debugMode,
         setDebugMode,
+
+        // Extra Settings.
+        twitterAPIKey,
+        setTwitterAPIKey,
+        twitterAPIKeySecret,
+        setTwitterAPIKeySecret,
+        twitterAccessToken,
+        setTwitterAccessToken,
+        twitterAccessTokenSecret,
+        setTwitterAccessTokenSecret,
+        enableTwitterStreamAPI,
+        setEnableTwitterStreamAPI,
+        enableDiscordNotifications,
+        setEnableDiscordNotifications,
+        discordToken,
+        setDiscordToken,
+        discordUserID,
+        setDiscordUserID,
+        enableAutoRestore,
+        setEnableAutoRestore,
+        enableFullElixir,
+        setEnableFullElixir,
+        enableSoulBalm,
+        setEnableSoulBalm,
+        enableBezierCurveMouseMovement,
+        setEnableBezierCurveMouseMovement,
+        mouseSpeed,
+        setMouseSpeed,
+        enableDelayBetweenRuns,
+        setEnableDelayBetweenRuns,
+        delayBetweenRuns,
+        setDelayBetweenRuns,
+        enableRandomizedDelayBetweenRuns,
+        setEnableRandomizedDelayBetweenRuns,
+        delayBetweenRunsLowerBound,
+        setDelayBetweenRunsLowerBound,
+        delayBetweenRunsUpperBound,
+        setDelayBetweenRunsUpperBound,
     }
 
     return <BotStateContext.Provider value={providerValues}>{children}</BotStateContext.Provider>
