@@ -25,6 +25,8 @@
     // https://css-tricks.com/the-peculiar-magic-of-flexbox-and-auto-margins/
     // Having the parent container be flex and setting the children have auto margins is what gets rid of the children expanding past the navbar.
     margin: auto;
+
+    width: 35vw;
 }
 
 .supportSummonModal {
