@@ -47,8 +47,6 @@ export interface IProviderProps {
     setTwitterAccessToken: (twitterAccessToken: string) => void
     twitterAccessTokenSecret: string
     setTwitterAccessTokenSecret: (twitterAccessTokenSecret: string) => void
-    enableTwitterStreamAPI: boolean
-    setEnableTwitterStreamAPI: (enableTwitterStreamAPI: boolean) => void
     enableDiscordNotifications: boolean
     setEnableDiscordNotifications: (enableDiscordNotifications: boolean) => void
     discordToken: string
@@ -124,7 +122,6 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
     const [twitterAPIKeySecret, setTwitterAPIKeySecret] = useState<string>("")
     const [twitterAccessToken, setTwitterAccessToken] = useState<string>("")
     const [twitterAccessTokenSecret, setTwitterAccessTokenSecret] = useState<string>("")
-    const [enableTwitterStreamAPI, setEnableTwitterStreamAPI] = useState<boolean>(true)
     const [enableDiscordNotifications, setEnableDiscordNotifications] = useState<boolean>(false)
     const [discordToken, setDiscordToken] = useState<string>("")
     const [discordUserID, setDiscordUserID] = useState<string>("")
@@ -196,8 +193,6 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
         setTwitterAccessToken,
         twitterAccessTokenSecret,
         setTwitterAccessTokenSecret,
-        enableTwitterStreamAPI,
-        setEnableTwitterStreamAPI,
         enableDiscordNotifications,
         setEnableDiscordNotifications,
         discordToken,

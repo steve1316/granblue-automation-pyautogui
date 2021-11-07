@@ -65,14 +65,6 @@ const ExtraSettings = () => {
                     Please visit the wiki on the GitHub page for instructions on how to get these keys and tokens.
                 </Typography>
 
-                <FormGroup sx={{ paddingBottom: "16px" }}>
-                    <FormControlLabel
-                        control={<Checkbox checked={bot.enableTwitterStreamAPI} onChange={(e) => bot.setEnableTwitterStreamAPI(e.target.checked)} />}
-                        label="Enable usage of Twitter Stream API"
-                    />
-                    <FormHelperText>Enable usage of Twitter Stream API for Raid farming.</FormHelperText>
-                </FormGroup>
-
                 <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                     <Grid item xs={6}>
                         <TextField

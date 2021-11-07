@@ -81,7 +81,6 @@ const Start = () => {
                             apiKeySecret: string
                             accessToken: string
                             accessTokenSecret: string
-                            enableTwitterStreamAPI: boolean
                         }
                         discord: {
                             enableDiscordNotifications: boolean
@@ -136,7 +135,6 @@ const Start = () => {
                     botStateContext.setTwitterAPIKeySecret(decoded.twitter.apiKeySecret)
                     botStateContext.setTwitterAccessToken(decoded.twitter.accessToken)
                     botStateContext.setTwitterAccessTokenSecret(decoded.twitter.accessTokenSecret)
-                    botStateContext.setEnableTwitterStreamAPI(decoded.twitter.enableTwitterStreamAPI)
                     botStateContext.setEnableDiscordNotifications(decoded.discord.enableDiscordNotifications)
                     botStateContext.setDiscordToken(decoded.discord.discordToken)
                     botStateContext.setDiscordUserID(decoded.discord.discordUserID)
@@ -244,7 +242,6 @@ const Start = () => {
                         apiKeySecret: botStateContext.twitterAPIKeySecret,
                         accessToken: botStateContext.twitterAccessToken,
                         accessTokenSecret: botStateContext.twitterAccessTokenSecret,
-                        enableTwitterStreamAPI: botStateContext.enableTwitterStreamAPI,
                     },
                     discord: {
                         enableDiscordNotifications: botStateContext.enableDiscordNotifications,
@@ -315,7 +312,6 @@ const Start = () => {
         botStateContext.twitterAPIKeySecret,
         botStateContext.twitterAccessToken,
         botStateContext.twitterAccessTokenSecret,
-        botStateContext.enableTwitterStreamAPI,
         botStateContext.enableDiscordNotifications,
         botStateContext.discordToken,
         botStateContext.discordUserID,
