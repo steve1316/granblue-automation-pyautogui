@@ -1,6 +1,0 @@
-// This script will one-punch the raid on Turn 1 and then back out for the purposes of joining another one.
-
-Turn 1:
-	targetEnemy(2)
-	character1.useSkill(1).useSkill(2)
-end
