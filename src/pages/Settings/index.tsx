@@ -4,7 +4,7 @@ import { deepPurple } from "@mui/material/colors"
 import { Box, styled } from "@mui/system"
 import match from "autosuggest-highlight/match"
 import parse from "autosuggest-highlight/parse"
-import React, { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import TransferList from "../../components/TransferList"
 import { BotStateContext } from "../../context/BotStateContext"
 import data from "../../data/data.json"
@@ -21,6 +21,8 @@ const Settings = () => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
     const botStateContext = useContext(BotStateContext)
+
+    const inputRef = useRef<HTMLInputElement>(null)
 
     const farmingModes: string[] = [
         "Quest",
@@ -44,9 +46,10 @@ const Settings = () => {
             var file = files[0]
             if (file == null) {
                 // Reset the combat script selected if none was selected from the file picker dialog.
-                botStateContext?.setCombatScriptName("")
+                botStateContext.setCombatScriptName("")
+                botStateContext.setCombatScript([])
             } else {
-                botStateContext?.setCombatScriptName(file.name)
+                botStateContext.setCombatScriptName(file.name)
 
                 // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
                 var reader = new FileReader()
@@ -54,11 +57,11 @@ const Settings = () => {
                     if (loadedEvent.target?.result != null) {
                         console.log("Loaded Combat Script: ", loadedEvent.target?.result)
                         const newCombatScript: string[] = (loadedEvent.target?.result).toString().split("\r\n")
-                        botStateContext?.setCombatScript(newCombatScript)
+                        botStateContext.setCombatScript(newCombatScript)
                     } else {
                         console.log("Failed to read combat script. Reseting to default empty combat script...")
-                        botStateContext?.setCombatScriptName("")
-                        botStateContext?.setCombatScript([])
+                        botStateContext.setCombatScriptName("")
+                        botStateContext.setCombatScript([])
                     }
                 }
 
@@ -147,29 +150,22 @@ const Settings = () => {
 
     return (
         <Fade in={true}>
-            <Box className="container" id="settingsContainer">
-                <Stack spacing={2} className="wrapper">
-                    <Grid container spacing={4} justifyContent="center" alignItems="center">
-                        {/* Load Combat Script */}
-                        <Grid item md>
-                            <TextField
-                                variant="filled"
-                                label="Combat Script"
-                                value={botStateContext?.combatScriptName ? botStateContext?.combatScriptName : ""}
-                                inputProps={{ readOnly: true }}
-                                InputLabelProps={{ shrink: true }}
-                                helperText="Selected Combat Script"
-                            />
-                        </Grid>
-                        <Grid item xs>
-                            <label htmlFor="combat-script-loader">
-                                <Input accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadCombatScript(e)} />
-                                <Button variant="contained" component="span">
-                                    Load Combat Script
-                                </Button>
-                            </label>
-                        </Grid>
-                    </Grid>
+            <Box className="settingsContainer" id="settingsContainer">
+                <Stack spacing={2} className="settingsWrapper">
+                    {/* Load Combat Script */}
+                    <div>
+                        <Input ref={inputRef} accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadCombatScript(e)} />
+                        <TextField
+                            variant="filled"
+                            label="Combat Script"
+                            value={botStateContext.combatScriptName !== "" ? botStateContext.combatScriptName : "None Selected"}
+                            inputProps={{ readOnly: true }}
+                            InputLabelProps={{ shrink: true }}
+                            helperText="Select a Combat Script"
+                            onClick={() => inputRef.current?.click()}
+                            fullWidth
+                        />
+                    </div>
 
                     <Divider>
                         <Avatar sx={{ bgcolor: deepPurple[500] }}>
