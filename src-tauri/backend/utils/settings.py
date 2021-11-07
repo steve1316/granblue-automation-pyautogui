@@ -1,6 +1,7 @@
 import json
 import os
 import multiprocessing
+import sys
 from typing import List, Tuple
 
 from utils.message_log import MessageLog
@@ -12,7 +13,15 @@ class Settings:
     ######################################################
     # ################## settings.json ###################
     # Read from settings.json and populate the class variables.
-    _file = open(f"{os.getcwd()}/backend/settings.json")
+    try:
+        _file = open(f"{os.getcwd()}/backend/settings.json")
+    except FileNotFoundError:
+        try:
+            _file = open(f"{os.getcwd()}/settings.json")
+        except FileNotFoundError:
+            print("[ERROR] Failed to find settings.json. Exiting now...")
+            sys.exit(1)
+
     _data = json.load(_file)
 
     combat_script: List[str] = _data["combatScript"]

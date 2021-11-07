@@ -1,8 +1,11 @@
-import multiprocessing
-import os
 import unittest
 
+from utils.settings import Settings
+from utils.image_utils import ImageUtils
+from utils.mouse_utils import MouseUtils
+from bot.combat_mode import CombatMode
 from bot.game import Game
+from utils.twitter_room_finder import TwitterRoomFinder
 
 
 class Test(unittest.TestCase):
@@ -10,32 +13,80 @@ class Test(unittest.TestCase):
         super().__init__()
         self.game_object = bot
 
-    def test_quest_navigation1(self):
-        self.assertTrue(self.game_object.start_farming_mode())
+        self.old_settings = {
+            "item_name": Settings.item_name,
+            "farming_mode": Settings.farming_mode,
+            "map_name": Settings.map_name,
+            "mission_name": Settings.mission_name,
+            "item_amount": Settings.item_amount_to_farm
+        }
 
-    def test_special_navigation(self):
-        self.assertTrue(self.game_object.start_farming_mode())
+    def _reset_settings(self):
+        Settings.item_name = self.old_settings["item_name"]
+        Settings.farming_mode = self.old_settings["farming_mode"]
+        Settings.map_name = self.old_settings["map_name"]
+        Settings.mission_name = self.old_settings["mission_name"]
+        Settings.item_amount_to_farm = self.old_settings["item_amount"]
 
-    def test_raid_navigation(self):
-        self.assertTrue(self.game_object.start_farming_mode())
+    def test_quest(self):
+        Settings.item_name = "Rough Stone"
+        Settings.farming_mode = "Quest"
+        Settings.map_name = "Lumacie Archipelago"
+        Settings.mission_name = "The Fruit of Lumacie"
+        Settings.item_amount_to_farm = 1
 
-    def test_coop_navigation(self):
         self.assertTrue(self.game_object.start_farming_mode())
+        self._reset_settings()
+        return None
+
+    def test_special(self):
+        Settings.item_name = "EXP"
+        Settings.farming_mode = "Special"
+        Settings.map_name = "Shiny Slime Search!"
+        Settings.mission_name = "VH Slimy Slime Search!"
+        Settings.item_amount_to_farm = 1
+
+        self.assertTrue(self.game_object.start_farming_mode())
+        self._reset_settings()
+        return None
+
+    def test_raid(self):
+        Settings.item_name = "Grimnir Anima"
+        Settings.farming_mode = "Raid"
+        Settings.mission_name = "Lvl 120 Grimnir"
+        Settings.item_amount_to_farm = 1
+
+        self.assertTrue(self.game_object.start_farming_mode())
+        self._reset_settings()
+        return None
+
+    def test_coop(self):
+        Settings.item_name = "Grimnir Anima"
+        Settings.farming_mode = "Raid"
+        Settings.mission_name = "Lvl 120 Grimnir"
+        Settings.item_amount_to_farm = 1
+
+        self.assertTrue(self.game_object.start_farming_mode())
+        self._reset_settings()
+        return None
 
     def test_item_detection1(self):
-        self.assertTrue(self.game_object.image_tools.confirm_location("loot_collected"))
-        result = self.game_object.image_tools.find_farmed_items("Horseman's Plate", take_screenshot = False)
+        self.assertTrue(ImageUtils.confirm_location("loot_collected"))
+        result = ImageUtils.find_farmed_items("Horseman's Plate", take_screenshot = False)
         self.assertEqual(result, 3)
+        return None
 
     def test_item_detection2(self):
-        self.assertTrue(self.game_object.image_tools.confirm_location("loot_collected"))
-        result = self.game_object.image_tools.find_farmed_items("Wind Orb", take_screenshot = False)
+        self.assertTrue(ImageUtils.confirm_location("loot_collected"))
+        result = ImageUtils.find_farmed_items("Wind Orb", take_screenshot = False)
         self.assertEqual(result, 1)
+        return None
 
     def test_item_detection3(self):
-        self.assertTrue(self.game_object.image_tools.confirm_location("loot_collected"))
-        result = self.game_object.image_tools.find_farmed_items("Sagittarius Omega Anima", take_screenshot = False)
+        self.assertTrue(ImageUtils.confirm_location("loot_collected"))
+        result = ImageUtils.find_farmed_items("Sagittarius Omega Anima", take_screenshot = False)
         self.assertEqual(result, 4)
+        return None
 
     def test_twitter_functionality(self):
         self.game_object.wait(5)
@@ -43,7 +94,7 @@ class Test(unittest.TestCase):
         tries = 30
         room_codes = []
         while tries > 0:
-            code = self.game_object.room_finder.get_room_code()
+            code = TwitterRoomFinder.get_room_code()
             if code != "":
                 room_codes.append(code)
                 if len(room_codes) >= 5:
@@ -52,20 +103,21 @@ class Test(unittest.TestCase):
             tries -= 1
             self.game_object.wait(1)
 
-        self.game_object.room_finder.disconnect()
+        TwitterRoomFinder.disconnect()
         print(f"\nFound room codes: {room_codes}")
         self.assertGreaterEqual(len(room_codes), 5)
+        return None
 
     def test_combat_mode_old_lignoid(self):
         # Make sure the bot is at the Home screen and go to the Trial Battles screen.
         self.game_object.go_back_home(confirm_location_check = True)
-        self.game_object.mouse_tools.scroll_screen_from_home_button(-600)
+        MouseUtils.scroll_screen_from_home_button(-600)
         self.game_object.find_and_click_button("gameplay_extras")
 
         while self.game_object.find_and_click_button("trial_battles") is False:
-            self.game_object.mouse_tools.scroll_screen_from_home_button(-300)
+            MouseUtils.scroll_screen_from_home_button(-300)
 
-        self.assertTrue(self.game_object.image_tools.confirm_location("trial_battles"))
+        self.assertTrue(ImageUtils.confirm_location("trial_battles"))
         # Click on the "Old Lignoid" button.
         self.game_object.find_and_click_button("trial_battles_old_lignoid")
 
@@ -73,20 +125,26 @@ class Test(unittest.TestCase):
         self.game_object.find_and_click_button("play_round_button")
 
         # Now select the first Summon.
-        choose_a_summon_location = self.game_object.image_tools.find_button("choose_a_summon")
-        self.game_object.mouse_tools.move_and_click_point(choose_a_summon_location[0], choose_a_summon_location[1] + 187, "choose_a_summon")
+        choose_a_summon_location = ImageUtils.find_button("choose_a_summon")
+        MouseUtils.move_and_click_point(choose_a_summon_location[0], choose_a_summon_location[1] + 187, "choose_a_summon")
 
         # Now start the Old Lignoid Trial Battle right away and then wait a few seconds.
         self.game_object.find_and_click_button("party_selection_ok")
         self.game_object.wait(3)
 
-        if self.game_object.image_tools.confirm_location("trial_battles_description"):
+        if ImageUtils.confirm_location("trial_battles_description"):
             self.game_object.find_and_click_button("close")
 
-        os.chdir("tests/")
-
-        self.assertFalse(self.game_object.combat_mode.start_combat_mode(os.path.abspath("test_combat_mode.txt")))
-        self.assertTrue(self.game_object.image_tools.confirm_location("home"))
+        self.assertFalse(CombatMode.start_combat_mode(script_commands = ["Turn 1:",
+                                                                         "\tsummon(6)",
+                                                                         "\tcharacter1.useSkill(1)",
+                                                                         "end",
+                                                                         "",
+                                                                         "Turn 5:",
+                                                                         "\texit",
+                                                                         "end"]))
+        self.assertTrue(ImageUtils.confirm_location("home"))
+        return None
 
 
 if __name__ == "__main__":
@@ -123,17 +181,6 @@ if __name__ == "__main__":
         if option == 0:
             break
 
-        item_name = ""
-        amount = 1
-        mode = ""
-        map_name = ""
-        mission_name = ""
-        summon_element_list = ["Fire"]
-        summon_list = ["Colossus Omega"]
-        group = 1
-        party = 1
-        combat_script = ""
-
         if check:
             if option == 1:
                 item_name = "Rough Stone"
@@ -163,20 +210,17 @@ if __name__ == "__main__":
                 mission_name = "Lvl 120 Avatar"
 
             try:
-                game = Game(queue = multiprocessing.Queue(), discord_queue = multiprocessing.Queue(), is_bot_running = multiprocessing.Value("i", 0), item_name = item_name,
-                            item_amount_to_farm = amount,
-                            farming_mode = mode, map_name = map_name, mission_name = mission_name, summon_element_list = summon_element_list, summon_list = summon_list, group_number = group,
-                            party_number = party, combat_script = combat_script)
+                game = Game()
                 test = Test(game)
 
                 if option == 1:
-                    test.test_quest_navigation1()
+                    test.test_quest()
                 elif option == 2:
-                    test.test_special_navigation()
+                    test.test_special()
                 elif option == 3:
-                    test.test_raid_navigation()
+                    test.test_raid()
                 elif option == 4:
-                    test.test_coop_navigation()
+                    test.test_coop()
                 elif option == 5:
                     input("Please have the Quest Results screen visible for loot detection to work. Press any button to proceed...")
                     test.test_item_detection1()
