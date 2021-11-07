@@ -1,5 +1,4 @@
 import random
-import traceback
 
 import pyautogui
 import pyclick
@@ -33,20 +32,17 @@ class MouseUtils:
         Returns:
             None
         """
-        try:
-            if Settings.enable_bezier_curve_mouse_movement:
-                # HumanClicker only accepts int as the mouse speed.
-                if int(custom_mouse_speed) < 1:
-                    custom_mouse_speed = 1
+        if Settings.enable_bezier_curve_mouse_movement:
+            # HumanClicker only accepts int as the mouse speed.
+            if int(custom_mouse_speed) < 1:
+                custom_mouse_speed = 1
 
-                MouseUtils._hc.move((x, y), duration = custom_mouse_speed, humanCurve = pyclick.HumanCurve(pyautogui.position(), (x, y)))
-            else:
-                if custom_mouse_speed <= 0.0:
-                    custom_mouse_speed = Settings.custom_mouse_speed
+            MouseUtils._hc.move((x, y), duration = custom_mouse_speed, humanCurve = pyclick.HumanCurve(pyautogui.position(), (x, y)))
+        else:
+            if custom_mouse_speed <= 0.0:
+                custom_mouse_speed = Settings.custom_mouse_speed
 
-                pyautogui.moveTo(x, y, duration = custom_mouse_speed, tween = pyautogui.easeInOutQuad)
-        except Exception:
-            MessageLog.print_message(f"\n[ERROR] Bot encountered exception attempting to move the mouse cursor to Point({x}, {y}): \n{traceback.format_exc()}")
+            pyautogui.moveTo(x, y, duration = custom_mouse_speed, tween = pyautogui.easeInOutQuad)
 
         return None
 
@@ -64,35 +60,32 @@ class MouseUtils:
         Returns:
             None
         """
-        try:
-            if Settings.debug_mode:
-                MessageLog.print_message(f"[DEBUG] Old coordinates: ({x}, {y})")
+        if Settings.debug_mode:
+            MessageLog.print_message(f"[DEBUG] Old coordinates: ({x}, {y})")
 
-            new_x, new_y = MouseUtils._randomize_point(x, y, image_name)
+        new_x, new_y = MouseUtils._randomize_point(x, y, image_name)
 
-            if Settings.debug_mode:
-                MessageLog.print_message(f"[DEBUG] New coordinates: ({new_x}, {new_y})")
+        if Settings.debug_mode:
+            MessageLog.print_message(f"[DEBUG] New coordinates: ({new_x}, {new_y})")
 
-            # Move the mouse to the specified coordinates.
-            if Settings.enable_bezier_curve_mouse_movement:
-                # HumanClicker only accepts int as the mouse speed.
-                if int(custom_mouse_speed) < 1:
-                    custom_mouse_speed = 1
+        # Move the mouse to the specified coordinates.
+        if Settings.enable_bezier_curve_mouse_movement:
+            # HumanClicker only accepts int as the mouse speed.
+            if int(custom_mouse_speed) < 1:
+                custom_mouse_speed = 1
 
-                MouseUtils._hc.move((new_x, new_y), duration = custom_mouse_speed, humanCurve = pyclick.HumanCurve(pyautogui.position(), (new_x, new_y)))
-            else:
-                if custom_mouse_speed <= 0.0:
-                    custom_mouse_speed = Settings.custom_mouse_speed
+            MouseUtils._hc.move((new_x, new_y), duration = custom_mouse_speed, humanCurve = pyclick.HumanCurve(pyautogui.position(), (new_x, new_y)))
+        else:
+            if custom_mouse_speed <= 0.0:
+                custom_mouse_speed = Settings.custom_mouse_speed
 
-                pyautogui.moveTo(x, y, duration = custom_mouse_speed, tween = pyautogui.easeInOutQuad)
+            pyautogui.moveTo(x, y, duration = custom_mouse_speed, tween = pyautogui.easeInOutQuad)
 
-            pyautogui.click(clicks = mouse_clicks)
+        pyautogui.click(clicks = mouse_clicks)
 
-            # This delay is necessary as ImageUtils will take the screenshot too fast and the bot will use the last frame before clicking to navigate.
-            from bot.game import Game
-            Game.wait(1)
-        except Exception:
-            MessageLog.print_message(f"\n[ERROR] Bot encountered exception attempting to move the mouse cursor to Point({x}, {y}) and clicking it: \n{traceback.format_exc()}")
+        # This delay is necessary as ImageUtils will take the screenshot too fast and the bot will use the last frame before clicking to navigate.
+        from bot.game import Game
+        Game.wait(1)
 
         return None
 
@@ -108,31 +101,28 @@ class MouseUtils:
         Returns:
             (int, int): Tuple of the newly randomized location to click.
         """
-        try:
-            # Get the width and height of the template image.
-            from utils.image_utils import ImageUtils
-            width, height = ImageUtils.get_button_dimensions(image_name)
+        # Get the width and height of the template image.
+        from utils.image_utils import ImageUtils
+        width, height = ImageUtils.get_button_dimensions(image_name)
 
-            dimensions_x0 = x - (width // 2)
-            dimensions_x1 = x + (width // 2)
+        dimensions_x0 = x - (width // 2)
+        dimensions_x1 = x + (width // 2)
 
-            dimensions_y0 = y - (height // 2)
-            dimensions_y1 = y + (height // 2)
+        dimensions_y0 = y - (height // 2)
+        dimensions_y1 = y + (height // 2)
 
-            while True:
-                new_width = random.randint(int(width * 0.2), int(width * 0.8))
-                new_height = random.randint(int(height * 0.2), int(height * 0.8))
+        while True:
+            new_width = random.randint(int(width * 0.2), int(width * 0.8))
+            new_height = random.randint(int(height * 0.2), int(height * 0.8))
 
-                new_x = dimensions_x0 + new_width
-                new_y = dimensions_y0 + new_height
+            new_x = dimensions_x0 + new_width
+            new_y = dimensions_y0 + new_height
 
-                # If the new coordinates are within the bounds of the template image, break out of the loop and return the coordinates.
-                if new_x > dimensions_x0 or new_x < dimensions_x1 or new_y > dimensions_y0 or new_y < dimensions_y1:
-                    break
+            # If the new coordinates are within the bounds of the template image, break out of the loop and return the coordinates.
+            if new_x > dimensions_x0 or new_x < dimensions_x1 or new_y > dimensions_y0 or new_y < dimensions_y1:
+                break
 
-            return new_x, new_y
-        except Exception:
-            MessageLog.print_message(f"\n[ERROR] Bot encountered exception attempting to randomize point: \n{traceback.format_exc()}")
+        return new_x, new_y
 
     @staticmethod
     def scroll_screen(x: int, y: int, scroll_clicks: int):
@@ -149,16 +139,13 @@ class MouseUtils:
         if Settings.debug_mode:
             MessageLog.print_message(f"[DEBUG] Now scrolling the screen from ({x}, {y}) by {scroll_clicks} clicks...")
 
-        try:
-            MouseUtils.move_to(x, y)
+        MouseUtils.move_to(x, y)
 
-            if Settings.enable_bezier_curve_mouse_movement:
-                # Reset the pause delay back to 0.25, primarily for ImageUtils' methods using pyautogui.
-                pyautogui.PAUSE = 0.25
+        if Settings.enable_bezier_curve_mouse_movement:
+            # Reset the pause delay back to 0.25, primarily for ImageUtils' methods using pyautogui.
+            pyautogui.PAUSE = 0.25
 
-            pyautogui.scroll(scroll_clicks, x = x, y = y)
-        except Exception:
-            MessageLog.print_message(f"\n[ERROR] Bot encountered exception attempting to scroll the screen at Point({x}, {y}) by {scroll_clicks} clicks: \n{traceback.format_exc()}")
+        pyautogui.scroll(scroll_clicks, x = x, y = y)
 
         return None
 
@@ -172,22 +159,19 @@ class MouseUtils:
         Returns:
             None
         """
-        try:
-            x = Settings.home_button_location[0]
-            y = Settings.home_button_location[1] - 50
+        x = Settings.home_button_location[0]
+        y = Settings.home_button_location[1] - 50
 
-            if Settings.debug_mode:
-                MessageLog.print_message(f"[DEBUG] Now scrolling the screen from the \"Home\" button's coordinates at ({x}, {y}) by {scroll_clicks} clicks...")
+        if Settings.debug_mode:
+            MessageLog.print_message(f"[DEBUG] Now scrolling the screen from the \"Home\" button's coordinates at ({x}, {y}) by {scroll_clicks} clicks...")
 
-            MouseUtils.move_to(x, y)
+        MouseUtils.move_to(x, y)
 
-            if Settings.enable_bezier_curve_mouse_movement:
-                # Reset the pause delay back to 0.25, primarily for ImageUtils' methods using pyautogui.
-                pyautogui.PAUSE = 0.25
+        if Settings.enable_bezier_curve_mouse_movement:
+            # Reset the pause delay back to 0.25, primarily for ImageUtils' methods using pyautogui.
+            pyautogui.PAUSE = 0.25
 
-            pyautogui.scroll(scroll_clicks, x = x, y = y)
-        except Exception:
-            MessageLog.print_message(f"\n[ERROR] Bot encountered exception attempting to scroll the screen from the \"Home\" button: \n{traceback.format_exc()}")
+        pyautogui.scroll(scroll_clicks, x = x, y = y)
 
         return None
 
