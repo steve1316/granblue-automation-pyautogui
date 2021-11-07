@@ -162,6 +162,7 @@ const Start = () => {
         if (!firstTimeSetup) {
             try {
                 var newSummonElementsList: string[] = botStateContext.summonElements
+                var newSummonElementsList: string[] = []
                 botStateContext.summons.forEach((summon) => {
                     if (summonData.Fire.summons.indexOf(summon) !== -1) {
                         newSummonElementsList = newSummonElementsList.concat("Fire")
