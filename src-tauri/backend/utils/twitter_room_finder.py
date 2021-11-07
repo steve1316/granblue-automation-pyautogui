@@ -161,7 +161,7 @@ class TwitterRoomFinder:
 
     @staticmethod
     def get_room_code():
-        """Clean the tweets passed to this function and parse out the room codes from them.
+        """Clean the tweets from the listener and parse out a valid room code from them.
 
         Returns:
             (str): A single room code that has not been visited.
