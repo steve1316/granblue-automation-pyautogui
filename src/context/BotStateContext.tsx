@@ -75,6 +75,24 @@ export interface IProviderProps {
     setDelayBetweenRunsLowerBound: (delayBetweenRunsLowerBound: number) => void
     delayBetweenRunsUpperBound: number
     setDelayBetweenRunsUpperBound: (delayBetweenRunsUpperBound: number) => void
+
+    // Extra Settings related to Nightmares from certain Farming Modes.
+    enableNightmare: boolean
+    setEnableNightmare: (enableNightmare: boolean) => void
+    enableCustomNightmareSettings: boolean
+    setEnableCustomNightmareSettings: (enableCustomNightmareSettings: boolean) => void
+    nightmareCombatScriptName: string
+    setNightmareCombatScriptName: (nightmareCombatScriptName: string) => void
+    nightmareCombatScript: string[]
+    setNightmareCombatScript: (nightmareCombatScript: string[]) => void
+    nightmareSummons: string[]
+    setNightmareSummons: (nightmareSummons: string[]) => void
+    nightmareSummonElements: string[]
+    setNightmareSummonElements: (nightmareSummonElements: string[]) => void
+    nightmareGroupNumber: number
+    setNightmareGroupNumber: (nightmareGroupNumber: number) => void
+    nightmarePartyNumber: number
+    setNightmarePartyNumber: (nightmarePartyNumber: number) => void
 }
 
 export const BotStateContext = createContext<IProviderProps>({} as IProviderProps)
@@ -120,6 +138,16 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
     const [enableRandomizedDelayBetweenRuns, setEnableRandomizedDelayBetweenRuns] = useState<boolean>(false)
     const [delayBetweenRunsLowerBound, setDelayBetweenRunsLowerBound] = useState<number>(15)
     const [delayBetweenRunsUpperBound, setDelayBetweenRunsUpperBound] = useState<number>(60)
+
+    // Extra Settings related to Nightmares from certain Farming Modes.
+    const [enableNightmare, setEnableNightmare] = useState<boolean>(false)
+    const [enableCustomNightmareSettings, setEnableCustomNightmareSettings] = useState<boolean>(false)
+    const [nightmareCombatScriptName, setNightmareCombatScriptName] = useState<string>("")
+    const [nightmareCombatScript, setNightmareCombatScript] = useState<string[]>([])
+    const [nightmareSummons, setNightmareSummons] = useState<string[]>([])
+    const [nightmareSummonElements, setNightmareSummonElements] = useState<string[]>([])
+    const [nightmareGroupNumber, setNightmareGroupNumber] = useState<number>(1)
+    const [nightmarePartyNumber, setNightmarePartyNumber] = useState<number>(1)
 
     const providerValues: IProviderProps = {
         readyStatus,
@@ -196,6 +224,24 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
         setDelayBetweenRunsLowerBound,
         delayBetweenRunsUpperBound,
         setDelayBetweenRunsUpperBound,
+
+        // Extra Settings related to Nightmares from certain Farming Modes.
+        enableNightmare,
+        setEnableNightmare,
+        enableCustomNightmareSettings,
+        setEnableCustomNightmareSettings,
+        nightmareCombatScriptName,
+        setNightmareCombatScriptName,
+        nightmareCombatScript,
+        setNightmareCombatScript,
+        nightmareSummons,
+        setNightmareSummons,
+        nightmareSummonElements,
+        setNightmareSummonElements,
+        nightmareGroupNumber,
+        setNightmareGroupNumber,
+        nightmarePartyNumber,
+        setNightmarePartyNumber,
     }
 
     return <BotStateContext.Provider value={providerValues}>{children}</BotStateContext.Provider>

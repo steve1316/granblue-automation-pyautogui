@@ -1,13 +1,55 @@
 import { Icon as Iconify } from "@iconify/react"
 import { Speed } from "@mui/icons-material"
-import { Button, Checkbox, Divider, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, InputAdornment, Stack, TextField, Typography } from "@mui/material"
-import { Box } from "@mui/system"
-import { useContext } from "react"
+import { Button, Checkbox, Divider, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, InputAdornment, Modal, Stack, TextField, Typography } from "@mui/material"
+import { Box, styled } from "@mui/system"
+import { useContext, useRef, useState } from "react"
+import TransferList from "../../components/TransferList"
 import { BotStateContext } from "../../context/BotStateContext"
 import "./index.scss"
 
+// Custom input component for combat script file selection.
+const Input = styled("input")({
+    display: "none",
+})
+
 const ExtraSettings = () => {
+    const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+
     const bot = useContext(BotStateContext)
+
+    const inputRef = useRef<HTMLInputElement>(null)
+
+    // Load the selected combat script text file.
+    const loadNightmareCombatScript = (event: React.ChangeEvent<HTMLInputElement>) => {
+        var files = event.currentTarget.files
+        if (files != null) {
+            var file = files[0]
+            if (file == null) {
+                // Reset the nightmare combat script selected if none was selected from the file picker dialog.
+                bot.setNightmareCombatScriptName("")
+                bot.setNightmareCombatScript([])
+            } else {
+                bot.setNightmareCombatScriptName(file.name)
+
+                // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
+                var reader = new FileReader()
+                reader.onload = function (loadedEvent) {
+                    if (loadedEvent.target?.result != null) {
+                        console.log("Loaded Nightmare Combat Script: ", loadedEvent.target?.result)
+                        const newCombatScript: string[] = (loadedEvent.target?.result).toString().split("\r\n")
+                        bot.setNightmareCombatScript(newCombatScript)
+                    } else {
+                        console.log("Failed to read Nightmare combat script. Reseting to default empty combat script...")
+                        bot.setNightmareCombatScriptName("")
+                        bot.setNightmareCombatScript([])
+                    }
+                }
+
+                // Read the text contents of the file.
+                reader.readAsText(file)
+            }
+        }
+    }
 
     // Render settings for Twitter.
     const renderTwitterSettings = () => {
@@ -332,20 +374,125 @@ const ExtraSettings = () => {
         )
     }
 
-    const renderDimensionalHaloSettings = () => {}
+    const renderNightmareSettings = () => {
+        if (bot.enableNightmare) {
+            var title: string = ""
+            if (bot.farmingMode === "Special") {
+                title = "Dimensional Halo"
+            } else if (bot.farmingMode === "Event" || bot.farmingMode === "Event (Token Drawboxes)" || bot.farmingMode === "Xeno Clash") {
+                title = "Nightmare"
+            } else if (bot.farmingMode === "Rise of the Beasts") {
+                title = "Extreme+"
+            } else {
+                title = "Unknown"
+            }
 
-    const renderEventSettings = () => {}
+            return (
+                <div id="nightmare">
+                    <Typography variant="h6" gutterBottom component="div" className="sectionTitle">
+                        {title} Settings <Iconify icon="ri:sword-fill" className="sectionTitleIcon" />
+                    </Typography>
 
-    const renderRiseOfTheBeastsSettings = () => {}
+                    <Divider />
 
-    const renderXenoClashSettings = () => {}
+                    <Typography variant="subtitle1" gutterBottom component="div" color="text.secondary">
+                        If none of these settings are changed, then the bot will reuse the settings for the Farming Mode.
+                    </Typography>
 
-    const renderArcarumSettings = () => {}
+                    <FormGroup sx={{ paddingBottom: "16px" }}>
+                        <FormControlLabel
+                            control={<Checkbox checked={bot.enableCustomNightmareSettings} onChange={(e) => bot.setEnableCustomNightmareSettings(e.target.checked)} />}
+                            label={`Enable Custom Settings for ${title}`}
+                        />
+                        <FormHelperText>Enable customizing individual settings for {title}</FormHelperText>
+                    </FormGroup>
+
+                    {bot.enableCustomNightmareSettings ? (
+                        <Stack spacing={2}>
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <Input ref={inputRef} accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadNightmareCombatScript(e)} />
+                                    <TextField
+                                        variant="filled"
+                                        label="Nightmare Combat Script"
+                                        value={bot.nightmareCombatScriptName !== "" ? bot.nightmareCombatScriptName : "None Selected"}
+                                        inputProps={{ readOnly: true }}
+                                        InputLabelProps={{ shrink: true }}
+                                        helperText="Select a Combat Script"
+                                        onClick={() => inputRef.current?.click()}
+                                        fullWidth
+                                    />
+                                </Grid>
+                                <Grid item xs />
+                            </Grid>
+
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <Button variant="contained" onClick={handleModalOpen} disabled={bot.farmingMode === "Coop" || bot.farmingMode === "Arcarum"} fullWidth>
+                                        Select Nightmare Support Summons
+                                    </Button>
+                                    <Modal className="supportSummonModal" open={isModalOpen} onClose={handleModalClose}>
+                                        <div>
+                                            <Typography>Select Nightmare Support Summon(s)</Typography>
+                                            <Box id="nightmareModalContainer" className="supportSummonContainer">
+                                                <TransferList isNightmare={true} />
+                                            </Box>
+                                        </div>
+                                    </Modal>
+                                </Grid>
+                                <Grid item xs />
+                            </Grid>
+
+                            <Grid container direction="row">
+                                <Grid item id="gridItemNightmareGroup" xs={4}>
+                                    <TextField
+                                        label="Group #"
+                                        variant="filled"
+                                        type="number"
+                                        error={bot.nightmareGroupNumber < 1 || bot.nightmareGroupNumber > 7}
+                                        value={bot.nightmareGroupNumber}
+                                        inputProps={{ min: 1, max: 7 }}
+                                        onChange={(e) => bot.setNightmareGroupNumber(parseInt(e.target.value))}
+                                        helperText="From 1 to 7"
+                                        className="textfield"
+                                    />
+                                </Grid>
+
+                                <Grid item xs={8} />
+
+                                <Grid item id="gridItemNightmareParty" xs={4}>
+                                    <TextField
+                                        label="Party #"
+                                        variant="filled"
+                                        type="number"
+                                        error={bot.nightmarePartyNumber < 1 || bot.nightmarePartyNumber > 6}
+                                        value={bot.nightmarePartyNumber}
+                                        inputProps={{ min: 1, max: 6 }}
+                                        onChange={(e) => bot.setNightmarePartyNumber(parseInt(e.target.value))}
+                                        helperText="From 1 to 6"
+                                        className="textfield"
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Stack>
+                    ) : (
+                        ""
+                    )}
+                </div>
+            )
+        }
+    }
+
+    // Show or hide the Support Summon Selection component.
+    const handleModalOpen = () => setIsModalOpen(true)
+    const handleModalClose = () => setIsModalOpen(false)
 
     return (
         <Fade in={true}>
-            <Box className="container">
-                <Stack spacing={2} className="wrapper">
+            <Box className="extraSettingsContainer">
+                <Stack spacing={2} className="extraSettingsWrapper">
+                    {renderNightmareSettings()}
+
                     {renderTwitterSettings()}
 
                     {renderDiscordSettings()}

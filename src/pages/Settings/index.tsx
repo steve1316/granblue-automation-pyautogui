@@ -131,6 +131,16 @@ const Settings = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [botStateContext?.item])
 
+    // Reset Nightmare settings.
+    const resetNightmareSettings = () => {
+        botStateContext?.setEnableNightmare(false)
+        botStateContext?.setEnableCustomNightmareSettings(false)
+        botStateContext?.setNightmareSummons([])
+        botStateContext?.setNightmareSummonElements([])
+        botStateContext?.setNightmareGroupNumber(1)
+        botStateContext?.setNightmarePartyNumber(1)
+    }
+
     // Show or hide the Support Summon Selection component.
     const handleModalOpen = () => setIsModalOpen(true)
     const handleModalClose = () => setIsModalOpen(false)
@@ -176,6 +186,8 @@ const Settings = () => {
                         onChange={(e) => {
                             botStateContext?.setFarmingMode(e.target.value)
 
+                            resetNightmareSettings()
+
                             // Reset selected Item and Mission.
                             botStateContext?.setItem("")
                             botStateContext?.setMission("")
@@ -189,6 +201,22 @@ const Settings = () => {
                             </MenuItem>
                         ))}
                     </TextField>
+
+                    {botStateContext.farmingMode === "Special" ||
+                    botStateContext.farmingMode === "Event" ||
+                    botStateContext.farmingMode === "Event (Token Drawboxes)" ||
+                    botStateContext.farmingMode === "Rise of the Beasts" ||
+                    botStateContext.farmingMode === "Xeno Clash" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={<Checkbox checked={botStateContext.enableNightmare} onChange={(e) => botStateContext.setEnableNightmare(e.target.checked)} />}
+                                label="Enable Nightmare Settings"
+                            />
+                            <FormHelperText>Enable additional settings to show up in the Extra Settings page.</FormHelperText>
+                        </FormGroup>
+                    ) : (
+                        ""
+                    )}
 
                     {/* Select Item */}
                     <Autocomplete
@@ -299,7 +327,7 @@ const Settings = () => {
                         <div>
                             <Typography>Select Support Summon(s)</Typography>
                             <Box id="modalContainer" className="box">
-                                <TransferList />
+                                <TransferList isNightmare={false} />
                             </Box>
                         </div>
                     </Modal>

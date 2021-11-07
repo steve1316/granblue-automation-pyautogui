@@ -102,6 +102,16 @@ const Start = () => {
                             delayLowerBound: number
                             delayUpperBound: number
                         }
+                        nightmare: {
+                            enableNightmare: boolean
+                            enableCustomNightmareSettings: boolean
+                            nightmareCombatScriptName: string
+                            nightmareCombatScript: string[]
+                            nightmareSummons: string[]
+                            nightmareSummonElements: string[]
+                            nightmareGroupNumber: number
+                            nightmarePartyNumber: number
+                        }
                     }
 
                     const decoded: ParsedSettings = JSON.parse(settings)
@@ -140,6 +150,16 @@ const Start = () => {
                     botStateContext.setEnableDelayBetweenRuns(decoded.randomizedDelayBetweenRuns.enableRandomizedDelayBetweenRuns)
                     botStateContext.setDelayBetweenRunsLowerBound(decoded.randomizedDelayBetweenRuns.delayLowerBound)
                     botStateContext.setDelayBetweenRunsUpperBound(decoded.randomizedDelayBetweenRuns.delayUpperBound)
+
+                    // Save extra settings for Nightmare to state.
+                    botStateContext.setEnableNightmare(decoded.nightmare.enableNightmare)
+                    botStateContext.setEnableCustomNightmareSettings(decoded.nightmare.enableCustomNightmareSettings)
+                    botStateContext.setNightmareCombatScriptName(decoded.nightmare.nightmareCombatScriptName)
+                    botStateContext.setNightmareCombatScript(decoded.nightmare.nightmareCombatScript)
+                    botStateContext.setNightmareSummons(decoded.nightmare.nightmareSummons)
+                    botStateContext.setNightmareSummonElements(decoded.nightmare.nightmareSummonElements)
+                    botStateContext.setNightmareGroupNumber(decoded.nightmare.nightmareGroupNumber)
+                    botStateContext.setNightmarePartyNumber(decoded.nightmare.nightmarePartyNumber)
                 })
                 .catch((err) => {
                     console.log(`Encountered read exception while loading settings from settings.json ${err}`)
@@ -161,7 +181,7 @@ const Start = () => {
     useEffect(() => {
         if (!firstTimeSetup) {
             try {
-                var newSummonElementsList: string[] = botStateContext.summonElements
+                // Find the elements of the support Summons for the Farming Mode first.
                 var newSummonElementsList: string[] = []
                 botStateContext.summons.forEach((summon) => {
                     if (summonData.Fire.summons.indexOf(summon) !== -1) {
@@ -183,6 +203,29 @@ const Start = () => {
 
                 botStateContext.setSummonElements(newSummonElementsList)
 
+                // Now find the elements of the support Summons for Nightmare.
+                var newNightmareSummonElementsList: string[] = []
+                botStateContext.nightmareSummons.forEach((summon) => {
+                    if (summonData.Fire.summons.indexOf(summon) !== -1) {
+                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Fire")
+                    } else if (summonData.Water.summons.indexOf(summon) !== -1) {
+                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Water")
+                    } else if (summonData.Earth.summons.indexOf(summon) !== -1) {
+                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Earth")
+                    } else if (summonData.Wind.summons.indexOf(summon) !== -1) {
+                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Wind")
+                    } else if (summonData.Light.summons.indexOf(summon) !== -1) {
+                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Light")
+                    } else if (summonData.Dark.summons.indexOf(summon) !== -1) {
+                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Dark")
+                    } else if (summonData.Misc.summons.indexOf(summon) !== -1) {
+                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Misc")
+                    }
+                })
+
+                botStateContext.setNightmareSummonElements(newNightmareSummonElementsList)
+
+                // Be sure to save the summon elements using the local variable and not the state to avoid endless rendering loop.
                 const settings = {
                     combatScriptName: botStateContext.combatScriptName,
                     combatScript: botStateContext.combatScript,
@@ -221,6 +264,16 @@ const Start = () => {
                         enableRandomizedDelayBetweenRuns: botStateContext.enableRandomizedDelayBetweenRuns,
                         delayLowerBound: botStateContext.delayBetweenRunsLowerBound,
                         delayUpperBound: botStateContext.delayBetweenRunsUpperBound,
+                    },
+                    nightmare: {
+                        enableNightmare: botStateContext.enableNightmare,
+                        enableCustomNightmareSettings: botStateContext.enableCustomNightmareSettings,
+                        nightmareCombatScriptName: botStateContext.nightmareCombatScriptName,
+                        nightmareCombatScript: botStateContext.nightmareCombatScript,
+                        nightmareSummons: botStateContext.nightmareSummons,
+                        nightmareSummonElements: newNightmareSummonElementsList,
+                        nightmareGroupNumber: botStateContext.nightmareGroupNumber,
+                        nightmarePartyNumber: botStateContext.nightmarePartyNumber,
                     },
                 }
 
@@ -276,6 +329,13 @@ const Start = () => {
         botStateContext.enableRandomizedDelayBetweenRuns,
         botStateContext.delayBetweenRunsLowerBound,
         botStateContext.delayBetweenRunsUpperBound,
+        botStateContext.enableNightmare,
+        botStateContext.enableCustomNightmareSettings,
+        botStateContext.nightmareCombatScriptName,
+        botStateContext.nightmareCombatScript,
+        botStateContext.nightmareSummons,
+        botStateContext.nightmareGroupNumber,
+        botStateContext.nightmarePartyNumber,
     ])
 
     // Save current message log to text file inside the /logs/ folder.

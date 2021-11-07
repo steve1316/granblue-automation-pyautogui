@@ -4,7 +4,11 @@ import { BotStateContext } from "../../context/BotStateContext"
 import summonData from "../../data/summons.json"
 import "./index.scss"
 
-const TransferList = () => {
+interface Props {
+    isNightmare: boolean
+}
+
+const TransferList: React.FC<Props> = (props) => {
     const [leftList, setLeftList] = useState<string[]>([])
     const [rightList, setRightList] = useState<string[]>([])
 
@@ -24,7 +28,12 @@ const TransferList = () => {
         oldLeftList = Array.from(new Set(oldLeftList))
 
         // Populate the right list.
-        var oldRightList: string[] = botStateContext?.summons
+        var oldRightList: string[] = []
+        if (!props.isNightmare) {
+            oldRightList = botStateContext.summons
+        } else {
+            oldRightList = botStateContext.nightmareSummons
+        }
 
         // Filter out summons from the left list that are already selected.
         const filteredList = oldLeftList.filter((summon) => !oldRightList.includes(summon))
@@ -35,6 +44,7 @@ const TransferList = () => {
     }, [])
 
     const handleChecked = (value: string, isLeftList: boolean) => () => {
+        var newRightList: string[] = []
         if (isLeftList) {
             // Handle the left list.
             const index = leftList.indexOf(value)
@@ -43,27 +53,28 @@ const TransferList = () => {
             setLeftList(newLeftList)
 
             // Move the element to the right list.
-            const newRightList = [...rightList, value]
+            newRightList = [...rightList, value]
             setRightList(newRightList)
-
-            // Save selected summons to settings.
-            botStateContext?.setSummons(newRightList)
         } else {
             // Handle the right list
             const index = rightList.indexOf(value)
-            const newRightList = [...rightList]
+            newRightList = [...rightList]
             newRightList.splice(index, 1)
             setRightList(newRightList)
 
             // Move the element to the left list.
             const newLeftList = [...leftList, value]
             setLeftList(newLeftList)
-
-            // Save selected summons to settings.
-            botStateContext?.setSummons(newRightList)
         }
 
-        botStateContext?.setSummonElements([])
+        // Save selected summons to settings.
+        if (!props.isNightmare) {
+            botStateContext?.setSummons(newRightList)
+            botStateContext?.setSummonElements([])
+        } else {
+            botStateContext?.setNightmareSummons(newRightList)
+            botStateContext?.setNightmareSummonElements([])
+        }
     }
 
     const customList = (items: string[], isLeftList: boolean) => (
