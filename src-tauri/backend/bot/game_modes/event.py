@@ -27,7 +27,7 @@ class Event:
         """
         from bot.game import Game
 
-        if Settings.enable_event_nightmare and ImageUtils.confirm_location("limited_time_quests", tries = 1):
+        if Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests", tries = 1):
             # First check if the Event Nightmare is skippable.
             event_claim_loot_location = ImageUtils.find_button("event_claim_loot", tries = 1, suppress_error = True)
             if event_claim_loot_location is not None:
@@ -41,11 +41,11 @@ class Event:
                 MessageLog.print_message("\n********************************************************************************")
                 MessageLog.print_message("********************************************************************************")
                 MessageLog.print_message(f"[EVENT] Event Nightmare")
-                MessageLog.print_message(f"[EVENT] Event Nightmare Summon Elements: {Settings.event_nightmare_summon_element_list}")
-                MessageLog.print_message(f"[EVENT] Event Nightmare Summons: {Settings.event_nightmare_summon_list}")
-                MessageLog.print_message(f"[EVENT] Event Nightmare Group Number: {Settings.event_nightmare_group_number}")
-                MessageLog.print_message(f"[EVENT] Event Nightmare Party Number: {Settings.event_nightmare_party_number}")
-                MessageLog.print_message(f"[EVENT] Event Nightmare Combat Script: {Settings.event_nightmare_combat_script}")
+                MessageLog.print_message(f"[EVENT] Event Nightmare Summon Elements: {Settings.nightmare_summon_elements_list}")
+                MessageLog.print_message(f"[EVENT] Event Nightmare Summons: {Settings.nightmare_summon_list}")
+                MessageLog.print_message(f"[EVENT] Event Nightmare Group Number: {Settings.nightmare_group_number}")
+                MessageLog.print_message(f"[EVENT] Event Nightmare Party Number: {Settings.nightmare_party_number}")
+                MessageLog.print_message(f"[EVENT] Event Nightmare Combat Script: {Settings.nightmare_combat_script_name}")
                 MessageLog.print_message("********************************************************************************")
                 MessageLog.print_message("********************************************************************************\n")
 
@@ -56,15 +56,15 @@ class Event:
 
                 # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
                 if ImageUtils.confirm_location("select_a_summon"):
-                    Game.select_summon(Settings.event_nightmare_summon_list, Settings.event_nightmare_summon_element_list)
-                    start_check = Game.find_party_and_start_mission(int(Settings.event_nightmare_group_number), int(Settings.event_nightmare_party_number))
+                    Game.select_summon(Settings.nightmare_summon_list, Settings.nightmare_summon_elements_list)
+                    start_check = Game.find_party_and_start_mission(int(Settings.nightmare_group_number), int(Settings.nightmare_party_number))
 
                     # Once preparations are completed, start Combat Mode.
-                    if start_check and CombatMode.start_combat_mode(Settings.event_nightmare_combat_script, is_nightmare = True):
+                    if start_check and CombatMode.start_combat_mode(script_commands = Settings.nightmare_combat_script, is_nightmare = True):
                         Game.collect_loot(is_completed = False, is_event_nightmare = True)
                         return True
 
-        elif not Settings.enable_event_nightmare and ImageUtils.confirm_location("limited_time_quests", tries = 1):
+        elif not Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests", tries = 1):
             # First check if the Event Nightmare is skippable.
             event_claim_loot_location = ImageUtils.find_button("event_claim_loot", tries = 1, suppress_error = True)
             if event_claim_loot_location is not None:

@@ -24,18 +24,17 @@ class RiseOfTheBeasts:
         """
         from bot.game import Game
 
-        if Settings.enable_rotb_extreme_plus and ImageUtils.confirm_location("rotb_extreme_plus", tries = 1):
+        if Settings.enable_nightmare and ImageUtils.confirm_location("rotb_extreme_plus", tries = 1):
             MessageLog.print_message("\n[ROTB] Detected Extreme+. Starting it now...")
 
             MessageLog.print_message("\n********************************************************************************")
             MessageLog.print_message("********************************************************************************")
             MessageLog.print_message(f"[ROTB] Rise of the Beasts Extreme+")
-            MessageLog.print_message(f"[ROTB] Rise of the Beasts Extreme+ Summon Elements: {Settings.rotb_extreme_plus_summon_element_list}")
-            MessageLog.print_message(f"[ROTB] Rise of the Beasts Extreme+ Summons: {Settings.rotb_extreme_plus_summon_list}")
-            MessageLog.print_message(f"[ROTB] Rise of the Beasts Extreme+ Group Number: {Settings.rotb_extreme_plus_group_number}")
-            MessageLog.print_message(f"[ROTB] Rise of the Beasts Extreme+ Party Number: {Settings.rotb_extreme_plus_party_number}")
-            MessageLog.print_message(f"[ROTB] Rise of the Beasts Extreme+ Combat Script: {Settings.rotb_extreme_plus_combat_script}")
-            MessageLog.print_message(f"[ROTB] Amount of Rise of the Beasts Extreme+ encountered: {Settings.rotb_extreme_plus_amount}")
+            MessageLog.print_message(f"[ROTB] Rise of the Beasts Extreme+ Summon Elements: {Settings.nightmare_summon_elements_list}")
+            MessageLog.print_message(f"[ROTB] Rise of the Beasts Extreme+ Summons: {Settings.nightmare_summon_list}")
+            MessageLog.print_message(f"[ROTB] Rise of the Beasts Extreme+ Group Number: {Settings.nightmare_group_number}")
+            MessageLog.print_message(f"[ROTB] Rise of the Beasts Extreme+ Party Number: {Settings.nightmare_party_number}")
+            MessageLog.print_message(f"[ROTB] Rise of the Beasts Extreme+ Combat Script: {Settings.nightmare_combat_script_name}")
             MessageLog.print_message("********************************************************************************")
             MessageLog.print_message("********************************************************************************\n")
 
@@ -46,15 +45,15 @@ class RiseOfTheBeasts:
 
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             if ImageUtils.confirm_location("select_a_summon"):
-                Game.select_summon(Settings.rotb_extreme_plus_summon_list, Settings.rotb_extreme_plus_summon_element_list)
-                start_check = Game.find_party_and_start_mission(int(Settings.rotb_extreme_plus_group_number), int(Settings.rotb_extreme_plus_party_number))
+                Game.select_summon(Settings.nightmare_summon_list, Settings.nightmare_summon_elements_list)
+                start_check = Game.find_party_and_start_mission(int(Settings.nightmare_group_number), int(Settings.nightmare_party_number))
 
                 # Once preparations are completed, start Combat mode.
-                if start_check and CombatMode.start_combat_mode(Settings.rotb_extreme_plus_combat_script, is_nightmare = True):
+                if start_check and CombatMode.start_combat_mode(script_commands = Settings.nightmare_combat_script, is_nightmare = True):
                     Game.collect_loot(is_completed = False, is_event_nightmare = True)
                     return True
 
-        elif not Settings.enable_rotb_extreme_plus and ImageUtils.confirm_location("rotb_extreme_plus", tries = 2):
+        elif not Settings.enable_nightmare and ImageUtils.confirm_location("rotb_extreme_plus", tries = 2):
             MessageLog.print_message("\n[ROTB] Rise of the Beasts Extreme+ detected but user opted to not run it. Moving on...")
             Game.find_and_click_button("close")
         else:

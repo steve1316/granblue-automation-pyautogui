@@ -26,19 +26,18 @@ class Special:
         """
         from bot.game import Game
 
-        if Settings.enable_dimensional_halo and ImageUtils.confirm_location("limited_time_quests", tries = 1):
+        if Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests", tries = 1):
             MessageLog.print_message("\n[D.HALO] Detected Dimensional Halo. Starting it now...")
             Special._dimensional_halo_amount += 1
 
             MessageLog.print_message("\n********************************************************************************")
             MessageLog.print_message("********************************************************************************")
             MessageLog.print_message(f"[D.HALO] Dimensional Halo")
-            MessageLog.print_message(f"[D.HALO] Dimensional Halo Summon Elements: {Settings.dimensional_halo_summon_element_list}")
-            MessageLog.print_message(f"[D.HALO] Dimensional Halo Summons: {Settings.dimensional_halo_summon_list}")
-            MessageLog.print_message(f"[D.HALO] Dimensional Halo Group Number: {Settings.dimensional_halo_group_number}")
-            MessageLog.print_message(f"[D.HALO] Dimensional Halo Party Number: {Settings.dimensional_halo_party_number}")
-            MessageLog.print_message(f"[D.HALO] Dimensional Halo Combat Script: {Settings.dimensional_halo_combat_script}")
-            MessageLog.print_message(f"[D.HALO] Amount of Dimensional Halos encountered: {Special._dimensional_halo_amount}")
+            MessageLog.print_message(f"[D.HALO] Dimensional Halo Summon Elements: {Settings.nightmare_summon_elements_list}")
+            MessageLog.print_message(f"[D.HALO] Dimensional Halo Summons: {Settings.nightmare_summon_list}")
+            MessageLog.print_message(f"[D.HALO] Dimensional Halo Group Number: {Settings.nightmare_group_number}")
+            MessageLog.print_message(f"[D.HALO] Dimensional Halo Party Number: {Settings.nightmare_party_number}")
+            MessageLog.print_message(f"[D.HALO] Dimensional Halo Combat Script: {Settings.nightmare_combat_script_name}")
             MessageLog.print_message("********************************************************************************")
             MessageLog.print_message("********************************************************************************\n")
 
@@ -49,15 +48,15 @@ class Special:
 
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             if ImageUtils.confirm_location("select_a_summon"):
-                Game.select_summon(Settings.dimensional_halo_summon_list, Settings.dimensional_halo_summon_element_list)
-                start_check = Game.find_party_and_start_mission(int(Settings.dimensional_halo_group_number), int(Settings.dimensional_halo_party_number))
+                Game.select_summon(Settings.nightmare_summon_list, Settings.nightmare_summon_elements_list)
+                start_check = Game.find_party_and_start_mission(int(Settings.nightmare_group_number), int(Settings.nightmare_party_number))
 
                 # Once preparations are completed, start Combat Mode.
-                if start_check and CombatMode.start_combat_mode(Settings.dimensional_halo_combat_script, is_nightmare = True):
+                if start_check and CombatMode.start_combat_mode(script_commands = Settings.nightmare_combat_script, is_nightmare = True):
                     Game.collect_loot(is_completed = False, is_event_nightmare = True)
                     return True
 
-        elif not Settings.enable_dimensional_halo and ImageUtils.confirm_location("limited_time_quests", tries = 1):
+        elif not Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests", tries = 1):
             MessageLog.print_message("\n[D.HALO] Dimensional Halo detected but user opted to not run it. Moving on...")
             Game.find_and_click_button("close")
         else:
