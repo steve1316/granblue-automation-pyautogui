@@ -25,3 +25,6 @@ yarn-error.log*
 src-tauri/backend/settings.json
 
 src-tauri/scripts/
+
+src-tauri/images/temp/
+src-tauri/logs/
