@@ -1,7 +1,7 @@
 import { Settings as SettingsIcon } from "@mui/icons-material"
-import { Autocomplete, Avatar, Button, Checkbox, Divider, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, MenuItem, Modal, Stack, TextField, Typography } from "@mui/material"
+import { Autocomplete, Avatar, Button, Checkbox, Divider, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, MenuItem, Modal, Stack, styled, TextField, Typography } from "@mui/material"
 import { deepPurple } from "@mui/material/colors"
-import { Box, styled } from "@mui/system"
+import { Box } from "@mui/system"
 import match from "autosuggest-highlight/match"
 import parse from "autosuggest-highlight/parse"
 import { useContext, useEffect, useRef, useState } from "react"
@@ -76,20 +76,20 @@ const Settings = () => {
         var newItemList: string[] = []
 
         if (
-            botStateContext?.farmingMode === "Quest" ||
-            botStateContext?.farmingMode === "Special" ||
-            botStateContext?.farmingMode === "Coop" ||
-            botStateContext?.farmingMode === "Raid" ||
-            botStateContext?.farmingMode === "Event" ||
-            botStateContext?.farmingMode === "Event (Token Drawboxes)" ||
-            botStateContext?.farmingMode === "Rise of the Beasts" ||
-            botStateContext?.farmingMode === "Guild Wars" ||
-            botStateContext?.farmingMode === "Dread Barrage" ||
-            botStateContext?.farmingMode === "Proving Grounds" ||
-            botStateContext?.farmingMode === "Xeno Clash" ||
-            botStateContext?.farmingMode === "Arcarum"
+            botStateContext.farmingMode === "Quest" ||
+            botStateContext.farmingMode === "Special" ||
+            botStateContext.farmingMode === "Coop" ||
+            botStateContext.farmingMode === "Raid" ||
+            botStateContext.farmingMode === "Event" ||
+            botStateContext.farmingMode === "Event (Token Drawboxes)" ||
+            botStateContext.farmingMode === "Rise of the Beasts" ||
+            botStateContext.farmingMode === "Guild Wars" ||
+            botStateContext.farmingMode === "Dread Barrage" ||
+            botStateContext.farmingMode === "Proving Grounds" ||
+            botStateContext.farmingMode === "Xeno Clash" ||
+            botStateContext.farmingMode === "Arcarum"
         ) {
-            Object.values(data[botStateContext?.farmingMode]).forEach((tempItems) => {
+            Object.values(data[botStateContext.farmingMode]).forEach((tempItems) => {
                 newItemList = newItemList.concat(tempItems.items)
             })
         }
@@ -97,33 +97,33 @@ const Settings = () => {
         const filteredNewItemList = Array.from(new Set(newItemList))
         setItemList(filteredNewItemList)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [botStateContext?.farmingMode])
+    }, [botStateContext.farmingMode])
 
     // Populate the mission list after selecting the item.
     useEffect(() => {
         var newMissionList: string[] = []
 
         if (
-            botStateContext?.farmingMode === "Quest" ||
-            botStateContext?.farmingMode === "Special" ||
-            botStateContext?.farmingMode === "Raid" ||
-            botStateContext?.farmingMode === "Event" ||
-            botStateContext?.farmingMode === "Event (Token Drawboxes)" ||
-            botStateContext?.farmingMode === "Rise of the Beasts" ||
-            botStateContext?.farmingMode === "Guild Wars" ||
-            botStateContext?.farmingMode === "Dread Barrage" ||
-            botStateContext?.farmingMode === "Proving Grounds" ||
-            botStateContext?.farmingMode === "Xeno Clash" ||
-            botStateContext?.farmingMode === "Arcarum"
+            botStateContext.farmingMode === "Quest" ||
+            botStateContext.farmingMode === "Special" ||
+            botStateContext.farmingMode === "Raid" ||
+            botStateContext.farmingMode === "Event" ||
+            botStateContext.farmingMode === "Event (Token Drawboxes)" ||
+            botStateContext.farmingMode === "Rise of the Beasts" ||
+            botStateContext.farmingMode === "Guild Wars" ||
+            botStateContext.farmingMode === "Dread Barrage" ||
+            botStateContext.farmingMode === "Proving Grounds" ||
+            botStateContext.farmingMode === "Xeno Clash" ||
+            botStateContext.farmingMode === "Arcarum"
         ) {
-            Object.entries(data[botStateContext?.farmingMode]).forEach((obj) => {
-                if (obj[1].items.indexOf(botStateContext?.item) !== -1) {
+            Object.entries(data[botStateContext.farmingMode]).forEach((obj) => {
+                if (obj[1].items.indexOf(botStateContext.item) !== -1) {
                     newMissionList = newMissionList.concat(obj[0])
                 }
             })
         } else {
             Object.entries(data["Coop"]).forEach((obj) => {
-                if (obj[1].items.indexOf(botStateContext?.item) !== -1) {
+                if (obj[1].items.indexOf(botStateContext.item) !== -1) {
                     newMissionList = newMissionList.concat(obj[0])
                 }
             })
@@ -132,16 +132,16 @@ const Settings = () => {
         const filteredNewMissionList = Array.from(new Set(newMissionList))
         setMissionList(filteredNewMissionList)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [botStateContext?.item])
+    }, [botStateContext.item])
 
     // Reset Nightmare settings.
     const resetNightmareSettings = () => {
-        botStateContext?.setEnableNightmare(false)
-        botStateContext?.setEnableCustomNightmareSettings(false)
-        botStateContext?.setNightmareSummons([])
-        botStateContext?.setNightmareSummonElements([])
-        botStateContext?.setNightmareGroupNumber(1)
-        botStateContext?.setNightmarePartyNumber(1)
+        botStateContext.setEnableNightmare(false)
+        botStateContext.setEnableCustomNightmareSettings(false)
+        botStateContext.setNightmareSummons([])
+        botStateContext.setNightmareSummonElements([])
+        botStateContext.setNightmareGroupNumber(1)
+        botStateContext.setNightmarePartyNumber(1)
     }
 
     // Show or hide the Support Summon Selection component.
@@ -178,16 +178,16 @@ const Settings = () => {
                         select
                         label="Farming Mode"
                         variant="filled"
-                        value={botStateContext?.farmingMode}
+                        value={botStateContext.farmingMode}
                         onChange={(e) => {
-                            botStateContext?.setFarmingMode(e.target.value)
+                            botStateContext.setFarmingMode(e.target.value)
 
                             resetNightmareSettings()
 
                             // Reset selected Item and Mission.
-                            botStateContext?.setItem("")
-                            botStateContext?.setMission("")
-                            botStateContext?.setMap("")
+                            botStateContext.setItem("")
+                            botStateContext.setMission("")
+                            botStateContext.setMap("")
                         }}
                         helperText="Please select the Farming Mode"
                     >
@@ -217,17 +217,17 @@ const Settings = () => {
                     {/* Select Item */}
                     <Autocomplete
                         options={itemList.map((element) => element)}
-                        value={botStateContext?.item}
+                        value={botStateContext.item}
                         onChange={(_e, value) => {
                             if (value === null) {
-                                botStateContext?.setItem("")
+                                botStateContext.setItem("")
                             } else {
-                                botStateContext?.setItem(value)
+                                botStateContext.setItem(value)
                             }
 
                             // Reset selected Mission.
-                            botStateContext?.setMission("")
-                            botStateContext?.setMap("")
+                            botStateContext.setMission("")
+                            botStateContext.setMap("")
                         }}
                         getOptionLabel={(option) => option}
                         isOptionEqualToValue={(option) => option !== ""}
@@ -253,28 +253,28 @@ const Settings = () => {
                     {/* Select Mission */}
                     <Autocomplete
                         options={missionList.map((element) => element)}
-                        value={botStateContext?.mission}
+                        value={botStateContext.mission}
                         onChange={(_e, value) => {
                             if (value === null) {
-                                botStateContext?.setMission("")
+                                botStateContext.setMission("")
                             } else {
-                                botStateContext?.setMission(value)
+                                botStateContext.setMission(value)
                                 if (
-                                    botStateContext?.farmingMode === "Quest" ||
-                                    botStateContext?.farmingMode === "Special" ||
-                                    botStateContext?.farmingMode === "Raid" ||
-                                    botStateContext?.farmingMode === "Event" ||
-                                    botStateContext?.farmingMode === "Event (Token Drawboxes)" ||
-                                    botStateContext?.farmingMode === "Rise of the Beasts" ||
-                                    botStateContext?.farmingMode === "Guild Wars" ||
-                                    botStateContext?.farmingMode === "Dread Barrage" ||
-                                    botStateContext?.farmingMode === "Proving Grounds" ||
-                                    botStateContext?.farmingMode === "Xeno Clash" ||
-                                    botStateContext?.farmingMode === "Arcarum"
+                                    botStateContext.farmingMode === "Quest" ||
+                                    botStateContext.farmingMode === "Special" ||
+                                    botStateContext.farmingMode === "Raid" ||
+                                    botStateContext.farmingMode === "Event" ||
+                                    botStateContext.farmingMode === "Event (Token Drawboxes)" ||
+                                    botStateContext.farmingMode === "Rise of the Beasts" ||
+                                    botStateContext.farmingMode === "Guild Wars" ||
+                                    botStateContext.farmingMode === "Dread Barrage" ||
+                                    botStateContext.farmingMode === "Proving Grounds" ||
+                                    botStateContext.farmingMode === "Xeno Clash" ||
+                                    botStateContext.farmingMode === "Arcarum"
                                 ) {
-                                    Object.entries(data[botStateContext?.farmingMode]).every((obj) => {
+                                    Object.entries(data[botStateContext.farmingMode]).every((obj) => {
                                         if (obj[0] === value) {
-                                            botStateContext?.setMap(obj[1].map)
+                                            botStateContext.setMap(obj[1].map)
                                             return false
                                         } else {
                                             return true
@@ -309,20 +309,20 @@ const Settings = () => {
                         label="# of Items"
                         type="number"
                         variant="filled"
-                        value={botStateContext?.itemAmount}
-                        onChange={(e) => botStateContext?.setItemAmount(e.target.value === "" ? 1 : parseInt(e.target.value))}
+                        value={botStateContext.itemAmount}
+                        onChange={(e) => botStateContext.setItemAmount(e.target.value === "" ? 1 : parseInt(e.target.value))}
                         inputProps={{ min: 1 }}
                         helperText="Please select the amount of Items to farm"
                     />
 
                     {/* Select Summon(s) */}
-                    <Button variant="contained" onClick={handleModalOpen} disabled={botStateContext?.farmingMode === "Coop" || botStateContext?.farmingMode === "Arcarum"}>
+                    <Button variant="contained" onClick={handleModalOpen} disabled={botStateContext.farmingMode === "Coop" || botStateContext.farmingMode === "Arcarum"}>
                         Select Summons
                     </Button>
-                    <Modal className="modal" open={isModalOpen} onClose={handleModalClose}>
+                    <Modal className="supportSummonModal" open={isModalOpen} onClose={handleModalClose}>
                         <div>
                             <Typography>Select Support Summon(s)</Typography>
-                            <Box id="modalContainer" className="box">
+                            <Box id="supportSummonContainer" className="supportSummonContainer">
                                 <TransferList isNightmare={false} />
                             </Box>
                         </div>
@@ -335,12 +335,12 @@ const Settings = () => {
                                 label="Group #"
                                 variant="filled"
                                 type="number"
-                                error={botStateContext?.groupNumber < 1 || botStateContext?.groupNumber > 7}
-                                value={botStateContext?.groupNumber}
+                                error={botStateContext.groupNumber < 1 || botStateContext.groupNumber > 7}
+                                value={botStateContext.groupNumber}
                                 inputProps={{ min: 1, max: 7 }}
-                                onChange={(e) => botStateContext?.setGroupNumber(parseInt(e.target.value))}
+                                onChange={(e) => botStateContext.setGroupNumber(parseInt(e.target.value))}
                                 helperText="From 1 to 7"
-                                className="textfield"
+                                className="settingsTextfield"
                             />
                         </Grid>
                         <Grid item md></Grid>
@@ -349,12 +349,12 @@ const Settings = () => {
                                 label="Party #"
                                 variant="filled"
                                 type="number"
-                                error={botStateContext?.partyNumber < 1 || botStateContext?.partyNumber > 6}
-                                value={botStateContext?.partyNumber}
+                                error={botStateContext.partyNumber < 1 || botStateContext.partyNumber > 6}
+                                value={botStateContext.partyNumber}
                                 inputProps={{ min: 1, max: 6 }}
-                                onChange={(e) => botStateContext?.setPartyNumber(parseInt(e.target.value))}
+                                onChange={(e) => botStateContext.setPartyNumber(parseInt(e.target.value))}
                                 helperText="From 1 to 6"
-                                className="textfield"
+                                className="settingsTextfield"
                             />
                         </Grid>
                     </Grid>
@@ -371,9 +371,9 @@ const Settings = () => {
                             control={
                                 <Checkbox
                                     onChange={(e) => {
-                                        botStateContext?.setDebugMode(e.target.checked)
+                                        botStateContext.setDebugMode(e.target.checked)
                                     }}
-                                    checked={botStateContext?.debugMode}
+                                    checked={botStateContext.debugMode}
                                 />
                             }
                             label="Enable Debug Mode"

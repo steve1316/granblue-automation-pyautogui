@@ -23,20 +23,20 @@ const Home = () => {
             const bottom: number = msgRef.current!!.scrollHeight - msgRef.current!!.clientHeight
             msgRef.current!!.scrollTo(0, bottom)
         }
-    }, [messageLogContext?.messageLog])
+    }, [messageLogContext.messageLog])
 
     // Reset message log and then start the bot process. Actual logic is based in Start.tsx component.
     const handleStart = () => {
-        messageLogContext?.setMessageLog([])
-        messageLogContext?.setAsyncMessages([])
-        botStateContext?.setStartBot(true)
-        botStateContext?.setStopBot(false)
+        messageLogContext.setMessageLog([])
+        messageLogContext.setAsyncMessages([])
+        botStateContext.setStartBot(true)
+        botStateContext.setStopBot(false)
     }
 
     // Stop the bot process. Actual logic is based in Start.tsx component.
     const handleStop = () => {
-        botStateContext?.setStartBot(false)
-        botStateContext?.setStopBot(true)
+        botStateContext.setStartBot(false)
+        botStateContext.setStopBot(true)
     }
 
     return (
@@ -45,18 +45,18 @@ const Home = () => {
                 <Stack direction="row" sx={{ height: "100%" }}>
                     <div className="logOuterContainer">
                         <div ref={msgRef} className="logInnerContainer">
-                            <p id="log">{initialMessage + messageLogContext?.messageLog.join("\r")}</p>
+                            <p id="log">{initialMessage + messageLogContext.messageLog.join("\r")}</p>
                         </div>
                     </div>
                     <div className="rightOuterContainer">
                         <div className="rightContainer">
-                            {botStateContext?.isBotRunning ? (
+                            {botStateContext.isBotRunning ? (
                                 <Button color="error" variant="contained" onClick={handleStop}>
                                     Stop
                                 </Button>
                             ) : (
-                                <Button disabled={!botStateContext?.readyStatus} variant="contained" onClick={handleStart}>
-                                    {botStateContext?.readyStatus ? "Start" : "Not Ready"}
+                                <Button disabled={!botStateContext.readyStatus} variant="contained" onClick={handleStart}>
+                                    {botStateContext.readyStatus ? "Start" : "Not Ready"}
                                 </Button>
                             )}
                         </div>

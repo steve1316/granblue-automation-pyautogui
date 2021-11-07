@@ -78,9 +78,9 @@ const TransferList: React.FC<Props> = (props) => {
     }
 
     const customList = (items: string[], isLeftList: boolean) => (
-        <Card className="card">
+        <Card className="transferCard">
             <Paper elevation={2}>
-                <Typography variant="h5" component="div" className="cardHeader">
+                <Typography variant="h5" component="div" className="transferCardHeader">
                     {isLeftList ? "Available Support Summons" : "Selected Support Summons"}
                 </Typography>
             </Paper>
@@ -101,12 +101,12 @@ const TransferList: React.FC<Props> = (props) => {
                         <Tooltip key={`${index}-${value}`} title={`${value}`} placement="left" arrow TransitionComponent={Zoom} TransitionProps={{ timeout: 200 }}>
                             <Grow in={true}>
                                 <ListItem button onClick={handleChecked(value, isLeftList)}>
-                                    <Card className="supportSummonCard">
+                                    <Card>
                                         <CardActionArea>
                                             <CardMedia component="img" image={require(`../../images/summons/${fileName}.png`).default} />
                                         </CardActionArea>
                                     </Card>
-                                    <ListItemText className="listItemText" primary={value} />
+                                    <ListItemText className="transferListItemText" primary={value} />
                                 </ListItem>
                             </Grow>
                         </Tooltip>

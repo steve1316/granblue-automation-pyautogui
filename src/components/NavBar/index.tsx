@@ -33,7 +33,7 @@ const NavBar = () => {
 
     // Warn the user about refreshing the page.
     window.onbeforeunload = function (e) {
-        if (botStateContext?.refreshAlert) {
+        if (botStateContext.refreshAlert) {
             return false
         }
     }
@@ -41,7 +41,7 @@ const NavBar = () => {
     // This event listener will fire before the onbeforeunload. This is so the Snackbar can show itself before the window popup appears.
     window.addEventListener("keydown", function (e) {
         if (e.key === "F5") {
-            botStateContext?.setRefreshAlert(true)
+            botStateContext.setRefreshAlert(true)
         }
     })
 
@@ -52,21 +52,21 @@ const NavBar = () => {
     return (
         <AppBar position="fixed" id="header">
             <Snackbar
-                open={botStateContext?.refreshAlert}
+                open={botStateContext.refreshAlert}
                 anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
                 autoHideDuration={10000}
-                onClose={() => botStateContext?.setRefreshAlert(false)}
-                onClick={() => botStateContext?.setRefreshAlert(false)}
+                onClose={() => botStateContext.setRefreshAlert(false)}
+                onClick={() => botStateContext.setRefreshAlert(false)}
             >
                 <Alert severity="error">Do NOT reload/F5/refresh the "page" while the bot is RUNNING. You will have a runaway program.</Alert>
             </Snackbar>
-            <Toolbar variant="dense" className="toolbar" data-tauri-drag-region>
-                <IconButton className="menuButton" size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={toggleDrawer}>
+            <Toolbar variant="dense" className="navToolbar" data-tauri-drag-region>
+                <IconButton className="navMenuButton" size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }} onClick={toggleDrawer}>
                     <Menu />
                 </IconButton>
                 <Drawer anchor="left" open={isDrawerOpen} onClose={toggleDrawer}>
-                    <List className="list">
-                        <RouterLink to="/" className="link">
+                    <List className="navList">
+                        <RouterLink to="/" className="navLink">
                             <ListItem button key="home">
                                 <ListItemIcon>
                                     <HomeRounded />
@@ -75,7 +75,7 @@ const NavBar = () => {
                             </ListItem>
                             <Divider />
                         </RouterLink>
-                        <RouterLink to="/settings" className="link">
+                        <RouterLink to="/settings" className="navLink">
                             <ListItem button key="settings">
                                 <ListItemIcon>
                                     <Settings />
@@ -84,7 +84,7 @@ const NavBar = () => {
                             </ListItem>
                             <Divider />
                         </RouterLink>
-                        <RouterLink to="/extrasettings" className="link">
+                        <RouterLink to="/extrasettings" className="navLink">
                             <ListItem button key="extrasettings">
                                 <ListItemIcon>
                                     <SettingsSuggest />
@@ -97,7 +97,7 @@ const NavBar = () => {
                 </Drawer>
                 <Typography
                     variant="h6"
-                    className="title"
+                    className="navTitle"
                     onClick={() => {
                         history.push("/")
                     }}
@@ -105,7 +105,7 @@ const NavBar = () => {
                     Granblue Automation <Typography variant="caption">v{version}</Typography>
                 </Typography>
                 <div className="emptyDivider" />
-                {botStateContext?.readyStatus ? (
+                {botStateContext.readyStatus ? (
                     <Typography variant="caption" sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", marginRight: "10px", color: "#76ff03" }}>
                         Status: Ready
                     </Typography>
@@ -114,7 +114,7 @@ const NavBar = () => {
                         Status: Not Ready
                     </Typography>
                 )}
-                <ButtonGroup variant="outlined" className="group">
+                <ButtonGroup variant="outlined" className="navGroup">
                     <Button
                         className="navButton"
                         onClick={() =>
