@@ -111,6 +111,9 @@ const Start = () => {
                             nightmareGroupNumber: number
                             nightmarePartyNumber: number
                         }
+                        arcarum: {
+                            enableStopOnArcarumBoss: boolean
+                        }
                     }
 
                     const decoded: ParsedSettings = JSON.parse(settings)
@@ -158,6 +161,8 @@ const Start = () => {
                     botStateContext.setNightmareSummonElements(decoded.nightmare.nightmareSummonElements)
                     botStateContext.setNightmareGroupNumber(decoded.nightmare.nightmareGroupNumber)
                     botStateContext.setNightmarePartyNumber(decoded.nightmare.nightmarePartyNumber)
+
+                    botStateContext.setEnableStopOnArcarumBoss(decoded.arcarum.enableStopOnArcarumBoss)
                 })
                 .catch((err) => {
                     console.log(`Encountered read exception while loading settings from settings.json ${err}`)
@@ -223,6 +228,7 @@ const Start = () => {
 
                 botStateContext.setNightmareSummonElements(newNightmareSummonElementsList)
 
+                // Create the structure of the JSON object to be saved.
                 // Be sure to save the summon elements using the local variable and not the state to avoid endless rendering loop.
                 const settings = {
                     combatScriptName: botStateContext.combatScriptName,
@@ -271,6 +277,9 @@ const Start = () => {
                         nightmareSummonElements: newNightmareSummonElementsList,
                         nightmareGroupNumber: botStateContext.nightmareGroupNumber,
                         nightmarePartyNumber: botStateContext.nightmarePartyNumber,
+                    },
+                    arcarum: {
+                        enableStopOnArcarumBoss: botStateContext.enableStopOnArcarumBoss,
                     },
                 }
 
@@ -332,6 +341,7 @@ const Start = () => {
         botStateContext.nightmareSummons,
         botStateContext.nightmareGroupNumber,
         botStateContext.nightmarePartyNumber,
+        botStateContext.enableStopOnArcarumBoss,
     ])
 
     // Save current message log to text file inside the /logs/ folder.

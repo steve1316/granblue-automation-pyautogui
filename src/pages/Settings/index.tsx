@@ -214,6 +214,18 @@ const Settings = () => {
                         ""
                     )}
 
+                    {botStateContext.farmingMode === "Arcarum" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={<Checkbox checked={botStateContext.enableStopOnArcarumBoss} onChange={(e) => botStateContext.setEnableStopOnArcarumBoss(e.target.checked)} />}
+                                label="Enable Stop on Arcarum Boss"
+                            />
+                            <FormHelperText>Enable this option to have the bot upon encountering a Arcarum Boss (3-3, 6-3, 9-9).</FormHelperText>
+                        </FormGroup>
+                    ) : (
+                        ""
+                    )}
+
                     {/* Select Item */}
                     <Autocomplete
                         options={itemList.map((element) => element)}

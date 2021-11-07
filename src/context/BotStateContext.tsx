@@ -91,6 +91,9 @@ export interface IProviderProps {
     setNightmareGroupNumber: (nightmareGroupNumber: number) => void
     nightmarePartyNumber: number
     setNightmarePartyNumber: (nightmarePartyNumber: number) => void
+
+    enableStopOnArcarumBoss: boolean
+    setEnableStopOnArcarumBoss: (enableStopOnArcarumBoss: boolean) => void
 }
 
 export const BotStateContext = createContext<IProviderProps>({} as IProviderProps)
@@ -145,6 +148,8 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
     const [nightmareSummonElements, setNightmareSummonElements] = useState<string[]>([])
     const [nightmareGroupNumber, setNightmareGroupNumber] = useState<number>(1)
     const [nightmarePartyNumber, setNightmarePartyNumber] = useState<number>(1)
+
+    const [enableStopOnArcarumBoss, setEnableStopOnArcarumBoss] = useState<boolean>(false)
 
     const providerValues: IProviderProps = {
         readyStatus,
@@ -237,6 +242,9 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
         setNightmareGroupNumber,
         nightmarePartyNumber,
         setNightmarePartyNumber,
+
+        enableStopOnArcarumBoss,
+        setEnableStopOnArcarumBoss,
     }
 
     return <BotStateContext.Provider value={providerValues}>{children}</BotStateContext.Provider>
