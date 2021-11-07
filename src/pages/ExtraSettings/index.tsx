@@ -123,7 +123,7 @@ const ExtraSettings = () => {
                     </Grid>
 
                     <Grid item>
-                        <Button variant="contained" startIcon={<Speed />} className="twitterButton">
+                        <Button variant="contained" startIcon={<Speed />} className="twitterButton" disabled>
                             Test Twitter API
                         </Button>
                     </Grid>
@@ -180,7 +180,7 @@ const ExtraSettings = () => {
                     </Grid>
 
                     <Grid item>
-                        <Button variant="contained" startIcon={<Speed />} className="discordButton">
+                        <Button variant="contained" startIcon={<Speed />} className="discordButton" disabled>
                             Test Discord API
                         </Button>
                     </Grid>
