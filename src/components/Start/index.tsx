@@ -168,10 +168,6 @@ const Start = () => {
                 })
                 .catch((err) => {
                     console.log(`Encountered read exception while loading settings from settings.json ${err}`)
-                    messageLogContext.setMessageLog([
-                        ...messageLogContext.messageLog,
-                        `\nEncountered read exception while loading settings from settings.json: ${err}\nThe settings.json file might not exist because this is your first time booting up this application.`,
-                    ])
                 })
         } catch (e) {
             console.log(`Encountered exception while loading settings from settings.json: ${e}`)
