@@ -826,6 +826,9 @@ class Game:
                 MessageLog.print_message("######################################################################")
                 MessageLog.print_message("######################################################################\n")
 
+            if Settings.farming_mode == "Raid":
+                TwitterRoomFinder.connect()
+
             first_run = True
             while Settings.item_amount_farmed < Settings.item_amount_to_farm:
                 if Settings.farming_mode == "Quest":
