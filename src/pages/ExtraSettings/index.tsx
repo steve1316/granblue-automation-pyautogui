@@ -1,7 +1,26 @@
 import { Icon as Iconify } from "@iconify/react"
 import { Speed } from "@mui/icons-material"
-import { Button, Checkbox, Divider, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, InputAdornment, Modal, Stack, TextField, Typography } from "@mui/material"
+import {
+    Alert,
+    Button,
+    Checkbox,
+    CircularProgress,
+    Divider,
+    Fade,
+    FormControlLabel,
+    FormGroup,
+    FormHelperText,
+    Grid,
+    InputAdornment,
+    Modal,
+    Snackbar,
+    Stack,
+    TextField,
+    Typography,
+} from "@mui/material"
+import { green } from "@mui/material/colors"
 import { Box, styled } from "@mui/system"
+import { Command } from "@tauri-apps/api/shell"
 import { useContext, useRef, useState } from "react"
 import TransferList from "../../components/TransferList"
 import { BotStateContext } from "../../context/BotStateContext"
@@ -13,7 +32,11 @@ const Input = styled("input")({
 })
 
 const ExtraSettings = () => {
+    const [testPID, setTestPID] = useState(0)
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
+    const [showSnackbar, setShowSnackbar] = useState<boolean>(false)
+    const [testInProgress, setTestInProgress] = useState<boolean>(false)
+    const [testFailed, setTestFailed] = useState<boolean>(false)
 
     const bot = useContext(BotStateContext)
 
@@ -115,9 +138,23 @@ const ExtraSettings = () => {
                     </Grid>
 
                     <Grid item>
-                        <Button variant="contained" startIcon={<Speed />} className="twitterButton" disabled>
-                            Test Twitter API
-                        </Button>
+                        <Box sx={{ m: 1, position: "relative" }}>
+                            <Button variant="contained" startIcon={<Speed />} className="twitterButton" onClick={() => testTwitter()} disabled={testInProgress}>
+                                Test Twitter API
+                            </Button>
+                            {testInProgress && (
+                                <CircularProgress
+                                    size={24}
+                                    sx={{
+                                        position: "absolute",
+                                        top: "50%",
+                                        left: "50%",
+                                        marginTop: "-12px",
+                                        marginLeft: "-12px",
+                                    }}
+                                />
+                            )}
+                        </Box>
                     </Grid>
                 </Grid>
             </div>
@@ -172,9 +209,23 @@ const ExtraSettings = () => {
                     </Grid>
 
                     <Grid item>
-                        <Button variant="contained" startIcon={<Speed />} className="discordButton" disabled>
-                            Test Discord API
-                        </Button>
+                        <Box sx={{ m: 1, position: "relative" }}>
+                            <Button variant="contained" startIcon={<Speed />} className="twitterButton" onClick={() => testDiscord()} disabled={testInProgress}>
+                                Test Discord API
+                            </Button>
+                            {testInProgress && (
+                                <CircularProgress
+                                    size={24}
+                                    sx={{
+                                        position: "absolute",
+                                        top: "50%",
+                                        left: "50%",
+                                        marginTop: "-12px",
+                                        marginLeft: "-12px",
+                                    }}
+                                />
+                            )}
+                        </Box>
                     </Grid>
                 </Grid>
             </div>
@@ -475,6 +526,98 @@ const ExtraSettings = () => {
         }
     }
 
+    // Attempt to kill the bot process if it is still active.
+    const handleStop = async () => {
+        if (testPID !== 0) {
+            console.log("Killing process tree now...")
+            const output = await new Command("powershell", `taskkill /F /T /PID ${testPID}`).execute() // Windows specific
+            console.log(`Result of killing bot process using PID ${testPID}: \n${output.stdout}`)
+            setTestPID(0)
+        }
+    }
+
+    // Test Twitter API key.
+    const testTwitter = async () => {
+        // Construct the shell command using Tauri Command API.
+        const command = new Command("python", ["backend/test.py", "9"])
+
+        // Attach event listeners.
+        command.on("close", (data) => {
+            console.log(`\nChild process finished with code ${data.code}`)
+            handleStop()
+
+            setTestInProgress(false)
+        })
+        command.on("error", (error) => {
+            console.log(`\nChild process finished with error ${error}`)
+            handleStop()
+
+            setTestFailed(true)
+            setShowSnackbar(true)
+        })
+        command.stdout.on("data", (line: string) => {
+            if (line.indexOf("Test successfully completed.") !== -1) {
+                console.log("Testing Twitter API was successful.")
+                setTestFailed(false)
+                setShowSnackbar(true)
+            } else if (line.indexOf("Test failed.") !== -1) {
+                console.log("Testing Twitter API was unsuccessful.")
+                setTestFailed(true)
+                setShowSnackbar(true)
+            }
+        })
+        command.stderr.on("data", (line) => {
+            console.log("ERROR: ", line)
+        })
+
+        // Create the child process.
+        const child = await command.spawn()
+        console.log("PID: ", child.pid)
+        setTestPID(child.pid)
+        setTestInProgress(true)
+    }
+
+    // Test Discord API key.
+    const testDiscord = async () => {
+        // Construct the shell command using Tauri Command API.
+        const command = new Command("python", ["backend/test.py", "10"])
+
+        // Attach event listeners.
+        command.on("close", (data) => {
+            console.log(`\nChild process finished with code ${data.code}`)
+            handleStop()
+
+            setTestInProgress(false)
+        })
+        command.on("error", (error) => {
+            console.log(`\nChild process finished with error ${error}`)
+            handleStop()
+
+            setTestFailed(true)
+            setShowSnackbar(true)
+        })
+        command.stdout.on("data", (line: string) => {
+            if (line.indexOf("Test successfully completed.") !== -1) {
+                console.log("Testing Discord API was successful.")
+                setTestFailed(false)
+                setShowSnackbar(true)
+            } else if (line.indexOf("Test failed.") !== -1) {
+                console.log("Testing Discord API was unsuccessful.")
+                setTestFailed(true)
+                setShowSnackbar(true)
+            }
+        })
+        command.stderr.on("data", (line) => {
+            console.log("ERROR: ", line)
+        })
+
+        // Create the child process.
+        const child = await command.spawn()
+        console.log("PID: ", child.pid)
+        setTestPID(child.pid)
+        setTestInProgress(true)
+    }
+
     // Show or hide the Support Summon Selection component.
     const handleModalOpen = () => setIsModalOpen(true)
     const handleModalClose = () => setIsModalOpen(false)
@@ -482,6 +625,16 @@ const ExtraSettings = () => {
     return (
         <Fade in={true}>
             <Box className="extraSettingsContainer">
+                <Snackbar
+                    open={showSnackbar}
+                    anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                    autoHideDuration={10000}
+                    onClose={() => setShowSnackbar(false)}
+                    onClick={() => setShowSnackbar(false)}
+                >
+                    {testFailed ? <Alert severity="error">Test was not successful.</Alert> : <Alert severity="success">Test was successful.</Alert>}
+                </Snackbar>
+
                 <Stack spacing={2} className="extraSettingsWrapper">
                     {renderNightmareSettings()}
 
