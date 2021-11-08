@@ -1,3 +1,5 @@
+import multiprocessing
+import sys
 import unittest
 
 from utils.settings import Settings
@@ -6,6 +8,7 @@ from utils.mouse_utils import MouseUtils
 from bot.combat_mode import CombatMode
 from bot.game import Game
 from utils.twitter_room_finder import TwitterRoomFinder
+from utils import discord_utils
 
 
 class Test(unittest.TestCase):
@@ -89,23 +92,47 @@ class Test(unittest.TestCase):
         return None
 
     def test_twitter_functionality(self):
-        self.game_object.wait(5)
+        Settings.farming_mode = "Raid"
+        Settings.mission_name = "Lvl 120 Avatar"
 
-        tries = 30
+        TwitterRoomFinder.connect()
+
+        Game.wait(5)
+
+        tries = 10
         room_codes = []
         while tries > 0:
             code = TwitterRoomFinder.get_room_code()
             if code != "":
                 room_codes.append(code)
-                if len(room_codes) >= 5:
+                if len(room_codes) >= 1:
                     break
 
             tries -= 1
-            self.game_object.wait(1)
+            Game.wait(1)
 
         TwitterRoomFinder.disconnect()
         print(f"\nFound room codes: {room_codes}")
-        self.assertGreaterEqual(len(room_codes), 5)
+        self.assertGreaterEqual(len(room_codes), 1)
+        self._reset_settings()
+        return None
+
+    def test_twitter_connection(self):
+        TwitterRoomFinder.connect()
+        Game.wait(5)
+        self.assertTrue(TwitterRoomFinder.test_connection())
+        TwitterRoomFinder.disconnect()
+        return None
+
+    def test_discord_connection(self):
+        print("\n[DISCORD] Starting Discord process on a new Thread...")
+        self._discord_process = multiprocessing.Process(target = discord_utils.start_now, args = (Settings.discord_token, Settings.user_id, Settings.discord_queue))
+        self._discord_process.start()
+        Game.wait(3.0)
+        Settings.discord_queue.put("Testing 1 2 3")
+        Game.wait(3.0)
+        self.assertTrue(Settings.discord_queue.empty())
+        self._discord_process.terminate()
         return None
 
     def test_combat_mode_old_lignoid(self):
@@ -130,7 +157,7 @@ class Test(unittest.TestCase):
 
         # Now start the Old Lignoid Trial Battle right away and then wait a few seconds.
         self.game_object.find_and_click_button("party_selection_ok")
-        self.game_object.wait(3)
+        Game.wait(3)
 
         if ImageUtils.confirm_location("trial_battles_description"):
             self.game_object.find_and_click_button("close")
@@ -149,65 +176,18 @@ class Test(unittest.TestCase):
 
 if __name__ == "__main__":
 
-    option: int = -1
-    option_selected = ""
+    try:
+        if len(sys.argv[1]) != "":
+            arg: str = sys.argv[1]
 
-    while option != 0:
-        check = False
+            option: int = -1
+            try:
+                option: int = int(arg)
+            except ValueError:
+                print("Invalid argument passed in for a option number.", flush = True)
 
-        print("\n########################################")
-        print("Unit and Integration Tests")
-        print("\n1. Test \"The Fruit of Lumacie\" for Quest Farming Mode")
-        print("2. Test \"VH Slimy Slime Search!\" for Special Farming Mode")
-        print("3. Test \"Lvl 120 Grimnir\" for Raid Farming Mode")
-        print("4. Test \"Time of Revelation\" for Coop Farming Mode")
-        print("5. Test item detection for \"Horseman's Plate\"")
-        print("6. Test item detection for \"Wind Orb\"")
-        print("7. Test item detection for \"Sagittarius Omega Anima\"")
-        print("8. Test Twitter functionality searching for \"Lvl 120 Avatar\" room codes")
-        print("9. Test Combat Mode functionality for \"Old Lignoid\"")
-        print("\n0. Exit")
-        print("\n########################################")
-
-        option_selected = input("\nEnter the option number to begin that specific test: ")
-
-        option: int = -1
-        try:
-            option: int = int(option_selected)
-            check = True
-        except ValueError:
-            print("Invalid option entered. Please try again.")
-
-        if option == 0:
-            break
-
-        if check:
-            if option == 1:
-                item_name = "Rough Stone"
-                mode = "Quest"
-                map_name = "Lumacie Archipelago"
-                mission_name = "The Fruit of Lumacie"
-            elif option == 2:
-                item_name = "EXP"
-                mode = "Special"
-                map_name = "Shiny Slime Search!"
-                mission_name = "VH Shiny Slime Search!"
-            elif option == 3:
-                item_name = "Grimnir Anima"
-                mode = "Raid"
-                mission_name = "Lvl 120 Grimnir"
-            elif option == 4:
-                item_name = "Gladiator Distinction"
-                mode = "Coop"
-                mission_name = "Time of Revelation"
-            elif option == 5:
-                item_name = "Horseman's Plate"
-            elif option == 6:
-                item_name = "Wind Orb"
-            elif option == 7:
-                item_name = "Sagittarius Omega Anima"
-            elif option == 8:
-                mission_name = "Lvl 120 Avatar"
+            if option not in range(1, 11):
+                raise (ValueError("Argument passed in was for a option number that does not exist."))
 
             try:
                 game = Game()
@@ -233,8 +213,81 @@ if __name__ == "__main__":
                 elif option == 8:
                     test.test_twitter_functionality()
                 elif option == 9:
+                    test.test_twitter_connection()
+                elif option == 10:
+                    test.test_discord_connection()
+                elif option == 11:
                     test.test_combat_mode_old_lignoid()
 
                 print("\nTest successfully completed.")
             except Exception as e:
                 print(f"\nTest failed. Error message: {e}")
+    except IndexError:
+        option: int = -1
+        option_selected = ""
+
+        while option != 0:
+            check = False
+
+            print("\n########################################")
+            print("Unit and Integration Tests")
+            print("\n1. Test \"The Fruit of Lumacie\" for Quest Farming Mode")
+            print("2. Test \"VH Slimy Slime Search!\" for Special Farming Mode")
+            print("3. Test \"Lvl 120 Grimnir\" for Raid Farming Mode")
+            print("4. Test \"Time of Revelation\" for Coop Farming Mode")
+            print("5. Test item detection for \"Horseman's Plate\"")
+            print("6. Test item detection for \"Wind Orb\"")
+            print("7. Test item detection for \"Sagittarius Omega Anima\"")
+            print("8. Test Twitter functionality searching for \"Lvl 120 Avatar\" room codes")
+            print("9. Test Twitter Connection using saved API keys and tokens.")
+            print("10. Test Discord functionality using saved API key.")
+            print("11. Test Combat Mode functionality for \"Old Lignoid\"")
+            print("\n0. Exit")
+            print("\n########################################")
+
+            option_selected = input("\nEnter the option number to begin that specific test: ")
+
+            option: int = -1
+            try:
+                option: int = int(option_selected)
+                check = True
+            except ValueError:
+                print("Invalid option entered. Please try again.")
+
+            if option == 0:
+                break
+
+            if check:
+                try:
+                    game = Game()
+                    test = Test(game)
+
+                    if option == 1:
+                        test.test_quest()
+                    elif option == 2:
+                        test.test_special()
+                    elif option == 3:
+                        test.test_raid()
+                    elif option == 4:
+                        test.test_coop()
+                    elif option == 5:
+                        input("Please have the Quest Results screen visible for loot detection to work. Press any button to proceed...")
+                        test.test_item_detection1()
+                    elif option == 6:
+                        input("Please have the Quest Results screen visible for loot detection to work. Press any button to proceed...")
+                        test.test_item_detection2()
+                    elif option == 7:
+                        input("Please have the Quest Results screen visible for loot detection to work. Press any button to proceed...")
+                        test.test_item_detection3()
+                    elif option == 8:
+                        test.test_twitter_functionality()
+                    elif option == 9:
+                        test.test_twitter_connection()
+                    elif option == 10:
+                        test.test_discord_connection()
+                    elif option == 11:
+                        test.test_combat_mode_old_lignoid()
+
+                    print("\nTest successfully completed.")
+                except Exception as e:
+                    print(f"\nTest failed. Error message: {e}")
