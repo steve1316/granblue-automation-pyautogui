@@ -168,6 +168,7 @@ const Start = () => {
                 })
                 .catch((err) => {
                     console.log(`Encountered read exception while loading settings from settings.json ${err}`)
+                    setFirstTimeSetup(false)
                 })
         } catch (e) {
             console.log(`Encountered exception while loading settings from settings.json: ${e}`)
