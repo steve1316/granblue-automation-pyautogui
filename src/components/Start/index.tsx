@@ -5,6 +5,59 @@ import { BotStateContext } from "../../context/BotStateContext"
 import { MessageLogContext } from "../../context/MessageLogContext"
 import summonData from "../../data/summons.json"
 
+interface ParsedSettings {
+    combatScriptName: string
+    combatScript: string[]
+    farmingMode: string
+    item: string
+    mission: string
+    map: string
+    itemAmount: number
+    summons: string[]
+    summonElements: string[]
+    groupNumber: number
+    partyNumber: number
+    debugMode: boolean
+    twitter: {
+        apiKey: string
+        apiKeySecret: string
+        accessToken: string
+        accessTokenSecret: string
+    }
+    discord: {
+        enableDiscordNotifications: boolean
+        discordToken: string
+        discordUserID: string
+    }
+    enableAutoRestore: boolean
+    enableFullElixir: boolean
+    enableSoulBalm: boolean
+    enableBezierCurveMouseMovement: boolean
+    mouseSpeed: number
+    delayBetweenRuns: {
+        enableDelayBetweenRuns: boolean
+        delay: number
+    }
+    randomizedDelayBetweenRuns: {
+        enableRandomizedDelayBetweenRuns: boolean
+        delayLowerBound: number
+        delayUpperBound: number
+    }
+    nightmare: {
+        enableNightmare: boolean
+        enableCustomNightmareSettings: boolean
+        nightmareCombatScriptName: string
+        nightmareCombatScript: string[]
+        nightmareSummons: string[]
+        nightmareSummonElements: string[]
+        nightmareGroupNumber: number
+        nightmarePartyNumber: number
+    }
+    arcarum: {
+        enableStopOnArcarumBoss: boolean
+    }
+}
+
 const Start = () => {
     const [PID, setPID] = useState(0)
     const [firstTimeSetup, setFirstTimeSetup] = useState(true)
@@ -63,59 +116,6 @@ const Start = () => {
         try {
             readTextFile("backend/settings.json")
                 .then((settings) => {
-                    interface ParsedSettings {
-                        combatScriptName: string
-                        combatScript: string[]
-                        farmingMode: string
-                        item: string
-                        mission: string
-                        map: string
-                        itemAmount: number
-                        summons: string[]
-                        summonElements: string[]
-                        groupNumber: number
-                        partyNumber: number
-                        debugMode: boolean
-                        twitter: {
-                            apiKey: string
-                            apiKeySecret: string
-                            accessToken: string
-                            accessTokenSecret: string
-                        }
-                        discord: {
-                            enableDiscordNotifications: boolean
-                            discordToken: string
-                            discordUserID: string
-                        }
-                        enableAutoRestore: boolean
-                        enableFullElixir: boolean
-                        enableSoulBalm: boolean
-                        enableBezierCurveMouseMovement: boolean
-                        mouseSpeed: number
-                        delayBetweenRuns: {
-                            enableDelayBetweenRuns: boolean
-                            delay: number
-                        }
-                        randomizedDelayBetweenRuns: {
-                            enableRandomizedDelayBetweenRuns: boolean
-                            delayLowerBound: number
-                            delayUpperBound: number
-                        }
-                        nightmare: {
-                            enableNightmare: boolean
-                            enableCustomNightmareSettings: boolean
-                            nightmareCombatScriptName: string
-                            nightmareCombatScript: string[]
-                            nightmareSummons: string[]
-                            nightmareSummonElements: string[]
-                            nightmareGroupNumber: number
-                            nightmarePartyNumber: number
-                        }
-                        arcarum: {
-                            enableStopOnArcarumBoss: boolean
-                        }
-                    }
-
                     const decoded: ParsedSettings = JSON.parse(settings)
                     console.log(`Loaded settings from settings.json: ${JSON.stringify(decoded, null, 4)}`)
 
@@ -163,6 +163,8 @@ const Start = () => {
                     botStateContext.setNightmarePartyNumber(decoded.nightmare.nightmarePartyNumber)
 
                     botStateContext.setEnableStopOnArcarumBoss(decoded.arcarum.enableStopOnArcarumBoss)
+
+                    setFirstTimeSetup(false)
                 })
                 .catch((err) => {
                     console.log(`Encountered read exception while loading settings from settings.json ${err}`)
@@ -176,7 +178,6 @@ const Start = () => {
             messageLogContext.setMessageLog([...messageLogContext.messageLog, `\nEncountered exception while loading settings from local JSON file: ${e}`])
         }
 
-        setFirstTimeSetup(false)
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
@@ -230,7 +231,7 @@ const Start = () => {
 
                 // Create the structure of the JSON object to be saved.
                 // Be sure to save the summon elements using the local variable and not the state to avoid endless rendering loop.
-                const settings = {
+                const settings: ParsedSettings = {
                     combatScriptName: botStateContext.combatScriptName,
                     combatScript: botStateContext.combatScript,
                     farmingMode: botStateContext.farmingMode,
