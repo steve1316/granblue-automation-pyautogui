@@ -37,9 +37,6 @@ class Game:
     def __init__(self):
         super().__init__()
 
-        # Calibrate the dimensions of the bot window on bot launch.
-        Game.go_back_home(confirm_location_check = True, display_info_check = True)
-
     @staticmethod
     def _calibrate_game_window(display_info_check: bool = False):
         """Recalibrate the dimensions of the bot window for fast and accurate image matching.
@@ -811,6 +808,9 @@ class Game:
             (bool): True if Farming Mode ended successfully.
         """
         try:
+            # Calibrate the dimensions of the bot window on bot launch.
+            Game.go_back_home(confirm_location_check = True, display_info_check = True)
+
             if Settings.item_name != "EXP":
                 MessageLog.print_message("\n######################################################################")
                 MessageLog.print_message("######################################################################")
