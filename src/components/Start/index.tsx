@@ -214,9 +214,13 @@ const Start = () => {
             let newLog = [...messageLogContext.asyncMessages, `\n${line}`]
             messageLogContext.setAsyncMessages(newLog)
         })
-        command.stderr.on("data", (line) => {
+        command.stderr.on("data", (line: string) => {
             let newLog = [...messageLogContext.asyncMessages, `\n${line}`]
             messageLogContext.setAsyncMessages(newLog)
+
+            if (line.indexOf("Traceback") !== -1) {
+                handleStop()
+            }
         })
 
         // Create the child process.
