@@ -35,7 +35,7 @@ class ImageUtils:
 
     # Check if the temp folder is created in the images folder.
     _current_dir: str = os.getcwd()
-    _temp_dir: str = _current_dir + "/images/temp/"
+    _temp_dir: str = _current_dir + "/temp/"
     if not os.path.exists(_temp_dir):
         os.makedirs(_temp_dir)
 
@@ -87,8 +87,8 @@ class ImageUtils:
         else:
             image: PIL.Image.Image = pyautogui.screenshot()
 
-        image.save(f"images/temp/source.png")
-        src: numpy.ndarray = cv2.imread(f"images/temp/source.png", 0)
+        image.save(f"temp/source.png")
+        src: numpy.ndarray = cv2.imread(f"temp/source.png", 0)
         height, width = template.shape
 
         result: numpy.ndarray = cv2.matchTemplate(src, template, ImageUtils._match_method)
@@ -111,7 +111,7 @@ class ImageUtils:
             cv2.rectangle(src, ImageUtils._match_location, region, 255, 5)
 
             if Settings.debug_mode:
-                cv2.imwrite(f"images/temp/match.png", src)
+                cv2.imwrite(f"temp/match.png", src)
 
             if Settings.additional_calibration_required is False:
                 temp_location = list(ImageUtils._match_location)
@@ -149,9 +149,9 @@ class ImageUtils:
         else:
             image: PIL.Image.Image = pyautogui.screenshot()
 
-        image.save(f"images/temp/source.png")
+        image.save(f"temp/source.png")
 
-        src: numpy.ndarray = cv2.imread(f"images/temp/source.png", 0)
+        src: numpy.ndarray = cv2.imread(f"temp/source.png", 0)
         height, width = template.shape
 
         match_check = True
@@ -181,7 +181,7 @@ class ImageUtils:
                 cv2.rectangle(src, ImageUtils._match_location, region, 255, 5)
 
                 if Settings.debug_mode:
-                    cv2.imwrite(f"images/temp/matchAll.png", src)
+                    cv2.imwrite(f"temp/matchAll.png", src)
 
                 if Settings.additional_calibration_required is False:
                     temp_location = list(ImageUtils._match_location)
@@ -460,9 +460,9 @@ class ImageUtils:
                 top = location[1] - 5
                 width = 30
                 height = 25
-                test_image = pyautogui.screenshot(f"images/temp/test.png", region = (left, top, width, height))
+                test_image = pyautogui.screenshot(f"temp/test.png", region = (left, top, width, height))
                 # test_image.show() # Uncomment this line of code to see what the bot captured for the region of the detected text.
-                result = ImageUtils._reader.readtext(f"images/temp/test.png", detail = 0)
+                result = ImageUtils._reader.readtext(f"temp/test.png", detail = 0)
 
                 # Split any unnecessary characters in the extracted text until only the number remains.
                 result_cleaned = 0
