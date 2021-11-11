@@ -105,7 +105,11 @@ const NavBar = () => {
                     Granblue Automation <Typography variant="caption">v{version}</Typography>
                 </Typography>
                 <div className="emptyDivider" />
-                {botStateContext.readyStatus ? (
+                {botStateContext.isBotRunning ? (
+                    <Typography variant="caption" sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", marginRight: "10px", color: "#FFEB3B" }}>
+                        Status: Running
+                    </Typography>
+                ) : botStateContext.readyStatus ? (
                     <Typography variant="caption" sx={{ display: "flex", flexDirection: "column", justifyContent: "flex-end", marginRight: "10px", color: "#76ff03" }}>
                         Status: Ready
                     </Typography>
