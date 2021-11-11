@@ -290,7 +290,9 @@ const ExtraSettings = () => {
                         }
                         label="Enable Bezier Curve Mouse Movement"
                     />
-                    <FormHelperText>Enable this option to have slow but human-like mouse movement. Disable this for fast but bot-like mouse movement.</FormHelperText>
+                    <FormHelperText>
+                        Enable this option to have slow but human-like mouse movement. Disable this for fast but bot-like mouse movement. Note that enabling this will disable the Mouse Speed setting.
+                    </FormHelperText>
                 </FormGroup>
 
                 <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
@@ -306,6 +308,7 @@ const ExtraSettings = () => {
                                 endAdornment: <InputAdornment position="end">seconds</InputAdornment>,
                             }}
                             helperText="Set how fast a mouse operation finishes."
+                            disabled={bot.settings.enableBezierCurveMouseMovement}
                             fullWidth
                         />
                     </Grid>
