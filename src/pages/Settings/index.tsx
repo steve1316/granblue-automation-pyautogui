@@ -137,6 +137,32 @@ const Settings = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [botStateContext.settings.item])
 
+    // Fetch the map that corresponds to the selected mission if applicable.
+    useEffect(() => {
+        if (
+            botStateContext.settings.farmingMode === "Quest" ||
+            botStateContext.settings.farmingMode === "Special" ||
+            botStateContext.settings.farmingMode === "Raid" ||
+            botStateContext.settings.farmingMode === "Event" ||
+            botStateContext.settings.farmingMode === "Event (Token Drawboxes)" ||
+            botStateContext.settings.farmingMode === "Rise of the Beasts" ||
+            botStateContext.settings.farmingMode === "Guild Wars" ||
+            botStateContext.settings.farmingMode === "Dread Barrage" ||
+            botStateContext.settings.farmingMode === "Proving Grounds" ||
+            botStateContext.settings.farmingMode === "Xeno Clash" ||
+            botStateContext.settings.farmingMode === "Arcarum"
+        ) {
+            Object.entries(data[botStateContext.settings.farmingMode]).every((obj) => {
+                if (obj[0] === botStateContext.settings.mission) {
+                    botStateContext.setSettings({ ...botStateContext.settings, map: obj[1].map })
+                    return false
+                } else {
+                    return true
+                }
+            })
+        }
+    }, [botStateContext.settings.mission])
+
     // Reset Nightmare settings.
     const resetNightmareSettings = () => {
         botStateContext.setSettings({
@@ -277,33 +303,10 @@ const Settings = () => {
                         options={missionList.map((element) => element)}
                         value={botStateContext.settings.mission}
                         onChange={(_e, value) => {
-                            var newMission = ""
-                            if (value !== null) {
-                                botStateContext.setSettings({ ...botStateContext.settings, mission: newMission })
-
-                                // Fetch the map for the selected mission if applicable.
-                                if (
-                                    botStateContext.settings.farmingMode === "Quest" ||
-                                    botStateContext.settings.farmingMode === "Special" ||
-                                    botStateContext.settings.farmingMode === "Raid" ||
-                                    botStateContext.settings.farmingMode === "Event" ||
-                                    botStateContext.settings.farmingMode === "Event (Token Drawboxes)" ||
-                                    botStateContext.settings.farmingMode === "Rise of the Beasts" ||
-                                    botStateContext.settings.farmingMode === "Guild Wars" ||
-                                    botStateContext.settings.farmingMode === "Dread Barrage" ||
-                                    botStateContext.settings.farmingMode === "Proving Grounds" ||
-                                    botStateContext.settings.farmingMode === "Xeno Clash" ||
-                                    botStateContext.settings.farmingMode === "Arcarum"
-                                ) {
-                                    Object.entries(data[botStateContext.settings.farmingMode]).every((obj) => {
-                                        if (obj[0] === value) {
-                                            botStateContext.setSettings({ ...botStateContext.settings, map: obj[1].map })
-                                            return false
-                                        } else {
-                                            return true
-                                        }
-                                    })
-                                }
+                            if (value === null) {
+                                botStateContext.setSettings({ ...botStateContext.settings, mission: "", map: "" })
+                            } else {
+                                botStateContext.setSettings({ ...botStateContext.settings, mission: value })
                             }
                         }}
                         getOptionLabel={(option) => option}
