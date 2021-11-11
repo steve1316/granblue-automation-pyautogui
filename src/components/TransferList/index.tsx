@@ -1,14 +1,10 @@
 import { Card, CardActionArea, CardMedia, Divider, Grid, Grow, List, ListItem, ListItemText, Paper, Tooltip, Typography, Zoom } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
-import { BotStateContext } from "../../context/BotStateContext"
+import { BotStateContext, Settings } from "../../context/BotStateContext"
 import summonData from "../../data/summons.json"
 import "./index.scss"
 
-interface Props {
-    isNightmare: boolean
-}
-
-const TransferList: React.FC<Props> = (props) => {
+const TransferList = ({ isNightmare }: { isNightmare: boolean }) => {
     const [leftList, setLeftList] = useState<string[]>([])
     const [rightList, setRightList] = useState<string[]>([])
 
@@ -29,10 +25,10 @@ const TransferList: React.FC<Props> = (props) => {
 
         // Populate the right list.
         var oldRightList: string[] = []
-        if (!props.isNightmare) {
-            oldRightList = botStateContext.summons
+        if (!isNightmare) {
+            oldRightList = botStateContext.settings.summons
         } else {
-            oldRightList = botStateContext.nightmareSummons
+            oldRightList = botStateContext.settings.nightmareSummons
         }
 
         // Filter out summons from the left list that are already selected.
@@ -68,13 +64,16 @@ const TransferList: React.FC<Props> = (props) => {
         }
 
         // Save selected summons to settings.
-        if (!props.isNightmare) {
-            botStateContext?.setSummons(newRightList)
-            botStateContext?.setSummonElements([])
+        const localSettings: Settings = botStateContext.settings
+        if (!isNightmare) {
+            localSettings.summons = newRightList
+            localSettings.summonElements = []
         } else {
-            botStateContext?.setNightmareSummons(newRightList)
-            botStateContext?.setNightmareSummonElements([])
+            localSettings.nightmareSummons = newRightList
+            localSettings.nightmareSummonElements = []
         }
+
+        botStateContext.setSettings(localSettings)
     }
 
     const customList = (items: string[], isLeftList: boolean) => (

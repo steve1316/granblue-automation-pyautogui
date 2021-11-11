@@ -1,6 +1,6 @@
 import { createContext, useState } from "react"
 
-export interface IProviderProps {
+interface IProviderProps {
     messageLog: string[]
     setMessageLog: (messageLog: string[]) => void
     asyncMessages: string[]

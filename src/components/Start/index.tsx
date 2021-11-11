@@ -1,62 +1,9 @@
 import { FsTextFileOption, readTextFile, writeFile } from "@tauri-apps/api/fs"
 import { Command } from "@tauri-apps/api/shell"
 import { useContext, useEffect, useState } from "react"
-import { BotStateContext } from "../../context/BotStateContext"
+import { BotStateContext, Settings } from "../../context/BotStateContext"
 import { MessageLogContext } from "../../context/MessageLogContext"
 import summonData from "../../data/summons.json"
-
-interface ParsedSettings {
-    combatScriptName: string
-    combatScript: string[]
-    farmingMode: string
-    item: string
-    mission: string
-    map: string
-    itemAmount: number
-    summons: string[]
-    summonElements: string[]
-    groupNumber: number
-    partyNumber: number
-    debugMode: boolean
-    twitter: {
-        apiKey: string
-        apiKeySecret: string
-        accessToken: string
-        accessTokenSecret: string
-    }
-    discord: {
-        enableDiscordNotifications: boolean
-        discordToken: string
-        discordUserID: string
-    }
-    enableAutoRestore: boolean
-    enableFullElixir: boolean
-    enableSoulBalm: boolean
-    enableBezierCurveMouseMovement: boolean
-    mouseSpeed: number
-    delayBetweenRuns: {
-        enableDelayBetweenRuns: boolean
-        delay: number
-    }
-    randomizedDelayBetweenRuns: {
-        enableRandomizedDelayBetweenRuns: boolean
-        delayLowerBound: number
-        delayUpperBound: number
-    }
-    nightmare: {
-        enableNightmare: boolean
-        enableCustomNightmareSettings: boolean
-        nightmareCombatScriptName: string
-        nightmareCombatScript: string[]
-        nightmareSummons: string[]
-        nightmareSummonElements: string[]
-        nightmareGroupNumber: number
-        nightmarePartyNumber: number
-    }
-    arcarum: {
-        enableStopOnArcarumBoss: boolean
-    }
-}
 
 const Start = () => {
     const [PID, setPID] = useState(0)
@@ -120,53 +67,11 @@ const Start = () => {
         try {
             readTextFile("backend/settings.json")
                 .then((settings) => {
-                    const decoded: ParsedSettings = JSON.parse(settings)
+                    const decoded: Settings = JSON.parse(settings)
                     console.log(`Loaded settings from settings.json: ${JSON.stringify(decoded, null, 4)}`)
 
                     // Save the settings to state.
-                    botStateContext.setCombatScriptName(decoded.combatScriptName)
-                    botStateContext.setCombatScript(decoded.combatScript)
-                    botStateContext.setFarmingMode(decoded.farmingMode)
-                    botStateContext.setItem(decoded.item)
-                    botStateContext.setMission(decoded.mission)
-                    botStateContext.setMap(decoded.map)
-                    botStateContext.setItemAmount(decoded.itemAmount)
-                    botStateContext.setSummons(decoded.summons)
-                    botStateContext.setSummonElements(decoded.summonElements)
-                    botStateContext.setGroupNumber(decoded.groupNumber)
-                    botStateContext.setPartyNumber(decoded.partyNumber)
-                    botStateContext.setDebugMode(decoded.debugMode)
-
-                    // Save extra settings to state.
-                    botStateContext.setTwitterAPIKey(decoded.twitter.apiKey)
-                    botStateContext.setTwitterAPIKeySecret(decoded.twitter.apiKeySecret)
-                    botStateContext.setTwitterAccessToken(decoded.twitter.accessToken)
-                    botStateContext.setTwitterAccessTokenSecret(decoded.twitter.accessTokenSecret)
-                    botStateContext.setEnableDiscordNotifications(decoded.discord.enableDiscordNotifications)
-                    botStateContext.setDiscordToken(decoded.discord.discordToken)
-                    botStateContext.setDiscordUserID(decoded.discord.discordUserID)
-                    botStateContext.setEnableAutoRestore(decoded.enableAutoRestore)
-                    botStateContext.setEnableFullElixir(decoded.enableFullElixir)
-                    botStateContext.setEnableSoulBalm(decoded.enableSoulBalm)
-                    botStateContext.setEnableBezierCurveMouseMovement(decoded.enableBezierCurveMouseMovement)
-                    botStateContext.setMouseSpeed(decoded.mouseSpeed)
-                    botStateContext.setEnableDelayBetweenRuns(decoded.delayBetweenRuns.enableDelayBetweenRuns)
-                    botStateContext.setDelayBetweenRuns(decoded.delayBetweenRuns.delay)
-                    botStateContext.setEnableDelayBetweenRuns(decoded.randomizedDelayBetweenRuns.enableRandomizedDelayBetweenRuns)
-                    botStateContext.setDelayBetweenRunsLowerBound(decoded.randomizedDelayBetweenRuns.delayLowerBound)
-                    botStateContext.setDelayBetweenRunsUpperBound(decoded.randomizedDelayBetweenRuns.delayUpperBound)
-
-                    // Save extra settings for Nightmare to state.
-                    botStateContext.setEnableNightmare(decoded.nightmare.enableNightmare)
-                    botStateContext.setEnableCustomNightmareSettings(decoded.nightmare.enableCustomNightmareSettings)
-                    botStateContext.setNightmareCombatScriptName(decoded.nightmare.nightmareCombatScriptName)
-                    botStateContext.setNightmareCombatScript(decoded.nightmare.nightmareCombatScript)
-                    botStateContext.setNightmareSummons(decoded.nightmare.nightmareSummons)
-                    botStateContext.setNightmareSummonElements(decoded.nightmare.nightmareSummonElements)
-                    botStateContext.setNightmareGroupNumber(decoded.nightmare.nightmareGroupNumber)
-                    botStateContext.setNightmarePartyNumber(decoded.nightmare.nightmarePartyNumber)
-
-                    botStateContext.setEnableStopOnArcarumBoss(decoded.arcarum.enableStopOnArcarumBoss)
+                    botStateContext.setSettings(decoded)
 
                     setFirstTimeSetup(false)
                 })
@@ -182,111 +87,42 @@ const Start = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
+    const fetchSummonElements = (summonList: string[]) => {
+        var newSummonElementsList: string[] = []
+        summonList.forEach((summon) => {
+            if (summonData.Fire.summons.indexOf(summon) !== -1) {
+                newSummonElementsList = newSummonElementsList.concat("Fire")
+            } else if (summonData.Water.summons.indexOf(summon) !== -1) {
+                newSummonElementsList = newSummonElementsList.concat("Water")
+            } else if (summonData.Earth.summons.indexOf(summon) !== -1) {
+                newSummonElementsList = newSummonElementsList.concat("Earth")
+            } else if (summonData.Wind.summons.indexOf(summon) !== -1) {
+                newSummonElementsList = newSummonElementsList.concat("Wind")
+            } else if (summonData.Light.summons.indexOf(summon) !== -1) {
+                newSummonElementsList = newSummonElementsList.concat("Light")
+            } else if (summonData.Dark.summons.indexOf(summon) !== -1) {
+                newSummonElementsList = newSummonElementsList.concat("Dark")
+            } else if (summonData.Misc.summons.indexOf(summon) !== -1) {
+                newSummonElementsList = newSummonElementsList.concat("Misc")
+            }
+        })
+
+        return newSummonElementsList
+    }
+
     // Save current settings to JSON file.
     useEffect(() => {
         if (!firstTimeSetup) {
             try {
-                // Find the elements of the support Summons for the Farming Mode first.
-                var newSummonElementsList: string[] = []
-                botStateContext.summons.forEach((summon) => {
-                    if (summonData.Fire.summons.indexOf(summon) !== -1) {
-                        newSummonElementsList = newSummonElementsList.concat("Fire")
-                    } else if (summonData.Water.summons.indexOf(summon) !== -1) {
-                        newSummonElementsList = newSummonElementsList.concat("Water")
-                    } else if (summonData.Earth.summons.indexOf(summon) !== -1) {
-                        newSummonElementsList = newSummonElementsList.concat("Earth")
-                    } else if (summonData.Wind.summons.indexOf(summon) !== -1) {
-                        newSummonElementsList = newSummonElementsList.concat("Wind")
-                    } else if (summonData.Light.summons.indexOf(summon) !== -1) {
-                        newSummonElementsList = newSummonElementsList.concat("Light")
-                    } else if (summonData.Dark.summons.indexOf(summon) !== -1) {
-                        newSummonElementsList = newSummonElementsList.concat("Dark")
-                    } else if (summonData.Misc.summons.indexOf(summon) !== -1) {
-                        newSummonElementsList = newSummonElementsList.concat("Misc")
-                    }
-                })
+                // Grab a local copy of the current settings.
+                const localSettings: Settings = botStateContext.settings
 
-                botStateContext.setSummonElements(newSummonElementsList)
-
-                // Now find the elements of the support Summons for Nightmare.
-                var newNightmareSummonElementsList: string[] = []
-                botStateContext.nightmareSummons.forEach((summon) => {
-                    if (summonData.Fire.summons.indexOf(summon) !== -1) {
-                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Fire")
-                    } else if (summonData.Water.summons.indexOf(summon) !== -1) {
-                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Water")
-                    } else if (summonData.Earth.summons.indexOf(summon) !== -1) {
-                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Earth")
-                    } else if (summonData.Wind.summons.indexOf(summon) !== -1) {
-                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Wind")
-                    } else if (summonData.Light.summons.indexOf(summon) !== -1) {
-                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Light")
-                    } else if (summonData.Dark.summons.indexOf(summon) !== -1) {
-                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Dark")
-                    } else if (summonData.Misc.summons.indexOf(summon) !== -1) {
-                        newNightmareSummonElementsList = newNightmareSummonElementsList.concat("Misc")
-                    }
-                })
-
-                botStateContext.setNightmareSummonElements(newNightmareSummonElementsList)
-
-                // Create the structure of the JSON object to be saved.
-                // Be sure to save the summon elements using the local variable and not the state to avoid endless rendering loop.
-                const settings: ParsedSettings = {
-                    combatScriptName: botStateContext.combatScriptName,
-                    combatScript: botStateContext.combatScript,
-                    farmingMode: botStateContext.farmingMode,
-                    item: botStateContext.item,
-                    mission: botStateContext.mission,
-                    map: botStateContext.map,
-                    itemAmount: botStateContext.itemAmount,
-                    summons: botStateContext.summons,
-                    summonElements: newSummonElementsList,
-                    groupNumber: botStateContext.groupNumber,
-                    partyNumber: botStateContext.partyNumber,
-                    debugMode: botStateContext.debugMode,
-                    twitter: {
-                        apiKey: botStateContext.twitterAPIKey,
-                        apiKeySecret: botStateContext.twitterAPIKeySecret,
-                        accessToken: botStateContext.twitterAccessToken,
-                        accessTokenSecret: botStateContext.twitterAccessTokenSecret,
-                    },
-                    discord: {
-                        enableDiscordNotifications: botStateContext.enableDiscordNotifications,
-                        discordToken: botStateContext.discordToken,
-                        discordUserID: botStateContext.discordUserID,
-                    },
-                    enableAutoRestore: botStateContext.enableAutoRestore,
-                    enableFullElixir: botStateContext.enableFullElixir,
-                    enableSoulBalm: botStateContext.enableSoulBalm,
-                    enableBezierCurveMouseMovement: botStateContext.enableBezierCurveMouseMovement,
-                    mouseSpeed: botStateContext.mouseSpeed,
-                    delayBetweenRuns: {
-                        enableDelayBetweenRuns: botStateContext.enableDelayBetweenRuns,
-                        delay: botStateContext.delayBetweenRuns,
-                    },
-                    randomizedDelayBetweenRuns: {
-                        enableRandomizedDelayBetweenRuns: botStateContext.enableRandomizedDelayBetweenRuns,
-                        delayLowerBound: botStateContext.delayBetweenRunsLowerBound,
-                        delayUpperBound: botStateContext.delayBetweenRunsUpperBound,
-                    },
-                    nightmare: {
-                        enableNightmare: botStateContext.enableNightmare,
-                        enableCustomNightmareSettings: botStateContext.enableCustomNightmareSettings,
-                        nightmareCombatScriptName: botStateContext.nightmareCombatScriptName,
-                        nightmareCombatScript: botStateContext.nightmareCombatScript,
-                        nightmareSummons: botStateContext.nightmareSummons,
-                        nightmareSummonElements: newNightmareSummonElementsList,
-                        nightmareGroupNumber: botStateContext.nightmareGroupNumber,
-                        nightmarePartyNumber: botStateContext.nightmarePartyNumber,
-                    },
-                    arcarum: {
-                        enableStopOnArcarumBoss: botStateContext.enableStopOnArcarumBoss,
-                    },
-                }
+                // Find the elements of the support Summons for the Farming Mode first and then for Nightmare if available.
+                localSettings.summonElements = fetchSummonElements(localSettings.summons)
+                localSettings.nightmareSummonElements = fetchSummonElements(localSettings.nightmareSummons)
 
                 // Stringify the contents and prepare for writing to the specified file.
-                const jsonString = JSON.stringify(settings, null, 4)
+                const jsonString = JSON.stringify(localSettings, null, 4)
                 const settingsFile: FsTextFileOption = { path: "backend/settings.json", contents: jsonString }
                 writeFile(settingsFile)
                     .then(() => {
@@ -307,44 +143,7 @@ const Start = () => {
 
         handleReady()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [
-        botStateContext.combatScriptName,
-        botStateContext.combatScript,
-        botStateContext.farmingMode,
-        botStateContext.item,
-        botStateContext.mission,
-        botStateContext.map,
-        botStateContext.itemAmount,
-        botStateContext.summons,
-        botStateContext.groupNumber,
-        botStateContext.partyNumber,
-        botStateContext.debugMode,
-        botStateContext.twitterAPIKey,
-        botStateContext.twitterAPIKeySecret,
-        botStateContext.twitterAccessToken,
-        botStateContext.twitterAccessTokenSecret,
-        botStateContext.enableDiscordNotifications,
-        botStateContext.discordToken,
-        botStateContext.discordUserID,
-        botStateContext.enableAutoRestore,
-        botStateContext.enableFullElixir,
-        botStateContext.enableSoulBalm,
-        botStateContext.enableBezierCurveMouseMovement,
-        botStateContext.mouseSpeed,
-        botStateContext.enableDelayBetweenRuns,
-        botStateContext.delayBetweenRuns,
-        botStateContext.enableRandomizedDelayBetweenRuns,
-        botStateContext.delayBetweenRunsLowerBound,
-        botStateContext.delayBetweenRunsUpperBound,
-        botStateContext.enableNightmare,
-        botStateContext.enableCustomNightmareSettings,
-        botStateContext.nightmareCombatScriptName,
-        botStateContext.nightmareCombatScript,
-        botStateContext.nightmareSummons,
-        botStateContext.nightmareGroupNumber,
-        botStateContext.nightmarePartyNumber,
-        botStateContext.enableStopOnArcarumBoss,
-    ])
+    }, [botStateContext.settings])
 
     // Save current message log to text file inside the /logs/ folder.
     useEffect(() => {
@@ -375,14 +174,14 @@ const Start = () => {
 
     // Determine whether the program is ready to start.
     const handleReady = () => {
-        if (botStateContext.farmingMode !== "Coop" && botStateContext.farmingMode !== "Arcarum" && botStateContext.farmingMode !== "") {
-            if (botStateContext.item !== "" && botStateContext.mission !== "" && botStateContext.summons.length !== 0) {
+        if (botStateContext.settings.farmingMode !== "Coop" && botStateContext.settings.farmingMode !== "Arcarum" && botStateContext.settings.farmingMode !== "") {
+            if (botStateContext.settings.item !== "" && botStateContext.settings.mission !== "" && botStateContext.settings.summons.length !== 0) {
                 botStateContext.setReadyStatus(true)
             } else {
                 botStateContext.setReadyStatus(false)
             }
-        } else if (botStateContext.farmingMode === "Coop" || botStateContext.farmingMode === "Arcarum") {
-            if (botStateContext.item !== "" && botStateContext.mission !== "") {
+        } else if (botStateContext.settings.farmingMode === "Coop" || botStateContext.settings.farmingMode === "Arcarum") {
+            if (botStateContext.settings.item !== "" && botStateContext.settings.mission !== "") {
                 botStateContext.setReadyStatus(true)
             } else {
                 botStateContext.setReadyStatus(false)
@@ -401,13 +200,13 @@ const Start = () => {
         // Attach event listeners.
         command.on("close", (data) => {
             const fileName = `log ${getCurrentDateAndTime("-")}`
-            let newLog = [...messageLogContext.asyncMessages, `\n\nWill save message log to ${fileName}.txt`, `\nChild process finished with code ${data.code}`]
+            let newLog = [...messageLogContext.asyncMessages, `\n\nSaved message log to: ${fileName}.txt`, `\nChild process finished with code ${data.code}`]
             messageLogContext.setAsyncMessages(newLog)
             handleStop()
         })
         command.on("error", (error) => {
             const fileName = `log ${getCurrentDateAndTime("-")}`
-            let newLog = [...messageLogContext.asyncMessages, `\n\nWill save message log to ${fileName}.txt`, `\nChild process error: ${error}`]
+            let newLog = [...messageLogContext.asyncMessages, `\n\nSaved message log to: ${fileName}.txt`, `\nChild process error: ${error}`]
             messageLogContext.setAsyncMessages(newLog)
             handleStop()
         })
