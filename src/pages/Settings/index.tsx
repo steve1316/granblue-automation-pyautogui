@@ -42,35 +42,30 @@ const Settings = () => {
     // Load the selected combat script text file.
     const loadCombatScript = (event: React.ChangeEvent<HTMLInputElement>) => {
         var files = event.currentTarget.files
-        if (files != null) {
-            var file = files[0]
-            const localSettings: SettingsInterface = botStateContext.settings
-            if (file == null) {
+        if (files !== null && files.length !== 0) {
+            var selectedFile = files[0]
+            if (selectedFile === null || selectedFile === undefined) {
                 // Reset the combat script selected if none was selected from the file picker dialog.
-                localSettings.combatScriptName = ""
-                localSettings.combatScript = []
+                botStateContext.setSettings({ ...botStateContext.settings, combatScriptName: "", combatScript: [] })
             } else {
-                localSettings.combatScriptName = file.name
-
                 // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
                 var reader = new FileReader()
                 reader.onload = function (loadedEvent) {
-                    if (loadedEvent.target?.result != null) {
-                        console.log("Loaded Combat Script: ", loadedEvent.target?.result)
-                        const newCombatScript: string[] = (loadedEvent.target?.result).toString().split("\r\n")
-                        localSettings.combatScript = newCombatScript
+                    if (loadedEvent.target?.result !== null && loadedEvent.target?.result !== undefined) {
+                        console.log("Loaded Combat Script: ", loadedEvent.target.result)
+                        const newCombatScript: string[] = loadedEvent.target.result.toString().split("\r\n")
+                        botStateContext.setSettings({ ...botStateContext.settings, combatScriptName: selectedFile.name, combatScript: newCombatScript })
                     } else {
                         console.log("Failed to read combat script. Reseting to default empty combat script...")
-                        localSettings.combatScriptName = ""
-                        localSettings.combatScript = []
+                        botStateContext.setSettings({ ...botStateContext.settings, combatScriptName: "", combatScript: [] })
                     }
                 }
 
                 // Read the text contents of the file.
-                reader.readAsText(file)
+                reader.readAsText(selectedFile)
             }
-
-            botStateContext.setSettings(localSettings)
+        } else {
+            botStateContext.setSettings({ ...botStateContext.settings, combatScriptName: "", combatScript: [] })
         }
     }
 

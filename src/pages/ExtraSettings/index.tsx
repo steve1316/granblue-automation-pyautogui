@@ -44,35 +44,30 @@ const ExtraSettings = () => {
     // Load the selected combat script text file.
     const loadNightmareCombatScript = (event: React.ChangeEvent<HTMLInputElement>) => {
         var files = event.currentTarget.files
-        if (files != null) {
-            var file = files[0]
-            const localSettings: Settings = bot.settings
-            if (file == null) {
+        if (files !== null && files.length !== 0) {
+            var selectedFile = files[0]
+            if (selectedFile === null || selectedFile === undefined) {
                 // Reset the nightmare combat script selected if none was selected from the file picker dialog.
-                localSettings.nightmareCombatScriptName = ""
-                localSettings.nightmareCombatScript = []
+                bot.setSettings({ ...bot.settings, nightmareCombatScriptName: "", nightmareCombatScript: [] })
             } else {
-                localSettings.nightmareCombatScriptName = file.name
-
                 // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
                 var reader = new FileReader()
                 reader.onload = function (loadedEvent) {
-                    if (loadedEvent.target?.result != null) {
-                        console.log("Loaded Nightmare Combat Script: ", loadedEvent.target?.result)
-                        const newCombatScript: string[] = (loadedEvent.target?.result).toString().split("\r\n")
-                        localSettings.nightmareCombatScript = newCombatScript
+                    if (loadedEvent.target?.result !== null && loadedEvent.target?.result !== undefined) {
+                        console.log("Loaded Nightmare Combat Script: ", loadedEvent.target.result)
+                        const newCombatScript: string[] = loadedEvent.target.result.toString().split("\r\n")
+                        bot.setSettings({ ...bot.settings, nightmareCombatScriptName: selectedFile.name, nightmareCombatScript: newCombatScript })
                     } else {
                         console.log("Failed to read Nightmare combat script. Reseting to default empty combat script...")
-                        localSettings.nightmareCombatScriptName = ""
-                        localSettings.nightmareCombatScript = []
+                        bot.setSettings({ ...bot.settings, nightmareCombatScriptName: "", nightmareCombatScript: [] })
                     }
                 }
 
                 // Read the text contents of the file.
-                reader.readAsText(file)
+                reader.readAsText(selectedFile)
             }
-
-            bot.setSettings(localSettings)
+        } else {
+            bot.setSettings({ ...bot.settings, nightmareCombatScriptName: "", nightmareCombatScript: [] })
         }
     }
 
