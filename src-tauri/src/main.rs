@@ -11,7 +11,7 @@ use tauri::Manager;
 fn close_splashscreen(window: tauri::Window) {
   // Wait a random number of seconds.
   let mut rng = rand::thread_rng();
-  sleep(Duration::new(rng.gen_range(1..3), 0));
+  sleep(Duration::new(rng.gen_range(1..2), 0));
 
   // Close splashscreen window.
   if let Some(splashscreen) = window.get_window("splashscreen") {
