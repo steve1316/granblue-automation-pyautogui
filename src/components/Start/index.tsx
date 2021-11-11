@@ -104,6 +104,10 @@ const Start = () => {
     // Attempt to kill the bot process if it is still active.
     const handleStop = async () => {
         if (PID !== 0) {
+            botStateContext.setIsBotRunning(false)
+            botStateContext.setStartBot(false)
+            botStateContext.setStopBot(false)
+
             console.log("Killing process tree now...")
             const output = await new Command("powershell", `taskkill /F /T /PID ${PID}`).execute() // Windows specific
             console.log(`Result of killing bot process using PID ${PID}: \n${output.stdout}`)
@@ -399,20 +403,12 @@ const Start = () => {
             const fileName = `log ${getCurrentDateAndTime("-")}`
             let newLog = [...messageLogContext.asyncMessages, `\n\nWill save message log to ${fileName}.txt`, `\nChild process finished with code ${data.code}`]
             messageLogContext.setAsyncMessages(newLog)
-            botStateContext.setIsBotRunning(false)
-            botStateContext.setStartBot(false)
-            botStateContext.setStopBot(false)
-
             handleStop()
         })
         command.on("error", (error) => {
             const fileName = `log ${getCurrentDateAndTime("-")}`
             let newLog = [...messageLogContext.asyncMessages, `\n\nWill save message log to ${fileName}.txt`, `\nChild process error: ${error}`]
             messageLogContext.setAsyncMessages(newLog)
-            botStateContext.setIsBotRunning(false)
-            botStateContext.setStartBot(false)
-            botStateContext.setStopBot(false)
-
             handleStop()
         })
         command.stdout.on("data", (line) => {
