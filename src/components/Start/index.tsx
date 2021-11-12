@@ -118,8 +118,8 @@ const Start = () => {
                 const localSettings: Settings = botStateContext.settings
 
                 // Find the elements of the support Summons for the Farming Mode first and then for Nightmare if available.
-                localSettings.summonElements = fetchSummonElements(localSettings.summons)
-                localSettings.nightmareSummonElements = fetchSummonElements(localSettings.nightmareSummons)
+                localSettings.game.summonElements = fetchSummonElements(localSettings.game.summons)
+                localSettings.nightmare.nightmareSummonElements = fetchSummonElements(localSettings.nightmare.nightmareSummons)
 
                 // Stringify the contents and prepare for writing to the specified file.
                 const jsonString = JSON.stringify(localSettings, null, 4)
@@ -174,14 +174,14 @@ const Start = () => {
 
     // Determine whether the program is ready to start.
     const handleReady = () => {
-        if (botStateContext.settings.farmingMode !== "Coop" && botStateContext.settings.farmingMode !== "Arcarum" && botStateContext.settings.farmingMode !== "") {
-            if (botStateContext.settings.item !== "" && botStateContext.settings.mission !== "" && botStateContext.settings.summons.length !== 0) {
+        if (botStateContext.settings.game.farmingMode !== "Coop" && botStateContext.settings.game.farmingMode !== "Arcarum" && botStateContext.settings.game.farmingMode !== "") {
+            if (botStateContext.settings.game.item !== "" && botStateContext.settings.game.mission !== "" && botStateContext.settings.game.summons.length !== 0) {
                 botStateContext.setReadyStatus(true)
             } else {
                 botStateContext.setReadyStatus(false)
             }
-        } else if (botStateContext.settings.farmingMode === "Coop" || botStateContext.settings.farmingMode === "Arcarum") {
-            if (botStateContext.settings.item !== "" && botStateContext.settings.mission !== "") {
+        } else if (botStateContext.settings.game.farmingMode === "Coop" || botStateContext.settings.game.farmingMode === "Arcarum") {
+            if (botStateContext.settings.game.item !== "" && botStateContext.settings.game.mission !== "") {
                 botStateContext.setReadyStatus(true)
             } else {
                 botStateContext.setReadyStatus(false)

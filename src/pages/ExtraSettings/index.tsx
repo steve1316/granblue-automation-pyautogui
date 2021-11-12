@@ -48,7 +48,7 @@ const ExtraSettings = () => {
             var selectedFile = files[0]
             if (selectedFile === null || selectedFile === undefined) {
                 // Reset the nightmare combat script selected if none was selected from the file picker dialog.
-                bot.setSettings({ ...bot.settings, nightmareCombatScriptName: "", nightmareCombatScript: [] })
+                bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
             } else {
                 // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
                 var reader = new FileReader()
@@ -56,10 +56,10 @@ const ExtraSettings = () => {
                     if (loadedEvent.target?.result !== null && loadedEvent.target?.result !== undefined) {
                         console.log("Loaded Nightmare Combat Script: ", loadedEvent.target.result)
                         const newCombatScript: string[] = loadedEvent.target.result.toString().split("\r\n")
-                        bot.setSettings({ ...bot.settings, nightmareCombatScriptName: selectedFile.name, nightmareCombatScript: newCombatScript })
+                        bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: selectedFile.name, nightmareCombatScript: newCombatScript } })
                     } else {
                         console.log("Failed to read Nightmare combat script. Reseting to default empty combat script...")
-                        bot.setSettings({ ...bot.settings, nightmareCombatScriptName: "", nightmareCombatScript: [] })
+                        bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
                     }
                 }
 
@@ -67,7 +67,7 @@ const ExtraSettings = () => {
                 reader.readAsText(selectedFile)
             }
         } else {
-            bot.setSettings({ ...bot.settings, nightmareCombatScriptName: "", nightmareCombatScript: [] })
+            bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
         }
     }
 
@@ -89,8 +89,8 @@ const ExtraSettings = () => {
                     <Grid item xs={6}>
                         <TextField
                             label="API Key"
-                            value={bot.settings.twitterAPIKey}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, twitterAPIKey: e.target.value })}
+                            value={bot.settings.twitter.twitterAPIKey}
+                            onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAPIKey: e.target.value } })}
                             placeholder="Insert API Key here"
                             multiline
                             variant="filled"
@@ -101,8 +101,8 @@ const ExtraSettings = () => {
                     <Grid item xs={6}>
                         <TextField
                             label="API Key Secret"
-                            value={bot.settings.twitterAPIKeySecret}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, twitterAPIKeySecret: e.target.value })}
+                            value={bot.settings.twitter.twitterAPIKeySecret}
+                            onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAPIKeySecret: e.target.value } })}
                             placeholder="Insert API Key Secret here"
                             multiline
                             variant="filled"
@@ -113,8 +113,8 @@ const ExtraSettings = () => {
                     <Grid item xs={6}>
                         <TextField
                             label="Access Token"
-                            value={bot.settings.twitterAccessToken}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, twitterAccessToken: e.target.value })}
+                            value={bot.settings.twitter.twitterAccessToken}
+                            onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAccessToken: e.target.value } })}
                             placeholder="Insert Access Token here"
                             multiline
                             variant="filled"
@@ -125,8 +125,8 @@ const ExtraSettings = () => {
                     <Grid item xs={6}>
                         <TextField
                             label="Access Token Secret"
-                            value={bot.settings.twitterAccessTokenSecret}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, twitterAccessTokenSecret: e.target.value })}
+                            value={bot.settings.twitter.twitterAccessTokenSecret}
+                            onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAccessTokenSecret: e.target.value } })}
                             placeholder="Insert Access Token Secret here"
                             multiline
                             variant="filled"
@@ -174,7 +174,12 @@ const ExtraSettings = () => {
 
                 <FormGroup sx={{ paddingBottom: "16px" }}>
                     <FormControlLabel
-                        control={<Checkbox checked={bot.settings.enableDiscordNotifications} onChange={(e) => bot.setSettings({ ...bot.settings, enableDiscordNotifications: e.target.checked })} />}
+                        control={
+                            <Checkbox
+                                checked={bot.settings.discord.enableDiscordNotifications}
+                                onChange={(e) => bot.setSettings({ ...bot.settings, discord: { ...bot.settings.discord, enableDiscordNotifications: e.target.checked } })}
+                            />
+                        }
                         label="Enable Discord Notifications"
                     />
                     <FormHelperText>Enable notifications of loot drops and errors encountered by the bot via Discord DMs.</FormHelperText>
@@ -184,8 +189,8 @@ const ExtraSettings = () => {
                     <Grid item xs={6}>
                         <TextField
                             label="Discord Token"
-                            value={bot.settings.discordToken}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, discordToken: e.target.value })}
+                            value={bot.settings.discord.discordToken}
+                            onChange={(e) => bot.setSettings({ ...bot.settings, discord: { ...bot.settings.discord, discordToken: e.target.value } })}
                             placeholder="Insert Discord Token here"
                             multiline
                             variant="filled"
@@ -196,8 +201,8 @@ const ExtraSettings = () => {
                     <Grid item xs={6}>
                         <TextField
                             label="User ID"
-                            value={bot.settings.discordUserID}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, discordUserID: e.target.value })}
+                            value={bot.settings.discord.discordUserID}
+                            onChange={(e) => bot.setSettings({ ...bot.settings, discord: { ...bot.settings.discord, discordUserID: e.target.value } })}
                             placeholder="Insert User ID here"
                             multiline
                             variant="filled"
@@ -240,7 +245,12 @@ const ExtraSettings = () => {
 
                 <FormGroup>
                     <FormControlLabel
-                        control={<Checkbox checked={bot.settings.enableAutoRestore} onChange={(e) => bot.setSettings({ ...bot.settings, enableAutoRestore: e.target.checked })} />}
+                        control={
+                            <Checkbox
+                                checked={bot.settings.configuration.enableAutoRestore}
+                                onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableAutoRestore: e.target.checked } })}
+                            />
+                        }
                         label="Enable Auto-Restore"
                     />
                     <FormHelperText>
@@ -251,7 +261,12 @@ const ExtraSettings = () => {
 
                 <FormGroup>
                     <FormControlLabel
-                        control={<Checkbox checked={bot.settings.enableFullElixir} onChange={(e) => bot.setSettings({ ...bot.settings, enableFullElixir: e.target.checked })} />}
+                        control={
+                            <Checkbox
+                                checked={bot.settings.configuration.enableFullElixir}
+                                onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableFullElixir: e.target.checked } })}
+                            />
+                        }
                         label="Enable Full Elixirs"
                     />
                     <FormHelperText>Enable usage of full elixirs when refilling AP.</FormHelperText>
@@ -259,7 +274,12 @@ const ExtraSettings = () => {
 
                 <FormGroup>
                     <FormControlLabel
-                        control={<Checkbox checked={bot.settings.enableSoulBalm} onChange={(e) => bot.setSettings({ ...bot.settings, enableSoulBalm: e.target.checked })} />}
+                        control={
+                            <Checkbox
+                                checked={bot.settings.configuration.enableSoulBalm}
+                                onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableSoulBalm: e.target.checked } })}
+                            />
+                        }
                         label="Enable Soul Balms"
                     />
                     <FormHelperText>Enable usage of soul balms when refilling EP.</FormHelperText>
@@ -281,7 +301,10 @@ const ExtraSettings = () => {
                 <FormGroup sx={{ paddingBottom: "16px" }}>
                     <FormControlLabel
                         control={
-                            <Checkbox checked={bot.settings.enableBezierCurveMouseMovement} onChange={(e) => bot.setSettings({ ...bot.settings, enableBezierCurveMouseMovement: e.target.checked })} />
+                            <Checkbox
+                                checked={bot.settings.configuration.enableBezierCurveMouseMovement}
+                                onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableBezierCurveMouseMovement: e.target.checked } })}
+                            />
                         }
                         label="Enable Bezier Curve Mouse Movement"
                     />
@@ -294,8 +317,8 @@ const ExtraSettings = () => {
                     <Grid item xs={6}>
                         <TextField
                             label="Mouse Speed"
-                            value={bot.settings.mouseSpeed}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, mouseSpeed: Number(e.target.value) })}
+                            value={bot.settings.configuration.mouseSpeed}
+                            onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, mouseSpeed: Number(e.target.value) } })}
                             variant="outlined"
                             type="number"
                             inputProps={{ min: 0, step: 0.1 }}
@@ -303,7 +326,7 @@ const ExtraSettings = () => {
                                 endAdornment: <InputAdornment position="end">seconds</InputAdornment>,
                             }}
                             helperText="Set how fast a mouse operation finishes."
-                            disabled={bot.settings.enableBezierCurveMouseMovement}
+                            disabled={bot.settings.configuration.enableBezierCurveMouseMovement}
                             fullWidth
                         />
                     </Grid>
@@ -315,13 +338,13 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.enableDelayBetweenRuns}
+                                checked={bot.settings.configuration.enableDelayBetweenRuns}
                                 onChange={(e) => {
-                                    if (e.target.checked && bot.settings.enableRandomizedDelayBetweenRuns) {
-                                        bot.setSettings({ ...bot.settings, enableRandomizedDelayBetweenRuns: e.target.checked })
+                                    if (e.target.checked && bot.settings.configuration.enableRandomizedDelayBetweenRuns) {
+                                        bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableRandomizedDelayBetweenRuns: e.target.checked } })
                                     }
 
-                                    bot.setSettings({ ...bot.settings, enableDelayBetweenRuns: false })
+                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableDelayBetweenRuns: false } })
                                 }}
                             />
                         }
@@ -330,13 +353,13 @@ const ExtraSettings = () => {
                     <FormHelperText>Enable delay in seconds between runs to serve as a resting period.</FormHelperText>
                 </FormGroup>
 
-                {bot.settings.enableDelayBetweenRuns && !bot.settings.enableRandomizedDelayBetweenRuns ? (
+                {bot.settings.configuration.enableDelayBetweenRuns && !bot.settings.configuration.enableRandomizedDelayBetweenRuns ? (
                     <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                         <Grid item xs={6}>
                             <TextField
                                 label="Delay In Seconds"
-                                value={bot.settings.delayBetweenRuns}
-                                onChange={(e) => bot.setSettings({ ...bot.settings, delayBetweenRuns: Number(e.target.value) })}
+                                value={bot.settings.configuration.delayBetweenRuns}
+                                onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, delayBetweenRuns: Number(e.target.value) } })}
                                 variant="outlined"
                                 type="number"
                                 inputProps={{ min: 1 }}
@@ -358,13 +381,13 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.enableRandomizedDelayBetweenRuns}
+                                checked={bot.settings.configuration.enableRandomizedDelayBetweenRuns}
                                 onChange={(e) => {
-                                    if (e.target.checked && bot.settings.enableDelayBetweenRuns) {
-                                        bot.setSettings({ ...bot.settings, enableDelayBetweenRuns: false })
+                                    if (e.target.checked && bot.settings.configuration.enableDelayBetweenRuns) {
+                                        bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableDelayBetweenRuns: false } })
                                     }
 
-                                    bot.setSettings({ ...bot.settings, enableRandomizedDelayBetweenRuns: e.target.checked })
+                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableRandomizedDelayBetweenRuns: e.target.checked } })
                                 }}
                             />
                         }
@@ -373,18 +396,21 @@ const ExtraSettings = () => {
                     <FormHelperText>Enable randomized delay in seconds between runs to serve as a resting period.</FormHelperText>
                 </FormGroup>
 
-                {!bot.settings.enableDelayBetweenRuns && bot.settings.enableRandomizedDelayBetweenRuns ? (
+                {!bot.settings.configuration.enableDelayBetweenRuns && bot.settings.configuration.enableRandomizedDelayBetweenRuns ? (
                     <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                         <Grid item xs={6}>
                             <TextField
                                 label="Delay In Seconds Lower Bound"
-                                value={bot.settings.delayBetweenRunsLowerBound}
+                                value={bot.settings.configuration.delayBetweenRunsLowerBound}
                                 onChange={(e) => {
                                     // Perform validation so that the value does not violate the opposing bound.
-                                    if (Number(e.target.value) > bot.settings.delayBetweenRunsUpperBound) {
-                                        bot.setSettings({ ...bot.settings, delayBetweenRunsLowerBound: bot.settings.delayBetweenRunsUpperBound })
+                                    if (Number(e.target.value) > bot.settings.configuration.delayBetweenRunsUpperBound) {
+                                        bot.setSettings({
+                                            ...bot.settings,
+                                            configuration: { ...bot.settings.configuration, delayBetweenRunsLowerBound: bot.settings.configuration.delayBetweenRunsUpperBound },
+                                        })
                                     } else {
-                                        bot.setSettings({ ...bot.settings, delayBetweenRunsLowerBound: Number(e.target.value) })
+                                        bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, delayBetweenRunsLowerBound: Number(e.target.value) } })
                                     }
                                 }}
                                 variant="outlined"
@@ -401,13 +427,16 @@ const ExtraSettings = () => {
                         <Grid item xs={6}>
                             <TextField
                                 label="Delay In Seconds Upper Bound"
-                                value={bot.settings.delayBetweenRunsUpperBound}
+                                value={bot.settings.configuration.delayBetweenRunsUpperBound}
                                 onChange={(e) => {
                                     // Perform validation so that the value does not violate the opposing bound.
-                                    if (Number(e.target.value) < bot.settings.delayBetweenRunsLowerBound) {
-                                        bot.setSettings({ ...bot.settings, delayBetweenRunsUpperBound: bot.settings.delayBetweenRunsLowerBound })
+                                    if (Number(e.target.value) < bot.settings.configuration.delayBetweenRunsLowerBound) {
+                                        bot.setSettings({
+                                            ...bot.settings,
+                                            configuration: { ...bot.settings.configuration, delayBetweenRunsUpperBound: bot.settings.configuration.delayBetweenRunsLowerBound },
+                                        })
                                     } else {
-                                        bot.setSettings({ ...bot.settings, delayBetweenRunsUpperBound: Number(e.target.value) })
+                                        bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, delayBetweenRunsUpperBound: Number(e.target.value) } })
                                     }
                                 }}
                                 variant="outlined"
@@ -429,9 +458,9 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.enableAutoExitRaid}
+                                checked={bot.settings.raid.enableAutoExitRaid}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, enableAutoExitRaid: e.target.checked })
+                                    bot.setSettings({ ...bot.settings, raid: { ...bot.settings.raid, enableAutoExitRaid: e.target.checked } })
                                 }}
                             />
                         }
@@ -440,14 +469,14 @@ const ExtraSettings = () => {
                     <FormHelperText>Enables backing out of a Raid without retreating while under Semi/Full Auto after a certain period of time has passed.</FormHelperText>
                 </FormGroup>
 
-                {bot.settings.enableAutoExitRaid ? (
+                {bot.settings.raid.enableAutoExitRaid ? (
                     <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                         <Grid item xs={6}>
                             <TextField
                                 label="Max Time Allowed for Semi/Full Auto"
-                                value={bot.settings.timeAllowedUntilAutoExitRaid}
+                                value={bot.settings.raid.timeAllowedUntilAutoExitRaid}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, timeAllowedUntilAutoExitRaid: Number(e.target.value) })
+                                    bot.setSettings({ ...bot.settings, raid: { ...bot.settings.raid, timeAllowedUntilAutoExitRaid: Number(e.target.value) } })
                                 }}
                                 variant="outlined"
                                 type="number"
@@ -469,9 +498,9 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.enableNoTimeout}
+                                checked={bot.settings.raid.enableNoTimeout}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, enableNoTimeout: e.target.checked })
+                                    bot.setSettings({ ...bot.settings, raid: { ...bot.settings.raid, enableNoTimeout: e.target.checked } })
                                 }}
                             />
                         }
@@ -484,13 +513,13 @@ const ExtraSettings = () => {
     }
 
     const renderNightmareSettings = () => {
-        if (bot.settings.enableNightmare) {
+        if (bot.settings.nightmare.enableNightmare) {
             var title: string = ""
-            if (bot.settings.farmingMode === "Special") {
+            if (bot.settings.game.farmingMode === "Special") {
                 title = "Dimensional Halo"
-            } else if (bot.settings.farmingMode === "Event" || bot.settings.farmingMode === "Event (Token Drawboxes)" || bot.settings.farmingMode === "Xeno Clash") {
+            } else if (bot.settings.game.farmingMode === "Event" || bot.settings.game.farmingMode === "Event (Token Drawboxes)" || bot.settings.game.farmingMode === "Xeno Clash") {
                 title = "Nightmare"
-            } else if (bot.settings.farmingMode === "Rise of the Beasts") {
+            } else if (bot.settings.game.farmingMode === "Rise of the Beasts") {
                 title = "Extreme+"
             } else {
                 title = "Unknown"
@@ -512,8 +541,8 @@ const ExtraSettings = () => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={bot.settings.enableCustomNightmareSettings}
-                                    onChange={(e) => bot.setSettings({ ...bot.settings, enableCustomNightmareSettings: e.target.checked })}
+                                    checked={bot.settings.nightmare.enableCustomNightmareSettings}
+                                    onChange={(e) => bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, enableCustomNightmareSettings: e.target.checked } })}
                                 />
                             }
                             label={`Enable Custom Settings for ${title}`}
@@ -521,7 +550,7 @@ const ExtraSettings = () => {
                         <FormHelperText>Enable customizing individual settings for {title}</FormHelperText>
                     </FormGroup>
 
-                    {bot.settings.enableCustomNightmareSettings ? (
+                    {bot.settings.nightmare.enableCustomNightmareSettings ? (
                         <Stack spacing={2}>
                             <Grid container>
                                 <Grid item xs={6}>
@@ -529,7 +558,7 @@ const ExtraSettings = () => {
                                     <TextField
                                         variant="filled"
                                         label="Nightmare Combat Script"
-                                        value={bot.settings.nightmareCombatScriptName !== "" ? bot.settings.nightmareCombatScriptName : "None Selected"}
+                                        value={bot.settings.nightmare.nightmareCombatScriptName !== "" ? bot.settings.nightmare.nightmareCombatScriptName : "None Selected"}
                                         inputProps={{ readOnly: true }}
                                         InputLabelProps={{ shrink: true }}
                                         helperText="Select a Combat Script"
@@ -542,7 +571,7 @@ const ExtraSettings = () => {
 
                             <Grid container>
                                 <Grid item xs={6}>
-                                    <Button variant="contained" onClick={handleModalOpen} disabled={bot.settings.farmingMode === "Coop" || bot.settings.farmingMode === "Arcarum"} fullWidth>
+                                    <Button variant="contained" onClick={handleModalOpen} disabled={bot.settings.game.farmingMode === "Coop" || bot.settings.game.farmingMode === "Arcarum"} fullWidth>
                                         Select Nightmare Support Summons
                                     </Button>
                                     <Modal className="supportSummonModal" open={isModalOpen} onClose={handleModalClose}>
@@ -563,10 +592,10 @@ const ExtraSettings = () => {
                                         label="Group #"
                                         variant="filled"
                                         type="number"
-                                        error={bot.settings.nightmareGroupNumber < 1 || bot.settings.nightmareGroupNumber > 7}
-                                        value={bot.settings.nightmareGroupNumber}
+                                        error={bot.settings.nightmare.nightmareGroupNumber < 1 || bot.settings.nightmare.nightmareGroupNumber > 7}
+                                        value={bot.settings.nightmare.nightmareGroupNumber}
                                         inputProps={{ min: 1, max: 7 }}
-                                        onChange={(e) => bot.setSettings({ ...bot.settings, nightmareGroupNumber: parseInt(e.target.value) })}
+                                        onChange={(e) => bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareGroupNumber: parseInt(e.target.value) } })}
                                         helperText="From 1 to 7"
                                         className="textfield"
                                     />
@@ -579,10 +608,10 @@ const ExtraSettings = () => {
                                         label="Party #"
                                         variant="filled"
                                         type="number"
-                                        error={bot.settings.nightmarePartyNumber < 1 || bot.settings.nightmarePartyNumber > 6}
-                                        value={bot.settings.nightmarePartyNumber}
+                                        error={bot.settings.nightmare.nightmarePartyNumber < 1 || bot.settings.nightmare.nightmarePartyNumber > 6}
+                                        value={bot.settings.nightmare.nightmarePartyNumber}
                                         inputProps={{ min: 1, max: 6 }}
-                                        onChange={(e) => bot.setSettings({ ...bot.settings, nightmarePartyNumber: parseInt(e.target.value) })}
+                                        onChange={(e) => bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmarePartyNumber: parseInt(e.target.value) } })}
                                         helperText="From 1 to 6"
                                         className="textfield"
                                     />

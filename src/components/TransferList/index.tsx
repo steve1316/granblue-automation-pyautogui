@@ -26,9 +26,9 @@ const TransferList = ({ isNightmare }: { isNightmare: boolean }) => {
         // Populate the right list.
         var oldRightList: string[] = []
         if (!isNightmare) {
-            oldRightList = botStateContext.settings.summons
+            oldRightList = botStateContext.settings.game.summons
         } else {
-            oldRightList = botStateContext.settings.nightmareSummons
+            oldRightList = botStateContext.settings.nightmare.nightmareSummons
         }
 
         // Filter out summons from the left list that are already selected.
@@ -66,11 +66,11 @@ const TransferList = ({ isNightmare }: { isNightmare: boolean }) => {
         // Save selected summons to settings.
         const localSettings: Settings = botStateContext.settings
         if (!isNightmare) {
-            localSettings.summons = newRightList
-            localSettings.summonElements = []
+            localSettings.game.summons = newRightList
+            localSettings.game.summonElements = []
         } else {
-            localSettings.nightmareSummons = newRightList
-            localSettings.nightmareSummonElements = []
+            localSettings.nightmare.nightmareSummons = newRightList
+            localSettings.nightmare.nightmareSummonElements = []
         }
 
         botStateContext.setSettings(localSettings)
