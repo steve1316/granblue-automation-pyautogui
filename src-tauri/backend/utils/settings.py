@@ -24,22 +24,23 @@ class Settings:
 
     _data = json.load(_file)
 
-    combat_script: List[str] = _data["combatScript"]
-    farming_mode: str = _data["farmingMode"]
-    item_name: str = _data["item"]
-    map_name: str = _data["map"]
-    mission_name: str = _data["mission"]
-    item_amount_to_farm: int = _data["itemAmount"]
+    combat_script_name: str = _data["game"]["combatScriptName"]
+    combat_script: List[str] = _data["game"]["combatScript"]
+    farming_mode: str = _data["game"]["farmingMode"]
+    item_name: str = _data["game"]["item"]
+    map_name: str = _data["game"]["map"]
+    mission_name: str = _data["game"]["mission"]
+    item_amount_to_farm: int = _data["game"]["itemAmount"]
     item_amount_farmed: int = 0
     amount_of_runs_finished: int = 0
-    summon_element_list: List[str] = _data["summonElements"]
-    summon_list: List[str] = _data["summons"]
-    group_number: int = _data["groupNumber"]
-    party_number: int = _data["partyNumber"]
-    debug_mode: bool = _data["debugMode"]
+    summon_element_list: List[str] = _data["game"]["summonElements"]
+    summon_list: List[str] = _data["game"]["summons"]
+    group_number: int = _data["game"]["groupNumber"]
+    party_number: int = _data["game"]["partyNumber"]
+    debug_mode: bool = _data["game"]["debugMode"]
 
     # #### twitter ####
-    twitter_keys_tokens: List[str] = [_data["twitter"]["apiKey"], _data["twitter"]["apiKeySecret"], _data["twitter"]["accessToken"], _data["twitter"]["accessTokenSecret"]]
+    twitter_keys_tokens: List[str] = [_data["twitter"]["twitterAPIKey"], _data["twitter"]["twitterAPIKeySecret"], _data["twitter"]["twitterAccessToken"], _data["twitter"]["twitterAccessTokenSecret"]]
     # #### end of twitter ####
 
     # #### discord ####
@@ -49,20 +50,17 @@ class Settings:
     user_id: int = _data["discord"]["discordUserID"]
     # #### end of discord ####
 
-    # #### refill ####
-    enabled_auto_restore: bool = _data["enableAutoRestore"]
-    use_full_elixir: bool = _data["enableFullElixir"]
-    use_soul_balm: bool = _data["enableSoulBalm"]
-    # #### end of refill ####
-
     # #### configuration ####
-    enable_bezier_curve_mouse_movement: bool = _data["enableBezierCurveMouseMovement"]
-    custom_mouse_speed: float = float(_data["mouseSpeed"])
-    enable_delay_between_runs: bool = _data["delayBetweenRuns"]["enableDelayBetweenRuns"]
-    delay_in_seconds: int = _data["delayBetweenRuns"]["delay"]
-    enable_randomized_delay_between_runs: bool = _data["randomizedDelayBetweenRuns"]["enableRandomizedDelayBetweenRuns"]
-    delay_in_seconds_lower_bound: int = _data["randomizedDelayBetweenRuns"]["delayLowerBound"]
-    delay_in_seconds_upper_bound: int = _data["randomizedDelayBetweenRuns"]["delayUpperBound"]
+    enabled_auto_restore: bool = _data["configuration"]["enableAutoRestore"]
+    use_full_elixir: bool = _data["configuration"]["enableFullElixir"]
+    use_soul_balm: bool = _data["configuration"]["enableSoulBalm"]
+    enable_bezier_curve_mouse_movement: bool = _data["configuration"]["enableBezierCurveMouseMovement"]
+    custom_mouse_speed: float = float(_data["configuration"]["mouseSpeed"])
+    enable_delay_between_runs: bool = _data["configuration"]["enableDelayBetweenRuns"]
+    delay_in_seconds: int = _data["configuration"]["delayBetweenRuns"]
+    enable_randomized_delay_between_runs: bool = _data["configuration"]["enableRandomizedDelayBetweenRuns"]
+    delay_in_seconds_lower_bound: int = _data["configuration"]["delayBetweenRunsLowerBound"]
+    delay_in_seconds_upper_bound: int = _data["configuration"]["delayBetweenRunsUpperBound"]
     # #### end of configuration ####
 
     # #### nightmare ####
@@ -109,6 +107,12 @@ class Settings:
 
         MessageLog.print_message(f"[NIGHTMARE] Settings initialized for {farming_mode}'s Nightmare...")
     # #### end of nightmare ####
+
+    # #### raid ####
+    enable_auto_exit_raid: bool = _data["raid"]["enableAutoExitRaid"]
+    time_allowed_until_auto_exit_raid: int = _data["raid"]["timeAllowedUntilAutoExitRaid"]
+    enable_no_timeout: bool = _data["raid"]["enableNoTimeout"]
+    # #### end of raid ####
 
     # #### arcarum ####
     enable_stop_on_arcarum_boss: bool = _data["arcarum"]["enableStopOnArcarumBoss"]
