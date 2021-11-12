@@ -424,6 +424,61 @@ const ExtraSettings = () => {
                 ) : (
                     ""
                 )}
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bot.settings.enableAutoExitRaid}
+                                onChange={(e) => {
+                                    bot.setSettings({ ...bot.settings, enableAutoExitRaid: e.target.checked })
+                                }}
+                            />
+                        }
+                        label="Enable Auto Exiting Raids"
+                    />
+                    <FormHelperText>Enables backing out of a Raid without retreating while under Semi/Full Auto after a certain period of time has passed.</FormHelperText>
+                </FormGroup>
+
+                {bot.settings.enableAutoExitRaid ? (
+                    <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Max Time Allowed for Semi/Full Auto"
+                                value={bot.settings.timeAllowedUntilAutoExitRaid}
+                                onChange={(e) => {
+                                    bot.setSettings({ ...bot.settings, timeAllowedUntilAutoExitRaid: Number(e.target.value) })
+                                }}
+                                variant="outlined"
+                                type="number"
+                                inputProps={{ min: 1, max: 15 }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">minutes</InputAdornment>,
+                                }}
+                                helperText="Set the maximum amount of minutes to be in a Raid while under Semi/Full Auto before moving on to the next Raid."
+                                fullWidth
+                            />
+                        </Grid>
+                        <Grid item xs={6} />
+                    </Grid>
+                ) : (
+                    ""
+                )}
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bot.settings.enableNoTimeout}
+                                onChange={(e) => {
+                                    bot.setSettings({ ...bot.settings, enableNoTimeout: e.target.checked })
+                                }}
+                            />
+                        }
+                        label="Enable No Timeout"
+                    />
+                    <FormHelperText>Enable no timeouts when attempting to farm Raids that appear infrequently.</FormHelperText>
+                </FormGroup>
             </div>
         )
     }

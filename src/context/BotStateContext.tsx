@@ -33,6 +33,9 @@ export interface Settings {
     enableRandomizedDelayBetweenRuns: boolean
     delayBetweenRunsLowerBound: number
     delayBetweenRunsUpperBound: number
+    enableAutoExitRaid: boolean
+    timeAllowedUntilAutoExitRaid: number
+    enableNoTimeout: boolean
 
     // Extra Settings related to Nightmares from certain Farming Modes.
     enableNightmare: boolean
@@ -79,6 +82,9 @@ const defaultSettings: Settings = {
     enableRandomizedDelayBetweenRuns: false,
     delayBetweenRunsLowerBound: 15,
     delayBetweenRunsUpperBound: 60,
+    enableAutoExitRaid: false,
+    timeAllowedUntilAutoExitRaid: 10,
+    enableNoTimeout: false,
 
     enableNightmare: false,
     enableCustomNightmareSettings: false,
