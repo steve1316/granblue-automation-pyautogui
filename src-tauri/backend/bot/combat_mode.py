@@ -573,6 +573,7 @@ class CombatMode:
         MessageLog.print_message("######################################################################\n")
 
         if script_commands is not None:
+            print("Name of script loaded: ", Settings.combat_script_name)
             print("Size of script commands: ", len(script_commands))
 
             command_list = script_commands
