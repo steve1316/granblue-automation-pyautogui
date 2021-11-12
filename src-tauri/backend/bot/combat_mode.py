@@ -1,5 +1,6 @@
 import os
 from typing import List
+import time
 
 from utils.settings import Settings
 from utils.message_log import MessageLog
@@ -566,6 +567,8 @@ class CombatMode:
         """
         from bot.game import Game
 
+        start_time: float = time.time()
+
         MessageLog.print_message("\n######################################################################")
         MessageLog.print_message("######################################################################")
         MessageLog.print_message(f"[COMBAT] Starting Combat Mode.")
@@ -859,6 +862,15 @@ class CombatMode:
 
         # Main workflow loop for both Semi Auto and Full Auto. The bot will progress the Quest/Raid until it ends or the Party wipes.
         while not CombatMode._retreat_check and (full_auto or semi_auto):
+            # Back out of the Raid without retreating if the allowed time has been exceeded.
+            if Settings.farming_mode == "Raid" and Settings.enable_auto_exit_raid and time.time() - start_time >= Settings.time_allowed_until_auto_exit_raid:
+                MessageLog.print_message("\n######################################################################")
+                MessageLog.print_message("######################################################################")
+                MessageLog.print_message("[COMBAT] Combat Mode ended due to exceeding time allowed.")
+                MessageLog.print_message("######################################################################")
+                MessageLog.print_message("######################################################################")
+                return False
+
             # Check if the Battle has ended.
             if CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True):
                 MessageLog.print_message("\n######################################################################")

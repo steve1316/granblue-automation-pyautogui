@@ -110,7 +110,7 @@ class Settings:
 
     # #### raid ####
     enable_auto_exit_raid: bool = _data["raid"]["enableAutoExitRaid"]
-    time_allowed_until_auto_exit_raid: int = _data["raid"]["timeAllowedUntilAutoExitRaid"]
+    time_allowed_until_auto_exit_raid: int = _data["raid"]["timeAllowedUntilAutoExitRaid"] * 60
     enable_no_timeout: bool = _data["raid"]["enableNoTimeout"]
     # #### end of raid ####
 
