@@ -193,7 +193,7 @@ class Raid:
         Game.check_for_ep()
 
         # Check if the bot is at the Summon Selection screen.
-        if ImageUtils.confirm_location("select_a_summon"):
+        if ImageUtils.confirm_location("select_a_summon", tries = 10):
             summon_check = Game.select_summon(Settings.summon_list, Settings.summon_element_list)
 
             if summon_check:

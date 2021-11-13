@@ -89,7 +89,7 @@ class ProvingGrounds:
         Game.check_for_ap()
 
         # Check if the bot is at the Summon Selection screen.
-        if (first_run or ProvingGrounds._first_time) and ImageUtils.confirm_location("proving_grounds_summon_selection"):
+        if (first_run or ProvingGrounds._first_time) and ImageUtils.confirm_location("proving_grounds_summon_selection", tries = 10):
             summon_check = Game.select_summon(Settings.summon_list, Settings.summon_element_list)
             if summon_check:
                 Game.wait(1)
