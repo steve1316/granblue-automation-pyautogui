@@ -554,12 +554,11 @@ class CombatMode:
         return turn_number
 
     @staticmethod
-    def start_combat_mode(script_file_path: str = "", script_commands: List[str] = None, is_nightmare: bool = False):
+    def start_combat_mode(script_commands: List[str], is_nightmare: bool = False):
         """Start Combat Mode with the given script file path. Start reading through the text file line by line and have the bot proceed with the commands accordingly.
 
         Args:
-            script_file_path (str, optional): Path to the combat script text file. Defaults to "".
-            script_commands (List[str], optional): List of script commands to use instead of reading from a text file. Defaults to None.
+            script_commands (List[str]): List of script commands to use instead of reading from a text file.
             is_nightmare (bool, optional): If Combat Mode is being used for a Nightmare, determines the method of reading the script file.
 
         Returns:
@@ -575,35 +574,15 @@ class CombatMode:
         MessageLog.print_message("######################################################################")
         MessageLog.print_message("######################################################################\n")
 
+        command_list = []
         if script_commands is not None:
-            print("Name of script loaded: ", Settings.combat_script_name)
+            if is_nightmare:
+                print("Name of script loaded: ", Settings.nightmare_combat_script_name)
+            else:
+                print("Name of script loaded: ", Settings.combat_script_name)
             print("Size of script commands: ", len(script_commands))
 
             command_list = script_commands
-        else:
-            # Open the combat script text file.
-            if script_file_path == "" or script_file_path is None:
-                MessageLog.print_message(f"\n[COMBAT] No script file was provided. Using default full_auto.txt script.")
-                os.chdir(os.getcwd() + "/scripts/")
-                script = open(os.path.abspath("full_auto.txt"), "r")
-                os.chdir(CombatMode._owd)
-            elif is_nightmare:
-                MessageLog.print_message(f"\n[COMBAT] Now loading up combat script for this at {os.getcwd()}\scripts\{script_file_path}")
-                os.chdir(os.getcwd() + "/scripts/")
-                root, extension = os.path.splitext(script_file_path)
-                if not extension:
-                    script = open(os.path.abspath(script_file_path + ".txt"), "r")
-                else:
-                    script = open(os.path.abspath(script_file_path), "r")
-                os.chdir(CombatMode._owd)
-            else:
-                MessageLog.print_message(f"\n[COMBAT] Now loading up combat script at {script_file_path}")
-                os.chdir(CombatMode._owd)
-                script = open(script_file_path, "r")
-
-            # Grab all lines in the file and store it in a list.
-            command_list = script.readlines()
-            script.close()
 
         command_turn_number = 1
         turn_number = 1  # Current turn for the script execution.
