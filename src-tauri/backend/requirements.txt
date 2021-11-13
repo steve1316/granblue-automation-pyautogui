@@ -5,7 +5,7 @@ torchvision===0.8.2+cu110
 torchaudio===0.7.2
 
 PyAutoGUI~=0.9.52
-Pillow~=8.1.0
+Pillow~=8.3.2
 opencv-python~=4.5.1.48
 easyocr~=1.2.1
 numpy~=1.20.2
