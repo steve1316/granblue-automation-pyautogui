@@ -218,7 +218,7 @@ const Start = () => {
             let newLog = [...messageLogContext.asyncMessages, `\n${line}`]
             messageLogContext.setAsyncMessages(newLog)
 
-            if (line.indexOf("Traceback") !== -1) {
+            if (line.indexOf("Traceback") !== -1 || line.indexOf("Ending Farming Mode") !== -1) {
                 handleStop()
             }
         })
