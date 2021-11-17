@@ -64,16 +64,11 @@ const TransferList = ({ isNightmare }: { isNightmare: boolean }) => {
         }
 
         // Save selected summons to settings.
-        const localSettings: Settings = botStateContext.settings
         if (!isNightmare) {
-            localSettings.game.summons = newRightList
-            localSettings.game.summonElements = []
+            botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, summons: newRightList, summonElements: [] } })
         } else {
-            localSettings.nightmare.nightmareSummons = newRightList
-            localSettings.nightmare.nightmareSummonElements = []
+            botStateContext.setSettings({ ...botStateContext.settings, nightmare: { ...botStateContext.settings.nightmare, nightmareSummons: newRightList, nightmareSummonElements: [] } })
         }
-
-        botStateContext.setSettings(localSettings)
     }
 
     const customList = (items: string[], isLeftList: boolean) => (
