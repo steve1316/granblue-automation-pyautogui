@@ -145,7 +145,7 @@ class TwitterRoomFinder:
     }
 
     _listener = RoomStreamListener()
-    _stream: Stream
+    _stream: Stream = None
 
     @staticmethod
     def connect():
@@ -217,5 +217,6 @@ class TwitterRoomFinder:
         Returns:
             None
         """
-        TwitterRoomFinder._stream.disconnect()
+        if TwitterRoomFinder._stream is not None:
+            TwitterRoomFinder._stream.disconnect()
         return None

@@ -118,9 +118,9 @@ class Test(unittest.TestCase):
         return None
 
     def test_twitter_connection(self):
-        TwitterRoomFinder.connect()
+        result: bool = TwitterRoomFinder.test_connection()
         Game.wait(5)
-        self.assertTrue(TwitterRoomFinder.test_connection())
+        self.assertTrue(result)
         TwitterRoomFinder.disconnect()
         return None
 
