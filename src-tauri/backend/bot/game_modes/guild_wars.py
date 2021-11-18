@@ -189,7 +189,7 @@ class GuildWars:
                 Game.wait(1)
 
                 # Now start Combat Mode and detect any item drops.
-                if CombatMode.start_combat_mode(script_commands = Settings.combat_script):
+                if CombatMode.start_combat_mode():
                     runs_completed = Game.collect_loot(is_completed = True)
         else:
             raise GuildWarsException("Failed to arrive at the Summon Selection screen.")

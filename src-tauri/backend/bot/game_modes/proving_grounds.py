@@ -103,7 +103,7 @@ class ProvingGrounds:
                 Game.find_and_click_button("proving_grounds_start")
 
                 # Now start Combat Mode and detect any item drops.
-                if CombatMode.start_combat_mode(script_commands = Settings.combat_script):
+                if CombatMode.start_combat_mode():
                     runs_completed = Game.collect_loot(is_completed = False)
 
                     # Click the "Next Battle" button if there are any battles left.
@@ -113,7 +113,7 @@ class ProvingGrounds:
                         ProvingGrounds._first_time = False
         elif first_run is False and ProvingGrounds._first_time is False:
             # No need to select a Summon again as it is reused.
-            if CombatMode.start_combat_mode(script_commands = Settings.combat_script):
+            if CombatMode.start_combat_mode():
                 runs_completed = Game.collect_loot(is_completed = False)
 
                 # Click the "Next Battle" button if there are any battles left.

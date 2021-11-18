@@ -206,7 +206,7 @@ class Raid:
                         MessageLog.print_message("\n[RAID] Seems that the Raid just ended. Moving back to the Home screen and joining another Raid...")
                     else:
                         # Now start Combat Mode and detect any item drops.
-                        if CombatMode.start_combat_mode(script_commands = Settings.combat_script):
+                        if CombatMode.start_combat_mode():
                             number_of_items_dropped = Game.collect_loot(is_completed = True)
                 else:
                     MessageLog.print_message("\n[RAID] Seems that the Raid ended before the bot was able to join. Now looking for another Raid to join...")

@@ -181,7 +181,7 @@ class Arcarum:
                             raise ArcarumException("Encountered a party restriction for Arcarum. Perhaps you would like to complete this section by yourself?")
 
                         Game.wait(3)
-                        if CombatMode.start_combat_mode(script_commands = Settings.combat_script):
+                        if CombatMode.start_combat_mode():
                             Game.collect_loot(is_completed = False, skip_info = True)
                             Game.find_and_click_button("expedition")
                 elif action == "Navigating":

@@ -233,7 +233,7 @@ class Quest:
                     Game.find_and_click_button("ok")
 
                 # Now start Combat Mode and detect any item drops.
-                if CombatMode.start_combat_mode(script_commands = Settings.combat_script):
+                if CombatMode.start_combat_mode():
                     number_of_items_dropped = Game.collect_loot(is_completed = True)
         else:
             raise QuestException("Failed to arrive at the Summon Selection screen.")

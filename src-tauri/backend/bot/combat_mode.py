@@ -1,3 +1,4 @@
+import copy
 import os
 from typing import List
 import time
@@ -554,11 +555,11 @@ class CombatMode:
         return turn_number
 
     @staticmethod
-    def start_combat_mode(script_commands: List[str], is_nightmare: bool = False):
+    def start_combat_mode(script_commands: List[str] = None, is_nightmare: bool = False):
         """Start Combat Mode with the given script file path. Start reading through the text file line by line and have the bot proceed with the commands accordingly.
 
         Args:
-            script_commands (List[str]): List of script commands to use instead of reading from a text file.
+            script_commands (List[str]): List of script commands to use instead of reading from a text file. Defaults to None.
             is_nightmare (bool, optional): If Combat Mode is being used for a Nightmare, determines the method of reading the script file.
 
         Returns:

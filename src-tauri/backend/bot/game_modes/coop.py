@@ -187,13 +187,13 @@ class Coop:
             Game.wait(1)
 
             # Now start Combat Mode and detect any item drops.
-            if CombatMode.start_combat_mode(script_commands = Settings.combat_script):
+            if CombatMode.start_combat_mode():
                 number_of_items_dropped = Game.collect_loot(is_completed = True)
         elif first_run is False:
             MessageLog.print_message("\n[COOP] Starting Coop Mission again.")
 
             # Now start Combat Mode and detect any item drops.
-            if CombatMode.start_combat_mode(script_commands = Settings.combat_script):
+            if CombatMode.start_combat_mode():
                 number_of_items_dropped = Game.collect_loot(is_completed = True)
         else:
             raise CoopException("Failed to arrive at the Summon Selection screen.")

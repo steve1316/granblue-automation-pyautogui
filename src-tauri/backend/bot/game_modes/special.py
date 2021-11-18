@@ -52,7 +52,7 @@ class Special:
                 start_check = Game.find_party_and_start_mission(int(Settings.nightmare_group_number), int(Settings.nightmare_party_number))
 
                 # Once preparations are completed, start Combat Mode.
-                if start_check and CombatMode.start_combat_mode(script_commands = Settings.nightmare_combat_script, is_nightmare = True):
+                if start_check and CombatMode.start_combat_mode(is_nightmare = True):
                     Game.collect_loot(is_completed = False, is_event_nightmare = True)
                     return True
 
@@ -302,7 +302,7 @@ class Special:
                 Game.wait(1)
 
                 # Now start Combat Mode and detect any item drops.
-                if CombatMode.start_combat_mode(script_commands = Settings.combat_script):
+                if CombatMode.start_combat_mode():
                     number_of_items_dropped = Game.collect_loot(is_completed = True)
         else:
             raise SpecialException("Failed to arrive at the Summon Selection screen.")
