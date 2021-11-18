@@ -15,7 +15,7 @@ const Home = () => {
     1. Have your game window and the Bottom Menu visible. Set the game window size set to the second "notch". 
     2. Go to the Settings Page of the bot and fill out the sections until the status at the top says "Ready".
     3. You can now head back to the Home Page of the bot and click START.
-    \nWarning: Do not refresh/F5 the program's "page" while the bot process is running. Otherwise in order to stop it, you will need to kill it by completely exiting the program.\n****************************************`
+    \nWarning: Do not refresh/F5 the program's "page" while the bot process is running. Otherwise in order to stop it, you will need to kill it by completely exiting the program.\n****************************************\n`
 
     // Scroll to the bottom of the message log window when new messages are added.
     useEffect(() => {
