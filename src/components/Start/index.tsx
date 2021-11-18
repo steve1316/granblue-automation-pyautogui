@@ -16,6 +16,14 @@ const Start = () => {
     useEffect(() => {
         const newLog = [...messageLogContext.messageLog, ...messageLogContext.asyncMessages]
         messageLogContext.setMessageLog(newLog)
+
+        if (
+            messageLogContext.asyncMessages.length > 0 &&
+            (messageLogContext.asyncMessages[messageLogContext.asyncMessages.length - 1].includes("Traceback") ||
+                messageLogContext.asyncMessages[messageLogContext.asyncMessages.length - 1].includes("Ending Farming Mode"))
+        ) {
+            handleStop()
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [messageLogContext.asyncMessages])
 
@@ -217,10 +225,6 @@ const Start = () => {
         command.stderr.on("data", (line: string) => {
             let newLog = [...messageLogContext.asyncMessages, `\n${line}`]
             messageLogContext.setAsyncMessages(newLog)
-
-            if (line.indexOf("Traceback") !== -1 || line.indexOf("Ending Farming Mode") !== -1) {
-                handleStop()
-            }
         })
 
         // Create the child process.
