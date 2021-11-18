@@ -574,15 +574,17 @@ class CombatMode:
         MessageLog.print_message("######################################################################")
         MessageLog.print_message("######################################################################\n")
 
-        command_list = []
         if script_commands is not None:
-            if is_nightmare:
-                print("Name of script loaded: ", Settings.nightmare_combat_script_name)
-            else:
-                print("Name of script loaded: ", Settings.combat_script_name)
-            print("Size of script commands: ", len(script_commands))
-
             command_list = script_commands
+        else:
+            if is_nightmare:
+                print("Name of Nightmare combat script loaded: ", Settings.nightmare_combat_script_name)
+                command_list = copy.deepcopy(Settings.nightmare_combat_script)
+            else:
+                print("Name of combat script loaded: ", Settings.combat_script_name)
+                command_list = copy.deepcopy(Settings.combat_script)
+
+        print("Size of script commands: ", len(command_list))
 
         command_turn_number = 1
         turn_number = 1  # Current turn for the script execution.
