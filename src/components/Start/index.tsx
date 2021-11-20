@@ -19,8 +19,8 @@ const Start = () => {
 
         if (
             messageLogContext.asyncMessages.length > 0 &&
-            (messageLogContext.asyncMessages[messageLogContext.asyncMessages.length - 1].includes("Traceback") ||
-                messageLogContext.asyncMessages[messageLogContext.asyncMessages.length - 1].includes("Ending Farming Mode"))
+            (messageLogContext.asyncMessages[messageLogContext.asyncMessages.length - 1].includes("Ending Farming Mode") ||
+                messageLogContext.asyncMessages[messageLogContext.asyncMessages.length - 1].includes("Child process finished with code"))
         ) {
             handleStop()
         }
@@ -218,7 +218,7 @@ const Start = () => {
             messageLogContext.setAsyncMessages(newLog)
             handleStop()
         })
-        command.stdout.on("data", (line) => {
+        command.stdout.on("data", (line: string) => {
             let newLog = [...messageLogContext.asyncMessages, `\n${line}`]
             messageLogContext.setAsyncMessages(newLog)
         })
