@@ -513,16 +513,21 @@ const ExtraSettings = () => {
     }
 
     const renderNightmareSettings = () => {
-        if (bot.settings.nightmare.enableNightmare) {
+        if (
+            bot.settings.nightmare.enableNightmare &&
+            (bot.settings.game.farmingMode === "Special" ||
+                bot.settings.game.farmingMode === "Event" ||
+                bot.settings.game.farmingMode === "Event (Token Drawboxes)" ||
+                bot.settings.game.farmingMode === "Xeno Clash" ||
+                bot.settings.game.farmingMode === "Rise of the Beasts")
+        ) {
             var title: string = ""
             if (bot.settings.game.farmingMode === "Special") {
                 title = "Dimensional Halo"
-            } else if (bot.settings.game.farmingMode === "Event" || bot.settings.game.farmingMode === "Event (Token Drawboxes)" || bot.settings.game.farmingMode === "Xeno Clash") {
-                title = "Nightmare"
             } else if (bot.settings.game.farmingMode === "Rise of the Beasts") {
                 title = "Extreme+"
             } else {
-                title = "Unknown"
+                title = "Nightmare"
             }
 
             return (
@@ -571,7 +576,7 @@ const ExtraSettings = () => {
 
                             <Grid container>
                                 <Grid item xs={6}>
-                                    <Button variant="contained" onClick={handleModalOpen} disabled={bot.settings.game.farmingMode === "Coop" || bot.settings.game.farmingMode === "Arcarum"} fullWidth>
+                                    <Button variant="contained" onClick={handleModalOpen} fullWidth>
                                         Select Nightmare Support Summons
                                     </Button>
                                     <Modal className="supportSummonModal" open={isModalOpen} onClose={handleModalClose}>
