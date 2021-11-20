@@ -158,22 +158,6 @@ const Settings = () => {
         }
     }, [botStateContext.settings.game.mission])
 
-    // Reset Nightmare settings.
-    const resetNightmareSettings = () => {
-        botStateContext.setSettings({
-            ...botStateContext.settings,
-            nightmare: {
-                ...botStateContext.settings.nightmare,
-                enableNightmare: false,
-                enableCustomNightmareSettings: false,
-                nightmareSummons: [],
-                nightmareSummonElements: [],
-                nightmareGroupNumber: 1,
-                nightmarePartyNumber: 1,
-            },
-        })
-    }
-
     // Show or hide the Support Summon Selection component.
     const handleModalOpen = () => setIsModalOpen(true)
     const handleModalClose = () => setIsModalOpen(false)
@@ -210,10 +194,22 @@ const Settings = () => {
                         variant="filled"
                         value={botStateContext.settings.game.farmingMode}
                         onChange={(e) => {
-                            resetNightmareSettings()
-
                             // In addition, also reset selected Item and Mission.
-                            botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, farmingMode: e.target.value, item: "", mission: "", map: "" } })
+                            botStateContext.setSettings({
+                                ...botStateContext.settings,
+                                game: { ...botStateContext.settings.game, farmingMode: e.target.value, item: "", mission: "", map: "" },
+                                nightmare: {
+                                    ...botStateContext.settings.nightmare,
+                                    enableNightmare: false,
+                                    enableCustomNightmareSettings: false,
+                                    nightmareCombatScriptName: "",
+                                    nightmareCombatScript: [],
+                                    nightmareSummons: [],
+                                    nightmareSummonElements: [],
+                                    nightmareGroupNumber: 1,
+                                    nightmarePartyNumber: 1,
+                                },
+                            })
                         }}
                         helperText="Please select the Farming Mode"
                     >
