@@ -229,7 +229,8 @@ class CombatMode:
 
         # Find the location of the "Cancel" button and then click the button right next to it. This is to ensure that no matter what the blue "Request Backup" button's appearance, it is ensured to be pressed.
         cancel_button_location = ImageUtils.find_button("cancel")
-        MouseUtils.move_and_click_point(cancel_button_location[0] + 200, cancel_button_location[1], "cancel")
+        if cancel_button_location is not None:
+            MouseUtils.move_and_click_point(cancel_button_location[0] + 200, cancel_button_location[1], "cancel")
 
         Game.wait(1)
 
