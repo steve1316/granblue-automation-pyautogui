@@ -1,5 +1,7 @@
 import datetime
 import os
+import sys
+import codecs
 from datetime import date
 from typing import List, Tuple
 
@@ -24,8 +26,6 @@ class ImageUtils:
     _image_number: int = 0
     _new_folder_name: str = None
 
-    _reader: easyocr.Reader = None
-
     # Used for skipping selecting the Summon Element every time on repeated runs.
     _summon_selection_first_run = True
     _summon_selection_same_element = False
@@ -38,6 +38,21 @@ class ImageUtils:
     _temp_dir: str = _current_dir + "/temp/"
     if not os.path.exists(_temp_dir):
         os.makedirs(_temp_dir)
+
+    try:
+        if not os.path.exists(_current_dir + "/backend/model/"):
+            os.makedirs(_current_dir + "/backend/model/")
+
+        MessageLog.print_message(f"\n[INFO] Initializing EasyOCR reader. This may take a few seconds...")
+        _reader = easyocr.Reader(["en"], model_storage_directory = _current_dir + "/backend/model/", gpu = True)
+        MessageLog.print_message(f"[INFO] EasyOCR reader initialized.")
+    except UnicodeEncodeError:
+        # Tauri spawns the Python process using encoding cp1252 and not utf-8. Need to do this hacky way to force stdout to be utf-8 to get through
+        # EasyOCR initialization as it uses Unicode characters. This process is not needed after EasyOCR downloads the models to the /model/ folder.
+        MessageLog.print_message(f"\n[INFO] Seems that the models for EasyOCR has not been downloaded yet. Downloading them now after setting stdout encoding from cp1252 to utf-8...\n\n")
+        sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
+        _reader = easyocr.Reader(["en"], model_storage_directory = _current_dir + "/backend/model/", gpu = True)
+        MessageLog.print_message(f"\n[INFO] Models for EasyOCR has been downloaded successfully.\n\n")
 
     @staticmethod
     def update_window_dimensions(window_left: int, window_top: int, window_width: int, window_height: int, additional_calibration_required: bool = False):
@@ -402,12 +417,6 @@ class ImageUtils:
         Returns:
             (int): Amount gained for the item.
         """
-        # Initialize EasyOCR for text detection.
-        if ImageUtils._reader is None:
-            MessageLog.print_message(f"\n[INFO] Initializing EasyOCR reader. This may take a few seconds...")
-            _reader = easyocr.Reader(["en"], gpu = True)
-            MessageLog.print_message(f"[INFO] EasyOCR reader initialized.")
-
         # List of items blacklisted from using the standard confidence and instead need a custom confidence to detect them.
         blacklisted_items = ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb",
                              "Red Tome", "Blue Tome", "Brown Tome", "Green Tome", "White Tome", "Black Tome",
