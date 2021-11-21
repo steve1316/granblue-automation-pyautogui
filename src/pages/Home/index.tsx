@@ -41,7 +41,7 @@ const Home = () => {
 
     return (
         <Fade in={true}>
-            <Box className="homeContainer" id="homeContainer">
+            <Box className={botStateContext.settings.misc.guiLowPerformanceMode ? "homeContainerLowPerformance" : "homeContainer"} id="homeContainer">
                 <Stack direction="row" sx={{ height: "100%" }}>
                     <div className="logOuterContainer">
                         <div ref={msgRef} className="logInnerContainer">

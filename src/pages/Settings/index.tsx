@@ -6,7 +6,7 @@ import match from "autosuggest-highlight/match"
 import parse from "autosuggest-highlight/parse"
 import { useContext, useEffect, useRef, useState } from "react"
 import TransferList from "../../components/TransferList"
-import { BotStateContext, Settings as SettingsInterface } from "../../context/BotStateContext"
+import { BotStateContext } from "../../context/BotStateContext"
 import data from "../../data/data.json"
 import "./index.scss"
 
@@ -156,6 +156,7 @@ const Settings = () => {
                 }
             })
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [botStateContext.settings.game.mission])
 
     // Show or hide the Support Summon Selection component.
@@ -164,7 +165,7 @@ const Settings = () => {
 
     return (
         <Fade in={true}>
-            <Box className="settingsContainer" id="settingsContainer">
+            <Box className={botStateContext.settings.misc.guiLowPerformanceMode ? "settingsContainerLowPerformance" : "settingsContainer"} id="settingsContainer">
                 <Stack spacing={2} className="settingsWrapper">
                     {/* Load Combat Script */}
                     <div>

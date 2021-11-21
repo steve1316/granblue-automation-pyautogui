@@ -22,7 +22,7 @@ import { Box, styled } from "@mui/system"
 import { Command } from "@tauri-apps/api/shell"
 import { useContext, useRef, useState } from "react"
 import TransferList from "../../components/TransferList"
-import { BotStateContext, Settings } from "../../context/BotStateContext"
+import { BotStateContext } from "../../context/BotStateContext"
 import "./index.scss"
 
 // Custom input component for combat script file selection.
@@ -631,6 +631,33 @@ const ExtraSettings = () => {
         }
     }
 
+    const renderMiscSettings = () => {
+        return (
+            <div id="misc">
+                <Typography variant="h6" gutterBottom component="div" className="sectionTitle">
+                    Misc Settings <Iconify icon="dashicons:admin-settings" className="sectionTitleIcon" />
+                </Typography>
+
+                <Divider />
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bot.settings.misc.guiLowPerformanceMode}
+                                onChange={(e) => {
+                                    bot.setSettings({ ...bot.settings, misc: { ...bot.settings.misc, guiLowPerformanceMode: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable GUI Low Performance Mode"
+                    />
+                    <FormHelperText>Enable to disable background animations of the GUI.</FormHelperText>
+                </FormGroup>
+            </div>
+        )
+    }
+
     // Attempt to kill the bot process if it is still active.
     const handleStop = async () => {
         if (testPID !== 0) {
@@ -729,7 +756,7 @@ const ExtraSettings = () => {
 
     return (
         <Fade in={true}>
-            <Box className="extraSettingsContainer">
+            <Box className={bot.settings.misc.guiLowPerformanceMode ? "extraSettingsContainerLowPerformance" : "extraSettingsContainer"}>
                 <Snackbar
                     open={showSnackbar}
                     anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
@@ -750,6 +777,8 @@ const ExtraSettings = () => {
                     {renderRefillSettings()}
 
                     {renderConfigurationSettings()}
+
+                    {renderMiscSettings()}
                 </Stack>
             </Box>
         </Fade>

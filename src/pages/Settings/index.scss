@@ -17,6 +17,19 @@
     padding: 25px 0 25px 0;
 }
 
+.settingsContainerLowPerformance {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    padding: 25px 0 25px 0;
+}
+
 .settingsWrapper {
     background-color: rgba(200, 200, 200, 1);
     border-radius: 50px;

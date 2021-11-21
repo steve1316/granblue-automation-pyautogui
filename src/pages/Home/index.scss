@@ -9,6 +9,14 @@
     animation: gradientAnimation 20s ease infinite;
 }
 
+.homeContainerLowPerformance {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+}
+
 @keyframes gradientAnimation {
     0% {
         background-position: 0% 50%;

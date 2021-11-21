@@ -46,6 +46,11 @@ export interface Settings {
         delayBetweenRunsUpperBound: number
     }
 
+    // Misc settings for the GUI.
+    misc: {
+        guiLowPerformanceMode: boolean
+    }
+
     // Extra Settings related to Nightmares from certain Farming Modes.
     nightmare: {
         enableNightmare: boolean
@@ -108,6 +113,9 @@ const defaultSettings: Settings = {
         enableRandomizedDelayBetweenRuns: false,
         delayBetweenRunsLowerBound: 15,
         delayBetweenRunsUpperBound: 60,
+    },
+    misc: {
+        guiLowPerformanceMode: false,
     },
     nightmare: {
         enableNightmare: false,
