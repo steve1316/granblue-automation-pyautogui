@@ -76,7 +76,7 @@ export interface Settings {
 }
 
 // Set the default settings.
-const defaultSettings: Settings = {
+export const defaultSettings: Settings = {
     game: {
         combatScriptName: "",
         combatScript: [],

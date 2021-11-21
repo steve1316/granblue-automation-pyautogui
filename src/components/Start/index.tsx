@@ -1,7 +1,7 @@
 import { FsTextFileOption, readTextFile, writeFile } from "@tauri-apps/api/fs"
 import { Command } from "@tauri-apps/api/shell"
 import { useContext, useEffect, useState } from "react"
-import { BotStateContext, Settings } from "../../context/BotStateContext"
+import { BotStateContext, Settings, defaultSettings } from "../../context/BotStateContext"
 import { MessageLogContext } from "../../context/MessageLogContext"
 import summonData from "../../data/summons.json"
 
@@ -78,8 +78,10 @@ const Start = () => {
                     const decoded: Settings = JSON.parse(settings)
                     console.log(`Loaded settings from settings.json: ${JSON.stringify(decoded, null, 4)}`)
 
+                    var fixedSettings: Settings = fixSettings(decoded)
+
                     // Save the settings to state.
-                    botStateContext.setSettings(decoded)
+                    botStateContext.setSettings(fixedSettings)
 
                     setFirstTimeSetup(false)
                 })
@@ -94,6 +96,21 @@ const Start = () => {
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    // Attempt to fix missing key-value pairs in the settings before commiting them to state.
+    const fixSettings = (decoded: Settings) => {
+        var newSettings: Settings = decoded
+        Object.keys(defaultSettings).forEach((key) => {
+            if (decoded[key as keyof Settings] === undefined) {
+                newSettings = {
+                    ...newSettings,
+                    [key as keyof Settings]: defaultSettings[key as keyof Settings],
+                }
+            }
+        })
+
+        return newSettings
+    }
 
     const fetchSummonElements = (summonList: string[]) => {
         var newSummonElementsList: string[] = []
