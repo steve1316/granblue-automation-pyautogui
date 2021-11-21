@@ -588,6 +588,9 @@ class Game:
                 # Search for and click on the "Extended Mastery" popup.
                 Game.find_and_click_button("new_extended_mastery_level", tries = 1, suppress_error = True)
 
+                if ImageUtils.confirm_location("no_loot", tries = 1):
+                    return 0
+
         # Now that the bot is at the Loot Collected screen, detect any user-specified items.
         if is_completed and not is_pending_battle and not is_event_nightmare:
             MessageLog.print_message("\n[INFO] Detecting if any user-specified loot dropped from this run...")
