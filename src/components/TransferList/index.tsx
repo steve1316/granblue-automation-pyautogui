@@ -1,6 +1,6 @@
 import { Card, CardActionArea, CardMedia, Divider, Grid, Grow, List, ListItem, ListItemText, Paper, Tooltip, Typography, Zoom } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
-import { BotStateContext, Settings } from "../../context/BotStateContext"
+import { BotStateContext } from "../../context/BotStateContext"
 import summonData from "../../data/summons.json"
 import "./index.scss"
 
