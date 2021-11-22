@@ -476,8 +476,10 @@ class Game:
         if Settings.farming_mode.lower() == "raid" and ImageUtils.confirm_location("raids"):
             MessageLog.print_message("\n[WARNING] Raid unfortunately just ended. Backing out now...")
             Game.find_and_click_button("ok")
+            Game.wait(3.0)
             return False
 
+        Game.wait(3.0)
         return True
 
     @staticmethod

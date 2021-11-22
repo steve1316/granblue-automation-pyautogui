@@ -184,8 +184,6 @@ class Coop:
             # Now click the "Start" button to start the Coop Mission.
             Game.find_and_click_button("coop_start")
 
-            Game.wait(1)
-
             # Now start Combat Mode and detect any item drops.
             if CombatMode.start_combat_mode():
                 number_of_items_dropped = Game.collect_loot(is_completed = True)

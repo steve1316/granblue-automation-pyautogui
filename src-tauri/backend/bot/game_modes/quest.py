@@ -226,8 +226,6 @@ class Quest:
                 # Select the Party.
                 Game.find_party_and_start_mission(Settings.group_number, Settings.party_number)
 
-                Game.wait(1)
-
                 # Close the "Item Picked Up" popup.
                 if ImageUtils.confirm_location("items_picked_up"):
                     Game.find_and_click_button("ok")

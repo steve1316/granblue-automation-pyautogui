@@ -180,7 +180,6 @@ class Arcarum:
                         elif ImageUtils.confirm_location("arcarum_restriction", tries = 1):
                             raise ArcarumException("Encountered a party restriction for Arcarum. Perhaps you would like to complete this section by yourself?")
 
-                        Game.wait(3)
                         if CombatMode.start_combat_mode():
                             Game.collect_loot(is_completed = False, skip_info = True)
                             Game.find_and_click_button("expedition")

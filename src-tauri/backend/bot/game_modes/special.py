@@ -299,8 +299,6 @@ class Special:
                 # Select the Party.
                 Game.find_party_and_start_mission(Settings.group_number, Settings.party_number)
 
-                Game.wait(1)
-
                 # Now start Combat Mode and detect any item drops.
                 if CombatMode.start_combat_mode():
                     number_of_items_dropped = Game.collect_loot(is_completed = True)
