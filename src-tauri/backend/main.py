@@ -48,7 +48,7 @@ class MainDriver:
         # Create a new Process whose target is the MainDriver's run_bot() method.
         self._bot_process = multiprocessing.Process(target = self._run_bot)
 
-        print("Starting now")
+        print("[STATUS] Starting now...")
 
         # Now start the new Process on a new Thread.
         self._bot_process.start()
