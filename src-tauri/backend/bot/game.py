@@ -685,11 +685,11 @@ class Game:
 
         while ImageUtils.confirm_location("select_a_summon", tries = 1) is False:
             # Break out of the loop if the bot detected that a AP recovery item was automatically used and let check_for_ap() take care of it.
-            if ImageUtils.confirm_location("auto_ap_recovered", tries = 1) or ImageUtils.confirm_location("auto_ap_recovered2", tries = 1):
+            if Settings.enabled_auto_restore is False and ImageUtils.confirm_location("auto_ap_recovered", tries = 1) or ImageUtils.confirm_location("auto_ap_recovered2", tries = 1):
                 break
 
             # Break out of the loop if the bot detected the "Not Enough AP" popup.
-            if ImageUtils.confirm_location("not_enough_ap", tries = 1):
+            if Settings.enabled_auto_restore is False and ImageUtils.confirm_location("not_enough_ap", tries = 1):
                 break
 
             if Settings.farming_mode == "Rise of the Beasts" and ImageUtils.confirm_location("proud_solo_quest", tries = 1):
@@ -708,11 +708,9 @@ class Game:
                 Game.find_and_click_button("ok")
                 return True
 
-            # Attempt to close the popup by clicking on any detected "Close" and "Cancel" buttons.
+            # Attempt to close any popup by clicking on any detected "Close" and "Cancel" buttons.
             if Game.find_and_click_button("close", tries = 1) is False:
                 Game.find_and_click_button("cancel", tries = 1)
-
-            Game.wait(1)
 
         return False
 
