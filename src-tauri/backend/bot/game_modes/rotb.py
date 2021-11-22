@@ -101,7 +101,7 @@ class RiseOfTheBeasts:
                 MessageLog.print_message(f"[ROTB] Now hosting {temp_mission_name} Raid...")
                 Game.find_and_click_button("rotb_extreme")
 
-                if ImageUtils.confirm_location("rotb_battle_the_beasts"):
+                if ImageUtils.confirm_location("rotb_battle_the_beasts", tries = 30):
                     if temp_mission_name == "Zhuque":
                         MessageLog.print_message(f"[ROTB] Now starting EX Zhuque Raid...")
                         Game.find_and_click_button("rotb_raid_zhuque")
@@ -114,6 +114,8 @@ class RiseOfTheBeasts:
                     elif temp_mission_name == "Qinglong":
                         MessageLog.print_message(f"[ROTB] Now starting EX Qinglong Raid...")
                         Game.find_and_click_button("rotb_raid_qinglong")
+                else:
+                    raise(RiseOfTheBeastsException("Failed to open the ROTB Battle the Beasts popup."))
 
             elif Settings.mission_name == "Lvl 100 Shenxian":
                 # Click on Shenxian to host.
@@ -134,7 +136,7 @@ class RiseOfTheBeasts:
                 select_button_locations = ImageUtils.find_all("select")
                 MouseUtils.move_and_click_point(select_button_locations[0][0], select_button_locations[0][1], "select")
 
-                if ImageUtils.confirm_location("rotb_rising_beasts_showdown"):
+                if ImageUtils.confirm_location("rotb_rising_beasts_showdown", tries = 30):
                     # Find all the round "Play" buttons.
                     round_play_button_locations = ImageUtils.find_all("play_round_button")
 
@@ -147,13 +149,15 @@ class RiseOfTheBeasts:
                     elif temp_mission_name == "Qinglong":
                         MouseUtils.move_and_click_point(round_play_button_locations[3][0], round_play_button_locations[3][1], "play_round_button")
 
-                    Game.wait(1)
+                    Game.wait(2.0)
 
                     # Find all the round "Play" buttons again.
                     round_play_button_locations = ImageUtils.find_all("play_round_button")
 
                     # Only Very Hard difficulty will be supported for farming efficiency
                     MouseUtils.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1], "play_round_button")
+                else:
+                    raise(RiseOfTheBeastsException("Failed to open the ROTB Rising Beasts Showdown popup."))
 
         return None
 
@@ -186,7 +190,7 @@ class RiseOfTheBeasts:
         Game.check_for_ap()
 
         # Check if the bot is at the Summon Selection screen.
-        if ImageUtils.confirm_location("select_a_summon", tries = 10):
+        if ImageUtils.confirm_location("select_a_summon", tries = 30):
             summon_check = Game.select_summon(Settings.summon_list, Settings.summon_element_list)
             if summon_check:
                 # Select the Party.

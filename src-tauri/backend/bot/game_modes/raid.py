@@ -193,21 +193,17 @@ class Raid:
         Game.check_for_ep()
 
         # Check if the bot is at the Summon Selection screen.
-        if ImageUtils.confirm_location("select_a_summon", tries = 10):
+        if ImageUtils.confirm_location("select_a_summon", tries = 30):
             summon_check = Game.select_summon(Settings.summon_list, Settings.summon_element_list)
 
             if summon_check:
                 # Select the Party.
                 if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
-                    Game.wait(1)
-
                     # Handle the rare case where joining the Raid after selecting the Summon and Party led the bot to the Quest Results screen with no loot to collect.
-                    if ImageUtils.confirm_location("no_loot", tries = 1):
+                    if ImageUtils.confirm_location("no_loot", tries = 2):
                         MessageLog.print_message("\n[RAID] Seems that the Raid just ended. Moving back to the Home screen and joining another Raid...")
-                    else:
-                        # Now start Combat Mode and detect any item drops.
-                        if CombatMode.start_combat_mode():
-                            number_of_items_dropped = Game.collect_loot(is_completed = True)
+                    elif CombatMode.start_combat_mode():
+                        number_of_items_dropped = Game.collect_loot(is_completed = True)
                 else:
                     MessageLog.print_message("\n[RAID] Seems that the Raid ended before the bot was able to join. Now looking for another Raid to join...")
         else:

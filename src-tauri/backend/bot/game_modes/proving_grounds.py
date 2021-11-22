@@ -89,15 +89,15 @@ class ProvingGrounds:
         Game.check_for_ap()
 
         # Check if the bot is at the Summon Selection screen.
-        if (first_run or ProvingGrounds._first_time) and ImageUtils.confirm_location("proving_grounds_summon_selection", tries = 10):
+        if (first_run or ProvingGrounds._first_time) and ImageUtils.confirm_location("proving_grounds_summon_selection", tries = 30):
             summon_check = Game.select_summon(Settings.summon_list, Settings.summon_element_list)
             if summon_check:
-                Game.wait(1)
+                Game.wait(2.0)
 
                 # No need to select a Party. Just click "OK" to start the mission and confirming the selected summon.
                 Game.find_and_click_button("ok")
 
-                Game.wait(1.0)
+                Game.wait(2.0)
 
                 MessageLog.print_message("\n[PROVING.GROUNDS] Now starting Mission for Proving Grounds...")
                 Game.find_and_click_button("proving_grounds_start")
@@ -131,7 +131,7 @@ class ProvingGrounds:
                     # Check for trophy.
                     Game.find_and_click_button("close", tries = 1, suppress_error = True)
 
-                    Game.wait(2)
+                    Game.wait(2.0)
                     Game.find_and_click_button("proving_grounds_open_chest")
 
                     if ImageUtils.confirm_location("proving_grounds_completion_loot"):

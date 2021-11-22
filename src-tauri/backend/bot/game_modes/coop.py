@@ -177,7 +177,7 @@ class Coop:
         Game.check_for_ap()
 
         # Check if the bot is at the Party Selection screen. Note that the bot is hosting solo so no support summon selection.
-        if first_run and ImageUtils.confirm_location("coop_without_support_summon", tries = 10):
+        if first_run and ImageUtils.confirm_location("coop_without_support_summon", tries = 30):
             # Select the Party.
             Game.find_party_and_start_mission(Settings.group_number, Settings.party_number)
 

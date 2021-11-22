@@ -111,9 +111,9 @@ class XenoClash:
             event_banner_locations = ImageUtils.find_all("event_banner_blue", custom_confidence = 0.7)
         MouseUtils.move_and_click_point(event_banner_locations[0][0], event_banner_locations[0][1], "event_banner")
 
-        Game.wait(1)
+        Game.wait(2.0)
 
-        if Game.find_and_click_button("xeno_special"):
+        if Game.find_and_click_button("xeno_special", tries = 30):
             # Check to see if the user already has a Nightmare available.
             nightmare_is_available = 0
             if ImageUtils.find_button("event_nightmare", tries = 1) is not None:
@@ -132,9 +132,11 @@ class XenoClash:
                 MessageLog.print_message(f"[XENO.CLASH] Now hosting Xeno Clash Raid...")
                 MouseUtils.move_and_click_point(select_button_locations[2 + nightmare_is_available][0], select_button_locations[2 + nightmare_is_available][1], "select")
 
-                Game.wait(1)
+                Game.wait(2.0)
 
                 Game.find_and_click_button("play")
+        else:
+            raise(XenoClashException("Failed to open the Xeno Special tab."))
 
         return None
 
@@ -167,7 +169,7 @@ class XenoClash:
         Game.check_for_ap()
 
         # Check if the bot is at the Summon Selection screen.
-        if ImageUtils.confirm_location("select_a_summon", tries = 10):
+        if ImageUtils.confirm_location("select_a_summon", tries = 30):
             summon_check = Game.select_summon(Settings.summon_list, Settings.summon_element_list)
             if summon_check:
                 # Select the Party.
