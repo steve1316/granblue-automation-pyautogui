@@ -376,8 +376,7 @@ class CombatMode:
 
             y = CombatMode._attack_button_location[1] + 171
 
-            # Double-clicking the skill to avoid any non-invasive popups from other Raid participants.
-            MouseUtils.move_and_click_point(x, y, "template_skill", mouse_clicks = 2)
+            MouseUtils.move_and_click_point(x, y, "template_skill")
 
             # Check if the skill requires a target.
             if len(skill_command_list) > 0 and ImageUtils.confirm_location("use_skill", tries = 2):
