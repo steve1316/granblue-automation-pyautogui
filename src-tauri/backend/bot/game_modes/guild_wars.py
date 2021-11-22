@@ -1,3 +1,5 @@
+import random
+
 from utils.settings import Settings
 from utils.message_log import MessageLog
 from utils.image_utils import ImageUtils
@@ -74,8 +76,8 @@ class GuildWars:
                     formatted_mission_name = difficulty.replace(" ", "_")
                     tries = 10
                     MessageLog.print_message(f"[GUILD.WARS] Now hosting {difficulty} now...")
-                    while ImageUtils.wait_vanish("ap_30", timeout = 10) is False:
-                        Game.find_and_click_button(f"guild_wars_meat_{formatted_mission_name}")
+                    while ImageUtils.wait_vanish("ap_30", timeout = 1) is False:
+                        Game.find_and_click_button(f"guild_wars_meat_{formatted_mission_name}", x_offset = random.randrange(-30, 30), y_offset = random.randrange(-60, -40))
 
                         Game.wait(3)
 

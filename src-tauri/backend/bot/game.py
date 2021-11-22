@@ -149,14 +149,16 @@ class Game:
         return None
 
     @staticmethod
-    def find_and_click_button(button_name: str, clicks: int = 1, tries: int = 0, suppress_error: bool = False):
+    def find_and_click_button(button_name: str, clicks: int = 1, tries: int = 0, x_offset: int = 0, y_offset: int = 0, suppress_error: bool = False):
         """Find the center point of a button image and click it.
 
         Args:
             button_name (str): Name of the button image file in the /images/buttons/ folder.
-            clicks (int): Number of mouse clicks when clicking the button image location. Defaults to 1.
-            tries (int): Number of tries to attempt to find the specified button image. Defaults to 0 which will use ImageUtil's default.
-            suppress_error (bool): Suppresses template matching error depending on boolean. Defaults to False.
+            clicks (int, optional): Number of mouse clicks when clicking the button image location. Defaults to 1.
+            tries (int, optional): Number of tries to attempt to find the specified button image. Defaults to 0 which will use ImageUtil's default.
+            x_offset (int, optional): Offset the x-coordinate of the click location. Defaults to 0.
+            y_offset (int, optional): Offset the y-coordinate of the click location. Defaults to 0.
+            suppress_error (bool, optional): Suppresses template matching error depending on boolean. Defaults to False.
 
         Returns:
             (bool): Return True if the button was found and clicked. Otherwise, return False.
@@ -171,7 +173,7 @@ class Game:
                     temp_location = ImageUtils.find_button("quest_red")
 
                 if temp_location is not None:
-                    MouseUtils.move_and_click_point(temp_location[0], temp_location[1], "quest_blue", mouse_clicks = clicks)
+                    MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "quest_blue", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "raid":
                 temp_location = ImageUtils.find_button("raid_flat")
@@ -179,7 +181,7 @@ class Game:
                     temp_location = ImageUtils.find_button("raid_bouncing")
 
                 if temp_location is not None:
-                    MouseUtils.move_and_click_point(temp_location[0], temp_location[1], "raid_flat", mouse_clicks = clicks)
+                    MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "raid_flat", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "coop_start":
                 temp_location = ImageUtils.find_button("coop_start_flat")
@@ -187,7 +189,7 @@ class Game:
                     temp_location = ImageUtils.find_button("coop_start_faded")
 
                 if temp_location is not None:
-                    MouseUtils.move_and_click_point(temp_location[0], temp_location[1], "coop_start_flat", mouse_clicks = clicks)
+                    MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "coop_start_flat", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "event_special_quest":
                 temp_location = ImageUtils.find_button("event_special_quest")
@@ -197,12 +199,12 @@ class Game:
                     temp_location = ImageUtils.find_button("event_special_quest_bouncing")
 
                 if temp_location is not None:
-                    MouseUtils.move_and_click_point(temp_location[0], temp_location[1], "event_special_quest", mouse_clicks = clicks)
+                    MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "event_special_quest", mouse_clicks = clicks)
                     return True
             else:
                 temp_location = ImageUtils.find_button(button_name.lower())
                 if temp_location is not None:
-                    MouseUtils.move_and_click_point(temp_location[0], temp_location[1], button_name, mouse_clicks = clicks)
+                    MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, button_name, mouse_clicks = clicks)
                     return True
         else:
             if button_name.lower() == "quest":
@@ -211,7 +213,7 @@ class Game:
                     temp_location = ImageUtils.find_button("quest_red", tries = tries)
 
                 if temp_location is not None:
-                    MouseUtils.move_and_click_point(temp_location[0], temp_location[1], "quest_blue", mouse_clicks = clicks)
+                    MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "quest_blue", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "raid":
                 temp_location = ImageUtils.find_button("raid_flat", tries = tries)
@@ -219,7 +221,7 @@ class Game:
                     temp_location = ImageUtils.find_button("raid_bouncing", tries = tries)
 
                 if temp_location is not None:
-                    MouseUtils.move_and_click_point(temp_location[0], temp_location[1], "raid_flat", mouse_clicks = clicks)
+                    MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "raid_flat", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "coop_start":
                 temp_location = ImageUtils.find_button("coop_start_flat", tries = tries)
@@ -227,7 +229,7 @@ class Game:
                     temp_location = ImageUtils.find_button("coop_start_faded", tries = tries)
 
                 if temp_location is not None:
-                    MouseUtils.move_and_click_point(temp_location[0], temp_location[1], "coop_start_flat", mouse_clicks = clicks)
+                    MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "coop_start_flat", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "event_special_quest":
                 temp_location = ImageUtils.find_button("event_special_quest", tries = tries)
@@ -237,12 +239,12 @@ class Game:
                     temp_location = ImageUtils.find_button("event_special_quest_bouncing", tries = tries)
 
                 if temp_location is not None:
-                    MouseUtils.move_and_click_point(temp_location[0], temp_location[1], "event_special_quest", mouse_clicks = clicks)
+                    MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "event_special_quest", mouse_clicks = clicks)
                     return True
             else:
                 temp_location = ImageUtils.find_button(button_name.lower(), tries = tries, suppress_error = suppress_error)
                 if temp_location is not None:
-                    MouseUtils.move_and_click_point(temp_location[0], temp_location[1], button_name, mouse_clicks = clicks)
+                    MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, button_name, mouse_clicks = clicks)
                     return True
 
         return False
