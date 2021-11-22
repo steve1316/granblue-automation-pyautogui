@@ -36,7 +36,7 @@ class GuildWars:
             banner_locations = ImageUtils.find_all("event_banner_blue", custom_confidence = 0.7)
         MouseUtils.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
 
-        Game.wait(1)
+        Game.wait(1.0)
 
         difficulty = ""
         if Settings.mission_name == "Very Hard":
@@ -109,12 +109,12 @@ class GuildWars:
                     nightmare_locations = ImageUtils.find_all("guild_wars_nightmares")
 
                     # If today is the first/second day of Guild Wars, only NM90 will be available.
-                    if ImageUtils.confirm_location("guild_wars_nightmare_first_day", tries = 1):
+                    if ImageUtils.confirm_location("guild_wars_nightmare_first_day", tries = 3):
                         MessageLog.print_message(f"[GUILD.WARS] Today is the first/second day so hosting NM90.")
                         Game.find_and_click_button("ok")
 
                         # Alert the user if they lack the meat to host this and stop the bot.
-                        if not ImageUtils.wait_vanish("ok", timeout = 10):
+                        if not ImageUtils.wait_vanish("ok", timeout = 30):
                             ImageUtils.generate_alert("You do not have enough meat to host this NM90!")
                             raise GuildWarsException("You do not have enough meat to host this NM90!")
 
@@ -146,7 +146,7 @@ class GuildWars:
                         Game.find_and_click_button("guild_wars_meat_extreme+")
 
                         # Alert the user if they did not unlock Extreme+ and stop the bot.
-                        if not ImageUtils.wait_vanish("guild_wars_meat_extreme+", timeout = 10):
+                        if not ImageUtils.wait_vanish("guild_wars_meat_extreme+", timeout = 30):
                             ImageUtils.generate_alert("You did not unlock Extreme+ yet!")
                             raise GuildWarsException("You did not unlock Extreme+ yet!")
 
