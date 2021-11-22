@@ -721,13 +721,12 @@ class Game:
         Returns:
             (bool): Return True if a Pending Battle was successfully processed. Otherwise, return False.
         """
-        if Game.find_and_click_button("tap_here_to_see_rewards", tries = 1):
+        if Game.find_and_click_button("tap_here_to_see_rewards", tries = 3):
             MessageLog.print_message(f"[INFO] Clearing this Pending Battle...")
-
             Game.wait(1)
 
             # If there is loot available, start loot detection.
-            if ImageUtils.confirm_location("no_loot", tries = 1):
+            if ImageUtils.confirm_location("no_loot", tries = 3):
                 MessageLog.print_message(f"[INFO] No loot can be collected.")
 
                 # Navigate back to the Quests screen.
@@ -740,8 +739,8 @@ class Game:
                 else:
                     Game.collect_loot(is_completed = False, is_pending_battle = True)
 
-                Game.find_and_click_button("close", tries = 1)
-                Game.find_and_click_button("ok", tries = 1)
+                Game.find_and_click_button("close", tries = 2)
+                Game.find_and_click_button("ok", tries = 2)
 
                 return True
 
@@ -787,17 +786,15 @@ class Game:
                 (Game.find_and_click_button("quest_results_pending_battles", tries = 1)):
             MessageLog.print_message(f"[INFO] Found Pending Battles that need collecting from.")
 
-            Game.find_and_click_button("ok", tries = 1)
-
+            Game.find_and_click_button("ok")
             Game.wait(1)
 
-            if ImageUtils.confirm_location("pending_battles", tries = 1):
+            if ImageUtils.confirm_location("pending_battles"):
                 # Process the current Pending Battle.
                 while Game._clear_pending_battle():
                     # While on the Loot Collected screen, if there are more Pending Battles then head back to the Pending Battles screen.
                     if ImageUtils.find_button("quest_results_pending_battles", tries = 1):
                         Game.find_and_click_button("quest_results_pending_battles")
-
                         Game.wait(1)
 
                         # Close the Skyscope mission popup.
