@@ -82,5 +82,7 @@ if __name__ == "__main__":
     while True:
         if Settings.bot_status_flag.value == 1:
             break
+        else:
+            time.sleep(1.0)
 
     bot_object.stop_bot()
