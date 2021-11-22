@@ -750,6 +750,30 @@ class Game:
         return False
 
     @staticmethod
+    def check_for_friend_request():
+        """Check for the Friend Request popup.
+
+        Returns:
+            None
+        """
+        if ImageUtils.confirm_location("friend_request", tries = 3):
+            Game.find_and_click_button("cancel")
+            Game.wait(2.0)
+        return None
+
+    @staticmethod
+    def check_for_skyscope():
+        """Check for the Skyscope popup.
+
+        Returns:
+            None
+        """
+        if ImageUtils.confirm_location("skyscope", tries = 3):
+            Game.find_and_click_button("close")
+            Game.wait(2.0)
+        return None
+
+    @staticmethod
     def check_for_pending():
         """Check and collect any pending rewards and free up slots for the bot to join more raids.
 
@@ -779,23 +803,13 @@ class Game:
                         Game.wait(1)
 
                         # Close the Skyscope mission popup.
-                        if ImageUtils.confirm_location("skyscope"):
-                            Game.find_and_click_button("close")
-                            Game.wait(1)
-
-                        if ImageUtils.confirm_location("friend_request", tries = 1):
-                            Game.find_and_click_button("cancel")
-
-                        Game.wait(1)
+                        Game.check_for_skyscope()
                     else:
                         # When there are no more Pending Battles, go back to the Home screen.
                         Game.find_and_click_button("home")
 
                         # Close the Skyscope mission popup.
-                        if ImageUtils.confirm_location("skyscope"):
-                            Game.find_and_click_button("close")
-                            Game.wait(1)
-
+                        Game.check_for_skyscope()
                         break
 
             MessageLog.print_message(f"[INFO] Pending battles have been cleared.")

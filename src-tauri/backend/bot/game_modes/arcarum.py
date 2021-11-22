@@ -198,10 +198,7 @@ class Arcarum:
                         runs_completed += 1
 
                         Game.wait(1)
-
-                        if ImageUtils.confirm_location("skyscope", tries = 1):
-                            Game.find_and_click_button("close")
-
+                        Game.check_for_skyscope()
                         break
                 elif action == "Boss Detected":
                     MessageLog.print_message(f"[ARCARUM] Boss has been detected. Stopping the bot.")
