@@ -604,7 +604,7 @@ class CombatMode:
             Game.find_and_click_button("arcarum_stage_effect_active", tries = 5)
 
         # Save the positions of the "Attack" and "Back" button.
-        CombatMode._attack_button_location = ImageUtils.find_button("attack", tries = 30)
+        CombatMode._attack_button_location = ImageUtils.find_button("attack", tries = 50)
         if CombatMode._attack_button_location is None:
             MessageLog.print_message(f"\n[ERROR] Cannot find Attack button. Raid must have just ended.")
             return False
