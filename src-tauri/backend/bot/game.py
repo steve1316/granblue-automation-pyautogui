@@ -382,13 +382,13 @@ class Game:
         return None
 
     @staticmethod
-    def find_party_and_start_mission(group_number: int, party_number: int, tries: int = 3):
+    def find_party_and_start_mission(group_number: int, party_number: int, tries: int = 30):
         """Select the specified Group and Party. It will then start the mission.
 
         Args:
             group_number (int): The Group that the specified Party in in.
             party_number (int): The specified Party to start the mission with.
-            tries (int, optional): Number of tries to select a Set before failing. Defaults to 3.
+            tries (int, optional): Number of tries to select a Set before failing. Defaults to 30.
 
         Returns:
             (bool): Returns False if it detects the "Raid is full/Raid is already done" dialog. Otherwise, return True.
@@ -402,24 +402,24 @@ class Game:
             set_location = None
             if group_number < 8:
                 while set_location is None:
-                    set_location = ImageUtils.find_button("party_set_a", tries = 1)
+                    set_location = ImageUtils.find_button("party_set_a", tries = 3)
                     if set_location is None:
                         tries -= 1
                         if tries <= 0:
                             raise RuntimeError("Could not find Set A.")
 
                         # See if the user had Set B active instead of Set A if matching failed.
-                        set_location = ImageUtils.find_button("party_set_b", tries = 1)
+                        set_location = ImageUtils.find_button("party_set_b", tries = 3)
             else:
                 while set_location is None:
-                    set_location = ImageUtils.find_button("party_set_b", tries = 1)
+                    set_location = ImageUtils.find_button("party_set_b", tries = 3)
                     if set_location is None:
                         tries -= 1
                         if tries <= 0:
                             raise RuntimeError("Could not find Set B.")
 
                         # See if the user had Set A active instead of Set B if matching failed.
-                        set_location = ImageUtils.find_button("party_set_a", tries = 1)
+                        set_location = ImageUtils.find_button("party_set_a", tries = 3)
 
             # Center the mouse on the "Set A" / "Set B" button and then click the correct Group tab.
             if Settings.debug_mode:
