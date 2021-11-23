@@ -222,7 +222,7 @@ class ImageUtils:
         if Settings.debug_mode:
             MessageLog.print_message(f"\n[DEBUG] Starting process to find the {image_name.upper()} button image...")
 
-        template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.png", 0)
+        template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.jpg", 0)
 
         while tries > 0:
             result_flag: bool = ImageUtils._match(template, custom_confidence)
@@ -254,7 +254,7 @@ class ImageUtils:
         if Settings.debug_mode:
             MessageLog.print_message(f"\n[DEBUG] Starting process to find the {image_name.upper()} button image...")
 
-        template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/headers/{image_name.lower()}_header.png", 0)
+        template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/headers/{image_name.lower()}_header.jpg", 0)
 
         while tries > 0:
             result_flag: bool = ImageUtils._match(template, custom_confidence)
@@ -318,7 +318,7 @@ class ImageUtils:
             summon_index = 0
             while summon_index < len(summon_list):
                 # Now try and find the Summon at the current index.
-                template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/summons/{summon_list[summon_index]}.png", 0)
+                template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/summons/{summon_list[summon_index]}.jpg", 0)
 
                 # Crop the summon template image so that plus marks would not potentially obscure any match.
                 height, width = template.shape
@@ -365,7 +365,7 @@ class ImageUtils:
         else:
             folder_name = "buttons"
 
-        template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/{folder_name}/{image_name}.png", 0)
+        template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/{folder_name}/{image_name}.jpg", 0)
 
         locations = ImageUtils._match_all(template, custom_confidence)
         filtered_locations: List[Tuple[int, ...]] = []
@@ -530,7 +530,7 @@ class ImageUtils:
         """
         MessageLog.print_message(f"\n[INFO] Now waiting for {image_name} to vanish from screen...")
 
-        template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.png", 0)
+        template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.jpg", 0)
 
         for _ in range(timeout):
             if ImageUtils._match(template) is False:
@@ -552,7 +552,7 @@ class ImageUtils:
         Returns:
             (Tuple[int, int]): Tuple of the width and the height of the image.
         """
-        image = Image.open(f"{ImageUtils._current_dir}/images/buttons/{image_name}.png")
+        image = Image.open(f"{ImageUtils._current_dir}/images/buttons/{image_name}.jpg")
         width, height = image.size
         image.close()
         return width, height
