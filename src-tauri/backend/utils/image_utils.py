@@ -369,6 +369,8 @@ class ImageUtils:
 
         locations = ImageUtils._match_all(template, custom_confidence)
         filtered_locations: List[Tuple[int, ...]] = []
+        same_y: int = 0
+        sort_flag: bool = False
 
         if len(locations) != 0:
             for (index, location) in enumerate(locations):
@@ -376,14 +378,29 @@ class ImageUtils:
                     # Filter out duplicate locations where they are 1 pixel away from each other.
                     if location[0] != (locations[index - 1][0] + 1) and location[1] != (locations[index - 1][1] + 1):
                         filtered_locations.append(location)
+                        if same_y != location[1]:
+                            same_y = location[1]
+                            sort_flag = False
+                        else:
+                            sort_flag = True
                 else:
                     filtered_locations.append(location)
+                    same_y = location[1]
+                    sort_flag = False
 
             # Sort the matched locations.
+            def first(point):
+                return point[0]
+
             def second(point):
                 return point[1]
 
-            filtered_locations.sort(key = second)
+            if sort_flag:
+                MessageLog.print_message(f"Sorting first")
+                filtered_locations.sort(key = first)
+            else:
+                MessageLog.print_message(f"Sorting second")
+                filtered_locations.sort(key = second)
 
             if not hide_info:
                 MessageLog.print_message(f"[INFO] Occurrence for {image_name.upper()} found at: {filtered_locations}")
