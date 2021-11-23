@@ -367,16 +367,13 @@ class Game:
 
                 # Now start the Old Lignoid Trial Battle right away and then wait a few seconds.
                 Game.find_and_click_button("party_selection_ok")
-                Game.wait(3)
+                Game.wait(2)
 
-                # Close the popup and then retreat from this Trial Battle.
-                if ImageUtils.confirm_location("trial_battles_description", tries = 10):
-                    Game.find_and_click_button("close", tries = 5)
-
-                    Game.find_and_click_button("menu", tries = 5)
-                    Game.find_and_click_button("retreat", tries = 5)
-                    Game.find_and_click_button("retreat_confirmation", tries = 5)
-                    Game.go_back_home()
+                # Retreat from this Trial Battle.
+                Game.find_and_click_button("menu", tries = 30)
+                Game.find_and_click_button("retreat", tries = 5)
+                Game.find_and_click_button("retreat_confirmation", tries = 5)
+                Game.go_back_home()
 
                 if ImageUtils.confirm_location("home"):
                     MessageLog.print_message("[SUCCESS] Summons have now been refreshed.")
