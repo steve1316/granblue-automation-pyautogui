@@ -1,0 +1,79 @@
+{
+    "package": {
+        "productName": "Granblue Automation",
+        "version": "1.0.0"
+    },
+    "build": {
+        "distDir": "../build",
+        "devPath": "http://localhost:3000",
+        "beforeDevCommand": "",
+        "beforeBuildCommand": "",
+        "withGlobalTauri": true
+    },
+    "tauri": {
+        "bundle": {
+            "active": true,
+            "targets": "all",
+            "identifier": "com.steve1316.dev",
+            "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
+            "resources": ["backend/", "images/", "scripts/"],
+            "externalBin": [],
+            "copyright": "",
+            "category": "DeveloperTool",
+            "shortDescription": "",
+            "longDescription": "",
+            "deb": {
+                "depends": [],
+                "useBootstrapper": false
+            },
+            "macOS": {
+                "frameworks": [],
+                "minimumSystemVersion": "",
+                "useBootstrapper": false,
+                "exceptionDomain": "",
+                "signingIdentity": null,
+                "entitlements": null
+            },
+            "windows": {
+                "certificateThumbprint": null,
+                "digestAlgorithm": "sha256",
+                "timestampUrl": ""
+            }
+        },
+        "updater": {
+            "active": false
+        },
+        "allowlist": {
+            "all": true
+        },
+        "windows": [
+            {
+                "label": "main",
+                "title": "Granblue Automation",
+                "width": 1000,
+                "height": 600,
+                "minWidth": 1000,
+                "minHeight": 600,
+                "center": true,
+                "resizable": true,
+                "fullscreen": false,
+                "decorations": false,
+                "visible": false
+            },
+            {
+                "label": "splashscreen",
+                "title": "Loading...",
+                "width": 1000,
+                "height": 600,
+                "center": true,
+                "resizable": true,
+                "fullscreen": false,
+                "decorations": false,
+                "url": "splashscreen.html"
+            }
+        ],
+        "security": {
+            "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: 'unsafe-eval' 'unsafe-inline' 'self' img-src: 'self'"
+        }
+    }
+}

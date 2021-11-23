@@ -1,0 +1,76 @@
+$twitterColor: #1da1f2;
+$discordColor: #7289d9;
+
+.extraSettingsContainer {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+
+    // Set the animated svg background with the appropriate settings to keep it centered.
+    background: url("./bg.svg") no-repeat center center fixed;
+    background-size: cover;
+
+    // This assists in having the children evenly spaced out from the navbar and the bottom of the page.
+    padding: 25px 0 25px 0;
+}
+
+.extraSettingsContainerLowPerformance {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+
+    // This assists in having the children evenly spaced out from the navbar and the bottom of the page.
+    padding: 25px 0 25px 0;
+}
+
+.extraSettingsWrapper {
+    background-color: rgba(200, 200, 200, 1);
+    border-radius: 50px;
+    padding: 25px;
+
+    // https://css-tricks.com/the-peculiar-magic-of-flexbox-and-auto-margins/
+    // Having the parent container be flex and setting the children have auto margins is what gets rid of the children expanding past the navbar.
+    margin: auto;
+
+    max-width: 75vw;
+}
+
+.sectionTitle {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.sectionTitleIcon {
+    margin-left: 5px;
+}
+
+.twitterTitleIcon {
+    color: $twitterColor;
+    margin-left: 5px;
+}
+
+.twitterButton {
+    background-color: $twitterColor;
+}
+
+.discordTitleIcon {
+    color: $discordColor;
+    margin-left: 5px;
+}
+
+.discordButton {
+    background-color: $discordColor;
+}

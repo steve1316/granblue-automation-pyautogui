@@ -1,0 +1,16 @@
+--find-links https://download.pytorch.org/whl/torch_stable.html
+
+torch===1.7.1+cu110
+torchvision===0.8.2+cu110
+torchaudio===0.7.2
+
+PyAutoGUI~=0.9.52
+Pillow~=8.3.2
+opencv-python~=4.5.1.48
+easyocr~=1.2.1
+numpy~=1.20.2
+playsound~=1.2.2
+pyclick~=0.0.2
+pyperclip~=1.8.1
+tweepy~=3.10.0
+discord.py==1.7.3

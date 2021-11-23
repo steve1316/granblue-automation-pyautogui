@@ -1,0 +1,827 @@
+{
+    "Quest": {
+        "Scattered Cargo": {
+            "map": "Port Breeze Archipelago",
+            "items": ["Satin Feather", "Zephyr Feather", "Flying Sprout"]
+        },
+        "Lucky Charm Hunt": {
+            "map": "Valtz Duchy",
+            "items": ["Fine Sand Bottle", "Untamed Flame", "Blistering Ore"]
+        },
+        "Special Op's Request": {
+            "map": "Valtz Duchy",
+            "items": ["Fine Sand Bottle", "Untamed Flame", "Blistering Ore"]
+        },
+        "Threat to the Fisheries": {
+            "map": "Auguste Isles",
+            "items": ["Fresh Water Jug", "Soothing Splash", "Glowing Coral"]
+        },
+        "The Fruit of Lumacie": {
+            "map": "Lumacie Archipelago",
+            "items": ["Rough Stone", "Swirling Amber", "Coarse Alluvium"]
+        },
+        "Whiff of Danger": {
+            "map": "Lumacie Archipelago",
+            "items": ["Rough Stone", "Swirling Amber", "Coarse Alluvium"]
+        },
+        "I Challenge You!": {
+            "map": "Albion Citadel",
+            "items": ["Falcon Feather", "Spring Water Jug", "Vermilion Stone"]
+        },
+        "For Whom the Bell Tolls": {
+            "map": "Mist-Shrouded Isle",
+            "items": ["Slimy Shroom", "Hollow Soul", "Lacrimosa"]
+        },
+        "Golonzo's Battles of Old": {
+            "map": "Golonzo Island",
+            "items": ["Wheat Stalk", "Iron Cluster", "Olea Plant"]
+        },
+        "The Dungeon Diet": {
+            "map": "Amalthea Island",
+            "items": ["Indigo Fruit", "Foreboding Clover", "Blood Amber"]
+        },
+        "Trust Busting Dustup": {
+            "map": "Former Capital Mephorash",
+            "items": ["Sand Brick", "Native Reed"]
+        },
+        "Erste Kingdom Episode 4": {
+            "map": "Former Capital Mephorash",
+            "items": ["Antique Cloth"]
+        },
+        "Imperial Wanderer's Soul": {
+            "map": "Agastia",
+            "items": ["Prosperity Flame", "Explosive Material", "Steel Liquid"]
+        }
+    },
+    "Special": {
+        "N Scarlet Trial": {
+            "map": "Basic Treasure Quests",
+            "items": ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb", "Inferno Orb", "Frost Orb", "Rumbling Orb", "Cyclone Orb", "Shining Orb", "Abysm Orb"]
+        },
+        "H Scarlet Trial": {
+            "map": "Basic Treasure Quests",
+            "items": ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb", "Inferno Orb", "Frost Orb", "Rumbling Orb", "Cyclone Orb", "Shining Orb", "Abysm Orb"]
+        },
+        "VH Scarlet Trial": {
+            "map": "Basic Treasure Quests",
+            "items": ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb", "Inferno Orb", "Frost Orb", "Rumbling Orb", "Cyclone Orb", "Shining Orb", "Abysm Orb"]
+        },
+        "N Cerulean Trial": {
+            "map": "Basic Treasure Quests",
+            "items": [
+                "Red Tome",
+                "Blue Tome",
+                "Brown Tome",
+                "Green Tome",
+                "White Tome",
+                "Black Tome",
+                "Hellfire Scroll",
+                "Flood Scroll",
+                "Thunder Scroll",
+                "Gale Scroll",
+                "Skylight Scroll",
+                "Chasm Scroll",
+                "Infernal Whorl",
+                "Tidal Whorl",
+                "Seismic Whorl",
+                "Tempest Whorl",
+                "Radiant Whorl",
+                "Umbral Whorl"
+            ]
+        },
+        "H Cerulean Trial": {
+            "map": "Basic Treasure Quests",
+            "items": [
+                "Red Tome",
+                "Blue Tome",
+                "Brown Tome",
+                "Green Tome",
+                "White Tome",
+                "Black Tome",
+                "Hellfire Scroll",
+                "Flood Scroll",
+                "Thunder Scroll",
+                "Gale Scroll",
+                "Skylight Scroll",
+                "Chasm Scroll",
+                "Infernal Whorl",
+                "Tidal Whorl",
+                "Seismic Whorl",
+                "Tempest Whorl",
+                "Radiant Whorl",
+                "Umbral Whorl"
+            ]
+        },
+        "VH Cerulean Trial": {
+            "map": "Basic Treasure Quests",
+            "items": [
+                "Red Tome",
+                "Blue Tome",
+                "Brown Tome",
+                "Green Tome",
+                "White Tome",
+                "Black Tome",
+                "Hellfire Scroll",
+                "Flood Scroll",
+                "Thunder Scroll",
+                "Gale Scroll",
+                "Skylight Scroll",
+                "Chasm Scroll",
+                "Infernal Whorl",
+                "Tidal Whorl",
+                "Seismic Whorl",
+                "Tempest Whorl",
+                "Radiant Whorl",
+                "Umbral Whorl"
+            ]
+        },
+        "N Violet Trial": {
+            "map": "Basic Treasure Quests",
+            "items": ["Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism"]
+        },
+        "H Violet Trial": {
+            "map": "Basic Treasure Quests",
+            "items": ["Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism"]
+        },
+        "VH Violet Trial": {
+            "map": "Basic Treasure Quests",
+            "items": ["Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism"]
+        },
+        "N Shiny Slime Search!": {
+            "map": "Shiny Slime Search!",
+            "items": ["EXP"]
+        },
+        "H Shiny Slime Search!": {
+            "map": "Shiny Slime Search!",
+            "items": ["EXP"]
+        },
+        "VH Shiny Slime Search!": {
+            "map": "Shiny Slime Search!",
+            "items": ["EXP"]
+        },
+        "N Six Dragon Trial": {
+            "map": "Six Dragon Trial",
+            "items": ["Red Dragon Scale", "Blue Dragon Scale", "Brown Dragon Scale", "Green Dragon Scale", "White Dragon Scale", "Black Dragon Scale"]
+        },
+        "H Six Dragon Trial": {
+            "map": "Six Dragon Trial",
+            "items": ["Red Dragon Scale", "Blue Dragon Scale", "Brown Dragon Scale", "Green Dragon Scale", "White Dragon Scale", "Black Dragon Scale"]
+        },
+        "VH Six Dragon Trial": {
+            "map": "Six Dragon Trial",
+            "items": ["Red Dragon Scale", "Blue Dragon Scale", "Brown Dragon Scale", "Green Dragon Scale", "White Dragon Scale", "Black Dragon Scale"]
+        },
+        "EX Ifrit Showdown": {
+            "map": "Showdowns",
+            "items": ["Jasper Scale", "Scorching Peak", "Infernal Garnet", "Ifrit Anima", "Ifrit Omega Anima"]
+        },
+        "EX Cocytus Showdown": {
+            "map": "Showdowns",
+            "items": ["Mourning Stone", "Crystal Spirit", "Frozen Hell Prism", "Cocytus Anima", "Cocytus Omega Anima"]
+        },
+        "EX Vohu Manah Showdown": {
+            "map": "Showdowns",
+            "items": ["Scrutiny Stone", "Luminous Judgment", "Evil Judge Crystal", "Vohu Manah Anima", "Vohu Manah Omega Anima"]
+        },
+        "EX Sagittarius Showdown": {
+            "map": "Showdowns",
+            "items": ["Sagittarius Arrowhead", "Sagittarius Rune", "Horseman's Plate", "Sagittarius Anima", "Sagittarius Omega Anima"]
+        },
+        "EX Corow Showdown": {
+            "map": "Showdowns",
+            "items": ["Solar Ring", "Sunlight Quartz", "Halo Light Quartz", "Corow Anima", "Corow Omega Anima"]
+        },
+        "EX Diablo Showdown": {
+            "map": "Showdowns",
+            "items": ["Twilight Cloth Strip", "Shadow Silver", "Phantom Demon Jewel", "Diablo Anima", "Diablo Omega Anima"]
+        },
+        "The Hellfire Trial": {
+            "map": "Elemental Treasure Quests",
+            "items": ["Hellfire Fragment"]
+        },
+        "The Deluge Trial": {
+            "map": "Elemental Treasure Quests",
+            "items": ["Deluge Fragment"]
+        },
+        "The Wasteland Trial": {
+            "map": "Elemental Treasure Quests",
+            "items": ["Wasteland Fragment"]
+        },
+        "The Typhoon Trial": {
+            "map": "Elemental Treasure Quests",
+            "items": ["Typhoon Fragment"]
+        },
+        "The Aurora Trial": {
+            "map": "Elemental Treasure Quests",
+            "items": ["Aurora Fragment"]
+        },
+        "The Oblivion Trial": {
+            "map": "Elemental Treasure Quests",
+            "items": ["Oblivion Fragment"]
+        },
+        "N Angel Halo": {
+            "map": "Angel Halo",
+            "items": ["Angel Halo Weapons"]
+        },
+        "H Angel Halo": {
+            "map": "Angel Halo",
+            "items": ["Angel Halo Weapons"]
+        },
+        "VH Angel Halo": {
+            "map": "Angel Halo",
+            "items": ["Angel Halo Weapons"]
+        },
+        "Campaign-Exclusive Quest": {
+            "map": "Campaign-Exclusive Quest",
+            "items": ["Repeated Runs"]
+        }
+    },
+    "Coop": {
+        "H3-1 In a Dusk Dream": {
+            "items": ["EXP"]
+        },
+        "EX1-1 Corridor of Puzzles": {
+            "items": ["Warrior Creed", "Mage Creed"]
+        },
+        "EX1-3 Lost in the Dark": {
+            "items": ["Warrior Creed", "Mage Creed"]
+        },
+        "EX2-2 Time of Judgement": {
+            "items": ["Keraunos Replica", "Faust Replica", "Mage Distinction", "Pilgrim Distinction", "Alchemist Distinction", "Monk's Distinction", "Evil Judge Crystal"]
+        },
+        "EX2-3 Time of Revelation": {
+            "items": ["Avenger Replica", "Hellion Gauntlet Replica", "Gladiator Distinction", "Fencer Distinction", "Dual Wielder Distinction", "Forester's Distinction", "Infernal Garnet"]
+        },
+        "EX2-4 Time of Eminence": {
+            "items": [
+                "Nirvana Replica",
+                "Romulus Spear Replica",
+                "Murakumo Replica",
+                "Bandit Distinction",
+                "Troubadour Distinction",
+                "Mystic Distinction",
+                "Shredder Distinction",
+                "Contractor Distinction",
+                "Halo Light Quartz"
+            ]
+        },
+        "EX3-2 Rule of the Tundra": {
+            "items": [
+                "Frozen Hell Prism",
+                "Guardian Distinction",
+                "Combatant Distinction",
+                "Sword Master Distinction",
+                "Dragoon's Distinction",
+                "Skofnung Replica",
+                "Langeleik Replica",
+                "Kapilavastu Replica"
+            ]
+        },
+        "EX3-3 Rule of the Plains": {
+            "items": ["Oliver Replica", "Rosenbogen Replica", "Sharpshooter Distinction", "Gunslinger Distinction", "Cavalryman Distinction", "Longstrider's Distinction", "Horseman's Plate"]
+        },
+        "EX3-4 Rule of the Twilight": {
+            "items": ["Ipetam Replica", "Muramasa Replica", "Proximo Replica", "Samurai Distinction", "Assassin Distinction", "Ninja Distinction", "Dancer Distinction", "Phantom Demon Jewel"]
+        },
+        "EX4-2 Amidst the Waves": {
+            "items": ["Oliver Replica", "Romulus Spear Replica", "Kapilavastu Replica", "Mystic Distinction", "Pilgrim Distinction", "Alchemist Distinction", "Mage Distinction", "Monk's Distinction"]
+        },
+        "EX4-3 Amidst the Petals": {
+            "items": [
+                "Langeleik Replica",
+                "Faust Replica",
+                "Misericorde Replica",
+                "Arabesque Replica",
+                "Ninja Distinction",
+                "Samurai Distinction",
+                "Sharpshooter Distinction",
+                "Gunslinger Distinction",
+                "Longstrider's Distinction",
+                "Dancer Distinction"
+            ]
+        },
+        "EX4-4 Amidst Severe Cliffs": {
+            "items": [
+                "Hellion Gauntlet Replica",
+                "Muramasa Replica",
+                "Aschallon Replica",
+                "Practice Drum",
+                "Combatant Distinction",
+                "Gladiator Distinction",
+                "Sword Master Distinction",
+                "Fencer Distinction"
+            ]
+        },
+        "EX4-5 Amidst the Flames": {
+            "items": [
+                "Ipetam Replica",
+                "Murakumo Replica",
+                "Nebuchad Replica",
+                "Proximo Replica",
+                "Guardian Distinction",
+                "Cavalryman Distinction",
+                "Bandit Distinction",
+                "Troubadour Distinction",
+                "Dragoon's Distinction",
+                "Contractor Distinction"
+            ]
+        }
+    },
+    "Raid": {
+        "Lvl 50 Tiamat Omega": {
+            "map": "Tiamat Omega",
+            "items": ["Tiamat Omega", "Tiamat Anima", "Tiamat Omega Anima", "Tiamat Amood Omega", "Tiamat Bolt Omega", "Tiamat Gauntlet Omega", "Tiamat Glaive Omega"]
+        },
+        "Lvl 100 Tiamat Omega": {
+            "map": "Tiamat Omega",
+            "items": ["Tiamat Omega", "Tiamat Anima", "Tiamat Omega Anima", "Tiamat Amood Omega", "Tiamat Bolt Omega", "Tiamat Gauntlet Omega", "Tiamat Glaive Omega"]
+        },
+        "Lvl 70 Colossus Omega": {
+            "map": "Colossus Omega",
+            "items": ["Colossus Omega", "Colossus Anima", "Colossus Omega Anima", "Colossus Blade Omega", "Colossus Cane Omega", "Colossus Carbine Omega", "Colossus Fist Omega"]
+        },
+        "Lvl 100 Colossus Omega": {
+            "map": "Colossus Omega",
+            "items": ["Colossus Omega", "Colossus Anima", "Colossus Omega Anima", "Colossus Blade Omega", "Colossus Cane Omega", "Colossus Carbine Omega", "Colossus Fist Omega"]
+        },
+        "Lvl 60 Leviathan Omega": {
+            "map": "Leviathan Omega",
+            "items": ["Leviathan Omega", "Leviathan Anima", "Leviathan Omega Anima", "Leviathan Bow Omega", "Leviathan Gaze Omega", "Leviathan Scepter Omega", "Leviathan Spear Omega"]
+        },
+        "Lvl 100 Leviathan Omega": {
+            "map": "Leviathan Omega",
+            "items": ["Leviathan Omega", "Leviathan Anima", "Leviathan Omega Anima", "Leviathan Bow Omega", "Leviathan Gaze Omega", "Leviathan Scepter Omega", "Leviathan Spear Omega"]
+        },
+        "Lvl 60 Yggdrasil Omega": {
+            "map": "Yggdrasil Omega",
+            "items": ["Yggdrasil Omega", "Yggdrasil Anima", "Yggdrasil Omega Anima", "Yggdrasil Bow Omega", "Yggdrasil Crystal Blade Omega", "Yggdrasil Dagger Omega", "Yggdrasil Dewbranch Omega"]
+        },
+        "Lvl 100 Yggdrasil Omega": {
+            "map": "Yggdrasil Omega",
+            "items": ["Yggdrasil Omega", "Yggdrasil Anima", "Yggdrasil Omega Anima", "Yggdrasil Bow Omega", "Yggdrasil Crystal Blade Omega", "Yggdrasil Dagger Omega", "Yggdrasil Dewbranch Omega"]
+        },
+        "Lvl 75 Luminiera Omega": {
+            "map": "Luminiera Omega",
+            "items": ["Luminiera Omega", "Luminiera Anima", "Luminiera Omega Anima", "Luminiera Bhuj Omega", "Luminiera Bolt Omega", "Luminiera Harp Omega", "Luminiera Sword Omega"]
+        },
+        "Lvl 100 Luminiera Omega": {
+            "map": "Luminiera Omega",
+            "items": ["Luminiera Omega", "Luminiera Anima", "Luminiera Omega Anima", "Luminiera Bhuj Omega", "Luminiera Bolt Omega", "Luminiera Harp Omega", "Luminiera Sword Omega"]
+        },
+        "Lvl 75 Celeste Omega": {
+            "map": "Celeste Omega",
+            "items": ["Celeste Omega", "Celeste Anima", "Celeste Omega Anima", "Celeste Harp Omega", "Celeste Claw Omega", "Celeste Horn Omega", "Celeste Zaghnal Omega"]
+        },
+        "Lvl 100 Celeste Omega": {
+            "map": "Celeste Omega",
+            "items": ["Celeste Omega", "Celeste Anima", "Celeste Omega Anima", "Celeste Harp Omega", "Celeste Claw Omega", "Celeste Horn Omega", "Celeste Zaghnal Omega"]
+        },
+        "Lvl 120 Shiva": {
+            "map": "Shiva",
+            "items": ["Shiva Anima", "Shiva Omega Anima", "Hand of Brahman", "Scimitar of Brahman", "Trident of Brahman", "Nilakantha"]
+        },
+        "Lvl 120 Europa": {
+            "map": "Europa",
+            "items": ["Europa Anima", "Europa Omega Anima", "Tyros Bow", "Tyros Scepter", "Tyros Zither", "Spirit of Mana"]
+        },
+        "Lvl 120 Godsworn Alexiel": {
+            "map": "Godsworn Alexiel",
+            "items": ["Alexiel Anima", "Alexiel Omega Anima", "Nibelung Horn", "Nibelung Klinge", "Nibelung Messer", "Godsworn Edge"]
+        },
+        "Lvl 120 Grimnir": {
+            "map": "Grimnir",
+            "items": ["Grimnir Anima", "Grimnir Omega Anima", "Last Storm Blade", "Last Storm Harp", "Last Storm Lance", "Coruscant Crozier"]
+        },
+        "Lvl 120 Metatron": {
+            "map": "Metatron",
+            "items": ["Metatron Anima", "Metatron Omega Anima", "Mittron's Treasured Blade", "Mittron's Gauntlet", "Mittron's Bow", "Pillar of Flame"]
+        },
+        "Lvl 120 Avatar": {
+            "map": "Avatar",
+            "items": ["Avatar Anima", "Avatar Omega Anima", "Abyss Striker", "Abyss Spine", "Abyss Gaze", "Zechariah"]
+        },
+        "Lvl 100 Michael": {
+            "map": "Michael",
+            "items": ["Michael Anima"]
+        },
+        "Lvl 100 Gabriel": {
+            "map": "Gabriel",
+            "items": ["Gabriel Anima"]
+        },
+        "Lvl 100 Uriel": {
+            "map": "Uriel",
+            "items": ["Uriel Anima"]
+        },
+        "Lvl 100 Raphael": {
+            "map": "Raphael",
+            "items": ["Raphael Anima"]
+        },
+        "The Four Primarchs": {
+            "map": "The Four Primarchs",
+            "items": ["Fire Halo", "Water Halo", "Earth Halo", "Wind Halo"]
+        },
+        "Lvl 110 Rose Queen": {
+            "map": "Rose Queen",
+            "items": ["Rose Petal"]
+        },
+        "Lvl 100 Grand Order": { "map": "Grand Order", "items": ["Azure Feather", "Heavenly Horn"] },
+        "Lvl 200 Grand Order": { "map": "Grand Order", "items": ["Verdant Azurite"] },
+        "Lvl 100 Proto Bahamut": {
+            "map": "Proto Bahamut",
+            "items": ["Champion Merit", "Horn of Bahamut"]
+        },
+        "Lvl 150 Proto Bahamut": {
+            "map": "Proto Bahamut",
+            "items": ["Primeval Horn"]
+        },
+        "Lvl 150 Ultimate Bahamut": {
+            "map": "Ultimate Bahamut",
+            "items": [
+                "Michael Anima",
+                "Gabriel Anima",
+                "Uriel Anima",
+                "Raphael Anima",
+                "Meteorite Fragment",
+                "Meteorite",
+                "Silver Centrum",
+                "Ultima Unit",
+                "Athena Anima",
+                "Athena Omega Anima",
+                "Grani Anima",
+                "Grani Omega Anima",
+                "Baal Anima",
+                "Baal Omega Anima",
+                "Garuda Anima",
+                "Garuda Omega Anima",
+                "Odin Anima",
+                "Odin Omega Anima",
+                "Lich Anima",
+                "Lich Omega Anima"
+            ]
+        },
+        "Lvl 200 Ultimate Bahamut": {
+            "map": "Ultimate Bahamut",
+            "items": ["Silver Centrum", "Ultima Unit"]
+        },
+        "Lvl 200 Akasha": {
+            "map": "Akasha",
+            "items": ["Hollow Key"]
+        },
+        "Lvl 150 Lucilius": {
+            "map": "Lucilius",
+            "items": ["Dark Residue", "Shadow Substance"]
+        },
+        "Lvl 200 Lindwurm": {
+            "map": "Lindwurm",
+            "items": ["Golden Scale", "Lineage Fragment"]
+        },
+        "Huanglong & Qilin (Impossible)": {
+            "map": "Huanglong & Qilin",
+            "items": ["Huanglong Anima", "Qilin Anima", "Golden Talisman", "Obsidian Talisman"]
+        },
+        "Lvl 100 Twin Elements": {
+            "map": "Twin Elements",
+            "items": ["Twin Elements Anima", "Twin Elements Omega Anima", "Ancient Ecke Sachs", "Ecke Sachs"]
+        },
+        "Lvl 120 Twin Elements": {
+            "map": "Twin Elements",
+            "items": ["Twin Elements Anima", "Twin Elements Omega Anima", "Ancient Ecke Sachs", "Ecke Sachs"]
+        },
+        "Lvl 100 Macula Marius": {
+            "map": "Macula Marius",
+            "items": ["Macula Marius Anima", "Macula Marius Omega Anima", "Ancient Auberon", "Auberon"]
+        },
+        "Lvl 120 Macula Marius": {
+            "map": "Macula Marius",
+            "items": ["Macula Marius Anima", "Macula Marius Omega Anima", "Ancient Auberon", "Auberon"]
+        },
+        "Lvl 100 Medusa": {
+            "map": "Medusa",
+            "items": ["Medusa Anima", "Medusa Omega Anima", "Ancient Perseus", "Perseus"]
+        },
+        "Lvl 120 Medusa": {
+            "map": "Medusa",
+            "items": ["Medusa Anima", "Medusa Omega Anima", "Ancient Perseus", "Perseus"]
+        },
+        "Lvl 100 Nezha": {
+            "map": "Nezha",
+            "items": ["Nezha Anima", "Nezha Omega Anima", "Ancient Nalakuvara", "Nalakuvara"]
+        },
+        "Lvl 120 Nezha": {
+            "map": "Nezha",
+            "items": ["Nezha Anima", "Nezha Omega Anima", "Ancient Nalakuvara", "Nalakuvara"]
+        },
+        "Lvl 100 Apollo": {
+            "map": "Apollo",
+            "items": ["Apollo Anima", "Apollo Omega Anima", "Ancient Bow of Artemis", "Bow of Artemis"]
+        },
+        "Lvl 120 Apollo": {
+            "map": "Apollo",
+            "items": ["Apollo Anima", "Apollo Omega Anima", "Ancient Bow of Artemis", "Bow of Artemis"]
+        },
+        "Lvl 100 Dark Angel Olivia": {
+            "map": "Dark Angel Olivia",
+            "items": ["Dark Angel Olivia Anima", "Dark Angel Olivia Omega Anima", "Ancient Cortana", "Cortana"]
+        },
+        "Lvl 120 Dark Angel Olivia": {
+            "map": "Dark Angel Olivia",
+            "items": ["Dark Angel Olivia Anima", "Dark Angel Olivia Omega Anima", "Ancient Cortana", "Cortana"]
+        },
+        "Lvl 100 Athena": {
+            "map": "Athena",
+            "items": ["Athena Anima", "Athena Omega Anima", "Erichthonius", "Sword of Pallas"]
+        },
+        "Lvl 100 Grani": {
+            "map": "Grani",
+            "items": ["Grani Anima", "Grani Omega Anima", "Bow of Sigurd", "Wilhelm"]
+        },
+        "Lvl 100 Baal": {
+            "map": "Baal",
+            "items": ["Baal Anima", "Baal Omega Anima", "Solomon's Axe", "Spymur's Vision"]
+        },
+        "Lvl 100 Garuda": {
+            "map": "Garuda",
+            "items": ["Garuda Anima", "Garuda Omega Anima", "Plume of Suparna", "Indra's Edge"]
+        },
+        "Lvl 100 Odin": {
+            "map": "Odin",
+            "items": ["Odin Anima", "Odin Omega Anima", "Gungnir", "Sleipnir Shoe"]
+        },
+        "Lvl 100 Lich": {
+            "map": "Lich",
+            "items": ["Lich Anima", "Lich Omega Anima", "Obscuritas", "Phantasmas"]
+        },
+        "Lvl 120 Prometheus": {
+            "map": "Prometheus",
+            "items": ["Prometheus Anima", "Fire of Prometheus", "Chains of Caucasus"]
+        },
+        "Lvl 120 Ca Ong": {
+            "map": "Ca Ong",
+            "items": ["Ca Ong Anima", "Keeper of Hallowed Ground", "Savior of Hallowed Ground"]
+        },
+        "Lvl 120 Gilgamesh": {
+            "map": "Gilgamesh",
+            "items": ["Gilgamesh Anima", "All-Might Spear", "All-Might Battle-Axe"]
+        },
+        "Lvl 120 Morrigna": {
+            "map": "Morrigna",
+            "items": ["Morrigna Anima", "Le Fay", "Unius"]
+        },
+        "Lvl 120 Hector": {
+            "map": "Hector",
+            "items": ["Hector Anima", "Bow of Iliad", "Adamantine Gauntlet"]
+        },
+        "Lvl 120 Anubis": {
+            "map": "Anubis",
+            "items": ["Anubis Anima", "Hermanubis", "Scales of Dominion"]
+        },
+        "Lvl 150 Tiamat Malice": {
+            "map": "Tiamat Malice",
+            "items": ["Tiamat Malice Anima", "Hatsoiilhal", "Majestas"]
+        },
+        "Lvl 150 Leviathan Malice": {
+            "map": "Leviathan Malice",
+            "items": ["Leviathan Malice Anima", "Kaladanda", "Kris of Hypnos"]
+        },
+        "Lvl 150 Phronesis": {
+            "map": "Phronesis",
+            "items": ["Phronesis Anima", "Dark Thrasher", "Master Bamboo Sword"]
+        },
+        "Lvl 150 Luminiera Malice": {
+            "map": "Luminiera Malice",
+            "items": ["Luminiera Malice Anima", "Colomba", "Seyfert"]
+        },
+        "Lvl 150 Anima-Animus Core": {
+            "map": "Anima-Animus Core",
+            "items": ["Hive God Anima", "Agonize", "Faceless"]
+        },
+        "Lvl 200 Wilnas": {
+            "map": "Wilnas",
+            "items": ["Wilnas's Finger"]
+        },
+        "Lvl 200 Wamdus": {
+            "map": "Wamdus",
+            "items": ["Wamdus's Cnidocyte"]
+        },
+        "Lvl 200 Galleon": {
+            "map": "Galleon",
+            "items": ["Galleon's Jaw"]
+        },
+        "Lvl 200 Ewiyar": {
+            "map": "Ewiyar",
+            "items": ["Ewiyar's Beak"]
+        },
+        "Lvl 200 Lu Woh": {
+            "map": "Lu Woh",
+            "items": ["Lu Woh's Horn"]
+        },
+        "Lvl 200 Fediel": {
+            "map": "Fediel",
+            "items": ["Fediel's Spine"]
+        },
+        "Lvl 100 Xeno Ifrit": {
+            "map": "Xeno Ifrit",
+            "items": ["True Xeno Ifrit Anima", "Infernal Vajra"]
+        },
+        "Lvl 100 Xeno Cocytus": {
+            "map": "Xeno Cocytus",
+            "items": ["True Xeno Cocytus Anima", "Frozen Hellplume"]
+        },
+        "Lvl 100 Xeno Vohu Manah": {
+            "map": "Xeno Vohu Manah",
+            "items": ["True Xeno Vohu Manah Anima", "Sacrosanct Sutra"]
+        },
+        "Lvl 100 Xeno Sagittarius": {
+            "map": "Xeno Sagittarius",
+            "items": ["True Xeno Sagittarius Anima", "Zodiac Arc"]
+        },
+        "Lvl 100 Xeno Corow": {
+            "map": "Xeno Corow",
+            "items": ["True Xeno Corow Anima", "Flame Fanner"]
+        },
+        "Lvl 100 Xeno Diablo": {
+            "map": "Xeno Diablo",
+            "items": ["True Xeno Diablo Anima", "Wraithbind Fetter"]
+        },
+        "Lvl 100 Shenxian": {
+            "map": "Shenxian",
+            "items": ["Shenxian Badge"]
+        },
+        "Lvl 90 Agni": {
+            "map": "Agni",
+            "items": ["Zhuque Badge"]
+        },
+        "Lvl 90 Neptune": {
+            "map": "Neptune",
+            "items": ["Xuanwu Badge"]
+        },
+        "Lvl 90 Titan": {
+            "map": "Titan",
+            "items": ["Baihu Badge"]
+        },
+        "Lvl 90 Zephyrus": {
+            "map": "Zephyrus",
+            "items": ["Qinglong Badge"]
+        }
+    },
+    "Event": {
+        "EX Event Quest": {
+            "map": "Event Quest",
+            "items": ["Repeated Runs"]
+        },
+        "EX+ Event Quest": {
+            "map": "Event Quest",
+            "items": ["Repeated Runs"]
+        },
+        "VH Event Raid": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "EX Event Raid": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "EX+ Event Raid": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        }
+    },
+    "Event (Token Drawboxes)": {
+        "EX Event Quest": {
+            "map": "Event Quest",
+            "items": ["Repeated Runs"]
+        },
+        "VH Event Raid": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "EX Event Raid": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "IM Event Raid": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        }
+    },
+    "Rise of the Beasts": {
+        "VH Zhuque": {
+            "map": "Event Quest",
+            "items": ["Repeated Runs"]
+        },
+        "VH Xuanwu": {
+            "map": "Event Quest",
+            "items": ["Repeated Runs"]
+        },
+        "VH Baihu": {
+            "map": "Event Quest",
+            "items": ["Repeated Runs"]
+        },
+        "VH Qinglong": {
+            "map": "Event Quest",
+            "items": ["Repeated Runs"]
+        },
+        "EX Zhuque": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "EX Xuanwu": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "EX Baihu": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "EX Qinglong": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "Lvl 100 Shenxian": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        }
+    },
+    "Guild Wars": {
+        "Extreme": {
+            "map": "Event Quest",
+            "items": ["Repeated Runs"]
+        },
+        "Extreme+": {
+            "map": "Event Quest",
+            "items": ["Repeated Runs"]
+        },
+        "NM90": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "NM95": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "NM100": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "NM150": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        }
+    },
+    "Dread Barrage": {
+        "1 Star": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "2 Star": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "3 Star": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "4 Star": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        },
+        "5 Star": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        }
+    },
+    "Proving Grounds": {
+        "Extreme": {
+            "map": "Event Quest",
+            "items": ["Repeated Runs"]
+        },
+        "Extreme+": {
+            "map": "Event Quest",
+            "items": ["Repeated Runs"]
+        }
+    },
+    "Xeno Clash": {
+        "Xeno Clash Extreme": {
+            "map": "Event Quest",
+            "items": ["Repeated Runs"]
+        },
+        "Xeno Clash Raid": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
+        }
+    },
+    "Arcarum": {
+        "Point Aquila": {
+            "map": "Expedition",
+            "items": ["Repeated Runs"]
+        },
+        "Point Bellator": {
+            "map": "Expedition",
+            "items": ["Repeated Runs"]
+        },
+        "Point Celsus": {
+            "map": "Expedition",
+            "items": ["Repeated Runs"]
+        }
+    }
+}
