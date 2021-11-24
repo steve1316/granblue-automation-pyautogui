@@ -5,7 +5,7 @@
 
 > Android version here: https://github.com/steve1316/granblue-automation-android
 
-https://user-images.githubusercontent.com/18709555/118408116-db622c00-b638-11eb-9a24-5edc59cef34e.mp4
+https://user-images.githubusercontent.com/18709555/143183561-f6296c1b-350b-4a34-b262-294be3888fae.mp4
 
 This Python application is designed for educational research purposes on studying how to automate certain workflows via image template matching using OpenCV. The application uses PyAutoGUI for direct mouse control, hence why it is recommended to run this on a separate machine than the one that you use daily. This can be circumvented by running this on a virtual machine like VMWare Workstation Player so you can keep using your main computer without interruption.
 
