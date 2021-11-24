@@ -116,7 +116,9 @@ class Raid:
                         Game.find_and_click_button("raid")
                         Game.find_and_click_button("enter_id")
 
-                room_code_tries -= 1
+                if Settings.enable_no_timeout is False:
+                    room_code_tries -= 1
+
                 Game.wait(1)
 
             tries -= 1
