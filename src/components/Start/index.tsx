@@ -17,11 +17,7 @@ const Start = () => {
         const newLog = [...messageLogContext.messageLog, ...messageLogContext.asyncMessages]
         messageLogContext.setMessageLog(newLog)
 
-        if (
-            messageLogContext.asyncMessages.length > 0 &&
-            (messageLogContext.asyncMessages[messageLogContext.asyncMessages.length - 1].includes("Ending Farming Mode") ||
-                messageLogContext.asyncMessages[messageLogContext.asyncMessages.length - 1].includes("Child process finished with code"))
-        ) {
+        if (messageLogContext.asyncMessages.length > 0 && messageLogContext.asyncMessages[messageLogContext.asyncMessages.length - 1].includes("Closing Python process")) {
             handleStop()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
