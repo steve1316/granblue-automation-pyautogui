@@ -426,14 +426,14 @@ class ImageUtils:
                 os.makedirs(ImageUtils._current_dir + "/backend/model/")
 
             MessageLog.print_message(f"\n[INFO] Initializing EasyOCR reader. This may take a few seconds...")
-            _reader = easyocr.Reader(["en"], model_storage_directory = ImageUtils._current_dir + "/backend/model/", gpu = True)
+            ImageUtils._reader = easyocr.Reader(["en"], model_storage_directory = ImageUtils._current_dir + "/backend/model/", gpu = True)
             MessageLog.print_message(f"[INFO] EasyOCR reader initialized.")
         except UnicodeEncodeError:
             # Tauri spawns the Python process using encoding cp1252 and not utf-8. Need to do this hacky way to force stdout to be utf-8 to get through
             # EasyOCR initialization as it uses Unicode characters. This process is not needed after EasyOCR downloads the models to the /model/ folder.
             MessageLog.print_message(f"\n[INFO] Seems that the models for EasyOCR has not been downloaded yet. Downloading them now after setting stdout encoding from cp1252 to utf-8...\n\n")
             sys.stdout = codecs.getwriter("utf-8")(sys.stdout.detach())
-            _reader = easyocr.Reader(["en"], model_storage_directory = ImageUtils._current_dir + "/backend/model/", gpu = True)
+            ImageUtils._reader = easyocr.Reader(["en"], model_storage_directory = ImageUtils._current_dir + "/backend/model/", gpu = True)
             MessageLog.print_message(f"\n[INFO] Models for EasyOCR has been downloaded successfully.\n\n")
 
         # List of items blacklisted from using the standard confidence and instead need a custom confidence to detect them.
