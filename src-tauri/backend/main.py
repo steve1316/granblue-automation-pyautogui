@@ -1,8 +1,7 @@
 import multiprocessing
 import time
 
-from utils.settings import Settings
-from utils import discord_utils
+from utils.message_log import MessageLog
 from bot.game import Game
 
 
@@ -15,7 +14,7 @@ class MainDriver:
         super().__init__()
         self._game = None
         self._bot_process = None
-        self._discord_process = None
+
     def is_running(self) -> bool:
         """Check the status of the bot process.
 
@@ -41,24 +40,14 @@ class MainDriver:
         Returns:
             None
         """
-        # #### discord ####
-        if Settings.enable_discord and Settings.discord_token != "" and Settings.user_id != 0:
-            print("\n[DISCORD] Starting Discord process on a new Thread...")
-            self._discord_process = multiprocessing.Process(target = discord_utils.start_now, args = (Settings.discord_token, Settings.user_id, Settings.discord_queue))
-            self._discord_process.start()
-        else:
-            print("\n[DISCORD] Unable to start Discord process. Either you opted not to turn it on or your included token and user id inside the config.ini are invalid.")
-        # #### end of discord ####
-
-        print("\n[STATUS] Starting bot on a new Thread...")
-
         # Create a new Process whose target is the MainDriver's run_bot() method.
         self._bot_process = multiprocessing.Process(target = self._run_bot)
 
-        print("[STATUS] Starting now...")
+        MessageLog.print_message("[STATUS] Starting bot process on a new thread now...")
 
         # Now start the new Process on a new Thread.
         self._bot_process.start()
+        self._bot_process.is_alive()
 
         return None
 
@@ -69,14 +58,8 @@ class MainDriver:
             None
         """
         if self._bot_process is not None:
-            print("\n[STATUS] Stopping the bot and terminating its Thread.")
+            MessageLog.print_message("\n[STATUS] Stopping the bot and terminating its Thread.")
             self._bot_process.terminate()
-
-        if self._discord_process is not None and self._discord_process.is_alive():
-            Settings.discord_queue.put(f"```diff\n- Terminated connection to Discord API for Granblue Automation\n```")
-            print("\n[DISCORD] Terminated connection to Discord API and terminating its Thread.")
-            time.sleep(1.0)
-            self._discord_process.terminate()
 
         return None
 

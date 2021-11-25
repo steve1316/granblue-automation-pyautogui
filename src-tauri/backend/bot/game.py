@@ -1,3 +1,4 @@
+import multiprocessing
 import random
 import time
 import traceback
@@ -8,6 +9,7 @@ import pyautogui
 # The order of the following imports matter to avoid circular import error.
 from utils.settings import Settings
 from utils.message_log import MessageLog
+from utils import discord_utils
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
 from utils.twitter_room_finder import TwitterRoomFinder
@@ -33,6 +35,9 @@ class Game:
     """
     Main driver for bot activity and navigation for the web browser bot, Granblue Fantasy.
     """
+
+    _discord_process = None
+    _discord_queue = multiprocessing.Queue()
 
     def __init__(self):
         super().__init__()
@@ -264,10 +269,9 @@ class Game:
 
             return None
         except RuntimeError:
+            Game._discord_queue.put(f"> Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
             MessageLog.print_message(f"\n[ERROR] Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
-            Settings.discord_queue.put(f"> Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
             ImageUtils.generate_alert_for_captcha()
-            Game.wait(1)
 
     @staticmethod
     def _delay_between_runs():
@@ -631,7 +635,7 @@ class Game:
                         discord_string = f"> {temp_amount}x __{Settings.item_name}__ gained from this run: **[{Settings.item_amount_farmed} / {Settings.item_amount_to_farm}]** -> " \
                                          f"**[{Settings.item_amount_farmed + temp_amount} / {Settings.item_amount_to_farm}]**"
 
-                    Settings.discord_queue.put(discord_string)
+                    Game._discord_queue.put(discord_string)
             else:
                 MessageLog.print_message("\n**********************************************************************")
                 MessageLog.print_message("**********************************************************************")
@@ -649,7 +653,7 @@ class Game:
                     discord_string = f"> Runs completed for __{Settings.mission_name}__: **[{Settings.amount_of_runs_finished - 1} / {Settings.item_amount_to_farm}]** -> " \
                                      f"**[{Settings.amount_of_runs_finished} / {Settings.item_amount_to_farm}]**"
 
-                Settings.discord_queue.put(discord_string)
+                Game._discord_queue.put(discord_string)
         elif is_pending_battle and temp_amount > 0 and not skip_info:
             if Settings.item_name != "EXP" and Settings.item_name != "Angel Halo Weapons" and Settings.item_name != "Repeated Runs":
                 MessageLog.print_message("\n**********************************************************************")
@@ -671,7 +675,7 @@ class Game:
                         discord_string = f"> {temp_amount}x __{Settings.item_name}__ gained from this pending battle: **[{Settings.item_amount_farmed} / {Settings.item_amount_to_farm}]** -> " \
                                          f"**[{Settings.item_amount_farmed + temp_amount} / {Settings.item_amount_to_farm}]**"
 
-                    Settings.discord_queue.put(discord_string)
+                    Game._discord_queue.put(discord_string)
 
         return temp_amount
 
@@ -814,6 +818,41 @@ class Game:
         MessageLog.print_message(f"[INFO] No Pending Battles needed to be cleared.")
         return False
 
+    @staticmethod
+    def start_discord_process():
+        """Starts the Discord process.
+
+        Returns:
+            None
+        """
+        if Settings.enable_discord and Settings.discord_token != "" and Settings.user_id != 0:
+            MessageLog.print_message("\n[DISCORD] Starting Discord process on a new Thread...")
+            Game._discord_process = multiprocessing.Process(target = discord_utils.start_now, args = (Settings.discord_token, Settings.user_id, Game._discord_queue))
+            Game._discord_process.start()
+        else:
+            MessageLog.print_message("\n[DISCORD] Unable to start Discord process. Either you opted not to turn it on or your included token and user id inside the Settings or settings.json are invalid.")
+
+        return None
+
+    @staticmethod
+    def stop_discord_process():
+        """Stops the Discord process.
+
+        Returns:
+            None
+        """
+        if Game._discord_process is not None and Game._discord_process.is_alive():
+            MessageLog.print_message("\n[DISCORD] Now terminating Discord process...")
+            while Game._discord_queue.empty() is False:
+                Game.wait(1.0)
+
+            Game._discord_queue.put(f"```diff\n- Terminated connection to Discord API for Granblue Automation\n```")
+            MessageLog.print_message("[DISCORD] Terminated connection to Discord API and terminating its Thread.")
+            Game.wait(1.0)
+            Game._discord_process.terminate()
+
+        return None
+
     def start_farming_mode(self):
         """Start the Farming Mode using the given parameters.
 
@@ -821,6 +860,8 @@ class Game:
             (bool): True if Farming Mode ended successfully.
         """
         try:
+            Game.start_discord_process()
+
             # Calibrate the dimensions of the bot window on bot launch.
             Game.go_back_home(confirm_location_check = True, display_info_check = True)
 
@@ -829,6 +870,11 @@ class Game:
                 MessageLog.print_message("######################################################################")
                 MessageLog.print_message(f"[FARM] Starting Farming Mode for {Settings.farming_mode}.")
                 MessageLog.print_message(f"[FARM] Farming {Settings.item_amount_to_farm}x {Settings.item_name} at {Settings.mission_name}.")
+                MessageLog.print_message(f"[FARM] Combat Script name: {Settings.combat_script_name}")
+                MessageLog.print_message(f"[FARM] Combat Script: {Settings.combat_script}")
+                MessageLog.print_message(f"[FARM] Summons: {Settings.summon_list}")
+                MessageLog.print_message(f"[FARM] Group #: {Settings.group_number}")
+                MessageLog.print_message(f"[FARM] Party #: {Settings.party_number}")
                 MessageLog.print_message("######################################################################")
                 MessageLog.print_message("######################################################################\n")
             else:
@@ -836,6 +882,11 @@ class Game:
                 MessageLog.print_message("######################################################################")
                 MessageLog.print_message(f"[FARM] Starting Farming Mode for {Settings.farming_mode}.")
                 MessageLog.print_message(f"[FARM] Doing {Settings.item_amount_to_farm}x runs for {Settings.item_name} at {Settings.mission_name}.")
+                MessageLog.print_message(f"[FARM] Combat Script name: {Settings.combat_script_name}")
+                MessageLog.print_message(f"[FARM] Combat Script: {Settings.combat_script}")
+                MessageLog.print_message(f"[FARM] Summons: {Settings.summon_list}")
+                MessageLog.print_message(f"[FARM] Group #: {Settings.group_number}")
+                MessageLog.print_message(f"[FARM] Party #: {Settings.party_number}")
                 MessageLog.print_message("######################################################################")
                 MessageLog.print_message("######################################################################\n")
 
@@ -873,22 +924,28 @@ class Game:
                     first_run = False
 
         except Exception as e:
+            Game._discord_queue.put(f"> Bot encountered exception in Farming Mode: \n{e}")
             MessageLog.print_message(f"\n[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
-            Settings.discord_queue.put(f"> Bot encountered exception in Farming Mode: \n{e}")
-
-            MessageLog.print_message("\n######################################################################")
-            MessageLog.print_message("######################################################################")
-            MessageLog.print_message("[FARM] Ending Farming Mode.")
-            MessageLog.print_message("######################################################################")
-            MessageLog.print_message("######################################################################\n")
 
             if Settings.farming_mode == "Raid":
                 TwitterRoomFinder.disconnect()
 
+            Game.stop_discord_process()
+
             ImageUtils.generate_alert(f"Bot encountered exception in Farming Mode: \n{e}")
 
-            Settings.bot_status_flag.value = 1
+            MessageLog.print_message("\n######################################################################")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("[FARM] Ending Farming Mode due to encountering Exception.")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("######################################################################\n")
+
             return False
+
+        if Settings.farming_mode == "Raid":
+            TwitterRoomFinder.disconnect()
+
+        Game.stop_discord_process()
 
         MessageLog.print_message("\n######################################################################")
         MessageLog.print_message("######################################################################")
@@ -896,8 +953,4 @@ class Game:
         MessageLog.print_message("######################################################################")
         MessageLog.print_message("######################################################################\n")
 
-        if Settings.farming_mode == "Raid":
-            TwitterRoomFinder.disconnect()
-
-        Settings.bot_status_flag.value = 1
         return True

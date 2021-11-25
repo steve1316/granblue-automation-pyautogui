@@ -126,12 +126,13 @@ class Test(unittest.TestCase):
 
     def test_discord_connection(self):
         print("\n[DISCORD] Starting Discord process on a new Thread...")
-        self._discord_process = multiprocessing.Process(target = discord_utils.start_now, args = (Settings.discord_token, Settings.user_id, Settings.discord_queue))
+        discord_queue = multiprocessing.Queue()
+        self._discord_process = multiprocessing.Process(target = discord_utils.start_now, args = (Settings.discord_token, Settings.user_id, discord_queue))
         self._discord_process.start()
         Game.wait(3.0)
-        Settings.discord_queue.put("Testing 1 2 3")
+        discord_queue.put("Testing 1 2 3")
         Game.wait(3.0)
-        self.assertTrue(Settings.discord_queue.empty())
+        self.assertTrue(discord_queue.empty())
         self._discord_process.terminate()
         return None
 

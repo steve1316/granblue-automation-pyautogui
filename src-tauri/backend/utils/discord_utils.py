@@ -16,20 +16,20 @@ class MyClient:
     ----------
     bot (discord.Client): The Client object for Discord interaction.
 
-    queue (multiprocessing.Queue): The Queue holding messages to be sent to the user over Discord.
-
     user_id (int): The User ID on Discord that uniquely identifies them.
+
+    queue (multiprocessing.Queue): The Queue holding messages to be sent to the user over Discord.
 
     """
 
-    def __init__(self, bot: discord.Client, queue: multiprocessing.Queue, user_id: int):
+    def __init__(self, bot: discord.Client, user_id: int, queue: multiprocessing.Queue):
         self.bot = bot
         self.user = None
         self.user_id = user_id
         self.queue = queue
         self.print_status.start()
 
-    @loop(seconds = 1.0)
+    @loop()
     async def print_status(self):
         """Grab each message in the Queue and send it as a private DM to the user.
 
@@ -39,7 +39,7 @@ class MyClient:
         if self.user is not None and not self.queue.empty():
             message: str = self.queue.get()
             if Settings.debug_mode:
-                MessageLog.print_message(f"[DISCORD] Acquired message to send via Discord DM: {message}")
+                MessageLog.print_message(f"\n[DEBUG] Acquired message to send via Discord DM: {message}")
             await self.user.send(content = message)
 
     @print_status.before_loop
@@ -49,7 +49,7 @@ class MyClient:
         Returns:
             None
         """
-        MessageLog.print_message("\n[DISCORD] Waiting for connection to Discord API...")
+        MessageLog.print_message("[DISCORD] Waiting for connection to Discord API...")
         await self.bot.wait_until_ready()
         MessageLog.print_message("[DISCORD] Successful connection to Discord API")
         self.queue.put(f"```diff\n+ Successful connection to Discord API for Granblue Automation\n```")
@@ -64,11 +64,16 @@ class MyClient:
 def start_now(token: str, user_id: int, queue: multiprocessing.Queue):
     """Initialize the Client object and begin the process to connect to the Discord API.
 
+    Args:
+        token (str): Discord Token for use with Discord's API.
+        user_id (int): The user's Discord user ID.
+        queue (multiprocessing.Queue): The Queue holding messages to be sent to the user over Discord.
+
     Returns:
         None
     """
     client = discord.Client()
-    MyClient(client, queue, user_id)
+    MyClient(client, user_id, queue)
     try:
         client.run(token)
     except LoginFailure:
