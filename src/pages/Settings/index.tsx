@@ -53,7 +53,13 @@ const Settings = () => {
                 reader.onload = function (loadedEvent) {
                     if (loadedEvent.target?.result !== null && loadedEvent.target?.result !== undefined) {
                         console.log("Loaded Combat Script: ", loadedEvent.target.result)
-                        const newCombatScript: string[] = loadedEvent.target.result.toString().split("\r\n")
+                        const newCombatScript: string[] = loadedEvent.target.result
+                            .toString()
+                            .replace(/\r\n/g, "\n") // Replace LF with CRLF.
+                            .replace(/[\r\n]/g, "\n")
+                            .replace("\t", "") // Replace tab characters.
+                            .replace(/\t/g, "")
+                            .split("\n")
                         botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, combatScriptName: selectedFile.name, combatScript: newCombatScript } })
                     } else {
                         console.log("Failed to read combat script. Reseting to default empty combat script...")
