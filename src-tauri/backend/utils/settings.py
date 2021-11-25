@@ -1,6 +1,5 @@
 import json
 import os
-import multiprocessing
 import sys
 from typing import List, Tuple
 
@@ -8,8 +7,6 @@ from utils.message_log import MessageLog
 
 
 class Settings:
-    bot_status_flag = multiprocessing.Value("i", 0)
-
     ######################################################
     # ################## settings.json ###################
     # Read from settings.json and populate the class variables.
@@ -44,7 +41,6 @@ class Settings:
     # #### end of twitter ####
 
     # #### discord ####
-    discord_queue = multiprocessing.Queue()
     enable_discord: bool = _data["discord"]["enableDiscordNotifications"]
     discord_token: str = _data["discord"]["discordToken"]
     user_id: int = _data["discord"]["discordUserID"]
