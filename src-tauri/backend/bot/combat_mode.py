@@ -588,13 +588,13 @@ class CombatMode:
             command_list = script_commands
         else:
             if is_nightmare:
-                print("Name of Nightmare combat script loaded: ", Settings.nightmare_combat_script_name)
+                MessageLog.print_message(f"Name of Nightmare combat script loaded: {Settings.nightmare_combat_script_name}")
                 command_list = copy.deepcopy(Settings.nightmare_combat_script)
             else:
-                print("Name of combat script loaded: ", Settings.combat_script_name)
+                MessageLog.print_message(f"Name of combat script loaded: {Settings.combat_script_name}")
                 command_list = copy.deepcopy(Settings.combat_script)
 
-        print("Size of script commands: ", len(command_list))
+        MessageLog.print_message(f"Size of script commands: {len(command_list)}")
 
         # If current Farming Mode is Arcarum, attempt to dismiss potential stage effect popup like "Can't use Charge Attacks".
         if Settings.farming_mode == "Arcarum":
