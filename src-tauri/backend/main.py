@@ -16,6 +16,13 @@ class MainDriver:
         self._game = None
         self._bot_process = None
         self._discord_process = None
+    def is_running(self) -> bool:
+        """Check the status of the bot process.
+
+        Returns:
+            (bool): Flag that indicates whether the bot process is still running or not.
+        """
+        return self._bot_process.is_alive()
 
     def _run_bot(self):
         """Starts the main bot process on this Thread.
@@ -80,9 +87,11 @@ if __name__ == "__main__":
     bot_object.start_bot()
 
     while True:
-        if Settings.bot_status_flag.value == 1:
+        if bot_object.is_running() is False:
             break
         else:
             time.sleep(1.0)
 
     bot_object.stop_bot()
+
+    MessageLog.print_message("[STATUS] Closing Python process...")
