@@ -38,29 +38,31 @@ class CombatMode:
             MessageLog.print_message(f"\n[DEBUG] Checking to see if the Party wiped...")
 
         party_wipe_indicator = ImageUtils.find_button("party_wipe_indicator", tries = 1, suppress_error = True)
-        if party_wipe_indicator is not None:
+        if party_wipe_indicator is not None or ImageUtils.confirm_location("salute_participants", tries = 1, suppress_error = True):
             if (Settings.farming_mode != "Raid" and Settings.farming_mode != "Dread Barrage") and ImageUtils.confirm_location("continue"):
                 # Click on the blue indicator to get rid of the overlay.
-                MouseUtils.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1], "party_wipe_indicator")
+                if party_wipe_indicator is not None:
+                    MouseUtils.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1], "party_wipe_indicator")
 
-                MessageLog.print_message(f"[WARNING] Party has unfortunately wiped during Combat Mode. Retreating now...")
+                MessageLog.print_message(f"[WARNING] Party has unfortunately wiped during Combat Mode for this non-Raid battle. Retreating now...")
 
                 # Cancel the popup that asks you if you want to use a Full Elixir to come back. Then click the red "Retreat" button.
                 Game.find_and_click_button("cancel")
                 Game.find_and_click_button("retreat_confirmation")
                 CombatMode._retreat_check = True
-            elif Settings.farming_mode == "Raid" or Settings.farming_mode == "Dread barrage":
-                MessageLog.print_message(f"[WARNING] Party has unfortunately wiped during Combat Mode. Backing out now without retreating...")
+            elif Settings.farming_mode == "Raid" or Settings.farming_mode == "Dread Barrage" or Settings.farming_mode == "Guild Wars" or Settings.map_name.__contains__("Raid"):
+                MessageLog.print_message(f"[WARNING] Party has unfortunately wiped during Combat Mode for this Raid battle. Backing out now without retreating...")
 
                 # Head back to the Home screen.
                 Game.go_back_home(confirm_location_check = True)
                 CombatMode._retreat_check = True
             elif Settings.farming_mode == "Coop" and ImageUtils.confirm_location("salute_participants"):
                 # Click on the blue indicator to get rid of the overlay.
-                MouseUtils.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1], "party_wipe_indicator")
+                if party_wipe_indicator is not None:
+                    MouseUtils.move_and_click_point(party_wipe_indicator[0], party_wipe_indicator[1], "party_wipe_indicator")
 
                 # Salute the participants.
-                MessageLog.print_message(f"[WARNING] Party has unfortunately wiped during Combat Mode. Leaving the Coop room...")
+                MessageLog.print_message(f"[WARNING] Party has unfortunately wiped during Combat Mode for this Coop battle. Leaving the Coop room...")
                 Game.find_and_click_button("salute")
                 Game.find_and_click_button("ok")
 
@@ -73,33 +75,6 @@ class CombatMode:
                 CombatMode._retreat_check = True
         elif party_wipe_indicator is None and Settings.debug_mode:
             MessageLog.print_message(f"[DEBUG] Party has not wiped.")
-        elif ImageUtils.confirm_location("salute_participants", tries = 1, suppress_error = True):
-            if (Settings.farming_mode != "Raid" and Settings.farming_mode != "Dread Barrage") and ImageUtils.confirm_location("continue"):
-                MessageLog.print_message(f"[WARNING] Party has unfortunately wiped during Combat Mode. Retreating now...")
-
-                # Cancel the popup that asks you if you want to use a Full Elixir to come back. Then click the red "Retreat" button.
-                Game.find_and_click_button("cancel")
-                Game.find_and_click_button("retreat_confirmation")
-                CombatMode._retreat_check = True
-            elif Settings.farming_mode == "Raid" or Settings.farming_mode == "Dread barrage":
-                MessageLog.print_message(f"[WARNING] Party has unfortunately wiped during Combat Mode. Backing out now without retreating...")
-
-                # Head back to the Home screen.
-                Game.go_back_home(confirm_location_check = True)
-                CombatMode._retreat_check = True
-            elif Settings.farming_mode == "Coop":
-                # Salute the participants.
-                MessageLog.print_message(f"[WARNING] Party has unfortunately wiped during Combat Mode. Leaving the Coop room...")
-                Game.find_and_click_button("salute")
-                Game.find_and_click_button("ok")
-
-                # Then cancel the popup that asks you if you want to use a Full Elixir to come back.
-                Game.find_and_click_button("cancel")
-
-                # Then click the "Leave" button.
-                Game.find_and_click_button("leave")
-
-                CombatMode._retreat_check = True
 
         return None
 
