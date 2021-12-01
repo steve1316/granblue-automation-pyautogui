@@ -23,6 +23,8 @@ import { Command } from "@tauri-apps/api/shell"
 import { useContext, useRef, useState } from "react"
 import TransferList from "../../components/TransferList"
 import { BotStateContext } from "../../context/BotStateContext"
+import { readTextFile } from "@tauri-apps/api/fs"
+import { open, DialogFilter } from "@tauri-apps/api/dialog"
 import "./index.scss"
 
 // Custom input component for combat script file selection.
@@ -67,8 +69,48 @@ const ExtraSettings = () => {
                 reader.readAsText(selectedFile)
             }
         } else {
+            console.log("No file selected. Reseting to default empty combat script...")
             bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
         }
+    }
+
+    const loadNightmareCombatScriptAlternative = () => {
+        // Use an alternative file picker for selecting the combat script.
+        let filter: DialogFilter = {
+            extensions: ["txt"],
+            name: "Combat Script filter",
+        }
+
+        open({ defaultPath: undefined, filters: [filter], multiple: false })
+            .then((filePath) => {
+                if (typeof filePath === "string") {
+                    readTextFile(filePath)
+                        .then((data) => {
+                            console.log("Loaded Nightmare Combat Script via alternative method: ", data)
+                            const newCombatScript: string[] = data
+                                .toString()
+                                .replace(/\r\n/g, "\n") // Replace LF with CRLF.
+                                .replace(/[\r\n]/g, "\n")
+                                .replace("\t", "") // Replace tab characters.
+                                .replace(/\t/g, "")
+                                .split("\n")
+                            bot.setSettings({
+                                ...bot.settings,
+                                nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: filePath.replace(/^.*[\\/]/, ""), nightmareCombatScript: newCombatScript },
+                            })
+                        })
+                        .catch((err) => {
+                            console.log(`Failed to read Nightmare combat script via alternative method: ${err}\n\nReseting to default empty combat script...`)
+                            bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
+                        })
+                } else {
+                    console.log(`No file selected.\n\nReseting to default empty combat script...`)
+                    bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
+                }
+            })
+            .catch((e) => {
+                console.log("Error while resolving the path to the combat script: ", e)
+            })
     }
 
     // Render settings for Twitter.
@@ -559,17 +601,32 @@ const ExtraSettings = () => {
                         <Stack spacing={2}>
                             <Grid container>
                                 <Grid item xs={6}>
-                                    <Input ref={inputRef} accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadNightmareCombatScript(e)} />
-                                    <TextField
-                                        variant="filled"
-                                        label="Nightmare Combat Script"
-                                        value={bot.settings.nightmare.nightmareCombatScriptName !== "" ? bot.settings.nightmare.nightmareCombatScriptName : "None Selected"}
-                                        inputProps={{ readOnly: true }}
-                                        InputLabelProps={{ shrink: true }}
-                                        helperText="Select a Combat Script"
-                                        onClick={() => inputRef.current?.click()}
-                                        fullWidth
-                                    />
+                                    {!bot.settings.misc.alternativeCombatScriptSelector ? (
+                                        <div>
+                                            <Input ref={inputRef} accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadNightmareCombatScript(e)} />
+                                            <TextField
+                                                variant="filled"
+                                                label="Nightmare Combat Script"
+                                                value={bot.settings.nightmare.nightmareCombatScriptName !== "" ? bot.settings.nightmare.nightmareCombatScriptName : "None Selected"}
+                                                inputProps={{ readOnly: true }}
+                                                InputLabelProps={{ shrink: true }}
+                                                helperText="Select a Combat Script"
+                                                onClick={() => inputRef.current?.click()}
+                                                fullWidth
+                                            />
+                                        </div>
+                                    ) : (
+                                        <TextField
+                                            variant="filled"
+                                            label="Nightmare Combat Script"
+                                            value={bot.settings.nightmare.nightmareCombatScriptName !== "" ? bot.settings.nightmare.nightmareCombatScriptName : "None Selected"}
+                                            inputProps={{ readOnly: true }}
+                                            InputLabelProps={{ shrink: true }}
+                                            helperText="Select a Combat Script (alternative method)"
+                                            onClick={() => loadNightmareCombatScriptAlternative()}
+                                            fullWidth
+                                        />
+                                    )}
                                 </Grid>
                                 <Grid item xs />
                             </Grid>
@@ -653,6 +710,21 @@ const ExtraSettings = () => {
                         label="Enable GUI Low Performance Mode"
                     />
                     <FormHelperText>Enable to disable background animations of the GUI.</FormHelperText>
+                </FormGroup>
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bot.settings.misc.alternativeCombatScriptSelector}
+                                onChange={(e) => {
+                                    bot.setSettings({ ...bot.settings, misc: { ...bot.settings.misc, alternativeCombatScriptSelector: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable Alternative File Picker for Combat Script selection"
+                    />
+                    <FormHelperText>Enable this if the regular method of combat script selection failed.</FormHelperText>
                 </FormGroup>
             </div>
         )

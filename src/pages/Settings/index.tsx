@@ -7,6 +7,8 @@ import parse from "autosuggest-highlight/parse"
 import { useContext, useEffect, useRef, useState } from "react"
 import TransferList from "../../components/TransferList"
 import { BotStateContext } from "../../context/BotStateContext"
+import { readTextFile } from "@tauri-apps/api/fs"
+import { open, DialogFilter } from "@tauri-apps/api/dialog"
 import data from "../../data/data.json"
 import "./index.scss"
 
@@ -39,6 +41,45 @@ const Settings = () => {
         "Arcarum",
     ]
 
+    const loadCombatScriptAlternative = () => {
+        // Use an alternative file picker for selecting the combat script.
+        let filter: DialogFilter = {
+            extensions: ["txt"],
+            name: "Combat Script filter",
+        }
+
+        open({ defaultPath: undefined, filters: [filter], multiple: false })
+            .then((filePath) => {
+                if (typeof filePath === "string") {
+                    readTextFile(filePath)
+                        .then((data) => {
+                            console.log("Loaded Combat Script via alternative method: ", data)
+                            const newCombatScript: string[] = data
+                                .toString()
+                                .replace(/\r\n/g, "\n") // Replace LF with CRLF.
+                                .replace(/[\r\n]/g, "\n")
+                                .replace("\t", "") // Replace tab characters.
+                                .replace(/\t/g, "")
+                                .split("\n")
+                            botStateContext.setSettings({
+                                ...botStateContext.settings,
+                                game: { ...botStateContext.settings.game, combatScriptName: filePath.replace(/^.*[\\/]/, ""), combatScript: newCombatScript },
+                            })
+                        })
+                        .catch((err) => {
+                            console.log(`Failed to read combat script via alternative method: ${err}\n\nReseting to default empty combat script...`)
+                            botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, combatScriptName: "", combatScript: [] } })
+                        })
+                } else {
+                    console.log(`No file selected.\n\nReseting to default empty combat script...`)
+                    botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, combatScriptName: "", combatScript: [] } })
+                }
+            })
+            .catch((e) => {
+                console.log("Error while resolving the path to the combat script: ", e)
+            })
+    }
+
     // Load the selected combat script text file.
     const loadCombatScript = (event: React.ChangeEvent<HTMLInputElement>) => {
         var files = event.currentTarget.files
@@ -49,7 +90,7 @@ const Settings = () => {
                 botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, combatScriptName: "", combatScript: [] } })
             } else {
                 // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
-                var reader = new FileReader()
+                const reader = new FileReader()
                 reader.onload = function (loadedEvent) {
                     if (loadedEvent.target?.result !== null && loadedEvent.target?.result !== undefined) {
                         console.log("Loaded Combat Script: ", loadedEvent.target.result)
@@ -71,6 +112,7 @@ const Settings = () => {
                 reader.readAsText(selectedFile)
             }
         } else {
+            console.log("No file selected. Reseting to default empty combat script...")
             botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, combatScriptName: "", combatScript: [] } })
         }
     }
@@ -175,17 +217,32 @@ const Settings = () => {
                 <Stack spacing={2} className="settingsWrapper">
                     {/* Load Combat Script */}
                     <div>
-                        <Input ref={inputRef} accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadCombatScript(e)} />
-                        <TextField
-                            variant="filled"
-                            label="Combat Script"
-                            value={botStateContext.settings.game.combatScriptName !== "" ? botStateContext.settings.game.combatScriptName : "None Selected"}
-                            inputProps={{ readOnly: true }}
-                            InputLabelProps={{ shrink: true }}
-                            helperText="Select a Combat Script"
-                            onClick={() => inputRef.current?.click()}
-                            fullWidth
-                        />
+                        {!botStateContext.settings.misc.alternativeCombatScriptSelector ? (
+                            <div>
+                                <Input ref={inputRef} accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadCombatScript(e)} />
+                                <TextField
+                                    variant="filled"
+                                    label="Combat Script"
+                                    value={botStateContext.settings.game.combatScriptName !== "" ? botStateContext.settings.game.combatScriptName : "None Selected"}
+                                    inputProps={{ readOnly: true }}
+                                    InputLabelProps={{ shrink: true }}
+                                    helperText="Select a Combat Script"
+                                    onClick={() => inputRef.current?.click()}
+                                    fullWidth
+                                />
+                            </div>
+                        ) : (
+                            <TextField
+                                variant="filled"
+                                label="Combat Script"
+                                value={botStateContext.settings.game.combatScriptName !== "" ? botStateContext.settings.game.combatScriptName : "None Selected"}
+                                inputProps={{ readOnly: true }}
+                                InputLabelProps={{ shrink: true }}
+                                helperText="Select a Combat Script (alternative method)"
+                                onClick={() => loadCombatScriptAlternative()}
+                                fullWidth
+                            />
+                        )}
                     </div>
 
                     <Divider>

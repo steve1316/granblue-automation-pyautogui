@@ -49,6 +49,7 @@ export interface Settings {
     // Misc settings for the GUI.
     misc: {
         guiLowPerformanceMode: boolean
+        alternativeCombatScriptSelector: boolean
     }
 
     // Extra Settings related to Nightmares from certain Farming Modes.
@@ -116,6 +117,7 @@ export const defaultSettings: Settings = {
     },
     misc: {
         guiLowPerformanceMode: false,
+        alternativeCombatScriptSelector: false,
     },
     nightmare: {
         enableNightmare: false,
