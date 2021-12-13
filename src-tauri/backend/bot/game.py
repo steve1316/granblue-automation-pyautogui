@@ -169,7 +169,7 @@ class Game:
             (bool): Return True if the button was found and clicked. Otherwise, return False.
         """
         if Settings.debug_mode:
-            MessageLog.print_message(f"[DEBUG] Attempting to find and click the button: \"{button_name}\".")
+            MessageLog.print_message(f"\n[DEBUG] Attempting to find and click the button: \"{button_name}\".")
 
         if tries == 0:
             if button_name.lower() == "quest":
