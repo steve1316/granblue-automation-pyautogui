@@ -119,6 +119,9 @@ class Event:
         elif Settings.mission_name.find("EX ") == 0:
             difficulty = "Extreme"
             formatted_mission_name = Settings.mission_name[3:]
+        elif Settings.mission_name.find("EX+ ") == 0:
+            difficulty = "Extreme+"
+            formatted_mission_name = Settings.mission_name[4:]
         elif Settings.mission_name.find("IM ") == 0:
             difficulty = "Impossible"
             formatted_mission_name = Settings.mission_name[3:]
@@ -135,8 +138,11 @@ class Event:
             # Find all the round "Play" buttons.
             quest_play_locations = ImageUtils.find_all("play_round_button")
 
-            # Only Extreme difficulty is supported for farming efficiency.
-            MouseUtils.move_and_click_point(quest_play_locations[3][0], quest_play_locations[3][1], "play_round_button")
+            # Only Extreme and Extreme+ difficulty is supported for farming efficiency.
+            if difficulty == "Extreme":
+                MouseUtils.move_and_click_point(quest_play_locations[3][0], quest_play_locations[3][1], "play_round_button")
+            elif difficulty == "Extreme+":
+                MouseUtils.move_and_click_point(quest_play_locations[4][0], quest_play_locations[4][1], "play_round_button")
         elif formatted_mission_name == "Event Raid":
             # Bring up the "Raid Battle" popup. Then scroll down the screen a bit for screens less than 1440p to see the entire popup.
             MessageLog.print_message(f"[EVENT.TOKEN.DRAWBOXES] Now hosting Event Raid...")
@@ -224,6 +230,9 @@ class Event:
             elif Settings.mission_name.find("EX ") == 0:
                 difficulty = "Extreme"
                 formatted_mission_name = Settings.mission_name[3:]
+            elif Settings.mission_name.find("EX+ ") == 0:
+                difficulty = "Extreme+"
+                formatted_mission_name = Settings.mission_name[4:]
 
             if ImageUtils.confirm_location("special"):
                 # Check to see if the user already has a Nightmare available.
@@ -252,11 +261,18 @@ class Event:
                 # Find all the round "Play" buttons.
                 round_play_button_locations = ImageUtils.find_all("play_round_button")
 
+                # If Extreme+ was selected and only 3 locations were found for the play_round_button, that means Extreme+ is not available.
+                if len(round_play_button_locations) == 3 and difficulty == "Extreme+":
+                    MessageLog.print_message(f"[EVENT] Extreme+ was selected but it seems it is not available. Defaulting to Extreme difficulty...")
+                    difficulty = "Extreme"
+
                 # Now select the chosen difficulty.
                 if difficulty == "Very Hard":
                     MouseUtils.move_and_click_point(round_play_button_locations[0][0], round_play_button_locations[0][1], "play_round_button")
                 elif difficulty == "Extreme":
                     MouseUtils.move_and_click_point(round_play_button_locations[1][0], round_play_button_locations[1][1], "play_round_button")
+                elif difficulty == "Extreme+":
+                    MouseUtils.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1], "play_round_button")
             else:
                 raise EventException("Failed to arrive at the Special Quest screen.")
 
