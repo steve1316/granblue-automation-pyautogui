@@ -109,7 +109,7 @@ pip install -r requirements.txt
 3. Open up the game on a Chromium-based browser and log in if you haven't already done so. Click away any daily log in popups until you are at the Main/Home screen.
    1. `Make sure the window size is set to this or else the bot will not be able to detect the "Home" button:`
     
-        ![Correct Window Size](images/readme_assets/correct_window_size.png)
+        ![Correct Window Size](src-tauri/images/readme_assets/correct_window_size.png)
 4. Now open up the program executable and follow the onscreen instructions and checking that the Settings page is filled out. You will be informed that the bot is ready to start by the status message at the top of the window.
    1. `(Optional) Additionally, you can check the Extra Settings page for more general settings like Twitter, Discord and Configuration settings.`
 5. You can now head back to the Home page of the program and hit the "Start" button to begin.
