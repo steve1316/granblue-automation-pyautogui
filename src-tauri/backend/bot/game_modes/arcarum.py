@@ -139,7 +139,7 @@ class Arcarum:
 
     @staticmethod
     def _check_for_boss() -> bool:
-        """Checks for the existence of 3-3, 6-3 or 9-3 boss if config.ini enabled it.
+        """Checks for the existence of 3-3, 6-3 or 9-3 boss if user settings enabled it.
 
         Returns:
             (bool): Flag on whether or not a Boss was detected.

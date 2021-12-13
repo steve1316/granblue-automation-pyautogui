@@ -24,7 +24,7 @@ class XenoClash:
 
     @staticmethod
     def check_for_xeno_clash_nightmare():
-        """Checks for Xeno Clash Nightmare and if it appears and the user enabled it in config.ini, start it.
+        """Checks for Xeno Clash Nightmare and if it appears and the user enabled it in user settings, start it.
 
         Returns:
             (bool): Return True if Xeno Clash Nightmare was detected and successfully completed. Otherwise, return False.

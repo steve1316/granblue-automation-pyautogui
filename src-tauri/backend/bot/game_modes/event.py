@@ -20,7 +20,7 @@ class Event:
 
     @staticmethod
     def check_for_event_nightmare():
-        """Checks for Event Nightmare and if it appears and the user enabled it in config.ini, start it.
+        """Checks for Event Nightmare and if it appears and the user enabled it in user settings, start it.
 
         Returns:
             (bool): Return True if Event Nightmare was detected and successfully completed. Otherwise, return False.

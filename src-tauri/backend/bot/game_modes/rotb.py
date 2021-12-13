@@ -17,7 +17,7 @@ class RiseOfTheBeasts:
 
     @staticmethod
     def check_for_rotb_extreme_plus():
-        """Checks for Extreme+ for Rise of the Beasts and if it appears and the user enabled it in config.ini, start it.
+        """Checks for Extreme+ for Rise of the Beasts and if it appears and the user enabled it in user settings, start it.
 
         Returns:
             (bool): Return True if Extreme+ was detected and successfully completed. Otherwise, return False.

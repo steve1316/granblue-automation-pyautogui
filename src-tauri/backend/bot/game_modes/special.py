@@ -19,7 +19,7 @@ class Special:
 
     @staticmethod
     def check_for_dimensional_halo():
-        """Checks for Dimensional Halo and if it appears and the user enabled it in config.ini, start it.
+        """Checks for Dimensional Halo and if it appears and the user enabled it in user settings, start it.
 
         Returns:
             (bool): Return True if Dimensional Halo was detected and successfully completed. Otherwise, return False.

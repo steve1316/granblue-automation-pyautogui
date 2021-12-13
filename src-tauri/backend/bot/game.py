@@ -275,7 +275,7 @@ class Game:
 
     @staticmethod
     def _delay_between_runs():
-        """Execute a delay after every run completed based on user settings from config.ini.
+        """Execute a delay after every run completed based on user settings.
 
         Returns:
             None
@@ -528,7 +528,7 @@ class Game:
 
             MessageLog.print_message("\n[INFO] AP is available. Continuing...")
         else:
-            MessageLog.print_message("\n[INFO] AP was auto-restored according to your config.ini. Continuing...")
+            MessageLog.print_message("\n[INFO] AP was auto-restored according to user settings. Continuing...")
 
         return None
 
@@ -563,7 +563,7 @@ class Game:
 
             MessageLog.print_message("[INFO] EP is available. Continuing...")
         else:
-            MessageLog.print_message("[INFO] EP was auto-restored according to your config.ini. Continuing...")
+            MessageLog.print_message("[INFO] EP was auto-restored according to user settings. Continuing...")
 
         return None
 
