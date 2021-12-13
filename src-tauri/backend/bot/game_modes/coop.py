@@ -16,10 +16,10 @@ class Coop:
     """
 
     # The 2nd element of the list of EX1 missions is designated "empty" because it is used to navigate properly to "Lost in the Dark" from "Corridor of Puzzles".
-    _coop_ex1_list = ["Corridor of Puzzles", "empty", "Lost in the Dark"]
-    _coop_ex2_list = ["Time of Judgement", "Time of Revelation", "Time of Eminence"]
-    _coop_ex3_list = ["Rule of the Tundra", "Rule of the Plains", "Rule of the Twilight"]
-    _coop_ex4_list = ["Amidst the Waves", "Amidst the Petals", "Amidst Severe Cliffs", "Amidst the Flames"]
+    _coop_ex1_list = ["EX1-1 Corridor of Puzzles", "empty", "EX1-3 Lost in the Dark"]
+    _coop_ex2_list = ["EX2-2 Time of Judgement", "EX2-3 Time of Revelation", "EX2-4 Time of Eminence"]
+    _coop_ex3_list = ["EX3-2 Rule of the Tundra", "EX3-3 Rule of the Plains", "EX3-4 Rule of the Twilight"]
+    _coop_ex4_list = ["EX4-2 Amidst the Waves", "EX4-3 Amidst the Petals", "EX4-4 Amidst Severe Cliffs", "EX4-5 Amidst the Flames"]
 
     @staticmethod
     def _navigate():
@@ -47,7 +47,7 @@ class Coop:
             host_quest_button_locations = ImageUtils.find_all("coop_host_quest")
 
             # Select the difficulty of the mission that it is under.
-            if Settings.mission_name == "In a Dusk Dream":
+            if Settings.mission_name == "H3-1 In a Dusk Dream":
                 # Check if Hard difficulty is already selected. If not, make it active.
                 if ImageUtils.find_button("coop_hard_selected") is None:
                     Game.find_and_click_button("coop_hard")
