@@ -585,6 +585,11 @@ class CombatMode:
         ######################################################################
         # This is where the main workflow of Combat Mode is located.
         while len(command_list) > 0 and CombatMode._retreat_check is False and semi_auto is False and full_auto is False:
+            # All the logic that follows assumes that the command string is lowercase to allow case-insensitive commands.
+            command = command_list.pop(0).strip().lower()
+            if command == "" or command[0] == "#" or command[0] == "/":
+                continue
+
             # Check if the Battle has ended.
             if CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True):
                 MessageLog.print_message("\n######################################################################")
@@ -609,11 +614,6 @@ class CombatMode:
                 MessageLog.print_message("######################################################################")
                 MessageLog.print_message("######################################################################")
                 return True
-
-            # All the logic that follows assumes that the command string is lowercase to allow case-insensitive commands.
-            command = command_list.pop(0).strip().lower()
-            if command == "" or command[0] == "#" or command[0] == "/":
-                continue
 
             MessageLog.print_message(f"\n[COMBAT] Reading command: \"{command}\"")
 
