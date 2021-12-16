@@ -92,7 +92,10 @@ class Arcarum:
         tries = 3
         while tries > 0:
             # Prioritise any enemies/chests/thorns that are available on the current node.
-            if Game.find_and_click_button("arcarum_action", tries = 1):
+            arcarum_actions = ImageUtils.find_all("arcarum_action")
+            if len(arcarum_actions) > 0:
+                MouseUtils.move_and_click_point(arcarum_actions[0][0], arcarum_actions[0][1], "arcarum_action")
+
                 Game.wait(2)
 
                 Game.check_for_captcha()
