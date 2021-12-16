@@ -105,7 +105,7 @@ class Arcarum:
                 elif Game.find_and_click_button("ok", tries = 1):
                     return "Claimed Treasure/Keythorn"
                 else:
-                    return "Claimed Spirethorn"
+                    return "Claimed Spirethorn/No Action"
 
             # Clear any detected Treasure popup after claiming a chest.
             MessageLog.print_message(f"[ARCARUM] No action found for the current node. Looking for Treasure popup...")
