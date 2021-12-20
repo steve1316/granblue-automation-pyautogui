@@ -284,6 +284,26 @@ const Settings = () => {
                         ))}
                     </TextField>
 
+                    {botStateContext.settings.game.farmingMode === "Event" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={botStateContext.settings.event.enableLocationIncrementByOne}
+                                        onChange={(e) =>
+                                            botStateContext.setSettings({ ...botStateContext.settings, event: { ...botStateContext.settings.event, enableLocationIncrementByOne: e.target.checked } })
+                                        }
+                                    />
+                                }
+                                label="Enable Incrementation of Location by 1"
+                            />
+                            <FormHelperText>
+                                Enable this if the event has its N/H missions at the very top so the bot can correctly select the correct quest. Or in otherwords, enable this if the Event tab in the
+                                Special page has 3 "Select" buttons instead of 2.
+                            </FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
                     {botStateContext.settings.game.farmingMode === "Special" ||
                     botStateContext.settings.game.farmingMode === "Event" ||
                     botStateContext.settings.game.farmingMode === "Event (Token Drawboxes)" ||

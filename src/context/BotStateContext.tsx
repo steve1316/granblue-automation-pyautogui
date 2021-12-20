@@ -65,6 +65,10 @@ export interface Settings {
     }
 
     // Settings specific to certain Farming Modes.
+    event: {
+        enableLocationIncrementByOne: boolean
+    }
+
     raid: {
         enableAutoExitRaid: boolean
         timeAllowedUntilAutoExitRaid: number
@@ -128,6 +132,9 @@ export const defaultSettings: Settings = {
         nightmareSummonElements: [],
         nightmareGroupNumber: 1,
         nightmarePartyNumber: 1,
+    },
+    event: {
+        enableLocationIncrementByOne: false,
     },
     raid: {
         enableAutoExitRaid: false,

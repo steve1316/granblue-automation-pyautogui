@@ -104,6 +104,10 @@ class Settings:
         MessageLog.print_message(f"[NIGHTMARE] Settings initialized for {farming_mode}'s Nightmare...")
     # #### end of nightmare ####
 
+    # #### event ####
+    enable_event_location_incrementation_by_one: bool = _data["event"]["enableLocationIncrementByOne"]
+    # #### end of event ####
+
     # #### raid ####
     enable_auto_exit_raid: bool = _data["raid"]["enableAutoExitRaid"]
     time_allowed_until_auto_exit_raid: int = _data["raid"]["timeAllowedUntilAutoExitRaid"] * 60

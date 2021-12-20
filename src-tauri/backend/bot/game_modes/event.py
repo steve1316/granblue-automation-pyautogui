@@ -15,9 +15,6 @@ class Event:
     Provides the navigation and any necessary utility functions to handle the Event or Event (Token Drawboxes) game mode.
     """
 
-    _move_one_down: bool = True
-    _fallback: bool = True
-
     @staticmethod
     def check_for_event_nightmare():
         """Checks for Event Nightmare and if it appears and the user enabled it in user settings, start it.
@@ -242,19 +239,23 @@ class Event:
 
                 # Find all the "Select" buttons.
                 select_button_locations = ImageUtils.find_all("select")
-                if Event._move_one_down:
+                if Settings.enable_event_location_incrementation_by_one:
                     position = 1
                 else:
                     position = 0
 
                 # Select the Event Quest or Event Raid. Additionally, offset the locations by 1 if there is a Nightmare available.
-                if formatted_mission_name == "Event Quest":
-                    MessageLog.print_message(f"[EVENT] Now hosting Event Quest...")
-                    MouseUtils.move_and_click_point(select_button_locations[position + nightmare_is_available][0], select_button_locations[position + nightmare_is_available][1], "select")
-                elif formatted_mission_name == "Event Raid":
-                    MessageLog.print_message(f"[EVENT] Now hosting Event Raid...")
-                    MouseUtils.move_and_click_point(select_button_locations[(position + 1) + nightmare_is_available][0], select_button_locations[(position + 1) + nightmare_is_available][1],
-                                                    "play_round_button")
+                try:
+                    if formatted_mission_name == "Event Quest":
+                        MessageLog.print_message(f"[EVENT] Now hosting Event Quest...")
+                        MouseUtils.move_and_click_point(select_button_locations[position + nightmare_is_available][0], select_button_locations[position + nightmare_is_available][1], "select")
+                    elif formatted_mission_name == "Event Raid":
+                        MessageLog.print_message(f"[EVENT] Now hosting Event Raid...")
+                        MouseUtils.move_and_click_point(select_button_locations[(position + 1) + nightmare_is_available][0], select_button_locations[(position + 1) + nightmare_is_available][1],
+                                                        "play_round_button")
+                except IndexError as e:
+                    MessageLog.print_message(f"\n[ERROR] Turn on/off the 'Enable Incrementation of Location by 1' and try again.")
+                    raise IndexError(e)
 
                 Game.wait(1)
 
