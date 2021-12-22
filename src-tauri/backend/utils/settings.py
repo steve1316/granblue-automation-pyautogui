@@ -57,6 +57,7 @@ class Settings:
     enable_randomized_delay_between_runs: bool = _data["configuration"]["enableRandomizedDelayBetweenRuns"]
     delay_in_seconds_lower_bound: int = _data["configuration"]["delayBetweenRunsLowerBound"]
     delay_in_seconds_upper_bound: int = _data["configuration"]["delayBetweenRunsUpperBound"]
+    static_window: bool = _data["configuration"]["staticWindow"]
     # #### end of configuration ####
 
     # #### nightmare ####

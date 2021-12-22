@@ -44,6 +44,7 @@ export interface Settings {
         enableRandomizedDelayBetweenRuns: boolean
         delayBetweenRunsLowerBound: number
         delayBetweenRunsUpperBound: number
+        staticWindow: boolean
     }
 
     // Misc settings for the GUI.
@@ -118,6 +119,7 @@ export const defaultSettings: Settings = {
         enableRandomizedDelayBetweenRuns: false,
         delayBetweenRunsLowerBound: 15,
         delayBetweenRunsUpperBound: 60,
+        staticWindow: true,
     },
     misc: {
         guiLowPerformanceMode: false,

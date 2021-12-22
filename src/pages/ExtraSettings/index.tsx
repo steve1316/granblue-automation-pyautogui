@@ -550,6 +550,24 @@ const ExtraSettings = () => {
                     />
                     <FormHelperText>Enable no timeouts when attempting to farm Raids that appear infrequently.</FormHelperText>
                 </FormGroup>
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bot.settings.configuration.staticWindow}
+                                onChange={(e) => {
+                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, staticWindow: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable static window calibration"
+                    />
+                    <FormHelperText>
+                        Enable calibration of game window to be static. This will assume that you do not move the game window around during the bot process. Otherwise, the bot will not see where to go
+                        next. Disable to have the whole computer screen act as the game window and you can move around the window during the bot process as you wish.
+                    </FormHelperText>
+                </FormGroup>
             </div>
         )
     }

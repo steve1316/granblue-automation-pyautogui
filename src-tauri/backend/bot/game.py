@@ -71,28 +71,20 @@ class Game:
             raise RuntimeError("Calibration of window dimensions failed. Is the Menu button visible on the Home screen?")
 
         width, height = pyautogui.size()
-        additional_calibration_required = False
-        # if Settings.home_button_location[0] < (width / 2):
-        #     window_left = 0
-        #     window_top = 0
-        #     window_width = int(width / 3)
-        #     window_height = height
-        # elif Settings.home_button_location[0] > (width - (width / 2)):
-        #     window_left = int(width - width / 3)
-        #     window_top = 0
-        #     window_width = int(width / 3)
-        #     window_height = height
-        #     additional_calibration_required = True
-        # else:
-        #     window_left = 0
-        #     window_top = 0
-        #     window_width = width
-        #     window_height = height
+        additional_calibration_required = Settings.static_window
 
-        window_left: int = 0
-        window_top: int = 0
-        window_width: int = width
-        window_height: int = height
+        if Settings.static_window:
+            MessageLog.print_message("[INFO] Using static window configuration...")
+            window_left = home_news_button[0] - 35  # The x-coordinate of the left edge.
+            window_top = home_menu_button[1] - 24  # The y-coordinate of the top edge.
+            window_width = window_left + 410  # The width of the region.
+            window_height = (Settings.home_button_location[1] + 24) - window_top  # The height of the region.
+        else:
+            MessageLog.print_message("[INFO] Using dynamic window configuration...")
+            window_left: int = 0
+            window_top: int = 0
+            window_width: int = width
+            window_height: int = height
 
         ImageUtils.update_window_dimensions(window_left, window_top, window_width, window_height, additional_calibration_required)
 
