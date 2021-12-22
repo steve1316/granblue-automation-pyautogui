@@ -31,6 +31,11 @@ class MessageLog:
         else:
             new_message = MessageLog._print_time() + " " + message
 
-        print(new_message, flush = True)
+        try:
+            print(new_message, flush = True)
+        except UnicodeEncodeError:
+            # Clean out any non UTF-8 characters before printing.
+            new_message_decoded = new_message.encode("utf-8", "ignore")
+            print(new_message_decoded, flush = True)
 
         return None
