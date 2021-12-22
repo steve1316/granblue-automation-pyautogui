@@ -226,10 +226,8 @@ const Start = () => {
             handleStop()
         })
         command.on("error", (error) => {
-            const fileName = `log ${getCurrentDateAndTime("-")}`
-            let newLog = [...messageLogContext.asyncMessages, `\n\nSaved message log to: ${fileName}.txt`, `\nChild process error: ${error}`]
+            let newLog = [...messageLogContext.asyncMessages, `\nChild process error: ${error}`]
             messageLogContext.setAsyncMessages(newLog)
-            handleStop()
         })
         command.stdout.on("data", (line: string) => {
             let newLog = [...messageLogContext.asyncMessages, `\n${line}`]
