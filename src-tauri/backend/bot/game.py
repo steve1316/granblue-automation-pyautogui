@@ -823,7 +823,7 @@ class Game:
             Game._discord_process = multiprocessing.Process(target = discord_utils.start_now, args = (Settings.discord_token, Settings.user_id, Game._discord_queue))
             Game._discord_process.start()
         else:
-            MessageLog.print_message("\n[DISCORD] Unable to start Discord process. Either you opted not to turn it on or your included token and user id inside the Settings or settings.json are invalid.")
+            MessageLog.print_message("\n[DISCORD] Unable to start Discord process. Either you opted not to turn it on or your included token/user id inside the Settings or settings.json are invalid.")
 
         return None
 
