@@ -18,12 +18,12 @@ class RoomStreamListener(tweepy.StreamListener):
 
     def on_status(self, status):
         if Settings.debug_mode:
-            print(f"[DEBUG] Stream found: {status.text}")
+            MessageLog.print_message(f"[DEBUG] Stream found: {status.text}")
 
         self.tweets.append(status)
 
     def on_error(self, status_code):
-        print(f"[ERROR] Stream API encountered Error Code {status_code}. Closing the stream...")
+        MessageLog.print_message(f"[ERROR] Stream API encountered Error Code {status_code}. Closing the stream...")
         return False
 
 
