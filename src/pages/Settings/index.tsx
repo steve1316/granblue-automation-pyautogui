@@ -39,7 +39,6 @@ const Settings = () => {
         "Proving Grounds",
         "Xeno Clash",
         "Arcarum",
-        "Generic",
     ]
 
     const loadCombatScriptAlternative = () => {
@@ -134,8 +133,7 @@ const Settings = () => {
             botStateContext.settings.game.farmingMode === "Dread Barrage" ||
             botStateContext.settings.game.farmingMode === "Proving Grounds" ||
             botStateContext.settings.game.farmingMode === "Xeno Clash" ||
-            botStateContext.settings.game.farmingMode === "Arcarum" ||
-            botStateContext.settings.game.farmingMode === "Generic"
+            botStateContext.settings.game.farmingMode === "Arcarum"
         ) {
             Object.values(data[botStateContext.settings.game.farmingMode]).forEach((tempItems) => {
                 newItemList = newItemList.concat(tempItems.items)
@@ -162,8 +160,7 @@ const Settings = () => {
             botStateContext.settings.game.farmingMode === "Dread Barrage" ||
             botStateContext.settings.game.farmingMode === "Proving Grounds" ||
             botStateContext.settings.game.farmingMode === "Xeno Clash" ||
-            botStateContext.settings.game.farmingMode === "Arcarum" ||
-            botStateContext.settings.game.farmingMode === "Generic"
+            botStateContext.settings.game.farmingMode === "Arcarum"
         ) {
             Object.entries(data[botStateContext.settings.game.farmingMode]).forEach((obj) => {
                 if (obj[1].items.indexOf(botStateContext.settings.game.item) !== -1) {
@@ -196,8 +193,7 @@ const Settings = () => {
             botStateContext.settings.game.farmingMode === "Dread Barrage" ||
             botStateContext.settings.game.farmingMode === "Proving Grounds" ||
             botStateContext.settings.game.farmingMode === "Xeno Clash" ||
-            botStateContext.settings.game.farmingMode === "Arcarum" ||
-            botStateContext.settings.game.farmingMode === "Generic"
+            botStateContext.settings.game.farmingMode === "Arcarum"
         ) {
             Object.entries(data[botStateContext.settings.game.farmingMode]).every((obj) => {
                 if (obj[0] === botStateContext.settings.game.mission) {
@@ -287,16 +283,6 @@ const Settings = () => {
                             </MenuItem>
                         ))}
                     </TextField>
-
-                    {botStateContext.settings.game.farmingMode === "Generic" ? (
-                        <div>
-                            <Divider />
-                            <Typography variant="subtitle2" component="p" color="text.secondary">
-                                {`Selecting this will repeat the current mission on the screen until it finishes the required number of runs. Note that Generic does not provide any navigation.\n\nIt is required that the bot starts on either the Combat screen with the "Attack" button visible or on the Loot Collection screen with the "Play Again" button visible.`}
-                            </Typography>
-                            <Divider />
-                        </div>
-                    ) : null}
 
                     {botStateContext.settings.game.farmingMode === "Event" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
@@ -395,38 +381,36 @@ const Settings = () => {
                     />
 
                     {/* Select Mission */}
-                    {botStateContext.settings.game.farmingMode !== "Generic" ? (
-                        <Autocomplete
-                            options={missionList.map((element) => element)}
-                            value={botStateContext.settings.game.mission}
-                            onChange={(_e, value) => {
-                                if (value === null) {
-                                    botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, mission: "", map: "" } })
-                                } else {
-                                    botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, mission: value } })
-                                }
-                            }}
-                            getOptionLabel={(option) => option}
-                            isOptionEqualToValue={(option) => option !== ""}
-                            renderInput={(params) => <TextField {...params} label="Select Mission" variant="filled" helperText="Please select the Mission" />}
-                            renderOption={(props, option, { inputValue }) => {
-                                const matches = match(option, inputValue)
-                                const parts = parse(option, matches)
+                    <Autocomplete
+                        options={missionList.map((element) => element)}
+                        value={botStateContext.settings.game.mission}
+                        onChange={(_e, value) => {
+                            if (value === null) {
+                                botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, mission: "", map: "" } })
+                            } else {
+                                botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, mission: value } })
+                            }
+                        }}
+                        getOptionLabel={(option) => option}
+                        isOptionEqualToValue={(option) => option !== ""}
+                        renderInput={(params) => <TextField {...params} label="Select Mission" variant="filled" helperText="Please select the Mission" />}
+                        renderOption={(props, option, { inputValue }) => {
+                            const matches = match(option, inputValue)
+                            const parts = parse(option, matches)
 
-                                return (
-                                    <li {...props}>
-                                        <div>
-                                            {parts.map((part, index) => (
-                                                <span key={index} style={{ fontWeight: part.highlight ? 1000 : 400 }}>
-                                                    {part.text}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </li>
-                                )
-                            }}
-                        />
-                    ) : null}
+                            return (
+                                <li {...props}>
+                                    <div>
+                                        {parts.map((part, index) => (
+                                            <span key={index} style={{ fontWeight: part.highlight ? 1000 : 400 }}>
+                                                {part.text}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </li>
+                            )
+                        }}
+                    />
 
                     {/* Select # of Items to farm */}
                     <TextField
@@ -455,37 +439,35 @@ const Settings = () => {
                     </Modal>
 
                     {/* Select Group and Party */}
-                    {botStateContext.settings.game.farmingMode !== "Generic" ? (
-                        <Grid container justifyContent="center" alignItems="center">
-                            <Grid item id="gridItemGroup" xs={4}>
-                                <TextField
-                                    label="Group #"
-                                    variant="filled"
-                                    type="number"
-                                    error={botStateContext.settings.game.groupNumber < 1 || botStateContext.settings.game.groupNumber > 7}
-                                    value={botStateContext.settings.game.groupNumber}
-                                    inputProps={{ min: 1, max: 7 }}
-                                    onChange={(e) => botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, groupNumber: parseInt(e.target.value) } })}
-                                    helperText="From 1 to 7"
-                                    className="settingsTextfield"
-                                />
-                            </Grid>
-                            <Grid item md></Grid>
-                            <Grid item id="gridItemParty" xs={4}>
-                                <TextField
-                                    label="Party #"
-                                    variant="filled"
-                                    type="number"
-                                    error={botStateContext.settings.game.partyNumber < 1 || botStateContext.settings.game.partyNumber > 6}
-                                    value={botStateContext.settings.game.partyNumber}
-                                    inputProps={{ min: 1, max: 6 }}
-                                    onChange={(e) => botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, partyNumber: parseInt(e.target.value) } })}
-                                    helperText="From 1 to 6"
-                                    className="settingsTextfield"
-                                />
-                            </Grid>
+                    <Grid container justifyContent="center" alignItems="center">
+                        <Grid item id="gridItemGroup" xs={4}>
+                            <TextField
+                                label="Group #"
+                                variant="filled"
+                                type="number"
+                                error={botStateContext.settings.game.groupNumber < 1 || botStateContext.settings.game.groupNumber > 7}
+                                value={botStateContext.settings.game.groupNumber}
+                                inputProps={{ min: 1, max: 7 }}
+                                onChange={(e) => botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, groupNumber: parseInt(e.target.value) } })}
+                                helperText="From 1 to 7"
+                                className="settingsTextfield"
+                            />
                         </Grid>
-                    ) : null}
+                        <Grid item md></Grid>
+                        <Grid item id="gridItemParty" xs={4}>
+                            <TextField
+                                label="Party #"
+                                variant="filled"
+                                type="number"
+                                error={botStateContext.settings.game.partyNumber < 1 || botStateContext.settings.game.partyNumber > 6}
+                                value={botStateContext.settings.game.partyNumber}
+                                inputProps={{ min: 1, max: 6 }}
+                                onChange={(e) => botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, partyNumber: parseInt(e.target.value) } })}
+                                helperText="From 1 to 6"
+                                className="settingsTextfield"
+                            />
+                        </Grid>
+                    </Grid>
 
                     <Divider>
                         <Avatar sx={{ bgcolor: deepPurple[500] }}>

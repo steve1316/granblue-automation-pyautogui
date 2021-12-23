@@ -195,18 +195,20 @@ const Start = () => {
 
     // Determine whether the program is ready to start.
     const handleReady = () => {
-        const farmingMode = botStateContext.settings.game.farmingMode
-        if (
-            farmingMode !== "Coop" &&
-            botStateContext.settings.game.farmingMode !== "Arcarum" &&
-            botStateContext.settings.game.farmingMode !== "Generic" &&
-            botStateContext.settings.game.farmingMode !== ""
-        ) {
-            botStateContext.setReadyStatus(botStateContext.settings.game.item !== "" && botStateContext.settings.game.mission !== "" && botStateContext.settings.game.summons.length !== 0)
+        if (botStateContext.settings.game.farmingMode !== "Coop" && botStateContext.settings.game.farmingMode !== "Arcarum" && botStateContext.settings.game.farmingMode !== "") {
+            if (botStateContext.settings.game.item !== "" && botStateContext.settings.game.mission !== "" && botStateContext.settings.game.summons.length !== 0) {
+                botStateContext.setReadyStatus(true)
+            } else {
+                botStateContext.setReadyStatus(false)
+            }
         } else if (botStateContext.settings.game.farmingMode === "Coop" || botStateContext.settings.game.farmingMode === "Arcarum") {
-            botStateContext.setReadyStatus(botStateContext.settings.game.item !== "" && botStateContext.settings.game.mission !== "")
+            if (botStateContext.settings.game.item !== "" && botStateContext.settings.game.mission !== "") {
+                botStateContext.setReadyStatus(true)
+            } else {
+                botStateContext.setReadyStatus(false)
+            }
         } else {
-            botStateContext.setReadyStatus(farmingMode === "Generic" && botStateContext.settings.game.item !== "" && botStateContext.settings.game.summons.length !== 0)
+            botStateContext.setReadyStatus(false)
         }
     }
 
