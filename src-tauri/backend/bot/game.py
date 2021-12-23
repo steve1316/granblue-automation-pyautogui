@@ -62,24 +62,20 @@ class Game:
             raise RuntimeError("Calibration of window dimensions failed. Is the Home button on the bottom bar visible?")
 
         # Set the dimensions of the bot window and save it in ImageUtils so that future operations do not go out of bounds.
-        home_news_button = ImageUtils.find_button("home_news")
-        home_menu_button = ImageUtils.find_button("home_menu")
+        home_back_button = ImageUtils.find_button("home_back")
 
-        if home_news_button is None:
-            raise RuntimeError("Calibration of window dimensions failed. Is the News button visible on the Home screen?")
-
-        if home_menu_button is None:
-            raise RuntimeError("Calibration of window dimensions failed. Is the Menu button visible on the Home screen?")
+        if home_back_button is None:
+            raise RuntimeError("Calibration of window dimensions failed. Is the back button visible on the screen?")
 
         width, height = pyautogui.size()
         additional_calibration_required = Settings.static_window
 
         if Settings.static_window:
             MessageLog.print_message("[INFO] Using static window configuration...")
-            window_left = home_news_button[0] - 35  # The x-coordinate of the left edge.
-            window_top = home_menu_button[1] - 25  # The y-coordinate of the top edge.
+            window_left = home_back_button[0] - 50  # The x-coordinate of the left edge.
+            window_top = 0  # The y-coordinate of the top edge.
             window_width = window_left + 500  # The width of the region.
-            window_height = (Settings.home_button_location[1] + 25) - window_top  # The height of the region.
+            window_height = pyautogui.size()[1]  # The height of the region.
         else:
             MessageLog.print_message("[INFO] Using dynamic window configuration...")
             window_left: int = 0
@@ -857,7 +853,7 @@ class Game:
             Game.start_discord_process()
 
             # Calibrate the dimensions of the bot window on bot launch.
-            Game.go_back_home(confirm_location_check = True, display_info_check = True)
+            Game._calibrate_game_window(display_info_check = True)
 
             if Settings.item_name != "EXP":
                 MessageLog.print_message("\n######################################################################")
