@@ -25,6 +25,7 @@ from bot.game_modes.raid import Raid
 from bot.game_modes.rotb import RiseOfTheBeasts
 from bot.game_modes.special import Special
 from bot.game_modes.xeno_clash import XenoClash
+from bot.game_modes.generic import Generic
 
 
 class CaptchaException(Exception):
@@ -910,6 +911,8 @@ class Game:
                     Settings.item_amount_farmed += XenoClash.start(first_run)
                 elif Settings.farming_mode == "Arcarum":
                     Settings.item_amount_farmed += Arcarum.start()
+                elif Settings.farming_mode == "Generic":
+                    Settings.item_amount_farmed += Generic.start()
 
                 if Settings.item_amount_farmed < Settings.item_amount_to_farm:
                     # Generate a resting period if the user enabled it.

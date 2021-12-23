@@ -823,5 +823,11 @@
             "map": "Expedition",
             "items": ["Repeated Runs"]
         }
+    },
+    "Generic": {
+        "Any": {
+            "map": "None",
+            "items": ["Repeated Runs"]
+        }
     }
 }
