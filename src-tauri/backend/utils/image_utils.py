@@ -121,8 +121,8 @@ class ImageUtils:
                 temp_location[1] += int(height / 2)
             else:
                 temp_location = list(ImageUtils._match_location)
-                temp_location[0] += int(pyautogui.size()[0] - (pyautogui.size()[0] / 3)) + int(width / 2)
-                temp_location[1] += int(height / 2)
+                temp_location[0] += (pyautogui.size()[0] - (pyautogui.size()[0] - Settings.window_left)) + int(width / 2)
+                temp_location[1] += (pyautogui.size()[1] - (pyautogui.size()[1] - Settings.window_top)) + int(height / 2)
 
             ImageUtils._match_location = tuple(temp_location)
 
@@ -191,8 +191,8 @@ class ImageUtils:
                     temp_location[1] += int(height / 2)
                 else:
                     temp_location = list(ImageUtils._match_location)
-                    temp_location[0] += int(pyautogui.size()[0] - (pyautogui.size()[0] / 3)) + int(width / 2)
-                    temp_location[1] += int(height / 2)
+                    temp_location[0] += (pyautogui.size()[0] - (pyautogui.size()[0] - Settings.window_left)) + int(width / 2)
+                    temp_location[1] += (pyautogui.size()[1] - (pyautogui.size()[1] - Settings.window_top)) + int(height / 2)
 
                 ImageUtils._match_location = tuple(temp_location)
                 match_locations.append(ImageUtils._match_location)

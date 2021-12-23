@@ -76,9 +76,9 @@ class Game:
         if Settings.static_window:
             MessageLog.print_message("[INFO] Using static window configuration...")
             window_left = home_news_button[0] - 35  # The x-coordinate of the left edge.
-            window_top = home_menu_button[1] - 24  # The y-coordinate of the top edge.
-            window_width = window_left + 410  # The width of the region.
-            window_height = (Settings.home_button_location[1] + 24) - window_top  # The height of the region.
+            window_top = home_menu_button[1] - 25  # The y-coordinate of the top edge.
+            window_width = window_left + 500  # The width of the region.
+            window_height = (Settings.home_button_location[1] + 25) - window_top  # The height of the region.
         else:
             MessageLog.print_message("[INFO] Using dynamic window configuration...")
             window_left: int = 0
