@@ -213,11 +213,11 @@
         },
         "The Aurora Trial": {
             "map": "Elemental Treasure Quests",
-            "items": ["Aurora Fragment"]
+            "items": ["Hellfire Fragment", "Typhoon Fragment"]
         },
         "The Oblivion Trial": {
             "map": "Elemental Treasure Quests",
-            "items": ["Oblivion Fragment"]
+            "items": ["Deluge Fragment", "Wasteland Fragment"]
         },
         "N Angel Halo": {
             "map": "Angel Halo",
