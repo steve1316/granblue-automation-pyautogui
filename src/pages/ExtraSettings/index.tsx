@@ -383,10 +383,10 @@ const ExtraSettings = () => {
                                 checked={bot.settings.configuration.enableDelayBetweenRuns}
                                 onChange={(e) => {
                                     if (e.target.checked && bot.settings.configuration.enableRandomizedDelayBetweenRuns) {
-                                        bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableRandomizedDelayBetweenRuns: e.target.checked } })
+                                        bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableRandomizedDelayBetweenRuns: false } })
                                     }
 
-                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableDelayBetweenRuns: false } })
+                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableDelayBetweenRuns: e.target.checked } })
                                 }}
                             />
                         }
