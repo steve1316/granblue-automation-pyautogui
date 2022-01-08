@@ -530,6 +530,32 @@ class CombatMode:
         return turn_number
 
     @staticmethod
+    def _enable_auto() -> bool:
+        from bot.game import Game
+
+        MessageLog.print_message(f"[COMBAT] Enabling Full Auto.")
+        enable_auto = Game.find_and_click_button("full_auto")
+
+        # If the bot failed to find and click the "Full Auto" button, fallback to the "Semi Auto" button.
+        if enable_auto is False:
+            MessageLog.print_message(f"[COMBAT] Failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
+            MessageLog.print_message(f"Double checking to see if Semi Auto is enabled.")
+
+            enabled_semi_auto_button_location = ImageUtils.find_button("semi_button_enabled")
+            if enabled_semi_auto_button_location is None:
+                # Have the Party attack and then attempt to see if the "Semi Auto" button becomes visible.
+                Game.find_and_click_button("attack")
+
+                Game.wait(2.0)
+
+                enable_auto = Game.find_and_click_button("semi_auto", tries = 5)
+                if enable_auto:
+                    MessageLog.print_message("[COMBAT] Semi Auto is now enabled.")
+
+        return enable_auto
+
+
+    @staticmethod
     def start_combat_mode(script_commands: List[str] = None, is_nightmare: bool = False):
         """Start Combat Mode with the given script file path. Start reading through the text file line by line and have the bot proceed with the commands accordingly.
 
@@ -866,6 +892,36 @@ class CombatMode:
                     Game.wait(3)
 
                 CombatMode._party_wipe_check()
+
+                # Click Next if it is available and enable automation again if combat continues.
+                if Game.find_and_click_button("next", tries = 2, suppress_error = True):
+                    CombatMode._wait_for_attack()
+
+                    if CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True):
+                        MessageLog.print_message("\n######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("[COMBAT] Combat Mode has ended with no loot.")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        return False
+                    elif ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True):
+                        MessageLog.print_message("\n[COMBAT] Battle concluded suddenly.")
+                        MessageLog.print_message("\n######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("[COMBAT] Ending Combat Mode.")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        Game.find_and_click_button("reload")
+                        return True
+                    elif ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True):
+                        MessageLog.print_message("\n######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("[COMBAT] Ending Combat Mode.")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        return True
+                    else:
+                        CombatMode._enable_auto()
         else:
             # Main workflow loop for manually pressing the Attack button and reloading until combat ends.
             while not CombatMode._retreat_check:
