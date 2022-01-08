@@ -407,18 +407,22 @@ class CombatMode:
                 Game.find_and_click_button("summon")
 
                 # Click on the specified Summon.
-                if summon_index == 1:
-                    MouseUtils.move_and_click_point(CombatMode._attack_button_location[0] - 317, CombatMode._attack_button_location[1] + 138, "template_summon", mouse_clicks = 2)
-                elif summon_index == 2:
-                    MouseUtils.move_and_click_point(CombatMode._attack_button_location[0] - 243, CombatMode._attack_button_location[1] + 138, "template_summon", mouse_clicks = 2)
-                elif summon_index == 3:
-                    MouseUtils.move_and_click_point(CombatMode._attack_button_location[0] - 165, CombatMode._attack_button_location[1] + 138, "template_summon", mouse_clicks = 2)
-                elif summon_index == 4:
-                    MouseUtils.move_and_click_point(CombatMode._attack_button_location[0] - 89, CombatMode._attack_button_location[1] + 138, "template_summon", mouse_clicks = 2)
-                elif summon_index == 5:
-                    MouseUtils.move_and_click_point(CombatMode._attack_button_location[0] - 12, CombatMode._attack_button_location[1] + 138, "template_summon", mouse_clicks = 2)
-                else:
-                    MouseUtils.move_and_click_point(CombatMode._attack_button_location[0] + 63, CombatMode._attack_button_location[1] + 138, "template_summon", mouse_clicks = 2)
+                tries = 3
+                while ImageUtils.confirm_location("summon_details", tries = 1) is False:
+                    if summon_index == 1:
+                        MouseUtils.move_and_click_point(CombatMode._attack_button_location[0] - 317, CombatMode._attack_button_location[1] + 138, "template_summon")
+                    elif summon_index == 2:
+                        MouseUtils.move_and_click_point(CombatMode._attack_button_location[0] - 243, CombatMode._attack_button_location[1] + 138, "template_summon")
+                    elif summon_index == 3:
+                        MouseUtils.move_and_click_point(CombatMode._attack_button_location[0] - 165, CombatMode._attack_button_location[1] + 138, "template_summon")
+                    elif summon_index == 4:
+                        MouseUtils.move_and_click_point(CombatMode._attack_button_location[0] - 89, CombatMode._attack_button_location[1] + 138, "template_summon")
+                    elif summon_index == 5:
+                        MouseUtils.move_and_click_point(CombatMode._attack_button_location[0] - 12, CombatMode._attack_button_location[1] + 138, "template_summon")
+                    else:
+                        MouseUtils.move_and_click_point(CombatMode._attack_button_location[0] + 63, CombatMode._attack_button_location[1] + 138, "template_summon")
+
+                    tries -= 1
 
                 # Check if it is able to be summoned.
                 if ImageUtils.confirm_location("summon_details"):
