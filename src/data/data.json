@@ -400,6 +400,10 @@
             "map": "Avatar",
             "items": ["Avatar Anima", "Avatar Omega Anima", "Abyss Striker", "Abyss Spine", "Abyss Gaze", "Zechariah"]
         },
+        "Lvl 120 Osiris": {
+            "map": "Osiris",
+            "items": ["Ancient Cortana", "Cortana", "Obscuritas", "Phantasmas", "Abydos", "Bigeh and Edfu"]
+        },
         "Lvl 100 Michael": {
             "map": "Michael",
             "items": ["Michael Anima"]

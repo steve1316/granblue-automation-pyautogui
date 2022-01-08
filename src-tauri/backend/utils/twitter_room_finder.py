@@ -141,7 +141,10 @@ class TwitterRoomFinder:
         "Lvl 100 Xeno Vohu Manah": "Lv100 ゼノ・ウォフマナフ",
         "Lvl 100 Xeno Sagittarius": "Lv100 ゼノ・サジタリウス",
         "Lvl 100 Xeno Corow": "Lv100 ゼノ・コロゥ",
-        "Lvl 100 Xeno Diablo": "Lv100 ゼノ・ディアボロス"
+        "Lvl 100 Xeno Diablo": "Lv100 ゼノ・ディアボロス",
+
+        # Ennead Raids
+        "Lvl 120 Osiris": "Lv120 オシリス"
     }
 
     _listener = RoomStreamListener()
