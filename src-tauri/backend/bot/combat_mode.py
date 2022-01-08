@@ -460,8 +460,11 @@ class CombatMode:
         return None
 
     @staticmethod
-    def _reload_for_attack():
+    def _reload_for_attack(override: bool = False):
         """Determine whether or not to reload after an Attack.
+
+        Args:
+            override (bool): Override the set checks and reload anyways. Defaults to false.
 
         Returns:
             None
@@ -480,7 +483,7 @@ class CombatMode:
                 dread_barrage_raids.__contains__(Settings.mission_name) or \
                 (Settings.farming_mode == "Proving Grounds" and proving_grounds_raids.__contains__(Settings.mission_name)) or \
                 (Settings.farming_mode == "Guild Wars" and guild_wars_raids.__contains__(Settings.mission_name)) or \
-                xeno_clash_raids.__contains__(Settings.mission_name):
+                xeno_clash_raids.__contains__(Settings.mission_name) or override:
             from bot.game import Game
 
             MessageLog.print_message("[COMBAT] Reloading now.")
@@ -922,6 +925,37 @@ class CombatMode:
                         return True
                     else:
                         CombatMode._enable_auto()
+                elif ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
+                    CombatMode._reload_for_attack(override = True)
+
+                    CombatMode._wait_for_attack()
+
+                    if CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True):
+                        MessageLog.print_message("\n######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("[COMBAT] Combat Mode has ended with no loot.")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        return False
+                    elif ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True):
+                        MessageLog.print_message("\n[COMBAT] Battle concluded suddenly.")
+                        MessageLog.print_message("\n######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("[COMBAT] Ending Combat Mode.")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        Game.find_and_click_button("reload")
+                        return True
+                    elif ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True):
+                        MessageLog.print_message("\n######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("[COMBAT] Ending Combat Mode.")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        return True
+                    else:
+                        CombatMode._enable_auto()
+
         else:
             # Main workflow loop for manually pressing the Attack button and reloading until combat ends.
             while not CombatMode._retreat_check:
