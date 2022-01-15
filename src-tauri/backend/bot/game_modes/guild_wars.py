@@ -62,12 +62,14 @@ class GuildWars:
 
             Game.wait(1.0)
 
+            raid_battle_locations = ImageUtils.find_all("event_raid_battle")
+
             # Perform different navigation actions based on whether the user wants to farm meat or to farm Nightmares.
             if difficulty == "Very Hard" or difficulty == "Extreme" or difficulty == "Extreme+":
                 MessageLog.print_message(f"\n[GUILD.WARS] Now proceeding to farm meat.")
 
                 # Click on the banner to farm meat.
-                Game.find_and_click_button("guild_wars_meat")
+                MouseUtils.move_and_click_point(raid_battle_locations[1][0], raid_battle_locations[1][1], "event_raid_battle")
 
                 Game.wait(1.0)
 
@@ -95,9 +97,9 @@ class GuildWars:
 
                 # Click on the banner to farm Nightmares.
                 if difficulty != "NM150":
-                    Game.find_and_click_button("guild_wars_nightmare")
+                    MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
                     if not ImageUtils.wait_vanish("guild_wars_nightmare", timeout = 10):
-                        Game.find_and_click_button("guild_wars_nightmare")
+                        MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
                 else:
                     MessageLog.print_message(f"\n[GUILD.WARS] Now hosting NM150 now...")
                     Game.find_and_click_button("guild_wars_nightmare_150")
