@@ -78,10 +78,27 @@ class GuildWars:
                     formatted_mission_name = difficulty.replace(" ", "_")
                     tries = 10
                     MessageLog.print_message(f"[GUILD.WARS] Now hosting {difficulty} now...")
-                    while ImageUtils.wait_vanish("ap_30", timeout = 1) is False:
-                        Game.find_and_click_button(f"guild_wars_meat_{formatted_mission_name}", x_offset = random.randrange(-30, 30), y_offset = random.randrange(-60, -40))
 
-                        Game.wait(3)
+                    ap_locations = ImageUtils.find_all("ap_30")
+
+                    if difficulty == "Very Hard":
+                        MouseUtils.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap_30")
+                    elif difficulty == "Extreme":
+                        MouseUtils.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap_30")
+                    elif difficulty == "Extreme+":
+                        MouseUtils.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap_30")
+
+                    Game.wait(3.0)
+
+                    while ImageUtils.wait_vanish("ap_30", timeout = 3) is False:
+                        if difficulty == "Very Hard":
+                            MouseUtils.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap_30")
+                        elif difficulty == "Extreme":
+                            MouseUtils.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap_30")
+                        elif difficulty == "Extreme+":
+                            MouseUtils.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap_30")
+
+                        Game.wait(3.0)
 
                         tries -= 1
                         if tries <= 0:
