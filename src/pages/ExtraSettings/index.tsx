@@ -415,9 +415,7 @@ const ExtraSettings = () => {
 
                         <Grid item xs={6} />
                     </Grid>
-                ) : (
-                    ""
-                )}
+                ) : null}
 
                 <FormGroup sx={{ paddingBottom: "16px" }}>
                     <FormControlLabel
@@ -492,9 +490,7 @@ const ExtraSettings = () => {
                             />
                         </Grid>
                     </Grid>
-                ) : (
-                    ""
-                )}
+                ) : null}
 
                 <FormGroup sx={{ paddingBottom: "16px" }}>
                     <FormControlLabel
@@ -532,9 +528,7 @@ const ExtraSettings = () => {
                         </Grid>
                         <Grid item xs={6} />
                     </Grid>
-                ) : (
-                    ""
-                )}
+                ) : null}
 
                 <FormGroup sx={{ paddingBottom: "16px" }}>
                     <FormControlLabel
@@ -698,9 +692,7 @@ const ExtraSettings = () => {
                                 </Grid>
                             </Grid>
                         </Stack>
-                    ) : (
-                        ""
-                    )}
+                    ) : null}
                 </div>
             )
         }

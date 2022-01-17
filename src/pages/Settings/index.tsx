@@ -337,9 +337,7 @@ const Settings = () => {
                             />
                             <FormHelperText>Enable additional settings to show up in the Extra Settings page.</FormHelperText>
                         </FormGroup>
-                    ) : (
-                        ""
-                    )}
+                    ) : null}
 
                     {botStateContext.settings.game.farmingMode === "Arcarum" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
@@ -356,9 +354,7 @@ const Settings = () => {
                             />
                             <FormHelperText>Enable this option to have the bot upon encountering a Arcarum Boss (3-3, 6-3, 9-9).</FormHelperText>
                         </FormGroup>
-                    ) : (
-                        ""
-                    )}
+                    ) : null}
 
                     {/* Select Item */}
                     <Autocomplete
