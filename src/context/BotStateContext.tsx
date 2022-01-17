@@ -79,6 +79,10 @@ export interface Settings {
     arcarum: {
         enableStopOnArcarumBoss: boolean
     }
+
+    generic: {
+        enableForceReload: boolean
+    }
 }
 
 // Set the default settings.
@@ -145,6 +149,9 @@ export const defaultSettings: Settings = {
     },
     arcarum: {
         enableStopOnArcarumBoss: true,
+    },
+    generic: {
+        enableForceReload: false,
     },
 }
 

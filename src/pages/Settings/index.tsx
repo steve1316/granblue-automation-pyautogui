@@ -356,6 +356,26 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
+                    {botStateContext.settings.game.farmingMode === "Generic" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={botStateContext.settings.generic.enableForceReload}
+                                        onChange={(e) =>
+                                            botStateContext.setSettings({ ...botStateContext.settings, generic: { ...botStateContext.settings.generic, enableForceReload: e.target.checked } })
+                                        }
+                                    />
+                                }
+                                label="Enable Forcing Reload after Attack"
+                            />
+                            <FormHelperText>
+                                Enable this option to force Generic Farming Mode to reload after an attack. This does not take into account whether or not the current battle supports reloading after
+                                an attack.
+                            </FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
                     {/* Select Item */}
                     <Autocomplete
                         options={itemList.map((element) => element)}

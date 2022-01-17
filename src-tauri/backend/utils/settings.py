@@ -118,6 +118,10 @@ class Settings:
     # #### arcarum ####
     enable_stop_on_arcarum_boss: bool = _data["arcarum"]["enableStopOnArcarumBoss"]
     # #### end of arcarum ####
+
+    # #### generic ####
+    enable_force_reload: bool = _data["generic"]["enableForceReload"]
+    # #### end of generic ####
     # ################## end of settings.json ###################
     #############################################################
 
