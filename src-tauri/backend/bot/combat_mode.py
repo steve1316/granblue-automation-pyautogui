@@ -474,7 +474,7 @@ class CombatMode:
         rotb_raids = ["EX Zhuque", "EX Xuanwu", "EX Baihu", "EX Qinglong", "Lvl 100 Shenxian"]
         dread_barrage_raids = ["1 Star", "2 Star", "3 Star", "4 Star", "5 Star"]
         proving_grounds_raids = ["Extreme", "Extreme+"]
-        guild_wars_raids = ["Very Hard", "Extreme", "Extreme+", "NM90", "NM100", "NM150"]
+        guild_wars_raids = ["Very Hard", "Extreme", "Extreme+", "NM90", "NM95", "NM100", "NM150"]
         xeno_clash_raids = ["Xeno Clash Raid"]
 
         if Settings.farming_mode == "Raid" or \
