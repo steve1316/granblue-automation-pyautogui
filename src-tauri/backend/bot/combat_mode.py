@@ -436,11 +436,11 @@ class CombatMode:
         return None
 
     @staticmethod
-    def _wait_for_attack():
+    def _wait_for_attack() -> bool:
         """Wait for several tries until the bot sees either the Attack or the Next button before starting a new turn.
 
         Returns:
-            None
+            (bool): True if Attack ended into the next Turn. False if Attack ended but combat also ended as well.
         """
         MessageLog.print_message("\n[COMBAT] Now waiting for attack to end...")
         tries = 10
@@ -455,13 +455,13 @@ class CombatMode:
 
                 if ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True) is True or \
                         ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True) is True:
-                    break
+                    return False
 
             tries -= 1
 
         MessageLog.print_message("[COMBAT] Attack ended.")
 
-        return None
+        return True
 
     @staticmethod
     def _check_raid() -> bool:
@@ -914,8 +914,6 @@ class CombatMode:
                 if CombatMode._check_raid():
                     # Click Next if it is available and enable automation again if combat continues.
                     if Game.find_and_click_button("next", tries = 2, suppress_error = True):
-                        CombatMode._wait_for_attack()
-
                         if CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True):
                             MessageLog.print_message("\n######################################################################")
                             MessageLog.print_message("######################################################################")
@@ -970,8 +968,11 @@ class CombatMode:
                             MessageLog.print_message("######################################################################")
                             return True
                         else:
-                            CombatMode._enable_auto()
+                            MessageLog.print_message("[COMBAT] Clicked the Next button to move to the next wave. Attempting to restart Full/Semi Auto...")
+                            if CombatMode._wait_for_attack():
+                                CombatMode._enable_auto()
                 elif ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
+                    MessageLog.print_message("[COMBAT] Attack and Next buttons have vanished. Determining if bot should reload...")
                     CombatMode._reload_for_attack()
         else:
             # Main workflow loop for manually pressing the Attack button and reloading until combat ends.
