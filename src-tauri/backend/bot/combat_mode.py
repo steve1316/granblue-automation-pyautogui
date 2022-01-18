@@ -317,6 +317,33 @@ class CombatMode:
         return None
 
     @staticmethod
+    def _wait_execute(command_list: List[str], fallback_delay: float = 1.0):
+        """Execute a wait command.
+
+        Args:
+            command_list (List[str]): A split list of the command by its "." delimiter with the "wait" command being the first element.
+            fallback_delay (float): A default delay if the wait command was invalid. Defaults to 1.0 second.
+
+        Returns:
+            None
+        """
+        from bot.game import Game
+
+        # Isolate the seconds inside the command.
+        if command_list[0].__contains__(")"):
+            wait_command: str = command_list[0].split("(")[1].replace(")", "")
+        else:
+            wait_command: str = command_list[0].split("(")[1] + "." + command_list[1].replace(")", "")
+
+        try:
+            wait_seconds: float = float(wait_command)
+            MessageLog.print_message(f"[COMBAT] Now waiting {wait_seconds} second(s).")
+            Game.wait(wait_seconds)
+        except ValueError:
+            MessageLog.print_message(f"[COMBAT] Could not parse out the seconds in the wait command. Waiting {fallback_delay} second(s) as fallback.")
+            Game.wait(fallback_delay)
+
+    @staticmethod
     def _use_character_skill(character_selected: int, skill_command_list: List[str]):
         """Activate the specified skill(s) for the already selected character.
 
@@ -331,57 +358,67 @@ class CombatMode:
 
         # Execute every skill command in the list.
         while len(skill_command_list) > 0:
-            skill = skill_command_list.pop(0)
-
-            if skill == "useskill(1)":
-                MessageLog.print_message(f"[COMBAT] Character {character_selected} uses Skill 1.")
-                x = CombatMode._attack_button_location[0] - 213
-            elif skill == "useskill(2)":
-                MessageLog.print_message(f"[COMBAT] Character {character_selected} uses Skill 2.")
-                x = CombatMode._attack_button_location[0] - 132
-            elif skill == "useskill(3)":
-                MessageLog.print_message(f"[COMBAT] Character {character_selected} uses Skill 3.")
-                x = CombatMode._attack_button_location[0] - 51
-            elif skill == "useskill(4)":
-                MessageLog.print_message(f"[COMBAT] Character {character_selected} uses Skill 4.")
-                x = CombatMode._attack_button_location[0] + 39
+            if skill_command_list[0].__contains__("wait"):
+                CombatMode._wait_execute(skill_command_list)
+                skill_command_list.pop(0)
             else:
-                MessageLog.print_message(f"[WARNING] Invalid command received for using the Character's Skill. User wanted: {skill}.")
-                return
+                skill = skill_command_list.pop(0)
 
-            y = CombatMode._attack_button_location[1] + 171
+                if skill == "useskill(1)":
+                    MessageLog.print_message(f"[COMBAT] Character {character_selected} uses Skill 1.")
+                    x = CombatMode._attack_button_location[0] - 213
+                elif skill == "useskill(2)":
+                    MessageLog.print_message(f"[COMBAT] Character {character_selected} uses Skill 2.")
+                    x = CombatMode._attack_button_location[0] - 132
+                elif skill == "useskill(3)":
+                    MessageLog.print_message(f"[COMBAT] Character {character_selected} uses Skill 3.")
+                    x = CombatMode._attack_button_location[0] - 51
+                elif skill == "useskill(4)":
+                    MessageLog.print_message(f"[COMBAT] Character {character_selected} uses Skill 4.")
+                    x = CombatMode._attack_button_location[0] + 39
+                else:
+                    MessageLog.print_message(f"[WARNING] Invalid command received for using the Character's Skill. User wanted: {skill}.")
+                    Game.find_and_click_button("back")
+                    return
 
-            MouseUtils.move_and_click_point(x, y, "template_skill")
+                y = CombatMode._attack_button_location[1] + 171
 
-            # Check if the skill requires a target.
-            if len(skill_command_list) > 0 and ImageUtils.confirm_location("use_skill", tries = 2):
-                MessageLog.print_message(f"[COMBAT] Skill is awaiting a target...")
-                target = skill_command_list.pop(0)
+                MouseUtils.move_and_click_point(x, y, "template_skill")
 
-                select_a_character_location = ImageUtils.find_button("select_a_character")
-                if target == "target(1)":
-                    MessageLog.print_message("[COMBAT] Targeting Character 1 for Skill.")
-                    MouseUtils.move_and_click_point(select_a_character_location[0] - 90, select_a_character_location[1] + 85, "template_target")
-                elif "target(2)" in target:
-                    MessageLog.print_message("[COMBAT] Targeting Character 2 for Skill.")
-                    MouseUtils.move_and_click_point(select_a_character_location[0], select_a_character_location[1] + 85, "template_target")
-                elif "target(3)" in target:
-                    MessageLog.print_message("[COMBAT] Targeting Character 3 for Skill.")
-                    MouseUtils.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 85, "template_target")
-                elif "target(4)" in target:
-                    MessageLog.print_message("[COMBAT] Targeting Character 4 for Skill.")
-                    MouseUtils.move_and_click_point(select_a_character_location[0] - 90, select_a_character_location[1] + 250, "template_target")
-                elif "target(5)" in target:
-                    MessageLog.print_message("[COMBAT] Targeting Character 5 for Skill.")
-                    MouseUtils.move_and_click_point(select_a_character_location[0], select_a_character_location[1] + 250, "template_target")
-                elif "target(6)" in target:
-                    MessageLog.print_message("[COMBAT] Targeting Character 6 for Skill.")
-                    MouseUtils.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 250, "template_target")
+                # Check if the skill requires a target.
+                if len(skill_command_list) > 0 and ImageUtils.confirm_location("use_skill", tries = 2):
+                    MessageLog.print_message(f"[COMBAT] Skill is awaiting a target...")
+                    target = skill_command_list.pop(0)
 
-            # Else, check if the character is skill-sealed.
-            elif ImageUtils.confirm_location("skill_unusable", tries = 2):
-                MessageLog.print_message("[COMBAT] Character is currently skill-sealed. Unable to execute command.")
-                Game.find_and_click_button("cancel")
+                    select_a_character_location = ImageUtils.find_button("select_a_character")
+                    if target == "target(1)":
+                        MessageLog.print_message("[COMBAT] Targeting Character 1 for Skill.")
+                        MouseUtils.move_and_click_point(select_a_character_location[0] - 90, select_a_character_location[1] + 85, "template_target")
+                    elif "target(2)" in target:
+                        MessageLog.print_message("[COMBAT] Targeting Character 2 for Skill.")
+                        MouseUtils.move_and_click_point(select_a_character_location[0], select_a_character_location[1] + 85, "template_target")
+                    elif "target(3)" in target:
+                        MessageLog.print_message("[COMBAT] Targeting Character 3 for Skill.")
+                        MouseUtils.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 85, "template_target")
+                    elif "target(4)" in target:
+                        MessageLog.print_message("[COMBAT] Targeting Character 4 for Skill.")
+                        MouseUtils.move_and_click_point(select_a_character_location[0] - 90, select_a_character_location[1] + 250, "template_target")
+                    elif "target(5)" in target:
+                        MessageLog.print_message("[COMBAT] Targeting Character 5 for Skill.")
+                        MouseUtils.move_and_click_point(select_a_character_location[0], select_a_character_location[1] + 250, "template_target")
+                    elif "target(6)" in target:
+                        MessageLog.print_message("[COMBAT] Targeting Character 6 for Skill.")
+                        MouseUtils.move_and_click_point(select_a_character_location[0] + 90, select_a_character_location[1] + 250, "template_target")
+                    elif "wait" in target:
+                        CombatMode._wait_execute(list(target))
+                    else:
+                        MessageLog.print_message("[WARNING] Invalid command received for Skill targeting.")
+                        Game.find_and_click_button("cancel")
+
+                # Else, check if the character is skill-sealed.
+                elif ImageUtils.confirm_location("skill_unusable", tries = 2):
+                    MessageLog.print_message("[COMBAT] Character is currently skill-sealed. Unable to execute command.")
+                    Game.find_and_click_button("cancel")
 
         # Once all the commands for the selected Character have been processed, click the "Back" button to return.
         Game.find_and_click_button("back")
@@ -399,7 +436,7 @@ class CombatMode:
             None
         """
         for summon_index in range(1, 7):
-            if command == f"summon({summon_index})":
+            if f"summon({summon_index})" in command:
                 from bot.game import Game
 
                 # Click the "Summon" button to bring up the available Summons.
@@ -432,6 +469,11 @@ class CombatMode:
 
                 # Click the "Back" button to return.
                 Game.find_and_click_button("back", tries = 1)
+
+        if "wait" in command:
+            split_command = command.split(".")
+            split_command.pop(0)
+            CombatMode._wait_execute(split_command)
 
         return None
 
@@ -707,12 +749,17 @@ class CombatMode:
                     CombatMode._tweet_backup()
                 elif CombatMode._healing_item_commands.__contains__(command):
                     CombatMode._use_combat_healing_item(command)
-                elif command.__contains__("summon") and command != "quicksummon":
+                elif command.__contains__("summon") and command.__contains__("quicksummon") is False:
                     CombatMode._use_summon(command)
-                elif command == "quicksummon":
+                elif command.__contains__("quicksummon"):
                     MessageLog.print_message("[COMBAT] Quick Summoning now...")
                     if Game.find_and_click_button("quick_summon1") or Game.find_and_click_button("quick_summon2"):
                         MessageLog.print_message("[COMBAT] Successfully quick summoned!")
+
+                        if "wait" in command:
+                            split_command = command.split(".")
+                            split_command.pop(0)
+                            CombatMode._wait_execute(split_command)
                     else:
                         MessageLog.print_message("[COMBAT] Was not able to quick summon this Turn.")
                 elif command == "enablesemiauto":
