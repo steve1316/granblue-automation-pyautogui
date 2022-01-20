@@ -113,6 +113,8 @@ class GuildWars:
             else:
                 MessageLog.print_message(f"\n[GUILD.WARS] Now proceeding to farm Nightmares.")
 
+                start_check_for_nm150 = False
+
                 # Click on the banner to farm Nightmares.
                 if difficulty != "NM150":
                     if len(raid_battle_locations) < 3:
@@ -129,7 +131,7 @@ class GuildWars:
                             Game.find_and_click_button("guild_wars_nightmare_150")
 
                         if ImageUtils.confirm_location("guild_wars_nightmare"):
-                        Game.find_and_click_button("start")
+                            start_check_for_nm150 = Game.find_and_click_button("start")
 
                 if difficulty != "NM150" and ImageUtils.confirm_location("guild_wars_nightmare"):
                     nightmare_locations = ImageUtils.find_all("guild_wars_nightmares")
@@ -155,7 +157,7 @@ class GuildWars:
                         MessageLog.print_message(f"[GUILD.WARS] Now hosting NM100 now...")
                         MouseUtils.move_and_click_point(nightmare_locations[2][0], nightmare_locations[2][1], "guild_wars_nightmares")
 
-                else:
+                elif start_check_for_nm150 is False:
                     # If there is not enough meat to host, host Extreme+ instead.
                     MessageLog.print_message(f"\n[GUILD.WARS] User lacks meat to host the Nightmare. Hosting Extreme+ instead...")
 
