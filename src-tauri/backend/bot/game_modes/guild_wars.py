@@ -1,5 +1,3 @@
-import random
-
 from utils.settings import Settings
 from utils.message_log import MessageLog
 from utils.image_utils import ImageUtils
@@ -69,7 +67,10 @@ class GuildWars:
                 MessageLog.print_message(f"\n[GUILD.WARS] Now proceeding to farm meat.")
 
                 # Click on the banner to farm meat.
-                MouseUtils.move_and_click_point(raid_battle_locations[1][0], raid_battle_locations[1][1], "event_raid_battle")
+                if len(raid_battle_locations) < 3:
+                    MouseUtils.move_and_click_point(raid_battle_locations[1][0], raid_battle_locations[1][1], "event_raid_battle")
+                else:
+                    MouseUtils.move_and_click_point(raid_battle_locations[2][0], raid_battle_locations[2][1], "event_raid_battle")
 
                 Game.wait(1.0)
 
@@ -114,16 +115,20 @@ class GuildWars:
 
                 # Click on the banner to farm Nightmares.
                 if difficulty != "NM150":
-                    MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
-                    if not ImageUtils.wait_vanish("guild_wars_nightmare", timeout = 10):
+                    if len(raid_battle_locations) < 3:
                         MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
+                    else:
+                        MouseUtils.move_and_click_point(raid_battle_locations[1][0], raid_battle_locations[1][1], "event_raid_battle")
                 else:
                     MessageLog.print_message(f"\n[GUILD.WARS] Now hosting NM150 now...")
-                    Game.find_and_click_button("guild_wars_nightmare_150")
-                    if not ImageUtils.wait_vanish("guild_wars_nightmare_150", timeout = 10):
-                        Game.find_and_click_button("guild_wars_nightmare_150")
 
-                    if ImageUtils.confirm_location("guild_wars_nightmare"):
+                    if len(raid_battle_locations) >= 3:
+                        MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
+
+                        if not ImageUtils.wait_vanish("guild_wars_nightmare_150", timeout = 10):
+                            Game.find_and_click_button("guild_wars_nightmare_150")
+
+                        if ImageUtils.confirm_location("guild_wars_nightmare"):
                         Game.find_and_click_button("start")
 
                 if difficulty != "NM150" and ImageUtils.confirm_location("guild_wars_nightmare"):
@@ -160,7 +165,10 @@ class GuildWars:
                         Game.find_and_click_button("cancel")
 
                     # Click on the banner to farm meat.
-                    Game.find_and_click_button("guild_wars_meat")
+                    if len(raid_battle_locations) < 3:
+                        MouseUtils.move_and_click_point(raid_battle_locations[1][0], raid_battle_locations[1][1], "event_raid_battle")
+                    else:
+                        MouseUtils.move_and_click_point(raid_battle_locations[2][0], raid_battle_locations[2][1], "event_raid_battle")
 
                     if ImageUtils.confirm_location("guild_wars_meat"):
                         MessageLog.print_message(f"[GUILD.WARS] Now hosting Extreme+ now...")
