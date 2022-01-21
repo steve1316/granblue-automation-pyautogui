@@ -27,14 +27,22 @@ class CombatMode:
                               "usesupportpotion", "useclarityherb.target(1)", "useclarityherb.target(2)", "useclarityherb.target(3)", "useclarityherb.target(4)", "userevivalpotion"]
 
     # Save some variables for use throughout the class.
+    _semi_auto = False
+    _full_auto = False
     _attack_button_location = None
     _retreat_check = False
     _start_time: float = None
     _list_of_exit_events_for_false = ["Time Exceeded", "No Loot"]
     _list_of_exit_events_for_true = ["Battle Concluded", "Exp Gained"]
 
+    ######################################################################
+    ######################################################################
+    # Checks
+    ######################################################################
+    ######################################################################
+
     @staticmethod
-    def _party_wipe_check():
+    def _check_for_wipe():
         """Check to see if the Party has wiped during Combat Mode. Update the retreat check flag if so.
 
         Returns:
@@ -88,7 +96,7 @@ class CombatMode:
         return None
 
     @staticmethod
-    def _find_dialog_in_combat():
+    def _check_for_dialog():
         """Check if there are dialog popups from either Lyria or Vyrn and click them away.
 
         Returns:
@@ -145,6 +153,218 @@ class CombatMode:
             raise CombatModeException("Exp Gained")
         else:
             return "Nothing"
+
+    @staticmethod
+    def _check_raid() -> bool:
+        """Check if the current battle is a raid.
+
+        Returns:
+            (bool): True if the current battle is a Raid.
+        """
+        event_raids = ["VH Event Raid", "EX Event Raid", "IM Event Raid"]
+        rotb_raids = ["EX Zhuque", "EX Xuanwu", "EX Baihu", "EX Qinglong", "Lvl 100 Shenxian"]
+        dread_barrage_raids = ["1 Star", "2 Star", "3 Star", "4 Star", "5 Star"]
+        proving_grounds_raids = ["Extreme", "Extreme+"]
+        guild_wars_raids = ["Very Hard", "Extreme", "Extreme+", "NM90", "NM95", "NM100", "NM150"]
+        xeno_clash_raids = ["Xeno Clash Raid"]
+
+        if Settings.farming_mode == "Raid" or \
+                event_raids.__contains__(Settings.mission_name) or \
+                rotb_raids.__contains__(Settings.mission_name) or \
+                dread_barrage_raids.__contains__(Settings.mission_name) or \
+                (Settings.farming_mode == "Proving Grounds" and proving_grounds_raids.__contains__(Settings.mission_name)) or \
+                (Settings.farming_mode == "Guild Wars" and guild_wars_raids.__contains__(Settings.mission_name)) or \
+                xeno_clash_raids.__contains__(Settings.mission_name):
+            return True
+        else:
+            return False
+
+    @staticmethod
+    def _wait_for_attack() -> bool:
+        """Wait for several tries until the bot sees either the Attack or the Next button before starting a new turn.
+
+        Returns:
+            (bool): True if Attack ended into the next Turn. False if Attack ended but combat also ended as well.
+        """
+        MessageLog.print_message("\n[COMBAT] Now waiting for attack to end...")
+        tries = 10
+        while tries > 0 and not CombatMode._retreat_check and ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and \
+                ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
+            # Stagger the checks for dialog popups.
+            if tries % 2 == 0:
+                CombatMode._check_for_dialog()
+
+                # Check if the Party wiped after attacking.
+                CombatMode._check_for_wipe()
+
+                if ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True) is True or \
+                        ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True) is True:
+                    return False
+
+            tries -= 1
+
+        MessageLog.print_message("[COMBAT] Attack ended.")
+
+        return True
+
+    ######################################################################
+    ######################################################################
+    # Helper Methods
+    ######################################################################
+    ######################################################################
+
+    @staticmethod
+    def _select_character(character_number: int):
+        """Selects the portrait of the character specified on the Combat screen.
+
+        Args:
+            character_number (int): The character that needs to be selected on the Combat screen.
+
+        Returns:
+            None
+        """
+        if character_number == 1:
+            x = CombatMode._attack_button_location[0] - 317
+        elif character_number == 2:
+            x = CombatMode._attack_button_location[0] - 240
+        elif character_number == 3:
+            x = CombatMode._attack_button_location[0] - 158
+        elif character_number == 4:
+            x = CombatMode._attack_button_location[0] - 76
+        else:
+            MessageLog.print_message(f"[WARNING] Invalid command received for selecting a Character. User wanted to select Character #{character_number}.")
+            return
+
+        y = CombatMode._attack_button_location[1] + 123
+
+        # Double-clicking the character portrait to avoid any non-invasive popups from other Raid participants.
+        MouseUtils.move_and_click_point(x, y, "template_character", mouse_clicks = 2)
+
+        return None
+
+    @staticmethod
+    def _reload_for_attack(override: bool = False):
+        """Determine whether or not to reload after an Attack.
+
+        Args:
+            override (bool): Override the set checks and reload anyways. Defaults to false.
+
+        Returns:
+            None
+        """
+        # If the "Cancel" button vanishes, that means the attack is in-progress. Now reload the page and wait for either the attack to finish or Battle ended.
+        if CombatMode._check_raid() or override or (Settings.farming_mode == "Generic" and Settings.enable_force_reload):
+            from bot.game import Game
+
+            MessageLog.print_message("[COMBAT] Reloading now.")
+            Game.find_and_click_button("reload")
+            Game.wait(3.0)
+
+        return None
+
+    @staticmethod
+    def _process_incorrect_turn(turn_number: int) -> int:
+        """Processes the current turn manually in order to get the bot to the expected turn number.
+
+        Args:
+            turn_number (int): The current turn number.
+
+        Returns:
+            (int): The incremented turn number.
+        """
+        from bot.game import Game
+
+        MessageLog.print_message(f"[COMBAT] Starting Turn {turn_number}.")
+
+        # Clear any detected dialog popups that might obstruct the "Attack" button.
+        CombatMode._check_for_dialog()
+
+        # Click the "Attack" button.
+        MessageLog.print_message(f"[COMBAT] Ending Turn {turn_number}.")
+        Game.find_and_click_button("attack", tries = 10)
+
+        # Wait until the "Cancel" button vanishes from the screen.
+        if ImageUtils.find_button("combat_cancel", tries = 3) is not None:
+            while ImageUtils.wait_vanish("combat_cancel", timeout = 5) is False:
+                if Settings.debug_mode:
+                    MessageLog.print_message("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
+                Game.wait(1)
+
+        CombatMode._reload_for_attack()
+        CombatMode._wait_for_attack()
+
+        MessageLog.print_message(f"[COMBAT] Turn {turn_number} has ended.")
+
+        if Game.find_and_click_button("next", tries = 1, suppress_error = True):
+            Game.wait(3)
+
+        turn_number += 1
+
+        return turn_number
+
+    @staticmethod
+    def _enable_auto() -> bool:
+        """Enable Full/Semi auto for this battle.
+
+        Returns:
+            (bool): True if Full/Semi auto is enabled.
+        """
+        from bot.game import Game
+
+        MessageLog.print_message(f"[COMBAT] Enabling Full Auto.")
+        enable_auto = Game.find_and_click_button("full_auto")
+
+        # If the bot failed to find and click the "Full Auto" button, fallback to the "Semi Auto" button.
+        if enable_auto is False:
+            MessageLog.print_message(f"[COMBAT] Failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
+            MessageLog.print_message(f"Double checking to see if Semi Auto is enabled.")
+
+            enabled_semi_auto_button_location = ImageUtils.find_button("semi_button_enabled")
+            if enabled_semi_auto_button_location is None:
+                # Have the Party attack and then attempt to see if the "Semi Auto" button becomes visible.
+                Game.find_and_click_button("attack")
+
+                Game.wait(2.0)
+
+                enable_auto = Game.find_and_click_button("semi_auto", tries = 5)
+                if enable_auto:
+                    MessageLog.print_message("[COMBAT] Semi Auto is now enabled.")
+
+        return enable_auto
+
+    ######################################################################
+    ######################################################################
+    # Commands
+    ######################################################################
+    ######################################################################
+
+    @staticmethod
+    def _wait_execute(command_list: List[str], fallback_delay: float = 1.0):
+        """Execute a wait command.
+
+        Args:
+            command_list (List[str]): A split list of the command by its "." delimiter with the "wait" command being the first element.
+            fallback_delay (float): A default delay if the wait command was invalid. Defaults to 1.0 second.
+
+        Returns:
+            None
+        """
+        from bot.game import Game
+
+        # Isolate the seconds inside the command.
+        if command_list[0].__contains__(")"):
+            wait_command: str = command_list[0].split("(")[1].replace(")", "")
+        else:
+            wait_command: str = command_list[0].split("(")[1] + "." + command_list[1].replace(")", "")
+
+        try:
+            wait_seconds: float = float(wait_command)
+            MessageLog.print_message(f"[COMBAT] Now waiting {wait_seconds} second(s).")
+            Game.wait(wait_seconds)
+        except ValueError:
+            MessageLog.print_message(f"[COMBAT] Could not parse out the seconds in the wait command. Waiting {fallback_delay} second(s) as fallback.")
+            Game.wait(fallback_delay)
+
     @staticmethod
     def _use_combat_healing_item(command: str):
         """Uses the specified healing item during Combat mode with an optional target if the item needs it.
@@ -310,35 +530,6 @@ class CombatMode:
         return None
 
     @staticmethod
-    def _select_character(character_number: int):
-        """Selects the portrait of the character specified on the Combat screen.
-
-        Args:
-            character_number (int): The character that needs to be selected on the Combat screen.
-
-        Returns:
-            None
-        """
-        if character_number == 1:
-            x = CombatMode._attack_button_location[0] - 317
-        elif character_number == 2:
-            x = CombatMode._attack_button_location[0] - 240
-        elif character_number == 3:
-            x = CombatMode._attack_button_location[0] - 158
-        elif character_number == 4:
-            x = CombatMode._attack_button_location[0] - 76
-        else:
-            MessageLog.print_message(f"[WARNING] Invalid command received for selecting a Character. User wanted to select Character #{character_number}.")
-            return
-
-        y = CombatMode._attack_button_location[1] + 123
-
-        # Double-clicking the character portrait to avoid any non-invasive popups from other Raid participants.
-        MouseUtils.move_and_click_point(x, y, "template_character", mouse_clicks = 2)
-
-        return None
-
-    @staticmethod
     def _select_enemy_target(command: str):
         """Selects the targeted enemy.
 
@@ -366,33 +557,6 @@ class CombatMode:
                 MessageLog.print_message(f"[COMBAT] Targeted Enemy #{target}.")
 
         return None
-
-    @staticmethod
-    def _wait_execute(command_list: List[str], fallback_delay: float = 1.0):
-        """Execute a wait command.
-
-        Args:
-            command_list (List[str]): A split list of the command by its "." delimiter with the "wait" command being the first element.
-            fallback_delay (float): A default delay if the wait command was invalid. Defaults to 1.0 second.
-
-        Returns:
-            None
-        """
-        from bot.game import Game
-
-        # Isolate the seconds inside the command.
-        if command_list[0].__contains__(")"):
-            wait_command: str = command_list[0].split("(")[1].replace(")", "")
-        else:
-            wait_command: str = command_list[0].split("(")[1] + "." + command_list[1].replace(")", "")
-
-        try:
-            wait_seconds: float = float(wait_command)
-            MessageLog.print_message(f"[COMBAT] Now waiting {wait_seconds} second(s).")
-            Game.wait(wait_seconds)
-        except ValueError:
-            MessageLog.print_message(f"[COMBAT] Could not parse out the seconds in the wait command. Waiting {fallback_delay} second(s) as fallback.")
-            Game.wait(fallback_delay)
 
     @staticmethod
     def _use_character_skill(character_selected: int, skill_command_list: List[str]):
@@ -529,142 +693,81 @@ class CombatMode:
         return None
 
     @staticmethod
-    def _wait_for_attack() -> bool:
-        """Wait for several tries until the bot sees either the Attack or the Next button before starting a new turn.
-
-        Returns:
-            (bool): True if Attack ended into the next Turn. False if Attack ended but combat also ended as well.
-        """
-        MessageLog.print_message("\n[COMBAT] Now waiting for attack to end...")
-        tries = 10
-        while tries > 0 and not CombatMode._retreat_check and ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and \
-                ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
-            # Stagger the checks for dialog popups.
-            if tries % 2 == 0:
-                CombatMode._find_dialog_in_combat()
-
-                # Check if the Party wiped after attacking.
-                CombatMode._party_wipe_check()
-
-                if ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True) is True or \
-                        ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True) is True:
-                    return False
-
-            tries -= 1
-
-        MessageLog.print_message("[COMBAT] Attack ended.")
-
-        return True
-
-    @staticmethod
-    def _check_raid() -> bool:
-        """Check if the current battle is a raid.
-
-        Returns:
-            (bool): True if the current battle is a Raid.
-        """
-        event_raids = ["VH Event Raid", "EX Event Raid", "IM Event Raid"]
-        rotb_raids = ["EX Zhuque", "EX Xuanwu", "EX Baihu", "EX Qinglong", "Lvl 100 Shenxian"]
-        dread_barrage_raids = ["1 Star", "2 Star", "3 Star", "4 Star", "5 Star"]
-        proving_grounds_raids = ["Extreme", "Extreme+"]
-        guild_wars_raids = ["Very Hard", "Extreme", "Extreme+", "NM90", "NM95", "NM100", "NM150"]
-        xeno_clash_raids = ["Xeno Clash Raid"]
-
-        if Settings.farming_mode == "Raid" or \
-                event_raids.__contains__(Settings.mission_name) or \
-                rotb_raids.__contains__(Settings.mission_name) or \
-                dread_barrage_raids.__contains__(Settings.mission_name) or \
-                (Settings.farming_mode == "Proving Grounds" and proving_grounds_raids.__contains__(Settings.mission_name)) or \
-                (Settings.farming_mode == "Guild Wars" and guild_wars_raids.__contains__(Settings.mission_name)) or \
-                xeno_clash_raids.__contains__(Settings.mission_name):
-            return True
-        else:
-            return False
-
-    @staticmethod
-    def _reload_for_attack(override: bool = False):
-        """Determine whether or not to reload after an Attack.
+    def _quick_summon(command: str):
+        """Activate a Quick Summon.
 
         Args:
-            override (bool): Override the set checks and reload anyways. Defaults to false.
+            command (str): The command to be executed.
 
         Returns:
             None
         """
-        # If the "Cancel" button vanishes, that means the attack is in-progress. Now reload the page and wait for either the attack to finish or Battle ended.
-        if CombatMode._check_raid() or override or (Settings.farming_mode == "Generic" and Settings.enable_force_reload):
-            from bot.game import Game
+        from bot.game import Game
 
-            MessageLog.print_message("[COMBAT] Reloading now.")
-            Game.find_and_click_button("reload")
-            Game.wait(3.0)
+        MessageLog.print_message("[COMBAT] Quick Summoning now...")
+        if Game.find_and_click_button("quick_summon1") or Game.find_and_click_button("quick_summon2"):
+            MessageLog.print_message("[COMBAT] Successfully quick summoned!")
+
+            if "wait" in command:
+                split_command = command.split(".")
+                split_command.pop(0)
+                CombatMode._wait_execute(split_command)
+        else:
+            MessageLog.print_message("[COMBAT] Was not able to quick summon this Turn.")
 
         return None
 
     @staticmethod
-    def _process_incorrect_turn(turn_number: int) -> int:
-        """Processes the current turn manually in order to get the bot to the expected turn number.
-
-        Args:
-            turn_number (int): The current turn number.
+    def _enable_semi_auto():
+        """Enable Semi Auto and if it fails, try to enable Full Auto.
 
         Returns:
-            (int): The incremented turn number.
+            None
         """
         from bot.game import Game
 
-        MessageLog.print_message(f"[COMBAT] Starting Turn {turn_number}.")
+        MessageLog.print_message("[COMBAT] Bot will now attempt to enable Semi Auto...")
+        CombatMode._semi_auto = ImageUtils.find_button("semi_auto_enabled")
+        if not CombatMode._semi_auto:
+            # Have the Party attack and then attempt to see if the "Semi Auto" button becomes visible.
+            Game.find_and_click_button("attack")
+            CombatMode._semi_auto = Game.find_and_click_button("semi_auto")
 
-        # Clear any detected dialog popups that might obstruct the "Attack" button.
-        CombatMode._find_dialog_in_combat()
+            # If the bot still cannot find the "Semi Auto" button, that probably means the user has the "Full Auto" button on the screen instead of the "Semi Auto" button.
+            if not CombatMode._semi_auto:
+                MessageLog.print_message("[COMBAT] Failed to enable Semi Auto. Falling back to Full Auto...")
 
-        # Click the "Attack" button.
-        MessageLog.print_message(f"[COMBAT] Ending Turn {turn_number}.")
-        Game.find_and_click_button("attack", tries = 10)
+                # Enable Full Auto.
+                CombatMode._full_auto = Game.find_and_click_button("full_auto")
+            else:
+                MessageLog.print_message("[COMBAT] Semi Auto is now enabled.")
 
-        # Wait until the "Cancel" button vanishes from the screen.
-        if ImageUtils.find_button("combat_cancel", tries = 3) is not None:
-            while ImageUtils.wait_vanish("combat_cancel", timeout = 5) is False:
-                if Settings.debug_mode:
-                    MessageLog.print_message("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
-                Game.wait(1)
-
-        CombatMode._reload_for_attack()
-        CombatMode._wait_for_attack()
-
-        MessageLog.print_message(f"[COMBAT] Turn {turn_number} has ended.")
-
-        if Game.find_and_click_button("next", tries = 1, suppress_error = True):
-            Game.wait(3)
-
-        turn_number += 1
-
-        return turn_number
+        return None
 
     @staticmethod
-    def _enable_auto() -> bool:
+    def _enable_full_auto():
+        """Enable Full Auto and if it fails, try to enable Semi Auto.
+
+        Returns:
+            None
+        """
         from bot.game import Game
 
-        MessageLog.print_message(f"[COMBAT] Enabling Full Auto.")
-        enable_auto = Game.find_and_click_button("full_auto")
+        MessageLog.print_message("[COMBAT] Bot will now attempt to enable Full Auto...")
+        CombatMode._full_auto = Game.find_and_click_button("full_auto")
 
         # If the bot failed to find and click the "Full Auto" button, fallback to the "Semi Auto" button.
-        if enable_auto is False:
-            MessageLog.print_message(f"[COMBAT] Failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
-            MessageLog.print_message(f"Double checking to see if Semi Auto is enabled.")
+        if not CombatMode._full_auto:
+            MessageLog.print_message("[COMBAT] Bot failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
+            CombatMode._enable_semi_auto()
 
-            enabled_semi_auto_button_location = ImageUtils.find_button("semi_button_enabled")
-            if enabled_semi_auto_button_location is None:
-                # Have the Party attack and then attempt to see if the "Semi Auto" button becomes visible.
-                Game.find_and_click_button("attack")
+        return None
 
-                Game.wait(2.0)
-
-                enable_auto = Game.find_and_click_button("semi_auto", tries = 5)
-                if enable_auto:
-                    MessageLog.print_message("[COMBAT] Semi Auto is now enabled.")
-
-        return enable_auto
+    ######################################################################
+    ######################################################################
+    # Entry Point
+    ######################################################################
+    ######################################################################
 
     @staticmethod
     def start_combat_mode(script_commands: List[str] = None, is_nightmare: bool = False):
