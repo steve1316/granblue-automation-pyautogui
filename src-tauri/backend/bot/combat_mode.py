@@ -1,5 +1,6 @@
 import copy
 import os
+import sys
 from typing import List
 import time
 
@@ -7,6 +8,11 @@ from utils.settings import Settings
 from utils.message_log import MessageLog
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
+
+
+class CombatModeException(Exception):
+    def __init__(self, message):
+        super().__init__(message)
 
 
 class CombatMode:
@@ -23,6 +29,9 @@ class CombatMode:
     # Save some variables for use throughout the class.
     _attack_button_location = None
     _retreat_check = False
+    _start_time: float = None
+    _list_of_exit_events_for_false = ["Time Exceeded", "No Loot"]
+    _list_of_exit_events_for_true = ["Battle Concluded", "Exp Gained"]
 
     @staticmethod
     def _party_wipe_check():
@@ -94,6 +103,48 @@ class CombatMode:
 
         return None
 
+    @staticmethod
+    def _check_for_battle_end() -> str:
+        """Perform checks to see if the battle ended or not.
+
+        Returns:
+            (str): Return "Nothing" if combat is still continuing. Otherwise, raise a CombatModeException whose message is the event name that caused the battle to end.
+        """
+        from bot.game import Game
+
+        # Check if the Battle has ended.
+        if Settings.farming_mode == "Raid" and Settings.enable_auto_exit_raid and time.time() - CombatMode._start_time >= Settings.time_allowed_until_auto_exit_raid:
+            MessageLog.print_message("\n######################################################################")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("[COMBAT] Combat Mode ended due to exceeding time allowed.")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("######################################################################")
+            raise CombatModeException("Time Exceeded")
+        elif CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True):
+            MessageLog.print_message("\n######################################################################")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("[COMBAT] Combat Mode has ended with no loot.")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("######################################################################")
+            raise CombatModeException("No Loot")
+        elif ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True):
+            MessageLog.print_message("\n[COMBAT] Battle concluded suddenly.")
+            MessageLog.print_message("\n######################################################################")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("[COMBAT] Ending Combat Mode.")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("######################################################################")
+            Game.find_and_click_button("reload")
+            raise CombatModeException("Battle Concluded")
+        elif ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True):
+            MessageLog.print_message("\n######################################################################")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("[COMBAT] Ending Combat Mode.")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("######################################################################")
+            raise CombatModeException("Exp Gained")
+        else:
+            return "Nothing"
     @staticmethod
     def _use_combat_healing_item(command: str):
         """Uses the specified healing item during Combat mode with an optional target if the item needs it.
@@ -628,12 +679,12 @@ class CombatMode:
         """
         from bot.game import Game
 
-        start_time: float = time.time()
+        _start_time = time.time()
 
         # Reset flags and Attack button location.
         CombatMode._retreat_check = False
-        semi_auto = False
-        full_auto = False
+        CombatMode._semi_auto = False
+        CombatMode._full_auto = False
         manual_attack_and_reload = False
         CombatMode._attack_button_location = None
         command_turn_number = 1
@@ -670,400 +721,212 @@ class CombatMode:
         ######################################################################
         ######################################################################
         # This is where the main workflow of Combat Mode is located.
-        while len(command_list) > 0 and CombatMode._retreat_check is False and semi_auto is False and full_auto is False:
-            # All the logic that follows assumes that the command string is lowercase to allow case-insensitive commands.
-            command = command_list.pop(0).strip().lower()
-            if command == "" or command[0] == "#" or command[0] == "/":
-                continue
+        try:
+            while len(command_list) > 0 and CombatMode._retreat_check is False and CombatMode._semi_auto is False and CombatMode._full_auto is False:
+                # All the logic that follows assumes that the command string is lowercase to allow case-insensitive commands.
+                command = command_list.pop(0).strip().lower()
+                if command == "" or command[0] == "#" or command[0] == "/":
+                    continue
 
-            # Check if the Battle has ended.
-            if CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True):
-                MessageLog.print_message("\n######################################################################")
-                MessageLog.print_message("######################################################################")
-                MessageLog.print_message("[COMBAT] Combat Mode has ended with no loot.")
-                MessageLog.print_message("######################################################################")
-                MessageLog.print_message("######################################################################")
-                return False
-            elif ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True):
-                MessageLog.print_message("\n[COMBAT] Battle concluded suddenly.")
-                MessageLog.print_message("\n######################################################################")
-                MessageLog.print_message("######################################################################")
-                MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-                MessageLog.print_message("######################################################################")
-                MessageLog.print_message("######################################################################")
-                Game.find_and_click_button("reload")
-                return True
-            elif ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True):
-                MessageLog.print_message("\n######################################################################")
-                MessageLog.print_message("######################################################################")
-                MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-                MessageLog.print_message("######################################################################")
-                MessageLog.print_message("######################################################################")
-                return True
+                # Check for exit conditions.
+                CombatMode._check_for_battle_end()
 
-            MessageLog.print_message(f"\n[COMBAT] Reading command: \"{command}\"")
+                MessageLog.print_message(f"\n[COMBAT] Reading command: \"{command}\"")
 
-            if command.__contains__("turn"):
-                # Clear any detected dialog popups that might obstruct the "Attack" button.
-                CombatMode._find_dialog_in_combat()
+                if command.__contains__("turn"):
+                    # Clear any detected dialog popups that might obstruct the "Attack" button.
+                    CombatMode._check_for_dialog()
 
-                # Parse the Turn's number.
-                command_turn_number = int(command.split(":")[0].split(" ")[1])
+                    # Parse the Turn's number.
+                    command_turn_number = int(command.split(":")[0].split(" ")[1])
 
-                # If the command is a "Turn #:" and it is currently not the correct Turn, attack until the Turn numbers match.
-                if CombatMode._retreat_check is False and turn_number != command_turn_number:
-                    MessageLog.print_message(f"[COMBAT] Attacking until the bot reaches Turn {command_turn_number}.")
-                    while turn_number != command_turn_number:
-                        turn_number = CombatMode._process_incorrect_turn(turn_number)
-                else:
-                    MessageLog.print_message(f"\n[COMBAT] Starting Turn {turn_number}.")
-
-            elif turn_number == command_turn_number:
-                # Process all commands here that belong inside a Turn block.
-
-                # Determine which Character to take action.
-                if "character1." in command:
-                    character_selected = 1
-                elif "character2." in command:
-                    character_selected = 2
-                elif "character3." in command:
-                    character_selected = 3
-                elif "character4." in command:
-                    character_selected = 4
-                else:
-                    character_selected = 0
-
-                if character_selected != 0:
-                    # Select the specified Character.
-                    CombatMode._select_character(character_selected)
-
-                    # Now execute each Skill command starting from left to right.
-                    skill_command_list = command.split(".")
-                    skill_command_list.pop(0)  # Remove the "character" portion of the string.
-                    CombatMode._use_character_skill(character_selected, skill_command_list)
-
-                # Handle any other supported command.
-                elif command == "requestbackup":
-                    CombatMode._request_backup()
-                elif command == "tweetbackup":
-                    CombatMode._tweet_backup()
-                elif CombatMode._healing_item_commands.__contains__(command):
-                    CombatMode._use_combat_healing_item(command)
-                elif command.__contains__("summon") and command.__contains__("quicksummon") is False:
-                    CombatMode._use_summon(command)
-                elif command.__contains__("quicksummon"):
-                    MessageLog.print_message("[COMBAT] Quick Summoning now...")
-                    if Game.find_and_click_button("quick_summon1") or Game.find_and_click_button("quick_summon2"):
-                        MessageLog.print_message("[COMBAT] Successfully quick summoned!")
-
-                        if "wait" in command:
-                            split_command = command.split(".")
-                            split_command.pop(0)
-                            CombatMode._wait_execute(split_command)
+                    # If the command is a "Turn #:" and it is currently not the correct Turn, attack until the Turn numbers match.
+                    if CombatMode._retreat_check is False and turn_number != command_turn_number:
+                        MessageLog.print_message(f"[COMBAT] Attacking until the bot reaches Turn {command_turn_number}.")
+                        while turn_number != command_turn_number:
+                            turn_number = CombatMode._process_incorrect_turn(turn_number)
                     else:
-                        MessageLog.print_message("[COMBAT] Was not able to quick summon this Turn.")
-                elif command == "enablesemiauto":
-                    MessageLog.print_message("[COMBAT] Bot will now attempt to enable Semi Auto...")
-                    semi_auto = True
+                        MessageLog.print_message(f"\n[COMBAT] Starting Turn {turn_number}.")
+
+                elif turn_number == command_turn_number:
+                    # Process all commands here that belong inside a Turn block.
+
+                    # Determine which Character to take action.
+                    if "character1." in command:
+                        character_selected = 1
+                    elif "character2." in command:
+                        character_selected = 2
+                    elif "character3." in command:
+                        character_selected = 3
+                    elif "character4." in command:
+                        character_selected = 4
+                    else:
+                        character_selected = 0
+
+                    if character_selected != 0:
+                        # Select the specified Character.
+                        CombatMode._select_character(character_selected)
+
+                        # Now execute each Skill command starting from left to right.
+                        skill_command_list = command.split(".")
+                        skill_command_list.pop(0)  # Remove the "character" portion of the string.
+                        CombatMode._use_character_skill(character_selected, skill_command_list)
+
+                    # Handle any other supported command.
+                    elif command == "requestbackup":
+                        CombatMode._request_backup()
+                    elif command == "tweetbackup":
+                        CombatMode._tweet_backup()
+                    elif CombatMode._healing_item_commands.__contains__(command):
+                        CombatMode._use_combat_healing_item(command)
+                    elif command.__contains__("summon") and command.__contains__("quicksummon") is False:
+                        CombatMode._use_summon(command)
+                    elif command.__contains__("quicksummon"):
+                        CombatMode._quick_summon(command)
+                    elif command == "enablesemiauto":
+                        CombatMode._enable_semi_auto()
+                    elif command == "enablefullauto":
+                        CombatMode._enable_full_auto()
+                    elif "targetenemy" in command:
+                        # Select enemy target.
+                        CombatMode._select_enemy_target(command)
+                    elif "back" in command and Game.find_and_click_button("home_back", tries = 1):
+                        MessageLog.print_message("[COMBAT] Tapped the Back button.")
+                        CombatMode._wait_for_attack()
+
+                        # Advance the Turn number by 1.
+                        turn_number += 1
+                    elif "reload" in command:
+                        MessageLog.print_message("[COMBAT] Bot will now attempt to manually reload...")
+
+                        # Press the "Attack" button in order to show the "Cancel" button. Once that disappears, manually reload the page.
+                        if Game.find_and_click_button("attack"):
+                            if ImageUtils.wait_vanish("combat_cancel", timeout = 10):
+                                Game.find_and_click_button("reload")
+                                Game.wait(3.0)
+                            else:
+                                # If the "Cancel" button fails to disappear after 10 tries, reload anyways.
+                                Game.find_and_click_button("reload")
+                                Game.wait(3.0)
+                    elif command == "repeatmanualattackandreload":
+                        MessageLog.print_message("[COMBAT] Enabling manually pressing the Attack button and reloading (if the mission supports it) until battle ends.")
+                        manual_attack_and_reload = True
+                    elif CombatMode._semi_auto is False and CombatMode._full_auto is False and command == "end":
+                        # Click the "Attack" button once every command inside the Turn Block has been processed.
+                        MessageLog.print_message(f"[COMBAT] Ending Turn {turn_number}.")
+                        Game.find_and_click_button("attack", tries = 10)
+
+                        # Wait until the "Cancel" button vanishes from the screen.
+                        if ImageUtils.find_button("combat_cancel", tries = 3) is not None:
+                            while ImageUtils.wait_vanish("combat_cancel", timeout = 5) is False:
+                                if Settings.debug_mode:
+                                    MessageLog.print_message("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
+                                Game.wait(1)
+
+                        CombatMode._reload_for_attack()
+                        CombatMode._wait_for_attack()
+
+                        MessageLog.print_message(f"[COMBAT] Turn {turn_number} has ended.")
+
+                        turn_number += 1
+
+                        # Check for exit conditions.
+                        CombatMode._check_for_battle_end()
+
+                        if Game.find_and_click_button("next", tries = 1, suppress_error = True):
+                            Game.wait(3)
+                    elif command == "exit":
+                        # End Combat Mode by heading back to the Home screen without retreating.
+                        MessageLog.print_message("\n[COMBAT] Leaving this Raid without retreating.")
+                        MessageLog.print_message("\n######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("[COMBAT] Ending Combat Mode.")
+                        MessageLog.print_message("######################################################################")
+                        MessageLog.print_message("######################################################################")
+                        Game.go_back_home(confirm_location_check = True)
+                        return False
+
+                # Handle certain commands that could be present outside of a Turn block.
+                if CombatMode._semi_auto is False and CombatMode._full_auto is False and command == "enablesemiauto":
+                    CombatMode._enable_semi_auto()
                     break
-                elif command == "enablefullauto":
-                    MessageLog.print_message("[COMBAT] Bot will now attempt to enable Full Auto...")
-                    full_auto = Game.find_and_click_button("full_auto")
-
-                    # If the bot failed to find and click the "Full Auto" button, fallback to the "Semi Auto" button.
-                    if not full_auto:
-                        MessageLog.print_message("[COMBAT] Bot failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
-                        semi_auto = True
+                elif CombatMode._semi_auto is False and CombatMode._full_auto is False and command == "enablefullauto":
+                    CombatMode._enable_full_auto()
                     break
-                elif "targetenemy" in command:
-                    # Select enemy target.
-                    CombatMode._select_enemy_target(command)
-                elif "back" in command and Game.find_and_click_button("home_back", tries = 1):
-                    MessageLog.print_message("[COMBAT] Tapped the Back button.")
-                    CombatMode._wait_for_attack()
-
-                    # Advance the Turn number by 1.
-                    turn_number += 1
-                elif "reload" in command:
-                    MessageLog.print_message("[COMBAT] Bot will now attempt to manually reload...")
-
-                    # Press the "Attack" button in order to show the "Cancel" button. Once that disappears, manually reload the page.
-                    if Game.find_and_click_button("attack"):
-                        if ImageUtils.wait_vanish("combat_cancel", timeout = 10):
-                            Game.find_and_click_button("reload")
-                            Game.wait(3.0)
-                        else:
-                            # If the "Cancel" button fails to disappear after 10 tries, reload anyways.
-                            Game.find_and_click_button("reload")
-                            Game.wait(3.0)
                 elif command == "repeatmanualattackandreload":
                     MessageLog.print_message("[COMBAT] Enabling manually pressing the Attack button and reloading (if the mission supports it) until battle ends.")
                     manual_attack_and_reload = True
-                elif semi_auto is False and full_auto is False and command == "end":
-                    # Click the "Attack" button once every command inside the Turn Block has been processed.
-                    MessageLog.print_message(f"[COMBAT] Ending Turn {turn_number}.")
-                    Game.find_and_click_button("attack", tries = 10)
 
-                    # Wait until the "Cancel" button vanishes from the screen.
-                    if ImageUtils.find_button("combat_cancel", tries = 3) is not None:
-                        while ImageUtils.wait_vanish("combat_cancel", timeout = 5) is False:
-                            if Settings.debug_mode:
-                                MessageLog.print_message("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
-                            Game.wait(1)
+            # Deal with the situation where high-profile raids end right when the bot loads in and all it sees is the "Next" button.
+            if Settings.farming_mode == "Raid" and Game.find_and_click_button("next", tries = 3):
+                MessageLog.print_message("\n######################################################################")
+                MessageLog.print_message("######################################################################")
+                MessageLog.print_message("[COMBAT] Ending Combat Mode.")
+                MessageLog.print_message("######################################################################")
+                MessageLog.print_message("######################################################################")
+                return True
 
-                    CombatMode._reload_for_attack()
-                    CombatMode._wait_for_attack()
+            ######################################################################
+            ######################################################################
+            # When the bot reaches here, all the commands in the combat script has been processed.
+            MessageLog.print_message("\n[COMBAT] Bot has reached end of script. Automatically attacking until battle ends or Party wipes...")
 
-                    MessageLog.print_message(f"[COMBAT] Turn {turn_number} has ended.")
+            if manual_attack_and_reload is False:
+                # Attempt to activate Full Auto at the end of the combat script. If not, then attempt to activate Semi Auto.
+                CombatMode._enable_full_auto()
 
-                    turn_number += 1
+                # Double check to see if Semi Auto is turned on. Note that the "Semi Auto" button only appears while the Party is attacking.
+                if not CombatMode._retreat_check and CombatMode._semi_auto and not CombatMode._full_auto:
+                    CombatMode._enable_semi_auto()
 
-                    if CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True):
-                        MessageLog.print_message("\n######################################################################")
-                        MessageLog.print_message("######################################################################")
-                        MessageLog.print_message("[COMBAT] Combat Mode has ended with no loot")
-                        MessageLog.print_message("######################################################################")
-                        MessageLog.print_message("######################################################################")
-                        return False
-                    elif ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True):
-                        MessageLog.print_message("\n[COMBAT] Battle concluded suddenly.")
-                        MessageLog.print_message("\n######################################################################")
-                        MessageLog.print_message("######################################################################")
-                        MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-                        MessageLog.print_message("######################################################################")
-                        MessageLog.print_message("######################################################################")
-                        Game.find_and_click_button("reload")
-                        return True
-                    elif ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True):
-                        MessageLog.print_message("\n######################################################################")
-                        MessageLog.print_message("######################################################################")
-                        MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-                        MessageLog.print_message("######################################################################")
-                        MessageLog.print_message("######################################################################")
-                        return True
+                # Main workflow loop for both Semi Auto and Full Auto. The bot will progress the Quest/Raid until it ends or the Party wipes.
+                while not CombatMode._retreat_check and (CombatMode._full_auto or CombatMode._semi_auto):
+                    # Check for exit conditions.
+                    CombatMode._check_for_battle_end()
 
                     if Game.find_and_click_button("next", tries = 1, suppress_error = True):
                         Game.wait(3)
-                elif command == "exit":
-                    # End Combat Mode by heading back to the Home screen without retreating.
-                    MessageLog.print_message("\n[COMBAT] Leaving this Raid without retreating.")
-                    MessageLog.print_message("\n######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    Game.go_back_home(confirm_location_check = True)
-                    return False
 
-            # Handle certain commands that could be present outside of a Turn block.
-            if semi_auto is False and full_auto is False and command == "enablesemiauto":
-                MessageLog.print_message("[COMBAT] Bot will now attempt to enable Semi Auto...")
-                semi_auto = True
-                break
-            elif semi_auto is False and full_auto is False and command == "enablefullauto":
-                MessageLog.print_message("[COMBAT] Bot will now attempt to enable Full Auto...")
-                full_auto = Game.find_and_click_button("full_auto")
+                    CombatMode._check_for_wipe()
 
-                # If the bot failed to find and click the "Full Auto" button, fallback to the "Semi Auto" button.
-                if not full_auto:
-                    MessageLog.print_message("[COMBAT] Bot failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
-                    semi_auto = True
-                break
-            elif command == "repeatmanualattackandreload":
-                MessageLog.print_message("[COMBAT] Enabling manually pressing the Attack button and reloading (if the mission supports it) until battle ends.")
-                manual_attack_and_reload = True
-
-        # Deal with any the situation where high-profile raids end right when the bot loads in and all it sees is the "Next" button.
-        if Settings.farming_mode == "Raid" and Game.find_and_click_button("next", tries = 3):
-            MessageLog.print_message("\n######################################################################")
-            MessageLog.print_message("######################################################################")
-            MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-            MessageLog.print_message("######################################################################")
-            MessageLog.print_message("######################################################################")
-            return True
-
-        ######################################################################
-        ######################################################################
-        # When the bot reaches here, all the commands in the combat script has been processed.
-        MessageLog.print_message("\n[COMBAT] Bot has reached end of script. Automatically attacking until battle ends or Party wipes...")
-
-        if manual_attack_and_reload is False:
-            # Attempt to activate Full Auto at the end of the combat script. If not, then attempt to activate Semi Auto.
-            if semi_auto is False and full_auto is False:
-                full_auto = Game.find_and_click_button("full_auto")
-
-                # If the bot failed to find and click the "Full Auto" button, fallback to the "Semi Auto" button.
-                if not full_auto:
-                    MessageLog.print_message("[COMBAT] Bot failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
-                    semi_auto = True
-
-            # Double check to see if Semi Auto is turned on. Note that the "Semi Auto" button only appears while the Party is attacking.
-            if not CombatMode._retreat_check and semi_auto and not full_auto:
-                MessageLog.print_message("[COMBAT] Double checking to see if Semi Auto is enabled...")
-                enabled_semi_auto = ImageUtils.find_button("semi_auto_enabled")
-                if not enabled_semi_auto:
-                    # Have the Party attack and then attempt to see if the "Semi Auto" button becomes visible.
-                    Game.find_and_click_button("attack")
-                    enabled_semi_auto = Game.find_and_click_button("semi_auto", tries = 5)
-
-                    # If the bot still cannot find the "Semi Auto" button, that probably means the user has the "Full Auto" button on the screen instead of the "Semi Auto" button.
-                    if not enabled_semi_auto:
-                        MessageLog.print_message("[COMBAT] Failed to enable Semi Auto. Falling back to Full Auto...")
-                        semi_auto = False
-                        full_auto = True
-
-                        # Enable Full Auto.
-                        Game.find_and_click_button("full_auto")
-                    else:
-                        MessageLog.print_message("[COMBAT] Semi Auto is now enabled.")
-
-            # Main workflow loop for both Semi Auto and Full Auto. The bot will progress the Quest/Raid until it ends or the Party wipes.
-            while not CombatMode._retreat_check and (full_auto or semi_auto):
-                # Back out of the Raid without retreating if the allowed time has been exceeded.
-                if Settings.farming_mode == "Raid" and Settings.enable_auto_exit_raid and time.time() - start_time >= Settings.time_allowed_until_auto_exit_raid:
-                    MessageLog.print_message("\n######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("[COMBAT] Combat Mode ended due to exceeding time allowed.")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    return False
-
-                # Check if the Battle has ended.
-                if CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True):
-                    MessageLog.print_message("\n######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("[COMBAT] Combat Mode has ended with no loot.")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    return False
-                elif ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True):
-                    MessageLog.print_message("\n[COMBAT] Battle concluded suddenly.")
-                    MessageLog.print_message("\n######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    Game.find_and_click_button("reload")
-                    return True
-                elif ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True):
-                    MessageLog.print_message("\n######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    return True
-
-                if Game.find_and_click_button("next", tries = 1, suppress_error = True):
-                    Game.wait(3)
-
-                CombatMode._party_wipe_check()
-
-                if CombatMode._check_raid():
-                    # Click Next if it is available and enable automation again if combat continues.
-                    if Game.find_and_click_button("next", tries = 2, suppress_error = True):
-                        if CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True):
-                            MessageLog.print_message("\n######################################################################")
-                            MessageLog.print_message("######################################################################")
-                            MessageLog.print_message("[COMBAT] Combat Mode has ended with no loot.")
-                            MessageLog.print_message("######################################################################")
-                            MessageLog.print_message("######################################################################")
-                            return False
-                        elif ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True):
-                            MessageLog.print_message("\n[COMBAT] Battle concluded suddenly.")
-                            MessageLog.print_message("\n######################################################################")
-                            MessageLog.print_message("######################################################################")
-                            MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-                            MessageLog.print_message("######################################################################")
-                            MessageLog.print_message("######################################################################")
-                            Game.find_and_click_button("reload")
-                            return True
-                        elif ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True):
-                            MessageLog.print_message("\n######################################################################")
-                            MessageLog.print_message("######################################################################")
-                            MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-                            MessageLog.print_message("######################################################################")
-                            MessageLog.print_message("######################################################################")
-                            return True
-                        else:
-                            CombatMode._enable_auto()
-                    elif ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
-                        CombatMode._reload_for_attack(override = True)
-
-                        CombatMode._wait_for_attack()
-
-                        if CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True):
-                            MessageLog.print_message("\n######################################################################")
-                            MessageLog.print_message("######################################################################")
-                            MessageLog.print_message("[COMBAT] Combat Mode has ended with no loot.")
-                            MessageLog.print_message("######################################################################")
-                            MessageLog.print_message("######################################################################")
-                            return False
-                        elif ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True):
-                            MessageLog.print_message("\n[COMBAT] Battle concluded suddenly.")
-                            MessageLog.print_message("\n######################################################################")
-                            MessageLog.print_message("######################################################################")
-                            MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-                            MessageLog.print_message("######################################################################")
-                            MessageLog.print_message("######################################################################")
-                            Game.find_and_click_button("reload")
-                            return True
-                        elif ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True):
-                            MessageLog.print_message("\n######################################################################")
-                            MessageLog.print_message("######################################################################")
-                            MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-                            MessageLog.print_message("######################################################################")
-                            MessageLog.print_message("######################################################################")
-                            return True
-                        else:
-                            MessageLog.print_message("[COMBAT] Clicked the Next button to move to the next wave. Attempting to restart Full/Semi Auto...")
-                            if CombatMode._wait_for_attack():
+                    if CombatMode._check_raid():
+                        # Click Next if it is available and enable automation again if combat continues.
+                        if Game.find_and_click_button("next", tries = 2, suppress_error = True):
+                            # Check for exit conditions and restart auto.
+                            if CombatMode._check_for_battle_end() == "Nothing":
                                 CombatMode._enable_auto()
-                elif ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
-                    MessageLog.print_message("[COMBAT] Attack and Next buttons have vanished. Determining if bot should reload...")
+                        elif ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
+                            CombatMode._reload_for_attack(override = True)
+
+                            CombatMode._wait_for_attack()
+
+                            # Check for exit conditions and restart auto.
+                            CombatMode._check_for_battle_end()
+                            if CombatMode._check_for_battle_end() == "Nothing":
+                                MessageLog.print_message("[COMBAT] Clicked the Next button to move to the next wave. Attempting to restart Full/Semi Auto...")
+                                if CombatMode._wait_for_attack():
+                                    CombatMode._enable_auto()
+                    elif ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
+                        MessageLog.print_message("[COMBAT] Attack and Next buttons have vanished. Determining if bot should reload...")
+                        CombatMode._reload_for_attack()
+            else:
+                # Main workflow loop for manually pressing the Attack button and reloading until combat ends.
+                while not CombatMode._retreat_check:
+                    # Check for exit conditions.
+                    CombatMode._check_for_battle_end()
+
+                    if Game.find_and_click_button("next", tries = 1, suppress_error = True):
+                        Game.wait(3)
+
+                    Game.find_and_click_button("attack", tries = 10)
                     CombatMode._reload_for_attack()
-        else:
-            # Main workflow loop for manually pressing the Attack button and reloading until combat ends.
-            while not CombatMode._retreat_check:
-                # Back out of the Raid without retreating if the allowed time has been exceeded.
-                if Settings.farming_mode == "Raid" and Settings.enable_auto_exit_raid and time.time() - start_time >= Settings.time_allowed_until_auto_exit_raid:
-                    MessageLog.print_message("\n######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("[COMBAT] Combat Mode ended due to exceeding time allowed.")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    return False
-
-                # Check if the Battle has ended.
-                if CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True):
-                    MessageLog.print_message("\n######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("[COMBAT] Combat Mode has ended with no loot.")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    return False
-                elif ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True):
-                    MessageLog.print_message("\n[COMBAT] Battle concluded suddenly.")
-                    MessageLog.print_message("\n######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    Game.find_and_click_button("reload")
-                    return True
-                elif ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True):
-                    MessageLog.print_message("\n######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("[COMBAT] Ending Combat Mode.")
-                    MessageLog.print_message("######################################################################")
-                    MessageLog.print_message("######################################################################")
-                    return True
-
-                if Game.find_and_click_button("next", tries = 1, suppress_error = True):
-                    Game.wait(3)
-
-                Game.find_and_click_button("attack", tries = 10)
-                CombatMode._reload_for_attack()
-                CombatMode._wait_for_attack()
+                    CombatMode._wait_for_attack()
+        except CombatModeException:
+            message = sys.exc_info()[1]
+            if CombatMode._list_of_exit_events_for_false.__contains__(message):
+                return False
+            elif CombatMode._list_of_exit_events_for_true.__contains__(message):
+                return True
 
         ######################################################################
         ######################################################################
