@@ -301,31 +301,35 @@ const ExtraSettings = () => {
                     </FormHelperText>
                 </FormGroup>
 
-                <FormGroup>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={bot.settings.configuration.enableFullElixir}
-                                onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableFullElixir: e.target.checked } })}
+                {!bot.settings.configuration.enableAutoRestore ? (
+                    <div>
+                        <FormGroup>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={bot.settings.configuration.enableFullElixir}
+                                        onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableFullElixir: e.target.checked } })}
+                                    />
+                                }
+                                label="Enable Full Elixirs"
                             />
-                        }
-                        label="Enable Full Elixirs"
-                    />
-                    <FormHelperText>Enable usage of full elixirs when refilling AP.</FormHelperText>
-                </FormGroup>
+                            <FormHelperText>Enable usage of full elixirs when refilling AP.</FormHelperText>
+                        </FormGroup>
 
-                <FormGroup>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={bot.settings.configuration.enableSoulBalm}
-                                onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableSoulBalm: e.target.checked } })}
+                        <FormGroup>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={bot.settings.configuration.enableSoulBalm}
+                                        onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableSoulBalm: e.target.checked } })}
+                                    />
+                                }
+                                label="Enable Soul Balms"
                             />
-                        }
-                        label="Enable Soul Balms"
-                    />
-                    <FormHelperText>Enable usage of soul balms when refilling EP.</FormHelperText>
-                </FormGroup>
+                            <FormHelperText>Enable usage of soul balms when refilling EP.</FormHelperText>
+                        </FormGroup>
+                    </div>
+                ) : null}
             </div>
         )
     }
