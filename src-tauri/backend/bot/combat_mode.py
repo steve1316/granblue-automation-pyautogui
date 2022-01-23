@@ -858,7 +858,7 @@ class CombatMode:
         """
         from bot.game import Game
 
-        _start_time = time.time()
+        CombatMode._start_time = time.time()
 
         # Reset flags and Attack button location.
         CombatMode._retreat_check = False
