@@ -1,5 +1,6 @@
 import datetime
 from timeit import default_timer as timer
+import inspect
 
 
 class MessageLog:
@@ -8,6 +9,8 @@ class MessageLog:
     """
 
     _starting_time = timer()
+
+    enable_inspect_caller = True
 
     @staticmethod
     def _print_time():
@@ -27,9 +30,15 @@ class MessageLog:
         """
         # Loop until the status flag has been set to 1.
         if message.startswith("\n"):
-            new_message = "\n" + MessageLog._print_time() + " " + message[len("\n"):]
+            if MessageLog.enable_inspect_caller:
+                new_message = "\n" + MessageLog._print_time() + " " + f"[{inspect.stack()[1][3]}]" + message[len("\n"):]
+            else:
+                new_message = "\n" + MessageLog._print_time() + " " + message[len("\n"):]
         else:
-            new_message = MessageLog._print_time() + " " + message
+            if MessageLog.enable_inspect_caller:
+                new_message = MessageLog._print_time() + " " + f"[{inspect.stack()[1][3]}]" + message
+            else:
+                new_message = MessageLog._print_time() + " " + message
 
         try:
             print(new_message, flush = True)
