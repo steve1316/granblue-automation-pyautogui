@@ -10,7 +10,7 @@ class MessageLog:
 
     _starting_time = timer()
 
-    enable_inspect_caller = True
+    enable_inspect_caller = False
 
     @staticmethod
     def _print_time():
