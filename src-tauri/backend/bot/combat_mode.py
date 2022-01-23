@@ -246,15 +246,11 @@ class CombatMode:
         """
         from bot.game import Game
 
-        MessageLog.print_message(f"[COMBAT] Starting Turn {CombatMode._turn_number}.")
-
         # Clear any detected dialog popups that might obstruct the "Attack" button.
         CombatMode._check_for_dialog()
 
-        Game.find_and_click_button("attack")
-
         # Wait for the Attack to process.
-        MessageLog.print_message(f"[COMBAT] Ending Turn {CombatMode._turn_number}.")
+        MessageLog.print_message(f"[COMBAT] Ending Turn {CombatMode._turn_number}...")
         tries = 30
         if CombatMode._full_auto is False and CombatMode._semi_auto is False:
             Game.find_and_click_button("attack", tries = 30)
@@ -271,20 +267,30 @@ class CombatMode:
                 tries -= 1
 
         reload_check = False
+
+        # If the next Turn is the current Turn block, turn off auto.
         if CombatMode._turn_number + 1 == CombatMode._command_turn_number:
             reload_check = CombatMode._reload_for_attack()
             if reload_check is False:
                 if CombatMode._full_auto:
                     MouseUtils.scroll_screen_from_home_button(0)  # Move the cursor if it is hovering over the Full/Semi Auto button.
-                    CombatMode._full_auto = not Game.find_and_click_button("full_auto_enabled", tries = 10)
+                    Game.find_and_click_button("full_auto_enabled", tries = 10)
                 elif CombatMode._semi_auto:
                     MouseUtils.scroll_screen_from_home_button(0)  # Move the cursor if it is hovering over the Full/Semi Auto button.
-                    CombatMode._semi_auto = not Game.find_and_click_button("semi_auto_enabled", tries = 10)
+                    Game.find_and_click_button("semi_auto_enabled", tries = 10)
+
+            CombatMode._full_auto = False
+            CombatMode._semi_auto = False
 
         Game.wait(1.0)
 
+        # If the bot reloaded the page, determine if bot needs to enable Full/Semi Auto again.
         if reload_check is False:
-            CombatMode._reload_for_attack()
+            reload_check = CombatMode._reload_for_attack()
+            if reload_check and CombatMode._full_auto:
+                CombatMode._enable_full_auto()
+            elif reload_check and CombatMode._semi_auto:
+                CombatMode._enable_semi_auto()
         CombatMode._wait_for_attack()
 
         MessageLog.print_message(f"[COMBAT] Turn {CombatMode._turn_number} has ended.")
@@ -293,6 +299,8 @@ class CombatMode:
             Game.wait(3)
 
         CombatMode._turn_number += 1
+
+        MessageLog.print_message(f"\n[COMBAT] Starting Turn {CombatMode._turn_number}.")
 
         return None
 
@@ -303,20 +311,18 @@ class CombatMode:
         Returns:
             (bool): True if Attack ended into the next Turn. False if Attack ended but combat also ended as well.
         """
-        MessageLog.print_message("\n[COMBAT] Now waiting for attack to end...")
+        MessageLog.print_message("[COMBAT] Now waiting for attack to end...")
         tries = 100
         while tries > 0 and not CombatMode._retreat_check and ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and \
                 ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
-            # Stagger the checks for dialog popups.
-            if tries % 5 == 0:
-                CombatMode._check_for_dialog()
+            CombatMode._check_for_dialog()
 
-                # Check if the Party wiped after attacking.
-                CombatMode._check_for_wipe()
+            # Check if the Party wiped after attacking.
+            CombatMode._check_for_wipe()
 
-                if ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True) is True or \
-                        ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True) is True:
-                    return False
+            if ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True) is True or \
+                    ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True) is True:
+                return False
 
             tries -= 1
 
@@ -396,15 +402,20 @@ class CombatMode:
         from bot.game import Game
 
         # Click the "Attack" button once every command inside the Turn Block has been processed.
-        MessageLog.print_message(f"[COMBAT] Ending Turn {CombatMode._turn_number}.")
-        Game.find_and_click_button("attack", tries = 10)
+        MessageLog.print_message(f"[COMBAT] Ending Turn {CombatMode._turn_number}...")
 
-        # Wait until the "Cancel" button vanishes from the screen.
-        if ImageUtils.find_button("combat_cancel", tries = 3) is not None:
-            while ImageUtils.wait_vanish("combat_cancel", timeout = 5) is False:
-                if Settings.debug_mode:
-                    MessageLog.print_message("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
-                Game.wait(1)
+        if CombatMode._full_auto or CombatMode._semi_auto:
+            while ImageUtils.find_button("attack") is not None:
+                Game.wait(1.0)
+        else:
+            Game.find_and_click_button("attack", tries = 10)
+
+            # Wait until the "Cancel" button vanishes from the screen.
+            if ImageUtils.find_button("combat_cancel", tries = 3) is not None:
+                while ImageUtils.wait_vanish("combat_cancel", timeout = 5, suppress_error = True) is False:
+                    if Settings.debug_mode:
+                        MessageLog.print_message("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
+                    Game.wait(1.0)
 
         # Check for exit conditions.
         CombatMode._check_for_battle_end()
@@ -836,6 +847,8 @@ class CombatMode:
         if not CombatMode._full_auto:
             MessageLog.print_message("[COMBAT] Bot failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
             CombatMode._enable_semi_auto()
+        else:
+            MessageLog.print_message("[COMBAT] Full Auto is now enabled.")
 
         return None
 
@@ -953,7 +966,6 @@ class CombatMode:
                         CombatMode._enable_semi_auto()
                     elif command == "enablefullauto":
                         CombatMode._enable_full_auto()
-                        MessageLog.print_message("Done.")
                     elif "targetenemy" in command:
                         # Select enemy target.
                         CombatMode._select_enemy_target(command)
@@ -1056,7 +1068,12 @@ class CombatMode:
                     elif ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
                         if Settings.debug_mode:
                             MessageLog.print_message("[DEBUG] Attack and Next buttons have vanished. Determining if bot should reload...")
-                        CombatMode._reload_for_attack()
+                        if CombatMode._reload_for_attack():
+                            # Enable Full/Semi Auto again if the bot reloaded.
+                            if CombatMode._full_auto:
+                                CombatMode._enable_full_auto()
+                            if CombatMode._semi_auto:
+                                CombatMode._enable_semi_auto()
             else:
                 # Main workflow loop for manually pressing the Attack button and reloading until combat ends.
                 while not CombatMode._retreat_check:
