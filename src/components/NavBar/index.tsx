@@ -94,12 +94,12 @@ const NavBar = () => {
                             </ListItem>
                             <Divider />
                         </RouterLink>
-                        <RouterLink to="/delays" className="navLink">
-                            <ListItem button key="delays">
+                        <RouterLink to="/adjustments" className="navLink">
+                            <ListItem button key="adjustments">
                                 <ListItemIcon>
                                     <WatchLaterIcon />
                                 </ListItemIcon>
-                                <ListItemText primary="Delays" />
+                                <ListItemText primary="Adjustments" />
                             </ListItem>
                             <Divider />
                         </RouterLink>

@@ -10,7 +10,7 @@ interface Props {
     helperText: string
 }
 
-const DelayTextField = ({ value, onChange, label, helperText }: Props) => {
+const CustomTextField = ({ value, onChange, label, helperText }: Props) => {
     return (
         <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
             <Grid item xs={6}>
@@ -49,7 +49,7 @@ const renderStart = () => {
             </FormGroup>
 
             {true ? (
-                <DelayTextField
+                <CustomTextField
                     value={1}
                     onChange={() => {}}
                     label="Home Calibration"
@@ -76,13 +76,13 @@ const renderGeneral = () => {
 
             {true ? (
                 <div>
-                    <DelayTextField
+                    <CustomTextField
                         value={1}
                         onChange={() => {}}
                         label="General Image Template Matching for Buttons"
                         helperText="Set the default number of tries for button template matching. This will be overwritten by the specific settings down below if applicable."
                     />
-                    <DelayTextField
+                    <CustomTextField
                         value={1}
                         onChange={() => {}}
                         label="General Image Template Matching for Headers"
@@ -109,7 +109,7 @@ const renderSupportSummonSelection = () => {
             </FormGroup>
 
             {true ? (
-                <DelayTextField
+                <CustomTextField
                     value={1}
                     onChange={() => {}}
                     label="Arrival at Support Summon Selection screen"
@@ -136,21 +136,21 @@ const renderCombatMode = () => {
 
             {true ? (
                 <div>
-                    <DelayTextField
+                    <CustomTextField
                         value={1}
                         onChange={() => {}}
                         label="Arrival at Combat Screen"
                         helperText="Set the default number of tries for checking when the bot arrives at the Combat Screen."
                     />
-                    <DelayTextField value={1} onChange={() => {}} label="Skill Usage" helperText="Set the default number of tries for checking when a skill is used." />
-                    <DelayTextField value={1} onChange={() => {}} label="Summon Usage" helperText="Set the default number of tries for checking when a Summon is used." />
-                    <DelayTextField
+                    <CustomTextField value={1} onChange={() => {}} label="Skill Usage" helperText="Set the default number of tries for checking when a skill is used." />
+                    <CustomTextField value={1} onChange={() => {}} label="Summon Usage" helperText="Set the default number of tries for checking when a Summon is used." />
+                    <CustomTextField
                         value={1}
                         onChange={() => {}}
                         label="Waiting for Reload"
                         helperText="Set the default number of tries for checking when a reload is finished, whether or not the bot ends up back at the Combat screen or the Loot Collection screen."
                     />
-                    <DelayTextField
+                    <CustomTextField
                         value={1}
                         onChange={() => {}}
                         label="Waiting for Attack"
@@ -162,63 +162,16 @@ const renderCombatMode = () => {
     )
 }
 
-const renderLootCollection = () => {
-    return (
-        <div>
-            <Divider sx={{ marginBottom: "16px" }}>
-                <Typography variant="h6" component="div" className="sectionTitle">
-                    Loot Collection Screen
-                </Typography>
-            </Divider>
-
-            <FormGroup sx={{ paddingBottom: "16px" }}>
-                <FormControlLabel control={<Checkbox checked={false} onChange={() => {}} />} label="Enable Loot Collection Screen Adjustments" />
-                <FormHelperText>Enable adjustment of tries for Loot Collection Screen Adjustments.</FormHelperText>
-            </FormGroup>
-
-            {true ? (
-                <DelayTextField
-                    value={1}
-                    onChange={() => {}}
-                    label="Arrival at Loot Collection screen"
-                    helperText="Set the default number of tries for checking when the bot arrives at the Loot Collection screen."
-                />
-            ) : null}
-        </div>
-    )
-}
-
-const renderCheckForPopups = () => {
-    return (
-        <div>
-            <Divider sx={{ marginBottom: "16px" }}>
-                <Typography variant="h6" component="div" className="sectionTitle">
-                    Check for Popups
-                </Typography>
-            </Divider>
-
-            <FormGroup sx={{ paddingBottom: "16px" }}>
-                <FormControlLabel control={<Checkbox checked={false} onChange={() => {}} />} label="Enable Check for Popups Adjustments" />
-                <FormHelperText>Enable adjustment of tries for Check for Popups Adjustments.</FormHelperText>
-            </FormGroup>
-
-            {true ? (
-                <DelayTextField value={1} onChange={() => {}} label="Check for Popups" helperText="Set the default number of tries for checking for popups during various stages of bot navigation." />
-            ) : null}
-        </div>
-    )
-}
-
-const Delays = () => {
+const Adjustments = () => {
     const bsc = useContext(BotStateContext)
 
     return (
         <Fade in={true}>
-            <Box className="delaysContainer">
-                <Stack className="delaysWrapper">
+            <Box className="adjustmentsContainer">
+                <Stack className="adjustmentsWrapper">
                     <div>
                         <Typography variant="h6" gutterBottom component="div" color="text.secondary" sx={{ marginBottom: "16px" }}>
-                            Set the default number of tries for the following:
+                            Adjust the default number of tries for the following:
                         </Typography>
                     </div>
 
@@ -229,14 +182,10 @@ const Delays = () => {
                     {renderSupportSummonSelection()}
 
                     {renderCombatMode()}
-
-                    {renderLootCollection()}
-
-                    {renderCheckForPopups()}
                 </Stack>
             </Box>
         </Fade>
     )
 }
 
-export default Delays
+export default Adjustments
