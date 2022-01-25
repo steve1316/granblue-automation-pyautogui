@@ -3,6 +3,7 @@ import NavBar from "./components/NavBar"
 import Start from "./components/Start"
 import { BotStateProvider } from "./context/BotStateContext"
 import { MessageLogProvider } from "./context/MessageLogContext"
+import Delays from "./pages/Delays"
 import ExtraSettings from "./pages/ExtraSettings"
 import Home from "./pages/Home"
 import Settings from "./pages/Settings"
@@ -23,6 +24,9 @@ function App() {
                         </Route>
                         <Route path="/extrasettings" exact>
                             <ExtraSettings />
+                        </Route>
+                        <Route path="/delays" exact>
+                            <Delays />
                         </Route>
                     </Switch>
                 </MessageLogProvider>

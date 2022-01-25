@@ -1,4 +1,5 @@
 import { Close, CropSquare, HomeRounded, Menu, Minimize, Settings, SettingsSuggest } from "@mui/icons-material"
+import WatchLaterIcon from "@mui/icons-material/WatchLater"
 import { Alert, AppBar, Button, ButtonGroup, Divider, Drawer, IconButton, List, ListItem, ListItemIcon, ListItemText, Snackbar, Toolbar, Typography } from "@mui/material"
 import * as app from "@tauri-apps/api/app"
 import { appWindow } from "@tauri-apps/api/window"
@@ -90,6 +91,15 @@ const NavBar = () => {
                                     <SettingsSuggest />
                                 </ListItemIcon>
                                 <ListItemText primary="Extra Settings" />
+                            </ListItem>
+                            <Divider />
+                        </RouterLink>
+                        <RouterLink to="/delays" className="navLink">
+                            <ListItem button key="delays">
+                                <ListItemIcon>
+                                    <WatchLaterIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Delays" />
                             </ListItem>
                             <Divider />
                         </RouterLink>
