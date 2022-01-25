@@ -122,6 +122,22 @@ class Settings:
     # #### generic ####
     enable_force_reload: bool = _data["generic"]["enableForceReload"]
     # #### end of generic ####
+
+    # #### adjustment ####
+    enable_calibration_adjustment: bool = _data["adjustment"]["enableCalibrationAdjustment"]
+    adjust_calibration: int = _data["adjustment"]["adjustCalibration"]
+    enable_general_adjustment: bool = _data["adjustment"]["enableGeneralAdjustment"]
+    adjust_button_search_general: int = _data["adjustment"]["adjustButtonSearchGeneral"]
+    adjust_header_search_general: int = _data["adjustment"]["adjustHeaderSearchGeneral"]
+    enable_support_summon_selection_screen_adjustment: bool = _data["adjustment"]["enableSupportSummonSelectionScreenAdjustment"]
+    adjust_support_summon_selection_screen: int = _data["adjustment"]["adjustSupportSummonSelectionScreen"]
+    enable_combat_mode_adjustment: bool = _data["adjustment"]["enableCombatModeAdjustment"]
+    adjust_combat_start: int = _data["adjustment"]["adjustCombatStart"]
+    adjust_skill_usage: int = _data["adjustment"]["adjustSkillUsage"]
+    adjust_summon_usage: int = _data["adjustment"]["adjustSummonUsage"]
+    adjust_waiting_for_reload: int = _data["adjustment"]["adjustWaitingForReload"]
+    adjust_waiting_for_attack: int = _data["adjustment"]["adjustWaitingForAttack"]
+    # #### end of adjustment ####
     # ################## end of settings.json ###################
     #############################################################
 
