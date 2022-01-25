@@ -83,6 +83,22 @@ export interface Settings {
     generic: {
         enableForceReload: boolean
     }
+
+    // Adjustment Settings.
+    adjustment: {
+        enableCalibrationAdjustment: boolean
+        adjustCalibration: number
+        enableGeneralAdjustment: boolean
+        adjustButtonSearchGeneral: number
+        adjustHeaderSearchGeneral: number
+        enableSupportSummonSelectionScreenAdjustment: boolean
+        adjustSupportSummonSelectionScreen: number
+        enableCombatModeAdjustment: boolean
+        adjustSkillUsage: number
+        adjustSummonUsage: number
+        adjustWaitingForReload: number
+        adjustWaitingForAttack: number
+    }
 }
 
 // Set the default settings.
@@ -152,6 +168,20 @@ export const defaultSettings: Settings = {
     },
     generic: {
         enableForceReload: false,
+    },
+    adjustment: {
+        enableCalibrationAdjustment: false,
+        adjustCalibration: 5,
+        enableGeneralAdjustment: false,
+        adjustButtonSearchGeneral: 5,
+        adjustHeaderSearchGeneral: 5,
+        enableSupportSummonSelectionScreenAdjustment: false,
+        adjustSupportSummonSelectionScreen: 30,
+        enableCombatModeAdjustment: false,
+        adjustSkillUsage: 5,
+        adjustSummonUsage: 5,
+        adjustWaitingForReload: 3,
+        adjustWaitingForAttack: 100,
     },
 }
 
