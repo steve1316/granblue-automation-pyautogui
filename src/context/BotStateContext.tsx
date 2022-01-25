@@ -94,6 +94,7 @@ export interface Settings {
         enableSupportSummonSelectionScreenAdjustment: boolean
         adjustSupportSummonSelectionScreen: number
         enableCombatModeAdjustment: boolean
+        adjustCombatStart: number
         adjustSkillUsage: number
         adjustSummonUsage: number
         adjustWaitingForReload: number
@@ -178,6 +179,7 @@ export const defaultSettings: Settings = {
         enableSupportSummonSelectionScreenAdjustment: false,
         adjustSupportSummonSelectionScreen: 30,
         enableCombatModeAdjustment: false,
+        adjustCombatStart: 50,
         adjustSkillUsage: 5,
         adjustSummonUsage: 5,
         adjustWaitingForReload: 3,

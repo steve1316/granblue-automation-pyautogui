@@ -47,14 +47,26 @@ const Adjustments = () => {
                 </Divider>
 
                 <FormGroup sx={{ paddingBottom: "16px" }}>
-                    <FormControlLabel control={<Checkbox checked={false} onChange={() => {}} />} label="Enable Calibration Adjustments" />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bsc.settings.adjustment.enableCalibrationAdjustment}
+                                onChange={(e) => {
+                                    bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enableCalibrationAdjustment: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable Calibration Adjustments"
+                    />
                     <FormHelperText>Enable adjustment of tries for Calibration.</FormHelperText>
                 </FormGroup>
 
                 {true ? (
                     <CustomTextField
-                        value={1}
-                        onChange={() => {}}
+                        value={bsc.settings.adjustment.adjustCalibration}
+                        onChange={(e) => {
+                            bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustCalibration: Number(e.target.value) } })
+                        }}
                         label="Home Calibration"
                         helperText="Home calibration occurs when the bot is first started and attempts to find and save the location of the game window."
                     />
@@ -73,21 +85,35 @@ const Adjustments = () => {
                 </Divider>
 
                 <FormGroup sx={{ paddingBottom: "16px" }}>
-                    <FormControlLabel control={<Checkbox checked={false} onChange={() => {}} />} label="Enable General Image Searching Adjustments" />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bsc.settings.adjustment.enableGeneralAdjustment}
+                                onChange={(e) => {
+                                    bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enableGeneralAdjustment: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable General Image Searching Adjustments"
+                    />
                     <FormHelperText>Enable adjustment of tries for General.</FormHelperText>
                 </FormGroup>
 
                 {true ? (
                     <div>
                         <CustomTextField
-                            value={1}
-                            onChange={() => {}}
+                            value={bsc.settings.adjustment.adjustButtonSearchGeneral}
+                            onChange={(e) => {
+                                bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustButtonSearchGeneral: Number(e.target.value) } })
+                            }}
                             label="General Image Template Matching for Buttons"
                             helperText="Set the default number of tries for button template matching. This will be overwritten by the specific settings down below if applicable."
                         />
                         <CustomTextField
-                            value={1}
-                            onChange={() => {}}
+                            value={bsc.settings.adjustment.adjustHeaderSearchGeneral}
+                            onChange={(e) => {
+                                bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustHeaderSearchGeneral: Number(e.target.value) } })
+                            }}
                             label="General Image Template Matching for Headers"
                             helperText="Set the default number of tries for header template matching. This will be overwritten by the specific settings down below if applicable."
                         />
@@ -107,14 +133,26 @@ const Adjustments = () => {
                 </Divider>
 
                 <FormGroup sx={{ paddingBottom: "16px" }}>
-                    <FormControlLabel control={<Checkbox checked={false} onChange={() => {}} />} label="Enable Summon Selection Screen Adjustments" />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bsc.settings.adjustment.enableSupportSummonSelectionScreenAdjustment}
+                                onChange={(e) => {
+                                    bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enableSupportSummonSelectionScreenAdjustment: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable Summon Selection Screen Adjustments"
+                    />
                     <FormHelperText>Enable adjustment of tries for Support Summon Selection Screen.</FormHelperText>
                 </FormGroup>
 
                 {true ? (
                     <CustomTextField
-                        value={1}
-                        onChange={() => {}}
+                        value={bsc.settings.adjustment.adjustSupportSummonSelectionScreen}
+                        onChange={(e) => {
+                            bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustSupportSummonSelectionScreen: Number(e.target.value) } })
+                        }}
                         label="Arrival at Support Summon Selection screen"
                         helperText="Set the default number of tries to check if the bot arrived at the Support Summon Selection screen."
                     />
@@ -133,29 +171,59 @@ const Adjustments = () => {
                 </Divider>
 
                 <FormGroup sx={{ paddingBottom: "16px" }}>
-                    <FormControlLabel control={<Checkbox checked={false} onChange={() => {}} />} label="Enable Combat Mode Adjustments" />
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bsc.settings.adjustment.enableCombatModeAdjustment}
+                                onChange={(e) => {
+                                    bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enableCombatModeAdjustment: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable Combat Mode Adjustments"
+                    />
                     <FormHelperText>Enable adjustment of tries for Combat Mode Adjustments.</FormHelperText>
                 </FormGroup>
 
                 {true ? (
                     <div>
                         <CustomTextField
-                            value={1}
-                            onChange={() => {}}
+                            value={bsc.settings.adjustment.adjustCombatStart}
+                            onChange={(e) => {
+                                bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustCombatStart: Number(e.target.value) } })
+                            }}
                             label="Arrival at Combat Screen"
                             helperText="Set the default number of tries for checking when the bot arrives at the Combat Screen."
                         />
-                        <CustomTextField value={1} onChange={() => {}} label="Skill Usage" helperText="Set the default number of tries for checking when a skill is used." />
-                        <CustomTextField value={1} onChange={() => {}} label="Summon Usage" helperText="Set the default number of tries for checking when a Summon is used." />
                         <CustomTextField
-                            value={1}
-                            onChange={() => {}}
+                            value={bsc.settings.adjustment.adjustSkillUsage}
+                            onChange={(e) => {
+                                bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustSkillUsage: Number(e.target.value) } })
+                            }}
+                            label="Skill Usage"
+                            helperText="Set the default number of tries for checking when a skill is used."
+                        />
+                        <CustomTextField
+                            value={bsc.settings.adjustment.adjustSummonUsage}
+                            onChange={(e) => {
+                                bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustSummonUsage: Number(e.target.value) } })
+                            }}
+                            label="Summon Usage"
+                            helperText="Set the default number of tries for checking when a Summon is used."
+                        />
+                        <CustomTextField
+                            value={bsc.settings.adjustment.adjustWaitingForReload}
+                            onChange={(e) => {
+                                bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustWaitingForReload: Number(e.target.value) } })
+                            }}
                             label="Waiting for Reload"
                             helperText="Set the default number of tries for checking when a reload is finished, whether or not the bot ends up back at the Combat screen or the Loot Collection screen."
                         />
                         <CustomTextField
-                            value={1}
-                            onChange={() => {}}
+                            value={bsc.settings.adjustment.adjustWaitingForAttack}
+                            onChange={(e) => {
+                                bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustWaitingForAttack: Number(e.target.value) } })
+                            }}
                             label="Waiting for Attack"
                             helperText="Set the default number of tries for checking when an attack is finished when the Attack button is pressed."
                         />
