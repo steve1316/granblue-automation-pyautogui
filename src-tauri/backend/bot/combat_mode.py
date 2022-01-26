@@ -701,7 +701,8 @@ class CombatMode:
 
                 # Check if the skill requires a target.
                 if len(skill_command_list) > 0 and (
-                        (Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("use_skill", tries = Settings.adjust_skill_usage)) or ImageUtils.confirm_location("use_skill")):
+                        (Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("use_skill", tries = Settings.adjust_skill_usage, bypass_general_adjustment = True)) or
+                        ImageUtils.confirm_location("use_skill")):
                     MessageLog.print_message(f"[COMBAT] Skill is awaiting a target...")
                     target = skill_command_list.pop(0)
 
@@ -731,7 +732,8 @@ class CombatMode:
                         Game.find_and_click_button("cancel")
 
                 # Else, check if the character is skill-sealed.
-                elif (Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("skill_unusable", tries = Settings.adjust_skill_usage)) or ImageUtils.confirm_location("skill_unusable"):
+                elif (Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("skill_unusable", tries = Settings.adjust_skill_usage, bypass_general_adjustment = True)) or \
+                        ImageUtils.confirm_location("skill_unusable"):
                     MessageLog.print_message("[COMBAT] Character is currently skill-sealed. Unable to execute command.")
                     Game.find_and_click_button("cancel")
 
@@ -777,7 +779,8 @@ class CombatMode:
                     tries -= 1
 
                 # Check if it is able to be summoned.
-                if (Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("summon_details", tries = Settings.adjust_summon_usage)) or ImageUtils.confirm_location("summon_details"):
+                if (Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("summon_details", tries = Settings.adjust_summon_usage, bypass_general_adjustment = True)) or \
+                        ImageUtils.confirm_location("summon_details"):
                     if Game.find_and_click_button("ok") is False:
                         MessageLog.print_message("[COMBAT] Summon #{j} cannot be invoked due to current restrictions.")
                         Game.find_and_click_button("cancel")
@@ -921,7 +924,7 @@ class CombatMode:
 
         # Save the positions of the "Attack" and "Back" button.
         if Settings.enable_combat_mode_adjustment:
-            CombatMode._attack_button_location = ImageUtils.find_button("attack", tries = Settings.adjust_combat_start)
+            CombatMode._attack_button_location = ImageUtils.find_button("attack", tries = Settings.adjust_combat_start, bypass_general_adjustment = True)
         else:
             CombatMode._attack_button_location = ImageUtils.find_button("attack", tries = 50)
 

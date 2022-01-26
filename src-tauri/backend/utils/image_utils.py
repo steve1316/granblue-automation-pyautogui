@@ -207,7 +207,7 @@ class ImageUtils:
         return match_locations
 
     @staticmethod
-    def find_button(image_name: str, custom_confidence: float = 0.8, tries: int = 5, suppress_error: bool = False):
+    def find_button(image_name: str, custom_confidence: float = 0.8, tries: int = 5, suppress_error: bool = False, bypass_general_adjustment: bool = False):
         """Find the location of the specified button.
 
         Args:
@@ -215,6 +215,7 @@ class ImageUtils:
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
             tries (int, optional): Number of tries before failing. Defaults to 5.
             suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
+            bypass_general_adjustment (bool, optional): Bypass using the general adjustment for the number of tries. Defaults to False.
 
         Returns:
             (Tuple[int, int]): Tuple of coordinates of where the center of the button is located if image matching was successful. Otherwise, return None.
@@ -224,7 +225,7 @@ class ImageUtils:
 
         template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.jpg", 0)
 
-        if Settings.enable_general_adjustment and tries != 5:
+        if Settings.enable_general_adjustment and bypass_general_adjustment is False and tries != 5:
             new_tries = Settings.adjust_button_search_general
         else:
             new_tries = tries
@@ -244,7 +245,7 @@ class ImageUtils:
         return None
 
     @staticmethod
-    def confirm_location(image_name: str, custom_confidence: float = 0.8, tries: int = 5, suppress_error: bool = False):
+    def confirm_location(image_name: str, custom_confidence: float = 0.8, tries: int = 5, suppress_error: bool = False, bypass_general_adjustment: bool = False):
         """Confirm the position of the bot by searching for the header image.
 
         Args:
@@ -252,6 +253,7 @@ class ImageUtils:
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
             tries (int, optional): Number of tries before failing. Defaults to 5.
             suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
+            bypass_general_adjustment (bool, optional): Bypass using the general adjustment for the number of tries. Defaults to False.
 
         Returns:
             (bool): True if current location is confirmed. Otherwise, False.
@@ -261,7 +263,7 @@ class ImageUtils:
 
         template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/headers/{image_name.lower()}_header.jpg", 0)
 
-        if Settings.enable_general_adjustment and tries != 5:
+        if Settings.enable_general_adjustment and bypass_general_adjustment is False and tries != 5:
             new_tries = Settings.adjust_header_search_general
         else:
             new_tries = tries
