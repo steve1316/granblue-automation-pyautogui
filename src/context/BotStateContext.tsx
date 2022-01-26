@@ -44,6 +44,7 @@ export interface Settings {
         enableRandomizedDelayBetweenRuns: boolean
         delayBetweenRunsLowerBound: number
         delayBetweenRunsUpperBound: number
+        enableRefreshDuringCombat: boolean
         staticWindow: boolean
     }
 
@@ -140,6 +141,7 @@ export const defaultSettings: Settings = {
         enableRandomizedDelayBetweenRuns: false,
         delayBetweenRunsLowerBound: 15,
         delayBetweenRunsUpperBound: 60,
+        enableRefreshDuringCombat: true,
         staticWindow: true,
     },
     misc: {

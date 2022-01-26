@@ -553,6 +553,24 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
+                                checked={bot.settings.configuration.enableRefreshDuringCombat}
+                                onChange={(e) => {
+                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableRefreshDuringCombat: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable Refreshing during Combat"
+                    />
+                    <FormHelperText>
+                        Enables the ability to refresh to speed up Combat Mode whenever the Attack button disappears when it is pressed or during Full/Semi Auto. This option takes precedence above any
+                        other related setting to reloading during combat except via the reload command in a script.
+                    </FormHelperText>
+                </FormGroup>
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
                                 checked={bot.settings.configuration.staticWindow}
                                 onChange={(e) => {
                                     bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, staticWindow: e.target.checked } })
