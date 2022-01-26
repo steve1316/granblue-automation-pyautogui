@@ -327,6 +327,17 @@ class Game:
             Game.check_for_captcha()
 
             return True
+        elif Settings.enable_bypass_reset_summon:
+            MessageLog.print_message("[INFO] Bypassing procedure to reset Summons. Reloading page and selecting the very first one now...")
+
+            Game.find_and_click_button("reload")
+            Game.wait(3.0)
+
+            # Now select the first Summon.
+            choose_a_summon_location = ImageUtils.find_button("choose_a_summon")
+            MouseUtils.move_and_click_point(choose_a_summon_location[0], choose_a_summon_location[1] + 187, "choose_a_summon")
+
+            return True
         else:
             # If a Summon is not found, start a Trial Battle to refresh Summons.
             Game._reset_summons()
