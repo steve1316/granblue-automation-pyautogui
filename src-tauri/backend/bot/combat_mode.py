@@ -294,6 +294,7 @@ class CombatMode:
                 CombatMode._enable_full_auto()
             elif reload_check and CombatMode._semi_auto:
                 CombatMode._enable_semi_auto()
+
         CombatMode._wait_for_attack()
 
         MessageLog.print_message(f"[COMBAT] Turn {CombatMode._turn_number} has ended.")
@@ -352,7 +353,7 @@ class CombatMode:
         # If the bot failed to find and click the "Full Auto" button, fallback to the "Semi Auto" button.
         if enable_auto is False:
             MessageLog.print_message(f"[COMBAT] Failed to find the \"Full Auto\" button. Falling back to Semi Auto.")
-            MessageLog.print_message(f"Double checking to see if Semi Auto is enabled.")
+            MessageLog.print_message(f"[COMBAT] Double checking to see if Semi Auto is enabled.")
 
             enabled_semi_auto_button_location = ImageUtils.find_button("semi_button_enabled")
             if enabled_semi_auto_button_location is None:
@@ -1066,6 +1067,7 @@ class CombatMode:
                         # Click Next if it is available and enable automation again if combat continues.
                         if Game.find_and_click_button("next", tries = 1, suppress_error = True):
                             # Check for exit conditions and restart auto.
+                            Game.wait(3.0)
                             if CombatMode._check_for_battle_end() == "Nothing":
                                 CombatMode._enable_auto()
                         elif ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
@@ -1077,8 +1079,8 @@ class CombatMode:
                             if CombatMode._check_for_battle_end() == "Nothing":
                                 if Settings.debug_mode:
                                     MessageLog.print_message("[DEBUG] Clicked the Next button to move to the next wave. Attempting to restart Full/Semi Auto...")
-                                if CombatMode._wait_for_attack():
-                                    CombatMode._enable_auto()
+
+                                CombatMode._enable_auto()
                     elif ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
                         if Settings.debug_mode:
                             MessageLog.print_message("[DEBUG] Attack and Next buttons have vanished. Determining if bot should reload...")
@@ -1086,7 +1088,7 @@ class CombatMode:
                             # Enable Full/Semi Auto again if the bot reloaded.
                             if CombatMode._full_auto:
                                 CombatMode._enable_full_auto()
-                            if CombatMode._semi_auto:
+                            elif CombatMode._semi_auto:
                                 CombatMode._enable_semi_auto()
             else:
                 # Main workflow loop for manually pressing the Attack button and reloading until combat ends.
