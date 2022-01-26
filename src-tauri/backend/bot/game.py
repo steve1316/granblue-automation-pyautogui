@@ -54,7 +54,10 @@ class Game:
             None
         """
         # Save the location of the "Home" button at the bottom of the bot window.
-        Settings.home_button_location = ImageUtils.find_button("home")
+        if Settings.enable_calibration_adjustment:
+            Settings.home_button_location = ImageUtils.find_button("home", tries = Settings.adjust_calibration)
+        else:
+            Settings.home_button_location = ImageUtils.find_button("home")
 
         MessageLog.print_message("\n[INFO] Recalibrating the dimensions of the window...")
 

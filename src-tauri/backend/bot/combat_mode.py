@@ -232,7 +232,10 @@ class CombatMode:
 
             MessageLog.print_message("[COMBAT] Reloading now.")
             Game.find_and_click_button("reload")
-            Game.wait(3.0)
+            if Settings.enable_combat_mode_adjustment:
+                Game.wait(Settings.adjust_waiting_for_reload)
+            else:
+                Game.wait(3.0)
             return True
 
         return False
@@ -312,7 +315,11 @@ class CombatMode:
             (bool): True if Attack ended into the next Turn. False if Attack ended but combat also ended as well.
         """
         MessageLog.print_message("[COMBAT] Now waiting for attack to end...")
-        tries = 100
+        if Settings.enable_combat_mode_adjustment:
+            tries = Settings.adjust_waiting_for_attack
+        else:
+            tries = 100
+
         while tries > 0 and not CombatMode._retreat_check and ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and \
                 ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
             CombatMode._check_for_dialog()
@@ -688,7 +695,8 @@ class CombatMode:
                 MouseUtils.move_and_click_point(x, y, "template_skill")
 
                 # Check if the skill requires a target.
-                if len(skill_command_list) > 0 and ImageUtils.confirm_location("use_skill", tries = 2):
+                if len(skill_command_list) > 0 and (
+                        (Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("use_skill", tries = Settings.adjust_skill_usage)) or ImageUtils.confirm_location("use_skill")):
                     MessageLog.print_message(f"[COMBAT] Skill is awaiting a target...")
                     target = skill_command_list.pop(0)
 
@@ -718,7 +726,7 @@ class CombatMode:
                         Game.find_and_click_button("cancel")
 
                 # Else, check if the character is skill-sealed.
-                elif ImageUtils.confirm_location("skill_unusable", tries = 2):
+                elif (Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("skill_unusable", tries = Settings.adjust_skill_usage)) or ImageUtils.confirm_location("skill_unusable"):
                     MessageLog.print_message("[COMBAT] Character is currently skill-sealed. Unable to execute command.")
                     Game.find_and_click_button("cancel")
 
@@ -747,7 +755,7 @@ class CombatMode:
 
                 # Click on the specified Summon.
                 tries = 3
-                while ImageUtils.confirm_location("summon_details", tries = 1) is False:
+                while ImageUtils.confirm_location("summon_details") is False:
                     if summon_index == 1:
                         MouseUtils.move_and_click_point(CombatMode._attack_button_location[0] - 317, CombatMode._attack_button_location[1] + 138, "template_summon")
                     elif summon_index == 2:
@@ -764,13 +772,13 @@ class CombatMode:
                     tries -= 1
 
                 # Check if it is able to be summoned.
-                if ImageUtils.confirm_location("summon_details"):
+                if (Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("summon_details", tries = Settings.adjust_summon_usage)) or ImageUtils.confirm_location("summon_details"):
                     if Game.find_and_click_button("ok") is False:
                         MessageLog.print_message("[COMBAT] Summon #{j} cannot be invoked due to current restrictions.")
                         Game.find_and_click_button("cancel")
 
                 # Click the "Back" button to return.
-                Game.find_and_click_button("back", tries = 1)
+                Game.find_and_click_button("back")
 
         if "wait" in command:
             split_command = command.split(".")
@@ -792,7 +800,9 @@ class CombatMode:
         from bot.game import Game
 
         MessageLog.print_message("[COMBAT] Quick Summoning now...")
-        if Game.find_and_click_button("quick_summon1") or Game.find_and_click_button("quick_summon2"):
+        if (Settings.enable_combat_mode_adjustment and (
+                Game.find_and_click_button("quick_summon1", tries = Settings.adjust_summon_usage) or Game.find_and_click_button("quick_summon2", tries = Settings.adjust_summon_usage))) or (
+                Game.find_and_click_button("quick_summon1") or Game.find_and_click_button("quick_summon2")):
             MessageLog.print_message("[COMBAT] Successfully quick summoned!")
 
             if "wait" in command:
@@ -905,7 +915,11 @@ class CombatMode:
             Game.find_and_click_button("arcarum_stage_effect_active", tries = 5)
 
         # Save the positions of the "Attack" and "Back" button.
-        CombatMode._attack_button_location = ImageUtils.find_button("attack", tries = 50)
+        if Settings.enable_combat_mode_adjustment:
+            CombatMode._attack_button_location = ImageUtils.find_button("attack", tries = Settings.adjust_combat_start)
+        else:
+            CombatMode._attack_button_location = ImageUtils.find_button("attack", tries = 50)
+
         if CombatMode._attack_button_location is None:
             MessageLog.print_message(f"\n[ERROR] Cannot find Attack button. Raid must have just ended.")
             return False

@@ -224,12 +224,17 @@ class ImageUtils:
 
         template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.jpg", 0)
 
-        while tries > 0:
+        if Settings.enable_general_adjustment and tries != 5:
+            new_tries = Settings.adjust_button_search_general
+        else:
+            new_tries = tries
+
+        while new_tries > 0:
             result_flag: bool = ImageUtils._match(template, custom_confidence)
 
             if result_flag is False:
-                tries -= 1
-                if tries <= 0:
+                new_tries -= 1
+                if new_tries <= 0:
                     if not suppress_error:
                         MessageLog.print_message(f"[WARNING] Failed to find the {image_name.upper()} button.")
                     return None
@@ -256,12 +261,20 @@ class ImageUtils:
 
         template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/headers/{image_name.lower()}_header.jpg", 0)
 
-        while tries > 0:
+        if Settings.enable_general_adjustment and tries != 5:
+            new_tries = Settings.adjust_header_search_general
+        else:
+            new_tries = tries
+
+        if (image_name == "coop_without_support_summon" or image_name == "select_a_summon") and Settings.enable_support_summon_selection_screen_adjustment:
+            new_tries = Settings.adjust_support_summon_selection_screen
+
+        while new_tries > 0:
             result_flag: bool = ImageUtils._match(template, custom_confidence)
 
             if result_flag is False:
-                tries -= 1
-                if tries <= 0:
+                new_tries -= 1
+                if new_tries <= 0:
                     if not suppress_error:
                         MessageLog.print_message(f"[WARNING] Failed to confirm the bot's location at {image_name.upper()}.")
                     return False
