@@ -58,6 +58,7 @@ class Settings:
     delay_in_seconds_lower_bound: int = _data["configuration"]["delayBetweenRunsLowerBound"]
     delay_in_seconds_upper_bound: int = _data["configuration"]["delayBetweenRunsUpperBound"]
     enable_refresh_during_combat: bool = _data["configuration"]["enableRefreshDuringCombat"]
+    enable_auto_quick_summon: bool = _data["configuration"]["enableAutoQuickSummon"]
     static_window: bool = _data["configuration"]["staticWindow"]
     # #### end of configuration ####
 

@@ -347,6 +347,10 @@ class CombatMode:
         """
         from bot.game import Game
 
+        if Settings.enable_refresh_during_combat and Settings.enable_auto_quick_summon:
+            MessageLog.print_message(f"[COMBAT] Automatically attempting to use Quick Summon...")
+            CombatMode._quick_summon()
+
         MessageLog.print_message(f"[COMBAT] Enabling Full Auto.")
         enable_auto = Game.find_and_click_button("full_auto")
 
@@ -789,11 +793,11 @@ class CombatMode:
         return None
 
     @staticmethod
-    def _quick_summon(command: str):
+    def _quick_summon(command: str = ""):
         """Activate a Quick Summon.
 
         Args:
-            command (str): The command to be executed.
+            command (str, optional): The command to be executed. Defaults to the regular quick summon command.
 
         Returns:
             None
