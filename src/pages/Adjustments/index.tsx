@@ -61,7 +61,7 @@ const Adjustments = () => {
                     <FormHelperText>Enable adjustment of tries for Calibration.</FormHelperText>
                 </FormGroup>
 
-                {true ? (
+                {bsc.settings.adjustment.enableCalibrationAdjustment ? (
                     <CustomTextField
                         value={bsc.settings.adjustment.adjustCalibration}
                         onChange={(e) => {
@@ -99,7 +99,7 @@ const Adjustments = () => {
                     <FormHelperText>Enable adjustment of tries for General.</FormHelperText>
                 </FormGroup>
 
-                {true ? (
+                {bsc.settings.adjustment.enableGeneralAdjustment ? (
                     <div>
                         <CustomTextField
                             value={bsc.settings.adjustment.adjustButtonSearchGeneral}
@@ -147,7 +147,7 @@ const Adjustments = () => {
                     <FormHelperText>Enable adjustment of tries for Support Summon Selection Screen.</FormHelperText>
                 </FormGroup>
 
-                {true ? (
+                {bsc.settings.adjustment.enableSupportSummonSelectionScreenAdjustment ? (
                     <CustomTextField
                         value={bsc.settings.adjustment.adjustSupportSummonSelectionScreen}
                         onChange={(e) => {
@@ -185,7 +185,7 @@ const Adjustments = () => {
                     <FormHelperText>Enable adjustment of tries for Combat Mode Adjustments.</FormHelperText>
                 </FormGroup>
 
-                {true ? (
+                {bsc.settings.adjustment.enableCombatModeAdjustment ? (
                     <div>
                         <CustomTextField
                             value={bsc.settings.adjustment.adjustCombatStart}
