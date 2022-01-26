@@ -589,6 +589,24 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
+                                checked={bot.settings.configuration.enableBypassResetSummon}
+                                onChange={(e) => {
+                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableBypassResetSummon: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable Bypassing Reset Summon Procedure"
+                    />
+                    <FormHelperText>
+                        Enables bypassing the bot resetting Summons if there are none of your chosen found during Summon Selection. The bot will reload the page and select the very first summon at the
+                        top of the list.
+                    </FormHelperText>
+                </FormGroup>
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
                                 checked={bot.settings.configuration.staticWindow}
                                 onChange={(e) => {
                                     bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, staticWindow: e.target.checked } })
