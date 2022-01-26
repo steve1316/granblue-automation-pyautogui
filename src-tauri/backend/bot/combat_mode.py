@@ -1109,11 +1109,11 @@ class CombatMode:
                     Game.find_and_click_button("attack", tries = 10)
                     CombatMode._reload_for_attack()
                     CombatMode._wait_for_attack()
-        except CombatModeException:
+        except CombatModeException as e:
             message = sys.exc_info()[1]
-            if CombatMode._list_of_exit_events_for_false.__contains__(message):
+            if CombatMode._list_of_exit_events_for_false.__contains__(e.__str__()):
                 return False
-            elif CombatMode._list_of_exit_events_for_true.__contains__(message):
+            elif CombatMode._list_of_exit_events_for_true.__contains__(e.__str__()):
                 return True
 
         ######################################################################
