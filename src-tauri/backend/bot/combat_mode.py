@@ -227,7 +227,7 @@ class CombatMode:
             (bool): True if the bot reloaded the page. False otherwise.
         """
         # If the "Cancel" button vanishes, that means the attack is in-progress. Now reload the page and wait for either the attack to finish or Battle ended.
-        if CombatMode._check_raid() or override or (Settings.farming_mode == "Generic" and Settings.enable_force_reload):
+        if Settings.enable_refresh_during_combat and (CombatMode._check_raid() or override or (Settings.farming_mode == "Generic" and Settings.enable_force_reload)):
             from bot.game import Game
 
             MessageLog.print_message("[COMBAT] Reloading now.")
