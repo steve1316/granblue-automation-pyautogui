@@ -97,7 +97,7 @@ const TransferList = ({ isNightmare }: { isNightmare: boolean }) => {
                                 <ListItem button onClick={handleChecked(value, isLeftList)}>
                                     <Card>
                                         <CardActionArea>
-                                            <CardMedia component="img" image={require(`../../images/summons/${fileName}.png`).default} />
+                                            <CardMedia component="img" image={require(`../../images/summons/${fileName}.jpg`).default} />
                                         </CardActionArea>
                                     </Card>
                                     <ListItemText className="transferListItemText" primary={value} />
