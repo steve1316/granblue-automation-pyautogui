@@ -225,7 +225,7 @@ const Adjustments = () => {
                                 bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustWaitingForAttack: Number(e.target.value) } })
                             }}
                             label="Waiting for Attack"
-                            helperText="Set the default number of tries for checking when an attack is finished when the Attack button is pressed."
+                            helperText="Set the default number of tries for checking when an attack is finished after the Attack button is pressed."
                         />
                     </div>
                 ) : null}
