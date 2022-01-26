@@ -352,7 +352,7 @@ class CombatMode:
             CombatMode._quick_summon()
 
         MessageLog.print_message(f"[COMBAT] Enabling Full Auto.")
-        enable_auto = Game.find_and_click_button("full_auto")
+        enable_auto = Game.find_and_click_button("full_auto") or ImageUtils.find_button("full_auto_enabled")
 
         # If the bot failed to find and click the "Full Auto" button, fallback to the "Semi Auto" button.
         if enable_auto is False:
