@@ -121,7 +121,7 @@ class Game:
             MessageLog.print_message("[INFO] Bot is at the Home screen.")
 
         # Handle any misc popups on the Home screen.
-        Game.find_and_click_button("close", tries = 2)
+        Game.find_and_click_button("close", suppress_error = True)
 
         # Recalibrate the dimensions of the bot window.
         if display_info_check:
@@ -363,12 +363,12 @@ class Game:
 
                 # Now start the Old Lignoid Trial Battle right away and then wait a few seconds.
                 Game.find_and_click_button("party_selection_ok")
-                Game.wait(2)
+                Game.wait(3.0)
 
                 # Retreat from this Trial Battle.
                 Game.find_and_click_button("menu", tries = 30)
-                Game.find_and_click_button("retreat", tries = 5)
-                Game.find_and_click_button("retreat_confirmation", tries = 5)
+                Game.find_and_click_button("retreat", tries = 30)
+                Game.find_and_click_button("retreat_confirmation", tries = 30)
                 Game.go_back_home()
 
                 if ImageUtils.confirm_location("home"):
@@ -397,24 +397,24 @@ class Game:
             set_location = None
             if group_number < 8:
                 while set_location is None:
-                    set_location = ImageUtils.find_button("party_set_a", tries = 3)
+                    set_location = ImageUtils.find_button("party_set_a", tries = 10)
                     if set_location is None:
                         tries -= 1
                         if tries <= 0:
                             raise RuntimeError("Could not find Set A.")
 
                         # See if the user had Set B active instead of Set A if matching failed.
-                        set_location = ImageUtils.find_button("party_set_b", tries = 3)
+                        set_location = ImageUtils.find_button("party_set_b", tries = 10)
             else:
                 while set_location is None:
-                    set_location = ImageUtils.find_button("party_set_b", tries = 3)
+                    set_location = ImageUtils.find_button("party_set_b", tries = 10)
                     if set_location is None:
                         tries -= 1
                         if tries <= 0:
                             raise RuntimeError("Could not find Set B.")
 
                         # See if the user had Set A active instead of Set B if matching failed.
-                        set_location = ImageUtils.find_button("party_set_a", tries = 3)
+                        set_location = ImageUtils.find_button("party_set_a", tries = 10)
 
             # Center the mouse on the "Set A" / "Set B" button and then click the correct Group tab.
             if Settings.debug_mode:
@@ -588,6 +588,9 @@ class Game:
                 if ImageUtils.confirm_location("no_loot", tries = 1):
                     return 0
 
+                if Settings.debug_mode:
+                    MessageLog.print_message("[DEBUG] Have not detected the Loot Collection screen yet...")
+
         # Now that the bot is at the Loot Collected screen, detect any user-specified items.
         if is_completed and not is_pending_battle and not is_event_nightmare:
             MessageLog.print_message("\n[INFO] Detecting if any user-specified loot dropped from this run...")
@@ -681,7 +684,7 @@ class Game:
         """
         MessageLog.print_message(f"\n[INFO] Now beginning process to check for popups...")
 
-        while ImageUtils.confirm_location("select_a_summon", tries = 1) is False:
+        while ImageUtils.confirm_location("select_a_summon", tries = 1, suppress_error = True) is False:
             # Break out of the loop if the bot detected that a AP recovery item was automatically used and let check_for_ap() take care of it.
             if Settings.enabled_auto_restore is False and ImageUtils.confirm_location("auto_ap_recovered", tries = 1) or ImageUtils.confirm_location("auto_ap_recovered2", tries = 1):
                 break
@@ -707,8 +710,11 @@ class Game:
                 return True
 
             # Attempt to close any popup by clicking on any detected "Close" and "Cancel" buttons.
-            if Game.find_and_click_button("close", tries = 1) is False:
-                Game.find_and_click_button("cancel", tries = 1)
+            if Game.find_and_click_button("close", tries = 1, suppress_error = True) is False:
+                Game.find_and_click_button("cancel", tries = 1, suppress_error = True)
+
+            if Settings.debug_mode:
+                MessageLog.print_message("[DEBUG] Have not detected the Support Summon Selection screen yet...")
 
         return False
 
@@ -719,12 +725,12 @@ class Game:
         Returns:
             (bool): Return True if a Pending Battle was successfully processed. Otherwise, return False.
         """
-        if Game.find_and_click_button("tap_here_to_see_rewards", tries = 3):
+        if Game.find_and_click_button("tap_here_to_see_rewards", tries = 10):
             MessageLog.print_message(f"[INFO] Clearing this Pending Battle...")
             Game.wait(1)
 
             # If there is loot available, start loot detection.
-            if ImageUtils.confirm_location("no_loot", tries = 3):
+            if ImageUtils.confirm_location("no_loot"):
                 MessageLog.print_message(f"[INFO] No loot can be collected.")
 
                 # Navigate back to the Quests screen.
@@ -737,8 +743,8 @@ class Game:
                 else:
                     Game.collect_loot(is_completed = False, is_pending_battle = True)
 
-                Game.find_and_click_button("close", tries = 2)
-                Game.find_and_click_button("ok", tries = 2)
+                Game.find_and_click_button("close", suppress_error = True)
+                Game.find_and_click_button("ok", suppress_error = True)
 
                 return True
 
@@ -751,7 +757,7 @@ class Game:
         Returns:
             None
         """
-        if ImageUtils.confirm_location("friend_request", tries = 3):
+        if ImageUtils.confirm_location("friend_request"):
             Game.find_and_click_button("cancel")
             Game.wait(2.0)
         return None
@@ -763,7 +769,7 @@ class Game:
         Returns:
             None
         """
-        if ImageUtils.confirm_location("skyscope", tries = 3):
+        if ImageUtils.confirm_location("skyscope"):
             Game.find_and_click_button("close")
             Game.wait(2.0)
         return None
@@ -779,9 +785,9 @@ class Game:
 
         Game.wait(1)
 
-        if (ImageUtils.confirm_location("check_your_pending_battles", tries = 1)) or \
-                (ImageUtils.confirm_location("pending_battles", tries = 1)) or \
-                (Game.find_and_click_button("quest_results_pending_battles", tries = 1)):
+        if (ImageUtils.confirm_location("check_your_pending_battles")) or \
+                (ImageUtils.confirm_location("pending_battles")) or \
+                (Game.find_and_click_button("quest_results_pending_battles")):
             MessageLog.print_message(f"[INFO] Found Pending Battles that need collecting from.")
 
             Game.find_and_click_button("ok")
@@ -791,7 +797,7 @@ class Game:
                 # Process the current Pending Battle.
                 while Game._clear_pending_battle():
                     # While on the Loot Collected screen, if there are more Pending Battles then head back to the Pending Battles screen.
-                    if ImageUtils.find_button("quest_results_pending_battles", tries = 1):
+                    if ImageUtils.find_button("quest_results_pending_battles"):
                         Game.find_and_click_button("quest_results_pending_battles")
                         Game.wait(1)
 

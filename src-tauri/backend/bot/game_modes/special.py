@@ -26,7 +26,7 @@ class Special:
         """
         from bot.game import Game
 
-        if Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests", tries = 1):
+        if Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests", tries = 3):
             MessageLog.print_message("\n[D.HALO] Detected Dimensional Halo. Starting it now...")
             Special._dimensional_halo_amount += 1
 
@@ -56,7 +56,7 @@ class Special:
                     Game.collect_loot(is_completed = False, is_event_nightmare = True)
                     return True
 
-        elif not Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests", tries = 1):
+        elif not Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests", tries = 3):
             MessageLog.print_message("\n[D.HALO] Dimensional Halo detected but user opted to not run it. Moving on...")
             Game.find_and_click_button("close")
         else:
@@ -82,8 +82,8 @@ class Special:
         Game.find_and_click_button("quest", suppress_error = True)
 
         # Check for the "You retreated from the raid battle" popup.
-        Game.wait(1)
-        if ImageUtils.confirm_location("you_retreated_from_the_raid_battle", tries = 1):
+        Game.wait(3.0)
+        if ImageUtils.confirm_location("you_retreated_from_the_raid_battle", tries = 3):
             Game.find_and_click_button("ok")
 
         if ImageUtils.confirm_location("quest"):

@@ -24,9 +24,9 @@ class Event:
         """
         from bot.game import Game
 
-        if Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests", tries = 1):
+        if Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests"):
             # First check if the Event Nightmare is skippable.
-            event_claim_loot_location = ImageUtils.find_button("event_claim_loot", tries = 1, suppress_error = True)
+            event_claim_loot_location = ImageUtils.find_button("event_claim_loot", suppress_error = True)
             if event_claim_loot_location is not None:
                 MessageLog.print_message("\n[EVENT] Skippable Event Nightmare detected. Claiming it now...")
                 MouseUtils.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
@@ -61,9 +61,9 @@ class Event:
                         Game.collect_loot(is_completed = False, is_event_nightmare = True)
                         return True
 
-        elif not Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests", tries = 1):
+        elif not Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests"):
             # First check if the Event Nightmare is skippable.
-            event_claim_loot_location = ImageUtils.find_button("event_claim_loot", tries = 1, suppress_error = True)
+            event_claim_loot_location = ImageUtils.find_button("event_claim_loot", suppress_error = True)
             if event_claim_loot_location is not None:
                 MessageLog.print_message("\n[EVENT] Skippable Event Nightmare detected but user opted to not run it. Claiming it regardless...")
                 MouseUtils.move_and_click_point(event_claim_loot_location[0], event_claim_loot_location[1], "event_claim_loot")
@@ -100,10 +100,10 @@ class Event:
                 raise EventException("Failed to find the Event banner.")
         MouseUtils.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
 
-        Game.wait(1)
+        Game.wait(3.0)
 
         # Check and click away the "Daily Missions" popup.
-        if ImageUtils.confirm_location("event_daily_missions", tries = 1):
+        if ImageUtils.confirm_location("event_daily_missions", tries = 3):
             MessageLog.print_message(f"\n[EVENT.TOKEN.DRAWBOXES] Detected \"Daily Missions\" popup. Clicking it away...")
             Game.find_and_click_button("close")
 
@@ -200,7 +200,7 @@ class Event:
 
             Game.find_and_click_button("quest")
 
-            Game.wait(1)
+            Game.wait(3.0)
 
             # Check for the "You retreated from the raid battle" popup.
             if ImageUtils.confirm_location("you_retreated_from_the_raid_battle", tries = 3):
@@ -234,7 +234,7 @@ class Event:
             if ImageUtils.confirm_location("special"):
                 # Check to see if the user already has a Nightmare available.
                 nightmare_is_available = 0
-                if ImageUtils.find_button("event_nightmare", tries = 1) is not None:
+                if ImageUtils.find_button("event_nightmare") is not None:
                     nightmare_is_available = 1
 
                 # Find all the "Select" buttons.

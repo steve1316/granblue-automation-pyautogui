@@ -32,11 +32,11 @@ class DreadBarrage:
         MouseUtils.scroll_screen_from_home_button(-400)
         Game.find_and_click_button("dread_barrage")
 
-        Game.wait(2)
+        Game.wait(3.0)
 
         if ImageUtils.confirm_location("dread_barrage"):
             # Check if there is already a hosted Dread Barrage mission.
-            if ImageUtils.confirm_location("resume_quests", tries = 1):
+            if ImageUtils.confirm_location("resume_quests"):
                 MessageLog.print_message(f"\n[WARNING] Detected that there is already a hosted Dread Barrage mission.")
                 expiry_time_in_seconds = 0
 

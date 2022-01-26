@@ -56,8 +56,8 @@ class CombatMode:
         if Settings.debug_mode:
             MessageLog.print_message(f"\n[DEBUG] Checking to see if the Party wiped...")
 
-        party_wipe_indicator = ImageUtils.find_button("party_wipe_indicator", tries = 1, suppress_error = True)
-        if party_wipe_indicator is not None or ImageUtils.confirm_location("salute_participants", tries = 1, suppress_error = True):
+        party_wipe_indicator = ImageUtils.find_button("party_wipe_indicator", tries = 3, suppress_error = True)
+        if party_wipe_indicator is not None or ImageUtils.confirm_location("salute_participants", tries = 3, suppress_error = True):
             if (Settings.farming_mode != "Raid" and Settings.farming_mode != "Dread Barrage") and ImageUtils.confirm_location("continue"):
                 # Click on the blue indicator to get rid of the overlay.
                 if party_wipe_indicator is not None:
@@ -104,9 +104,9 @@ class CombatMode:
         Returns:
             None
         """
-        dialog_location = ImageUtils.find_button("dialog_lyria", tries = 1, suppress_error = True)
+        dialog_location = ImageUtils.find_button("dialog_lyria", tries = 2, suppress_error = True)
         if dialog_location is None:
-            dialog_location = ImageUtils.find_button("dialog_vyrn", tries = 1, suppress_error = True)
+            dialog_location = ImageUtils.find_button("dialog_vyrn", tries = 2, suppress_error = True)
 
         if dialog_location is not None:
             MouseUtils.move_and_click_point(dialog_location[0] + 180, dialog_location[1] - 51, "template_dialog")
@@ -298,7 +298,7 @@ class CombatMode:
 
         MessageLog.print_message(f"[COMBAT] Turn {CombatMode._turn_number} has ended.")
 
-        if Game.find_and_click_button("next", tries = 1, suppress_error = True):
+        if Game.find_and_click_button("next", tries = 3, suppress_error = True):
             Game.wait(3)
 
         CombatMode._turn_number += 1
@@ -361,7 +361,7 @@ class CombatMode:
 
                 Game.wait(2.0)
 
-                enable_auto = Game.find_and_click_button("semi_auto", tries = 5)
+                enable_auto = Game.find_and_click_button("semi_auto", tries = 10)
                 if enable_auto:
                     MessageLog.print_message("[COMBAT] Semi Auto is now enabled.")
 
@@ -418,7 +418,7 @@ class CombatMode:
             Game.find_and_click_button("attack", tries = 10)
 
             # Wait until the "Cancel" button vanishes from the screen.
-            if ImageUtils.find_button("combat_cancel", tries = 3) is not None:
+            if ImageUtils.find_button("combat_cancel", tries = 10) is not None:
                 while ImageUtils.wait_vanish("combat_cancel", timeout = 5, suppress_error = True) is False:
                     if Settings.debug_mode:
                         MessageLog.print_message("[DEBUG] The \"Cancel\" button has not vanished from the screen yet.")
@@ -427,7 +427,7 @@ class CombatMode:
         # Check for exit conditions.
         CombatMode._check_for_battle_end()
 
-        if Game.find_and_click_button("next", tries = 1, suppress_error = True):
+        if Game.find_and_click_button("next", tries = 3, suppress_error = True):
             Game.wait(3)
 
         return None
@@ -912,7 +912,7 @@ class CombatMode:
 
         # If current Farming Mode is Arcarum, attempt to dismiss potential stage effect popup like "Can't use Charge Attacks".
         if Settings.farming_mode == "Arcarum":
-            Game.find_and_click_button("arcarum_stage_effect_active", tries = 5)
+            Game.find_and_click_button("arcarum_stage_effect_active", tries = 10)
 
         # Save the positions of the "Attack" and "Back" button.
         if Settings.enable_combat_mode_adjustment:
@@ -983,7 +983,7 @@ class CombatMode:
                     elif "targetenemy" in command:
                         # Select enemy target.
                         CombatMode._select_enemy_target(command)
-                    elif "back" in command and Game.find_and_click_button("home_back", tries = 1):
+                    elif "back" in command and Game.find_and_click_button("home_back"):
                         MessageLog.print_message("[COMBAT] Tapped the Back button.")
                         CombatMode._wait_for_attack()
 
@@ -1064,7 +1064,7 @@ class CombatMode:
 
                     if CombatMode._check_raid():
                         # Click Next if it is available and enable automation again if combat continues.
-                        if Game.find_and_click_button("next", tries = 2, suppress_error = True):
+                        if Game.find_and_click_button("next", tries = 1, suppress_error = True):
                             # Check for exit conditions and restart auto.
                             if CombatMode._check_for_battle_end() == "Nothing":
                                 CombatMode._enable_auto()

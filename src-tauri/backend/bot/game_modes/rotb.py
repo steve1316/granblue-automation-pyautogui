@@ -24,7 +24,7 @@ class RiseOfTheBeasts:
         """
         from bot.game import Game
 
-        if Settings.enable_nightmare and ImageUtils.confirm_location("rotb_extreme_plus", tries = 1):
+        if Settings.enable_nightmare and ImageUtils.confirm_location("rotb_extreme_plus", tries = 3):
             MessageLog.print_message("\n[ROTB] Detected Extreme+. Starting it now...")
 
             MessageLog.print_message("\n********************************************************************************")
@@ -53,7 +53,7 @@ class RiseOfTheBeasts:
                     Game.collect_loot(is_completed = False, is_event_nightmare = True)
                     return True
 
-        elif not Settings.enable_nightmare and ImageUtils.confirm_location("rotb_extreme_plus", tries = 2):
+        elif not Settings.enable_nightmare and ImageUtils.confirm_location("rotb_extreme_plus", tries = 3):
             MessageLog.print_message("\n[ROTB] Rise of the Beasts Extreme+ detected but user opted to not run it. Moving on...")
             Game.find_and_click_button("close")
         else:
@@ -82,7 +82,7 @@ class RiseOfTheBeasts:
             banner_locations = ImageUtils.find_all("event_banner_blue", custom_confidence = 0.7)
         MouseUtils.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
 
-        Game.wait(1)
+        Game.wait(3.0)
 
         if ImageUtils.confirm_location("rotb"):
             # Remove the difficulty prefix from the mission name.

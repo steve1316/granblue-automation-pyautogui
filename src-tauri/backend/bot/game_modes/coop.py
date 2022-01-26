@@ -126,7 +126,7 @@ class Coop:
             Game.wait(1)
 
             # Just in case, check for the "You retreated from the raid battle" popup.
-            if ImageUtils.confirm_location("you_retreated_from_the_raid_battle", tries = 1):
+            if ImageUtils.confirm_location("you_retreated_from_the_raid_battle", tries = 3):
                 Game.find_and_click_button("ok")
 
             MessageLog.print_message(f"\n[COOP] Selecting a Party for Coop mission: \"{Settings.mission_name}\".")
@@ -158,13 +158,13 @@ class Coop:
             Game.wait(1)
 
             # Check for "Daily Missions" popup for Coop.
-            if ImageUtils.confirm_location("coop_daily_missions", tries = 1):
+            if ImageUtils.confirm_location("coop_daily_missions"):
                 Game.find_and_click_button("close")
 
             Game.wait(1)
 
             # Now that the bot is back at the Coop Room/Lobby, check if it closed due to time running out.
-            if ImageUtils.confirm_location("coop_room_closed", tries = 1):
+            if ImageUtils.confirm_location("coop_room_closed"):
                 MessageLog.print_message("\n[COOP] Coop room has closed due to time running out.")
                 return -1
 

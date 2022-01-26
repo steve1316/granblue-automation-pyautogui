@@ -40,7 +40,7 @@ class ProvingGrounds:
                 raise ProvingGroundsException("Failed to find the Event banner.")
         MouseUtils.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
 
-        Game.wait(1)
+        Game.wait(3.0)
 
         difficulty = ""
         if Settings.mission_name == "Extreme":
@@ -126,10 +126,10 @@ class ProvingGrounds:
                     Game.find_and_click_button("event")
 
                     # Check for friend request.
-                    Game.find_and_click_button("cancel", tries = 1, suppress_error = True)
+                    Game.check_for_friend_request()
 
                     # Check for trophy.
-                    Game.find_and_click_button("close", tries = 1, suppress_error = True)
+                    Game.find_and_click_button("close", suppress_error = True)
 
                     Game.wait(2.0)
                     Game.find_and_click_button("proving_grounds_open_chest")

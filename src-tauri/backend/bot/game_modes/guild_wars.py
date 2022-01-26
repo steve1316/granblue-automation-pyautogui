@@ -36,7 +36,7 @@ class GuildWars:
             banner_locations = ImageUtils.find_all("event_banner_blue", custom_confidence = 0.7)
         MouseUtils.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
 
-        Game.wait(1.0)
+        Game.wait(3.0)
 
         difficulty = ""
         if Settings.mission_name == "Very Hard":
@@ -58,7 +58,7 @@ class GuildWars:
             # Scroll the screen down a little bit.
             MouseUtils.scroll_screen_from_home_button(-200)
 
-            Game.wait(1.0)
+            Game.wait(3.0)
 
             raid_battle_locations = ImageUtils.find_all("event_raid_battle")
 
@@ -72,7 +72,7 @@ class GuildWars:
                 else:
                     MouseUtils.move_and_click_point(raid_battle_locations[2][0], raid_battle_locations[2][1], "event_raid_battle")
 
-                Game.wait(1.0)
+                Game.wait(3.0)
 
                 if ImageUtils.confirm_location("guild_wars_meat"):
                     # Now click on the specified Mission to start. Also attempt at fixing the deadzone issue by looping.
@@ -137,7 +137,7 @@ class GuildWars:
                     nightmare_locations = ImageUtils.find_all("guild_wars_nightmares")
 
                     # If today is the first/second day of Guild Wars, only NM90 will be available.
-                    if ImageUtils.confirm_location("guild_wars_nightmare_first_day", tries = 3):
+                    if ImageUtils.confirm_location("guild_wars_nightmare_first_day"):
                         MessageLog.print_message(f"[GUILD.WARS] Today is the first/second day so hosting NM90.")
                         Game.find_and_click_button("ok")
 

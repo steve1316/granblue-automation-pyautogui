@@ -28,7 +28,6 @@ class Raid:
         from bot.game import Game
 
         # Find out the number of currently joined raids.
-        Game.wait(1)
         joined_locations = ImageUtils.find_all("joined")
 
         if joined_locations is not None:
@@ -56,10 +55,10 @@ class Raid:
 
             if Game.check_for_pending():
                 Game.find_and_click_button("quest")
-                Game.wait(1)
+                Game.wait(3.0)
 
             Game.find_and_click_button("raid")
-            Game.wait(1)
+            Game.wait(3.0)
             Raid._check_for_joined_raids()
 
         return None
@@ -144,10 +143,10 @@ class Raid:
         # Then navigate to the Quest screen.
         Game.find_and_click_button("quest")
 
-        Game.wait(1)
+        Game.wait(3.0)
 
         # Check for the "You retreated from the raid battle" popup.
-        if ImageUtils.confirm_location("you_retreated_from_the_raid_battle", tries = 1):
+        if ImageUtils.confirm_location("you_retreated_from_the_raid_battle", tries = 3):
             Game.find_and_click_button("ok")
 
         # Check for any Pending Battles popup.
@@ -202,7 +201,7 @@ class Raid:
                 # Select the Party.
                 if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
                     # Handle the rare case where joining the Raid after selecting the Summon and Party led the bot to the Quest Results screen with no loot to collect.
-                    if ImageUtils.confirm_location("no_loot", tries = 2):
+                    if ImageUtils.confirm_location("no_loot"):
                         MessageLog.print_message("\n[RAID] Seems that the Raid just ended. Moving back to the Home screen and joining another Raid...")
                     elif CombatMode.start_combat_mode():
                         number_of_items_dropped = Game.collect_loot(is_completed = True)

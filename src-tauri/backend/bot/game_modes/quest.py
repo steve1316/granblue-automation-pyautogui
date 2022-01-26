@@ -120,7 +120,7 @@ class Quest:
         # Once the bot has determined where it is, go to the Quest screen.
         Game.find_and_click_button("quest")
 
-        Game.wait(1)
+        Game.wait(3.0)
 
         # Check for the "You retreated from the raid battle" popup.
         if ImageUtils.confirm_location("you_retreated_from_the_raid_battle", tries = 3):

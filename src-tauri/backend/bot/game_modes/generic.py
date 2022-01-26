@@ -28,7 +28,7 @@ class Generic:
         MessageLog.print_message(f"\n[GENERIC] Now checking for run eligibility...")
 
         # Bot can start either at the Combat screen with the "Attack" button visible or the Loot Collection screen with the "Play Again" button visible.
-        if ImageUtils.find_button("attack", tries = 5):
+        if ImageUtils.find_button("attack", tries = 10):
             MessageLog.print_message(f"[GENERIC] Bot is at the Combat screen. Starting Combat Mode now...")
             if CombatMode.start_combat_mode():
                 runs_completed = Game.collect_loot(is_completed = True)
@@ -51,7 +51,7 @@ class Generic:
                 if summon_check:
                     # Do not select party and just commence the mission.
                     MessageLog.print_message(f"[GENERIC] Skipping party selection and immediately commencing mission...")
-                    if Game.find_and_click_button("ok", tries = 10):
+                    if Game.find_and_click_button("ok", tries = 30):
                         # Now start Combat Mode and detect any item drops.
                         if CombatMode.start_combat_mode():
                             runs_completed = Game.collect_loot(is_completed = True)
