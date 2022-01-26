@@ -45,6 +45,7 @@ export interface Settings {
         delayBetweenRunsLowerBound: number
         delayBetweenRunsUpperBound: number
         enableRefreshDuringCombat: boolean
+        enableAutoQuickSummon: boolean
         staticWindow: boolean
     }
 
@@ -142,6 +143,7 @@ export const defaultSettings: Settings = {
         delayBetweenRunsLowerBound: 15,
         delayBetweenRunsUpperBound: 60,
         enableRefreshDuringCombat: true,
+        enableAutoQuickSummon: false,
         staticWindow: true,
     },
     misc: {

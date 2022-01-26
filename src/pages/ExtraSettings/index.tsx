@@ -571,6 +571,24 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
+                                checked={bot.settings.configuration.enableAutoQuickSummon}
+                                onChange={(e) => {
+                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableAutoQuickSummon: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable Automatic Quick Summon during Full/Semi Auto"
+                    />
+                    <FormHelperText>
+                        Enables the ability to automatically use Quick Summon during Full/Semi Auto. Note that this option only takes into effect when "Enable Refreshing during Combat" is turned on
+                        and that the bot is fighting a battle that is compatible with refreshing during combat.
+                    </FormHelperText>
+                </FormGroup>
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
                                 checked={bot.settings.configuration.staticWindow}
                                 onChange={(e) => {
                                     bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, staticWindow: e.target.checked } })
