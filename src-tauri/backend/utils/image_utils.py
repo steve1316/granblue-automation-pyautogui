@@ -266,7 +266,8 @@ class ImageUtils:
         else:
             new_tries = tries
 
-        if (image_name == "coop_without_support_summon" or image_name == "select_a_summon") and Settings.enable_support_summon_selection_screen_adjustment:
+        if (image_name == "coop_without_support_summon" or image_name == "select_a_summon" or image_name == "proving_grounds_summon_selection") and \
+                Settings.enable_support_summon_selection_screen_adjustment:
             new_tries = Settings.adjust_support_summon_selection_screen
 
         while new_tries > 0:
