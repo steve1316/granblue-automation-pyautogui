@@ -146,7 +146,7 @@ class Game:
         return None
 
     @staticmethod
-    def find_and_click_button(button_name: str, clicks: int = 1, tries: int = 0, x_offset: int = 0, y_offset: int = 0, suppress_error: bool = False, bypass_general_adjustment: bool = False):
+    def find_and_click_button(button_name: str, clicks: int = 1, tries: int = 0, x_offset: int = 0, y_offset: int = 0, suppress_error: bool = False, bypass_general_adjustment: bool = True):
         """Find the center point of a button image and click it.
 
         Args:
@@ -156,7 +156,7 @@ class Game:
             x_offset (int, optional): Offset the x-coordinate of the click location. Defaults to 0.
             y_offset (int, optional): Offset the y-coordinate of the click location. Defaults to 0.
             suppress_error (bool, optional): Suppresses template matching error depending on boolean. Defaults to False.
-            bypass_general_adjustment (bool, optional): Bypass using the general adjustment for the number of tries. Defaults to False.
+            bypass_general_adjustment (bool, optional): Bypass using the general adjustment for the number of tries if ImageUtil's default is not being used. Defaults to True.
 
         Returns:
             (bool): Return True if the button was found and clicked. Otherwise, return False.
@@ -206,41 +206,41 @@ class Game:
                     return True
         else:
             if button_name.lower() == "quest":
-                temp_location = ImageUtils.find_button("quest_blue", tries = tries, bypass_general_adjustment = True)
+                temp_location = ImageUtils.find_button("quest_blue", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("quest_red", tries = tries, bypass_general_adjustment = True)
+                    temp_location = ImageUtils.find_button("quest_red", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
 
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "quest_blue", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "raid":
-                temp_location = ImageUtils.find_button("raid_flat", tries = tries, bypass_general_adjustment = True)
+                temp_location = ImageUtils.find_button("raid_flat", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("raid_bouncing", tries = tries, bypass_general_adjustment = True)
+                    temp_location = ImageUtils.find_button("raid_bouncing", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
 
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "raid_flat", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "coop_start":
-                temp_location = ImageUtils.find_button("coop_start_flat", tries = tries, bypass_general_adjustment = True)
+                temp_location = ImageUtils.find_button("coop_start_flat", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("coop_start_faded", tries = tries, bypass_general_adjustment = True)
+                    temp_location = ImageUtils.find_button("coop_start_faded", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
 
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "coop_start_flat", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "event_special_quest":
-                temp_location = ImageUtils.find_button("event_special_quest", tries = tries, bypass_general_adjustment = True)
+                temp_location = ImageUtils.find_button("event_special_quest", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("event_special_quest_flat", tries = tries, bypass_general_adjustment = True)
+                    temp_location = ImageUtils.find_button("event_special_quest_flat", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("event_special_quest_bouncing", tries = tries, bypass_general_adjustment = True)
+                    temp_location = ImageUtils.find_button("event_special_quest_bouncing", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
 
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "event_special_quest", mouse_clicks = clicks)
                     return True
             else:
-                temp_location = ImageUtils.find_button(button_name.lower(), tries = tries, suppress_error = suppress_error, bypass_general_adjustment = True)
+                temp_location = ImageUtils.find_button(button_name.lower(), tries = tries, suppress_error = suppress_error, bypass_general_adjustment = bypass_general_adjustment)
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, button_name, mouse_clicks = clicks)
                     return True
