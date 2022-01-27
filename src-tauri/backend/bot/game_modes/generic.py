@@ -32,10 +32,9 @@ class Generic:
             MessageLog.print_message(f"[GENERIC] Bot is at the Combat screen. Starting Combat Mode now...")
             if CombatMode.start_combat_mode():
                 runs_completed = Game.collect_loot(is_completed = True)
-        elif ImageUtils.find_button("coop_start", tries = 10):
+        elif Game.find_and_click_button("coop_start", tries = 10):
             MessageLog.print_message(f"[GENERIC] Bot is at the Coop Room screen. Starting the Coop mission and Combat Mode now...")
 
-            Game.find_and_click_button("coop_start")
             Game.wait(3.0)
 
             if CombatMode.start_combat_mode():
