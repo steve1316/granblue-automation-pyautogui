@@ -6,13 +6,6 @@ import "./index.scss"
 const Adjustments = () => {
     const bsc = useContext(BotStateContext)
 
-    interface Props {
-        value: number
-        onChange: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement> | undefined
-        label: string
-        helperText: string
-    }
-
     const renderStart = () => {
         return (
             <div>
