@@ -332,7 +332,7 @@ const Adjustments = () => {
                 <Stack className="adjustmentsWrapper">
                     <div>
                         <Typography variant="h6" gutterBottom component="div" color="text.secondary" sx={{ marginBottom: "16px" }}>
-                            Adjust the default number of tries for the following:
+                            Adjust the default number of tries for the following situations. On average for a 8c CPU and CUDA-compatible GPU with the bot using CUDA, a try takes about 0.175 seconds.
                         </Typography>
                     </div>
 
