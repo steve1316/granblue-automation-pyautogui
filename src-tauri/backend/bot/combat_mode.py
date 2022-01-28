@@ -673,6 +673,10 @@ class CombatMode:
 
         # Execute every skill command in the list.
         while len(skill_command_list) > 0:
+            # Stop if the Next button is present.
+            if ImageUtils.find_button("next", tries = 1, suppress_error = True):
+                return
+
             if skill_command_list[0].__contains__("wait"):
                 CombatMode._wait_execute(skill_command_list)
                 skill_command_list.pop(0)
