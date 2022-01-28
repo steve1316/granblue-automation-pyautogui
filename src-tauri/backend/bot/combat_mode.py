@@ -254,20 +254,17 @@ class CombatMode:
 
         # Wait for the Attack to process.
         MessageLog.print_message(f"[COMBAT] Ending Turn {CombatMode._turn_number}...")
-        tries = 30
         if CombatMode._full_auto is False and CombatMode._semi_auto is False:
             Game.find_and_click_button("attack", tries = 30)
             while ImageUtils.find_button("cancel", suppress_error = True) is not None:
                 if Settings.debug_mode:
                     MessageLog.print_message("[DEBUG] While waiting for the incorrect turn to process, the \"Cancel\" button has not vanished from the screen yet.")
                 Game.wait(1.0)
-                tries -= 1
         else:
             while ImageUtils.find_button("attack", suppress_error = True) is not None:
                 if Settings.debug_mode:
                     MessageLog.print_message("[DEBUG] While waiting for the incorrect turn to process, the \"Attack\" button has not vanished from the screen yet.")
                 Game.wait(1.0)
-                tries -= 1
 
         reload_check = False
 
@@ -383,7 +380,7 @@ class CombatMode:
         """Start the Turn based on the read command and move the internal Turn count forward to match the command.
 
         Args:
-            command (str): The command for the healing item to use.
+            command (str): The command to execute.
 
         Returns:
             None
@@ -782,7 +779,7 @@ class CombatMode:
                 if (Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("summon_details", tries = Settings.adjust_summon_usage, bypass_general_adjustment = True)) or \
                         ImageUtils.confirm_location("summon_details"):
                     if Game.find_and_click_button("ok") is False:
-                        MessageLog.print_message("[COMBAT] Summon #{j} cannot be invoked due to current restrictions.")
+                        MessageLog.print_message(f"[COMBAT] Summon #{summon_index} cannot be invoked due to current restrictions.")
                         Game.find_and_click_button("cancel")
 
                 # Click the "Back" button to return.
@@ -1110,7 +1107,6 @@ class CombatMode:
                     CombatMode._reload_for_attack()
                     CombatMode._wait_for_attack()
         except CombatModeException as e:
-            message = sys.exc_info()[1]
             if CombatMode._list_of_exit_events_for_false.__contains__(e.__str__()):
                 return False
             elif CombatMode._list_of_exit_events_for_true.__contains__(e.__str__()):

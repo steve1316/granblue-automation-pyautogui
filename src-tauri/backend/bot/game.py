@@ -797,9 +797,9 @@ class Game:
 
         Game.wait(1)
 
-        if (ImageUtils.confirm_location("check_your_pending_battles")) or \
-                (ImageUtils.confirm_location("pending_battles")) or \
-                (Game.find_and_click_button("quest_results_pending_battles")):
+        if (ImageUtils.confirm_location("check_your_pending_battles", tries = 2)) or \
+                (ImageUtils.confirm_location("pending_battles", tries = 2)) or \
+                (Game.find_and_click_button("quest_results_pending_battles", tries = 2)):
             MessageLog.print_message(f"[INFO] Found Pending Battles that need collecting from.")
 
             Game.find_and_click_button("ok")
