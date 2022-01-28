@@ -176,7 +176,7 @@ class CombatMode:
                 dread_barrage_raids.__contains__(Settings.mission_name) or \
                 (Settings.farming_mode == "Proving Grounds" and proving_grounds_raids.__contains__(Settings.mission_name)) or \
                 (Settings.farming_mode == "Guild Wars" and guild_wars_raids.__contains__(Settings.mission_name)) or \
-                xeno_clash_raids.__contains__(Settings.mission_name):
+                xeno_clash_raids.__contains__(Settings.mission_name) or Settings.farming_mode == "Arcarum":
             return True
         else:
             return False
