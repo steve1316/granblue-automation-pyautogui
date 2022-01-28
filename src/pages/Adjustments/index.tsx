@@ -134,6 +134,131 @@ const Adjustments = () => {
         )
     }
 
+    const renderPendingBattles = () => {
+        return (
+            <div>
+                <Divider sx={{ marginBottom: "16px" }}>
+                    <Typography variant="h6" component="div" className="sectionTitle">
+                        Check for Pending Battles
+                    </Typography>
+                </Divider>
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bsc.settings.adjustment.enablePendingBattleAdjustment}
+                                onChange={(e) => {
+                                    bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enablePendingBattleAdjustment: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable Pending Battles Adjustments"
+                    />
+                    <FormHelperText>Enable adjustment of tries of check for Pending Battles.</FormHelperText>
+                </FormGroup>
+
+                {bsc.settings.adjustment.enablePendingBattleAdjustment ? (
+                    <div>
+                        <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Delay Before Starting Check"
+                                    value={bsc.settings.adjustment.adjustBeforePendingBattle}
+                                    onChange={(e) => {
+                                        bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustBeforePendingBattle: Number(e.target.value) } })
+                                    }}
+                                    variant="outlined"
+                                    type="number"
+                                    inputProps={{ min: 1, max: 999 }}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">seconds</InputAdornment>,
+                                    }}
+                                    helperText="Set the default number of seconds before starting the check for Pending Battles."
+                                    fullWidth
+                                    style={{ marginBottom: "16px" }}
+                                />
+                            </Grid>
+                            <Grid item xs={6} />
+                        </Grid>
+                        <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Check for Pending Battles"
+                                    value={bsc.settings.adjustment.adjustPendingBattle}
+                                    onChange={(e) => {
+                                        bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustPendingBattle: Number(e.target.value) } })
+                                    }}
+                                    variant="outlined"
+                                    type="number"
+                                    inputProps={{ min: 1, max: 999 }}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">tries</InputAdornment>,
+                                    }}
+                                    helperText="Set the default number of tries to check for Pending Battles."
+                                    fullWidth
+                                    style={{ marginBottom: "16px" }}
+                                />
+                            </Grid>
+                            <Grid item xs={6} />
+                        </Grid>
+                    </div>
+                ) : null}
+            </div>
+        )
+    }
+
+    const renderCaptcha = () => {
+        return (
+            <div>
+                <Divider sx={{ marginBottom: "16px" }}>
+                    <Typography variant="h6" component="div" className="sectionTitle">
+                        Check for CAPTCHA
+                    </Typography>
+                </Divider>
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bsc.settings.adjustment.enableCaptchaAdjustment}
+                                onChange={(e) => {
+                                    bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enableCaptchaAdjustment: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable CAPTCHA Adjustments"
+                    />
+                    <FormHelperText>Enable adjustment of tries of check for CAPTCHA.</FormHelperText>
+                </FormGroup>
+
+                {bsc.settings.adjustment.enableCaptchaAdjustment ? (
+                    <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                        <Grid item xs={6}>
+                            <TextField
+                                label="Check for CAPTCHA"
+                                value={bsc.settings.adjustment.adjustCaptcha}
+                                onChange={(e) => {
+                                    bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustCaptcha: Number(e.target.value) } })
+                                }}
+                                variant="outlined"
+                                type="number"
+                                inputProps={{ min: 1, max: 999 }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end">tries</InputAdornment>,
+                                }}
+                                helperText="Set the default number of tries to check for CAPTCHA."
+                                fullWidth
+                                style={{ marginBottom: "16px" }}
+                            />
+                        </Grid>
+                        <Grid item xs={6} />
+                    </Grid>
+                ) : null}
+            </div>
+        )
+    }
+
     const renderSupportSummonSelection = () => {
         return (
             <div>
@@ -232,6 +357,29 @@ const Adjustments = () => {
                             </Grid>
                             <Grid item xs={6} />
                         </Grid>
+
+                        <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Check for Dialog Popups"
+                                    value={bsc.settings.adjustment.adjustDialog}
+                                    onChange={(e) => {
+                                        bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustDialog: Number(e.target.value) } })
+                                    }}
+                                    variant="outlined"
+                                    type="number"
+                                    inputProps={{ min: 1, max: 999 }}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">tries</InputAdornment>,
+                                    }}
+                                    helperText="Set the default number of tries for checking when a dialog popup from Lyria/Vyrn is present during combat."
+                                    fullWidth
+                                    style={{ marginBottom: "16px" }}
+                                />
+                            </Grid>
+                            <Grid item xs={6} />
+                        </Grid>
+
                         <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                             <Grid item xs={6}>
                                 <TextField
@@ -253,6 +401,7 @@ const Adjustments = () => {
                             </Grid>
                             <Grid item xs={6} />
                         </Grid>
+
                         <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                             <Grid item xs={6}>
                                 <TextField
@@ -274,6 +423,7 @@ const Adjustments = () => {
                             </Grid>
                             <Grid item xs={6} />
                         </Grid>
+
                         <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                             <Grid item xs={6}>
                                 <TextField
@@ -295,6 +445,7 @@ const Adjustments = () => {
                             </Grid>
                             <Grid item xs={6} />
                         </Grid>
+
                         <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                             <Grid item xs={6}>
                                 <TextField
@@ -335,6 +486,10 @@ const Adjustments = () => {
                     {renderStart()}
 
                     {renderGeneral()}
+
+                    {renderPendingBattles()}
+
+                    {renderCaptcha()}
 
                     {renderSupportSummonSelection()}
 

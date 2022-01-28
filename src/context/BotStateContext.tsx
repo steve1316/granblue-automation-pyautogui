@@ -94,10 +94,16 @@ export interface Settings {
         enableGeneralAdjustment: boolean
         adjustButtonSearchGeneral: number
         adjustHeaderSearchGeneral: number
+        enablePendingBattleAdjustment: boolean
+        adjustBeforePendingBattle: number
+        adjustPendingBattle: number
+        enableCaptchaAdjustment: boolean
+        adjustCaptcha: number
         enableSupportSummonSelectionScreenAdjustment: boolean
         adjustSupportSummonSelectionScreen: number
         enableCombatModeAdjustment: boolean
         adjustCombatStart: number
+        adjustDialog: number
         adjustSkillUsage: number
         adjustSummonUsage: number
         adjustWaitingForReload: number
@@ -182,10 +188,16 @@ export const defaultSettings: Settings = {
         enableGeneralAdjustment: false,
         adjustButtonSearchGeneral: 5,
         adjustHeaderSearchGeneral: 5,
+        enablePendingBattleAdjustment: false,
+        adjustBeforePendingBattle: 1,
+        adjustPendingBattle: 2,
+        enableCaptchaAdjustment: false,
+        adjustCaptcha: 5,
         enableSupportSummonSelectionScreenAdjustment: false,
         adjustSupportSummonSelectionScreen: 30,
         enableCombatModeAdjustment: false,
         adjustCombatStart: 50,
+        adjustDialog: 2,
         adjustSkillUsage: 5,
         adjustSummonUsage: 5,
         adjustWaitingForReload: 3,
