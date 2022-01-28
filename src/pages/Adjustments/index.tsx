@@ -78,7 +78,10 @@ const Adjustments = () => {
                         }
                         label="Enable General Image Searching Adjustments"
                     />
-                    <FormHelperText>Enable adjustment of tries for General.</FormHelperText>
+                    <FormHelperText>
+                        Enable adjustment of tries for General. This encompasses a vast majority of the image processing operations of the bot so adjusting these will greatly affect the average
+                        running time.
+                    </FormHelperText>
                 </FormGroup>
 
                 {bsc.settings.adjustment.enableGeneralAdjustment ? (
@@ -97,7 +100,7 @@ const Adjustments = () => {
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end">tries</InputAdornment>,
                                     }}
-                                    helperText="Set the default number of tries for button template matching. This will be overwritten by the specific settings down below if applicable."
+                                    helperText="Set the default number of tries for overall button template matching. This will be overwritten by the specific settings down below if applicable."
                                     fullWidth
                                     style={{ marginBottom: "16px" }}
                                 />
@@ -118,7 +121,7 @@ const Adjustments = () => {
                                     InputProps={{
                                         endAdornment: <InputAdornment position="end">tries</InputAdornment>,
                                     }}
-                                    helperText="Set the default number of tries for header template matching. This will be overwritten by the specific settings down below if applicable."
+                                    helperText="Set the default number of tries for overall header template matching. This will be overwritten by the specific settings down below if applicable."
                                     fullWidth
                                     style={{ marginBottom: "16px" }}
                                 />
@@ -283,9 +286,9 @@ const Adjustments = () => {
                                     type="number"
                                     inputProps={{ min: 1, max: 999 }}
                                     InputProps={{
-                                        endAdornment: <InputAdornment position="end">tries</InputAdornment>,
+                                        endAdornment: <InputAdornment position="end">seconds</InputAdornment>,
                                     }}
-                                    helperText="Set the default number of tries for checking when a reload is finished, whether or not the bot ends up back at the Combat screen or the Loot Collection screen."
+                                    helperText="Set the default number of seconds for checking when a reload is finished, whether or not the bot ends up back at the Combat screen or the Loot Collection screen."
                                     fullWidth
                                     style={{ marginBottom: "16px" }}
                                 />
