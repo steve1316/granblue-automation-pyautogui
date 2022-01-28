@@ -255,7 +255,8 @@ class Game:
             None
         """
         try:
-            if ImageUtils.confirm_location("captcha"):
+            if (Settings.enable_captcha_adjustment and ImageUtils.confirm_location("captcha", tries = Settings.adjust_captcha, bypass_general_adjustment = True)) or \
+                    (Settings.enable_captcha_adjustment is False and ImageUtils.confirm_location("captcha")):
                 raise RuntimeError("CAPTCHA DETECTED!")
             else:
                 MessageLog.print_message("\n[CAPTCHA] CAPTCHA not detected.")
@@ -795,11 +796,19 @@ class Game:
         """
         MessageLog.print_message(f"\n[INFO] Starting process of checking for Pending Battles...")
 
-        Game.wait(1)
+        if Settings.enable_pending_battles_adjustment:
+            Game.wait(Settings.adjust_before_pending_battle)
+        else:
+            Game.wait(1)
 
-        if (ImageUtils.confirm_location("check_your_pending_battles", tries = 2)) or \
-                (ImageUtils.confirm_location("pending_battles", tries = 2)) or \
-                (Game.find_and_click_button("quest_results_pending_battles", tries = 2)):
+        if (Settings.enable_pending_battles_adjustment and
+            (ImageUtils.confirm_location("check_your_pending_battles", tries = Settings.adjust_pending_battle, bypass_general_adjustment = True) or
+             ImageUtils.confirm_location("pending_battles", tries = Settings.adjust_pending_battle, bypass_general_adjustment = True) or
+             Game.find_and_click_button("quest_results_pending_battles", tries = Settings.adjust_pending_battle, bypass_general_adjustment = True))) or \
+                (Settings.enable_pending_battles_adjustment is False and
+                 (ImageUtils.confirm_location("check_your_pending_battles", tries = 2) or
+                  ImageUtils.confirm_location("pending_battles", tries = 2) or
+                  Game.find_and_click_button("quest_results_pending_battles", tries = 2))):
             MessageLog.print_message(f"[INFO] Found Pending Battles that need collecting from.")
 
             Game.find_and_click_button("ok")

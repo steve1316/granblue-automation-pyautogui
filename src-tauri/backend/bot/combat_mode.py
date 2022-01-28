@@ -1,6 +1,5 @@
 import copy
 import os
-import sys
 from typing import List
 import time
 
@@ -104,9 +103,14 @@ class CombatMode:
         Returns:
             None
         """
-        dialog_location = ImageUtils.find_button("dialog_lyria", tries = 2, suppress_error = True)
-        if dialog_location is None:
-            dialog_location = ImageUtils.find_button("dialog_vyrn", tries = 2, suppress_error = True)
+        if Settings.enable_combat_mode_adjustment:
+            dialog_location = ImageUtils.find_button("dialog_lyria", tries = Settings.adjust_dialog, suppress_error = True, bypass_general_adjustment = True)
+            if dialog_location is None:
+                dialog_location = ImageUtils.find_button("dialog_vyrn", tries = Settings.adjust_dialog, suppress_error = True, bypass_general_adjustment = True)
+        else:
+            dialog_location = ImageUtils.find_button("dialog_lyria", tries = 2, suppress_error = True)
+            if dialog_location is None:
+                dialog_location = ImageUtils.find_button("dialog_vyrn", tries = 2, suppress_error = True)
 
         if dialog_location is not None:
             MouseUtils.move_and_click_point(dialog_location[0] + 180, dialog_location[1] - 51, "template_dialog")
