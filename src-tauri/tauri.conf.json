@@ -41,7 +41,9 @@
             }
         },
         "updater": {
-            "active": false
+            "active": true,
+            "endpoints": ["https://raw.githubusercontent.com/steve1316/granblue-automation-pyautogui/main/src-tauri/update.json"],
+            "dialog": false
         },
         "allowlist": {
             "all": true
