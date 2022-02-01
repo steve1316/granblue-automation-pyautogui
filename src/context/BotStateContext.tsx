@@ -109,7 +109,8 @@ export interface Settings {
         adjustWaitingForReload: number
         adjustWaitingForAttack: number
         enableArcarumAdjustment: boolean
-        adjustArcarum: number
+        adjustArcarumAction: number
+        adjustArcarumStageEffect: number
     }
 }
 
@@ -205,7 +206,8 @@ export const defaultSettings: Settings = {
         adjustWaitingForReload: 3,
         adjustWaitingForAttack: 100,
         enableArcarumAdjustment: false,
-        adjustArcarum: 3,
+        adjustArcarumAction: 3,
+        adjustArcarumStageEffect: 10,
     },
 }
 

@@ -503,9 +503,9 @@ const Adjustments = () => {
                             <Grid item xs={6}>
                                 <TextField
                                     label="Determining Which Action To Take"
-                                    value={bsc.settings.adjustment.adjustArcarum}
+                                    value={bsc.settings.adjustment.adjustArcarumAction}
                                     onChange={(e) => {
-                                        bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustArcarum: Number(e.target.value) } })
+                                        bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustArcarumAction: Number(e.target.value) } })
                                     }}
                                     variant="outlined"
                                     type="number"
@@ -514,6 +514,28 @@ const Adjustments = () => {
                                         endAdornment: <InputAdornment position="end">tries</InputAdornment>,
                                     }}
                                     helperText="Set the default number of tries for checking which action to take during Arcarum."
+                                    fullWidth
+                                    style={{ marginBottom: "16px" }}
+                                />
+                            </Grid>
+                            <Grid item xs={6} />
+                        </Grid>
+
+                        <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Checking for Stage Effect during Combat"
+                                    value={bsc.settings.adjustment.adjustArcarumStageEffect}
+                                    onChange={(e) => {
+                                        bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustArcarumStageEffect: Number(e.target.value) } })
+                                    }}
+                                    variant="outlined"
+                                    type="number"
+                                    inputProps={{ min: 1, max: 999 }}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">tries</InputAdornment>,
+                                    }}
+                                    helperText="Set the default number of tries for checking if there is an active stage effect popup at the start of Combat Mode."
                                     fullWidth
                                     style={{ marginBottom: "16px" }}
                                 />
