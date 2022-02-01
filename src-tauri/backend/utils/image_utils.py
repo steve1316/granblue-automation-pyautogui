@@ -223,6 +223,7 @@ class ImageUtils:
         dialog_list = ["dialog_lyria", "dialog_vyrn"]
         skill_usage_list = ["use_skill", "skill_unusable"]
         summon_usage_list = ["summon_details", "quick_summon1", "quick_summon2"]
+        arcarum_list = ["arcarum_party_selection", "arcarum_treasure", "arcarum_node", "arcarum_mob", "arcarum_red_mob", "arcarum_silver_chest", "arcarum_gold_chest", "arcarum_boss", "arcarum_boss2"]
 
         if Settings.enable_calibration_adjustment and calibration_list.__contains__(image_name):
             return Settings.adjust_calibration
@@ -238,6 +239,8 @@ class ImageUtils:
             return Settings.adjust_skill_usage
         elif Settings.enable_combat_mode_adjustment and summon_usage_list.__contains__(image_name):
             return Settings.adjust_summon_usage
+        elif Settings.enable_arcarum_adjustment and arcarum_list.__contains__(image_name):
+            return Settings.adjust_arcarum
         else:
             return 0
 

@@ -146,6 +146,8 @@ class Settings:
     adjust_summon_usage: int = _data["adjustment"]["adjustSummonUsage"]
     adjust_waiting_for_reload: int = _data["adjustment"]["adjustWaitingForReload"]
     adjust_waiting_for_attack: int = _data["adjustment"]["adjustWaitingForAttack"]
+    enable_arcarum_adjustment: bool = _data["adjustment"]["enableArcarumAdjustment"]
+    adjust_arcarum: int = _data["adjustment"]["adjustArcarum"]
     # #### end of adjustment ####
     # ################## end of settings.json ###################
     #############################################################

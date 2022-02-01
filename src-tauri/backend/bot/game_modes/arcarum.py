@@ -87,7 +87,7 @@ class Arcarum:
         MessageLog.print_message(f"\n[ARCARUM] Now determining what action to take...")
 
         # Wait a second in case the "Do or Die" animation plays.
-        Game.wait(1)
+        Game.wait(2.0)
 
         tries = 3
         while tries > 0:
@@ -100,22 +100,22 @@ class Arcarum:
 
                 Game.check_for_captcha()
 
-                if ImageUtils.confirm_location("arcarum_party_selection", tries = 3):
+                if ImageUtils.confirm_location("arcarum_party_selection", tries = 3, bypass_general_adjustment = True):
                     return "Combat"
-                elif Game.find_and_click_button("ok", tries = 3):
+                elif Game.find_and_click_button("ok", tries = 3, bypass_general_adjustment = True):
                     return "Claimed Treasure/Keythorn"
                 else:
                     return "Claimed Spirethorn/No Action"
 
             # Clear any detected Treasure popup after claiming a chest.
             MessageLog.print_message(f"[ARCARUM] No action found for the current node. Looking for Treasure popup...")
-            if ImageUtils.confirm_location("arcarum_treasure", tries = 3):
+            if ImageUtils.confirm_location("arcarum_treasure", tries = 3, bypass_general_adjustment = True):
                 Game.find_and_click_button("ok")
                 return "Claimed Treasure"
 
             # Next, determine if there is a available node to move to. Any bound monsters should have been destroyed by now.
             MessageLog.print_message(f"[ARCARUM] No Treasure popup detected. Looking for an available node to move to...")
-            if Game.find_and_click_button("arcarum_node", tries = 3):
+            if Game.find_and_click_button("arcarum_node", tries = 3, bypass_general_adjustment = True):
                 Game.wait(1)
                 return "Navigating"
 
@@ -125,13 +125,14 @@ class Arcarum:
 
             # Next, attempt to navigate to a node that is occupied by mob(s).
             MessageLog.print_message(f"[ARCARUM] No available node to move to. Looking for nodes with mobs on them...")
-            if Game.find_and_click_button("arcarum_mob", tries = 3) or Game.find_and_click_button("arcarum_red_mob", tries = 3):
+            if Game.find_and_click_button("arcarum_mob", tries = 3, bypass_general_adjustment = True) or Game.find_and_click_button("arcarum_red_mob", tries = 3, bypass_general_adjustment = True):
                 Game.wait(1)
                 return "Navigating"
 
             # If all else fails, see if there are any unclaimed chests, like the ones spawned by a random special event that spawns chests on all nodes.
             MessageLog.print_message(f"[ARCARUM] No nodes with mobs on them. Looking for nodes with chests on them...")
-            if Game.find_and_click_button("arcarum_silver_chest", tries = 3) or Game.find_and_click_button("arcarum_gold_chest", tries = 3):
+            if Game.find_and_click_button("arcarum_silver_chest", tries = 3, bypass_general_adjustment = True) or \
+                    Game.find_and_click_button("arcarum_gold_chest", tries = 3, bypass_general_adjustment = True):
                 Game.wait(1)
                 return "Navigating"
 
@@ -150,7 +151,7 @@ class Arcarum:
         if Settings.enable_stop_on_arcarum_boss:
             MessageLog.print_message(f"\n[ARCARUM] Checking if boss is available...")
 
-            if ImageUtils.find_button("arcarum_boss", tries = 3) or ImageUtils.find_button("arcarum_boss2", tries = 3):
+            if ImageUtils.find_button("arcarum_boss", tries = 3, bypass_general_adjustment = True) or ImageUtils.find_button("arcarum_boss2", tries = 3, bypass_general_adjustment = True):
                 return True
             else:
                 return False
@@ -205,7 +206,5 @@ class Arcarum:
                 elif action == "Boss Detected":
                     MessageLog.print_message(f"[ARCARUM] Boss has been detected. Stopping the bot.")
                     raise ArcarumException("Boss has been detected. Stopping the bot.")
-
-                Game.wait(1)
 
         return runs_completed
