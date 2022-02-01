@@ -103,14 +103,9 @@ class CombatMode:
         Returns:
             None
         """
-        if Settings.enable_combat_mode_adjustment:
-            dialog_location = ImageUtils.find_button("dialog_lyria", tries = Settings.adjust_dialog, suppress_error = True, bypass_general_adjustment = True)
-            if dialog_location is None:
-                dialog_location = ImageUtils.find_button("dialog_vyrn", tries = Settings.adjust_dialog, suppress_error = True, bypass_general_adjustment = True)
-        else:
-            dialog_location = ImageUtils.find_button("dialog_lyria", tries = 2, suppress_error = True)
-            if dialog_location is None:
-                dialog_location = ImageUtils.find_button("dialog_vyrn", tries = 2, suppress_error = True)
+        dialog_location = ImageUtils.find_button("dialog_lyria", tries = 2, suppress_error = True, bypass_general_adjustment = True)
+        if dialog_location is None:
+            dialog_location = ImageUtils.find_button("dialog_vyrn", tries = 2, suppress_error = True, bypass_general_adjustment = True)
 
         if dialog_location is not None:
             MouseUtils.move_and_click_point(dialog_location[0] + 180, dialog_location[1] - 51, "template_dialog")
@@ -712,9 +707,7 @@ class CombatMode:
                 MouseUtils.move_and_click_point(x, y, "template_skill")
 
                 # Check if the skill requires a target.
-                if len(skill_command_list) > 0 and (
-                        (Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("use_skill", tries = Settings.adjust_skill_usage, bypass_general_adjustment = True)) or
-                        ImageUtils.confirm_location("use_skill")):
+                if len(skill_command_list) > 0 and ImageUtils.confirm_location("use_skill", bypass_general_adjustment = True):
                     MessageLog.print_message(f"[COMBAT] Skill is awaiting a target...")
                     target = skill_command_list.pop(0)
 
@@ -744,8 +737,7 @@ class CombatMode:
                         Game.find_and_click_button("cancel")
 
                 # Else, check if the character is skill-sealed.
-                elif (Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("skill_unusable", tries = Settings.adjust_skill_usage, bypass_general_adjustment = True)) or \
-                        ImageUtils.confirm_location("skill_unusable"):
+                elif Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("skill_unusable", bypass_general_adjustment = True):
                     MessageLog.print_message("[COMBAT] Character is currently skill-sealed. Unable to execute command.")
                     Game.find_and_click_button("cancel")
 
@@ -791,8 +783,7 @@ class CombatMode:
                     tries -= 1
 
                 # Check if it is able to be summoned.
-                if (Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("summon_details", tries = Settings.adjust_summon_usage, bypass_general_adjustment = True)) or \
-                        ImageUtils.confirm_location("summon_details"):
+                if Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("summon_details", bypass_general_adjustment = True):
                     if Game.find_and_click_button("ok") is False:
                         MessageLog.print_message(f"[COMBAT] Summon #{summon_index} cannot be invoked due to current restrictions.")
                         Game.find_and_click_button("cancel")
@@ -935,10 +926,7 @@ class CombatMode:
             Game.find_and_click_button("arcarum_stage_effect_active", tries = 10)
 
         # Save the positions of the "Attack" and "Back" button.
-        if Settings.enable_combat_mode_adjustment:
-            CombatMode._attack_button_location = ImageUtils.find_button("attack", tries = Settings.adjust_combat_start, bypass_general_adjustment = True)
-        else:
-            CombatMode._attack_button_location = ImageUtils.find_button("attack", tries = 50)
+        CombatMode._attack_button_location = ImageUtils.find_button("attack", tries = 50, bypass_general_adjustment = True)
 
         if CombatMode._attack_button_location is None:
             MessageLog.print_message(f"\n[ERROR] Cannot find Attack button. Raid must have just ended.")

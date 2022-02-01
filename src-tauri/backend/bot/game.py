@@ -54,10 +54,7 @@ class Game:
             None
         """
         # Save the location of the "Home" button at the bottom of the bot window.
-        if Settings.enable_calibration_adjustment:
-            Settings.home_button_location = ImageUtils.find_button("home", tries = Settings.adjust_calibration, bypass_general_adjustment = True)
-        else:
-            Settings.home_button_location = ImageUtils.find_button("home")
+        Settings.home_button_location = ImageUtils.find_button("home", bypass_general_adjustment = True)
 
         MessageLog.print_message("\n[INFO] Recalibrating the dimensions of the window...")
 
@@ -255,8 +252,7 @@ class Game:
             None
         """
         try:
-            if (Settings.enable_captcha_adjustment and ImageUtils.confirm_location("captcha", tries = Settings.adjust_captcha, bypass_general_adjustment = True)) or \
-                    (Settings.enable_captcha_adjustment is False and ImageUtils.confirm_location("captcha")):
+            if ImageUtils.confirm_location("captcha", bypass_general_adjustment = True):
                 raise RuntimeError("CAPTCHA DETECTED!")
             else:
                 MessageLog.print_message("\n[CAPTCHA] CAPTCHA not detected.")
@@ -801,14 +797,9 @@ class Game:
         else:
             Game.wait(1)
 
-        if (Settings.enable_pending_battles_adjustment and
-            (ImageUtils.confirm_location("check_your_pending_battles", tries = Settings.adjust_pending_battle, bypass_general_adjustment = True) or
-             ImageUtils.confirm_location("pending_battles", tries = Settings.adjust_pending_battle, bypass_general_adjustment = True) or
-             Game.find_and_click_button("quest_results_pending_battles", tries = Settings.adjust_pending_battle, bypass_general_adjustment = True))) or \
-                (Settings.enable_pending_battles_adjustment is False and
-                 (ImageUtils.confirm_location("check_your_pending_battles", tries = 2) or
-                  ImageUtils.confirm_location("pending_battles", tries = 2) or
-                  Game.find_and_click_button("quest_results_pending_battles", tries = 2))):
+        if ImageUtils.confirm_location("check_your_pending_battles", tries = 2, bypass_general_adjustment = True) or \
+                ImageUtils.confirm_location("pending_battles", tries = 2, bypass_general_adjustment = True) or \
+                Game.find_and_click_button("quest_results_pending_battles", tries = 2, bypass_general_adjustment = True):
             MessageLog.print_message(f"[INFO] Found Pending Battles that need collecting from.")
 
             Game.find_and_click_button("ok")

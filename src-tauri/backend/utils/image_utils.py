@@ -207,6 +207,41 @@ class ImageUtils:
         return match_locations
 
     @staticmethod
+    def _determine_adjustment(image_name: str) -> int:
+        """Verify whether the template name is able to be adjusted and return its adjustment.
+
+        Args:
+            image_name (str): The specific adjustment to the specified template or 0 to use the default number of tries.
+
+        Returns:
+            (int): List of Tuples containing match locations.
+        """
+        calibration_list = ["home"]
+        pending_battles_list = ["check_your_pending_battles", "pending_battles", "quest_results_pending_battles"]
+        captcha_list = ["captcha"]
+        support_summon_selection_list = ["select_a_summon", "coop_without_support_summon", "proving_grounds_summon_selection"]
+        dialog_list = ["dialog_lyria", "dialog_vyrn"]
+        skill_usage_list = ["use_skill", "skill_unusable"]
+        summon_usage_list = ["summon_details", "quick_summon1", "quick_summon2"]
+
+        if Settings.enable_calibration_adjustment and calibration_list.__contains__(image_name):
+            return Settings.adjust_calibration
+        elif Settings.enable_pending_battles_adjustment and pending_battles_list.__contains__(image_name):
+            return Settings.adjust_pending_battle
+        elif Settings.enable_captcha_adjustment and captcha_list.__contains__(image_name):
+            return Settings.adjust_captcha
+        elif Settings.enable_support_summon_selection_screen_adjustment and support_summon_selection_list.__contains__(image_name):
+            return Settings.adjust_support_summon_selection_screen
+        elif Settings.enable_combat_mode_adjustment and dialog_list.__contains__(image_name):
+            return Settings.adjust_dialog
+        elif Settings.enable_combat_mode_adjustment and skill_usage_list.__contains__(image_name):
+            return Settings.adjust_skill_usage
+        elif Settings.enable_combat_mode_adjustment and summon_usage_list.__contains__(image_name):
+            return Settings.adjust_summon_usage
+        else:
+            return 0
+
+    @staticmethod
     def find_button(image_name: str, custom_confidence: float = 0.8, tries: int = 5, suppress_error: bool = False, bypass_general_adjustment: bool = False):
         """Find the location of the specified button.
 
@@ -227,6 +262,10 @@ class ImageUtils:
 
         if Settings.enable_general_adjustment and bypass_general_adjustment is False and tries != 5:
             new_tries = Settings.adjust_button_search_general
+        elif bypass_general_adjustment:
+            new_tries = ImageUtils._determine_adjustment(image_name)
+            if new_tries == 0:
+                new_tries = tries
         else:
             new_tries = tries
 
@@ -265,6 +304,10 @@ class ImageUtils:
 
         if Settings.enable_general_adjustment and bypass_general_adjustment is False and tries != 5:
             new_tries = Settings.adjust_header_search_general
+        elif bypass_general_adjustment:
+            new_tries = ImageUtils._determine_adjustment(image_name)
+            if new_tries == 0:
+                new_tries = tries
         else:
             new_tries = tries
 
