@@ -147,7 +147,8 @@ class Settings:
     adjust_waiting_for_reload: int = _data["adjustment"]["adjustWaitingForReload"]
     adjust_waiting_for_attack: int = _data["adjustment"]["adjustWaitingForAttack"]
     enable_arcarum_adjustment: bool = _data["adjustment"]["enableArcarumAdjustment"]
-    adjust_arcarum: int = _data["adjustment"]["adjustArcarum"]
+    adjust_arcarum_action: int = _data["adjustment"]["adjustArcarumAction"]
+    adjust_arcarum_stage_effect: int = _data["adjustment"]["adjustArcarumStageEffect"]
     # #### end of adjustment ####
     # ################## end of settings.json ###################
     #############################################################
