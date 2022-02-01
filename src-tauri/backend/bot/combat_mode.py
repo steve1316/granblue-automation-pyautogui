@@ -32,7 +32,7 @@ class CombatMode:
     _retreat_check = False
     _start_time: float = None
     _list_of_exit_events_for_false = ["Time Exceeded", "No Loot"]
-    _list_of_exit_events_for_true = ["Battle Concluded", "Exp Gained"]
+    _list_of_exit_events_for_true = ["Battle Concluded", "Exp Gained", "Loot Collected"]
     _command_turn_number = 1
     _turn_number = 1  # Current turn for the script execution.
 
@@ -157,6 +157,13 @@ class CombatMode:
             MessageLog.print_message("######################################################################")
             MessageLog.print_message("######################################################################")
             raise CombatModeException("Exp Gained")
+        elif ImageUtils.confirm_location("loot_collected", tries = 1, suppress_error = True):
+            MessageLog.print_message("\n######################################################################")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("[COMBAT] Ending Combat Mode.")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("######################################################################")
+            raise CombatModeException("Loot Collected")
         else:
             return "Nothing"
 
