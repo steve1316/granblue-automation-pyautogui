@@ -108,6 +108,8 @@ export interface Settings {
         adjustSummonUsage: number
         adjustWaitingForReload: number
         adjustWaitingForAttack: number
+        enableArcarumAdjustment: boolean
+        adjustArcarum: number
     }
 }
 
@@ -202,6 +204,8 @@ export const defaultSettings: Settings = {
         adjustSummonUsage: 5,
         adjustWaitingForReload: 3,
         adjustWaitingForAttack: 100,
+        enableArcarumAdjustment: false,
+        adjustArcarum: 3,
     },
 }
 

@@ -473,6 +473,59 @@ const Adjustments = () => {
         )
     }
 
+    const renderArcarum = () => {
+        return (
+            <div>
+                <Divider sx={{ marginBottom: "16px" }}>
+                    <Typography variant="h6" component="div" className="sectionTitle">
+                        Arcarum
+                    </Typography>
+                </Divider>
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bsc.settings.adjustment.enableArcarumAdjustment}
+                                onChange={(e) => {
+                                    bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, enableArcarumAdjustment: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable Arcarum Adjustments"
+                    />
+                    <FormHelperText>Enable adjustment of tries for Arcarum Adjustments.</FormHelperText>
+                </FormGroup>
+
+                {bsc.settings.adjustment.enableArcarumAdjustment ? (
+                    <div>
+                        <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Determining Which Action To Take"
+                                    value={bsc.settings.adjustment.adjustArcarum}
+                                    onChange={(e) => {
+                                        bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustArcarum: Number(e.target.value) } })
+                                    }}
+                                    variant="outlined"
+                                    type="number"
+                                    inputProps={{ min: 1, max: 999 }}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">tries</InputAdornment>,
+                                    }}
+                                    helperText="Set the default number of tries for checking which action to take during Arcarum."
+                                    fullWidth
+                                    style={{ marginBottom: "16px" }}
+                                />
+                            </Grid>
+                            <Grid item xs={6} />
+                        </Grid>
+                    </div>
+                ) : null}
+            </div>
+        )
+    }
+
     return (
         <Fade in={true}>
             <Box className="adjustmentsContainer">
@@ -494,6 +547,8 @@ const Adjustments = () => {
                     {renderSupportSummonSelection()}
 
                     {renderCombatMode()}
+
+                    {renderArcarum()}
                 </Stack>
             </Box>
         </Fade>
