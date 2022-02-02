@@ -14,3 +14,4 @@ pyclick~=0.0.2
 pyperclip~=1.8.1
 tweepy~=3.10.0
 discord.py==1.7.3
+dictor~=0.1.9

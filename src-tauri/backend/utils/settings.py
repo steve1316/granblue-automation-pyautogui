@@ -2,7 +2,7 @@ import json
 import os
 import sys
 from typing import List, Tuple
-
+from dictor import dictor
 from utils.message_log import MessageLog
 
 
@@ -21,58 +21,63 @@ class Settings:
 
     _data = json.load(_file)
 
-    combat_script_name: str = _data["game"]["combatScriptName"]
-    combat_script: List[str] = _data["game"]["combatScript"]
-    farming_mode: str = _data["game"]["farmingMode"]
-    item_name: str = _data["game"]["item"]
-    map_name: str = _data["game"]["map"]
-    mission_name: str = _data["game"]["mission"]
-    item_amount_to_farm: int = _data["game"]["itemAmount"]
+    combat_script_name: str = dictor(_data, "game.combatScriptName", "")
+    combat_script: List[str] = dictor(_data, "game.combatScript", [])
+    farming_mode: str = dictor(_data, "game.farmingMode", checknone = True)
+    item_name: str = dictor(_data, "game.item", checknone = True)
+    map_name: str = dictor(_data, "game.map", checknone = True)
+    mission_name: str = dictor(_data, "game.mission", checknone = True)
+    item_amount_to_farm: int = dictor(_data, "game.itemAmount", 1)
     item_amount_farmed: int = 0
     amount_of_runs_finished: int = 0
-    summon_element_list: List[str] = _data["game"]["summonElements"]
-    summon_list: List[str] = _data["game"]["summons"]
-    group_number: int = _data["game"]["groupNumber"]
-    party_number: int = _data["game"]["partyNumber"]
-    debug_mode: bool = _data["game"]["debugMode"]
+    summon_element_list: List[str] = dictor(_data, "game.summonElements", [])
+    summon_list: List[str] = dictor(_data, "game.summons", [])
+    group_number: int = dictor(_data, "game.groupNumber", 1)
+    party_number: int = dictor(_data, "game.partyNumber", 1)
+    debug_mode: bool = dictor(_data, "game.debugMode", False)
 
     # #### twitter ####
-    twitter_keys_tokens: List[str] = [_data["twitter"]["twitterAPIKey"], _data["twitter"]["twitterAPIKeySecret"], _data["twitter"]["twitterAccessToken"], _data["twitter"]["twitterAccessTokenSecret"]]
+    twitter_keys_tokens: List[str] = [dictor(_data, "twitter.twitterAPIKey", ""),
+                                      dictor(_data, "twitter.twitterAPIKeySecret", ""),
+                                      dictor(_data, "twitter.twitterAccessToken", ""),
+                                      dictor(_data, "twitter.twitterAccessTokenSecret", "")]
     # #### end of twitter ####
 
     # #### discord ####
-    enable_discord: bool = _data["discord"]["enableDiscordNotifications"]
-    discord_token: str = _data["discord"]["discordToken"]
-    user_id: int = _data["discord"]["discordUserID"]
+    enable_discord: bool = dictor(_data, "discord.enableDiscordNotifications", False)
+    discord_token: str = dictor(_data, "discord.discordToken", "")
+    user_id: int = dictor(_data, "discord.discordUserID", "")
     # #### end of discord ####
 
     # #### configuration ####
-    enabled_auto_restore: bool = _data["configuration"]["enableAutoRestore"]
-    use_full_elixir: bool = _data["configuration"]["enableFullElixir"]
-    use_soul_balm: bool = _data["configuration"]["enableSoulBalm"]
-    enable_bezier_curve_mouse_movement: bool = _data["configuration"]["enableBezierCurveMouseMovement"]
-    custom_mouse_speed: float = float(_data["configuration"]["mouseSpeed"])
-    enable_delay_between_runs: bool = _data["configuration"]["enableDelayBetweenRuns"]
-    delay_in_seconds: int = _data["configuration"]["delayBetweenRuns"]
-    enable_randomized_delay_between_runs: bool = _data["configuration"]["enableRandomizedDelayBetweenRuns"]
-    delay_in_seconds_lower_bound: int = _data["configuration"]["delayBetweenRunsLowerBound"]
-    delay_in_seconds_upper_bound: int = _data["configuration"]["delayBetweenRunsUpperBound"]
-    enable_refresh_during_combat: bool = _data["configuration"]["enableRefreshDuringCombat"]
-    enable_auto_quick_summon: bool = _data["configuration"]["enableAutoQuickSummon"]
-    enable_bypass_reset_summon: bool = _data["configuration"]["enableBypassResetSummon"]
-    static_window: bool = _data["configuration"]["staticWindow"]
+    enabled_auto_restore: bool = dictor(_data, "configuration.enableAutoRestore", True)
+    use_full_elixir: bool = dictor(_data, "configuration.enableFullElixir", False)
+    use_soul_balm: bool = dictor(_data, "configuration.enableSoulBalm", False)
+    enable_bezier_curve_mouse_movement: bool = dictor(_data, "configuration.enableBezierCurveMouseMovement", True)
+    custom_mouse_speed: float = float(dictor(_data, "configuration.mouseSpeed", 0.2))
+    enable_delay_between_runs: bool = dictor(_data, "configuration.enableDelayBetweenRuns", False)
+    delay_in_seconds: int = dictor(_data, "configuration.delayBetweenRuns", 15)
+    enable_randomized_delay_between_runs: bool = dictor(_data, "configuration.enableRandomizedDelayBetweenRuns", False)
+    delay_in_seconds_lower_bound: int = dictor(_data, "configuration.delayBetweenRunsLowerBound", 15)
+    delay_in_seconds_upper_bound: int = dictor(_data, "configuration.delayBetweenRunsUpperBound", 60)
+    enable_refresh_during_combat: bool = dictor(_data, "configuration.enableRefreshDuringCombat", True)
+    enable_auto_quick_summon: bool = dictor(_data, "configuration.enableAutoQuickSummon", False)
+    enable_bypass_reset_summon: bool = dictor(_data, "configuration.enableBypassResetSummon", False)
+    static_window: bool = dictor(_data, "configuration.staticWindow", True)
     # #### end of configuration ####
 
     # #### nightmare ####
-    enable_nightmare: bool = _data["nightmare"]["enableNightmare"]
-    _enable_custom_nightmare_settings: bool = _data["nightmare"]["enableCustomNightmareSettings"]
+    enable_nightmare: bool = dictor(_data, "nightmare.enableNightmare", False)
+    _enable_custom_nightmare_settings: bool = dictor(_data, "nightmare.enableCustomNightmareSettings", False)
+    nightmare_combat_script_name: str = dictor(_data, "nightmare.nightmareCombatScriptName", "")
+    nightmare_combat_script: List[str] = dictor(_data, "nightmare.nightmareCombatScript", [])
+    nightmare_summon_list: List[str] = dictor(_data, "nightmare.nightmareSummons", [])
+    nightmare_summon_elements_list: List[str] = dictor(_data, "nightmare.nightmareSummonElements", [])
+    nightmare_group_number: int = dictor(_data, "nightmare.nightmareGroupNumber", 1)
+    nightmare_party_number: int = dictor(_data, "nightmare.nightmarePartyNumber", 1)
+
     _farming_modes_with_nightmares = ["Event", "Event (Token Drawboxes)", "Rise of the Beasts", "Xeno Clash"]
-    nightmare_combat_script: List[str] = _data["nightmare"]["nightmareCombatScript"]
-    nightmare_combat_script_name: str = _data["nightmare"]["nightmareCombatScriptName"]
-    nightmare_summon_list: List[str] = _data["nightmare"]["nightmareSummons"]
-    nightmare_summon_elements_list: List[str] = _data["nightmare"]["nightmareSummonElements"]
-    nightmare_group_number: int = _data["nightmare"]["nightmareGroupNumber"]
-    nightmare_party_number: int = _data["nightmare"]["nightmarePartyNumber"]
+
     if enable_nightmare and ((farming_mode == "Special" and mission_name == "VH Angel Halo") or _farming_modes_with_nightmares.__contains__(mission_name)):
         MessageLog.print_message(f"\n[NIGHTMARE] Initializing settings for {farming_mode}'s Nightmare...")
 
@@ -109,46 +114,46 @@ class Settings:
     # #### end of nightmare ####
 
     # #### event ####
-    enable_event_location_incrementation_by_one: bool = _data["event"]["enableLocationIncrementByOne"]
+    enable_event_location_incrementation_by_one: bool = dictor(_data, "event.enableLocationIncrementByOne", False)
     # #### end of event ####
 
     # #### raid ####
-    enable_auto_exit_raid: bool = _data["raid"]["enableAutoExitRaid"]
-    time_allowed_until_auto_exit_raid: int = _data["raid"]["timeAllowedUntilAutoExitRaid"] * 60
-    enable_no_timeout: bool = _data["raid"]["enableNoTimeout"]
+    enable_auto_exit_raid: bool = dictor(_data, "raid.enableAutoExitRaid", False)
+    time_allowed_until_auto_exit_raid: int = dictor(_data, "raid.timeAllowedUntilAutoExitRaid", 10) * 60
+    enable_no_timeout: bool = dictor(_data, "raid.enableNoTimeout", False)
     # #### end of raid ####
 
     # #### arcarum ####
-    enable_stop_on_arcarum_boss: bool = _data["arcarum"]["enableStopOnArcarumBoss"]
+    enable_stop_on_arcarum_boss: bool = dictor(_data, "arcarum.enableStopOnArcarumBoss", True)
     # #### end of arcarum ####
 
     # #### generic ####
-    enable_force_reload: bool = _data["generic"]["enableForceReload"]
+    enable_force_reload: bool = dictor(_data, "generic.enableForceReload", False)
     # #### end of generic ####
 
     # #### adjustment ####
-    enable_calibration_adjustment: bool = _data["adjustment"]["enableCalibrationAdjustment"]
-    adjust_calibration: int = _data["adjustment"]["adjustCalibration"]
-    enable_general_adjustment: bool = _data["adjustment"]["enableGeneralAdjustment"]
-    adjust_button_search_general: int = _data["adjustment"]["adjustButtonSearchGeneral"]
-    adjust_header_search_general: int = _data["adjustment"]["adjustHeaderSearchGeneral"]
-    enable_pending_battles_adjustment: bool = _data["adjustment"]["enablePendingBattleAdjustment"]
-    adjust_before_pending_battle: int = _data["adjustment"]["adjustBeforePendingBattle"]
-    adjust_pending_battle: int = _data["adjustment"]["adjustPendingBattle"]
-    enable_captcha_adjustment: bool = _data["adjustment"]["enableCaptchaAdjustment"]
-    adjust_captcha: int = _data["adjustment"]["adjustCaptcha"]
-    enable_support_summon_selection_screen_adjustment: bool = _data["adjustment"]["enableSupportSummonSelectionScreenAdjustment"]
-    adjust_support_summon_selection_screen: int = _data["adjustment"]["adjustSupportSummonSelectionScreen"]
-    enable_combat_mode_adjustment: bool = _data["adjustment"]["enableCombatModeAdjustment"]
-    adjust_combat_start: int = _data["adjustment"]["adjustCombatStart"]
-    adjust_dialog: int = _data["adjustment"]["adjustDialog"]
-    adjust_skill_usage: int = _data["adjustment"]["adjustSkillUsage"]
-    adjust_summon_usage: int = _data["adjustment"]["adjustSummonUsage"]
-    adjust_waiting_for_reload: int = _data["adjustment"]["adjustWaitingForReload"]
-    adjust_waiting_for_attack: int = _data["adjustment"]["adjustWaitingForAttack"]
-    enable_arcarum_adjustment: bool = _data["adjustment"]["enableArcarumAdjustment"]
-    adjust_arcarum_action: int = _data["adjustment"]["adjustArcarumAction"]
-    adjust_arcarum_stage_effect: int = _data["adjustment"]["adjustArcarumStageEffect"]
+    enable_calibration_adjustment: bool = dictor(_data, "adjustment.enableCalibrationAdjustment", False)
+    adjust_calibration: int = dictor(_data, "adjustment.adjustCalibration", 5)
+    enable_general_adjustment: bool = dictor(_data, "adjustment.enableGeneralAdjustment", False)
+    adjust_button_search_general: int = dictor(_data, "adjustment.adjustButtonSearchGeneral", 5)
+    adjust_header_search_general: int = dictor(_data, "adjustment.adjustHeaderSearchGeneral", 5)
+    enable_pending_battles_adjustment: bool = dictor(_data, "adjustment.enableForceReload", False)
+    adjust_before_pending_battle: int = dictor(_data, "adjustment.adjustBeforePendingBattle", 1)
+    adjust_pending_battle: int = dictor(_data, "adjustment.adjustPendingBattle", 2)
+    enable_captcha_adjustment: bool = dictor(_data, "adjustment.enableCaptchaAdjustment", False)
+    adjust_captcha: int = dictor(_data, "adjustment.adjustCaptcha", 5)
+    enable_support_summon_selection_screen_adjustment: bool = dictor(_data, "adjustment.enableSupportSummonSelectionScreenAdjustment", False)
+    adjust_support_summon_selection_screen: int = dictor(_data, "adjustment.adjustSupportSummonSelectionScreen", 30)
+    enable_combat_mode_adjustment: bool = dictor(_data, "adjustment.enableCombatModeAdjustment", False)
+    adjust_combat_start: int = dictor(_data, "adjustment.adjustCombatStart", 50)
+    adjust_dialog: int = dictor(_data, "adjustment.adjustDialog", 2)
+    adjust_skill_usage: int = dictor(_data, "adjustment.adjustSkillUsage", 5)
+    adjust_summon_usage: int = dictor(_data, "adjustment.adjustSummonUsage", 5)
+    adjust_waiting_for_reload: int = dictor(_data, "adjustment.adjustWaitingForReload", 3)
+    adjust_waiting_for_attack: int = dictor(_data, "adjustment.adjustWaitingForAttack", 100)
+    enable_arcarum_adjustment: bool = dictor(_data, "adjustment.enableArcarumAdjustment", False)
+    adjust_arcarum_action: int = dictor(_data, "adjustment.adjustArcarumAction", 3)
+    adjust_arcarum_stage_effect: int = dictor(_data, "adjustment.adjustArcarumStageEffect", 10)
     # #### end of adjustment ####
     # ################## end of settings.json ###################
     #############################################################
