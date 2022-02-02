@@ -241,9 +241,9 @@ class ImageUtils:
         elif Settings.enable_combat_mode_adjustment and summon_usage_list.__contains__(image_name):
             return Settings.adjust_summon_usage
         elif Settings.enable_arcarum_adjustment and arcarum_list.__contains__(image_name):
-            return Settings.adjust_arcarum
+            return Settings.adjust_arcarum_action
         elif Settings.enable_arcarum_adjustment and arcarum_stage_effect_list.__contains__(image_name):
-            return Settings.arcarum
+            return Settings.adjust_arcarum_stage_effect
         else:
             return 0
 
