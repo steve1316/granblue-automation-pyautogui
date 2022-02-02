@@ -2,7 +2,9 @@ import json
 import os
 import sys
 from typing import List, Tuple
+
 from dictor import dictor
+
 from utils.message_log import MessageLog
 
 
