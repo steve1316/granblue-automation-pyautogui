@@ -1004,7 +1004,7 @@ class CombatMode:
                             # Advance the Turn number by 1.
                             CombatMode._turn_number += 1
                         else:
-                            MessageLog.print_message("[COMBAT] Failed to execute the \"attackandback\" command...")
+                            MessageLog.print_message("[COMBAT] Failed to execute the \"attackback\" command...")
                     elif "back" in command and Game.find_and_click_button("home_back"):
                         MessageLog.print_message("[COMBAT] Tapped the Back button.")
                         CombatMode._wait_for_attack()
