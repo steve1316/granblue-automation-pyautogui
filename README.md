@@ -102,6 +102,7 @@ pip install -r requirements.txt
 - [pyperclip 1.8.1](https://pypi.org/project/pyperclip/)
 - [tweepy 3.10.0](https://pypi.org/project/tweepy)
 - [discord.py 1.7.3](https://pypi.org/project/discord.py/)
+- [dictor 0.1.9](https://github.com/perfecto25/dictor)
 
 # Instructions
 1. Download the entire project folder.
