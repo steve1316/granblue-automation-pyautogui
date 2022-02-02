@@ -945,15 +945,15 @@ class CombatMode:
                     # Remove comments in the same line.
                     command = command[0:command.find("#")][0:command.find("/")].strip()
 
-                # Check for exit conditions.
-                CombatMode._check_for_battle_end()
-
                 MessageLog.print_message(f"\n[COMBAT] Reading command: \"{command}\"")
 
                 if command.__contains__("turn"):
                     CombatMode._start_turn(command)
                 elif CombatMode._turn_number == CombatMode._command_turn_number:
                     # Process all commands here that belong inside a Turn block.
+
+                    # Check for exit conditions.
+                    CombatMode._check_for_battle_end()
 
                     # Determine which Character to take action.
                     if "character1." in command:
