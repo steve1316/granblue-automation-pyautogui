@@ -994,6 +994,17 @@ class CombatMode:
                     elif "targetenemy" in command:
                         # Select enemy target.
                         CombatMode._select_enemy_target(command)
+                    elif "attackback" in command:
+                        if Game.find_and_click_button("attack"):
+                            if ImageUtils.wait_vanish("combat_cancel", timeout = 10):
+                                MessageLog.print_message("[COMBAT] Attacked and pressing the Back button now...")
+                                Game.find_and_click_button("home_back")
+                                CombatMode._wait_for_attack()
+
+                            # Advance the Turn number by 1.
+                            CombatMode._turn_number += 1
+                        else:
+                            MessageLog.print_message("[COMBAT] Failed to execute the \"attackandback\" command...")
                     elif "back" in command and Game.find_and_click_button("home_back"):
                         MessageLog.print_message("[COMBAT] Tapped the Back button.")
                         CombatMode._wait_for_attack()
