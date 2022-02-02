@@ -941,9 +941,9 @@ class CombatMode:
                 command = command_list.pop(0).strip().lower()
                 if command == "" or command[0] == "#" or command[0] == "/":
                     continue
-                else:
+                elif command.__contains__("/") or command.__contains__("#"):
                     # Remove comments in the same line.
-                    command = command[0:command.find("#")][0:command.find("/")]
+                    command = command[0:command.find("#")][0:command.find("/")].strip()
 
                 # Check for exit conditions.
                 CombatMode._check_for_battle_end()
