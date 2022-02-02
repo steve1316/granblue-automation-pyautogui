@@ -254,7 +254,7 @@ class ImageUtils:
         Args:
             image_name (str): Name of the button image file in the /images/buttons/ folder.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
-            tries (int, optional): Number of tries before failing. Defaults to 5.
+            tries (int, optional): Number of tries before failing. Note that this gets overridden if the image_name is one of the adjustments. Defaults to 5.
             suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
             bypass_general_adjustment (bool, optional): Bypass using the general adjustment for the number of tries. Defaults to False.
 
@@ -266,11 +266,11 @@ class ImageUtils:
 
         template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.jpg", 0)
 
-        if Settings.enable_general_adjustment and bypass_general_adjustment is False and tries != 5:
-            new_tries = Settings.adjust_button_search_general
-        elif bypass_general_adjustment:
-            new_tries = ImageUtils._determine_adjustment(image_name)
-            if new_tries == 0:
+        new_tries = ImageUtils._determine_adjustment(image_name)
+        if new_tries == 0:
+            if Settings.enable_general_adjustment and bypass_general_adjustment is False and tries == 5:
+                new_tries = Settings.adjust_button_search_general
+            else:
                 new_tries = tries
         else:
             new_tries = tries
@@ -296,7 +296,7 @@ class ImageUtils:
         Args:
             image_name (str): Name of the header image file in the /images/headers/ folder.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
-            tries (int, optional): Number of tries before failing. Defaults to 5.
+            tries (int, optional): Number of tries before failing. Note that this gets overridden if the image_name is one of the adjustments. Defaults to 5.
             suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
             bypass_general_adjustment (bool, optional): Bypass using the general adjustment for the number of tries. Defaults to False.
 
@@ -308,11 +308,11 @@ class ImageUtils:
 
         template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/headers/{image_name.lower()}_header.jpg", 0)
 
-        if Settings.enable_general_adjustment and bypass_general_adjustment is False and tries != 5:
-            new_tries = Settings.adjust_header_search_general
-        elif bypass_general_adjustment:
-            new_tries = ImageUtils._determine_adjustment(image_name)
-            if new_tries == 0:
+        new_tries = ImageUtils._determine_adjustment(image_name)
+        if new_tries == 0:
+            if Settings.enable_general_adjustment and bypass_general_adjustment is False and tries == 5:
+                new_tries = Settings.adjust_header_search_general
+            else:
                 new_tries = tries
         else:
             new_tries = tries
