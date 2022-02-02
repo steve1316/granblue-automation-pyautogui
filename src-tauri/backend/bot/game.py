@@ -627,7 +627,7 @@ class Game:
                 MessageLog.print_message(f"[FARM] Mission: {Settings.mission_name}")
                 MessageLog.print_message(f"[FARM] Summons: {Settings.summon_list}")
                 MessageLog.print_message(f"[FARM] Amount of {Settings.item_name} gained from this run: {temp_amount}")
-                MessageLog.print_message(f"[FARM] Amount of {Settings.item_name} gained in total: {Settings.item_amount_farmed - temp_amount} / {Settings.item_amount_to_farm}")
+                MessageLog.print_message(f"[FARM] Amount of {Settings.item_name} gained in total: {Settings.item_amount_farmed} / {Settings.item_amount_to_farm}")
                 MessageLog.print_message(f"[FARM] Amount of runs completed: {Settings.amount_of_runs_finished}")
                 MessageLog.print_message("**********************************************************************")
                 MessageLog.print_message("**********************************************************************\n")
@@ -674,11 +674,11 @@ class Game:
 
                 if temp_amount != 0:
                     if Settings.item_amount_farmed >= Settings.item_amount_to_farm:
-                        discord_string = f"> {temp_amount}x __{Settings.item_name}__ gained from this pending battle: **[{Settings.item_amount_farmed} / {Settings.item_amount_to_farm}]** -> " \
-                                         f"**[{Settings.item_amount_farmed + temp_amount} / {Settings.item_amount_to_farm}]** :white_check_mark:"
+                        discord_string = f"> {temp_amount}x __{Settings.item_name}__ gained from this pending battle: **[{Settings.item_amount_farmed - temp_amount} / {Settings.item_amount_to_farm}]** -> " \
+                                         f"**[{Settings.item_amount_farmed} / {Settings.item_amount_to_farm}]** :white_check_mark:"
                     else:
-                        discord_string = f"> {temp_amount}x __{Settings.item_name}__ gained from this pending battle: **[{Settings.item_amount_farmed} / {Settings.item_amount_to_farm}]** -> " \
-                                         f"**[{Settings.item_amount_farmed + temp_amount} / {Settings.item_amount_to_farm}]**"
+                        discord_string = f"> {temp_amount}x __{Settings.item_name}__ gained from this pending battle: **[{Settings.item_amount_farmed - temp_amount} / {Settings.item_amount_to_farm}]** -> " \
+                                         f"**[{Settings.item_amount_farmed} / {Settings.item_amount_to_farm}]**"
 
                     Game._discord_queue.put(discord_string)
 
