@@ -129,14 +129,14 @@ class CombatMode:
             MessageLog.print_message("######################################################################")
             MessageLog.print_message("######################################################################")
             raise CombatModeException("Time Exceeded")
-        elif CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True):
+        elif CombatMode._retreat_check or ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True, bypass_general_adjustment = True):
             MessageLog.print_message("\n######################################################################")
             MessageLog.print_message("######################################################################")
             MessageLog.print_message("[COMBAT] Combat Mode has ended with no loot.")
             MessageLog.print_message("######################################################################")
             MessageLog.print_message("######################################################################")
             raise CombatModeException("No Loot")
-        elif ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True):
+        elif ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True, bypass_general_adjustment = True):
             MessageLog.print_message("\n[COMBAT] Battle concluded suddenly.")
             MessageLog.print_message("\n######################################################################")
             MessageLog.print_message("######################################################################")
@@ -145,14 +145,14 @@ class CombatMode:
             MessageLog.print_message("######################################################################")
             Game.find_and_click_button("reload")
             raise CombatModeException("Battle Concluded")
-        elif ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True):
+        elif ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True, bypass_general_adjustment = True):
             MessageLog.print_message("\n######################################################################")
             MessageLog.print_message("######################################################################")
             MessageLog.print_message("[COMBAT] Ending Combat Mode.")
             MessageLog.print_message("######################################################################")
             MessageLog.print_message("######################################################################")
             raise CombatModeException("Exp Gained")
-        elif ImageUtils.confirm_location("loot_collected", tries = 1, suppress_error = True):
+        elif ImageUtils.confirm_location("loot_collected", tries = 1, suppress_error = True, bypass_general_adjustment = True):
             MessageLog.print_message("\n######################################################################")
             MessageLog.print_message("######################################################################")
             MessageLog.print_message("[COMBAT] Ending Combat Mode.")
@@ -334,9 +334,7 @@ class CombatMode:
             # Check if the Party wiped after attacking.
             CombatMode._check_for_wipe()
 
-            if ImageUtils.confirm_location("battle_concluded", tries = 1, suppress_error = True) is True or \
-                    ImageUtils.confirm_location("exp_gained", tries = 1, suppress_error = True) is True:
-                return False
+            CombatMode._check_for_battle_end()
 
             tries -= 1
 

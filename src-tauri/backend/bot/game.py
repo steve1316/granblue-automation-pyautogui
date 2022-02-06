@@ -586,7 +586,7 @@ class Game:
 
         # Close all popups until the bot reaches the Loot Collected screen.
         if skip_popup_check is False:
-            while not ImageUtils.confirm_location("loot_collected", tries = 1):
+            while not ImageUtils.confirm_location("loot_collected", tries = 1, disable_adjustment = True):
                 Game.find_and_click_button("ok", tries = 1, suppress_error = True)
                 Game.find_and_click_button("close", tries = 1, suppress_error = True)
                 Game.find_and_click_button("cancel", tries = 1, suppress_error = True)
@@ -594,7 +594,7 @@ class Game:
                 # Search for and click on the "Extended Mastery" popup.
                 Game.find_and_click_button("new_extended_mastery_level", tries = 1, suppress_error = True)
 
-                if ImageUtils.confirm_location("no_loot", tries = 1):
+                if ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True, disable_adjustment = True):
                     return 0
 
                 if Settings.debug_mode:
@@ -739,7 +739,7 @@ class Game:
             Game.wait(1)
 
             # If there is loot available, start loot detection.
-            if ImageUtils.confirm_location("no_loot"):
+            if ImageUtils.confirm_location("no_loot", disable_adjustment = True):
                 MessageLog.print_message(f"[INFO] No loot can be collected.")
 
                 # Navigate back to the Quests screen.

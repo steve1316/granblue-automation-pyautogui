@@ -201,7 +201,7 @@ class Raid:
                 # Select the Party.
                 if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
                     # Handle the rare case where joining the Raid after selecting the Summon and Party led the bot to the Quest Results screen with no loot to collect.
-                    if ImageUtils.confirm_location("no_loot"):
+                    if ImageUtils.confirm_location("no_loot", disable_adjustment = True):
                         MessageLog.print_message("\n[RAID] Seems that the Raid just ended. Moving back to the Home screen and joining another Raid...")
                     elif CombatMode.start_combat_mode():
                         number_of_items_dropped = Game.collect_loot(is_completed = True)

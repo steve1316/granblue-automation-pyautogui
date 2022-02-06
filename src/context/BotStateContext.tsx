@@ -108,6 +108,10 @@ export interface Settings {
         adjustSummonUsage: number
         adjustWaitingForReload: number
         adjustWaitingForAttack: number
+        adjustCheckForNoLootScreen: number
+        adjustCheckForBattleConcludedPopup: number
+        adjustCheckForExpGainedPopup: number
+        adjustCheckForLootCollectionScreen: number
         enableArcarumAdjustment: boolean
         adjustArcarumAction: number
         adjustArcarumStageEffect: number
@@ -205,6 +209,10 @@ export const defaultSettings: Settings = {
         adjustSummonUsage: 5,
         adjustWaitingForReload: 3,
         adjustWaitingForAttack: 100,
+        adjustCheckForNoLootScreen: 1,
+        adjustCheckForBattleConcludedPopup: 1,
+        adjustCheckForExpGainedPopup: 1,
+        adjustCheckForLootCollectionScreen: 1,
         enableArcarumAdjustment: false,
         adjustArcarumAction: 3,
         adjustArcarumStageEffect: 10,

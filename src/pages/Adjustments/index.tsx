@@ -467,6 +467,94 @@ const Adjustments = () => {
                             </Grid>
                             <Grid item xs={6} />
                         </Grid>
+
+                        <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Check for No Loot Screen"
+                                    value={bsc.settings.adjustment.adjustCheckForNoLootScreen}
+                                    onChange={(e) => {
+                                        bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustCheckForNoLootScreen: Number(e.target.value) } })
+                                    }}
+                                    variant="outlined"
+                                    type="number"
+                                    inputProps={{ min: 1, max: 999 }}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">tries</InputAdornment>,
+                                    }}
+                                    helperText="Set the default number of tries for the frequent checking of the No Loot screen during Combat Mode. This occurs when the bot just joined a raid and takes an action but the boss died already in the process of loading into the raid. This influences when the bot gets to reload the page."
+                                    fullWidth
+                                    style={{ marginBottom: "16px" }}
+                                />
+                            </Grid>
+                            <Grid item xs={6} />
+                        </Grid>
+
+                        <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Check for Battle Concluded Popup"
+                                    value={bsc.settings.adjustment.adjustCheckForBattleConcludedPopup}
+                                    onChange={(e) => {
+                                        bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustCheckForBattleConcludedPopup: Number(e.target.value) } })
+                                    }}
+                                    variant="outlined"
+                                    type="number"
+                                    inputProps={{ min: 1, max: 999 }}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">tries</InputAdornment>,
+                                    }}
+                                    helperText="Set the default number of tries for the frequent checking of the Battle Concluded popup during Combat Mode. This occurs when the bot takes an action but the boss died at that exact moment. This influences when the bot gets to reload the page."
+                                    fullWidth
+                                    style={{ marginBottom: "16px" }}
+                                />
+                            </Grid>
+                            <Grid item xs={6} />
+                        </Grid>
+
+                        <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Check for Exp Gained Popup"
+                                    value={bsc.settings.adjustment.adjustCheckForExpGainedPopup}
+                                    onChange={(e) => {
+                                        bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustCheckForExpGainedPopup: Number(e.target.value) } })
+                                    }}
+                                    variant="outlined"
+                                    type="number"
+                                    inputProps={{ min: 1, max: 999 }}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">tries</InputAdornment>,
+                                    }}
+                                    helperText="Set the default number of tries for the frequent checking of the Exp Gained popup after Combat Mode on the Loot Collection screen. This influences when the bot gets to reload the page."
+                                    fullWidth
+                                    style={{ marginBottom: "16px" }}
+                                />
+                            </Grid>
+                            <Grid item xs={6} />
+                        </Grid>
+
+                        <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Check for Loot Collection Screen"
+                                    value={bsc.settings.adjustment.adjustCheckForLootCollectionScreen}
+                                    onChange={(e) => {
+                                        bsc.setSettings({ ...bsc.settings, adjustment: { ...bsc.settings.adjustment, adjustCheckForLootCollectionScreen: Number(e.target.value) } })
+                                    }}
+                                    variant="outlined"
+                                    type="number"
+                                    inputProps={{ min: 1, max: 999 }}
+                                    InputProps={{
+                                        endAdornment: <InputAdornment position="end">tries</InputAdornment>,
+                                    }}
+                                    helperText="Set the default number of tries for the frequent checking if the bot arrived at the Loot Collection screen after Combat Mode. This influences when the bot gets to reload the page."
+                                    fullWidth
+                                    style={{ marginBottom: "16px" }}
+                                />
+                            </Grid>
+                            <Grid item xs={6} />
+                        </Grid>
                     </div>
                 ) : null}
             </div>

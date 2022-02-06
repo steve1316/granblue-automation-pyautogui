@@ -225,6 +225,10 @@ class ImageUtils:
         summon_usage_list = ["summon_details", "quick_summon1", "quick_summon2"]
         arcarum_list = ["arcarum_party_selection", "arcarum_treasure", "arcarum_node", "arcarum_mob", "arcarum_red_mob", "arcarum_silver_chest", "arcarum_gold_chest", "arcarum_boss", "arcarum_boss2"]
         arcarum_stage_effect_list = ["arcarum_stage_effect_active"]
+        no_loot_screen_list = ["no_loot"]
+        battle_concluded_popup_list = ["battle_concluded"]
+        exp_gained_popup_list = ["exp_gained"]
+        loot_collection_screen_list = ["loot_collected"]
 
         if Settings.enable_calibration_adjustment and calibration_list.__contains__(image_name):
             return Settings.adjust_calibration
@@ -240,6 +244,14 @@ class ImageUtils:
             return Settings.adjust_skill_usage
         elif Settings.enable_combat_mode_adjustment and summon_usage_list.__contains__(image_name):
             return Settings.adjust_summon_usage
+        elif Settings.enable_combat_mode_adjustment and no_loot_screen_list.__contains__(image_name):
+            return Settings.adjust_check_for_no_loot_screen
+        elif Settings.enable_combat_mode_adjustment and battle_concluded_popup_list.__contains__(image_name):
+            return Settings.adjust_check_for_battle_concluded_popup
+        elif Settings.enable_combat_mode_adjustment and exp_gained_popup_list.__contains__(image_name):
+            return Settings.adjust_check_for_exp_gained_popup
+        elif Settings.enable_combat_mode_adjustment and loot_collection_screen_list.__contains__(image_name):
+            return Settings.adjust_check_for_loot_collection_screen
         elif Settings.enable_arcarum_adjustment and arcarum_list.__contains__(image_name):
             return Settings.adjust_arcarum_action
         elif Settings.enable_arcarum_adjustment and arcarum_stage_effect_list.__contains__(image_name):
