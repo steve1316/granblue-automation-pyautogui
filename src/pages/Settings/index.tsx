@@ -354,7 +354,7 @@ const Settings = () => {
                                 }
                                 label="Enable Stop on Arcarum Boss"
                             />
-                            <FormHelperText>Enable this option to have the bot upon encountering a Arcarum Boss (3-3, 6-3, 9-9).</FormHelperText>
+                            <FormHelperText>Enable this option to have the bot stop upon encountering a Arcarum Boss (3-3, 6-3, 9-9).</FormHelperText>
                         </FormGroup>
                     ) : null}
 
