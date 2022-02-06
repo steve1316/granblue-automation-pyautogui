@@ -164,10 +164,10 @@ class CombatMode:
 
     @staticmethod
     def _check_raid() -> bool:
-        """Check if the current battle is a raid.
+        """Check if the current battle is a raid-like battle.
 
         Returns:
-            (bool): True if the current battle is a Raid.
+            (bool): True if the current battle is a raid-like battle.
         """
         event_raids = ["VH Event Raid", "EX Event Raid", "IM Event Raid"]
         rotb_raids = ["EX Zhuque", "EX Xuanwu", "EX Baihu", "EX Qinglong", "Lvl 100 Shenxian"]
