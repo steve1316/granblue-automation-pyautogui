@@ -83,14 +83,14 @@ class Arcarum:
         """
         from bot.game import Game
 
-        # Determine what action to take.
-        MessageLog.print_message(f"\n[ARCARUM] Now determining what action to take...")
-
         # Wait a second in case the "Do or Die" animation plays.
         Game.wait(2.0)
 
+        # Determine what action to take.
         tries = 3
         while tries > 0:
+            MessageLog.print_message(f"\n[ARCARUM] Now determining what action to take with {tries} tries remaining...")
+
             # Prioritise any enemies/chests/thorns that are available on the current node.
             arcarum_actions = ImageUtils.find_all("arcarum_action")
             if len(arcarum_actions) > 0:
