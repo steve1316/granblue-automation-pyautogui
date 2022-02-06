@@ -236,13 +236,16 @@ class CombatMode:
         if Settings.enable_refresh_during_combat and (CombatMode._check_raid() or override or (Settings.farming_mode == "Generic" and Settings.enable_force_reload)):
             from bot.game import Game
 
-            MessageLog.print_message("[COMBAT] Reloading now.")
-            Game.find_and_click_button("reload")
-            if Settings.enable_combat_mode_adjustment:
-                Game.wait(Settings.adjust_waiting_for_reload)
-            else:
-                Game.wait(3.0)
-            return True
+            if CombatMode._check_for_battle_end() == "Nothing":
+                MessageLog.print_message("[COMBAT] Reloading now.")
+                Game.find_and_click_button("reload")
+
+                if Settings.enable_combat_mode_adjustment:
+                    Game.wait(Settings.adjust_waiting_for_reload)
+                else:
+                    Game.wait(3.0)
+
+                return True
 
         return False
 
@@ -1087,13 +1090,16 @@ class CombatMode:
                     if CombatMode._check_raid():
                         # Click Next if it is available and enable automation again if combat continues.
                         if Game.find_and_click_button("next", tries = 1, suppress_error = True):
-                            # Check for exit conditions and restart auto.
                             Game.wait(3.0)
+
+                            # Check for exit conditions and restart auto.
                             if CombatMode._check_for_battle_end() == "Nothing":
                                 CombatMode._enable_auto()
-                        elif ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
-                            CombatMode._reload_for_attack(override = True)
+                        elif ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and ImageUtils.find_button("next", tries = 1, suppress_error = True) is None and \
+                                CombatMode._check_for_battle_end() == "Nothing":
+                            Game.wait(1.0)
 
+                            CombatMode._reload_for_attack(override = True)
                             CombatMode._wait_for_attack()
 
                             # Check for exit conditions and restart auto.
@@ -1105,6 +1111,7 @@ class CombatMode:
                     elif ImageUtils.find_button("attack", tries = 1, suppress_error = True) is None and ImageUtils.find_button("next", tries = 1, suppress_error = True) is None:
                         if Settings.debug_mode:
                             MessageLog.print_message("[DEBUG] Attack and Next buttons have vanished. Determining if bot should reload...")
+
                         if CombatMode._reload_for_attack():
                             # Enable Full/Semi Auto again if the bot reloaded.
                             if CombatMode._full_auto:
@@ -1119,6 +1126,9 @@ class CombatMode:
 
                     if Game.find_and_click_button("next", tries = 1, suppress_error = True):
                         Game.wait(3)
+
+                        # Check for exit conditions.
+                        CombatMode._check_for_battle_end()
 
                     Game.find_and_click_button("attack", tries = 10)
                     CombatMode._reload_for_attack()
