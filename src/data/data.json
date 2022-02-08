@@ -828,6 +828,152 @@
             "items": ["Repeated Runs"]
         }
     },
+    "Arcarum Sandbox": {
+        "Slithering Seductress": {
+            "map": "Zone Eletio",
+            "items": ["Fire Verum Proof"]
+        },
+        "Living Lightning Rod": {
+            "map": "Zone Eletio",
+            "items": ["Lightborne Astra"]
+        },
+        "Eletion Drake": {
+            "map": "Zone Eletio",
+            "items": ["Sephira Stone"]
+        },
+        "Paradoxical Gate": {
+            "map": "Zone Eletio",
+            "items": ["Flameborne Astra"]
+        },
+        "Blazing Everwing": {
+            "map": "Zone Eletio",
+            "items": ["Devil Idean"]
+        },
+        "Death Seer": {
+            "map": "Zone Eletio",
+            "items": ["Supreme Merit"]
+        },
+        "Hundred-Armed Hulk": {
+            "map": "Zone Eletio",
+            "items": ["Star Idean"]
+        },
+        "Terror Trifecta": {
+            "map": "Zone Eletio",
+            "items": ["Fire Quartz"]
+        },
+        "Rageborn One": {
+            "map": "Zone Eletio",
+            "items": ["Sun Idean"]
+        },
+        "Trident Grandmaster": {
+            "map": "Zone Faym",
+            "items": ["Water Verum Proof"]
+        },
+        "Hoarfrost Icequeen": {
+            "map": "Zone Faym",
+            "items": ["Justice Idean"]
+        },
+        "Oceanic Archon": {
+            "map": "Zone Faym",
+            "items": ["Sephira Stone"]
+        },
+        "Farsea Predator": {
+            "map": "Zone Faym",
+            "items": ["Supreme Merit"]
+        },
+        "Faymian Fortress": {
+            "map": "Zone Faym",
+            "items": ["Moon Idean"]
+        },
+        "Draconic Simulacrum": {
+            "map": "Zone Faym",
+            "items": ["Darkborne Astra"]
+        },
+        "Azureflame Dragon": {
+            "map": "Zone Faym",
+            "items": ["Aquaborne Astra"]
+        },
+        "Eyes of Sorrow": {
+            "map": "Zone Faym",
+            "items": ["Water Quartz"]
+        },
+        "Mud Shearwielder": {
+            "map": "Zone Faym",
+            "items": ["Death Idean"]
+        },
+        "Avatar of Avarice": {
+            "map": "Zone Goliath",
+            "items": ["Earthborne Astra"]
+        },
+        "Temptation's Guide": {
+            "map": "Zone Goliath",
+            "items": ["Supreme Merit"]
+        },
+        "World's Veil": {
+            "map": "Zone Goliath",
+            "items": ["Hanged Man Idean"]
+        },
+        "Golaith Keeper": {
+            "map": "Zone Goliath",
+            "items": ["Earth Quartz"]
+        },
+        "Bloodstained Barbarian": {
+            "map": "Zone Goliath",
+            "items": ["Sephira Stone"]
+        },
+        "Frenzied Howler": {
+            "map": "Zone Goliath",
+            "items": ["Darkborne Astra"]
+        },
+        "Goliath Vanguard": {
+            "map": "Zone Goliath",
+            "items": ["Tower Idean"]
+        },
+        "Vestige of Truth": {
+            "map": "Zone Goliath",
+            "items": ["Earth Verum Proof"]
+        },
+        "Writhing Despair": {
+            "map": "Zone Goliath",
+            "items": ["Death Idean"]
+        },
+        "Vengeful Demigod": {
+            "map": "Zone Harbinger",
+            "items": ["Sephira Stone"]
+        },
+        "Dirgesinger": {
+            "map": "Zone Harbinger",
+            "items": ["Supreme Merit"]
+        },
+        "Wildwind Conjurer/Fullthunder Conjurer": {
+            "map": "Zone Harbinger",
+            "items": ["Judgement Idean"]
+        },
+        "Harbinger Simurgh": {
+            "map": "Zone Harbinger",
+            "items": ["Temperance Idean"]
+        },
+        "Harbinger Hardwood": {
+            "map": "Zone Harbinger",
+            "items": ["Wind Verum Proof"]
+        },
+        "Demanding Stormgod": {
+            "map": "Zone Harbinger",
+            "items": ["Windborne Astra"]
+        },
+        "Harbinger Tyrant": {
+            "map": "Zone Harbinger",
+            "items": ["Lightborne Astra"]
+        },
+        "Phantasmagoric Aberration": {
+            "map": "Zone Harbinger",
+            "items": ["Light Quartz"]
+        },
+        "Dimensional Riftwalker": {
+            "map": "Zone Harbinger",
+            "items": ["Star Idean"]
+        }
+    },
     "Generic": {
         "Any": {
             "map": "None",
