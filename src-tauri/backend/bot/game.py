@@ -15,6 +15,7 @@ from utils.mouse_utils import MouseUtils
 from utils.twitter_room_finder import TwitterRoomFinder
 # Imports for all the supported game modes.
 from bot.game_modes.arcarum import Arcarum
+from bot.game_modes.arcarum_sandbox import ArcarumSandbox
 from bot.game_modes.coop import Coop
 from bot.game_modes.dread_barrage import DreadBarrage
 from bot.game_modes.event import Event
@@ -928,6 +929,8 @@ class Game:
                     Settings.item_amount_farmed += XenoClash.start(first_run)
                 elif Settings.farming_mode == "Arcarum":
                     Settings.item_amount_farmed += Arcarum.start()
+                elif Settings.farming_mode == "Arcarum Sandbox":
+                    Settings.item_amount_farmed += ArcarumSandbox.start()
                 elif Settings.farming_mode == "Generic":
                     Settings.item_amount_farmed += Generic.start()
 
