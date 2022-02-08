@@ -39,6 +39,7 @@ const Settings = () => {
         "Proving Grounds",
         "Xeno Clash",
         "Arcarum",
+        "Arcarum Sandbox",
         "Generic",
     ]
 
@@ -135,6 +136,7 @@ const Settings = () => {
             botStateContext.settings.game.farmingMode === "Proving Grounds" ||
             botStateContext.settings.game.farmingMode === "Xeno Clash" ||
             botStateContext.settings.game.farmingMode === "Arcarum" ||
+            botStateContext.settings.game.farmingMode === "Arcarum Sandbox" ||
             botStateContext.settings.game.farmingMode === "Generic"
         ) {
             Object.values(data[botStateContext.settings.game.farmingMode]).forEach((tempItems) => {
@@ -163,6 +165,7 @@ const Settings = () => {
             botStateContext.settings.game.farmingMode === "Proving Grounds" ||
             botStateContext.settings.game.farmingMode === "Xeno Clash" ||
             botStateContext.settings.game.farmingMode === "Arcarum" ||
+            botStateContext.settings.game.farmingMode === "Arcarum Sandbox" ||
             botStateContext.settings.game.farmingMode === "Generic"
         ) {
             Object.entries(data[botStateContext.settings.game.farmingMode]).forEach((obj) => {
@@ -197,6 +200,7 @@ const Settings = () => {
             botStateContext.settings.game.farmingMode === "Proving Grounds" ||
             botStateContext.settings.game.farmingMode === "Xeno Clash" ||
             botStateContext.settings.game.farmingMode === "Arcarum" ||
+            botStateContext.settings.game.farmingMode === "Arcarum Sandbox" ||
             botStateContext.settings.game.farmingMode === "Generic"
         ) {
             Object.entries(data[botStateContext.settings.game.farmingMode]).every((obj) => {
@@ -460,7 +464,15 @@ const Settings = () => {
                     />
 
                     {/* Select Summon(s) */}
-                    <Button variant="contained" onClick={handleModalOpen} disabled={botStateContext.settings.game.farmingMode === "Coop" || botStateContext.settings.game.farmingMode === "Arcarum"}>
+                    <Button
+                        variant="contained"
+                        onClick={handleModalOpen}
+                        disabled={
+                            botStateContext.settings.game.farmingMode === "Coop" ||
+                            botStateContext.settings.game.farmingMode === "Arcarum" ||
+                            botStateContext.settings.game.farmingMode === "Arcarum Sandbox"
+                        }
+                    >
                         Select Summons
                     </Button>
                     <Modal className="supportSummonModal" open={isModalOpen} onClose={handleModalClose}>
