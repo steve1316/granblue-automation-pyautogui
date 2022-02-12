@@ -122,6 +122,7 @@ const Settings = () => {
     // Populate the item list after selecting the Farming Mode.
     useEffect(() => {
         var newItemList: string[] = []
+        var fullItemList: string[] = []
 
         if (
             botStateContext.settings.game.farmingMode === "Quest" ||
@@ -139,19 +140,37 @@ const Settings = () => {
             botStateContext.settings.game.farmingMode === "Arcarum Sandbox" ||
             botStateContext.settings.game.farmingMode === "Generic"
         ) {
-            Object.values(data[botStateContext.settings.game.farmingMode]).forEach((tempItems) => {
-                newItemList = newItemList.concat(tempItems.items)
-            })
+            if (botStateContext.settings.game.mission !== "") {
+                // Filter items based on the mission selected.
+                Object.entries(data[botStateContext.settings.game.farmingMode]).forEach((missionObj) => {
+                    if (missionObj[0] === botStateContext.settings.game.mission) {
+                        newItemList = newItemList.concat(missionObj[1].items)
+                    }
+                })
+            } else {
+                // Display all items.
+                Object.values(data[botStateContext.settings.game.farmingMode]).forEach((tempItems) => {
+                    fullItemList = fullItemList.concat(tempItems.items)
+                })
+            }
         }
 
-        const filteredNewItemList = Array.from(new Set(newItemList))
-        setItemList(filteredNewItemList)
+        if (newItemList !== itemList) {
+            if (newItemList.length > 0) {
+                const filteredNewItemList = Array.from(new Set(newItemList))
+                setItemList(filteredNewItemList)
+            } else {
+                const filteredFullItemList = Array.from(new Set(fullItemList))
+                setItemList(filteredFullItemList)
+            }
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [botStateContext.settings.game.farmingMode])
+    }, [botStateContext.settings.game.farmingMode, botStateContext.settings.game.mission])
 
     // Populate the mission list after selecting the item.
     useEffect(() => {
         var newMissionList: string[] = []
+        var fullMissionList: string[] = []
 
         if (
             botStateContext.settings.game.farmingMode === "Quest" ||
@@ -171,18 +190,29 @@ const Settings = () => {
             Object.entries(data[botStateContext.settings.game.farmingMode]).forEach((obj) => {
                 if (obj[1].items.indexOf(botStateContext.settings.game.item) !== -1) {
                     newMissionList = newMissionList.concat(obj[0])
+                } else {
+                    fullMissionList = fullMissionList.concat(obj[0])
                 }
             })
         } else {
             Object.entries(data["Coop"]).forEach((obj) => {
                 if (obj[1].items.indexOf(botStateContext.settings.game.item) !== -1) {
                     newMissionList = newMissionList.concat(obj[0])
+                } else {
+                    fullMissionList = fullMissionList.concat(obj[0])
                 }
             })
         }
 
-        const filteredNewMissionList = Array.from(new Set(newMissionList))
-        setMissionList(filteredNewMissionList)
+        if (newMissionList !== missionList) {
+            if (newMissionList.length > 0) {
+                const filteredNewMissionList = Array.from(new Set(newMissionList))
+                setMissionList(filteredNewMissionList)
+            } else {
+                const filteredFullMissionList = Array.from(new Set(fullMissionList))
+                setMissionList(filteredFullMissionList)
+            }
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [botStateContext.settings.game.item])
 
@@ -392,8 +422,7 @@ const Settings = () => {
                                 newItem = value
                             }
 
-                            // In addition, also reset the selected Mission.
-                            botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, item: newItem, mission: "", map: "" } })
+                            botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, item: newItem } })
                         }}
                         getOptionLabel={(option) => option}
                         isOptionEqualToValue={(option) => option !== ""}
