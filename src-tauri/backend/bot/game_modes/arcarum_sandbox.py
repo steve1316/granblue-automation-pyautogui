@@ -298,11 +298,25 @@ class ArcarumSandbox:
         # Now that the Zone is on screen, have the bot move all the way to the left side of the map.
         MessageLog.print_message(f"[ARCARUM.SANDBOX] Now determining if bot is starting all the way at the left edge of the Zone...")
         while Game.find_and_click_button("arcarum_sandbox_left_arrow", tries = 1, suppress_error = True):
+    @staticmethod
+    def _refill_aap():
+        """Refills AAP if necessary.
+
+        Returns:
+            None
+        """
+        if ImageUtils.confirm_location("aap"):
+            from bot.game import Game
+
+            MessageLog.print_message(f"\n[ARCARUM.SANDBOX] Bot ran out of AAP. Refilling now...")
+            use_locations = ImageUtils.find_all("use")
+            MouseUtils.move_and_click_point(use_locations[0][0], use_locations[0][1], "use")
+
+            Game.wait(1.0)
+            Game.find_and_click_button("ok")
             Game.wait(1.0)
 
-        MessageLog.print_message(f"[ARCARUM.SANDBOX] Left edge of the Zone has been reached.")
-
-        ArcarumSandbox._navigate_to_mission()
+            MessageLog.print_message(f"[ARCARUM.SANDBOX] AAP is now refilled.")
 
         return None
 
@@ -328,6 +342,8 @@ class ArcarumSandbox:
             Game.find_and_click_button("expedition")
 
         # TODO: Create specialized function to refill AAP, not AP.
+        # Refill AAP if needed.
+        ArcarumSandbox._refill_aap()
 
         if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
             if CombatMode.start_combat_mode():
