@@ -250,6 +250,23 @@ class ArcarumSandbox:
         return None
 
     @staticmethod
+    def _reset_position():
+        """Resets the position of the bot to be at the left-most edge of the map.
+
+        Returns:
+            None
+        """
+        from bot.game import Game
+
+        MessageLog.print_message(f"[ARCARUM.SANDBOX] Now determining if bot is starting all the way at the left edge of the Zone...")
+        while Game.find_and_click_button("arcarum_sandbox_left_arrow", tries = 1, suppress_error = True):
+            Game.wait(1.0)
+
+        MessageLog.print_message(f"[ARCARUM.SANDBOX] Left edge of the Zone has been reached.")
+
+        return None
+
+    @staticmethod
     def _navigate_to_zone():
         """Navigates to the specified Arcarum Replicard Sandbox Zone.
 
@@ -296,8 +313,13 @@ class ArcarumSandbox:
         Game.wait(2.0)
 
         # Now that the Zone is on screen, have the bot move all the way to the left side of the map.
-        MessageLog.print_message(f"[ARCARUM.SANDBOX] Now determining if bot is starting all the way at the left edge of the Zone...")
-        while Game.find_and_click_button("arcarum_sandbox_left_arrow", tries = 1, suppress_error = True):
+        ArcarumSandbox._reset_position()
+
+        # Finally, select the mission.
+        ArcarumSandbox._navigate_to_mission()
+
+        return None
+
     @staticmethod
     def _refill_aap():
         """Refills AAP if necessary.
@@ -341,7 +363,17 @@ class ArcarumSandbox:
             Game.check_for_pending()
             Game.find_and_click_button("expedition")
 
-        # TODO: Create specialized function to refill AAP, not AP.
+            # Wait out the animations that play, whether it be Treasure or Defender spawning.
+            Game.wait(5.0)
+
+            # Click away the Treasure popup if it shows up.
+            Game.find_and_click_button("ok", suppress_error = True)
+
+            # Then reset position and reselect the mission again.
+            Game.wait(3.0)
+            ArcarumSandbox._reset_position()
+            ArcarumSandbox._navigate_to_mission()
+
         # Refill AAP if needed.
         ArcarumSandbox._refill_aap()
 
