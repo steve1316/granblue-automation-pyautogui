@@ -405,26 +405,34 @@ class Game:
             # Find the Group that the Party is in first. If the specified Group number is less than 8, it is in Set A. Otherwise, it is in Set B. If failed, alternate searching for Set A / Set B until
             # found or tries are depleted.
             set_location = None
-            if group_number < 8:
+            if Settings.farming_mode == "Arcarum Sandbox":
                 while set_location is None:
-                    set_location = ImageUtils.find_button("party_set_a", tries = 10)
+                    set_location = ImageUtils.find_button("party_set_extra", tries = 10)
                     if set_location is None:
                         tries -= 1
                         if tries <= 0:
-                            raise RuntimeError("Could not find Set A.")
-
-                        # See if the user had Set B active instead of Set A if matching failed.
-                        set_location = ImageUtils.find_button("party_set_b", tries = 10)
+                            raise RuntimeError("Could not find Set Extra.")
             else:
-                while set_location is None:
-                    set_location = ImageUtils.find_button("party_set_b", tries = 10)
-                    if set_location is None:
-                        tries -= 1
-                        if tries <= 0:
-                            raise RuntimeError("Could not find Set B.")
-
-                        # See if the user had Set A active instead of Set B if matching failed.
+                if group_number < 8:
+                    while set_location is None:
                         set_location = ImageUtils.find_button("party_set_a", tries = 10)
+                        if set_location is None:
+                            tries -= 1
+                            if tries <= 0:
+                                raise RuntimeError("Could not find Set A.")
+
+                            # See if the user had Set B active instead of Set A if matching failed.
+                            set_location = ImageUtils.find_button("party_set_b", tries = 10)
+                else:
+                    while set_location is None:
+                        set_location = ImageUtils.find_button("party_set_b", tries = 10)
+                        if set_location is None:
+                            tries -= 1
+                            if tries <= 0:
+                                raise RuntimeError("Could not find Set B.")
+
+                            # See if the user had Set A active instead of Set B if matching failed.
+                            set_location = ImageUtils.find_button("party_set_a", tries = 10)
 
             # Center the mouse on the "Set A" / "Set B" button and then click the correct Group tab.
             if Settings.debug_mode:
