@@ -210,8 +210,11 @@ class ArcarumSandbox:
     }
 
     @staticmethod
-    def _navigate_to_mission():
+    def _navigate_to_mission(skip_to_action: bool = False):
         """Navigates to the specified Arcarum Replicard Sandbox mission inside the current Zone.
+
+        Args:
+            skip_to_action (bool, optional): True if the mission is already selected. Defaults to False.
 
         Returns:
             None
@@ -220,23 +223,24 @@ class ArcarumSandbox:
 
         MessageLog.print_message(f"[ARCARUM.SANDBOX] Now beginning navigation to {Settings.mission_name} inside {Settings.map_name}...")
 
-        section: int = ArcarumSandbox._mission_data[Settings.mission_name]["section"]
-        x: int = ArcarumSandbox._mission_data[Settings.mission_name]["x"]
-        y: int = ArcarumSandbox._mission_data[Settings.mission_name]["y"]
+        if skip_to_action is False:
+            section: int = ArcarumSandbox._mission_data[Settings.mission_name]["section"]
+            x: int = ArcarumSandbox._mission_data[Settings.mission_name]["x"]
+            y: int = ArcarumSandbox._mission_data[Settings.mission_name]["y"]
 
-        # Shift the Zone over to the right based on the section that the mission is located at.
-        if section == 1:
-            Game.find_and_click_button("arcarum_sandbox_right_arrow")
-        elif section == 2:
-            Game.find_and_click_button("arcarum_sandbox_right_arrow")
+            # Shift the Zone over to the right based on the section that the mission is located at.
+            if section == 1:
+                Game.find_and_click_button("arcarum_sandbox_right_arrow")
+            elif section == 2:
+                Game.find_and_click_button("arcarum_sandbox_right_arrow")
+                Game.wait(1.0)
+                Game.find_and_click_button("arcarum_sandbox_right_arrow")
+
             Game.wait(1.0)
-            Game.find_and_click_button("arcarum_sandbox_right_arrow")
 
-        Game.wait(1.0)
-
-        # Now click on the specified node that has the mission offset by the coordinates associated with it based off of the Home Menu button location.
-        home_location: Tuple[int, int] = ImageUtils.find_button("home_menu")
-        MouseUtils.move_and_click_point(home_location[0] - x, home_location[1] + y, "arcarum_node")
+            # Now click on the specified node that has the mission offset by the coordinates associated with it based off of the Home Menu button location.
+            home_location: Tuple[int, int] = ImageUtils.find_button("home_menu")
+            MouseUtils.move_and_click_point(home_location[0] - x, home_location[1] + y, "arcarum_node")
 
         Game.wait(1.0)
 
@@ -356,26 +360,28 @@ class ArcarumSandbox:
         # Start the navigation process.
         if ArcarumSandbox._first_run:
             ArcarumSandbox._navigate_to_zone()
-        elif Game.find_and_click_button("play_again"):
-            Game.check_for_popups()
-        else:
-            # If the bot cannot find the "Play Again" button, check for Pending Battles and then click the Expedition button.
-            Game.check_for_pending()
-            Game.find_and_click_button("expedition")
+        elif Game.find_and_click_button("play_again") is False:
+            if Game.check_for_pending():
+                ArcarumSandbox._first_run = True
+                ArcarumSandbox._navigate_to_zone()
+            else:
+                # If the bot cannot find the "Play Again" button, click the Expedition button.
+                Game.find_and_click_button("expedition")
 
-            # Wait out the animations that play, whether it be Treasure or Defender spawning.
-            Game.wait(5.0)
+                # Wait out the animations that play, whether it be Treasure or Defender spawning.
+                Game.wait(5.0)
 
-            # Click away the Treasure popup if it shows up.
-            Game.find_and_click_button("ok", suppress_error = True)
+                # Click away the Treasure popup if it shows up.
+                Game.find_and_click_button("ok", suppress_error = True)
 
-            # Then reset position and reselect the mission again.
-            Game.wait(3.0)
-            ArcarumSandbox._reset_position()
-            ArcarumSandbox._navigate_to_mission()
+                # Start the mission again.
+                Game.wait(3.0)
+                ArcarumSandbox._navigate_to_mission(skip_to_action = True)
 
         # Refill AAP if needed.
         ArcarumSandbox._refill_aap()
+
+        Game.wait(3.0)
 
         if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
             if CombatMode.start_combat_mode():
