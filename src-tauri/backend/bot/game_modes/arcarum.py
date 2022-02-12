@@ -159,11 +159,11 @@ class Arcarum:
             return False
 
     @staticmethod
-    def start() -> int:
+    def start():
         """Starts the process of completing Arcarum expeditions.
 
         Returns:
-            (int): Number of runs completed.
+            None
         """
         from bot.game import Game
 
@@ -207,4 +207,4 @@ class Arcarum:
                     MessageLog.print_message(f"[ARCARUM] Boss has been detected. Stopping the bot.")
                     raise ArcarumException("Boss has been detected. Stopping the bot.")
 
-        return runs_completed
+        return None

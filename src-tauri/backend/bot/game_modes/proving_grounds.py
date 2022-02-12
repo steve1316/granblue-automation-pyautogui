@@ -66,18 +66,16 @@ class ProvingGrounds:
         return None
 
     @staticmethod
-    def start(first_run: bool) -> int:
+    def start(first_run: bool):
         """Starts the process to complete a run for Proving Grounds Farming Mode and returns the number of items detected.
 
         Args:
             first_run (bool): Flag that determines whether or not to run the navigation process again. Should be False if the Farming Mode supports the "Play Again" feature for repeated runs.
 
         Returns:
-            (int): Number of runs completed.
+            None
         """
         from bot.game import Game
-
-        runs_completed: int = 0
 
         # Start the navigation process.
         if first_run and ProvingGrounds._first_time:
@@ -104,7 +102,7 @@ class ProvingGrounds:
 
                 # Now start Combat Mode and detect any item drops.
                 if CombatMode.start_combat_mode():
-                    runs_completed = Game.collect_loot(is_completed = False)
+                    Game.collect_loot(is_completed = False)
 
                     # Click the "Next Battle" button if there are any battles left.
                     if Game.find_and_click_button("proving_grounds_next_battle"):
@@ -114,7 +112,7 @@ class ProvingGrounds:
         elif first_run is False and ProvingGrounds._first_time is False:
             # No need to select a Summon again as it is reused.
             if CombatMode.start_combat_mode():
-                runs_completed = Game.collect_loot(is_completed = False)
+                Game.collect_loot(is_completed = False)
 
                 # Click the "Next Battle" button if there are any battles left.
                 if Game.find_and_click_button("proving_grounds_next_battle"):
@@ -136,7 +134,7 @@ class ProvingGrounds:
 
                     if ImageUtils.confirm_location("proving_grounds_completion_loot"):
                         MessageLog.print_message("\n[PROVING.GROUNDS] Completion rewards has been acquired.")
-                        runs_completed = Game.collect_loot(is_completed = True, skip_popup_check = True)
+                        Game.collect_loot(is_completed = True, skip_popup_check = True)
 
                         # Reset the First Time flag so the bot can select a Summon and select the Mission again.
                         if Settings.item_amount_farmed < Settings.item_amount_to_farm:
@@ -146,4 +144,4 @@ class ProvingGrounds:
         else:
             raise ProvingGroundsException("Failed to arrive at the Summon Selection screen.")
 
-        return runs_completed
+        return None

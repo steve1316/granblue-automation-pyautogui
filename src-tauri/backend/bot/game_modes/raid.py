@@ -169,18 +169,16 @@ class Raid:
             raise RaidException("Failed to reach the Backup Requests screen.")
 
     @staticmethod
-    def start(first_run: bool) -> int:
+    def start(first_run: bool):
         """Starts the process to complete a run for Raid Farming Mode and returns the number of items detected.
 
         Args:
             first_run (bool): Flag that determines whether or not to run the navigation process again. Should be False if the Farming Mode supports the "Play Again" feature for repeated runs.
 
         Returns:
-            (int): Number of items detected.
+            None
         """
         from bot.game import Game
-
-        number_of_items_dropped: int = 0
 
         # Start the navigation process.
         if first_run:
@@ -204,10 +202,10 @@ class Raid:
                     if ImageUtils.confirm_location("no_loot", disable_adjustment = True):
                         MessageLog.print_message("\n[RAID] Seems that the Raid just ended. Moving back to the Home screen and joining another Raid...")
                     elif CombatMode.start_combat_mode():
-                        number_of_items_dropped = Game.collect_loot(is_completed = True)
+                        Game.collect_loot(is_completed = True)
                 else:
                     MessageLog.print_message("\n[RAID] Seems that the Raid ended before the bot was able to join. Now looking for another Raid to join...")
         else:
             raise RaidException("Failed to arrive at the Summon Selection screen.")
 
-        return number_of_items_dropped
+        return None

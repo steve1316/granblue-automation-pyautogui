@@ -15,15 +15,13 @@ class Generic:
     """
 
     @staticmethod
-    def start() -> int:
+    def start():
         """Starts the process of completing a generic setup that supports the 'Play Again' logic.
 
         Returns:
-            (int): Number of runs completed.
+            None
         """
         from bot.game import Game
-
-        runs_completed = 0
 
         MessageLog.print_message(f"\n[GENERIC] Now checking for run eligibility...")
 
@@ -31,14 +29,14 @@ class Generic:
         if ImageUtils.find_button("attack", tries = 10):
             MessageLog.print_message(f"[GENERIC] Bot is at the Combat screen. Starting Combat Mode now...")
             if CombatMode.start_combat_mode():
-                runs_completed = Game.collect_loot(is_completed = True)
+                Game.collect_loot(is_completed = True)
         elif Game.find_and_click_button("coop_start", tries = 10):
             MessageLog.print_message(f"[GENERIC] Bot is at the Coop Room screen. Starting the Coop mission and Combat Mode now...")
 
             Game.wait(3.0)
 
             if CombatMode.start_combat_mode():
-                runs_completed = Game.collect_loot(is_completed = True)
+                Game.collect_loot(is_completed = True)
 
                 # Head back to the Coop Room.
                 Game.find_and_click_button("coop_room")
@@ -69,10 +67,10 @@ class Generic:
                     if Game.find_and_click_button("ok", tries = 30):
                         # Now start Combat Mode and detect any item drops.
                         if CombatMode.start_combat_mode():
-                            runs_completed = Game.collect_loot(is_completed = True)
+                            Game.collect_loot(is_completed = True)
                     else:
                         raise GenericException("Failed to skip party selection.")
             else:
                 raise GenericException("Failed to arrive at the Summon Selection screen.")
 
-        return runs_completed
+        return None

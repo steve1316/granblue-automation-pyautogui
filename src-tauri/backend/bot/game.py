@@ -579,7 +579,7 @@ class Game:
 
     @staticmethod
     def collect_loot(is_completed: bool, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False, skip_popup_check: bool = False):
-        """Collect the loot from the Results screen while clicking away any dialog popups. Primarily for raids.
+        """Collects the loot from the Results screen while clicking away any dialog popups while updating the internal item count.
         
         Args:
             is_completed (bool): Allows incrementing of number of runs completed. This is for Farming Modes who have multi-part sections to them to prevent unnecessary incrementing of runs when it wasn't finished with 1 yet.
@@ -589,7 +589,7 @@ class Game:
             skip_popup_check (bool): Skip checking for popups to get to the Loot Collected screen. Defaults to False.
 
         Returns:
-            (int): Number of specified items dropped.
+            None
         """
         temp_amount = 0
 
@@ -691,7 +691,7 @@ class Game:
 
                     Game._discord_queue.put(discord_string)
 
-        return temp_amount
+        return None
 
     @staticmethod
     def check_for_popups() -> bool:
@@ -916,31 +916,31 @@ class Game:
             first_run = True
             while Settings.item_amount_farmed < Settings.item_amount_to_farm:
                 if Settings.farming_mode == "Quest":
-                    Settings.item_amount_farmed += Quest.start(first_run)
+                    Quest.start(first_run)
                 elif Settings.farming_mode == "Special":
-                    Settings.item_amount_farmed += Special.start(first_run)
+                    Special.start(first_run)
                 elif Settings.farming_mode == "Coop":
-                    Settings.item_amount_farmed += Coop.start(first_run)
+                    Coop.start(first_run)
                 elif Settings.farming_mode == "Raid":
-                    Settings.item_amount_farmed += Raid.start(first_run)
+                    Raid.start(first_run)
                 elif Settings.farming_mode == "Event" or Settings.farming_mode == "Event (Token Drawboxes)":
-                    Settings.item_amount_farmed += Event.start(first_run)
+                    Event.start(first_run)
                 elif Settings.farming_mode == "Rise of the Beasts":
-                    Settings.item_amount_farmed += RiseOfTheBeasts.start(first_run)
+                    RiseOfTheBeasts.start(first_run)
                 elif Settings.farming_mode == "Guild Wars":
-                    Settings.item_amount_farmed += GuildWars.start(first_run)
+                    GuildWars.start(first_run)
                 elif Settings.farming_mode == "Dread Barrage":
-                    Settings.item_amount_farmed += DreadBarrage.start(first_run)
+                    DreadBarrage.start(first_run)
                 elif Settings.farming_mode == "Proving Grounds":
-                    Settings.item_amount_farmed += ProvingGrounds.start(first_run)
+                    ProvingGrounds.start(first_run)
                 elif Settings.farming_mode == "Xeno Clash":
-                    Settings.item_amount_farmed += XenoClash.start(first_run)
+                    XenoClash.start(first_run)
                 elif Settings.farming_mode == "Arcarum":
-                    Settings.item_amount_farmed += Arcarum.start()
+                    Arcarum.start()
                 elif Settings.farming_mode == "Arcarum Sandbox":
-                    Settings.item_amount_farmed += ArcarumSandbox.start()
+                    ArcarumSandbox.start()
                 elif Settings.farming_mode == "Generic":
-                    Settings.item_amount_farmed += Generic.start()
+                    Generic.start()
 
                 if Settings.item_amount_farmed < Settings.item_amount_to_farm:
                     # Generate a resting period if the user enabled it.

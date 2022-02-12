@@ -347,15 +347,13 @@ class ArcarumSandbox:
         return None
 
     @staticmethod
-    def start() -> int:
+    def start():
         """Starts the process of completing Arcarum Replicard Sandbox missions.
 
         Returns:
-            (int): Number of items detected.
+            None
         """
         from bot.game import Game
-
-        number_of_items_dropped: int = 0
 
         # Start the navigation process.
         if ArcarumSandbox._first_run:
@@ -385,6 +383,6 @@ class ArcarumSandbox:
 
         if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
             if CombatMode.start_combat_mode():
-                number_of_items_dropped = Game.collect_loot(is_completed = True)
+                Game.collect_loot(is_completed = True)
 
-        return number_of_items_dropped
+        return None

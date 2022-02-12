@@ -92,18 +92,16 @@ class DreadBarrage:
             Game.wait(2)
 
     @staticmethod
-    def start(first_run: bool) -> int:
+    def start(first_run: bool):
         """Starts the process to complete a run for Dread Barrage Farming Mode and returns the number of items detected.
 
         Args:
             first_run (bool): Flag that determines whether or not to run the navigation process again. Should be False if the Farming Mode supports the "Play Again" feature for repeated runs.
 
         Returns:
-            (int): Number of runs completed.
+            None
         """
         from bot.game import Game
-
-        number_of_items_dropped: int = 0
 
         # Start the navigation process.
         if first_run:
@@ -127,8 +125,8 @@ class DreadBarrage:
 
                 # Now start Combat Mode and detect any item drops.
                 if CombatMode.start_combat_mode():
-                    number_of_items_dropped = Game.collect_loot(is_completed = True)
+                    Game.collect_loot(is_completed = True)
         else:
             raise DreadBarrageException("Failed to arrive at the Summon Selection screen.")
 
-        return number_of_items_dropped
+        return None

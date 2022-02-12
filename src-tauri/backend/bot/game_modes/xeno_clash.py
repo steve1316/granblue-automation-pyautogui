@@ -141,18 +141,16 @@ class XenoClash:
         return None
 
     @staticmethod
-    def start(first_run: bool) -> int:
+    def start(first_run: bool):
         """Starts the process to complete a run for Xeno Clash Farming Mode and returns the number of items detected.
 
         Args:
             first_run (bool): Flag that determines whether or not to run the navigation process again. Should be False if the Farming Mode supports the "Play Again" feature for repeated runs.
 
         Returns:
-            (int): Number of runs completed.
+            None
         """
         from bot.game import Game
-
-        runs_completed: int = 0
 
         # Start the navigation process.
         if first_run:
@@ -177,8 +175,8 @@ class XenoClash:
 
                 # Now start Combat Mode and detect any item drops.
                 if CombatMode.start_combat_mode():
-                    runs_completed = Game.collect_loot(is_completed = True)
+                    Game.collect_loot(is_completed = True)
         else:
             raise XenoClashException("Failed to arrive at the Summon Selection screen.")
 
-        return runs_completed
+        return None

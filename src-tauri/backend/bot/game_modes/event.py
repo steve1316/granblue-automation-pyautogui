@@ -287,11 +287,9 @@ class Event:
             first_run (bool): Flag that determines whether or not to run the navigation process again. Should be False if the Farming Mode supports the "Play Again" feature for repeated runs.
 
         Returns:
-            (int): Number of runs completed.
+            None
         """
         from bot.game import Game
-
-        runs_completed: int = 0
 
         # Start the navigation process.
         if first_run:
@@ -317,8 +315,8 @@ class Event:
 
                 # Now start Combat Mode and detect any item drops.
                 if CombatMode.start_combat_mode():
-                    runs_completed = Game.collect_loot(is_completed = True)
+                    Game.collect_loot(is_completed = True)
         else:
             raise EventException("Failed to arrive at the Summon Selection screen.")
 
-        return runs_completed
+        return None
