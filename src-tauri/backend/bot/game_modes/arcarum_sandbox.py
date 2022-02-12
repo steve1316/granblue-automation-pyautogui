@@ -23,189 +23,189 @@ class ArcarumSandbox:
         # Zone Eletio
         "Slithering Seductress": {
             "section": 0,
-            "x": 178,
-            "y": 341
+            "x": 335,
+            "y": 210
         },
         "Living Lightning Rod": {
             "section": 0,
-            "x": 452,
-            "y": 334
+            "x": 60,
+            "y": 200
         },
         "Eletion Drake": {
             "section": 0,
-            "x": 408,
-            "y": 470
+            "x": 105,
+            "y": 340
         },
         "Paradoxical Gate": {
             "section": 1,
-            "x": 207,
-            "y": 341
+            "x": 305,
+            "y": 205
         },
         "Blazing Everwing": {
             "section": 1,
-            "x": 337,
-            "y": 327
+            "x": 180,
+            "y": 190
         },
         "Death Seer": {
             "section": 1,
-            "x": 461,
-            "y": 405
+            "x": 55,
+            "y": 270
         },
         "Hundred-Armed Hulk": {
             "section": 2,
-            "x": 212,
-            "y": 321
+            "x": 305,
+            "y": 185
         },
         "Terror Trifecta": {
             "section": 2,
-            "x": 305,
-            "y": 395
+            "x": 210,
+            "y": 260
         },
         "Rageborn One": {
             "section": 2,
-            "x": 230,
-            "y": 428
+            "x": 285,
+            "y": 295
         },
 
         # Zone Faym
         "Tident Grandmaster": {
             "section": 0,
-            "x": 164,
-            "y": 344
+            "x": 350,
+            "y": 210
         },
         "Hoarfrost Icequeen": {
             "section": 0,
-            "x": 306,
-            "y": 405
+            "x": 210,
+            "y": 270
         },
         "Oceanic Archon": {
             "section": 0,
-            "x": 422,
-            "y": 477
+            "x": 95,
+            "y": 340
         },
         "Farsea Predator": {
             "section": 1,
-            "x": 165,
-            "y": 347
+            "x": 350,
+            "y": 210
         },
         "Faymian Fortress": {
             "section": 1,
-            "x": 309,
-            "y": 406
+            "x": 205,
+            "y": 270
         },
         "Draconic Simulacrum": {
             "section": 1,
-            "x": 448,
-            "y": 347
+            "x": 70,
+            "y": 210
         },
         "Azureflame Dragon": {
             "section": 2,
-            "x": 174,
-            "y": 348
+            "x": 340,
+            "y": 215
         },
         "Eyes of Sorrow": {
             "section": 2,
-            "x": 199,
-            "y": 481
+            "x": 315,
+            "y": 345
         },
         "Mad Shearwielder": {
             "section": 2,
-            "x": 453,
-            "y": 351
+            "x": 60,
+            "y": 215
         },
 
         # Zone Goliath
         "Avatar of Avarice": {
             "section": 0,
-            "x": 231,
-            "y": 482
+            "x": 285,
+            "y": 345
         },
         "Temptation's Guide": {
             "section": 0,
-            "x": 299,
-            "y": 307
+            "x": 215,
+            "y": 170
         },
         "World's Veil": {
             "section": 0,
-            "x": 345,
-            "y": 405
+            "x": 170,
+            "y": 270
         },
         "Goliath Keeper": {
             "section": 1,
-            "x": 160,
-            "y": 472
+            "x": 355,
+            "y": 335
         },
         "Bloodstained Barbarian": {
             "section": 1,
-            "x": 254,
-            "y": 338
+            "x": 260,
+            "y": 205
         },
         "Frenzied Howler": {
             "section": 1,
-            "x": 467,
-            "y": 324
+            "x": 50,
+            "y": 190
         },
         "Goliath Vanguard": {
             "section": 1,
-            "x": 448,
-            "y": 473
+            "x": 65,
+            "y": 390
         },
         "Vestige of Truth": {
             "section": 2,
-            "x": 142,
-            "y": 344
+            "x": 375,
+            "y": 210
         },
         "Writhing Despair": {
             "section": 2,
-            "x": 264,
-            "y": 396
+            "x": 250,
+            "y": 260
         },
 
         # Zone Harbinger
         "Vengeful Demigod": {
             "section": 0,
-            "x": 278,
-            "y": 318
+            "x": 235,
+            "y": 185
         },
         "Dirgesinger": {
             "section": 0,
-            "x": 170,
-            "y": 368
+            "x": 345,
+            "y": 235
         },
         "Wildwind COnjurer/Fullthunder Conjurer": {
             "section": 0,
-            "x": 300,
-            "y": 446
+            "x": 215,
+            "y": 310
         },
         "Harbinger Simurgh": {
             "section": 0,
-            "x": 396,
-            "y": 396
+            "x": 120,
+            "y": 260
         },
         "Harbinger Hardwood": {
             "section": 1,
-            "x": 148,
-            "y": 454
+            "x": 365,
+            "y": 320
         },
         "Demanding Stormgod": {
             "section": 1,
-            "x": 244,
-            "y": 384
+            "x": 170,
+            "y": 250
         },
         "Harbinger Tyrant": {
             "section": 2,
-            "x": 143,
-            "y": 336
+            "x": 370,
+            "y": 200
         },
         "Phantasmagoric Aberration": {
             "section": 2,
-            "x": 284,
-            "y": 450
+            "x": 230,
+            "y": 315
         },
         "Dimensional Riftwalker": {
             "section": 2,
-            "x": 400,
-            "y": 380
+            "x": 115,
+            "y": 245
         }
     }
 
