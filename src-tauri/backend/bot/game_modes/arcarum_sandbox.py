@@ -234,9 +234,9 @@ class ArcarumSandbox:
 
         Game.wait(1.0)
 
-        # Now click on the specified node that has the mission offset by the coordinates associated with it based off of the Home button location.
-        home_location: Tuple[int, int] = ImageUtils.find_button("home")
-        MouseUtils.move_and_click_point(home_location[0] - x, home_location[1] - y, "arcarum_node")
+        # Now click on the specified node that has the mission offset by the coordinates associated with it based off of the Home Menu button location.
+        home_location: Tuple[int, int] = ImageUtils.find_button("home_menu")
+        MouseUtils.move_and_click_point(home_location[0] - x, home_location[1] + y, "arcarum_node")
 
         Game.wait(1.0)
 
