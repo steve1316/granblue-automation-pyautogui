@@ -812,9 +812,8 @@ class CombatMode:
         from bot.game import Game
 
         MessageLog.print_message("[COMBAT] Quick Summoning now...")
-        if (Settings.enable_combat_mode_adjustment and (
-                Game.find_and_click_button("quick_summon1", tries = Settings.adjust_summon_usage) or Game.find_and_click_button("quick_summon2", tries = Settings.adjust_summon_usage))) or (
-                Game.find_and_click_button("quick_summon1") or Game.find_and_click_button("quick_summon2")):
+        if ImageUtils.find_button("quick_summon_not_ready", bypass_general_adjustment = True) is None and \
+                (Game.find_and_click_button("quick_summon1", bypass_general_adjustment = True) or Game.find_and_click_button("quick_summon2", bypass_general_adjustment = True)):
             MessageLog.print_message("[COMBAT] Successfully quick summoned!")
 
             if "wait" in command:

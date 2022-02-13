@@ -222,7 +222,7 @@ class ImageUtils:
         support_summon_selection_list = ["select_a_summon", "coop_without_support_summon", "proving_grounds_summon_selection"]
         dialog_list = ["dialog_lyria", "dialog_vyrn"]
         skill_usage_list = ["use_skill", "skill_unusable"]
-        summon_usage_list = ["summon_details", "quick_summon1", "quick_summon2"]
+        summon_usage_list = ["summon_details", "quick_summon1", "quick_summon2", "quick_summon_not_ready"]
         arcarum_list = ["arcarum_party_selection", "arcarum_treasure", "arcarum_node", "arcarum_mob", "arcarum_red_mob", "arcarum_silver_chest", "arcarum_gold_chest", "arcarum_boss", "arcarum_boss2"]
         arcarum_stage_effect_list = ["arcarum_stage_effect_active"]
         no_loot_screen_list = ["no_loot"]
