@@ -604,7 +604,7 @@ class Game:
                 Game.find_and_click_button("new_extended_mastery_level", tries = 1, suppress_error = True)
 
                 if ImageUtils.confirm_location("no_loot", tries = 1, suppress_error = True, disable_adjustment = True):
-                    return 0
+                    return None
 
                 if Settings.debug_mode:
                     MessageLog.print_message("[DEBUG] Have not detected the Loot Collection screen yet...")

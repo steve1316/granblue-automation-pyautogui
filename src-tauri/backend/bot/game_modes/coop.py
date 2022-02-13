@@ -164,7 +164,7 @@ class Coop:
             # Now that the bot is back at the Coop Room/Lobby, check if it closed due to time running out.
             if ImageUtils.confirm_location("coop_room_closed"):
                 MessageLog.print_message("\n[COOP] Coop room has closed due to time running out.")
-                return -1
+                return None
 
             # Start the Coop Mission again.
             Game.find_and_click_button("coop_start")
