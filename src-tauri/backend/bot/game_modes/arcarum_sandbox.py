@@ -68,7 +68,7 @@ class ArcarumSandbox:
         },
 
         # Zone Faym
-        "Tident Grandmaster": {
+        "Trident Grandmaster": {
             "section": 0,
             "x": 350,
             "y": 210
@@ -172,7 +172,7 @@ class ArcarumSandbox:
             "x": 345,
             "y": 235
         },
-        "Wildwind COnjurer/Fullthunder Conjurer": {
+        "Wildwind Conjurer/Fullthunder Conjurer": {
             "section": 0,
             "x": 215,
             "y": 310
