@@ -738,7 +738,7 @@ class CombatMode:
                         Game.find_and_click_button("cancel")
 
                 # Else, check if the character is skill-sealed.
-                elif Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("skill_unusable", bypass_general_adjustment = True):
+                elif ImageUtils.confirm_location("skill_unusable", bypass_general_adjustment = True):
                     MessageLog.print_message("[COMBAT] Character is currently skill-sealed. Unable to execute command.")
                     Game.find_and_click_button("cancel")
 
@@ -784,7 +784,7 @@ class CombatMode:
                     tries -= 1
 
                 # Check if it is able to be summoned.
-                if Settings.enable_combat_mode_adjustment and ImageUtils.confirm_location("summon_details", bypass_general_adjustment = True):
+                if ImageUtils.confirm_location("summon_details", bypass_general_adjustment = True):
                     if Game.find_and_click_button("ok") is False:
                         MessageLog.print_message(f"[COMBAT] Summon #{summon_index} cannot be invoked due to current restrictions.")
                         Game.find_and_click_button("cancel")
