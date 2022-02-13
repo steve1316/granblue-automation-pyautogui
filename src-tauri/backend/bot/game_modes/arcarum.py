@@ -50,6 +50,11 @@ class Arcarum:
         # Now make sure that the Extreme difficulty is selected.
         Game.wait(1)
 
+        # Check if bot is at Replicard Sandbox.
+        if ImageUtils.confirm_location("arcarum_sandbox"):
+            Game.find_and_click_button("arcarum_head_back")
+            Game.wait(1.0)
+
         # Confirm the completion popup if it shows up.
         if ImageUtils.confirm_location("arcarum_expedition"):
             Game.find_and_click_button("ok")
