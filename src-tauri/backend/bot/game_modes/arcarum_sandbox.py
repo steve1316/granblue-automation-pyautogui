@@ -336,7 +336,7 @@ class ArcarumSandbox:
 
             MessageLog.print_message(f"\n[ARCARUM.SANDBOX] Bot ran out of AAP. Refilling now...")
             use_locations = ImageUtils.find_all("use")
-            MouseUtils.move_and_click_point(use_locations[0][0], use_locations[0][1], "use")
+            MouseUtils.move_and_click_point(use_locations[1][0], use_locations[1][1], "use")
 
             Game.wait(1.0)
             Game.find_and_click_button("ok")
