@@ -6,18 +6,18 @@
         "summons": ["Leviathan Omega", "Europa", "Bonito", "Varuna"]
     },
     "Earth": {
-        "summons": ["Yggdrasil Omega", "Godsworn Alexiel", "Titan"]
+        "summons": ["Yggdrasil Omega", "Godsworn Alexiel", "Titan", "Gorilla"]
     },
     "Wind": {
         "summons": ["Tiamat Omega", "Grimnir", "Zephyrus"]
     },
     "Light": {
-        "summons": ["Luminiera Omega", "Lucifer", "Zeus"]
+        "summons": ["Luminiera Omega", "Lucifer", "Zeus", "Thor"]
     },
     "Dark": {
         "summons": ["Celeste Omega", "Bahamut", "Hades", "Belial"]
     },
     "Misc": {
-        "summons": ["Kaguya", "White Rabbit", "Black Rabbit", "Huanglong", "Qilin", "Nobiyo"]
+        "summons": ["Kaguya", "White Rabbit", "Black Rabbit", "Nobiyo", "Huanglong", "Qilin"]
     }
 }
