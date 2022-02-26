@@ -33,6 +33,10 @@ class CaptchaException(Exception):
     pass
 
 
+class GameException(Exception):
+    pass
+
+
 class Game:
     """
     Main driver for bot activity and navigation for the web browser bot, Granblue Fantasy.
@@ -497,83 +501,33 @@ class Game:
 
     @staticmethod
     def check_for_ap():
-        """Check if the user encountered the "Not Enough AP" popup and it will refill using either Half or Full Elixir.
+        """Check if the user has enabled the auto-restore option for AP.
 
         Returns:
             None
         """
-        if Settings.enabled_auto_restore is False:
-            tries = 3
+        Game.wait(3)
 
-            Game.wait(3)
-
-            if ImageUtils.confirm_location("auto_ap_recovered", tries = 1) is False and ImageUtils.confirm_location("auto_ap_recovered2", tries = 1) is False:
-                # Loop until the user gets to the Summon Selection screen.
-                while (Settings.farming_mode.lower() != "coop" and not ImageUtils.confirm_location("select_a_summon", tries = 2)) or (
-                        Settings.farming_mode.lower() == "coop" and not ImageUtils.confirm_location("coop_without_support_summon", tries = 2)):
-                    if ImageUtils.confirm_location("not_enough_ap", tries = 2):
-                        # If the bot detects that the user has run out of AP, it will refill using either Half Elixir or Full Elixir.
-                        if Settings.use_full_elixir is False:
-                            MessageLog.print_message("\n[INFO] AP ran out! Using Half Elixir...")
-                            half_ap_location = ImageUtils.find_button("refill_half_ap")
-                            MouseUtils.move_and_click_point(half_ap_location[0], half_ap_location[1] + 175, "use")
-                        else:
-                            MessageLog.print_message("\n[INFO] AP ran out! Using Full Elixir...")
-                            full_ap_location = ImageUtils.find_button("refill_full_ap")
-                            MouseUtils.move_and_click_point(full_ap_location[0], full_ap_location[1] + 175, "use")
-
-                        # Press the "OK" button to move to the Summon Selection screen.
-                        Game.wait(1)
-                        Game.find_and_click_button("ok")
-                        return None
-                    else:
-                        Game.wait(1)
-
-                        tries -= 1
-                        if tries <= 0:
-                            break
-            else:
-                MessageLog.print_message("\n[INFO] AP auto recovered due to in-game settings. Closing the popup now...")
-                Game.find_and_click_button("ok")
-
-            MessageLog.print_message("\n[INFO] AP is available. Continuing...")
+        if ImageUtils.confirm_location("not_enough_ap", tries = 2):
+            raise GameException("AP auto-restore check failed. Please enable the auto-restore option in the in-game settings according to the GitHub instructions.")
         else:
-            MessageLog.print_message("\n[INFO] AP was auto-restored according to user settings. Continuing...")
+            MessageLog.print_message("\n[INFO] AP auto-restore check passed. Continuing to Party Selection...")
 
         return None
 
     @staticmethod
     def check_for_ep():
-        """Check if the user encountered the "Not Enough EP" popup and it will refill using either Soul Berry or Soul Balm.
+        """Check if the user has enabled the auto-restore option for EP.
 
         Returns:
             None
         """
-        if Settings.enabled_auto_restore is False:
-            Game.wait(3)
+        Game.wait(3)
 
-            if ImageUtils.confirm_location("auto_ep_recovered", tries = 1) is False:
-                if Settings.farming_mode.lower() == "raid" and ImageUtils.confirm_location("not_enough_ep", tries = 2):
-                    # If the bot detects that the user has run out of EP, it will refill using either Soul Berry or Soul Balm.
-                    if Settings.use_soul_balm is False:
-                        MessageLog.print_message("\n[INFO] EP ran out! Using Soul Berries...")
-                        half_ep_location = ImageUtils.find_button("refill_soul_berry")
-                        MouseUtils.move_and_click_point(half_ep_location[0], half_ep_location[1] + 175, "use")
-                    else:
-                        MessageLog.print_message("\n[INFO] EP ran out! Using Soul Balm...")
-                        full_ep_location = ImageUtils.find_button("refill_soul_balm")
-                        MouseUtils.move_and_click_point(full_ep_location[0], full_ep_location[1] + 175, "use")
-
-                    # Press the "OK" button to move to the Summon Selection screen.
-                    Game.wait(1)
-                    Game.find_and_click_button("ok")
-            else:
-                MessageLog.print_message("\n[INFO] EP auto recovered due to in-game settings. Closing the popup now...")
-                Game.find_and_click_button("ok")
-
-            MessageLog.print_message("[INFO] EP is available. Continuing...")
+        if Settings.farming_mode.lower() == "raid" and ImageUtils.confirm_location("not_enough_ep", tries = 2):
+            raise GameException("EP auto-restore check failed. Please enable the auto-restore option in the in-game settings according to the GitHub instructions.")
         else:
-            MessageLog.print_message("[INFO] EP was auto-restored according to user settings. Continuing...")
+            MessageLog.print_message("[INFO] EP auto-restore check passed. Continuing to Party Selection...")
 
         return None
 
