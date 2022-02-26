@@ -254,12 +254,12 @@ class Game:
         """
         try:
             if ImageUtils.confirm_location("captcha", bypass_general_adjustment = True):
-                raise RuntimeError("CAPTCHA DETECTED!")
+                raise CaptchaException("CAPTCHA DETECTED!")
             else:
                 MessageLog.print_message("\n[CAPTCHA] CAPTCHA not detected.")
 
             return None
-        except RuntimeError:
+        except CaptchaException:
             Game._discord_queue.put(f"> Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
             MessageLog.print_message(f"\n[ERROR] Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
             ImageUtils.generate_alert_for_captcha()
