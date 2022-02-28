@@ -90,6 +90,8 @@ class DreadBarrage:
                 MouseUtils.move_and_click_point(dread_barrage_play_button_locations[4][0], dread_barrage_play_button_locations[4][1], "dread_barrage_play")
 
             Game.wait(2)
+        else:
+            raise DreadBarrageException("Failed to arrive at Dread Barrage page.")
 
     @staticmethod
     def start(first_run: bool):

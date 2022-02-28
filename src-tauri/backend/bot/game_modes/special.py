@@ -261,6 +261,10 @@ class Special:
                         # Scroll the screen down more if on a smaller screen and it obscures the targeted mission.
                         MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -500)
                         tries -= 1
+            else:
+                raise SpecialException("Failed to arrive at the Special page to continue with Special navigation.")
+        else:
+            raise SpecialException("Failed to arrive at the Quest page to continue with Special navigation.")
 
         return None
 

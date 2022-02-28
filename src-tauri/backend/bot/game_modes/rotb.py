@@ -158,6 +158,8 @@ class RiseOfTheBeasts:
                     MouseUtils.move_and_click_point(round_play_button_locations[2][0], round_play_button_locations[2][1], "play_round_button")
                 else:
                     raise(RiseOfTheBeastsException("Failed to open the ROTB Rising Beasts Showdown popup."))
+        else:
+            raise RiseOfTheBeastsException("Failed to arrive at the ROTB page.")
 
         return None
 

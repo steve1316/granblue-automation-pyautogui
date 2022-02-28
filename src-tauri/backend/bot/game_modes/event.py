@@ -128,7 +128,8 @@ class Event:
 
         if formatted_mission_name == "Event Quest":
             MessageLog.print_message(f"[EVENT.TOKEN.DRAWBOXES] Now hosting Event Quest...")
-            Game.find_and_click_button("event_quests")
+            if Game.find_and_click_button("event_quests") is False:
+                raise EventException("Failed to proceed any further in Event (Token Drawboxes) navigation by missing the Event Quests button.")
 
             Game.wait(1)
 

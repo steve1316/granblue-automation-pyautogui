@@ -189,6 +189,8 @@ class Quest:
             if Settings.mission_name == "Erste Kingdom Episode 4":
                 Game.find_and_click_button("episode_4")
                 Game.find_and_click_button("ok")
+        else:
+            raise QuestException("Failed to arrive at the Quest page.")
 
         return None
 

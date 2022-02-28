@@ -29,14 +29,6 @@ from bot.game_modes.xeno_clash import XenoClash
 from bot.game_modes.generic import Generic
 
 
-class CaptchaException(Exception):
-    pass
-
-
-class GameException(Exception):
-    pass
-
-
 class Game:
     """
     Main driver for bot activity and navigation for the web browser bot, Granblue Fantasy.
@@ -118,7 +110,7 @@ class Game:
         if not ImageUtils.confirm_location("home"):
             MessageLog.print_message("\n[INFO] Moving back to the Home screen...")
             if Game.find_and_click_button("home") is False:
-                raise RuntimeError("Home button located on the bottom bar is not visible. Is the browser window properly visible?")
+                raise RuntimeError("Failed to find and click the Home button. Maybe the Home button located on the bottom bar is not visible?")
         else:
             MessageLog.print_message("[INFO] Bot is at the Home screen.")
 
@@ -258,12 +250,12 @@ class Game:
         """
         try:
             if ImageUtils.confirm_location("captcha", bypass_general_adjustment = True):
-                raise CaptchaException("CAPTCHA DETECTED!")
+                raise RuntimeError("CAPTCHA DETECTED!")
             else:
                 MessageLog.print_message("\n[CAPTCHA] CAPTCHA not detected.")
 
             return None
-        except CaptchaException:
+        except RuntimeError:
             Game._discord_queue.put(f"> Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
             MessageLog.print_message(f"\n[ERROR] Bot encountered exception while checking for CAPTCHA: \n{traceback.format_exc()}")
             ImageUtils.generate_alert_for_captcha()
@@ -387,6 +379,8 @@ class Game:
 
                 if ImageUtils.confirm_location("home"):
                     MessageLog.print_message("[SUCCESS] Summons have now been refreshed.")
+        else:
+            MessageLog.print_message("[WARNING] Failed to reset Summons as the 'Gameplay Extras' button is not visible.")
 
         return None
 
@@ -509,7 +503,7 @@ class Game:
         Game.wait(3)
 
         if ImageUtils.confirm_location("not_enough_ap", tries = 2):
-            raise GameException("AP auto-restore check failed. Please enable the auto-restore option in the in-game settings according to the GitHub instructions.")
+            raise RuntimeError("AP auto-restore check failed. Please enable the auto-restore option in the in-game settings according to the GitHub instructions.")
         else:
             MessageLog.print_message("\n[INFO] AP auto-restore check passed. Continuing to Party Selection...")
 
@@ -525,7 +519,7 @@ class Game:
         Game.wait(3)
 
         if Settings.farming_mode.lower() == "raid" and ImageUtils.confirm_location("not_enough_ep", tries = 2):
-            raise GameException("EP auto-restore check failed. Please enable the auto-restore option in the in-game settings according to the GitHub instructions.")
+            raise RuntimeError("EP auto-restore check failed. Please enable the auto-restore option in the in-game settings according to the GitHub instructions.")
         else:
             MessageLog.print_message("[INFO] EP auto-restore check passed. Continuing to Party Selection...")
 
@@ -549,7 +543,12 @@ class Game:
 
         # Close all popups until the bot reaches the Loot Collected screen.
         if skip_popup_check is False:
+            loot_collection_tries = 30
             while not ImageUtils.confirm_location("loot_collected", tries = 1, disable_adjustment = True):
+                loot_collection_tries -= 1
+                if loot_collection_tries <= 0:
+                    raise RuntimeError("Unable to progress in the Loot Collection process.")
+
                 Game.find_and_click_button("ok", tries = 1, suppress_error = True)
                 Game.find_and_click_button("close", tries = 1, suppress_error = True)
                 Game.find_and_click_button("cancel", tries = 1, suppress_error = True)
@@ -656,7 +655,12 @@ class Game:
         """
         MessageLog.print_message(f"\n[INFO] Now beginning process to check for popups...")
 
+        check_popup_tries = 30
         while ImageUtils.confirm_location("select_a_summon", tries = 1, suppress_error = True) is False:
+            check_popup_tries -= 1
+            if check_popup_tries <= 0:
+                raise RuntimeError("Failed to progress in the Check for Popups process...")
+
             # Break out of the loop if the bot detected that a AP recovery item was automatically used and let check_for_ap() take care of it.
             if Settings.enabled_auto_restore is False and ImageUtils.confirm_location("auto_ap_recovered", tries = 1) or ImageUtils.confirm_location("auto_ap_recovered2", tries = 1):
                 break
@@ -719,6 +723,8 @@ class Game:
                 Game.find_and_click_button("ok", suppress_error = True)
 
                 return True
+        else:
+            MessageLog.print_message(f"[INFO] No more Pending Battles left to claim.")
 
         return False
 

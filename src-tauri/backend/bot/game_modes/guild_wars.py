@@ -110,6 +110,8 @@ class GuildWars:
                                 raise GuildWarsException("There appears to be a deadzone issue that the bot failed 10 times to resolve. Please refresh the page and try again.")
 
                     return None
+                else:
+                    raise GuildWarsException("Failed to open component to host Meat raids in the Guild Wars page.")
             else:
                 MessageLog.print_message(f"\n[GUILD.WARS] Now proceeding to farm Nightmares.")
 
@@ -180,6 +182,10 @@ class GuildWars:
                         if not ImageUtils.wait_vanish("guild_wars_meat_extreme+", timeout = 30):
                             ImageUtils.generate_alert("You did not unlock Extreme+ yet!")
                             raise GuildWarsException("You did not unlock Extreme+ yet!")
+                    else:
+                        GuildWarsException("Failed to open component to host Meat raids in the Guild Wars page due to running out of host materials.")
+        else:
+            raise GuildWarsException("Failed to arrive at Guild Wars page.")
 
         return None
 

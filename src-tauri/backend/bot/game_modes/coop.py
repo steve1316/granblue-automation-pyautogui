@@ -131,6 +131,8 @@ class Coop:
 
             MessageLog.print_message(f"\n[COOP] Selecting a Party for Coop mission: \"{Settings.mission_name}\".")
             Game.find_and_click_button("coop_select_party")
+        else:
+            raise CoopException("Failed to arrive at Coop page.")
 
         return None
 

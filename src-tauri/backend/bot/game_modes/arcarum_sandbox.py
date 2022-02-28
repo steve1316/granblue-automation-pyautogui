@@ -303,16 +303,20 @@ class ArcarumSandbox:
             Game.find_and_click_button("arcarum_sandbox_banner")
 
         # Move to the Zone that the user's mission is at.
+        navigation_check = False
         if Settings.map_name == "Zone Eletio":
-            Game.find_and_click_button("arcarum_sandbox_zone_eletio")
+            navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_eletio")
         elif Settings.map_name == "Zone Faym":
-            Game.find_and_click_button("arcarum_sandbox_zone_faym")
+            navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_faym")
         elif Settings.map_name == "Zone Goliath":
-            Game.find_and_click_button("arcarum_sandbox_zone_goliath")
+            navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_goliath")
         elif Settings.map_name == "Zone Harbinger":
-            Game.find_and_click_button("arcarum_sandbox_zone_harbinger")
+            navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_harbinger")
         else:
             raise ArcarumSandboxException("Invalid map name provided for Arcarum Replicard Sandbox navigation.")
+
+        if navigation_check is False:
+            raise ArcarumSandboxException("Failed to navigate into the Sandbox Zone.")
 
         Game.wait(2.0)
 
