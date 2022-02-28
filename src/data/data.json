@@ -404,6 +404,10 @@
             "map": "Osiris",
             "items": ["Ancient Cortana", "Cortana", "Obscuritas", "Phantasmas", "Abydos", "Bigeh and Edfu"]
         },
+        "Lvl 120 Horus": {
+            "map": "Horus",
+            "items": ["Ancient Bow of Artemis", "Bow of Artemis", "Gungnir", "Sleipnir Shoe", "Harakhte", "Harsiesis"]
+        },
         "Lvl 100 Michael": {
             "map": "Michael",
             "items": ["Michael Anima"]

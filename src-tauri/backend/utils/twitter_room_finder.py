@@ -144,7 +144,8 @@ class TwitterRoomFinder:
         "Lvl 100 Xeno Diablo": "Lv100 ゼノ・ディアボロス",
 
         # Ennead Raids
-        "Lvl 120 Osiris": "Lv120 オシリス"
+        "Lvl 120 Osiris": "Lv120 オシリス",
+        "Lvl 120 Horus": "Lv120 ホルス"
     }
 
     _listener = RoomStreamListener()
