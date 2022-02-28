@@ -98,6 +98,8 @@ class Raid:
                     # Now click on the "Join Room" button.
                     MouseUtils.move_and_click_point(join_room_button[0], join_room_button[1], "join_a_room")
 
+                    Game.wait(2.0)
+
                     # If the room code is valid and the raid is able to be joined, break out and head to the Summon Selection screen.
                     if Game.find_and_click_button("ok", suppress_error = True) is False:
                         # Check for EP.
