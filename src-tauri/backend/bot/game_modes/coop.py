@@ -37,6 +37,7 @@ class Coop:
 
         # Click the "Menu" button on the Home screen and then go to the Coop screen.
         Game.find_and_click_button("home_menu")
+        Game.wait(1.0)
         Game.find_and_click_button("coop")
 
         if ImageUtils.confirm_location("coop"):

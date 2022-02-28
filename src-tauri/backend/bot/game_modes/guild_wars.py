@@ -31,6 +31,7 @@ class GuildWars:
 
         # Go to the Event by clicking on the "Menu" button and then click the very first banner.
         Game.find_and_click_button("home_menu")
+        Game.wait(1.0)
         banner_locations = ImageUtils.find_all("event_banner", custom_confidence = 0.7)
         if len(banner_locations) == 0:
             banner_locations = ImageUtils.find_all("event_banner_blue", custom_confidence = 0.7)
