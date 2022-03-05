@@ -1,3 +1,5 @@
+from typing import Tuple
+
 from utils.settings import Settings
 from utils.message_log import MessageLog
 from utils.image_utils import ImageUtils
@@ -15,33 +17,93 @@ class Quest:
     Provides the navigation and any necessary utility functions to handle the Quest game mode.
     """
 
-    _page_1_list = ["Zinkenstill", "Port Breeze Archipelago", "Valtz Duchy", "Auguste Isles", "Lumacie Archipelago", "Albion Citadel"]
-    _page_2_list = ["Mist-Shrouded Isle", "Golonzo Island", "Amalthea Island", "Former Capital Mephorash", "Agastia"]
+    _phantagrande_page_1_islands = ["Zinkenstill", "Port Breeze Archipelago", "Valtz Duchy", "Auguste Isles", "Lumacie Archipelago", "Albion Citadel"]
+    _phantagrande_page_2_islands = ["Mist-Shrouded Isle", "Golonzo Island", "Amalthea Island", "Former Capital Mephorash", "Agastia"]
+    _nalhegrande_page_1_islands = ["Merkmal Island", "Groz Island", "Kluger Island", "The Edgelands"]
+    _nalhegrande_page_2_islands = ["Bestia Island", "Reiche Island", "Starke Island"]
+    _oarlyegrande_page_1_islands = ["New Utopia"]
 
     @staticmethod
-    def _navigate_to_map(map_name: str, current_location: str) -> bool:
-        """Navigates the bot to the specified Map for Quest Farming Mode.
+    def _exit_skydom(current_skydom: str):
+        """Exit out of the current skydom onto the world map.
 
         Args:
-            map_name (str): Name of the Map to navigate to.
-            current_location (str): Name of the Map that the bot is currently at.
+            current_skydom (str): Name of the skydom that the bot is currently at.
 
         Returns:
-            (bool): Return True if the bot reached the Summon Selection screen. Otherwise, return False.
+            None
         """
         from bot.game import Game
 
-        MessageLog.print_message(f"\n[QUEST] Beginning process to navigate to the island: {map_name}...")
+        if current_skydom.__contains__("Phantagrande"):
+            # Attempt to move to the right-most section of the skydom.
+            Game.find_and_click_button("world_right_arrow", suppress_error = True)
 
-        # Phantagrande Skydom Page 1
-        if Quest._page_1_list.__contains__(map_name):
-            # Switch pages if needed.
-            if Quest._page_2_list.__contains__(current_location):
-                Game.find_and_click_button("world_left_arrow")
+            if Game.find_and_click_button("world_skydom") is False:
+                raise QuestException("Failed to move out of the Phantagrande Skydom.")
+        elif current_skydom.__contains__("Nalhegrande"):
+            # Attempt to move to the left-most section of the skydom.
+            Game.find_and_click_button("world_left_arrow", suppress_error = True)
 
-            # Click on the Map to move to it.
-            if not Game.find_and_click_button(map_name.lower().replace(" ", "_").replace("-", "_")):
-                # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to a manual method.
+            if Game.find_and_click_button("world_skydom") is False:
+                raise QuestException("Failed to move out of the Nalhegrande Skydom.")
+        elif current_skydom.__contains__("Oarlyegrande"):
+            if Game.find_and_click_button("world_skydom") is False:
+                raise QuestException("Failed to move out of the Oarlyegrande Skydom.")
+
+        Game.wait(3.0)
+
+        return None
+
+    @staticmethod
+    def _enter_skydom(new_skydom: str):
+        """Enter a skydom from the world map.
+
+        Args:
+            new_skydom (str): Name of the skydom that the bot will be moving to.
+
+        Returns:
+            None
+        """
+        from bot.game import Game
+
+        if new_skydom.__contains__("Phantagrande"):
+            if Game.find_and_click_button("skydom_phantagrande") is False:
+                raise QuestException("Failed to move into Phantagrande Skydom.")
+        elif new_skydom.__contains__("Nalhegrande"):
+            if Game.find_and_click_button("skydom_nalhegrande") is False:
+                raise QuestException("Failed to move into Nalhegrande Skydom.")
+        elif new_skydom.__contains__("Oarlyegrande"):
+            if Game.find_and_click_button("skydom_oarlyegrande") is False:
+                raise QuestException("Failed to move into Oarlyegrande Skydom.")
+
+        Game.wait(3.0)
+
+        return None
+
+    @staticmethod
+    def _navigate_to_phantagrande_skydom_island(map_name: str, current_island: str):
+        """Navigates the bot to the specified island inside the Phantagrande Skydom
+
+        Args:
+            map_name (str): Name of the expected Island inside the Phantagrande Skydom.
+            current_island (str): Name of the Island inside the Phantagrande Skydom that the bot is currently at.
+
+        Returns:
+            None
+        """
+        from bot.game import Game
+
+        MessageLog.print_message(f"\n[QUEST] Beginning process to navigate to the island inside the Phantagrande Skydom: {map_name}...")
+
+        if Quest._phantagrande_page_1_islands.__contains__(map_name):
+            # Switch pages if bot is on Page 2.
+            if Quest._phantagrande_page_2_islands.__contains__(current_island) and Game.find_and_click_button("world_left_arrow") is False:
+                raise QuestException("Failed to move to Page 1 of Phantagrande Skydom.")
+
+            # Move to the expected Island.
+            if Game.find_and_click_button(map_name.lower().replace(" ", "_").replace("-", "_")) is False:
+                # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to the manual method.
                 arrow_location = ImageUtils.find_button("world_right_arrow")
 
                 if map_name == "Port Breeze Archipelago":
@@ -54,15 +116,15 @@ class Quest:
                     MouseUtils.move_and_click_point(arrow_location[0] - 84, arrow_location[1] + 39, "world_right_arrow")
                 elif map_name == "Albion Citadel":
                     MouseUtils.move_and_click_point(arrow_location[0] - 267, arrow_location[1] + 121, "world_right_arrow")
+                else:
+                    raise QuestException(f"Unexpected map name when trying to navigate in Phantagrande Skydom Page 1: {map_name}")
+        elif Quest._phantagrande_page_2_islands.__contains__(map_name):
+            if Quest._phantagrande_page_1_islands.__contains__(current_island) and Game.find_and_click_button("world_right_arrow") is False:
+                raise QuestException("Failed to move to Page 2 of Phantagrande Skydom.")
 
-            return True
-
-        # Phantagrande Skydom Page 2
-        elif Quest._page_2_list.__contains__(map_name):
-            if Quest._page_1_list.__contains__(current_location):
-                Game.find_and_click_button("world_right_arrow")
-
+            # Move to the expected Island.
             if not Game.find_and_click_button(map_name.lower().replace(" ", "_").replace("-", "_")):
+                # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to the manual method.
                 arrow_location = ImageUtils.find_button("world_left_arrow")
 
                 if map_name == "Mist-Shrouded Isle":
@@ -75,10 +137,162 @@ class Quest:
                     MouseUtils.move_and_click_point(arrow_location[0] + 352, arrow_location[1] - 51, "world_left_arrow")
                 elif map_name == "Agastia":
                     MouseUtils.move_and_click_point(arrow_location[0] + 190, arrow_location[1] - 148, "world_left_arrow")
+                else:
+                    raise QuestException(f"Unexpected map name when trying to navigate in Phantagrande Skydom Page 2: {map_name}")
 
-            return True
+        # Click "Go" on the popup after clicking on the island node.
+        if Game.find_and_click_button("go") is False:
+            raise QuestException(f"Failed to enter {map_name} as the Go button is missing.")
 
-        return False
+        return None
+
+    @staticmethod
+    def _navigate_to_nalhegrande_skydom_island(map_name: str, current_island: str):
+        """Navigates the bot to the specified island inside the Nalhegrande Skydom
+
+        Args:
+            map_name (str): Name of the expected Island inside the Nalhegrande Skydom.
+            current_island (str): Name of the Island inside the Nalhegrande Skydom that the bot is currently at.
+
+        Returns:
+            None
+        """
+        from bot.game import Game
+
+        MessageLog.print_message(f"\n[QUEST] Beginning process to navigate to the island inside the Nalhegrande Skydom: {map_name}...")
+
+        if Quest._nalhegrande_page_1_islands.__contains__(map_name):
+            # Switch pages if bot is on Page 2.
+            if Quest._nalhegrande_page_2_islands.__contains__(current_island) and Game.find_and_click_button("world_left_arrow") is False:
+                raise QuestException("Failed to move to Page 1 of Nalhegrande Skydom.")
+
+            # Move to the expected Island.
+            if Game.find_and_click_button(map_name.lower().replace(" ", "_").replace("-", "_")) is False:
+                # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to the manual method.
+                arrow_location = ImageUtils.find_button("world_right_arrow")
+
+                if map_name == "Merkmal Island":
+                    MouseUtils.move_and_click_point(arrow_location[0] - 345, arrow_location[1] - 215, "world_right_arrow")
+                elif map_name == "Groz Island":
+                    MouseUtils.move_and_click_point(arrow_location[0] - 310, arrow_location[1] - 35, "world_right_arrow")
+                elif map_name == "Kluger Island":
+                    MouseUtils.move_and_click_point(arrow_location[0] - 100, arrow_location[1] - 90, "world_right_arrow")
+                elif map_name == "The Edgelands":
+                    MouseUtils.move_and_click_point(arrow_location[0] - 240, arrow_location[1] + 155, "world_right_arrow")
+                else:
+                    raise QuestException(f"Unexpected map name when trying to navigate in Nalhegrande Skydom Page 1: {map_name}")
+
+        elif Quest._nalhegrande_page_2_islands.__contains__(map_name):
+            if Quest._nalhegrande_page_1_islands.__contains__(current_island) and Game.find_and_click_button("world_right_arrow") is False:
+                raise QuestException("Failed to move to Page 2 of Nalhegrande Skydom.")
+
+            # Move to the expected Island.
+            if not Game.find_and_click_button(map_name.lower().replace(" ", "_").replace("-", "_")):
+                # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to the manual method.
+                arrow_location = ImageUtils.find_button("world_left_arrow")
+
+                if map_name == "Bestia Island":
+                    MouseUtils.move_and_click_point(arrow_location[0] + 130, arrow_location[1] + 240, "world_left_arrow")
+                elif map_name == "Reiche Island":
+                    MouseUtils.move_and_click_point(arrow_location[0] + 320, arrow_location[1] + 60, "world_left_arrow")
+                elif map_name == "Starke Island":
+                    MouseUtils.move_and_click_point(arrow_location[0] + 170, arrow_location[1] - 100, "world_left_arrow")
+                else:
+                    raise QuestException(f"Unexpected map name when trying to navigate in Nalhegrande Skydom Page 2: {map_name}")
+
+        # Click "Go" on the popup after clicking on the island node.
+        if Game.find_and_click_button("go") is False:
+            raise QuestException(f"Failed to enter {map_name} as the Go button is missing.")
+
+        return None
+
+    @staticmethod
+    def _navigate_to_oarlyegrande_skydom_island(map_name: str):
+        """Navigates the bot to the specified island inside the Oarlyegrande Skydom
+
+        Args:
+            map_name (str): Name of the expected Island inside the Oarlyegrande Skydom.
+
+        Returns:
+            None
+        """
+        from bot.game import Game
+
+        MessageLog.print_message(f"\n[QUEST] Beginning process to navigate to the island inside the Oarlyegrande Skydom: {map_name}...")
+
+        if Quest._oarlyegrande_page_1_islands.__contains__(map_name):
+            # Move to the expected Island.
+            if Game.find_and_click_button(map_name.lower().replace(" ", "_").replace("-", "_")) is False:
+                # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to the manual method.
+                skydom_location = ImageUtils.find_button("world_skydom")
+
+                if map_name == "New Utopia":
+                    MouseUtils.move_and_click_point(skydom_location[0] - 200, skydom_location[1] - 175, "world_skydom")
+                else:
+                    raise QuestException(f"Unexpected map name when trying to navigate in Oarlyegrande Skydom: {map_name}")
+
+        # Click "Go" after clicking on the island node.
+        if Game.find_and_click_button("go_oarlyegrande") is False:
+            raise QuestException(f"Failed to enter {map_name} as the Go button is missing.")
+
+        return None
+
+    @staticmethod
+    def _select_phantagrande_chapter_node():
+        from bot.game import Game
+
+        # Grab the location of the "World" button.
+        world_location = ImageUtils.find_button("world", tries = 5)
+        if world_location is None:
+            world_location = ImageUtils.find_button("world2", tries = 5)
+
+        if Settings.mission_name == "Scattered Cargo":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 1 (115) node at ({world_location[0] + 97}, {world_location[1] + 97})...")
+            MouseUtils.move_and_click_point(world_location[0] + 97, world_location[1] + 97, "template_node")
+        elif Settings.mission_name == "Lucky Charm Hunt":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 6 (122) node...")
+            MouseUtils.move_and_click_point(world_location[0] + 332, world_location[1] + 16, "template_node")
+        elif Settings.mission_name == "Special Op's Request":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 8 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 258, world_location[1] + 151, "template_node")
+        elif Settings.mission_name == "Threat to the Fisheries":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 9 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 216, world_location[1] + 113, "template_node")
+        elif Settings.mission_name == "The Fruit of Lumacie" or Settings.mission_name == "Whiff of Danger":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 13 (39/52) node...")
+            MouseUtils.move_and_click_point(world_location[0] + 78, world_location[1] + 92, "template_node")
+        elif Settings.mission_name == "I Challenge You!":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 17 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 119, world_location[1] + 121, "template_node")
+        elif Settings.mission_name == "For Whom the Bell Tolls":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 22 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 178, world_location[1] + 33, "template_node")
+        elif Settings.mission_name == "Golonzo's Battles of Old":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 25 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 196, world_location[1] + 5, "template_node")
+        elif Settings.mission_name == "The Dungeon Diet":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 30 (44/65) node...")
+            MouseUtils.move_and_click_point(world_location[0] + 242, world_location[1] + 24, "template_node")
+        elif Settings.mission_name == "Trust Busting Dustup":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 36 (123) node...")
+            MouseUtils.move_and_click_point(world_location[0] + 319, world_location[1] + 13, "template_node")
+        elif Settings.mission_name == "Erste Kingdom Episode 4":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 70 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 253, world_location[1] + 136, "template_node")
+        elif Settings.mission_name == "Imperial Wanderer's Soul":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 55 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 162, world_location[1] + 143, "template_node")
+
+        # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
+        MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
+        Game.find_and_click_button(Settings.mission_name.replace(" ", "_"))
+
+        # Apply special navigation for mission "Ch. 70 - Erste Kingdom".
+        if Settings.mission_name == "Erste Kingdom Episode 4":
+            Game.find_and_click_button("episode_4")
+            Game.find_and_click_button("ok")
+
+        return None
 
     @staticmethod
     def _navigate():
@@ -94,28 +308,50 @@ class Quest:
         # Go to the Home screen.
         Game.go_back_home(confirm_location_check = True)
 
-        current_location = ""
+        current_island = ""
         formatted_map_name = Settings.map_name.lower().replace(" ", "_").replace("-", "_")
 
+        # Determine target skydom.
+        if Quest._phantagrande_page_1_islands.__contains__(Settings.map_name) or Quest._phantagrande_page_2_islands.__contains__(Settings.map_name):
+            target_skydom = "Phantagrande Skydom"
+        elif Quest._nalhegrande_page_1_islands.__contains__(Settings.map_name) or Quest._nalhegrande_page_2_islands.__contains__(Settings.map_name):
+            target_skydom = "Nalhegrande Skydom"
+        elif Quest._oarlyegrande_page_1_islands.__contains__(Settings.map_name):
+            target_skydom = "Oarlyegrande Skydom"
+        else:
+            raise QuestException("Invalid Skydom associated with map in settings.")
+
         # Check which island the bot is at.
-        if ImageUtils.confirm_location(f"map_{formatted_map_name}", tries = 3):
+        if ImageUtils.confirm_location(f"map_{formatted_map_name}", tries = 1):
             MessageLog.print_message(f"[QUEST] Bot is currently on the correct island.")
             check_location = True
+            current_skydom = target_skydom
         else:
             MessageLog.print_message(f"[QUEST] Bot is currently not on the correct island.")
             check_location = False
 
-            location_list = ["Zinkenstill", "Port Breeze Archipelago", "Valtz Duchy", "Auguste Isles", "Lumacie Archipelago", "Albion Citadel",
-                             "Mist-Shrouded Isle", "Golonzo Island", "Amalthea Island", "Former Capital Mephorash", "Agastia"]
+            location_list = Quest._phantagrande_page_1_islands + Quest._phantagrande_page_2_islands + Quest._nalhegrande_page_1_islands + Quest._nalhegrande_page_2_islands + \
+                Quest._oarlyegrande_page_1_islands
 
+            # Determine current island.
             while len(location_list) > 0:
                 temp_map_location = location_list.pop(0)
                 temp_formatted_map_location = temp_map_location.lower().replace(" ", "_").replace("-", "_")
 
                 if ImageUtils.confirm_location(f"map_{temp_formatted_map_location}", tries = 1):
                     MessageLog.print_message(f"[QUEST] Bot's current location is at {temp_map_location}. Now moving to {Settings.map_name}...")
-                    current_location = temp_map_location
+                    current_island = temp_map_location
                     break
+
+            # Now determine current skydom.
+            if Quest._phantagrande_page_1_islands.__contains__(current_island) or Quest._phantagrande_page_2_islands.__contains__(current_island):
+                current_skydom = "Phantagrande Skydom"
+            elif Quest._nalhegrande_page_1_islands.__contains__(current_island) or Quest._nalhegrande_page_2_islands.__contains__(current_island):
+                current_skydom = "Nalhegrande Skydom"
+            elif Quest._oarlyegrande_page_1_islands.__contains__(current_island):
+                current_skydom = "Oarlyegrande Skydom"
+            else:
+                raise QuestException("Current island does not fit into any of the skydoms defined.")
 
         # Once the bot has determined where it is, go to the Quest screen.
         Game.find_and_click_button("quest")
@@ -127,68 +363,28 @@ class Quest:
             Game.find_and_click_button("ok")
 
         if ImageUtils.confirm_location("quest"):
-            # If the bot is currently not at the correct island, move to it.
+            # If the bot is currently not at the correct island, exit from it.
             if not check_location:
-                # Click the "World" button.
+                # Click the "World" button to exit the island and land at the World page.
                 Game.find_and_click_button("world")
 
-                # On the World screen, click the specified coordinates on the window to move to the island. If the island is on a different world page, switch pages as necessary.
-                Quest._navigate_to_map(Settings.map_name, current_location)
+                Game.wait(3.0)
 
-                # Click "Go" on the popup after clicking on the map node.
-                Game.find_and_click_button("go")
+                # If current skydom is different from the target skydom, move to the target skydom.
+                if current_skydom != target_skydom:
+                    Quest._exit_skydom(current_skydom)
+                    Quest._enter_skydom(target_skydom)
 
-            # Grab the location of the "World" button.
-            world_location = ImageUtils.find_button("world", tries = 5)
-            if world_location is None:
-                world_location = ImageUtils.find_button("world2", tries = 5)
-
-            # Now that the bot is on the correct island and is at the Quest screen, click the correct chapter node.
-            if Settings.mission_name == "Scattered Cargo":
-                MessageLog.print_message(f"\n[QUEST] Moving to Chapter 1 (115) node at ({world_location[0] + 97}, {world_location[1] + 97})...")
-                MouseUtils.move_and_click_point(world_location[0] + 97, world_location[1] + 97, "template_node")
-            elif Settings.mission_name == "Lucky Charm Hunt":
-                MessageLog.print_message(f"\n[QUEST] Moving to Chapter 6 (122) node...")
-                MouseUtils.move_and_click_point(world_location[0] + 332, world_location[1] + 16, "template_node")
-            elif Settings.mission_name == "Special Op's Request":
-                MessageLog.print_message(f"\n[QUEST] Moving to Chapter 8 node...")
-                MouseUtils.move_and_click_point(world_location[0] + 258, world_location[1] + 151, "template_node")
-            elif Settings.mission_name == "Threat to the Fisheries":
-                MessageLog.print_message(f"\n[QUEST] Moving to Chapter 9 node...")
-                MouseUtils.move_and_click_point(world_location[0] + 216, world_location[1] + 113, "template_node")
-            elif Settings.mission_name == "The Fruit of Lumacie" or Settings.mission_name == "Whiff of Danger":
-                MessageLog.print_message(f"\n[QUEST] Moving to Chapter 13 (39/52) node...")
-                MouseUtils.move_and_click_point(world_location[0] + 78, world_location[1] + 92, "template_node")
-            elif Settings.mission_name == "I Challenge You!":
-                MessageLog.print_message(f"\n[QUEST] Moving to Chapter 17 node...")
-                MouseUtils.move_and_click_point(world_location[0] + 119, world_location[1] + 121, "template_node")
-            elif Settings.mission_name == "For Whom the Bell Tolls":
-                MessageLog.print_message(f"\n[QUEST] Moving to Chapter 22 node...")
-                MouseUtils.move_and_click_point(world_location[0] + 178, world_location[1] + 33, "template_node")
-            elif Settings.mission_name == "Golonzo's Battles of Old":
-                MessageLog.print_message(f"\n[QUEST] Moving to Chapter 25 node...")
-                MouseUtils.move_and_click_point(world_location[0] + 196, world_location[1] + 5, "template_node")
-            elif Settings.mission_name == "The Dungeon Diet":
-                MessageLog.print_message(f"\n[QUEST] Moving to Chapter 30 (44/65) node...")
-                MouseUtils.move_and_click_point(world_location[0] + 242, world_location[1] + 24, "template_node")
-            elif Settings.mission_name == "Trust Busting Dustup":
-                MessageLog.print_message(f"\n[QUEST] Moving to Chapter 36 (123) node...")
-                MouseUtils.move_and_click_point(world_location[0] + 319, world_location[1] + 13, "template_node")
-            elif Settings.mission_name == "Erste Kingdom Episode 4":
-                MessageLog.print_message(f"\n[QUEST] Moving to Chapter 70 node...")
-                MouseUtils.move_and_click_point(world_location[0] + 253, world_location[1] + 136, "template_node")
-            elif Settings.mission_name == "Imperial Wanderer's Soul":
-                MessageLog.print_message(f"\n[QUEST] Moving to Chapter 55 node...")
-                MouseUtils.move_and_click_point(world_location[0] + 162, world_location[1] + 143, "template_node")
-
-            # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
-            MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
-            Game.find_and_click_button(Settings.mission_name.replace(" ", "_"))
-
-            # Apply special navigation for mission "Ch. 70 - Erste Kingdom".
-            if Settings.mission_name == "Erste Kingdom Episode 4":
-                Game.find_and_click_button("episode_4")
-                Game.find_and_click_button("ok")
+            # From the World page, move to the target island and then select the target chapter node.
+            if Quest._phantagrande_page_1_islands.__contains__(current_island) or Quest._phantagrande_page_2_islands.__contains__(current_island):
+                Quest._navigate_to_phantagrande_skydom_island(Settings.map_name, current_island)
+                Quest._select_phantagrande_chapter_node()
+            elif Quest._nalhegrande_page_1_islands.__contains__(current_island) or Quest._nalhegrande_page_2_islands.__contains__(current_island):
+                Quest._navigate_to_nalhegrande_skydom_island(Settings.map_name, current_island)
+                Quest._select_nalhegrande_chapter_node()
+            elif Quest._oarlyegrande_page_1_islands.__contains__(current_island):
+                Quest._navigate_to_oarlyegrande_skydom_island(Settings.map_name)
+                Quest._select_oarlyegrande_chapter_node()
         else:
             raise QuestException("Failed to arrive at the Quest page.")
 
