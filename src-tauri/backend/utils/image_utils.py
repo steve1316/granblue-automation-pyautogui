@@ -214,7 +214,7 @@ class ImageUtils:
             image_name (str): The specific adjustment to the specified template or 0 to use the default number of tries.
 
         Returns:
-            (int): List of Tuples containing match locations.
+            (int): The adjustment specific to the template name.
         """
         calibration_list = ["home"]
         pending_battles_list = ["check_your_pending_battles", "pending_battles", "quest_results_pending_battles"]
