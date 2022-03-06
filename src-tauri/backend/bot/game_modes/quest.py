@@ -238,6 +238,24 @@ class Quest:
         return None
 
     @staticmethod
+    def _select_episode():
+        from bot.game import Game
+
+        if Settings.mission_name.__contains__("Episode"):
+            if Settings.mission_name.__contains__("Episode 1"):
+                Game.find_and_click_button("episode_1")
+            elif Settings.mission_name.__contains__("Episode 2"):
+                Game.find_and_click_button("episode_2")
+            elif Settings.mission_name.__contains__("Episode 3"):
+                Game.find_and_click_button("episode_3")
+            elif Settings.mission_name.__contains__("Episode 4"):
+                Game.find_and_click_button("episode_4")
+
+            Game.find_and_click_button("ok")
+
+        return None
+
+    @staticmethod
     def _select_phantagrande_chapter_node():
         from bot.game import Game
 
