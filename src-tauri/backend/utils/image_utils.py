@@ -369,7 +369,8 @@ class ImageUtils:
             MessageLog.print_message(f"[DEBUG] Received the following list of Elements: {str(summon_element_list)}")
 
         last_summon_element = ""
-        summon_index = 0
+        summon_element_index = 0
+
         # Find the home button.
         home_button = ImageUtils.find_button("home", bypass_general_adjustment = True)
         if home_button is None:
@@ -383,21 +384,29 @@ class ImageUtils:
             if tries <= 0 and ImageUtils.confirm_location("select_a_summon", tries = 1) is False:
                 raise Exception("Could not reach the Summon Selection screen.")
 
-        # Determine if all the summon elements are the same or not. This will influence whether or not the bot needs to change elements in repeated runs.
+        # Determine if all the summon elements are the same or not. This will influence whether the bot needs to change elements in repeated runs.
         ImageUtils._summon_selection_same_element = all(element == summon_element_list[0] for element in summon_element_list)
 
+        # Make the first summon element category active for first run.
+        if ImageUtils._summon_selection_first_run:
+            current_summon_element: str = summon_element_list[summon_element_index]
+            Game.find_and_click_button(f"summon_{current_summon_element}")
+            last_summon_element = current_summon_element
+            ImageUtils._summon_selection_first_run = False
+
+        tries = 30
         while True:
-            # Perform first time setup by selecting the correct summon element.
-            if ImageUtils._summon_selection_first_run or ImageUtils._summon_selection_same_element is False:
-                current_summon_element: str = summon_element_list[summon_index]
-                if current_summon_element != last_summon_element:
-                    Game.find_and_click_button(f"summon_{current_summon_element}")
-                    last_summon_element = current_summon_element
-
-                ImageUtils._summon_selection_first_run = False
-
+            # Reset the summon index.
             summon_index = 0
             while summon_index < len(summon_list):
+                # Switch over to a different element for this summon index if it is different.
+                if ImageUtils._summon_selection_same_element is False:
+                    current_summon_element: str = summon_element_list[summon_element_index]
+                    if current_summon_element != last_summon_element:
+                        if Game.find_and_click_button(f"summon_{current_summon_element}") is False:
+                            raise Exception(f"Unable to switch summon element categories from {last_summon_element.upper()} to {current_summon_element.upper()}.")
+                        last_summon_element = current_summon_element
+
                 # Now try and find the Summon at the current index.
                 template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/summons/{summon_list[summon_index]}.jpg", 0)
 
@@ -416,16 +425,45 @@ class ImageUtils:
                     if suppress_error is False:
                         MessageLog.print_message(f"[WARNING] Could not locate {summon_list[summon_index].upper()} Summon.")
 
-                    summon_index += 1
+                    if ImageUtils._summon_selection_same_element:
+                        summon_index += 1
+                    else:
+                        # Keep searching for the same summon until the bot reaches the bottom of the page. Then reset the page and move to the next summon's element.
+                        if ImageUtils.find_button("bottom_of_summon_selection", tries = 1) is not None:
+                            summon_index += 1
+                            summon_element_index += 1
 
-            # If the bot reached the bottom of the page, scroll back up to the top and start searching for the next Summon.
+                            # If the bot cycled through the list of summon elements without finding a match, reset Summons.
+                            if ImageUtils._summon_selection_same_element is False and summon_element_index >= len(summon_element_list):
+                                MessageLog.print_message(f"[WARNING] Bot has gone through the entire summon list without finding a match. Resetting Summons now...")
+                                return None
+
+                            MessageLog.print_message(f"[INFO] Bot has reached the bottom of the page. Moving on to the next summon's element...")
+                            if Game.find_and_click_button("reload") is False:
+                                from utils.mouse_utils import MouseUtils
+                                MouseUtils.scroll_screen(home_button[0], home_button[1] - 50, 10000)
+
+                            Game.wait(1.0)
+                        else:
+                            # If matching failed and the bottom of the page has not been reached, scroll the screen down to see more Summons and try again.
+                            from utils.mouse_utils import MouseUtils
+                            MouseUtils.scroll_screen(home_button[0], home_button[1] - 50, -700)
+
+                    tries -= 1
+
+            # Perform check here to prevent infinite loop for rare cases.
+            if tries <= 0:
+                MessageLog.print_message(f"[WARNING] Summon Selection process was not able to find any valid summons. Resetting Summons now...")
+                return None
+
+            # If the bot reached the bottom of the page, reset Summons.
             if ImageUtils.find_button("bottom_of_summon_selection", tries = 1) is not None:
                 MessageLog.print_message(f"[WARNING] Bot has reached the bottom of the page and found no suitable Summons. Resetting Summons now...")
                 return None
 
-            # If matching failed, scroll the screen down to see more Summons.
+            # If matching failed and the bottom of the page has not been reached, scroll the screen down to see more Summons and try again.
             from utils.mouse_utils import MouseUtils
-            MouseUtils.scroll_screen(home_button_x, home_button_y - 50, -700)
+            MouseUtils.scroll_screen(home_button[0], home_button[1] - 50, -700)
             Game.wait(1.0)
 
     @staticmethod
