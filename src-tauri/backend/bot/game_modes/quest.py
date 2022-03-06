@@ -100,7 +100,7 @@ class Quest:
                 raise QuestException("Failed to move to Page 1 of Phantagrande Skydom.")
 
             # Move to the expected Island.
-            if Game.find_and_click_button(map_name.lower().replace(" ", "_").replace("-", "_")) is False:
+            if Game.find_and_click_button("map_" + map_name.lower().replace(" ", "_").replace("-", "_")) is False:
                 # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to the manual method.
                 arrow_location = ImageUtils.find_button("world_right_arrow")
 
@@ -121,7 +121,7 @@ class Quest:
                 raise QuestException("Failed to move to Page 2 of Phantagrande Skydom.")
 
             # Move to the expected Island.
-            if not Game.find_and_click_button(map_name.lower().replace(" ", "_").replace("-", "_")):
+            if not Game.find_and_click_button("map_" + map_name.lower().replace(" ", "_").replace("-", "_")):
                 # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to the manual method.
                 arrow_location = ImageUtils.find_button("world_left_arrow")
 
@@ -165,7 +165,7 @@ class Quest:
                 raise QuestException("Failed to move to Page 1 of Nalhegrande Skydom.")
 
             # Move to the expected Island.
-            if Game.find_and_click_button(map_name.lower().replace(" ", "_").replace("-", "_")) is False:
+            if Game.find_and_click_button("map_" + map_name.lower().replace(" ", "_").replace("-", "_")) is False:
                 # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to the manual method.
                 arrow_location = ImageUtils.find_button("world_right_arrow")
 
@@ -185,7 +185,7 @@ class Quest:
                 raise QuestException("Failed to move to Page 2 of Nalhegrande Skydom.")
 
             # Move to the expected Island.
-            if not Game.find_and_click_button(map_name.lower().replace(" ", "_").replace("-", "_")):
+            if not Game.find_and_click_button("map_" + map_name.lower().replace(" ", "_").replace("-", "_")):
                 # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to the manual method.
                 arrow_location = ImageUtils.find_button("world_left_arrow")
 
@@ -220,7 +220,7 @@ class Quest:
 
         if Quest._oarlyegrande_page_1_islands.__contains__(map_name):
             # Move to the expected Island.
-            if Game.find_and_click_button(map_name.lower().replace(" ", "_").replace("-", "_")) is False:
+            if Game.find_and_click_button("map_" + map_name.lower().replace(" ", "_").replace("-", "_")) is False:
                 # If the name of the island is obscured, like by the "Next" text indicating that the user's next quest is there, fallback to the manual method.
                 skydom_location = ImageUtils.find_button("world_skydom")
 
@@ -306,7 +306,7 @@ class Quest:
 
         # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
         MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
-        Game.find_and_click_button(Settings.mission_name.replace(" ", "_"))
+        Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_"))
 
         # Apply special navigation for Episode missions.
         Quest._select_episode()
@@ -359,7 +359,7 @@ class Quest:
 
         # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
         MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
-        Game.find_and_click_button(Settings.mission_name.replace(" ", "_"))
+        Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_"))
 
         # Apply special navigation for Episode missions.
         Quest._select_episode()
@@ -383,7 +383,7 @@ class Quest:
 
         # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
         MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
-        Game.find_and_click_button(Settings.mission_name.replace(" ", "_"))
+        Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_"))
 
         # Apply special navigation for Episode missions.
         Quest._select_episode()
