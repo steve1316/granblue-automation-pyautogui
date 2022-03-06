@@ -298,6 +298,9 @@ class Quest:
         elif Settings.mission_name == "Imperial Wanderer's Soul":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 55 node...")
             MouseUtils.move_and_click_point(world_location[0] + 162, world_location[1] + 143, "template_node")
+        elif Settings.mission_name == "Rocket Raid":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 59 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 70, world_location[1] + 85, "template_node")
         else:
             raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
 
