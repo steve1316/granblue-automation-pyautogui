@@ -78,7 +78,7 @@
         },
         "Teachings of the Sage Episode 2": {
             "map": "Kluger Island",
-            "items": ["Gray Sandstone", "Kluger Herbs", "Meditative Sutra"]
+            "items": ["Gray Sandstone", "Kluger Herb", "Meditative Sutra"]
         },
         "Isle of Primals - Episode 3": {
             "map": "Bestia Island",
@@ -98,7 +98,7 @@
         },
         "A Girl Named Mika Episode 2": {
             "map": "The Edgelands",
-            "items": ["Malignaherb", "Converging Rays"]
+            "items": ["Converging Rays"]
         },
         "House of Happiness": {
             "map": "New Utopia",
