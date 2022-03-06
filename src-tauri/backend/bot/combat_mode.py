@@ -1035,6 +1035,8 @@ class CombatMode:
                         MessageLog.print_message(f"[COMBAT] Turn {CombatMode._turn_number} has ended.")
 
                         CombatMode._turn_number += 1
+                    elif command.find("wait") == 0:
+                        CombatMode._wait_execute(list(command))
                     elif command == "exit":
                         # End Combat Mode by heading back to the Home screen without retreating.
                         MessageLog.print_message("\n[COMBAT] Leaving this Raid without retreating.")
@@ -1046,6 +1048,8 @@ class CombatMode:
                         Game.go_back_home(confirm_location_check = True)
                         return False
 
+                ######################################################################
+                ######################################################################
                 # Handle certain commands that could be present outside a Turn block.
                 if CombatMode._semi_auto is False and CombatMode._full_auto is False and command == "enablesemiauto":
                     CombatMode._enable_semi_auto()
@@ -1054,6 +1058,8 @@ class CombatMode:
                 elif command == "repeatmanualattackandreload":
                     MessageLog.print_message("[COMBAT] Enabling manually pressing the Attack button and reloading (if the mission supports it) until battle ends.")
                     manual_attack_and_reload = True
+                elif command.find("wait") == 0:
+                    CombatMode._wait_execute(list(command))
 
             # Deal with the situation where high-profile raids end right when the bot loads in and all it sees is the "Next" button.
             if Settings.farming_mode == "Raid" and Game.find_and_click_button("next", tries = 3):
