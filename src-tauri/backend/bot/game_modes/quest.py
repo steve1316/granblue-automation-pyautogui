@@ -1,5 +1,3 @@
-from typing import Tuple
-
 from utils.settings import Settings
 from utils.message_log import MessageLog
 from utils.image_utils import ImageUtils
@@ -265,7 +263,7 @@ class Quest:
             world_location = ImageUtils.find_button("world2", tries = 5)
 
         if Settings.mission_name == "Scattered Cargo":
-            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 1 (115) node at ({world_location[0] + 97}, {world_location[1] + 97})...")
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 1 (115) node...")
             MouseUtils.move_and_click_point(world_location[0] + 97, world_location[1] + 97, "template_node")
         elif Settings.mission_name == "Lucky Charm Hunt":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 6 (122) node...")
@@ -300,15 +298,92 @@ class Quest:
         elif Settings.mission_name == "Imperial Wanderer's Soul":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 55 node...")
             MouseUtils.move_and_click_point(world_location[0] + 162, world_location[1] + 143, "template_node")
+        else:
+            raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
 
         # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
         MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
         Game.find_and_click_button(Settings.mission_name.replace(" ", "_"))
 
-        # Apply special navigation for mission "Ch. 70 - Erste Kingdom".
-        if Settings.mission_name == "Erste Kingdom Episode 4":
-            Game.find_and_click_button("episode_4")
-            Game.find_and_click_button("ok")
+        # Apply special navigation for Episode missions.
+        Quest._select_episode()
+
+        return None
+
+    @staticmethod
+    def _select_nalhegrande_chapter_node():
+        from bot.game import Game
+
+        # Grab the location of the "World" button.
+        world_location = ImageUtils.find_button("world", tries = 5)
+        if world_location is None:
+            world_location = ImageUtils.find_button("world2", tries = 5)
+
+        if Settings.mission_name == "Stocking Up for Winter":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 80 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 15, world_location[1] + 65, "template_node")
+        elif Settings.mission_name == "Stocking Up for Winter":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 81 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 200, world_location[1] + 45, "template_node")
+        elif Settings.mission_name == "The Right of Might" or Settings.mission_name == "Idelva Kingdom Episode 4":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 124 node...")
+            Game.find_and_click_button("arcarum_sandbox_right_arrow", tries = 1, suppress_error = True)
+            MouseUtils.move_and_click_point(world_location[0] + 235, world_location[1] + 50, "template_node")
+        elif Settings.mission_name == "Pholia the Maiden Episode 1" or Settings.mission_name == "Pholia the Maiden Episode 3":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 85 node...")
+            Game.find_and_click_button("arcarum_sandbox_right_arrow", tries = 1, suppress_error = True)
+            MouseUtils.move_and_click_point(world_location[0] + 165, world_location[1] + 130, "template_node")
+        elif Settings.mission_name == "Teachings of the Sage Episode 2":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 89 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 335, world_location[1] + 70, "template_node")
+        elif Settings.mission_name == "Isle of Primals - Episode 3":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 129 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 225, world_location[1] + 135, "template_node")
+        elif Settings.mission_name == "Deception's Inception - Episode 4":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 100 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 285, world_location[1] + 65, "template_node")
+        elif Settings.mission_name == "Be All That You Can Be":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 102 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 10, world_location[1] + 80, "template_node")
+        elif Settings.mission_name == "Once Lost, Once Found":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 108 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 295, world_location[1] + 70, "template_node")
+        elif Settings.mission_name == "A Girl Named Mika Episode 2":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 113 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 180, world_location[1] + 65, "template_node")
+        else:
+            raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
+
+        # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
+        MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
+        Game.find_and_click_button(Settings.mission_name.replace(" ", "_"))
+
+        # Apply special navigation for Episode missions.
+        Quest._select_episode()
+
+        return None
+
+    @staticmethod
+    def _select_oarlyegrande_chapter_node():
+        from bot.game import Game
+
+        # Grab the location of the "World" button.
+        world_location = ImageUtils.find_button("world", tries = 5)
+        if world_location is None:
+            world_location = ImageUtils.find_button("world2", tries = 5)
+
+        if Settings.mission_name == "House of Happiness":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 132 node...")
+            MouseUtils.move_and_click_point(world_location[0] + 155, world_location[1] + 130, "template_node")
+        else:
+            raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
+
+        # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
+        MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
+        Game.find_and_click_button(Settings.mission_name.replace(" ", "_"))
+
+        # Apply special navigation for Episode missions.
+        Quest._select_episode()
 
         return None
 
@@ -348,8 +423,7 @@ class Quest:
             MessageLog.print_message(f"[QUEST] Bot is currently not on the correct island.")
             check_location = False
 
-            location_list = Quest._phantagrande_page_1_islands + Quest._phantagrande_page_2_islands + Quest._nalhegrande_page_1_islands + Quest._nalhegrande_page_2_islands + \
-                Quest._oarlyegrande_page_1_islands
+            location_list = Quest._phantagrande_page_1_islands + Quest._phantagrande_page_2_islands + Quest._nalhegrande_page_1_islands + Quest._nalhegrande_page_2_islands + Quest._oarlyegrande_page_1_islands
 
             # Determine current island.
             while len(location_list) > 0:
