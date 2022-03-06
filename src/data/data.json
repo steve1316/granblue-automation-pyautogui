@@ -51,6 +51,58 @@
         "Imperial Wanderer's Soul": {
             "map": "Agastia",
             "items": ["Prosperity Flame", "Explosive Material", "Steel Liquid"]
+        },
+        "Rocket Raid": {
+            "map": "Agastia",
+            "items": ["Steel Liquid"]
+        },
+        "Stocking Up for Winter": {
+            "map": "Merkmal Island",
+            "items": ["Merkmal Fig", "Bastion Block", "Corroded Cartridge"]
+        },
+        "The Mysterious Room": {
+            "map": "Merkmal Island",
+            "items": ["Bastion Block"]
+        },
+        "The Right of Might": {
+            "map": "Groz Island",
+            "items": ["Raw Gemstone"]
+        },
+        "Pholia the Maiden Episode 1": {
+            "map": "Groz Island",
+            "items": ["Riot Root"]
+        },
+        "Pholia the Maiden Episode 3": {
+            "map": "Groz Island",
+            "items": ["Riot Root"]
+        },
+        "Teachings of the Sage Episode 2": {
+            "map": "Kluger Island",
+            "items": ["Gray Sandstone", "Kluger Herbs", "Meditative Sutra"]
+        },
+        "Isle of Primals - Episode 3": {
+            "map": "Bestia Island",
+            "items": ["Jumbo Beast Bone", "Bestia Fruit", "Toxic Tulip"]
+        },
+        "Deception's Inception - Episode 4": {
+            "map": "Bestia Island",
+            "items": ["Jumbo Beast Bone", "Bestia Fruit", "Toxic Tulip"]
+        },
+        "Be All You Can Be": {
+            "map": "Reiche Island",
+            "items": ["Rhem Pepper", "Rusty Eave", "Translucent Silk"]
+        },
+        "Once Lost, Once Found": {
+            "map": "Starke Island",
+            "items": ["Broken Teacup", "Dusty Book"]
+        },
+        "A Girl Named Mika Episode 2": {
+            "map": "The Edgelands",
+            "items": ["Malignaherb", "Converging Rays"]
+        },
+        "House of Happiness": {
+            "map": "New Utopia",
+            "items": ["Converging Rays", "Meditative Sutra", "Jumbo Beast Bone"]
         }
     },
     "Special": {
