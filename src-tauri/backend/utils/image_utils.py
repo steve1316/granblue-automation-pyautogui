@@ -350,14 +350,12 @@ class ImageUtils:
         return False
 
     @staticmethod
-    def find_summon(summon_list: List[str], summon_element_list: List[str], home_button_x: int, home_button_y: int, custom_confidence: float = 0.8, suppress_error: bool = False):
+    def find_summon(summon_list: List[str], summon_element_list: List[str], custom_confidence: float = 0.8, suppress_error: bool = False):
         """Find the location of the specified Summon. Will attempt to scroll the screen down to see more Summons if the initial screen position yielded no matches.
 
         Args:
             summon_list (List[str]): List of names of the Summon image's file name in /images/summons/ folder.
             summon_element_list (List[str]): List of names of the Summon element image file in the /images/buttons/ folder.
-            home_button_x (int): X coordinate of where the center of the Home Button is.
-            home_button_y (int): Y coordinate of where the center of the Home Button is.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
             suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
 
@@ -372,6 +370,10 @@ class ImageUtils:
 
         last_summon_element = ""
         summon_index = 0
+        # Find the home button.
+        home_button = ImageUtils.find_button("home", bypass_general_adjustment = True)
+        if home_button is None:
+            raise Exception("Unable to start Summon Selection process by not finding the Home button.")
 
         # Make sure that the bot is at the Summon Selection screen.
         tries = 10

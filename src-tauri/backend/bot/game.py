@@ -314,7 +314,7 @@ class Game:
         for idx, summon_ele in enumerate(summon_element_list):
             summon_element_list[idx] = summon_ele.lower()
 
-        summon_location = ImageUtils.find_summon(summon_list, summon_element_list, Settings.home_button_location[0], Settings.home_button_location[1])
+        summon_location = ImageUtils.find_summon(summon_list, summon_element_list)
         if summon_location is not None:
             MouseUtils.move_and_click_point(summon_location[0], summon_location[1], "template_support_summon", mouse_clicks = 2)
 
