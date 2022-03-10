@@ -1079,6 +1079,102 @@
         "Dimensional Riftwalker": {
             "map": "Zone Harbinger",
             "items": ["Star Idean"]
+        },
+        "Infernal Hellbeast": {
+            "map": "Zone Invidia",
+            "items": ["Repeated Runs"]
+        },
+        "Spikeball": {
+            "map": "Zone Invidia",
+            "items": ["Repeated Runs"]
+        },
+        "Blushing Groom": {
+            "map": "Zone Invidia",
+            "items": ["Repeated Runs"]
+        },
+        "Unworldly Guardian": {
+            "map": "Zone Invidia",
+            "items": ["Repeated Runs"]
+        },
+        "Deva of Wisdom": {
+            "map": "Zone Invidia",
+            "items": ["Repeated Runs"]
+        },
+        "Sword of Aberration": {
+            "map": "Zone Invidia",
+            "items": ["Repeated Runs"]
+        },
+        "Glacial Hellbeast": {
+            "map": "Zone Joculator",
+            "items": ["Repeated Runs"]
+        },
+        "Giant Sea Plant": {
+            "map": "Zone Joculator",
+            "items": ["Repeated Runs"]
+        },
+        "Maiden of the Depths": {
+            "map": "Zone Joculator",
+            "items": ["Repeated Runs"]
+        },
+        "Bloody Soothsayer": {
+            "map": "Zone Joculator",
+            "items": ["Repeated Runs"]
+        },
+        "Nebulous One": {
+            "map": "Zone Joculator",
+            "items": ["Repeated Runs"]
+        },
+        "Dreadful Scourge": {
+            "map": "Zone Joculator",
+            "items": ["Repeated Runs"]
+        },
+        "Bedeviled Plague": {
+            "map": "Zone Kalendae",
+            "items": ["Repeated Runs"]
+        },
+        "Tainted Hellmaiden": {
+            "map": "Zone Kalendae",
+            "items": ["Repeated Runs"]
+        },
+        "Watcher from Above": {
+            "map": "Zone Kalendae",
+            "items": ["Repeated Runs"]
+        },
+        "Scintillant Matter": {
+            "map": "Zone Kalendae",
+            "items": ["Repeated Runs"]
+        },
+        "Ebony Executioner": {
+            "map": "Zone Kalendae",
+            "items": ["Repeated Runs"]
+        },
+        "Hellbeast of Doom": {
+            "map": "Zone Liber",
+            "items": ["Repeated Runs"]
+        },
+        "Mounted Toxophilite": {
+            "map": "Zone Kalendae",
+            "items": ["Repeated Runs"]
+        },
+        "Beetle of Damnation": {
+            "map": "Zone Kalendae",
+            "items": ["Repeated Runs"]
+        },
+        "Ageless Guardian Beast": {
+            "map": "Zone Kalendae",
+            "items": ["Repeated Runs"]
+        },
+        "Solar Princess": {
+            "map": "Zone Kalendae",
+            "items": ["Repeated Runs"]
+        },
+        "Drifting Blade Demon": {
+            "map": "Zone Kalendae",
+            "items": ["Repeated Runs"]
+        },
+        "Simpering Beast": {
+            "map": "Zone Kalendae",
+            "items": ["Repeated Runs"]
         }
     },
     "Generic": {
