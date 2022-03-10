@@ -19,7 +19,10 @@ class ArcarumSandbox:
 
     _first_run: bool = True
 
+    # The x and y coordinates are the difference between the center of the Menu button at the top-right and the center of the node itself.
+    # The section refers to the left most page that the node is located in starting at page 0.
     _mission_data = {
+        ##########
         # Zone Eletio
         "Slithering Seductress": {
             "section": 0,
@@ -67,6 +70,7 @@ class ArcarumSandbox:
             "y": 295
         },
 
+        ##########
         # Zone Faym
         "Trident Grandmaster": {
             "section": 0,
@@ -114,6 +118,7 @@ class ArcarumSandbox:
             "y": 215
         },
 
+        ##########
         # Zone Goliath
         "Avatar of Avarice": {
             "section": 0,
@@ -161,6 +166,7 @@ class ArcarumSandbox:
             "y": 260
         },
 
+        ##########
         # Zone Harbinger
         "Vengeful Demigod": {
             "section": 0,
@@ -206,7 +212,141 @@ class ArcarumSandbox:
             "section": 2,
             "x": 115,
             "y": 245
-        }
+        },
+
+        # 510, 135
+
+        ##########
+        # Zone Invidia
+        "Infernal Hellbeast": {
+            "section": 0,
+            "x": 350,
+            "y": 215
+        },
+        "Spikeball": {
+            "section": 0,
+            "x": 115,
+            "y": 260
+        },
+        "Blushing Groom": {
+            "section": 0,
+            "x": 45,
+            "y": 185
+        },
+        "Unworldly Guardian": {
+            "section": 1,
+            "x": 290,
+            "y": 260
+        },
+        "Deva of Wisdom": {
+            "section": 1,
+            "x": 185,
+            "y": 130
+        },
+        "Sword of Aberration": {
+            "section": 1,
+            "x": 170,
+            "y": 220
+        },
+
+        ##########
+        # Zone Joculator
+        "Glacial Hellbeast": {
+            "section": 0,
+            "x": 50,
+            "y": 90
+        },
+        "Giant Sea Plant": {
+            "section": 0,
+            "x": 375,
+            "y": 280
+        },
+        "Maiden of the Depths": {
+            "section": 0,
+            "x": 145,
+            "y": 340
+        },
+        "Bloody Soothsayer": {
+            "section": 1,
+            "x": 145,
+            "y": 340
+        },
+        "Nebulous One": {
+            "section": 1,
+            "x": 30,
+            "y": 280
+        },
+        "Dreadful Scourge": {
+            "section": 1,
+            "x": 240,
+            "y": 140
+        },
+
+        ##########
+        # Zone Kalendae
+        "Bedeviled Plague": {
+            "section": 1,
+            "x": 300,
+            "y": 180
+        },
+        "Tainted Hellmaiden": {
+            "section": 1,
+            "x": 100,
+            "y": 340
+        },
+        "Watcher from Above": {
+            "section": 1,
+            "x": 20,
+            "y": 215
+        },
+        "Scintillant Matter": {
+            "section": 0,
+            "x": 365,
+            "y": 245
+        },
+        "Ebony Executioner": {
+            "section": 0,
+            "x": 250,
+            "y": 145
+        },
+        "Hellbeast of Doom": {
+            "section": 0,
+            "x": 125,
+            "y": 345
+        },
+
+        ##########
+        # Zone Liber
+        "Mounted Toxophilite": {
+            "section": 0,
+            "x": 225,
+            "y": 145
+        },
+        "Beetle of Damnation": {
+            "section": 0,
+            "x": 230,
+            "y": 345
+        },
+        "Ageless Guardian Beast": {
+            "section": 0,
+            "x": 120,
+            "y": 250
+        },
+        "Solar Princess": {
+            "section": 1,
+            "x": 330,
+            "y": 265
+        },
+        "Drifting Blade Demon": {
+            "section": 1,
+            "x": 225,
+            "y": 150
+        },
+        "Simpering Beast": {
+            "section": 1,
+            "x": 220,
+            "y": 335
+        },
     }
 
     @staticmethod
@@ -303,7 +443,6 @@ class ArcarumSandbox:
             Game.find_and_click_button("arcarum_sandbox_banner")
 
         # Move to the Zone that the user's mission is at.
-        navigation_check = False
         if Settings.map_name == "Zone Eletio":
             navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_eletio")
         elif Settings.map_name == "Zone Faym":
@@ -312,6 +451,14 @@ class ArcarumSandbox:
             navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_goliath")
         elif Settings.map_name == "Zone Harbinger":
             navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_harbinger")
+        elif Settings.map_name == "Zone Invidia":
+            navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_invidia")
+        elif Settings.map_name == "Zone Joculator":
+            navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_joculator")
+        elif Settings.map_name == "Zone Kalendae":
+            navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_kalendae")
+        elif Settings.map_name == "Zone Liber":
+            navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_liber")
         else:
             raise ArcarumSandboxException("Invalid map name provided for Arcarum Replicard Sandbox navigation.")
 
