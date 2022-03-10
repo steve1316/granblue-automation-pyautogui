@@ -106,98 +106,185 @@
         }
     },
     "Special": {
-        "N Scarlet Trial": {
-            "map": "Basic Treasure Quests",
-            "items": ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb", "Inferno Orb", "Frost Orb", "Rumbling Orb", "Cyclone Orb", "Shining Orb", "Abysm Orb"]
-        },
-        "H Scarlet Trial": {
-            "map": "Basic Treasure Quests",
-            "items": ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb", "Inferno Orb", "Frost Orb", "Rumbling Orb", "Cyclone Orb", "Shining Orb", "Abysm Orb"]
-        },
-        "VH Scarlet Trial": {
-            "map": "Basic Treasure Quests",
-            "items": ["Fire Orb", "Water Orb", "Earth Orb", "Wind Orb", "Light Orb", "Dark Orb", "Inferno Orb", "Frost Orb", "Rumbling Orb", "Cyclone Orb", "Shining Orb", "Abysm Orb"]
-        },
-        "N Cerulean Trial": {
-            "map": "Basic Treasure Quests",
+        "N Fire Trial": {
+            "map": "Uncap Treasure Quests",
             "items": [
+                "Fire Orb",
+                "Inferno Orb",
                 "Red Tome",
-                "Blue Tome",
-                "Brown Tome",
-                "Green Tome",
-                "White Tome",
-                "Black Tome",
                 "Hellfire Scroll",
-                "Flood Scroll",
-                "Thunder Scroll",
-                "Gale Scroll",
-                "Skylight Scroll",
-                "Chasm Scroll",
                 "Infernal Whorl",
-                "Tidal Whorl",
-                "Seismic Whorl",
-                "Tempest Whorl",
-                "Radiant Whorl",
-                "Umbral Whorl"
+                "Prism Chip",
+                "Flawed Prism",
+                "Flawless Prism",
+                "Rainbow Prism",
+                "Red Dragon Scale",
+                "Hellfire Fragment"
             ]
         },
-        "H Cerulean Trial": {
-            "map": "Basic Treasure Quests",
+        "H Fire Trial": {
+            "map": "Uncap Treasure Quests",
             "items": [
+                "Fire Orb",
+                "Inferno Orb",
                 "Red Tome",
-                "Blue Tome",
-                "Brown Tome",
-                "Green Tome",
-                "White Tome",
-                "Black Tome",
                 "Hellfire Scroll",
-                "Flood Scroll",
-                "Thunder Scroll",
-                "Gale Scroll",
-                "Skylight Scroll",
-                "Chasm Scroll",
                 "Infernal Whorl",
-                "Tidal Whorl",
-                "Seismic Whorl",
-                "Tempest Whorl",
-                "Radiant Whorl",
-                "Umbral Whorl"
+                "Prism Chip",
+                "Flawed Prism",
+                "Flawless Prism",
+                "Rainbow Prism",
+                "Red Dragon Scale",
+                "Hellfire Fragment"
             ]
         },
-        "VH Cerulean Trial": {
-            "map": "Basic Treasure Quests",
+        "VH Fire Trial": {
+            "map": "Uncap Treasure Quests",
             "items": [
+                "Fire Orb",
+                "Inferno Orb",
                 "Red Tome",
-                "Blue Tome",
-                "Brown Tome",
-                "Green Tome",
-                "White Tome",
-                "Black Tome",
                 "Hellfire Scroll",
-                "Flood Scroll",
-                "Thunder Scroll",
-                "Gale Scroll",
-                "Skylight Scroll",
-                "Chasm Scroll",
                 "Infernal Whorl",
-                "Tidal Whorl",
-                "Seismic Whorl",
-                "Tempest Whorl",
-                "Radiant Whorl",
-                "Umbral Whorl"
+                "Prism Chip",
+                "Flawed Prism",
+                "Flawless Prism",
+                "Rainbow Prism",
+                "Red Dragon Scale",
+                "Hellfire Fragment"
             ]
         },
-        "N Violet Trial": {
-            "map": "Basic Treasure Quests",
-            "items": ["Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism"]
+        "N Water Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": ["Water Orb", "Frost Orb", "Blue Tome", "Flood Scroll", "Tidal Whorl", "Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism", "Blue Dragon Scale", "Deluge Fragment"]
         },
-        "H Violet Trial": {
-            "map": "Basic Treasure Quests",
-            "items": ["Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism"]
+        "H Water Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": ["Water Orb", "Frost Orb", "Blue Tome", "Flood Scroll", "Tidal Whorl", "Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism", "Blue Dragon Scale", "Deluge Fragment"]
         },
-        "VH Violet Trial": {
-            "map": "Basic Treasure Quests",
-            "items": ["Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism"]
+        "VH Water Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": ["Water Orb", "Frost Orb", "Blue Tome", "Flood Scroll", "Tidal Whorl", "Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism", "Blue Dragon Scale", "Deluge Fragment"]
+        },
+        "N Earth Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": [
+                "Earth Orb",
+                "Rumbling Orb",
+                "Brown Tome",
+                "Thunder Scroll",
+                "Seismic Whorl",
+                "Prism Chip",
+                "Flawed Prism",
+                "Flawless Prism",
+                "Rainbow Prism",
+                "Brown Dragon Scale",
+                "Wasteland Fragment"
+            ]
+        },
+        "H Earth Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": [
+                "Earth Orb",
+                "Rumbling Orb",
+                "Brown Tome",
+                "Thunder Scroll",
+                "Seismic Whorl",
+                "Prism Chip",
+                "Flawed Prism",
+                "Flawless Prism",
+                "Rainbow Prism",
+                "Brown Dragon Scale",
+                "Wasteland Fragment"
+            ]
+        },
+        "VH Earth Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": [
+                "Earth Orb",
+                "Rumbling Orb",
+                "Brown Tome",
+                "Thunder Scroll",
+                "Seismic Whorl",
+                "Prism Chip",
+                "Flawed Prism",
+                "Flawless Prism",
+                "Rainbow Prism",
+                "Brown Dragon Scale",
+                "Wasteland Fragment"
+            ]
+        },
+        "N Wind Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": [
+                "Wind Orb",
+                "Cyclone Orb",
+                "Green Tome",
+                "Gale Scroll",
+                "Tempest Whorl",
+                "Prism Chip",
+                "Flawed Prism",
+                "Flawless Prism",
+                "Rainbow Prism",
+                "Green Dragon Scale",
+                "Typhoon Fragment"
+            ]
+        },
+        "H Wind Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": [
+                "Wind Orb",
+                "Cyclone Orb",
+                "Green Tome",
+                "Gale Scroll",
+                "Tempest Whorl",
+                "Prism Chip",
+                "Flawed Prism",
+                "Flawless Prism",
+                "Rainbow Prism",
+                "Green Dragon Scale",
+                "Typhoon Fragment"
+            ]
+        },
+        "VH Wind Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": [
+                "Wind Orb",
+                "Cyclone Orb",
+                "Green Tome",
+                "Gale Scroll",
+                "Tempest Whorl",
+                "Prism Chip",
+                "Flawed Prism",
+                "Flawless Prism",
+                "Rainbow Prism",
+                "Green Dragon Scale",
+                "Typhoon Fragment"
+            ]
+        },
+        "N Light Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": ["Light Orb", "Shining Orb", "White Tome", "Skylight Scroll", "Radiant Whorl", "Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism", "White Dragon Scale"]
+        },
+        "H Light Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": ["Light Orb", "Shining Orb", "White Tome", "Skylight Scroll", "Radiant Whorl", "Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism", "White Dragon Scale"]
+        },
+        "VH Light Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": ["Light Orb", "Shining Orb", "White Tome", "Skylight Scroll", "Radiant Whorl", "Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism", "White Dragon Scale"]
+        },
+        "N Dark Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": ["Dark Orb", "Abysm Orb", "Black Tome", "Chasm Scroll", "Umbral Whorl", "Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism", "Black Dragon Scale"]
+        },
+        "H Dark Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": ["Dark Orb", "Abysm Orb", "Black Tome", "Chasm Scroll", "Umbral Whorl", "Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism", "Black Dragon Scale"]
+        },
+        "VH Dark Trial": {
+            "map": "Uncap Treasure Quests",
+            "items": ["Dark Orb", "Abysm Orb", "Black Tome", "Chasm Scroll", "Umbral Whorl", "Prism Chip", "Flawed Prism", "Flawless Prism", "Rainbow Prism", "Black Dragon Scale"]
         },
         "N Shiny Slime Search!": {
             "map": "Shiny Slime Search!",
@@ -210,18 +297,6 @@
         "VH Shiny Slime Search!": {
             "map": "Shiny Slime Search!",
             "items": ["EXP"]
-        },
-        "N Six Dragon Trial": {
-            "map": "Six Dragon Trial",
-            "items": ["Red Dragon Scale", "Blue Dragon Scale", "Brown Dragon Scale", "Green Dragon Scale", "White Dragon Scale", "Black Dragon Scale"]
-        },
-        "H Six Dragon Trial": {
-            "map": "Six Dragon Trial",
-            "items": ["Red Dragon Scale", "Blue Dragon Scale", "Brown Dragon Scale", "Green Dragon Scale", "White Dragon Scale", "Black Dragon Scale"]
-        },
-        "VH Six Dragon Trial": {
-            "map": "Six Dragon Trial",
-            "items": ["Red Dragon Scale", "Blue Dragon Scale", "Brown Dragon Scale", "Green Dragon Scale", "White Dragon Scale", "Black Dragon Scale"]
         },
         "EX Ifrit Showdown": {
             "map": "Showdowns",
@@ -246,30 +321,6 @@
         "EX Diablo Showdown": {
             "map": "Showdowns",
             "items": ["Twilight Cloth Strip", "Shadow Silver", "Phantom Demon Jewel", "Diablo Anima", "Diablo Omega Anima"]
-        },
-        "The Hellfire Trial": {
-            "map": "Elemental Treasure Quests",
-            "items": ["Hellfire Fragment"]
-        },
-        "The Deluge Trial": {
-            "map": "Elemental Treasure Quests",
-            "items": ["Deluge Fragment"]
-        },
-        "The Wasteland Trial": {
-            "map": "Elemental Treasure Quests",
-            "items": ["Wasteland Fragment"]
-        },
-        "The Typhoon Trial": {
-            "map": "Elemental Treasure Quests",
-            "items": ["Typhoon Fragment"]
-        },
-        "The Aurora Trial": {
-            "map": "Elemental Treasure Quests",
-            "items": ["Hellfire Fragment", "Typhoon Fragment"]
-        },
-        "The Oblivion Trial": {
-            "map": "Elemental Treasure Quests",
-            "items": ["Deluge Fragment", "Wasteland Fragment"]
         },
         "N Angel Halo": {
             "map": "Angel Halo",
