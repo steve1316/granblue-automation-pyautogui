@@ -276,64 +276,6 @@ const ExtraSettings = () => {
         )
     }
 
-    const renderRefillSettings = () => {
-        return (
-            <div id="refill">
-                <Typography variant="h6" gutterBottom component="div" className="sectionTitle">
-                    Refill Settings <Iconify icon="ion:flask" className="sectionTitleIcon" />
-                </Typography>
-
-                <Divider />
-
-                <FormGroup>
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={bot.settings.configuration.enableAutoRestore}
-                                onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableAutoRestore: e.target.checked } })}
-                            />
-                        }
-                        label="Enable Auto-Restore"
-                    />
-                    <FormHelperText>
-                        Enable this option if you have already set the "Auto-Restore Notification Settings" to "Hide" in the game settings. It will shave off about 10 seconds every run. If enabled,
-                        the following two options below are ignored.
-                    </FormHelperText>
-                </FormGroup>
-
-                {!bot.settings.configuration.enableAutoRestore ? (
-                    <div>
-                        <FormGroup>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bot.settings.configuration.enableFullElixir}
-                                        onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableFullElixir: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable Full Elixirs"
-                            />
-                            <FormHelperText>Enable usage of full elixirs when refilling AP.</FormHelperText>
-                        </FormGroup>
-
-                        <FormGroup>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bot.settings.configuration.enableSoulBalm}
-                                        onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableSoulBalm: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable Soul Balms"
-                            />
-                            <FormHelperText>Enable usage of soul balms when refilling EP.</FormHelperText>
-                        </FormGroup>
-                    </div>
-                ) : null}
-            </div>
-        )
-    }
-
     // Render settings for Configuration.
     const renderConfigurationSettings = () => {
         return (
@@ -913,8 +855,6 @@ const ExtraSettings = () => {
                     {renderTwitterSettings()}
 
                     {renderDiscordSettings()}
-
-                    {renderRefillSettings()}
 
                     {renderConfigurationSettings()}
 
