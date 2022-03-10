@@ -126,21 +126,33 @@ class Special:
 
                         Game.wait(1)
 
-                        if Settings.map_name == "Basic Treasure Quests":
+                        if Settings.map_name == "Uncap Treasure Quests":
                             locations = ImageUtils.find_all("play_round_button")
 
-                            if formatted_mission_name == "Scarlet Trial":
+                            if formatted_mission_name == "Fire Trial":
                                 # Navigate to Scarlet Trial.
-                                MessageLog.print_message(f"[SPECIAL] Selecting Scarlet Trial...")
+                                MessageLog.print_message(f"[SPECIAL] Selecting Fire Trial...")
                                 MouseUtils.move_and_click_point(locations[0][0], locations[0][1], "play_round_button")
-                            elif formatted_mission_name == "Cerulean Trial":
+                            elif formatted_mission_name == "Water Trial":
                                 # Navigate to Cerulean Trial.
-                                MessageLog.print_message(f"[SPECIAL] Selecting Cerulean Trial...")
+                                MessageLog.print_message(f"[SPECIAL] Selecting Water Trial...")
                                 MouseUtils.move_and_click_point(locations[1][0], locations[1][1], "play_round_button")
-                            elif formatted_mission_name == "Violet Trial":
+                            elif formatted_mission_name == "Earth Trial":
                                 # Navigate to Violet Trial.
-                                MessageLog.print_message(f"[SPECIAL] Selecting Violet Trial...")
+                                MessageLog.print_message(f"[SPECIAL] Selecting Earth Trial...")
                                 MouseUtils.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
+                            elif formatted_mission_name == "Wind Trial":
+                                # Navigate to Violet Trial.
+                                MessageLog.print_message(f"[SPECIAL] Selecting Wind Trial...")
+                                MouseUtils.move_and_click_point(locations[3][0], locations[3][1], "play_round_button")
+                            elif formatted_mission_name == "Light Trial":
+                                # Navigate to Violet Trial.
+                                MessageLog.print_message(f"[SPECIAL] Selecting Light Trial...")
+                                MouseUtils.move_and_click_point(locations[4][0], locations[4][1], "play_round_button")
+                            elif formatted_mission_name == "Dark Trial":
+                                # Navigate to Violet Trial.
+                                MessageLog.print_message(f"[SPECIAL] Selecting Dark Trial...")
+                                MouseUtils.move_and_click_point(locations[5][0], locations[5][1], "play_round_button")
 
                             Game.wait(1)
 
@@ -166,36 +178,6 @@ class Special:
                                 MouseUtils.move_and_click_point(locations[1][0], locations[1][1], "play_round_button")
                             elif difficulty == "Very Hard":
                                 MouseUtils.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
-
-                        elif Settings.map_name == "Six Dragon Trial":
-                            # Start up the Six Dragon Trial mission by selecting its difficulty.
-                            MessageLog.print_message(f"[SPECIAL] Selecting {difficulty} Six Dragon Trial...")
-                            locations = ImageUtils.find_all("play_round_button")
-
-                            if difficulty == "Normal":
-                                MouseUtils.move_and_click_point(locations[0][0], locations[0][1], "play_round_button")
-                            elif difficulty == "Hard":
-                                MouseUtils.move_and_click_point(locations[1][0], locations[1][1], "play_round_button")
-                            elif difficulty == "Very Hard":
-                                MouseUtils.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
-
-                        elif Settings.map_name == "Elemental Treasure Quests":
-                            # Start up the specified Elemental Treasure Quest mission.
-                            MessageLog.print_message(f"[SPECIAL] Selecting {Settings.mission_name}...")
-                            locations = ImageUtils.find_all("play_round_button")
-
-                            if formatted_mission_name == "The Hellfire Trial":
-                                MouseUtils.move_and_click_point(locations[0][0], locations[0][1], "play_round_button")
-                            elif formatted_mission_name == "The Deluge Trial":
-                                MouseUtils.move_and_click_point(locations[1][0], locations[1][1], "play_round_button")
-                            elif formatted_mission_name == "The Wasteland Trial":
-                                MouseUtils.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
-                            elif formatted_mission_name == "The Typhoon Trial":
-                                MouseUtils.move_and_click_point(locations[3][0], locations[3][1], "play_round_button")
-                            elif formatted_mission_name == "The Aurora Trial":
-                                MouseUtils.move_and_click_point(locations[4][0], locations[4][1], "play_round_button")
-                            elif formatted_mission_name == "The Oblivion Trial":
-                                MouseUtils.move_and_click_point(locations[5][0], locations[5][1], "play_round_button")
 
                         elif Settings.map_name == "Showdowns":
                             locations = ImageUtils.find_all("play_round_button")
