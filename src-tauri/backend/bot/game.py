@@ -661,14 +661,6 @@ class Game:
             if check_popup_tries <= 0:
                 raise RuntimeError("Failed to progress in the Check for Popups process...")
 
-            # Break out of the loop if the bot detected that a AP recovery item was automatically used and let check_for_ap() take care of it.
-            if Settings.enabled_auto_restore is False and ImageUtils.confirm_location("auto_ap_recovered", tries = 1) or ImageUtils.confirm_location("auto_ap_recovered2", tries = 1):
-                break
-
-            # Break out of the loop if the bot detected the "Not Enough AP" popup.
-            if Settings.enabled_auto_restore is False and ImageUtils.confirm_location("not_enough_ap", tries = 1):
-                break
-
             if Settings.farming_mode == "Rise of the Beasts" and ImageUtils.confirm_location("proud_solo_quest", tries = 1):
                 # Scroll down the screen a little bit because the popup itself is too long for screen sizes around 1080p.
                 MouseUtils.scroll_screen_from_home_button(-400)

@@ -52,9 +52,6 @@ class Settings:
     # #### end of discord ####
 
     # #### configuration ####
-    enabled_auto_restore: bool = dictor(_data, "configuration.enableAutoRestore", True)
-    use_full_elixir: bool = dictor(_data, "configuration.enableFullElixir", False)
-    use_soul_balm: bool = dictor(_data, "configuration.enableSoulBalm", False)
     enable_bezier_curve_mouse_movement: bool = dictor(_data, "configuration.enableBezierCurveMouseMovement", True)
     custom_mouse_speed: float = float(dictor(_data, "configuration.mouseSpeed", 0.2))
     enable_delay_between_runs: bool = dictor(_data, "configuration.enableDelayBetweenRuns", False)
