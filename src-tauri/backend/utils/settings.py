@@ -114,6 +114,7 @@ class Settings:
 
     # #### event ####
     enable_event_location_incrementation_by_one: bool = dictor(_data, "event.enableLocationIncrementByOne", False)
+    enable_select_bottom_category: bool = dictor(_data, "selectBottomCategory", False)
     # #### end of event ####
 
     # #### raid ####
