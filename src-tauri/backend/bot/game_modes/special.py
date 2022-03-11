@@ -113,7 +113,7 @@ class Special:
                 # Try to select the specified Special mission for a number of tries.
                 while tries != 0:
                     # Scroll the screen down if its any of the Special Quests that are more towards the bottom of the page to alleviate problems for smaller screens.
-                    if Settings.map_name != "Campaign-Exclusive Quest" and Settings.map_name != "Basic Treasure Quests" and Settings.map_name != "Shiny Slime Search!" and Settings.map_name != "Six Dragon Trial":
+                    if Settings.map_name != "Campaign-Exclusive Quest" and Settings.map_name != "Uncap Treasure Quests" and Settings.map_name != "Shiny Slime Search!":
                         MouseUtils.scroll_screen_from_home_button(-500)
 
                     mission_select_button = ImageUtils.find_button(Settings.map_name.lower().replace(" ", "_").replace("-", "_"))
