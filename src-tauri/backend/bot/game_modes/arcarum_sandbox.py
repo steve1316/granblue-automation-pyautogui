@@ -268,7 +268,7 @@ class ArcarumSandbox:
         },
         "Bloody Soothsayer": {
             "section": 1,
-            "x": 145,
+            "x": 260,
             "y": 340
         },
         "Nebulous One": {
