@@ -412,6 +412,25 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
+                    {botStateContext.settings.game.farmingMode === "Event (Token Drawboxes)" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={botStateContext.settings.event.selectBottomCategory}
+                                        onChange={(e) =>
+                                            botStateContext.setSettings({ ...botStateContext.settings, event: { ...botStateContext.settings.event, selectBottomCategory: e.target.checked } })
+                                        }
+                                    />
+                                }
+                                label="Enable Selecting the Bottom Category"
+                            />
+                            <FormHelperText>
+                                In the event of the raids being split between 2 categories, the bot selects the top category by default. Enable this to select the bottom category instead.
+                            </FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
                     {/* Select Item */}
                     <Autocomplete
                         options={itemList.map((element) => element)}
