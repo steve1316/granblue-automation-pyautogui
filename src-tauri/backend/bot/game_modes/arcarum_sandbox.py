@@ -482,7 +482,7 @@ class ArcarumSandbox:
         Returns:
             None
         """
-        if ImageUtils.confirm_location("aap"):
+        if ImageUtils.confirm_location("aap", tries = 10):
             from bot.game import Game
 
             MessageLog.print_message(f"\n[ARCARUM.SANDBOX] Bot ran out of AAP. Refilling now...")
