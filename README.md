@@ -1,13 +1,21 @@
 # Granblue Automation using Template Matching (It is like Full Auto, but with Full Customization!)
-![GitHub commit activity](https://img.shields.io/github/commit-activity/m/steve1316/granblue-automation-pyautogui?logo=GitHub) ![GitHub last commit](https://img.shields.io/github/last-commit/steve1316/granblue-automation-pyautogui?logo=GitHub) ![GitHub issues](https://img.shields.io/github/issues/steve1316/granblue-automation-pyautogui?logo=GitHub) ![GitHub pull requests](https://img.shields.io/github/issues-pr/steve1316/granblue-automation-pyautogui?logo=GitHub) ![GitHub](https://img.shields.io/github/license/steve1316/gfl-database?logo=GitHub)
 
-This Python application is designed for educational research purposes on studying how to automate certain workflows via image template matching using PyAutoGUI and GuiBot. PyAutoGUI accomplishes this by taking over the mouse, hence why it is recommended to run this on a separate machine than the one that you use daily. This can be circumvented by running this on a virtual machine like VMWare Workstation Player so you can keep using your main computer without interruption.
+![GitHub commit activity](https://img.shields.io/github/commit-activity/m/steve1316/granblue-automation-pyautogui?logo=GitHub) ![GitHub last commit](https://img.shields.io/github/last-commit/steve1316/granblue-automation-pyautogui?logo=GitHub) ![GitHub issues](https://img.shields.io/github/issues/steve1316/granblue-automation-pyautogui?logo=GitHub) ![GitHub pull requests](https://img.shields.io/github/issues-pr/steve1316/granblue-automation-pyautogui?logo=GitHub) ![GitHub](https://img.shields.io/github/license/steve1316/granblue-automation-pyautogui?logo=GitHub)
 
-Screenshots are taken and cropped for PyAutoGUI to perform image template matching. This will determine where the bot is currently at and will inform the bot on what to do next from there. Should PyAutoGUI fail to template match, GuiBot will take over. I have found that on default settings, GuiBot performs admirably well compared to PyAutoGUI in terms of template matching.
+> Discord here: https://discord.gg/5Yv4kqjAbm
+
+> Android version here: https://github.com/steve1316/granblue-automation-android
+
+https://user-images.githubusercontent.com/18709555/143183561-f6296c1b-350b-4a34-b262-294be3888fae.mp4
+
+This Python application is designed for educational research purposes on studying how to automate certain workflows via image template matching using OpenCV. The application uses PyAutoGUI for direct mouse control, hence why it is recommended to run this on a separate machine than the one that you use daily. This can be circumvented by running this on a virtual machine like VMWare Workstation Player so you can keep using your main computer without interruption.
+
+Screenshots are taken and cropped by PyAutoGUI for OpenCV to perform image template matching. This will determine where the bot is currently at and will inform the bot on what to do next from there.
 
 There is a feature already in-game that can automate gameplay called "Semi/Full Auto" but does not offer any way to customize what each character does on a turn-by-turn basis. This program's primary goal is to provide that customization. Users can create their own combat scripts using predefined case-insensitive keywords and can indicate which turns the bot will execute their script, somewhat akin to constructing pseudocode.
 
 For example:
+
 ```
 // This is a comment. The bot will ignore this line.
 # This is also a comment.
@@ -32,132 +40,138 @@ exit
 
 ```
 
----
-### How to create my own Combat Script?
-- Visit the [Combat Scripting Documentation and Examples wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Combat-Scripting-Documentation-and-Examples) for combat scripting usage and examples.
----
-### What Missions/Items/Summons are supported?
-- Vist the [List of Supported Quests, Special, Coop, Raid, Event, and Dread Barrage Missions and their Farmable Items wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/List-of-Supported-Quests,-Special,-Coop,-Raid,-Event,-and-Dread-Barrage-Missions-and-their-Farmable-Items) for supported content.
-- Vist the [Selectable Summons wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons) for available Summons.
----
+## Disclaimer
+
+By downloading this program, you consent to your account potentially getting flagged for excessive amounts of farming for multiple hours straight and banned in the next banwave by KMR. I hold no responsibility for how much or how long you use this program for. I trust you have the self-control necessary to only farm in reasonable bursts of time with breaks in between and to always be alert for when the bot encounters the CAPTCHA.
 
 # Table of Contents
-- [Features](<#Features>)
-- [Requirements](<#Requirements>)
-  - [Python Dependencies](<##Python-Dependencies-(make-sure-to-have-these-installed-before-moving-on-to-the-instructions)>)
-- [Instructions](<#Instructions>)
-  - [How to create a Combat Script](<###How-to-create-my-own-Combat-Script>)
-  - [How to farm Raids](<#Instructions-for-the-Raid-component-of-this-application-(optional,-only-if-you-want-to-farm-Raids)>)
-  - [Virtualization](<#Instructions-on-how-to-get-this-working-on-VMWare-Workstation-Player-or-a-similar-virtual-machine>)
-- [Wiki](<#Wiki>)
-- [Technologies used](<#Technologies-Used>)
 
-## Disclaimer
-By downloading this program, you consent to your account potentially getting flagged for excessive farming and banned in the next banwave by KMR. I hold no responsibility for how much you use this program for. I trust you have the self-control necessary to only farm in reasonable bursts of time.
+-   [Features](#features)
+-   [Wiki](#wiki)
+-   [Requirements](#requirements)
+    -   [Python Dependencies (make sure to have these installed before moving on to the instructions)](#python-dependencies-make-sure-to-have-these-installed-before-moving-on-to-the-instructions)
+-   [Instructions](#instructions)
+    -   [Instructions to set up Discord integration](#instructions-to-set-up-discord-integration)
+    -   [How to create my own Combat Script?](#how-to-create-my-own-combat-script)
+    -   [What Missions/Items/Summons are supported?](#what-missionsitemssummons-are-supported)
+    -   [Instructions for farming Raids (optional, only if you want to farm Raids)](#instructions-for-farming-raids-optional-only-if-you-want-to-farm-raids)
+    -   [Virtual Machine Setup (optional)](#virtual-machine-setup-optional)
+-   [Technologies Used](#technologies-used)
 
 # Features
-- [x] Customize what skills to use during each turn in a user-created plan. Users can select which plan to use when starting the bot.
-- [x] A launchable GUI to keep track of logs and selecting what combat script to use.
-- [x] Farm user-defined amounts of specified materials from Quest, Coop, Raid, Event, etc.
-- [x] A user-defined timer for how long the bot should run for.
-- [x] Support for Quest farming.
-- [x] Support for Coop farming.
-- [x] Support for Raid farming.
-  - [x] Grab room codes from specified raids using user-created Twitter Developer account to connect to their API to scrape user tweets.
-  - [x] Alert for when anti-bot CAPTCHA pops up.
-- [x] Support for Event farming.
-- [ ] (ON HOLD) Support for Guild Wars farming. (This is pending a re-run in April)
-- [ ] (ON HOLD) Support for Rise of the Beasts farming. (This is pending a re-run at an unknown date)
-- [x] Support for Dread Barrage farming.
-- [ ] Support for Arcarum (currently unknown as to whether I will tackle this. This has to come after I finish the rest of the planned features for me to consider this)
+
+-   [x] Customize what skills to use during each turn in a user-created plan. Users can select which plan to use when starting the bot.
+-   [x] A launchable GUI to keep track of logs, adjust settings and selecting what combat script to use.
+-   [x] Farm user-defined amounts of specified materials from the supported Farming Modes.
+-   [x] A user-defined timer for how long the bot should run for.
+-   [x] Support for the following game modes:
+    -   [x] Quest
+    -   [x] Special
+    -   [x] Coop
+    -   [x] Raid
+    -   [x] Event
+    -   [x] Guild Wars
+    -   [x] Rise of the Beasts
+    -   [x] Dread Barrage
+    -   [x] Proving Grounds
+    -   [x] Xeno Clash
+    -   [x] Arcarum
+    -   [x] Replicard Sandbox Part 1
+    -   [x] Replicard Sandbox Part 2
+-   [x] Alert for when anti-bot CAPTCHA pops up.
+-   [x] Discord integration for informing you of status updates like loot drops via private DMs.
+
+# Wiki
+
+Visit the [Wiki here](https://github.com/steve1316/granblue-automation-pyautogui/wiki) for detailed documentation and examples.
 
 # Requirements
-1. [Python 3.8.3+](https://www.python.org/downloads/release/python-383/)
+
+1. [Python 3.8.3 (any version higher than this breaks PyTorch)](https://www.python.org/downloads/release/python-383/)
 2. [Granblue Fantasy account](http://game.granbluefantasy.jp/)
 3. [Twitter Developer account (optional, needed to farm Raids)](https://developer.twitter.com/en)
 4. [VMware Workstation Player (optional, if your computer is strong enough to support virtualization)](https://www.vmware.com/products/workstation-player.html)
+5. `New frontend requirement` [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (Windows 11 comes with this by default. Failure to install this leads to nothing showing up on the screen when the executable is launched.)
+6. `New frontend requirement` [Microsoft Visual C++ 2015-2019 Redistibutable (x64)](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
 
 ## Python Dependencies (make sure to have these installed before moving on to the instructions)
+
 ```
-# Execute this command in a terminal opened in the project folder to install all of these requirements.
+# Execute this command in a terminal opened inside the /backend/ folder to install all of these requirements:
 
 pip install -r requirements.txt
 ```
-- [PyTorch 1.7.1](https://pytorch.org/) (Installing the CUDA version will improve the speed of template matching if you have a CUDA-compatible GPU)
-- [GuiBot 0.41.1+](https://pypi.org/project/guibot/)
-- [PyAutoGUI 0.9.52+](https://pypi.org/project/PyAutoGUI/)
-- [EasyOCR 1.2.1+](https://pypi.org/project/easyocr/)
-- [PySide2 5.15.2+](https://pypi.org/project/PySide2/)
-- [PyYAML 5.3.1+](https://pypi.org/project/PyYAML/)
-- [autopy 4.0.0+](https://pypi.org/project/autopy/)
-- [tweepy 3.10.0+](https://pypi.org/project/tweepy)
+
+-   [PyTorch 1.7.1](https://pytorch.org/) (Installing the CUDA version will improve the speed of template matching if you have a CUDA-compatible GPU)
+-   [PyAutoGUI 0.9.52](https://pypi.org/project/PyAutoGUI/)
+-   [Pillow 8.3.2](https://pypi.org/project/Pillow/)
+-   [opencv-python 4.5.1.48](https://pypi.org/project/opencv-python/)
+-   [EasyOCR 1.2.1](https://pypi.org/project/easyocr/)
+-   [numpy 1.20.2](https://pypi.org/project/numpy/)
+-   [playsound 1.2.2](https://pypi.org/project/playsound/)
+-   [pyclick 0.0.2](https://pypi.org/project/pyclick/)
+-   [pyperclip 1.8.1](https://pypi.org/project/pyperclip/)
+-   [tweepy 3.10.0](https://pypi.org/project/tweepy)
+-   [discord.py 1.7.3](https://pypi.org/project/discord.py/)
+-   [dictor 0.1.9](https://github.com/perfecto25/dictor)
 
 # Instructions
+
 1. Download the entire project folder.
-2. Make sure you installed the project dependencies by having Python 3.8.3+ installed and ran `pip install -r requirements.txt` in a terminal.
+2. Make sure you installed the project dependencies by having Python 3.8.3 installed and ran `pip install -r requirements.txt` as stated above.
 3. Open up the game on a Chromium-based browser and log in if you haven't already done so. Click away any daily log in popups until you are at the Main/Home screen.
-4. Now open up the program in the following ways for each OS:
-   - For Windows: Open up the terminal in the root of the project folder and type:
-	```
-	python main.py
-	```
 
-   - For Mac: I do not have a Mac system so I do not know how they invoke python. Please look online on how to do that for yourself.
-5. Continue by following the instructions that are now shown to you by heading to the Settings and fill out each section. At the end, you will be notified when the program is ready to begin.
-6. (Optional) Check out the config.ini in the root of the project folder and see what internal settings you would like to change before starting.
+    1. `[REQUIRED] Make sure the window size is set to this or else the bot will not be able to detect the "Home" button and proceed any further:`
 
-### Instructions for the Raid component of this application (optional, only if you want to farm Raids)
-In order to get a Twitter Developer account, you need a Twitter account. Recommended to use the one bound to your GBF account just to keep it all in one place.
-1. Head to https://developer.twitter.com/en/apply-for-access and click "Apply for a developer account".
-2. Select "Hobbyist" and then "Exploring the API" and click "Get Started".
-3. If you have not already, add a valid phone number to your account. Now fill out the form and select "Some Experience" for your coding experience and then click "Next".
-4. In the first textbox, state your intention on exploring the Twitter API for educational purposes and using what you learned to develop a Python application. You can either craft your own response based on mine below or copy it outright:
+        ![Correct Window Size](src-tauri/images/readme_assets/correct_window_size.png)
 
-`
-I want to develop a Python application for a mobile Japanese game called Granblue Fantasy that uses tweepy and I want to explore what the Twitter Standard API 1.1 has to offer for me. I plan to use what I learn and apply it to the application so that it can search tweets made by users from the game in the past 24 hours based on user-created queries and parse specific text in the tweets. This is for educational purposes only.
-`
+    2. `[REQUIRED] Make sure that BOTH of the Auto Restore settings are enabled in the ingame settings.`
 
-5. Check Yes for "Are you planning to analyze Twitter data?" and either craft your own response based on mine below or copy it outright:
+        ![Auto Restore Settings](src-tauri/images/readme_assets/auto_restore.png)
 
-`
-The application will allow the users to look up tweets made in the past 24 hours while searching for tweets that have specific text or keywords in the tweets. It will then return and display those tweets onto the application's GUI.
-`
+4. Now open up the program executable and follow the onscreen instructions and checking that the Settings page is filled out. You will be informed that the bot is ready to start by the status message at the top of the window.
+    1. `(Optional) Additionally, you can check the Extra Settings page for more general settings like Twitter, Discord and Configuration settings.`
+5. You can now head back to the Home page of the program and hit the "Start" button to begin.
+    1. `Message logs are stored in the /logs/ folder after the bot ends or encounters an error/unexpected situation.`
 
-6. Uncheck the rest of the options and then click "Next".
-7. Accept the "Developer agreement & policy" and click "Submit Application".
-8. Once you verify the email sent to you, either two things will happen:
-   - You get accepted immediately and can get started on Step 9.
-   - You have to wait for Twitter to approve your application.
-9. Once you get accepted, head over to https://developer.twitter.com/en/portal/dashboard and click on "Projects & Apps" on the left sidebar and click on "+ Create App".
-10.  Give a name to your app. For example, mine is called `GBF Battle ID Finder` and click "Complete".
-11.  Now click on "App Settings" at the bottom. Then click on "Keys and tokens" at the top.
-12.  Click "Regenerate" for Consumer Keys and copy the API key and the API key secret into their respective places in config.ini in the root of the project folder. After that, click "Yes, I saved them".
-13.  Now click "Generate" for "Access token & secret". Again, copy these 2 tokens into their respective places in config.ini and after that, click "Yes, I saved them".
-14.  After that, the bot is now ready to access the Twitter API to look for raids.
+## Instructions for farming Raids (optional, only if you want to farm Raids)
+
+-   Visit the [Instructions for Farming Raids wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Instructions-for-Farming-Raids) for setting up Raid farming.
 
 ---
 
-### Instructions on how to get this working on VMWare Workstation Player or a similar virtual machine
-1. Download and install VMWare Workstation Player.
-2. Download a Windows 10 .iso from the official Microsoft website, https://www.microsoft.com/en-us/software-download/windows10
-3. Create a new virtual machine with the following settings:
-	- At least 4096MB of RAM is recommended.
-	- 4 processor cores is recommended.
-	- At least 30GB of space reserved.
-4. Boot up the virtual machine using the Windows 10 .iso and install Windows 10. After that, install VMWare Tools to give the virtual machine full processing capability by going up to Player at the top left and then going to Manage -> Install VMWare Tools. Otherwise, the virtual machine will run choppy.
-5. Set the display resolution to be 1920x1080 or higher. You can set it lower, but I cannot guarantee that it will run smoothly at lower resolutions.
-6. After that, download the project folder into the virtual machine and follow the instructions to start the application.
+## Instructions to set up Discord integration
 
-# Wiki
-Visit https://github.com/steve1316/granblue-automation-pyautogui/wiki for detailed documentation and examples.
+-   Visit the [Instructions for Discord integration wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Instructions-for-Discord-integration) for setting up the program notifying you of status updates like loot drops via private DMs.
+
+---
+
+## How to create my own Combat Script?
+
+-   Visit the [Combat Scripting Documentation and Examples wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Combat-Scripting-Documentation-and-Examples) for combat scripting usage and examples.
+
+---
+
+## What Missions/Items/Summons are supported?
+
+-   Visit the [List of Supported Missions and their Farmable Items wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/List-of-Supported-Missions-and-their-Farmable-Items) for supported content.
+-   Visit the [Selectable Summons wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Selectable-Summons) for available Summons.
+
+---
+
+## Virtual Machine Setup (optional)
+
+-   Visit the [Virtual Machine Setup wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Virtual-Machine-Setup) for setting up a Virtual Machine to run this program on.
 
 # Technologies Used
-1. [Python - The main language](https://www.python.org/)
-2. [Qt - Application development framework for the GUI](https://www.qt.io/product/development-tools)
-3. [PyAutoGUI - For image template matching and mouse control](https://pyautogui.readthedocs.io/en/latest/)
-4. [GuiBot - For image template matching if PyAutoGui fails](https://guibot.readthedocs.io/en/latest/README.html)
-5. [OpenCV-Python - Provides the confidence (accuracy) argument for PyAutoGUI](https://pypi.org/project/opencv-python/)
-6. [EasyOCR - For text recognition and detection](https://github.com/JaidedAI/EasyOCR)
-7. [Twitter Standard API 1.1 - For searching and parsing texts for Raid room codes to join](https://developer.twitter.com/en/docs/twitter-api/v1)
-8. [VMWare Workstation Player - For virtualizing the program to circumvent control of the main cursor](https://www.vmware.com/products/workstation-player.html)
 
+1. [Python - The main language](https://www.python.org/)
+2. [Qt - Application development framework for the GUI (old frontend)](https://www.qt.io/product/development-tools)
+3. [Typescript - Language for the new GUI (new frontend)](https://www.typescriptlang.org/)
+4. [Tauri - Toolkit to transform the Typescript frontend framework into a desktop application](https://tauri.studio/en/)
+5. [PyAutoGUI - Primarily for screenshot capturing and mouse control](https://pyautogui.readthedocs.io/en/latest/)
+6. [pyclick - For making mouse movements human-like via Bezier Curves](https://pypi.org/project/pyclick/)
+7. [OpenCV-Python - Image template matching](https://pypi.org/project/opencv-python/)
+8. [EasyOCR - For text recognition and detection](https://github.com/JaidedAI/EasyOCR)
+9. [Twitter Standard API 1.1 - For searching and parsing texts for Raid room codes to join](https://developer.twitter.com/en/docs/twitter-api/v1)
+10. [VMWare Workstation Player - For virtualizing the program to circumvent control of the main cursor](https://www.vmware.com/products/workstation-player.html)

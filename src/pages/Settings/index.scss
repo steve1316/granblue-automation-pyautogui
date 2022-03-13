@@ -1,0 +1,65 @@
+.settingsContainer {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+
+    // Set the animated svg background with the appropriate settings to keep it centered.
+    background: url("./bg.svg") no-repeat center center fixed;
+    background-size: cover;
+
+    // This assists in having the children evenly spaced out from the navbar and the bottom of the page.
+    padding: 25px 0 25px 0;
+}
+
+.settingsContainerLowPerformance {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+    padding: 25px 0 25px 0;
+}
+
+.settingsWrapper {
+    background-color: rgba(200, 200, 200, 1);
+    border-radius: 50px;
+    padding: 25px;
+
+    // https://css-tricks.com/the-peculiar-magic-of-flexbox-and-auto-margins/
+    // Having the parent container be flex and setting the children have auto margins is what gets rid of the children expanding past the navbar.
+    margin: auto;
+
+    width: 35vw;
+}
+
+.supportSummonModal {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.supportSummonContainer {
+    height: 75vh;
+    width: 100%;
+    top: 50%;
+    background-color: rgba(120, 120, 120, 0.2);
+    border-radius: 20px;
+    border: 1px dashed grey;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.settingsTextfield {
+    width: 100%;
+}

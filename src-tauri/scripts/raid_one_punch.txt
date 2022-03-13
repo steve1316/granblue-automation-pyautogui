@@ -1,0 +1,5 @@
+// This script will one-punch the raid on Turn 1 and then back out for the purposes of joining another one.
+
+Turn 2:
+	exit
+end

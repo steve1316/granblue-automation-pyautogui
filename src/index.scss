@@ -1,0 +1,18 @@
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #2e2e4d;
+
+    // 2 pixels are shaved off to emulate a drop shadow effect for this frameless window.
+    // height: calc(100vh - 2px);
+    // width: calc(100vw - 2px);
+    height: 100%;
+    width: 100%;
+    box-shadow: 3px 3px 10px;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New", monospace;
+}

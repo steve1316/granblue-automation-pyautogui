@@ -1,0 +1,51 @@
+$baseColor: #01bf71;
+
+.navToolbar {
+    background-color: #242424;
+}
+
+.navLink {
+    color: black;
+    text-decoration: none;
+}
+
+.emptyDivider {
+    flex-grow: 1;
+}
+
+.navMenuButton {
+    margin-right: 2rem;
+    &:hover {
+        transition: 0.5s all ease;
+        color: $baseColor;
+    }
+}
+
+.navTitle {
+    cursor: pointer;
+    font-size: 1.5rem;
+    margin-left: 24px;
+    font-weight: bold;
+    text-decoration: none;
+    color: white;
+    &:hover {
+        transition: 0.5s all ease;
+        color: $baseColor;
+    }
+}
+
+.navButton {
+    width: 30px;
+    height: 30px;
+}
+
+.navList {
+    height: 100%;
+    background-color: rgba(120, 120, 120, 0.2);
+}
+
+.navGroup {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

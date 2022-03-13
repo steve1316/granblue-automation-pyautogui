@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2000 1500">
+  <path d="M0 0h2000v1500H0z"/>
+  <defs>
+    <path fill="none" stroke-width="1" stroke-opacity="1" id="a" d="M-400-300h800v600h-800z" class="parabolic" />
+    <style>
+      @keyframes rotation {
+        0%{transform: rotate(0deg)}
+        100%{transform: rotate(360deg)}
+      }
+      .parabolic {
+        animation: rotation 120s linear infinite;
+      }
+    </style>
+  </defs>
+  <g style="transform-origin:center">
+      <g transform="rotate(-160 0 0)" style="transform-origin:center">
+        <g transform="translate(1000 750)">
+          <use stroke="#000" href="#a" transform="rotate(10) scale(1.1)"/>
+          <use stroke="#001" href="#a" transform="rotate(20) scale(1.2)"/>
+          <use stroke="#002" href="#a" transform="rotate(30) scale(1.3)"/>
+          <use stroke="#003" href="#a" transform="rotate(40) scale(1.4)"/>
+          <use stroke="#004" href="#a" transform="rotate(50) scale(1.5)"/>
+          <use stroke="#005" href="#a" transform="rotate(60) scale(1.6)"/>
+          <use stroke="#006" href="#a" transform="rotate(70) scale(1.7)"/>
+          <use stroke="#007" href="#a" transform="rotate(80) scale(1.8)"/>
+          <use stroke="#008" href="#a" transform="rotate(90) scale(1.9)"/>
+          <use stroke="#009" href="#a" transform="rotate(100) scale(2)"/>
+          <use stroke="#00a" href="#a" transform="rotate(110) scale(2.1)"/>
+          <use stroke="#00b" href="#a" transform="rotate(120) scale(2.2)"/>
+          <use stroke="#00c" href="#a" transform="rotate(130) scale(2.3)"/>
+          <use stroke="#00d" href="#a" transform="rotate(140) scale(2.4)"/>
+          <use stroke="#00e" href="#a" transform="rotate(150) scale(2.5)"/>
+          <use stroke="#00F" href="#a" transform="rotate(160) scale(2.6)"/>
+        </g>
+      </g>
+    </g>
+</svg>

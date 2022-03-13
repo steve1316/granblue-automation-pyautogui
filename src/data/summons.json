@@ -1,0 +1,23 @@
+{
+    "Fire": {
+        "summons": ["Colossus Omega", "Shiva", "Agni"]
+    },
+    "Water": {
+        "summons": ["Leviathan Omega", "Europa", "Bonito", "Varuna"]
+    },
+    "Earth": {
+        "summons": ["Yggdrasil Omega", "Godsworn Alexiel", "Titan", "Gorilla"]
+    },
+    "Wind": {
+        "summons": ["Tiamat Omega", "Grimnir", "Zephyrus"]
+    },
+    "Light": {
+        "summons": ["Luminiera Omega", "Lucifer", "Zeus", "Thor"]
+    },
+    "Dark": {
+        "summons": ["Celeste Omega", "Bahamut", "Hades", "Belial"]
+    },
+    "Misc": {
+        "summons": ["Kaguya", "White Rabbit", "Black Rabbit", "Nobiyo", "Huanglong", "Qilin"]
+    }
+}
