@@ -56,6 +56,7 @@ By downloading this program, you consent to your account potentially getting fla
     -   [What Missions/Items/Summons are supported?](#what-missionsitemssummons-are-supported)
     -   [Instructions for farming Raids (optional, only if you want to farm Raids)](#instructions-for-farming-raids-optional-only-if-you-want-to-farm-raids)
     -   [Virtual Machine Setup (optional)](#virtual-machine-setup-optional)
+-   [Build Instructions](#build-instructions)
 -   [Technologies Used](#technologies-used)
 
 # Features
@@ -162,6 +163,22 @@ pip install -r requirements.txt
 ## Virtual Machine Setup (optional)
 
 -   Visit the [Virtual Machine Setup wiki page](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Virtual-Machine-Setup) for setting up a Virtual Machine to run this program on.
+
+# Build Instructions
+
+> Note: If your changes are only in the Python files, you can just replace the files in your GA folder. But if the Javascript files were changed, then a build is needed.
+
+> Note 2: Adjust the `/src-tauri/tauri.conf.json` for build-specific adjustments to your environment. It is already set up for building on Windows.
+
+> Note 3: Adjust `/src-tauri/update.json` to update version number of your build.
+
+1. Open up root folder in VSCode. Type `yarn install` in terminal to install Javascript dependencies.
+2. Then follow your environment's instructions for [Tauri](https://tauri.studio/docs/getting-started/prerequisites).
+3. Now refer to the following 2 commands below for your use case.
+
+-   `yarn start` Starts up the Metro server for hot code reloading.
+
+-   `yarn build` Bundles and builds the executable in `/src-tauri/target/release/`. Also includes a installer in `../bundle/` as well.
 
 # Technologies Used
 
