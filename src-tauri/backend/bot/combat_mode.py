@@ -1081,6 +1081,11 @@ class CombatMode:
                 if CombatMode._full_auto is False and CombatMode._semi_auto is False:
                     CombatMode._enable_full_auto()
 
+                # Counteract slower instances when the battle finished right when the bot finished executing the script.
+                if Game.find_and_click_button("next", tries = 1, suppress_error = True):
+                    Game.wait(3)
+                    CombatMode._check_for_battle_end()
+
                 # Main workflow loop for both Semi Auto and Full Auto. The bot will progress the Quest/Raid until it ends or the Party wipes.
                 while not CombatMode._retreat_check and (CombatMode._full_auto or CombatMode._semi_auto):
                     # Check for exit conditions.
