@@ -154,12 +154,12 @@ class Event:
             Game.wait(1)
 
             # Select the first category if the raids are split into two sections.
-            categories = ImageUtils.find_all("event_raid_category", custom_confidence = 0.9)
+            categories = ImageUtils.find_all("event_raid_category")
             if len(categories) > 0:
                 if Settings.enable_select_bottom_category is False:
-                    MouseUtils.move_and_click_point(categories[0][0], categories[0][1], "event_raid_category")
+                    MouseUtils.move_and_click_point(categories[0][0] - 50, categories[0][1], "event_raid_category")
                 else:
-                    MouseUtils.move_and_click_point(categories[1][0], categories[1][1], "event_raid_category")
+                    MouseUtils.move_and_click_point(categories[1][0] - 50, categories[1][1], "event_raid_category")
 
             ap_locations = ImageUtils.find_all("ap")
 
