@@ -199,11 +199,12 @@ const Start = () => {
         if (
             farmingMode !== "Coop" &&
             botStateContext.settings.game.farmingMode !== "Arcarum" &&
+            botStateContext.settings.game.farmingMode !== "Arcarum Sandbox" &&
             botStateContext.settings.game.farmingMode !== "Generic" &&
             botStateContext.settings.game.farmingMode !== ""
         ) {
             botStateContext.setReadyStatus(botStateContext.settings.game.item !== "" && botStateContext.settings.game.mission !== "" && botStateContext.settings.game.summons.length !== 0)
-        } else if (botStateContext.settings.game.farmingMode === "Coop" || botStateContext.settings.game.farmingMode === "Arcarum") {
+        } else if (botStateContext.settings.game.farmingMode === "Coop" || botStateContext.settings.game.farmingMode === "Arcarum" || botStateContext.settings.game.farmingMode === "Arcarum Sandbox") {
             botStateContext.setReadyStatus(botStateContext.settings.game.item !== "" && botStateContext.settings.game.mission !== "")
         } else {
             botStateContext.setReadyStatus(farmingMode === "Generic" && botStateContext.settings.game.item !== "" && botStateContext.settings.game.summons.length !== 0)
