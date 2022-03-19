@@ -938,243 +938,243 @@
     "Arcarum Sandbox": {
         "Slithering Seductress": {
             "map": "Zone Eletio",
-            "items": ["Fire Verum Proof"]
+            "items": ["Fire Verum Proof","Repeated Runs"]
         },
         "Living Lightning Rod": {
             "map": "Zone Eletio",
-            "items": ["Lightborne Astra"]
+            "items": ["Lightborne Astra","Repeated Runs"]
         },
         "Eletion Drake": {
             "map": "Zone Eletio",
-            "items": ["Sephira Stone"]
+            "items": ["Sephira Stone","Repeated Runs"]
         },
         "Paradoxical Gate": {
             "map": "Zone Eletio",
-            "items": ["Flameborne Astra"]
+            "items": ["Flameborne Astra","Repeated Runs"]
         },
         "Blazing Everwing": {
             "map": "Zone Eletio",
-            "items": ["Devil Idean"]
+            "items": ["Devil Idean","Repeated Runs"]
         },
         "Death Seer": {
             "map": "Zone Eletio",
-            "items": ["Supreme Merit"]
+            "items": ["Supreme Merit","Repeated Runs"]
         },
         "Hundred-Armed Hulk": {
             "map": "Zone Eletio",
-            "items": ["Star Idean"]
+            "items": ["Star Idean","Repeated Runs"]
         },
         "Terror Trifecta": {
             "map": "Zone Eletio",
-            "items": ["Fire Quartz"]
+            "items": ["Fire Quartz","Repeated Runs"]
         },
         "Rageborn One": {
             "map": "Zone Eletio",
-            "items": ["Sun Idean"]
+            "items": ["Sun Idean","Repeated Runs"]
         },
         "Trident Grandmaster": {
             "map": "Zone Faym",
-            "items": ["Water Verum Proof"]
+            "items": ["Water Verum Proof","Repeated Runs"]
         },
         "Hoarfrost Icequeen": {
             "map": "Zone Faym",
-            "items": ["Justice Idean"]
+            "items": ["Justice Idean","Repeated Runs"]
         },
         "Oceanic Archon": {
             "map": "Zone Faym",
-            "items": ["Sephira Stone"]
+            "items": ["Sephira Stone","Repeated Runs"]
         },
         "Farsea Predator": {
             "map": "Zone Faym",
-            "items": ["Supreme Merit"]
+            "items": ["Supreme Merit","Repeated Runs"]
         },
         "Faymian Fortress": {
             "map": "Zone Faym",
-            "items": ["Moon Idean"]
+            "items": ["Moon Idean","Repeated Runs"]
         },
         "Draconic Simulacrum": {
             "map": "Zone Faym",
-            "items": ["Darkborne Astra"]
+            "items": ["Darkborne Astra","Repeated Runs"]
         },
         "Azureflame Dragon": {
             "map": "Zone Faym",
-            "items": ["Aquaborne Astra"]
+            "items": ["Aquaborne Astra","Repeated Runs"]
         },
         "Eyes of Sorrow": {
             "map": "Zone Faym",
-            "items": ["Water Quartz"]
+            "items": ["Water Quartz","Repeated Runs"]
         },
         "Mud Shearwielder": {
             "map": "Zone Faym",
-            "items": ["Death Idean"]
+            "items": ["Death Idean","Repeated Runs"]
         },
         "Avatar of Avarice": {
             "map": "Zone Goliath",
-            "items": ["Earthborne Astra"]
+            "items": ["Earthborne Astra","Repeated Runs"]
         },
         "Temptation's Guide": {
             "map": "Zone Goliath",
-            "items": ["Supreme Merit"]
+            "items": ["Supreme Merit","Repeated Runs"]
         },
         "World's Veil": {
             "map": "Zone Goliath",
-            "items": ["Hanged Man Idean"]
+            "items": ["Hanged Man Idean","Repeated Runs"]
         },
-        "Golaith Keeper": {
+        "Goliath Keeper": {
             "map": "Zone Goliath",
-            "items": ["Earth Quartz"]
+            "items": ["Earth Quartz","Repeated Runs"]
         },
         "Bloodstained Barbarian": {
             "map": "Zone Goliath",
-            "items": ["Sephira Stone"]
+            "items": ["Sephira Stone","Repeated Runs"]
         },
         "Frenzied Howler": {
             "map": "Zone Goliath",
-            "items": ["Darkborne Astra"]
+            "items": ["Darkborne Astra","Repeated Runs"]
         },
         "Goliath Vanguard": {
             "map": "Zone Goliath",
-            "items": ["Tower Idean"]
+            "items": ["Tower Idean","Repeated Runs"]
         },
         "Vestige of Truth": {
             "map": "Zone Goliath",
-            "items": ["Earth Verum Proof"]
+            "items": ["Earth Verum Proof","Repeated Runs"]
         },
         "Writhing Despair": {
             "map": "Zone Goliath",
-            "items": ["Death Idean"]
+            "items": ["Death Idean","Repeated Runs"]
         },
         "Vengeful Demigod": {
             "map": "Zone Harbinger",
-            "items": ["Sephira Stone"]
+            "items": ["Sephira Stone","Repeated Runs"]
         },
         "Dirgesinger": {
             "map": "Zone Harbinger",
-            "items": ["Supreme Merit"]
+            "items": ["Supreme Merit","Repeated Runs"]
         },
         "Wildwind Conjurer/Fullthunder Conjurer": {
             "map": "Zone Harbinger",
-            "items": ["Judgement Idean"]
+            "items": ["Judgement Idean","Repeated Runs"]
         },
         "Harbinger Simurgh": {
             "map": "Zone Harbinger",
-            "items": ["Temperance Idean"]
+            "items": ["Temperance Idean","Repeated Runs"]
         },
         "Harbinger Hardwood": {
             "map": "Zone Harbinger",
-            "items": ["Wind Verum Proof"]
+            "items": ["Wind Verum Proof","Repeated Runs"]
         },
         "Demanding Stormgod": {
             "map": "Zone Harbinger",
-            "items": ["Windborne Astra"]
+            "items": ["Windborne Astra","Repeated Runs"]
         },
         "Harbinger Tyrant": {
             "map": "Zone Harbinger",
-            "items": ["Lightborne Astra"]
+            "items": ["Lightborne Astra","Repeated Runs"]
         },
         "Phantasmagoric Aberration": {
             "map": "Zone Harbinger",
-            "items": ["Light Quartz"]
+            "items": ["Light Quartz","Repeated Runs"]
         },
         "Dimensional Riftwalker": {
             "map": "Zone Harbinger",
-            "items": ["Star Idean"]
+            "items": ["Star Idean","Repeated Runs"]
         },
         "Infernal Hellbeast": {
             "map": "Zone Invidia",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Flameborne Astra","Devil Idean","Repeated Runs"]
         },
         "Spikeball": {
             "map": "Zone Invidia",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Flameborne Astra","Sun Idean","Repeated Runs"]
         },
         "Blushing Groom": {
             "map": "Zone Invidia",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Flameborne Astra","Devil Idean","Sun Idean","Repeated Runs"]
         },
         "Unworldly Guardian": {
             "map": "Zone Invidia",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Lightborne Astra","Star Idean","Repeated Runs"]
         },
         "Deva of Wisdom": {
             "map": "Zone Invidia",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Lightborne Astra","Star Idean","Repeated Runs"]
         },
         "Sword of Aberration": {
             "map": "Zone Invidia",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Lightborne Astra","Star Idean","Repeated Runs"]
         },
         "Glacial Hellbeast": {
             "map": "Zone Joculator",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Aquaborne Astra","Justice Idean","Repeated Runs"]
         },
         "Giant Sea Plant": {
             "map": "Zone Joculator",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Aquaborne Astra","Moon Idean","Repeated Runs"]
         },
         "Maiden of the Depths": {
             "map": "Zone Joculator",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Aquaborne Astra","Justice Idean","Moon Idean","Repeated Runs"]
         },
         "Bloody Soothsayer": {
             "map": "Zone Joculator",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Darkborne Astra","Death Idean","Repeated Runs"]
         },
         "Nebulous One": {
             "map": "Zone Joculator",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Darkborne Astra","Death Idean","Repeated Runs"]
         },
         "Dreadful Scourge": {
             "map": "Zone Joculator",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Darkborne Astra","Death Idean","Repeated Runs"]
         },
         "Bedeviled Plague": {
             "map": "Zone Kalendae",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Earthborne Astra","Hanged Man Idean","Tower Idean","Repeated Runs"]
         },
         "Tainted Hellmaiden": {
             "map": "Zone Kalendae",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Earthborne Astra","Hanged Man Idean","Repeated Runs"]
         },
         "Watcher from Above": {
             "map": "Zone Kalendae",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Earthborne Astra","Tower Idean", "Repeated Runs"]
         },
         "Scintillant Matter": {
             "map": "Zone Kalendae",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Darkborne Astra","Death Idean","Repeated Runs"]
         },
         "Ebony Executioner": {
             "map": "Zone Kalendae",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Darkborne Astra","Death Idean","Repeated Runs"]
         },
         "Hellbeast of Doom": {
             "map": "Zone Kalendae",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Darkborne Astra","Death Idean","Repeated Runs"]
         },
         "Mounted Toxophilite": {
             "map": "Zone Liber",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Windborne Astra","Temperance Idean","Repeated Runs"]
         },
         "Beetle of Damnation": {
             "map": "Zone Liber",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Windborne Astra","Temperance Idean","Judgement Idean","Repeated Runs"]
         },
         "Ageless Guardian Beast": {
             "map": "Zone Liber",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Windborne Astra","Judgement Idean","Repeated Runs"]
         },
         "Solar Princess": {
             "map": "Zone Liber",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Lightborne Astra","Star Idean","Repeated Runs"]
         },
         "Drifting Blade Demon": {
             "map": "Zone Liber",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Lightborne Astra","Star Idean","Repeated Runs"]
         },
         "Simpering Beast": {
             "map": "Zone Liber",
-            "items": ["Repeated Runs"]
+            "items": ["Sephira Stone","Lightborne Astra","Star Idean","Repeated Runs"]
         }
     },
     "Generic": {
