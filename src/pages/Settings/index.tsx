@@ -319,8 +319,8 @@ const Settings = () => {
                                     defenderCombatScriptName: "",
                                     defenderCombatScript: [],
                                     defenderGroupNumber: 1,
-                                    defenderPartyNumber: 1
-                                }
+                                    defenderPartyNumber: 1,
+                                },
                             })
                         }}
                         helperText="Please select the Farming Mode"
@@ -385,7 +385,7 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
-                    {botStateContext.settings.game.farmingMode === "Arcarum Sandbox"  ? (
+                    {botStateContext.settings.game.farmingMode === "Arcarum Sandbox" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
                                 control={

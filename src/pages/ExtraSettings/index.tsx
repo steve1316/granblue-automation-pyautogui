@@ -768,8 +768,6 @@ const ExtraSettings = () => {
         }
     }
 
-    
-
     const renderMiscSettings = () => {
         return (
             <div id="misc">
@@ -814,10 +812,7 @@ const ExtraSettings = () => {
 
     //Arcarum sandbox settings
     const renderSandboxDefenderSettings = () => {
-        if (
-            bot.settings.sandbox.enableDefender &&
-            bot.settings.game.farmingMode === "Arcarum Sandbox"
-        ) {
+        if (bot.settings.sandbox.enableDefender && bot.settings.game.farmingMode === "Arcarum Sandbox") {
             var title: string = "Defender"
 
             return (
@@ -881,13 +876,13 @@ const ExtraSettings = () => {
 
                             <Grid container>
                                 <Grid item xs={6}>
-                                <TextField
+                                    <TextField
                                         label="How many times to run"
                                         variant="filled"
                                         type="number"
                                         error={bot.settings.sandbox.numberOfDefenders < 1}
                                         value={bot.settings.sandbox.numberOfDefenders}
-                                        inputProps={{ min: 1}}
+                                        inputProps={{ min: 1 }}
                                         onChange={(e) => bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, numberOfDefenders: parseInt(e.target.value) } })}
                                         className="textfield"
                                     />
@@ -932,7 +927,6 @@ const ExtraSettings = () => {
             )
         }
     }
-
 
     // Attempt to kill the bot process if it is still active.
     const handleStop = async () => {
