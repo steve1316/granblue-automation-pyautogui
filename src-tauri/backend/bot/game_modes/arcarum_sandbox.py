@@ -195,7 +195,7 @@ class ArcarumSandbox:
         },
         "Demanding Stormgod": {
             "section": 1,
-            "x": 170,
+            "x": 275,
             "y": 250
         },
         "Harbinger Tyrant": {
