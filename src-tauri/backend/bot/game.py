@@ -385,19 +385,20 @@ class Game:
         return None
 
     @staticmethod
-    def find_party_and_start_mission(group_number: int, party_number: int, tries: int = 30):
+    def find_party_and_start_mission(group_number: int, party_number: int, tries: int = 30, bypass_first_run: bool = False):
         """Select the specified Group and Party. It will then start the mission.
 
         Args:
-            group_number (int): The Group that the specified Party in in.
+            group_number (int): The Group that the specified Party is in.
             party_number (int): The specified Party to start the mission with.
             tries (int, optional): Number of tries to select a Set before failing. Defaults to 30.
+            bypass_first_run (bool, optional): Determines if the bot should reselect the party in subsequent runs. Defaults to False.
 
         Returns:
             (bool): Returns False if it detects the "Raid is full/Raid is already done" dialog. Otherwise, return True.
         """
         # Repeat runs already have the same party already selected.
-        if Settings.party_selection_first_run:
+        if Settings.party_selection_first_run or bypass_first_run:
             MessageLog.print_message(f"\n[INFO] Starting process to select Group {group_number}, Party {party_number}...")
 
             # Find the Group that the Party is in first. If the specified Group number is less than 8, it is in Set A. Otherwise, it is in Set B. If failed, alternate searching for Set A / Set B until

@@ -46,7 +46,7 @@ class RiseOfTheBeasts:
             # Once the bot is at the Summon Selection screen, select your Summon and Party and start the mission.
             if ImageUtils.confirm_location("select_a_summon"):
                 Game.select_summon(Settings.nightmare_summon_list, Settings.nightmare_summon_elements_list)
-                start_check = Game.find_party_and_start_mission(int(Settings.nightmare_group_number), int(Settings.nightmare_party_number))
+                start_check = Game.find_party_and_start_mission(int(Settings.nightmare_group_number), int(Settings.nightmare_party_number), bypass_first_run = True)
 
                 # Once preparations are completed, start Combat mode.
                 if start_check and CombatMode.start_combat_mode(is_nightmare = True):

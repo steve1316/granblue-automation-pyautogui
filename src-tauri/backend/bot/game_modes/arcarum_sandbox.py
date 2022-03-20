@@ -537,7 +537,7 @@ class ArcarumSandbox:
         Game.wait(3.0)
 
         if Settings.engaged_defender_battle:
-            if Game.find_party_and_start_mission(Settings.defender_group_number, Settings.defender_party_number):
+            if Game.find_party_and_start_mission(Settings.defender_group_number, Settings.defender_party_number, bypass_first_run = True):
                 if CombatMode.start_combat_mode(is_defender = Settings.engaged_defender_battle):
                     Game.collect_loot(is_completed = True, is_defender = Settings.engaged_defender_battle)
         else:
