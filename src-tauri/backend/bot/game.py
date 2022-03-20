@@ -385,19 +385,20 @@ class Game:
         return None
 
     @staticmethod
-    def find_party_and_start_mission(group_number: int, party_number: int, tries: int = 30):
+    def find_party_and_start_mission(group_number: int, party_number: int, tries: int = 30, bypass_first_run: bool = False):
         """Select the specified Group and Party. It will then start the mission.
 
         Args:
-            group_number (int): The Group that the specified Party in in.
+            group_number (int): The Group that the specified Party is in.
             party_number (int): The specified Party to start the mission with.
             tries (int, optional): Number of tries to select a Set before failing. Defaults to 30.
+            bypass_first_run (bool, optional): Determines if the bot should reselect the party in subsequent runs. Defaults to False.
 
         Returns:
             (bool): Returns False if it detects the "Raid is full/Raid is already done" dialog. Otherwise, return True.
         """
         # Repeat runs already have the same party already selected.
-        if Settings.party_selection_first_run:
+        if Settings.party_selection_first_run or bypass_first_run:
             MessageLog.print_message(f"\n[INFO] Starting process to select Group {group_number}, Party {party_number}...")
 
             # Find the Group that the Party is in first. If the specified Group number is less than 8, it is in Set A. Otherwise, it is in Set B. If failed, alternate searching for Set A / Set B until
@@ -526,7 +527,7 @@ class Game:
         return None
 
     @staticmethod
-    def collect_loot(is_completed: bool, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False, skip_popup_check: bool = False):
+    def collect_loot(is_completed: bool, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False, skip_popup_check: bool = False, is_defender: bool = False):
         """Collects the loot from the Results screen while clicking away any dialog popups while updating the internal item count.
         
         Args:
@@ -563,7 +564,7 @@ class Game:
                     MessageLog.print_message("[DEBUG] Have not detected the Loot Collection screen yet...")
 
         # Now that the bot is at the Loot Collected screen, detect any user-specified items.
-        if is_completed and not is_pending_battle and not is_event_nightmare:
+        if is_completed and not is_pending_battle and not is_event_nightmare and not is_defender:
             MessageLog.print_message("\n[INFO] Detecting if any user-specified loot dropped from this run...")
             if Settings.item_name != "EXP" and Settings.item_name != "Angel Halo Weapons" and Settings.item_name != "Repeated Runs":
                 temp_amount = ImageUtils.find_farmed_items(Settings.item_name)
@@ -581,7 +582,7 @@ class Game:
 
             Settings.item_amount_farmed += temp_amount
 
-        if is_completed and not is_pending_battle and not is_event_nightmare and not skip_info:
+        if is_completed and not is_pending_battle and not is_event_nightmare and not skip_info and not is_defender:
             if Settings.item_name != "EXP" and Settings.item_name != "Angel Halo Weapons" and Settings.item_name != "Repeated Runs":
                 MessageLog.print_message("\n**********************************************************************")
                 MessageLog.print_message("**********************************************************************")
@@ -643,6 +644,17 @@ class Game:
                                          f"**[{Settings.item_amount_farmed} / {Settings.item_amount_to_farm}]**"
 
                     Game._discord_queue.put(discord_string)
+        elif is_defender:
+            Settings.engaged_defender_battle = False
+            Settings.number_of_defeated_defenders += 1
+            MessageLog.print_message("\n**********************************************************************")
+            MessageLog.print_message("**********************************************************************")
+            MessageLog.print_message(f"[FARM] Farming Mode: {Settings.farming_mode}")
+            MessageLog.print_message(f"[FARM] Mission: {Settings.mission_name}")
+            MessageLog.print_message(f"[FARM] Summons: {Settings.summon_list}")
+            MessageLog.print_message(f"[FARM] Amount of Defenders defeated: {Settings.number_of_defeated_defenders}/{Settings.number_of_defenders}")
+            MessageLog.print_message("**********************************************************************")
+            MessageLog.print_message("**********************************************************************\n")
 
         return None
 

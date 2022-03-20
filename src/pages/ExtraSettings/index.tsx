@@ -113,6 +113,76 @@ const ExtraSettings = () => {
             })
     }
 
+    // Load the selected combat script text file.
+    const loadDefenderCombatScript = (event: React.ChangeEvent<HTMLInputElement>) => {
+        var files = event.currentTarget.files
+        if (files !== null && files.length !== 0) {
+            var selectedFile = files[0]
+            if (selectedFile === null || selectedFile === undefined) {
+                // Reset the defender combat script selected if none was selected from the file picker dialog.
+                bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
+            } else {
+                // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
+                var reader = new FileReader()
+                reader.onload = function (loadedEvent) {
+                    if (loadedEvent.target?.result !== null && loadedEvent.target?.result !== undefined) {
+                        console.log("Loaded Sandbox Defender Combat Script: ", loadedEvent.target.result)
+                        const newCombatScript: string[] = loadedEvent.target.result.toString().split("\r\n")
+                        bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: selectedFile.name, defenderCombatScript: newCombatScript } })
+                    } else {
+                        console.log("Failed to read Sandbox Defender combat script. Reseting to default empty combat script...")
+                        bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
+                    }
+                }
+
+                // Read the text contents of the file.
+                reader.readAsText(selectedFile)
+            }
+        } else {
+            console.log("No file selected. Reseting to default empty combat script...")
+            bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
+        }
+    }
+
+    const loadDefenderCombatScriptAlternative = () => {
+        // Use an alternative file picker for selecting the combat script.
+        let filter: DialogFilter = {
+            extensions: ["txt"],
+            name: "Combat Script filter",
+        }
+
+        open({ defaultPath: undefined, filters: [filter], multiple: false })
+            .then((filePath) => {
+                if (typeof filePath === "string") {
+                    readTextFile(filePath)
+                        .then((data) => {
+                            console.log("Loaded Sandbox Defender Combat Script via alternative method: ", data)
+                            const newCombatScript: string[] = data
+                                .toString()
+                                .replace(/\r\n/g, "\n") // Replace LF with CRLF.
+                                .replace(/[\r\n]/g, "\n")
+                                .replace("\t", "") // Replace tab characters.
+                                .replace(/\t/g, "")
+                                .split("\n")
+                            bot.setSettings({
+                                ...bot.settings,
+                                sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: filePath.replace(/^.*[\\/]/, ""), defenderCombatScript: newCombatScript },
+                            })
+                        })
+                        .catch((err) => {
+                            console.log(`Failed to read Sandbox Defender combat script via alternative method: ${err}\n\nReseting to default empty combat script...`)
+                            bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
+                        })
+                } else {
+                    console.log(`No file selected.\n\nReseting to default empty combat script...`)
+                    bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
+                }
+            })
+            .catch((e) => {
+                console.log("Error while resolving the path to the combat script: ", e)
+            })
+    }
+
     // Render settings for Twitter.
     const renderTwitterSettings = () => {
         return (
@@ -740,6 +810,124 @@ const ExtraSettings = () => {
         )
     }
 
+    //Arcarum sandbox settings
+    const renderSandboxDefenderSettings = () => {
+        if (bot.settings.sandbox.enableDefender && bot.settings.game.farmingMode === "Arcarum Sandbox") {
+            var title: string = "Defender"
+
+            return (
+                <div id="defender">
+                    <Typography variant="h6" gutterBottom component="div" className="sectionTitle">
+                        {title} Settings <Iconify icon="ri:sword-fill" className="sectionTitleIcon" />
+                    </Typography>
+
+                    <Divider />
+
+                    <Typography variant="subtitle1" gutterBottom component="div" color="text.secondary">
+                        If none of these settings are changed, then the bot will reuse the settings for the Farming Mode.
+                    </Typography>
+
+                    <FormGroup sx={{ paddingBottom: "16px" }}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={bot.settings.sandbox.enableCustomDefenderSettings}
+                                    onChange={(e) => bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, enableCustomDefenderSettings: e.target.checked } })}
+                                />
+                            }
+                            label={`Enable Custom Settings for ${title}`}
+                        />
+                        <FormHelperText>Enable customizing individual settings for {title}</FormHelperText>
+                    </FormGroup>
+
+                    {bot.settings.sandbox.enableCustomDefenderSettings ? (
+                        <Stack spacing={2}>
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    {!bot.settings.misc.alternativeCombatScriptSelector ? (
+                                        <div>
+                                            <Input ref={inputRef} accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadDefenderCombatScript(e)} />
+                                            <TextField
+                                                variant="filled"
+                                                label="Defender Combat Script"
+                                                value={bot.settings.sandbox.defenderCombatScriptName !== "" ? bot.settings.sandbox.defenderCombatScriptName : "None Selected"}
+                                                inputProps={{ readOnly: true }}
+                                                InputLabelProps={{ shrink: true }}
+                                                helperText="Select a Combat Script"
+                                                onClick={() => inputRef.current?.click()}
+                                                fullWidth
+                                            />
+                                        </div>
+                                    ) : (
+                                        <TextField
+                                            variant="filled"
+                                            label="Defender Combat Script"
+                                            value={bot.settings.sandbox.defenderCombatScriptName !== "" ? bot.settings.sandbox.defenderCombatScriptName : "None Selected"}
+                                            inputProps={{ readOnly: true }}
+                                            InputLabelProps={{ shrink: true }}
+                                            helperText="Select a Combat Script (alternative method)"
+                                            onClick={() => loadDefenderCombatScriptAlternative()}
+                                            fullWidth
+                                        />
+                                    )}
+                                </Grid>
+                                <Grid item xs />
+                            </Grid>
+
+                            <Grid container>
+                                <Grid item xs={6}>
+                                    <TextField
+                                        label="How many times to run"
+                                        variant="filled"
+                                        type="number"
+                                        error={bot.settings.sandbox.numberOfDefenders < 1}
+                                        value={bot.settings.sandbox.numberOfDefenders}
+                                        inputProps={{ min: 1 }}
+                                        onChange={(e) => bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, numberOfDefenders: parseInt(e.target.value) } })}
+                                        className="textfield"
+                                    />
+                                </Grid>
+                                <Grid item xs />
+                            </Grid>
+
+                            <Grid container direction="row">
+                                <Grid item id="gridItemDefenderGroup" xs={4}>
+                                    <TextField
+                                        label="Group #"
+                                        variant="filled"
+                                        type="number"
+                                        error={bot.settings.sandbox.defenderGroupNumber < 1 || bot.settings.sandbox.defenderGroupNumber > 7}
+                                        value={bot.settings.sandbox.defenderGroupNumber}
+                                        inputProps={{ min: 1, max: 7 }}
+                                        onChange={(e) => bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderGroupNumber: parseInt(e.target.value) } })}
+                                        helperText="From 1 to 7"
+                                        className="textfield"
+                                    />
+                                </Grid>
+
+                                <Grid item xs={8} />
+
+                                <Grid item id="gridItemDefenderParty" xs={4}>
+                                    <TextField
+                                        label="Party #"
+                                        variant="filled"
+                                        type="number"
+                                        error={bot.settings.sandbox.defenderPartyNumber < 1 || bot.settings.sandbox.defenderPartyNumber > 6}
+                                        value={bot.settings.sandbox.defenderPartyNumber}
+                                        inputProps={{ min: 1, max: 6 }}
+                                        onChange={(e) => bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderPartyNumber: parseInt(e.target.value) } })}
+                                        helperText="From 1 to 6"
+                                        className="textfield"
+                                    />
+                                </Grid>
+                            </Grid>
+                        </Stack>
+                    ) : null}
+                </div>
+            )
+        }
+    }
+
     // Attempt to kill the bot process if it is still active.
     const handleStop = async () => {
         if (testPID !== 0) {
@@ -851,6 +1039,8 @@ const ExtraSettings = () => {
 
                 <Stack spacing={2} className="extraSettingsWrapper">
                     {renderNightmareSettings()}
+
+                    {renderSandboxDefenderSettings()}
 
                     {renderTwitterSettings()}
 

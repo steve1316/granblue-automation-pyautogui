@@ -388,6 +388,10 @@ class ArcarumSandbox:
         action_locations: List[Tuple[int, ...]] = ImageUtils.find_all("arcarum_sandbox_action")
         if len(action_locations) == 1:
             MouseUtils.move_and_click_point(action_locations[0][0], action_locations[0][1], "arcarum_sandbox_action")
+        elif Settings.enable_defender and Settings.number_of_defeated_defenders < Settings.number_of_defenders:
+            MouseUtils.move_and_click_point(action_locations[0][0], action_locations[0][1], "arcarum_sandbox_action")
+            MessageLog.print_message(f"\n[ARCARUM.SANDBOX] Found Defender and fighting it...")
+            Settings.engaged_defender_battle = True
         else:
             MouseUtils.move_and_click_point(action_locations[1][0], action_locations[1][1], "arcarum_sandbox_action")
 
@@ -532,8 +536,13 @@ class ArcarumSandbox:
 
         Game.wait(3.0)
 
-        if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
-            if CombatMode.start_combat_mode():
-                Game.collect_loot(is_completed = True)
+        if Settings.engaged_defender_battle:
+            if Game.find_party_and_start_mission(Settings.defender_group_number, Settings.defender_party_number, bypass_first_run = True):
+                if CombatMode.start_combat_mode(is_defender = Settings.engaged_defender_battle):
+                    Game.collect_loot(is_completed = True, is_defender = Settings.engaged_defender_battle)
+        else:
+            if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
+                if CombatMode.start_combat_mode():
+                    Game.collect_loot(is_completed = True)
 
         return None
