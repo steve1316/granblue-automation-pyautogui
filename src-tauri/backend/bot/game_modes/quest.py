@@ -237,6 +237,11 @@ class Quest:
 
     @staticmethod
     def _select_episode():
+        """Selects the required episode using the mission's name.
+
+        Returns:
+            None
+        """
         from bot.game import Game
 
         if Settings.mission_name.__contains__("Episode"):
@@ -255,7 +260,11 @@ class Quest:
 
     @staticmethod
     def _select_phantagrande_chapter_node():
-        from bot.game import Game
+        """Selects the Phantagrande chapter node for the mission.
+
+        Returns:
+            None
+        """
 
         # Grab the location of the "World" button.
         world_location = ImageUtils.find_button("world", tries = 5)
@@ -315,6 +324,11 @@ class Quest:
 
     @staticmethod
     def _select_nalhegrande_chapter_node():
+        """Selects the Nalhegrande chapter node for the mission.
+
+        Returns:
+            None
+        """
         from bot.game import Game
 
         # Grab the location of the "World" button.
@@ -368,8 +382,11 @@ class Quest:
 
     @staticmethod
     def _select_oarlyegrande_chapter_node():
-        from bot.game import Game
+        """Selects the Oarlyegrande chapter node for the mission.
 
+        Returns:
+            None
+        """
         # Grab the location of the "World" button.
         world_location = ImageUtils.find_button("world", tries = 5)
         if world_location is None:
