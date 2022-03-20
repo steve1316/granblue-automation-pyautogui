@@ -644,16 +644,17 @@ class Game:
 
                     Game._discord_queue.put(discord_string)
         elif is_defender:
-                Settings.engaged_defender_battle = False
-                Settings.number_of_defeated_defenders+=1
-                MessageLog.print_message("\n**********************************************************************")
-                MessageLog.print_message("**********************************************************************")
-                MessageLog.print_message(f"[FARM] Farming Mode: {Settings.farming_mode}")
-                MessageLog.print_message(f"[FARM] Mission: {Settings.mission_name}")
-                MessageLog.print_message(f"[FARM] Summons: {Settings.summon_list}")
-                MessageLog.print_message(f"[FARM] Amount of Defenders defeated: {Settings.number_of_defeated_defenders}/{Settings.number_of_defenders}")
-                MessageLog.print_message("**********************************************************************")
-                MessageLog.print_message("**********************************************************************\n")
+            Settings.engaged_defender_battle = False
+            Settings.number_of_defeated_defenders += 1
+            MessageLog.print_message("\n**********************************************************************")
+            MessageLog.print_message("**********************************************************************")
+            MessageLog.print_message(f"[FARM] Farming Mode: {Settings.farming_mode}")
+            MessageLog.print_message(f"[FARM] Mission: {Settings.mission_name}")
+            MessageLog.print_message(f"[FARM] Summons: {Settings.summon_list}")
+            MessageLog.print_message(f"[FARM] Amount of Defenders defeated: {Settings.number_of_defeated_defenders}/{Settings.number_of_defenders}")
+            MessageLog.print_message("**********************************************************************")
+            MessageLog.print_message("**********************************************************************\n")
+
         return None
 
     @staticmethod
