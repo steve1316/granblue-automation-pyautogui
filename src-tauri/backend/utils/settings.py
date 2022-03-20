@@ -112,6 +112,18 @@ class Settings:
         MessageLog.print_message(f"[NIGHTMARE] Settings initialized for {farming_mode}'s Nightmare...")
     # #### end of nightmare ####
 
+    # #### sandbox defender #### #
+    enable_defender: bool = dictor(_data, "sandbox.enableDefender", False)
+    _enable_custom_defender_settings: bool = dictor(_data, "sandbox.enableCustomDefenderSettings", False)
+    defender_combat_script_name: str = dictor(_data, "sandbox.defenderCombatScriptName", "")
+    defender_combat_script: List[str] = dictor(_data, "sandbox.defenderCombatScript", [])
+    number_of_defenders: int = dictor(_data, "sandbox.numberOfDefenders", 1)
+    defender_group_number: int = dictor(_data, "sandbox.defenderGroupNumber", 1)
+    defender_party_number: int = dictor(_data, "sandbox.defenderPartyNumber", 1)
+    number_of_defeated_defenders: int = 0
+    engaged_defender_battle: bool = False
+    # #### end of sandbox defender #### #
+
     # #### event ####
     enable_event_location_incrementation_by_one: bool = dictor(_data, "event.enableLocationIncrementByOne", False)
     enable_select_bottom_category: bool = dictor(_data, "selectBottomCategory", False)

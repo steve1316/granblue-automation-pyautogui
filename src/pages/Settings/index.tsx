@@ -311,6 +311,16 @@ const Settings = () => {
                                     nightmareGroupNumber: 1,
                                     nightmarePartyNumber: 1,
                                 },
+                                sandbox: {
+                                    ...botStateContext.settings.sandbox,
+                                    enableDefender: false,
+                                    enableCustomDefenderSettings: false,
+                                    numberOfDefenders: 1,
+                                    defenderCombatScriptName: "",
+                                    defenderCombatScript: [],
+                                    defenderGroupNumber: 1,
+                                    defenderPartyNumber: 1
+                                }
                             })
                         }}
                         helperText="Please select the Farming Mode"
@@ -370,6 +380,23 @@ const Settings = () => {
                                     />
                                 }
                                 label="Enable Nightmare Settings"
+                            />
+                            <FormHelperText>Enable additional settings to show up in the Extra Settings page.</FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
+                    {botStateContext.settings.game.farmingMode === "Arcarum Sandbox"  ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={botStateContext.settings.sandbox.enableDefender}
+                                        onChange={(e) =>
+                                            botStateContext.setSettings({ ...botStateContext.settings, sandbox: { ...botStateContext.settings.sandbox, enableDefender: e.target.checked } })
+                                        }
+                                    />
+                                }
+                                label="Enable Defender settings"
                             />
                             <FormHelperText>Enable additional settings to show up in the Extra Settings page.</FormHelperText>
                         </FormGroup>

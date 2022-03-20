@@ -526,7 +526,7 @@ class Game:
         return None
 
     @staticmethod
-    def collect_loot(is_completed: bool, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False, skip_popup_check: bool = False):
+    def collect_loot(is_completed: bool, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False, skip_popup_check: bool = False, is_defender: bool = False):
         """Collects the loot from the Results screen while clicking away any dialog popups while updating the internal item count.
         
         Args:
@@ -563,7 +563,7 @@ class Game:
                     MessageLog.print_message("[DEBUG] Have not detected the Loot Collection screen yet...")
 
         # Now that the bot is at the Loot Collected screen, detect any user-specified items.
-        if is_completed and not is_pending_battle and not is_event_nightmare:
+        if is_completed and not is_pending_battle and not is_event_nightmare and not is_defender:
             MessageLog.print_message("\n[INFO] Detecting if any user-specified loot dropped from this run...")
             if Settings.item_name != "EXP" and Settings.item_name != "Angel Halo Weapons" and Settings.item_name != "Repeated Runs":
                 temp_amount = ImageUtils.find_farmed_items(Settings.item_name)
@@ -581,7 +581,7 @@ class Game:
 
             Settings.item_amount_farmed += temp_amount
 
-        if is_completed and not is_pending_battle and not is_event_nightmare and not skip_info:
+        if is_completed and not is_pending_battle and not is_event_nightmare and not skip_info and not is_defender:
             if Settings.item_name != "EXP" and Settings.item_name != "Angel Halo Weapons" and Settings.item_name != "Repeated Runs":
                 MessageLog.print_message("\n**********************************************************************")
                 MessageLog.print_message("**********************************************************************")
@@ -643,7 +643,17 @@ class Game:
                                          f"**[{Settings.item_amount_farmed} / {Settings.item_amount_to_farm}]**"
 
                     Game._discord_queue.put(discord_string)
-
+        elif is_defender:
+                Settings.engaged_defender_battle = False
+                Settings.number_of_defeated_defenders+=1
+                MessageLog.print_message("\n**********************************************************************")
+                MessageLog.print_message("**********************************************************************")
+                MessageLog.print_message(f"[FARM] Farming Mode: {Settings.farming_mode}")
+                MessageLog.print_message(f"[FARM] Mission: {Settings.mission_name}")
+                MessageLog.print_message(f"[FARM] Summons: {Settings.summon_list}")
+                MessageLog.print_message(f"[FARM] Amount of Defenders defeated: {Settings.number_of_defeated_defenders}/{Settings.number_of_defenders}")
+                MessageLog.print_message("**********************************************************************")
+                MessageLog.print_message("**********************************************************************\n")
         return None
 
     @staticmethod
