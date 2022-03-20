@@ -887,6 +887,7 @@ class CombatMode:
         Args:
             script_commands (List[str]): List of script commands to use instead of reading from a text file. Defaults to None.
             is_nightmare (bool, optional): If Combat Mode is being used for a Nightmare, determines the method of reading the script file.
+            is_defender (bool, optional): If Combat Mode is being used for a Defender, determines the method of reading the script file.
 
         Returns:
             (bool): Return True if Combat Mode was successful. Else, return False if the Party wiped or backed out without retreating.
