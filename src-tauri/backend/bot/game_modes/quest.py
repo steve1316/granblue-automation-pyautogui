@@ -313,13 +313,6 @@ class Quest:
         else:
             raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
 
-        # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
-        MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
-        Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_"))
-
-        # Apply special navigation for Episode missions.
-        Quest._select_episode()
-
         return None
 
     @staticmethod
@@ -371,13 +364,6 @@ class Quest:
         else:
             raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
 
-        # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
-        MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
-        Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_"))
-
-        # Apply special navigation for Episode missions.
-        Quest._select_episode()
-
         return None
 
     @staticmethod
@@ -397,13 +383,6 @@ class Quest:
             MouseUtils.move_and_click_point(world_location[0] + 155, world_location[1] + 130, "template_node")
         else:
             raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
-
-        # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
-        MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
-        Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_"))
-
-        # Apply special navigation for Episode missions.
-        Quest._select_episode()
 
         return None
 
@@ -497,6 +476,16 @@ class Quest:
             elif Quest._oarlyegrande_page_1_islands.__contains__(current_island):
                 Quest._navigate_to_oarlyegrande_skydom_island(Settings.map_name)
                 Quest._select_oarlyegrande_chapter_node()
+
+            # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
+            MessageLog.print_message(f"[QUEST] Now bringing up the Summon Selection screen for \"{Settings.mission_name}\"...")
+            MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
+
+            # Now click on the mission node to start.
+            Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_"))
+
+            # Apply special navigation for Episode missions.
+            Quest._select_episode()
         else:
             raise QuestException("Failed to arrive at the Quest page.")
 
