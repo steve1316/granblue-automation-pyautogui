@@ -332,7 +332,7 @@ class Quest:
         if Settings.mission_name == "Stocking Up for Winter":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 80 node...")
             MouseUtils.move_and_click_point(world_location[0] + 15, world_location[1] + 65, "template_node")
-        elif Settings.mission_name == "Stocking Up for Winter":
+        elif Settings.mission_name == "The Mysterious Room":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 81 node...")
             MouseUtils.move_and_click_point(world_location[0] + 200, world_location[1] + 45, "template_node")
         elif Settings.mission_name == "The Right of Might" or Settings.mission_name == "Idelva Kingdom Episode 4":
@@ -346,10 +346,10 @@ class Quest:
         elif Settings.mission_name == "Teachings of the Sage Episode 2":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 89 node...")
             MouseUtils.move_and_click_point(world_location[0] + 335, world_location[1] + 70, "template_node")
-        elif Settings.mission_name == "Isle of Primals - Episode 3":
+        elif Settings.mission_name == "Isle of Primals Episode 3":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 129 node...")
             MouseUtils.move_and_click_point(world_location[0] + 225, world_location[1] + 135, "template_node")
-        elif Settings.mission_name == "Deception's Inception - Episode 4":
+        elif Settings.mission_name == "Deception's Inception Episode 4":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 100 node...")
             MouseUtils.move_and_click_point(world_location[0] + 285, world_location[1] + 65, "template_node")
         elif Settings.mission_name == "Be All That You Can Be":
