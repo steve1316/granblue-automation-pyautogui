@@ -237,6 +237,11 @@ class Quest:
 
     @staticmethod
     def _select_episode():
+        """Selects the required episode using the mission's name.
+
+        Returns:
+            None
+        """
         from bot.game import Game
 
         if Settings.mission_name.__contains__("Episode"):
@@ -255,7 +260,11 @@ class Quest:
 
     @staticmethod
     def _select_phantagrande_chapter_node():
-        from bot.game import Game
+        """Selects the Phantagrande chapter node for the mission.
+
+        Returns:
+            None
+        """
 
         # Grab the location of the "World" button.
         world_location = ImageUtils.find_button("world", tries = 5)
@@ -304,17 +313,15 @@ class Quest:
         else:
             raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
 
-        # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
-        MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
-        Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_"))
-
-        # Apply special navigation for Episode missions.
-        Quest._select_episode()
-
         return None
 
     @staticmethod
     def _select_nalhegrande_chapter_node():
+        """Selects the Nalhegrande chapter node for the mission.
+
+        Returns:
+            None
+        """
         from bot.game import Game
 
         # Grab the location of the "World" button.
@@ -325,7 +332,7 @@ class Quest:
         if Settings.mission_name == "Stocking Up for Winter":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 80 node...")
             MouseUtils.move_and_click_point(world_location[0] + 15, world_location[1] + 65, "template_node")
-        elif Settings.mission_name == "Stocking Up for Winter":
+        elif Settings.mission_name == "The Mysterious Room":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 81 node...")
             MouseUtils.move_and_click_point(world_location[0] + 200, world_location[1] + 45, "template_node")
         elif Settings.mission_name == "The Right of Might" or Settings.mission_name == "Idelva Kingdom Episode 4":
@@ -339,10 +346,10 @@ class Quest:
         elif Settings.mission_name == "Teachings of the Sage Episode 2":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 89 node...")
             MouseUtils.move_and_click_point(world_location[0] + 335, world_location[1] + 70, "template_node")
-        elif Settings.mission_name == "Isle of Primals - Episode 3":
+        elif Settings.mission_name == "Isle of Primals Episode 3":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 129 node...")
             MouseUtils.move_and_click_point(world_location[0] + 225, world_location[1] + 135, "template_node")
-        elif Settings.mission_name == "Deception's Inception - Episode 4":
+        elif Settings.mission_name == "Deception's Inception Episode 4":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 100 node...")
             MouseUtils.move_and_click_point(world_location[0] + 285, world_location[1] + 65, "template_node")
         elif Settings.mission_name == "Be All That You Can Be":
@@ -357,19 +364,15 @@ class Quest:
         else:
             raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
 
-        # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
-        MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
-        Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_"))
-
-        # Apply special navigation for Episode missions.
-        Quest._select_episode()
-
         return None
 
     @staticmethod
     def _select_oarlyegrande_chapter_node():
-        from bot.game import Game
+        """Selects the Oarlyegrande chapter node for the mission.
 
+        Returns:
+            None
+        """
         # Grab the location of the "World" button.
         world_location = ImageUtils.find_button("world", tries = 5)
         if world_location is None:
@@ -380,13 +383,6 @@ class Quest:
             MouseUtils.move_and_click_point(world_location[0] + 155, world_location[1] + 130, "template_node")
         else:
             raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
-
-        # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
-        MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
-        Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_"))
-
-        # Apply special navigation for Episode missions.
-        Quest._select_episode()
 
         return None
 
@@ -480,6 +476,16 @@ class Quest:
             elif Quest._oarlyegrande_page_1_islands.__contains__(current_island):
                 Quest._navigate_to_oarlyegrande_skydom_island(Settings.map_name)
                 Quest._select_oarlyegrande_chapter_node()
+
+            # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
+            MessageLog.print_message(f"[QUEST] Now bringing up the Summon Selection screen for \"{Settings.mission_name}\"...")
+            MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
+
+            # Now click on the mission node to start.
+            Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_"))
+
+            # Apply special navigation for Episode missions.
+            Quest._select_episode()
         else:
             raise QuestException("Failed to arrive at the Quest page.")
 

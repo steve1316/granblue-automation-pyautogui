@@ -130,27 +130,21 @@ class Special:
                             locations = ImageUtils.find_all("play_round_button")
 
                             if formatted_mission_name == "Fire Trial":
-                                # Navigate to Scarlet Trial.
                                 MessageLog.print_message(f"[SPECIAL] Selecting Fire Trial...")
                                 MouseUtils.move_and_click_point(locations[0][0], locations[0][1], "play_round_button")
                             elif formatted_mission_name == "Water Trial":
-                                # Navigate to Cerulean Trial.
                                 MessageLog.print_message(f"[SPECIAL] Selecting Water Trial...")
                                 MouseUtils.move_and_click_point(locations[1][0], locations[1][1], "play_round_button")
                             elif formatted_mission_name == "Earth Trial":
-                                # Navigate to Violet Trial.
                                 MessageLog.print_message(f"[SPECIAL] Selecting Earth Trial...")
                                 MouseUtils.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
                             elif formatted_mission_name == "Wind Trial":
-                                # Navigate to Violet Trial.
                                 MessageLog.print_message(f"[SPECIAL] Selecting Wind Trial...")
                                 MouseUtils.move_and_click_point(locations[3][0], locations[3][1], "play_round_button")
                             elif formatted_mission_name == "Light Trial":
-                                # Navigate to Violet Trial.
                                 MessageLog.print_message(f"[SPECIAL] Selecting Light Trial...")
                                 MouseUtils.move_and_click_point(locations[4][0], locations[4][1], "play_round_button")
                             elif formatted_mission_name == "Dark Trial":
-                                # Navigate to Violet Trial.
                                 MessageLog.print_message(f"[SPECIAL] Selecting Dark Trial...")
                                 MouseUtils.move_and_click_point(locations[5][0], locations[5][1], "play_round_button")
 
