@@ -532,10 +532,11 @@ class Game:
         
         Args:
             is_completed (bool): Allows incrementing of number of runs completed. This is for Farming Modes who have multi-part sections to them to prevent unnecessary incrementing of runs when it wasn't finished with 1 yet.
-            is_pending_battle (bool): Skip the incrementation of runs attempted if this was a Pending Battle. Defaults to False.
-            is_event_nightmare (bool): Skip the incrementation of runs attempted if this was a Event Nightmare. Defaults to False.
-            skip_info (bool): Skip printing the information of the run. Defaults to False.
-            skip_popup_check (bool): Skip checking for popups to get to the Loot Collected screen. Defaults to False.
+            is_pending_battle (bool, optional): Skip the incrementation of runs attempted if this was a Pending Battle. Defaults to False.
+            is_event_nightmare (bool, optional): Skip the incrementation of runs attempted if this was a Event Nightmare. Defaults to False.
+            skip_info (bool, optional): Skip printing the information of the run. Defaults to False.
+            skip_popup_check (bool, optional): Skip checking for popups to get to the Loot Collected screen. Defaults to False.
+            is_defender (bool, optional): Skip the incrementation of runs attempted if this was a Defender. Defaults to False.
 
         Returns:
             None
