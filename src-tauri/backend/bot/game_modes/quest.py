@@ -267,9 +267,9 @@ class Quest:
         """
 
         # Grab the location of the "World" button.
-        world_location = ImageUtils.find_button("world", tries = 5)
+        world_location = ImageUtils.find_button("world", tries = 30)
         if world_location is None:
-            world_location = ImageUtils.find_button("world2", tries = 5)
+            world_location = ImageUtils.find_button("world2", tries = 30)
 
         if Settings.mission_name == "Scattered Cargo":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 1 (115) node...")
@@ -325,9 +325,9 @@ class Quest:
         from bot.game import Game
 
         # Grab the location of the "World" button.
-        world_location = ImageUtils.find_button("world", tries = 5)
+        world_location = ImageUtils.find_button("world", tries = 30)
         if world_location is None:
-            world_location = ImageUtils.find_button("world2", tries = 5)
+            world_location = ImageUtils.find_button("world2", tries = 30)
 
         if Settings.mission_name == "Stocking Up for Winter":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 80 node...")
@@ -374,9 +374,9 @@ class Quest:
             None
         """
         # Grab the location of the "World" button.
-        world_location = ImageUtils.find_button("world", tries = 5)
+        world_location = ImageUtils.find_button("world", tries = 30)
         if world_location is None:
-            world_location = ImageUtils.find_button("world2", tries = 5)
+            world_location = ImageUtils.find_button("world2", tries = 30)
 
         if Settings.mission_name == "House of Happiness":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 132 node...")
@@ -467,14 +467,23 @@ class Quest:
                     Quest._enter_skydom(target_skydom)
 
             # From the World page, move to the target island and then select the target chapter node.
-            if Quest._phantagrande_page_1_islands.__contains__(current_island) or Quest._phantagrande_page_2_islands.__contains__(current_island):
-                Quest._navigate_to_phantagrande_skydom_island(Settings.map_name, current_island)
+            if Quest._phantagrande_page_1_islands.__contains__(Settings.map_name) or Quest._phantagrande_page_2_islands.__contains__(Settings.map_name):
+                if not check_location:
+                    Quest._navigate_to_phantagrande_skydom_island(Settings.map_name, current_island)
+                    Game.wait(3.0)
+
                 Quest._select_phantagrande_chapter_node()
-            elif Quest._nalhegrande_page_1_islands.__contains__(current_island) or Quest._nalhegrande_page_2_islands.__contains__(current_island):
-                Quest._navigate_to_nalhegrande_skydom_island(Settings.map_name, current_island)
+            elif Quest._nalhegrande_page_1_islands.__contains__(Settings.map_name) or Quest._nalhegrande_page_2_islands.__contains__(Settings.map_name):
+                if not check_location:
+                    Quest._navigate_to_nalhegrande_skydom_island(Settings.map_name, current_island)
+                    Game.wait(3.0)
+
                 Quest._select_nalhegrande_chapter_node()
-            elif Quest._oarlyegrande_page_1_islands.__contains__(current_island):
-                Quest._navigate_to_oarlyegrande_skydom_island(Settings.map_name)
+            elif Quest._oarlyegrande_page_1_islands.__contains__(Settings.map_name):
+                if not check_location:
+                    Quest._navigate_to_oarlyegrande_skydom_island(Settings.map_name)
+                    Game.wait(3.0)
+
                 Quest._select_oarlyegrande_chapter_node()
 
             # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
