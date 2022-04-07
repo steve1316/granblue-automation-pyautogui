@@ -77,4 +77,4 @@ def start_now(token: str, user_id: int, queue: multiprocessing.Queue):
     try:
         client.run(token)
     except LoginFailure:
-        MessageLog.print_message("\n[DISCORD] Failed to connect to Discord API. Please double check your token.\n")
+        MessageLog.print_message("\n[DISCORD] Failed to connect to Discord API. Please double check your token and/or user id.\n")

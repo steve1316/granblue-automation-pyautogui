@@ -177,7 +177,11 @@ class TwitterRoomFinder:
         _auth = tweepy.OAuthHandler(Settings.twitter_keys_tokens[0], Settings.twitter_keys_tokens[1])
         _auth.set_access_token(Settings.twitter_keys_tokens[2], Settings.twitter_keys_tokens[3])
         _api = tweepy.API(_auth)
-        return _api.verify_credentials()
+
+        if _api.verify_credentials():
+            return True
+        else:
+            raise (ConnectionError(f"[ERROR] Failed to connect to the Twitter API. Check your keys and tokens."))
 
     @staticmethod
     def get_room_code():

@@ -39,6 +39,7 @@ const ExtraSettings = () => {
     const [showSnackbar, setShowSnackbar] = useState<boolean>(false)
     const [testInProgress, setTestInProgress] = useState<boolean>(false)
     const [testFailed, setTestFailed] = useState<boolean>(false)
+    const [testErrorMessage, setTestErrorMessage] = useState<string>("")
 
     const bot = useContext(BotStateContext)
 
@@ -1059,6 +1060,7 @@ const ExtraSettings = () => {
             } else if (line.indexOf("Test failed.") !== -1) {
                 console.log("Testing Twitter API was unsuccessful.")
                 setTestFailed(true)
+                setTestErrorMessage(line)
                 setShowSnackbar(true)
             }
         })
@@ -1100,6 +1102,7 @@ const ExtraSettings = () => {
             } else if (line.indexOf("Test failed.") !== -1) {
                 console.log("Testing Discord API was unsuccessful.")
                 setTestFailed(true)
+                setTestErrorMessage(line)
                 setShowSnackbar(true)
             }
         })
@@ -1146,7 +1149,7 @@ const ExtraSettings = () => {
                     onClose={() => setShowSnackbar(false)}
                     onClick={() => setShowSnackbar(false)}
                 >
-                    {testFailed ? <Alert severity="error">Test was not successful.</Alert> : <Alert severity="success">Test was successful.</Alert>}
+                    {testFailed ? <Alert severity="error">{testErrorMessage}</Alert> : <Alert severity="success">Test was successful.</Alert>}
                 </Snackbar>
 
                 <Stack spacing={2} className="extraSettingsWrapper">
