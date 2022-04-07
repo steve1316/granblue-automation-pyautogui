@@ -32,6 +32,13 @@ export interface Settings {
         discordUserID: string
     }
 
+    // API settings.
+    api: {
+        enableOptInAPI: boolean
+        userID: string
+        password: string
+    }
+
     // Configuration settings.
     configuration: {
         enableAutoRestore: boolean
@@ -156,6 +163,11 @@ export const defaultSettings: Settings = {
         enableDiscordNotifications: false,
         discordToken: "",
         discordUserID: "",
+    },
+    api: {
+        enableOptInAPI: false,
+        userID: "",
+        password: "",
     },
     configuration: {
         enableAutoRestore: true,

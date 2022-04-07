@@ -26,6 +26,7 @@ import { BotStateContext } from "../../context/BotStateContext"
 import { readTextFile } from "@tauri-apps/api/fs"
 import { open, DialogFilter } from "@tauri-apps/api/dialog"
 import "./index.scss"
+import axios from "axios"
 
 // Custom input component for combat script file selection.
 const Input = styled("input")({
@@ -810,7 +811,7 @@ const ExtraSettings = () => {
         )
     }
 
-    //Arcarum sandbox settings
+    // Arcarum sandbox settings
     const renderSandboxDefenderSettings = () => {
         if (bot.settings.sandbox.enableDefender && bot.settings.game.farmingMode === "Arcarum Sandbox") {
             var title: string = "Defender"
@@ -928,6 +929,99 @@ const ExtraSettings = () => {
         }
     }
 
+    // API Integration settings
+    const renderAPIIntegrationSettings = () => {
+        const title: string = "API Integration"
+        return (
+            <div id="api-integration">
+                <Typography variant="h6" gutterBottom component="div" className="sectionTitle">
+                    {title} Settings <Iconify icon="ri:sword-fill" className="sectionTitleIcon" />
+                </Typography>
+
+                <Divider />
+
+                <Typography variant="subtitle1" gutterBottom component="div" color="text.secondary">
+                    You can opt-in to this feature where the bot will automatically send successful results from the Loot Collection process and you can view your results and similar ones over on the
+                    Granblue Automation Statistics website.
+                </Typography>
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bot.settings.api.enableOptInAPI}
+                                onChange={(e) => bot.setSettings({ ...bot.settings, api: { ...bot.settings.api, enableOptInAPI: e.target.checked } })}
+                            />
+                        }
+                        label={`Enable Opt-in for ${title}`}
+                    />
+                    <FormHelperText>Enable API Integration</FormHelperText>
+                </FormGroup>
+
+                {bot.settings.api.enableOptInAPI ? (
+                    <div>
+                        <Typography variant="subtitle1" gutterBottom component="div" color="text.secondary">
+                            {`How this works:
+
+                            Press the button below to generate a unique ID attached to this program. This will serve as your user ID that you can use to register on the website with it. 
+                            Alternatively, you can use your own custom one to register but be sure to fill out the User ID text field below with your exact one.
+
+                            The account registered on the website will be used to associate your success results from the Loot Collection process.
+                            
+                            A success result describes the Loot Collection process detecting a item drop after each run.`}
+                        </Typography>
+
+                        <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="User ID"
+                                    value={bot.settings.api.userID}
+                                    onChange={(e) => bot.setSettings({ ...bot.settings, api: { ...bot.settings.api, userID: e.target.value } })}
+                                    placeholder="Insert your User ID here"
+                                    multiline
+                                    variant="filled"
+                                    fullWidth
+                                />
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Password"
+                                    value={bot.settings.api.password}
+                                    onChange={(e) => bot.setSettings({ ...bot.settings, api: { ...bot.settings.api, password: e.target.value } })}
+                                    placeholder="Insert your password here"
+                                    multiline
+                                    variant="filled"
+                                    fullWidth
+                                />
+                            </Grid>
+
+                            <Grid item>
+                                <Box sx={{ m: 1, position: "relative" }}>
+                                    <Button variant="contained" startIcon={<Speed />} className="twitterButton" onClick={() => testAPIIntegration()} disabled={testInProgress}>
+                                        Test Login into API
+                                    </Button>
+                                    {testInProgress && (
+                                        <CircularProgress
+                                            size={24}
+                                            sx={{
+                                                position: "absolute",
+                                                top: "50%",
+                                                left: "50%",
+                                                marginTop: "-12px",
+                                                marginLeft: "-12px",
+                                            }}
+                                        />
+                                    )}
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </div>
+                ) : null}
+            </div>
+        )
+    }
+
     // Attempt to kill the bot process if it is still active.
     const handleStop = async () => {
         if (testPID !== 0) {
@@ -1020,6 +1114,24 @@ const ExtraSettings = () => {
         setTestInProgress(true)
     }
 
+    const testAPIIntegration = () => {
+        const userID = bot.settings.api.userID
+        const password = bot.settings.api.password
+        axios
+            .post("https://granblue-automation-statistics.com/api/login", { userID, password }, { withCredentials: true })
+            .then(() => {
+                setTestFailed(false)
+            })
+            .catch(() => {
+                setTestFailed(true)
+            })
+            .finally(() => {
+                setTestInProgress(false)
+            })
+
+        setTestInProgress(true)
+    }
+
     // Show or hide the Support Summon Selection component.
     const handleModalOpen = () => setIsModalOpen(true)
     const handleModalClose = () => setIsModalOpen(false)
@@ -1041,6 +1153,8 @@ const ExtraSettings = () => {
                     {renderNightmareSettings()}
 
                     {renderSandboxDefenderSettings()}
+
+                    {renderAPIIntegrationSettings()}
 
                     {renderTwitterSettings()}
 
