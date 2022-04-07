@@ -26,7 +26,7 @@ import { BotStateContext } from "../../context/BotStateContext"
 import { readTextFile } from "@tauri-apps/api/fs"
 import { open, DialogFilter } from "@tauri-apps/api/dialog"
 import "./index.scss"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 
 // Custom input component for combat script file selection.
 const Input = styled("input")({
@@ -956,20 +956,13 @@ const ExtraSettings = () => {
                         }
                         label={`Enable Opt-in for ${title}`}
                     />
-                    <FormHelperText>Enable API Integration</FormHelperText>
+                    <FormHelperText>Enable API Integration with Granblue Automation Statistics</FormHelperText>
                 </FormGroup>
 
                 {bot.settings.api.enableOptInAPI ? (
                     <div>
-                        <Typography variant="subtitle1" gutterBottom component="div" color="text.secondary">
-                            {`How this works:
-
-                            Press the button below to generate a unique ID attached to this program. This will serve as your user ID that you can use to register on the website with it. 
-                            Alternatively, you can use your own custom one to register but be sure to fill out the User ID text field below with your exact one.
-
-                            The account registered on the website will be used to associate your success results from the Loot Collection process.
-                            
-                            A success result describes the Loot Collection process detecting a item drop after each run.`}
+                        <Typography variant="subtitle1" gutterBottom component="p" color="text.secondary">
+                            {`How this works:\n\nPress the button below to generate a unique ID attached to this program. This will serve as your user ID that you can use to register on the website with it. Alternatively, you can use your own custom one to register but be sure to fill out the User ID text field below with your exact one.\n\nThe account registered on the website will be used to associate your success results from the Loot Collection process. A success result describes the Loot Collection process detecting a item drop after each run.`}
                         </Typography>
 
                         <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
@@ -1118,18 +1111,18 @@ const ExtraSettings = () => {
     }
 
     const testAPIIntegration = () => {
-        const userID = bot.settings.api.userID
-        const password = bot.settings.api.password
         axios
-            .post("https://granblue-automation-statistics.com/api/login", { userID, password }, { withCredentials: true })
+            .post("https://granblue-automation-statistics.com/api/login", { username: bot.settings.api.userID, password: bot.settings.api.password }, { withCredentials: true })
             .then(() => {
                 setTestFailed(false)
             })
-            .catch(() => {
+            .catch((e: AxiosError) => {
                 setTestFailed(true)
+                setTestErrorMessage(e.message)
             })
             .finally(() => {
                 setTestInProgress(false)
+                setShowSnackbar(true)
             })
 
         setTestInProgress(true)
