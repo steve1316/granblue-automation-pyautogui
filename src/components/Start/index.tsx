@@ -1,5 +1,6 @@
 import { FsTextFileOption, readTextFile, writeFile } from "@tauri-apps/api/fs"
 import { Command } from "@tauri-apps/api/shell"
+import axios from "axios"
 import { useContext, useEffect, useState } from "react"
 import { BotStateContext, Settings, defaultSettings } from "../../context/BotStateContext"
 import { MessageLogContext } from "../../context/MessageLogContext"
@@ -8,6 +9,7 @@ import summonData from "../../data/summons.json"
 const Start = () => {
     const [PID, setPID] = useState(0)
     const [firstTimeSetup, setFirstTimeSetup] = useState(true)
+    const [firstTimeAPIRequest, setFirstTimeAPIRequest] = useState(true)
 
     const messageLogContext = useContext(MessageLogContext)
     const botStateContext = useContext(BotStateContext)
@@ -229,8 +231,25 @@ const Start = () => {
             messageLogContext.setAsyncMessages(newLog)
         })
         command.stdout.on("data", (line: string) => {
-            let newLog = [...messageLogContext.asyncMessages, `\n${line}`]
-            messageLogContext.setAsyncMessages(newLog)
+            // If the line contains this, then send a API request to Granblue Automation Statistics.
+            if (line.includes("API-EVENT")) {
+                // Format of the line is API-EVENT|ITEM NAME|ITEM AMOUNT
+                let newLog: string[] = []
+                const splitLine = line.split("|")
+                if (splitLine.length !== 3) {
+                    newLog = [...messageLogContext.asyncMessages, `\nUnable to send API request to Granblue Automation Statistics: Invalid request format of ${splitLine.length}.`]
+                } else if (Number.isNaN(parseInt(splitLine[2]))) {
+                    newLog = [...messageLogContext.asyncMessages, `\nUnable to send API request to Granblue Automation Statistics: Invalid type for item amount.`]
+                } else {
+                    sendAPIRequest(splitLine[1], parseInt(splitLine[2]))
+                }
+
+                newLog = [...newLog, `\n${line}`]
+                messageLogContext.setAsyncMessages(newLog)
+            } else {
+                let newLog = [...messageLogContext.asyncMessages, `\n${line}`]
+                messageLogContext.setAsyncMessages(newLog)
+            }
         })
         command.stderr.on("data", (line: string) => {
             let newLog = [...messageLogContext.asyncMessages, `\n${line}`]
@@ -242,6 +261,19 @@ const Start = () => {
         console.log("PID: ", child.pid)
         setPID(child.pid)
         botStateContext.setIsBotRunning(true)
+    }
+
+    // Send a API request to create a new result in the database.
+    const sendAPIRequest = (itemName: string, amount: number) => {
+        // If this is the first time, create the item if it does not already exist in the database.
+        if (firstTimeAPIRequest) {
+            axios.post(`https://granblue-automation-statistics.com/api/create-item/farmingMode/${botStateContext.settings.game.farmingMode}/${itemName}`).then(() => {
+                setFirstTimeAPIRequest(false)
+                axios.post(`https://granblue-automation-statistics.com/api/create-result/${botStateContext.settings.api.username}/${itemName}/GA/${amount}`)
+            })
+        } else {
+            axios.post(`https://granblue-automation-statistics.com/api/create-result/${botStateContext.settings.api.username}/${itemName}/GA/${amount}`)
+        }
     }
 
     return null

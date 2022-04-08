@@ -51,6 +51,10 @@ class Settings:
     user_id: int = dictor(_data, "discord.discordUserID", "")
     # #### end of discord ####
 
+    # #### api ####
+    enable_opt_in_api: bool = dictor(_data, "api.enableOptInAPI", False)
+    # #### end of api ####
+
     # #### configuration ####
     enable_bezier_curve_mouse_movement: bool = dictor(_data, "configuration.enableBezierCurveMouseMovement", True)
     custom_mouse_speed: float = float(dictor(_data, "configuration.mouseSpeed", 0.2))
