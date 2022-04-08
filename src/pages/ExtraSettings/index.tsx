@@ -962,16 +962,16 @@ const ExtraSettings = () => {
                 {bot.settings.api.enableOptInAPI ? (
                     <div>
                         <Typography variant="subtitle1" gutterBottom component="p" color="text.secondary">
-                            {`How this works:\n\nPress the button below to generate a unique ID attached to this program. This will serve as your user ID that you can use to register on the website with it. Alternatively, you can use your own custom one to register but be sure to fill out the User ID text field below with your exact one.\n\nThe account registered on the website will be used to associate your success results from the Loot Collection process. A success result describes the Loot Collection process detecting a item drop after each run.`}
+                            {`How this works:\n\nInput your username and password below that you used to register a new account on the website. \n\nThe account registered on the website will be used to associate your success results from the Loot Collection process. A success result describes the Loot Collection process detecting a item drop after each run.`}
                         </Typography>
 
                         <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                             <Grid item xs={6}>
                                 <TextField
-                                    label="User ID"
-                                    value={bot.settings.api.userID}
-                                    onChange={(e) => bot.setSettings({ ...bot.settings, api: { ...bot.settings.api, userID: e.target.value } })}
-                                    placeholder="Insert your User ID here"
+                                    label="Username"
+                                    value={bot.settings.api.username}
+                                    onChange={(e) => bot.setSettings({ ...bot.settings, api: { ...bot.settings.api, username: e.target.value } })}
+                                    placeholder="Insert your username here"
                                     multiline
                                     variant="filled"
                                     fullWidth
@@ -1112,7 +1112,7 @@ const ExtraSettings = () => {
 
     const testAPIIntegration = () => {
         axios
-            .post("https://granblue-automation-statistics.com/api/login", { username: bot.settings.api.userID, password: bot.settings.api.password }, { withCredentials: true })
+            .post("https://granblue-automation-statistics.com/api/login", { username: bot.settings.api.username, password: bot.settings.api.password }, { withCredentials: true })
             .then(() => {
                 setTestFailed(false)
             })

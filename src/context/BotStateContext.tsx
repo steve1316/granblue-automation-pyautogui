@@ -35,7 +35,7 @@ export interface Settings {
     // API settings.
     api: {
         enableOptInAPI: boolean
-        userID: string
+        username: string
         password: string
     }
 
@@ -166,7 +166,7 @@ export const defaultSettings: Settings = {
     },
     api: {
         enableOptInAPI: false,
-        userID: "",
+        username: "",
         password: "",
     },
     configuration: {
