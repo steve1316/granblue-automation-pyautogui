@@ -585,7 +585,7 @@ class Game:
 
         # If there were item drops detected and the user opt in to sending their result to Granblue Automation Statistics, then have the frontend send the API request.
         if temp_amount != 0 and Settings.enable_opt_in_api:
-            Game.send_api_result()
+            Game._send_api_result()
 
         if is_completed and not is_pending_battle and not is_event_nightmare and not skip_info and not is_defender:
             if Settings.item_name != "EXP" and Settings.item_name != "Angel Halo Weapons" and Settings.item_name != "Repeated Runs":
