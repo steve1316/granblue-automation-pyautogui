@@ -177,7 +177,6 @@ const Start = () => {
             messageLogContext.messageLog.forEach((message) => {
                 fileContent = fileContent.concat(message)
             })
-            console.log(`Messages to save: ${messageLogContext.messageLog}`)
             const logFile: FsTextFileOption = { path: `logs/${fileName}.txt`, contents: fileContent }
             writeFile(logFile)
                 .then(() => {
