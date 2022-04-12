@@ -992,7 +992,7 @@ const ExtraSettings = () => {
 
                             <Grid item>
                                 <Box sx={{ m: 1, position: "relative" }}>
-                                    <Button variant="contained" startIcon={<Speed />} className="twitterButton" onClick={() => testAPIIntegration()} disabled={testInProgress}>
+                                    <Button variant="contained" startIcon={<Speed />} className="twitterButton" onClick={(e) => testAPIIntegration(e)} disabled={testInProgress}>
                                         Test Login into API
                                     </Button>
                                     {testInProgress && (
@@ -1110,7 +1110,9 @@ const ExtraSettings = () => {
         setTestInProgress(true)
     }
 
-    const testAPIIntegration = () => {
+    const testAPIIntegration = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault()
+        setTestInProgress(true)
         axios
             .post("https://granblue-automation-statistics.com/api/login", { username: bot.settings.api.username, password: bot.settings.api.password }, { withCredentials: true })
             .then(() => {
@@ -1124,8 +1126,6 @@ const ExtraSettings = () => {
                 setTestInProgress(false)
                 setShowSnackbar(true)
             })
-
-        setTestInProgress(true)
     }
 
     // Show or hide the Support Summon Selection component.
