@@ -1,6 +1,6 @@
 import { FsTextFileOption, readTextFile, writeFile } from "@tauri-apps/api/fs"
 import { Command } from "@tauri-apps/api/shell"
-import axios from "axios"
+import axios, { AxiosError } from "axios"
 import { useContext, useEffect, useState } from "react"
 import { BotStateContext, Settings, defaultSettings } from "../../context/BotStateContext"
 import { MessageLogContext } from "../../context/MessageLogContext"
@@ -10,6 +10,7 @@ const Start = () => {
     const [PID, setPID] = useState(0)
     const [firstTimeSetup, setFirstTimeSetup] = useState(true)
     const [firstTimeAPIRequest, setFirstTimeAPIRequest] = useState(true)
+    const [successfulAPILogin, setSuccessfulAPILogin] = useState(false)
 
     const messageLogContext = useContext(MessageLogContext)
     const botStateContext = useContext(BotStateContext)
@@ -255,11 +256,37 @@ const Start = () => {
             messageLogContext.setAsyncMessages(newLog)
         })
 
+        // Login to API.
+        await loginToAPI()
+
         // Create the child process.
         const child = await command.spawn()
         console.log("PID: ", child.pid)
         setPID(child.pid)
         botStateContext.setIsBotRunning(true)
+    }
+
+    const loginToAPI = async () => {
+        await axios
+            .post(
+                "https://granblue-automation-statistics.com/api/login",
+                {
+                    username: botStateContext.settings.api.username,
+                    password: botStateContext.settings.api.password,
+                },
+                {
+                    withCredentials: true,
+                }
+            )
+            .then(() => {
+                let newLog = [...messageLogContext.asyncMessages, `Successfully logged into Granblue Automation Statistics API.\n`]
+                messageLogContext.setAsyncMessages(newLog)
+                setSuccessfulAPILogin(true)
+            })
+            .catch((e: AxiosError) => {
+                let newLog = [...messageLogContext.asyncMessages, `Failed to login to Granblue Automation Statistics API: ${e}\n`]
+                messageLogContext.setAsyncMessages(newLog)
+            })
     }
 
     // Send a API request to create a new result in the database.
