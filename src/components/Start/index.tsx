@@ -231,8 +231,8 @@ const Start = () => {
         })
         command.stdout.on("data", (line: string) => {
             // If the line contains this, then send a API request to Granblue Automation Statistics.
-            if (line.includes("API-EVENT")) {
-                // Format of the line is API-EVENT|ITEM NAME|ITEM AMOUNT
+            if (successfulAPILogin && line.includes("API-RESULT")) {
+                // Format of the line is API-RESULT|ITEM NAME|ITEM AMOUNT
                 let newLog: string[] = []
                 const splitLine = line.split("|")
                 if (splitLine.length !== 3) {
