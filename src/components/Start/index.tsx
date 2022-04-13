@@ -306,7 +306,7 @@ const Start = () => {
                     setFirstTimeAPIRequest(false)
                     axios
                         .post(
-                            `https://granblue-automation-statistics.com/api/create-result/${botStateContext.settings.api.username}/${itemName}/GA/${amount}`,
+                            `https://granblue-automation-statistics.com/api/create-result/${botStateContext.settings.api.username}/${botStateContext.settings.game.farmingMode}/${itemName}/GA/${amount}`,
                             { username: botStateContext.settings.api.username, password: botStateContext.settings.api.password },
                             { withCredentials: true }
                         )
