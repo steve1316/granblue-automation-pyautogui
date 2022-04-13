@@ -259,7 +259,9 @@ const Start = () => {
         })
 
         // Login to API.
+        if (botStateContext.settings.api.enableOptInAPI) {
         await loginToAPI()
+        }
 
         // Create the child process.
         const child = await command.spawn()
