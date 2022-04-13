@@ -237,8 +237,10 @@ const Start = () => {
                 let newLog: string[] = []
                 const splitLine = line.split("|")
                 if (splitLine.length !== 3) {
+                    console.log(`Unable to send API request to Granblue Automation Statistics: Invalid request format of ${splitLine.length}.`)
                     newLog = [...messageLogContext.asyncMessages, `\nUnable to send API request to Granblue Automation Statistics: Invalid request format of ${splitLine.length}.`]
                 } else if (Number.isNaN(parseInt(splitLine[2]))) {
+                    console.log(`Unable to send API request to Granblue Automation Statistics: Invalid type for item amount.`)
                     newLog = [...messageLogContext.asyncMessages, `\nUnable to send API request to Granblue Automation Statistics: Invalid type for item amount.`]
                 } else {
                     sendAPIRequest(splitLine[1], parseInt(splitLine[2]))
@@ -292,13 +294,54 @@ const Start = () => {
     // Send a API request to create a new result in the database.
     const sendAPIRequest = (itemName: string, amount: number) => {
         // If this is the first time, create the item if it does not already exist in the database.
+        let newLog: string[] = []
         if (firstTimeAPIRequest) {
-            axios.post(`https://granblue-automation-statistics.com/api/create-item/farmingMode/${botStateContext.settings.game.farmingMode}/${itemName}`).then(() => {
-                setFirstTimeAPIRequest(false)
-                axios.post(`https://granblue-automation-statistics.com/api/create-result/${botStateContext.settings.api.username}/${itemName}/GA/${amount}`)
-            })
+            axios
+                .post(
+                    `https://granblue-automation-statistics.com/api/create-item/farmingMode/${botStateContext.settings.game.farmingMode}/${itemName}`,
+                    { username: botStateContext.settings.api.username, password: botStateContext.settings.api.password },
+                    { withCredentials: true }
+                )
+                .then(() => {
+                    setFirstTimeAPIRequest(false)
+                    axios
+                        .post(
+                            `https://granblue-automation-statistics.com/api/create-result/${botStateContext.settings.api.username}/${itemName}/GA/${amount}`,
+                            { username: botStateContext.settings.api.username, password: botStateContext.settings.api.password },
+                            { withCredentials: true }
+                        )
+                        .then(() => {
+                            newLog = [...messageLogContext.asyncMessages, `\nAPI Request successfully resolved.`]
+                        })
+                        .catch((e: AxiosError) => {
+                            newLog = [...messageLogContext.asyncMessages, `\nFailed to create result: ${e}`]
+                        })
+                        .finally(() => {
+                            messageLogContext.setAsyncMessages(newLog)
+                        })
+                })
+                .catch((e: AxiosError) => {
+                    console.error(`Failed to create item for the first time: ${e}`)
+                    newLog = [...messageLogContext.asyncMessages, `\nFailed to create item for the first time: ${e}`]
+                    messageLogContext.setAsyncMessages(newLog)
+                })
         } else {
-            axios.post(`https://granblue-automation-statistics.com/api/create-result/${botStateContext.settings.api.username}/${itemName}/GA/${amount}`)
+            let newLog: string[] = []
+            axios
+                .post(
+                    `https://granblue-automation-statistics.com/api/create-result/${botStateContext.settings.api.username}/${itemName}/GA/${amount}`,
+                    { username: botStateContext.settings.api.username, password: botStateContext.settings.api.password },
+                    { withCredentials: true }
+                )
+                .then(() => {
+                    newLog = [...messageLogContext.asyncMessages, `\nAPI Request sent.`]
+                })
+                .catch((e: AxiosError) => {
+                    newLog = [...messageLogContext.asyncMessages, `\nFailed to create result: ${e}`]
+                })
+                .finally(() => {
+                    messageLogContext.setAsyncMessages(newLog)
+                })
         }
     }
 
