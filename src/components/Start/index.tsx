@@ -10,7 +10,7 @@ const Start = () => {
     const [PID, setPID] = useState(0)
     const [firstTimeSetup, setFirstTimeSetup] = useState(true)
     const [firstTimeAPIRequest, setFirstTimeAPIRequest] = useState(true)
-    const [successfulAPILogin, setSuccessfulAPILogin] = useState(false)
+    let successfulAPILogin = false
 
     const messageLogContext = useContext(MessageLogContext)
     const botStateContext = useContext(BotStateContext)
@@ -260,7 +260,7 @@ const Start = () => {
 
         // Login to API.
         if (botStateContext.settings.api.enableOptInAPI) {
-        await loginToAPI()
+            await loginToAPI()
         }
 
         // Create the child process.
@@ -285,7 +285,7 @@ const Start = () => {
             .then(() => {
                 let newLog = [...messageLogContext.asyncMessages, `Successfully logged into Granblue Automation Statistics API.\n`]
                 messageLogContext.setAsyncMessages(newLog)
-                setSuccessfulAPILogin(true)
+                successfulAPILogin = true
             })
             .catch((e: AxiosError) => {
                 let newLog = [...messageLogContext.asyncMessages, `Failed to login to Granblue Automation Statistics API: ${e}\n`]
@@ -294,25 +294,27 @@ const Start = () => {
     }
 
     // Send a API request to create a new result in the database.
-    const sendAPIRequest = (itemName: string, amount: number) => {
+    const sendAPIRequest = async (itemName: string, amount: number) => {
         // If this is the first time, create the item if it does not already exist in the database.
         let newLog: string[] = []
         if (firstTimeAPIRequest) {
-            axios
+            await axios
                 .post(
                     `https://granblue-automation-statistics.com/api/create-item/farmingMode/${botStateContext.settings.game.farmingMode}/${itemName}`,
                     { username: botStateContext.settings.api.username, password: botStateContext.settings.api.password },
                     { withCredentials: true }
                 )
-                .then(() => {
+                .then(async () => {
+                    console.log("Successfully created new item: ", itemName)
                     setFirstTimeAPIRequest(false)
-                    axios
+                    await axios
                         .post(
                             `https://granblue-automation-statistics.com/api/create-result/${botStateContext.settings.api.username}/${botStateContext.settings.game.farmingMode}/${itemName}/GA/${amount}`,
                             { username: botStateContext.settings.api.username, password: botStateContext.settings.api.password },
                             { withCredentials: true }
                         )
                         .then(() => {
+                            console.log(`Successfully created new result for ${amount}x ${itemName}`)
                             newLog = [...messageLogContext.asyncMessages, `\nAPI Request successfully resolved.`]
                         })
                         .catch((e: AxiosError) => {
@@ -329,14 +331,15 @@ const Start = () => {
                 })
         } else {
             let newLog: string[] = []
-            axios
+            await axios
                 .post(
-                    `https://granblue-automation-statistics.com/api/create-result/${botStateContext.settings.api.username}/${itemName}/GA/${amount}`,
+                    `https://granblue-automation-statistics.com/api/create-result/${botStateContext.settings.api.username}/${botStateContext.settings.game.farmingMode}/${itemName}/GA/${amount}`,
                     { username: botStateContext.settings.api.username, password: botStateContext.settings.api.password },
                     { withCredentials: true }
                 )
                 .then(() => {
-                    newLog = [...messageLogContext.asyncMessages, `\nAPI Request sent.`]
+                    console.log(`Successfully created new result for ${amount}x ${itemName}`)
+                    newLog = [...messageLogContext.asyncMessages, `\nAPI Request successfully resolved.`]
                 })
                 .catch((e: AxiosError) => {
                     newLog = [...messageLogContext.asyncMessages, `\nFailed to create result: ${e}`]
