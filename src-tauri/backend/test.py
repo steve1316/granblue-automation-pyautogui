@@ -222,7 +222,10 @@ if __name__ == "__main__":
 
                 print("\nTest successfully completed.")
             except Exception as e:
-                print(f"\nTest failed. Error message: {e}")
+                if option == 10:
+                    print(f"\nTest failed. Error message: [DISCORD] Failed to connect to Discord API. Please double check your token and/or user id.")
+                else:
+                    print(f"\nTest failed. Error message: {e}")
     except IndexError:
         option: int = -1
         option_selected = ""
@@ -291,4 +294,7 @@ if __name__ == "__main__":
 
                     print("\nTest successfully completed.")
                 except Exception as e:
-                    print(f"\nTest failed. Error message: {e}")
+                    if option == 10:
+                        print(f"\nTest failed. Error message: [DISCORD] Failed to connect to Discord API. Please double check your token and/or user id.")
+                    else:
+                        print(f"\nTest failed. Error message: {e}")

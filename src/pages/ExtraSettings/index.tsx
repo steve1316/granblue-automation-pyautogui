@@ -26,6 +26,7 @@ import { BotStateContext } from "../../context/BotStateContext"
 import { readTextFile } from "@tauri-apps/api/fs"
 import { open, DialogFilter } from "@tauri-apps/api/dialog"
 import "./index.scss"
+import axios, { AxiosError } from "axios"
 
 // Custom input component for combat script file selection.
 const Input = styled("input")({
@@ -38,6 +39,7 @@ const ExtraSettings = () => {
     const [showSnackbar, setShowSnackbar] = useState<boolean>(false)
     const [testInProgress, setTestInProgress] = useState<boolean>(false)
     const [testFailed, setTestFailed] = useState<boolean>(false)
+    const [testErrorMessage, setTestErrorMessage] = useState<string>("")
 
     const bot = useContext(BotStateContext)
 
@@ -810,7 +812,7 @@ const ExtraSettings = () => {
         )
     }
 
-    //Arcarum sandbox settings
+    // Arcarum sandbox settings
     const renderSandboxDefenderSettings = () => {
         if (bot.settings.sandbox.enableDefender && bot.settings.game.farmingMode === "Arcarum Sandbox") {
             var title: string = "Defender"
@@ -928,6 +930,92 @@ const ExtraSettings = () => {
         }
     }
 
+    // API Integration settings
+    const renderAPIIntegrationSettings = () => {
+        const title: string = "API Integration"
+        return (
+            <div id="api-integration">
+                <Typography variant="h6" gutterBottom component="div" className="sectionTitle">
+                    {title} Settings <Iconify icon="ri:sword-fill" className="sectionTitleIcon" />
+                </Typography>
+
+                <Divider />
+
+                <Typography variant="subtitle1" gutterBottom component="div" color="text.secondary">
+                    You can opt-in to this feature where the bot will automatically send successful results from the Loot Collection process and you can view your results and similar ones over on the
+                    Granblue Automation Statistics website.
+                </Typography>
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bot.settings.api.enableOptInAPI}
+                                onChange={(e) => bot.setSettings({ ...bot.settings, api: { ...bot.settings.api, enableOptInAPI: e.target.checked } })}
+                            />
+                        }
+                        label={`Enable Opt-in for ${title}`}
+                    />
+                    <FormHelperText>Enable API Integration with Granblue Automation Statistics</FormHelperText>
+                </FormGroup>
+
+                {bot.settings.api.enableOptInAPI ? (
+                    <div>
+                        <Typography variant="subtitle1" gutterBottom component="p" color="text.secondary">
+                            {`How this works:\n\nInput your username and password below that you used to register a new account on the website. \n\nThe account registered on the website will be used to associate your success results from the Loot Collection process. A success result describes the Loot Collection process detecting a item drop after each run.`}
+                        </Typography>
+
+                        <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Username"
+                                    value={bot.settings.api.username}
+                                    onChange={(e) => bot.setSettings({ ...bot.settings, api: { ...bot.settings.api, username: e.target.value } })}
+                                    placeholder="Insert your username here"
+                                    multiline
+                                    variant="filled"
+                                    fullWidth
+                                />
+                            </Grid>
+
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Password"
+                                    value={bot.settings.api.password}
+                                    onChange={(e) => bot.setSettings({ ...bot.settings, api: { ...bot.settings.api, password: e.target.value } })}
+                                    placeholder="Insert your password here"
+                                    multiline
+                                    variant="filled"
+                                    fullWidth
+                                />
+                            </Grid>
+
+                            <Grid item>
+                                <Box sx={{ m: 1, position: "relative" }}>
+                                    <Button variant="contained" startIcon={<Speed />} className="twitterButton" onClick={(e) => testAPIIntegration(e)} disabled={testInProgress}>
+                                        Test Login into API
+                                    </Button>
+                                    {testInProgress && (
+                                        <CircularProgress
+                                            size={24}
+                                            sx={{
+                                                position: "absolute",
+                                                top: "50%",
+                                                left: "50%",
+                                                marginTop: "-12px",
+                                                marginLeft: "-12px",
+                                            }}
+                                        />
+                                    )}
+                                </Box>
+                            </Grid>
+                        </Grid>
+                    </div>
+                ) : null}
+            </div>
+        )
+    }
+
     // Attempt to kill the bot process if it is still active.
     const handleStop = async () => {
         if (testPID !== 0) {
@@ -965,6 +1053,7 @@ const ExtraSettings = () => {
             } else if (line.indexOf("Test failed.") !== -1) {
                 console.log("Testing Twitter API was unsuccessful.")
                 setTestFailed(true)
+                setTestErrorMessage(line)
                 setShowSnackbar(true)
             }
         })
@@ -1006,6 +1095,7 @@ const ExtraSettings = () => {
             } else if (line.indexOf("Test failed.") !== -1) {
                 console.log("Testing Discord API was unsuccessful.")
                 setTestFailed(true)
+                setTestErrorMessage(line)
                 setShowSnackbar(true)
             }
         })
@@ -1018,6 +1108,24 @@ const ExtraSettings = () => {
         console.log("PID: ", child.pid)
         setTestPID(child.pid)
         setTestInProgress(true)
+    }
+
+    const testAPIIntegration = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        e.preventDefault()
+        setTestInProgress(true)
+        axios
+            .post("https://granblue-automation-statistics.com/api/login", { username: bot.settings.api.username, password: bot.settings.api.password }, { withCredentials: true })
+            .then(() => {
+                setTestFailed(false)
+            })
+            .catch((e: AxiosError) => {
+                setTestFailed(true)
+                setTestErrorMessage(e.message)
+            })
+            .finally(() => {
+                setTestInProgress(false)
+                setShowSnackbar(true)
+            })
     }
 
     // Show or hide the Support Summon Selection component.
@@ -1034,13 +1142,15 @@ const ExtraSettings = () => {
                     onClose={() => setShowSnackbar(false)}
                     onClick={() => setShowSnackbar(false)}
                 >
-                    {testFailed ? <Alert severity="error">Test was not successful.</Alert> : <Alert severity="success">Test was successful.</Alert>}
+                    {testFailed ? <Alert severity="error">{testErrorMessage}</Alert> : <Alert severity="success">Test was successful.</Alert>}
                 </Snackbar>
 
                 <Stack spacing={2} className="extraSettingsWrapper">
                     {renderNightmareSettings()}
 
                     {renderSandboxDefenderSettings()}
+
+                    {renderAPIIntegrationSettings()}
 
                     {renderTwitterSettings()}
 
