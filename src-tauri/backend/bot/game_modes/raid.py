@@ -108,7 +108,7 @@ class Raid:
                         MessageLog.print_message(f"[SUCCESS] Joining {room_code} was successful.")
                         Raid._raids_joined += 1
 
-                        return ImageUtils.confirm_location("select_a_summon")
+                        return ImageUtils.confirm_location("select_a_summon", tries = 30)
                     elif Game.check_for_pending() is False:
                         MessageLog.print_message(f"[WARNING] {room_code} already ended or invalid.")
                     else:
