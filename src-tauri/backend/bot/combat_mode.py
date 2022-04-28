@@ -1010,6 +1010,19 @@ class CombatMode:
                             CombatMode._turn_number += 1
                         else:
                             MessageLog.print_message("[COMBAT] Failed to execute the \"attackback\" command...")
+                    elif "attack" in command:
+                        if Game.find_and_click_button("attack", tries = 30):
+                            if ImageUtils.wait_vanish("combat_cancel", timeout = 10):
+                                MessageLog.print_message("[COMBAT] Successful executed a manual attack.")
+                            else:
+                                MessageLog.print_message("[COMBAT] Successful executed a manual attack that resolved instantly.")
+                        else:
+                            MessageLog.print_message("[COMBAT] Failed to execute a manual attack.")
+
+                        if "wait" in command:
+                            split_command = command.split(".")
+                            split_command.pop(0)
+                            CombatMode._wait_execute(list(split_command))
                     elif "back" in command and Game.find_and_click_button("home_back"):
                         MessageLog.print_message("[COMBAT] Tapped the Back button.")
                         CombatMode._wait_for_attack()
