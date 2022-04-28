@@ -24,13 +24,20 @@ class DreadBarrage:
         """
         from bot.game import Game
 
-        # Go to the Home screen.
-        Game.go_back_home(confirm_location_check = True)
-
         # Scroll down the screen a little bit and then click the Dread Barrage banner.
         MessageLog.print_message(f"\n[DREAD.BARRAGE] Now navigating to Dread Barrage...")
-        MouseUtils.scroll_screen_from_home_button(-400)
-        Game.find_and_click_button("dread_barrage")
+        Game.go_back_home(confirm_location_check = True)
+
+        # Navigate to the Dread Barrage banner.
+        tries = 30
+        while tries > 0:
+            if Game.find_and_click_button("dread_barrage", tries = 1) is False:
+                MouseUtils.scroll_screen_from_home_button(-200)
+                tries -= 1
+                if tries <= 0:
+                    raise DreadBarrageException("Failed to navigate to Dread Barrage from the Home screen.")
+            else:
+                break
 
         Game.wait(3.0)
 

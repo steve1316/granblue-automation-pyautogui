@@ -428,10 +428,10 @@ class ArcarumSandbox:
             Game.go_back_home()
 
             # Navigate to the Arcarum banner.
-            tries = 5
+            tries = 30
             while tries > 0:
                 if Game.find_and_click_button("arcarum_banner", tries = 1) is False:
-                    MouseUtils.scroll_screen_from_home_button(-400)
+                    MouseUtils.scroll_screen_from_home_button(-200)
                     tries -= 1
                     if tries <= 0:
                         raise ArcarumSandboxException("Failed to navigate to Arcarum from the Home screen.")
