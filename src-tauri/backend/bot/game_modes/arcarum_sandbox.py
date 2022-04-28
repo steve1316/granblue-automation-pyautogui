@@ -153,7 +153,7 @@ class ArcarumSandbox:
         "Goliath Vanguard": {
             "section": 1,
             "x": 65,
-            "y": 390
+            "y": 360
         },
         "Vestige of Truth": {
             "section": 2,
