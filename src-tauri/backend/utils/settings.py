@@ -25,6 +25,7 @@ class Settings:
 
     combat_script_name: str = dictor(_data, "game.combatScriptName", "")
     combat_script: List[str] = dictor(_data, "game.combatScript", [])
+    combat_elapsed_time: float = 0.0
     farming_mode: str = dictor(_data, "game.farmingMode", checknone = True)
     item_name: str = dictor(_data, "game.item", checknone = True)
     map_name: str = dictor(_data, "game.map", checknone = True)

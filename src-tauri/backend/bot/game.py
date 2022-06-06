@@ -585,7 +585,10 @@ class Game:
 
         # If there were item drops detected and the user opt in to sending their result to Granblue Automation Statistics, then have the frontend send the API request.
         if temp_amount != 0 and Settings.enable_opt_in_api:
-            Game._send_api_result(temp_amount)
+            if is_pending_battle:
+                Game._send_api_result(temp_amount, 0.0)
+            else:
+                Game._send_api_result(temp_amount, Settings.combat_elapsed_time)
 
         if is_completed and not is_pending_battle and not is_event_nightmare and not skip_info and not is_defender:
             if Settings.item_name != "EXP" and Settings.item_name != "Angel Halo Weapons" and Settings.item_name != "Repeated Runs":
@@ -843,17 +846,23 @@ class Game:
         return None
 
     @staticmethod
-    def _send_api_result(amount: int):
+    def _send_api_result(amount: int, elapsed_time: float):
         """Prints a formatted message as a way to send the event back to the frontend in order to have it send the result to the database.
 
         Args:
             amount (int): Amount of items detected for this run.
+            elapsed_time (str): Elapsed time for Combat Mode from start to finish.
 
         Returns:
             None
         """
+        formatted_elapsed_time = elapsed_time
+        if formatted_elapsed_time != 0.0:
+            import datetime
+            formatted_elapsed_time = str(datetime.timedelta(seconds = elapsed_time)).split('.')[0]
+
         MessageLog.print_message(f"\nSending API request to Granblue Automation Statistics...")
-        MessageLog.print_message(f"API-RESULT|{Settings.item_name}|{amount}")
+        MessageLog.print_message(f"API-RESULT|{Settings.item_name}|{amount}|{formatted_elapsed_time}")
         return None
 
     def start_farming_mode(self):

@@ -1277,6 +1277,10 @@ class CombatMode:
         MessageLog.print_message("######################################################################")
         MessageLog.print_message("######################################################################")
 
+        # Calculate elapsed time for the API.
+        if Settings.enable_opt_in_api:
+            Settings.combat_elapsed_time = time.time() - CombatMode._start_time
+
         if not CombatMode._retreat_check:
             return True
         else:
