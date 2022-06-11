@@ -275,7 +275,7 @@ const Start = () => {
     const loginToAPI = async () => {
         await axios
             .post(
-                "https://granblue-automation-statistics.com/api/login",
+                `${botStateContext.entryPoint}/api/login`,
                 {
                     username: botStateContext.settings.api.username,
                     password: botStateContext.settings.api.password,
@@ -302,7 +302,7 @@ const Start = () => {
         if (firstTimeAPIRequest) {
             await axios
                 .post(
-                    "https://granblue-automation-statistics.com/api/create-item",
+                    `${botStateContext.entryPoint}/api/create-item`,
                     {
                         username: botStateContext.settings.api.username,
                         password: botStateContext.settings.api.password,
@@ -318,7 +318,7 @@ const Start = () => {
                     setFirstTimeAPIRequest(false)
                     await axios
                         .post(
-                            "https://granblue-automation-statistics.com/api/create-result",
+                            `${botStateContext.entryPoint}/api/create-result`,
                             {
                                 username: botStateContext.settings.api.username,
                                 password: botStateContext.settings.api.password,
@@ -351,7 +351,7 @@ const Start = () => {
             let newLog: string[] = []
             await axios
                 .post(
-                    "https://granblue-automation-statistics.com/api/create-result",
+                    `${botStateContext.entryPoint}/api/create-result`,
                     {
                         username: botStateContext.settings.api.username,
                         password: botStateContext.settings.api.password,

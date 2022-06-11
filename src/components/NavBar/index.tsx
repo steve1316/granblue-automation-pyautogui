@@ -11,7 +11,6 @@ import "./index.scss"
 const NavBar = () => {
     const history = useHistory()
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
-    const [version, setVersion] = useState<string>("")
 
     const botStateContext = useContext(BotStateContext)
 
@@ -25,10 +24,10 @@ const NavBar = () => {
             .getVersion()
             .then((version) => {
                 console.log("Version is ", version)
-                setVersion(version)
+                botStateContext.setAppVersion(version)
             })
             .catch(() => {
-                setVersion("failed to get version")
+                botStateContext.setAppVersion("failed to get version")
             })
     }
 
@@ -112,7 +111,7 @@ const NavBar = () => {
                         history.push("/")
                     }}
                 >
-                    Granblue Automation <Typography variant="caption">v{version}</Typography>
+                    Granblue Automation <Typography variant="caption">v{botStateContext.appVersion}</Typography>
                 </Typography>
                 <div className="emptyDivider" />
                 {botStateContext.isBotRunning ? (

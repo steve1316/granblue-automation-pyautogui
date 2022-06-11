@@ -266,6 +266,9 @@ interface IProviderProps {
     setRefreshAlert: (refreshAlert: boolean) => void
     settings: Settings
     setSettings: (settings: Settings) => void
+    entryPoint: string
+    appVersion: string
+    setAppVersion: (appVersion: string) => void
 }
 
 export const BotStateContext = createContext<IProviderProps>({} as IProviderProps)
@@ -277,8 +280,14 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
     const [startBot, setStartBot] = useState<boolean>(false)
     const [stopBot, setStopBot] = useState<boolean>(false)
     const [refreshAlert, setRefreshAlert] = useState<boolean>(false)
+    const [appVersion, setAppVersion] = useState<string>("")
 
     const [settings, setSettings] = useState<Settings>(defaultSettings)
+
+    let entryPoint = "https://granblue-automation-statistics.com"
+    if (process.env.REACT_APP_ENVIRONMENT && process.env.REACT_APP_ENVIRONMENT === "development") {
+        entryPoint = "http://localhost:4000"
+    }
 
     const providerValues: IProviderProps = {
         readyStatus,
@@ -293,6 +302,9 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
         setRefreshAlert,
         settings,
         setSettings,
+        entryPoint,
+        appVersion,
+        setAppVersion,
     }
 
     return <BotStateContext.Provider value={providerValues}>{children}</BotStateContext.Provider>

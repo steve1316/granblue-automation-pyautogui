@@ -1114,7 +1114,7 @@ const ExtraSettings = () => {
         e.preventDefault()
         setTestInProgress(true)
         axios
-            .post("https://granblue-automation-statistics.com/api/login", { username: bot.settings.api.username, password: bot.settings.api.password }, { withCredentials: true })
+            .post(`${bot.entryPoint}/api/login`, { username: bot.settings.api.username, password: bot.settings.api.password }, { withCredentials: true })
             .then(() => {
                 setTestFailed(false)
             })
