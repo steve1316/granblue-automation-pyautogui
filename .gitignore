@@ -30,3 +30,5 @@ src-tauri/images/temp/
 src-tauri/logs/
 
 .idea/
+
+.env
