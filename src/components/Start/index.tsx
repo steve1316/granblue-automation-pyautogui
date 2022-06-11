@@ -328,6 +328,7 @@ const Start = () => {
                                 platform: "GA",
                                 amount: amount,
                                 elapsedTime: elapsedTime,
+                                appVersion: botStateContext.appVersion,
                             },
                             { withCredentials: true }
                         )
@@ -361,6 +362,7 @@ const Start = () => {
                         platform: "GA",
                         amount: amount,
                         elapsedTime: elapsedTime,
+                        appVersion: botStateContext.appVersion,
                     },
                     { withCredentials: true }
                 )
