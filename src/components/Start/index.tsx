@@ -335,8 +335,8 @@ const Start = () => {
                             console.log("[API] ", res.data)
                             newLog = [...newLog, `\n[API] ${res.data}`]
                         })
-                        .catch((e: AxiosError) => {
-                            newLog = [...newLog, `\n[API] Failed to create result: ${e}`]
+                        .catch((e) => {
+                            newLog = [...newLog, `\n[API] Failed to create result: ${e?.response?.data}`]
                         })
                         .finally(() => {
                             messageLogContext.setAsyncMessages(newLog)
@@ -368,8 +368,8 @@ const Start = () => {
                     console.log("[API] ", res.data)
                     newLog = [...messageLogContext.asyncMessages, `\n[API] ${res.data}`]
                 })
-                .catch((e: AxiosError) => {
-                    newLog = [...messageLogContext.asyncMessages, `\n[API] Failed to create result: ${e}`]
+                .catch((e) => {
+                    newLog = [...messageLogContext.asyncMessages, `\n[API] Failed to create result: ${e?.response?.data}`]
                 })
                 .finally(() => {
                     messageLogContext.setAsyncMessages(newLog)
