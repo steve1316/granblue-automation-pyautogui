@@ -127,13 +127,30 @@ class Test(unittest.TestCase):
     def test_discord_connection(self):
         print("\n[DISCORD] Starting Discord process on a new Thread...")
         discord_queue = multiprocessing.Queue()
-        self._discord_process = multiprocessing.Process(target = discord_utils.start_now, args = (Settings.discord_token, Settings.user_id, discord_queue))
+        test_queue = multiprocessing.Queue()
+        self._discord_process = multiprocessing.Process(target = discord_utils.start_now, args = (Settings.discord_token, Settings.user_id, discord_queue, test_queue))
         self._discord_process.start()
-        Game.wait(3.0)
+        Game.wait(5.0)
         discord_queue.put("Testing 1 2 3")
+
+        tries = 3
+        while not test_queue.empty() and tries > 0:
+            message: str = test_queue.get()
+            if message.__contains__("Successful connection."):
+                break
+            elif message.__contains__("Failed to find user using provided user ID."):
+                self._discord_process.terminate()
+                raise Exception("Failed to find user using provided user ID.")
+            elif message.__contains__("Failed to connect to Discord API using provided token."):
+                self._discord_process.terminate()
+                raise Exception("Failed to connect to Discord API using provided token.")
+
+            Game.wait(1.0)
+            tries -= 1
+
         Game.wait(3.0)
+
         self.assertTrue(discord_queue.empty())
-        self._discord_process.terminate()
         return None
 
     def test_combat_mode_old_lignoid(self):
@@ -222,10 +239,9 @@ if __name__ == "__main__":
 
                 print("\nTest successfully completed.")
             except Exception as e:
-                if option == 10:
-                    print(f"\nTest failed. Error message: [DISCORD] Failed to connect to Discord API. Please double check your token and/or user id.")
-                else:
-                    print(f"\nTest failed. Error message: {e}")
+                print(f"\nTest failed. Error message: {e}")
+            finally:
+                sys.exit(0)
     except IndexError:
         option: int = -1
         option_selected = ""
@@ -259,7 +275,7 @@ if __name__ == "__main__":
                 print("Invalid option entered. Please try again.")
 
             if option == 0:
-                break
+                sys.exit(0)
 
             if check:
                 try:
@@ -294,7 +310,4 @@ if __name__ == "__main__":
 
                     print("\nTest successfully completed.")
                 except Exception as e:
-                    if option == 10:
-                        print(f"\nTest failed. Error message: [DISCORD] Failed to connect to Discord API. Please double check your token and/or user id.")
-                    else:
-                        print(f"\nTest failed. Error message: {e}")
+                    print(f"\nTest failed. Error message: {e}")

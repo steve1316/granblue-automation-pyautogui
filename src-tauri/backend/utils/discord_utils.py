@@ -20,13 +20,16 @@ class MyClient:
 
     queue (multiprocessing.Queue): The Queue holding messages to be sent to the user over Discord.
 
+    test_queue (multiprocessing.Queue, optional): A workaround to notifying the tester that an error occurred. Defaults to None.
+
     """
 
-    def __init__(self, bot: discord.Client, user_id: int, queue: multiprocessing.Queue):
+    def __init__(self, bot: discord.Client, user_id: int, queue: multiprocessing.Queue, test_queue: multiprocessing.Queue = None):
         self.bot = bot
         self.user = None
         self.user_id = user_id
         self.queue = queue
+        self.test_queue = test_queue
         self.print_status.start()
 
     @loop()
@@ -57,24 +60,33 @@ class MyClient:
         try:
             self.user = await self.bot.fetch_user(self.user_id)
             MessageLog.print_message(f"[DISCORD] Found user: {self.user.name}")
+            if self.test_queue is not None:
+                self.test_queue.put(f"[DISCORD] Found user: {self.user.name}")
         except discord.errors.NotFound:
-            MessageLog.print_message("[DISCORD] Failed to find user.\n")
+            MessageLog.print_message("[DISCORD] Failed to find user using provided user ID.\n")
+            if self.test_queue is not None:
+                self.test_queue.put("[DISCORD] Failed to find user using provided user ID.")
 
 
-def start_now(token: str, user_id: int, queue: multiprocessing.Queue):
+def start_now(token: str, user_id: int, queue: multiprocessing.Queue, test_queue: multiprocessing.Queue = None):
     """Initialize the Client object and begin the process to connect to the Discord API.
 
     Args:
         token (str): Discord Token for use with Discord's API.
         user_id (int): The user's Discord user ID.
         queue (multiprocessing.Queue): The Queue holding messages to be sent to the user over Discord.
+        test_queue (multiprocessing.Queue, optional): A workaround to notifying the tester that an error occurred. Defaults to None.
 
     Returns:
         None
     """
     client = discord.Client()
-    MyClient(client, user_id, queue)
+    MyClient(client, user_id, queue, test_queue)
     try:
         client.run(token)
+        if test_queue is not None:
+            test_queue.put("[DISCORD] Successful connection.")
     except LoginFailure:
-        MessageLog.print_message("\n[DISCORD] Failed to connect to Discord API. Please double check your token and/or user id.\n")
+        MessageLog.print_message("\n[DISCORD] Failed to connect to Discord API using provided token.\n")
+        if test_queue is not None:
+            test_queue.put("[DISCORD] Failed to connect to Discord API using provided token.")
