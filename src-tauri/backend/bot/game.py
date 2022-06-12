@@ -295,6 +295,37 @@ class Game:
         return None
 
     @staticmethod
+    def _move_mouse_security_check():
+        """Moves the mouse off the game window and stay like that for a bit to attempt circumvention of possible bot detection. This is PC specific, not possible for the Android version.
+
+        Returns:
+            None
+        """
+        if Settings.enable_mouse_security_attempt_bypass:
+            MessageLog.print_message("\n[INFO] Moving mouse off game window to attempt circumvention of possible bot detection...")
+
+            # Get width and height of the screen.
+            width, height = pyautogui.size()
+
+            # Get current x,y coordinate of the mouse.
+            curr_x, curr_y = pyautogui.position()
+
+            # Depending on where the mouse is, move the mouse off the game window left or right.
+            if curr_x <= width / 2:
+                # This is the left half of the screen.
+                MouseUtils.move_to(width - 100, curr_y, custom_mouse_speed = Settings.custom_mouse_speed)
+            else:
+                # This is the right half of the screen.
+                MouseUtils.move_to(100, curr_y, custom_mouse_speed = Settings.custom_mouse_speed)
+
+            # Now wait for several seconds before continuing.
+            new_seconds = random.randrange(2, 10)
+            MessageLog.print_message(f"[INFO] Now waiting {new_seconds} seconds...")
+            Game.wait(new_seconds)
+            MessageLog.print_message("[INFO] Waiting complete. Now resuming bot operations...")
+        return None
+
+    @staticmethod
     def select_summon(summon_list: List[str], summon_element_list: List[str]):
         """Finds and selects the specified Summon based on the current index on the Summon Selection screen and then checks for CAPTCHA right
         afterwards.
@@ -865,7 +896,8 @@ class Game:
         MessageLog.print_message(f"API-RESULT|{Settings.item_name}|{amount}|{formatted_elapsed_time}")
         return None
 
-    def start_farming_mode(self):
+    @staticmethod
+    def start_farming_mode():
         """Start the Farming Mode using the given parameters.
 
         Returns:
@@ -936,7 +968,8 @@ class Game:
 
                 if Settings.item_amount_farmed < Settings.item_amount_to_farm:
                     # Generate a resting period if the user enabled it.
-                    self._delay_between_runs()
+                    Game._delay_between_runs()
+                    Game._move_mouse_security_check()
                     first_run = False
 
         except Exception as e:

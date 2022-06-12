@@ -68,6 +68,7 @@ class Settings:
     enable_auto_quick_summon: bool = dictor(_data, "configuration.enableAutoQuickSummon", False)
     enable_bypass_reset_summon: bool = dictor(_data, "configuration.enableBypassResetSummon", False)
     static_window: bool = dictor(_data, "configuration.staticWindow", True)
+    enable_mouse_security_attempt_bypass: bool = dictor(_data, "configuration.enableMouseSecurityAttemptBypass", True)
     # #### end of configuration ####
 
     # #### nightmare ####
