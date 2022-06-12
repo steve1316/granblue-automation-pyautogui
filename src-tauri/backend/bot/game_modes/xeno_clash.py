@@ -114,23 +114,27 @@ class XenoClash:
         Game.wait(3.0)
 
         if Game.find_and_click_button("xeno_special", tries = 30):
-            # Check to see if the user already has a Nightmare available.
-            nightmare_is_available = 0
-            if ImageUtils.find_button("event_nightmare") is not None:
-                nightmare_is_available = 1
-
             # Find all the "Select" buttons.
+            MouseUtils.scroll_screen_from_home_button(-400)
             select_button_locations = ImageUtils.find_all("select")
 
             if Settings.mission_name == "Xeno Clash Extreme":
+                # The Xeno Extremes are the two above the last two on the list.
                 MessageLog.print_message(f"[XENO.CLASH] Now hosting Xeno Clash Extreme...")
-                MouseUtils.move_and_click_point(select_button_locations[1 + nightmare_is_available][0], select_button_locations[1 + nightmare_is_available][1], "select")
+                if Settings.xeno_clash_select_top_option:
+                    MouseUtils.move_and_click_point(select_button_locations[len(select_button_locations) - 3][0], select_button_locations[len(select_button_locations) - 3][1], "select")
+                else:
+                    MouseUtils.move_and_click_point(select_button_locations[len(select_button_locations) - 4][0], select_button_locations[len(select_button_locations) - 4][1], "select")
 
                 difficulty_button_locations = ImageUtils.find_all("play_round_button")
                 MouseUtils.move_and_click_point(difficulty_button_locations[0][0], difficulty_button_locations[0][1], "play_round_button")
             elif Settings.mission_name == "Xeno Clash Raid":
+                # The Xeno Raids are the last two on the list.
                 MessageLog.print_message(f"[XENO.CLASH] Now hosting Xeno Clash Raid...")
-                MouseUtils.move_and_click_point(select_button_locations[2 + nightmare_is_available][0], select_button_locations[2 + nightmare_is_available][1], "select")
+                if Settings.xeno_clash_select_top_option:
+                    MouseUtils.move_and_click_point(select_button_locations[len(select_button_locations) - 1][0], select_button_locations[len(select_button_locations) - 1][1], "select")
+                else:
+                    MouseUtils.move_and_click_point(select_button_locations[len(select_button_locations) - 2][0], select_button_locations[len(select_button_locations) - 2][1], "select")
 
                 Game.wait(2.0)
 

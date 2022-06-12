@@ -148,6 +148,10 @@ class Settings:
     enable_force_reload: bool = dictor(_data, "generic.enableForceReload", False)
     # #### end of generic ####
 
+    # #### xeno clash ####
+    xeno_clash_select_top_option: bool = dictor(_data, "xenoClash.selectTopOption", False)
+    # #### end of xeno clash ####
+
     # #### adjustment ####
     enable_calibration_adjustment: bool = dictor(_data, "adjustment.enableCalibrationAdjustment", False)
     adjust_calibration: int = dictor(_data, "adjustment.adjustCalibration", 5)
