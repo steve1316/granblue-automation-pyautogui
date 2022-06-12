@@ -106,6 +106,10 @@ export interface Settings {
         enableForceReload: boolean
     }
 
+    xenoClash: {
+        selectTopOption: boolean
+    }
+
     // Adjustment Settings.
     adjustment: {
         enableCalibrationAdjustment: boolean
@@ -213,6 +217,9 @@ export const defaultSettings: Settings = {
     },
     generic: {
         enableForceReload: false,
+    },
+    xenoClash: {
+        selectTopOption: true,
     },
     adjustment: {
         enableCalibrationAdjustment: false,

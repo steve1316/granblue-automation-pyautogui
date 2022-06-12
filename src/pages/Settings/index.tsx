@@ -332,6 +332,23 @@ const Settings = () => {
                         ))}
                     </TextField>
 
+                    {botStateContext.settings.game.farmingMode === "Xeno Clash" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={botStateContext.settings.xenoClash.selectTopOption}
+                                        onChange={(e) =>
+                                            botStateContext.setSettings({ ...botStateContext.settings, xenoClash: { ...botStateContext.settings.xenoClash, selectTopOption: e.target.checked } })
+                                        }
+                                    />
+                                }
+                                label="Enable Selection of Bottom Option"
+                            />
+                            <FormHelperText>Enabling this will select the bottom Xeno Clash option. By default, it selects the top option.</FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
                     {botStateContext.settings.game.farmingMode === "Generic" ? (
                         <div>
                             <Divider />
