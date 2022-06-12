@@ -55,6 +55,7 @@ export interface Settings {
         enableAutoQuickSummon: boolean
         enableBypassResetSummon: boolean
         staticWindow: boolean
+        enableMouseSecurityAttemptBypass: boolean
     }
 
     // Misc settings for the GUI.
@@ -188,6 +189,7 @@ export const defaultSettings: Settings = {
         enableAutoQuickSummon: false,
         enableBypassResetSummon: false,
         staticWindow: true,
+        enableMouseSecurityAttemptBypass: true,
     },
     misc: {
         guiLowPerformanceMode: false,

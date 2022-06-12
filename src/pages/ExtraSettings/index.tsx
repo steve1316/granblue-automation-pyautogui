@@ -634,6 +634,24 @@ const ExtraSettings = () => {
                         next. Disable to have the whole computer screen act as the game window and you can move around the window during the bot process as you wish.
                     </FormHelperText>
                 </FormGroup>
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bot.settings.configuration.enableMouseSecurityAttemptBypass}
+                                onChange={(e) => {
+                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableMouseSecurityAttemptBypass: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable attempt at bypassing possible bot detection via mouse"
+                    />
+                    <FormHelperText>
+                        Enable attempt at bypassing possible bot detection via mouse. What this does is moves the mouse off of the game window after every run and waits several seconds there before
+                        resuming bot operations.
+                    </FormHelperText>
+                </FormGroup>
             </div>
         )
     }
