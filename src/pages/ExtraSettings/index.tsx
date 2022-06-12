@@ -980,7 +980,7 @@ const ExtraSettings = () => {
                 {bot.settings.api.enableOptInAPI ? (
                     <div>
                         <Typography variant="subtitle1" gutterBottom component="p" color="text.secondary">
-                            {`How this works:\n\nInput your username and password below that you used to register a new account on the website. \n\nThe account registered on the website will be used to associate your success results from the Loot Collection process. A success result describes the Loot Collection process detecting a item drop after each run.`}
+                            {`How this works:\n\nInput your username and password below that you used to register a new account on the website. The account registered on the website will be used to associate your success results from the Loot Collection process. A success result describes the Loot Collection process detecting a item drop after each run.`}
                         </Typography>
 
                         <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
