@@ -1266,6 +1266,10 @@ class CombatMode:
             if CombatMode._list_of_exit_events_for_false.__contains__(e.__str__()):
                 return False
             elif CombatMode._list_of_exit_events_for_true.__contains__(e.__str__()):
+                # Calculate elapsed time for the API.
+                if Settings.enable_opt_in_api:
+                    Settings.combat_elapsed_time = time.time() - CombatMode._start_time
+
                 return True
 
         ######################################################################
