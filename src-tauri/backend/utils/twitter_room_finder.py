@@ -118,6 +118,7 @@ class TwitterRoomFinder:
         "Lvl 150 Lucilius": "Lv150 ルシファー",
         "Lvl 250 Lucilius": "Lv250 ルシファー",
         "Lvl 200 Lindwurm": "Lv200 リンドヴルム",
+        "Lvl 275 Diaspora": "Lv275 ディアスポラ",
 
         # Malice Raids
         "Lvl 150 Tiamat Malice": "Lv150 ティアマト・マリス",
@@ -145,7 +146,11 @@ class TwitterRoomFinder:
 
         # Ennead Raids
         "Lvl 120 Osiris": "Lv120 オシリス",
-        "Lvl 120 Horus": "Lv120 ホルス"
+        "Lvl 120 Horus": "Lv120 ホルス",
+        "Lvl 120 Bennu": "Lv120 ベンヌ",
+        "Lvl 120 Atum": "Lv120 アトゥム",
+        "Lvl 120 Tefnut": "Lv120 テフヌト",
+        "Lvl 120 Ra": "Lv120 ラー",
     }
 
     _listener = RoomStreamListener()
