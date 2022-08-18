@@ -773,6 +773,26 @@
         "Lvl 90 Zephyrus": {
             "map": "Zephyrus",
             "items": ["Qinglong Badge"]
+        },
+        "Lvl 120 Bennu": {
+            "map": "Bennu",
+            "items": ["Bennu Anima", "Bennu Omega Anima", "Tatjenen", "Ished"]
+        },
+        "Lvl 120 Atum": {
+            "map": "Atum",
+            "items": ["Atum Anima", "Atum Omega Anima", "Benbenet", "Al-Abad"]
+        },
+        "Lvl 275 Diaspora": {
+            "map": "Diaspora",
+            "items": ["Automagod Plating", "Schrodinger"]
+        },
+        "Lvl 120 Tefnut": {
+            "map": "Tefnut",
+            "items": ["Tefnut Anima", "Tefnut Omega Anima", "Uraeus", "Esna"]
+        },
+        "Lvl 120 Ra": {
+            "map": "Ra",
+            "items": ["Ra Anima", "Ra Omega Anima", "Abu Simbel", "Mandjet"]
         }
     },
     "Event": {
