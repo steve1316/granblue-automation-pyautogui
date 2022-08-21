@@ -254,7 +254,7 @@ class ArcarumSandbox:
         "Glacial Hellbeast": {
             "section": 0,
             "x": 50,
-            "y": 90
+            "y": 180
         },
         "Giant Sea Plant": {
             "section": 0,
