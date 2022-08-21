@@ -69,6 +69,11 @@ class ArcarumSandbox:
             "x": 285,
             "y": 295
         },
+        "Eletion Glider": {
+            "section": 2,
+            "x": 70,
+            "y": 260
+        },
 
         ##########
         # Zone Faym
@@ -116,6 +121,11 @@ class ArcarumSandbox:
             "section": 2,
             "x": 60,
             "y": 215
+        },
+        "Faymian Gun": {
+            "section": 2,
+            "x": 200,
+            "y": 285
         },
 
         ##########
@@ -165,6 +175,11 @@ class ArcarumSandbox:
             "x": 250,
             "y": 260
         },
+        "Goliath Triune": {
+            "section": 2,
+            "x": 50,
+            "y": 300
+        },
 
         ##########
         # Zone Harbinger
@@ -197,6 +212,11 @@ class ArcarumSandbox:
             "section": 1,
             "x": 275,
             "y": 250
+        },
+        "Harbinger Stormer": {
+            "section": 1,
+            "x": 180,
+            "y": 150
         },
         "Harbinger Tyrant": {
             "section": 2,
@@ -248,6 +268,11 @@ class ArcarumSandbox:
             "x": 170,
             "y": 220
         },
+        "Athena Militis": {
+            "section": 1,
+            "x": 185,
+            "y": 350
+        },
 
         ##########
         # Zone Joculator
@@ -280,6 +305,11 @@ class ArcarumSandbox:
             "section": 1,
             "x": 240,
             "y": 140
+        },
+        "Grani Militis": {
+            "section": 1,
+            "x": 200,
+            "y": 230
         },
 
         ##########
@@ -314,6 +344,11 @@ class ArcarumSandbox:
             "x": 125,
             "y": 345
         },
+        "Baal Militis": {
+            "section": 0,
+            "x": 220,
+            "y": 245
+        },
 
         ##########
         # Zone Liber
@@ -346,6 +381,11 @@ class ArcarumSandbox:
             "section": 1,
             "x": 220,
             "y": 335
+        },
+        "Garuda Militis": {
+            "section": 1,
+            "x": 50,
+            "y": 225
         },
     }
 
@@ -500,6 +540,20 @@ class ArcarumSandbox:
             MessageLog.print_message(f"[ARCARUM.SANDBOX] AAP is now refilled.")
 
         return None
+    
+    @staticmethod
+    def _play_zone_boss():
+        """Clicks on Play if you are fighting a zone boss.
+
+        Returns:
+            None
+        """
+        play_button = ImageUtils.find_button("play")
+        if play_button:
+            MessageLog.print_message(f"\n[ARCARUM.SANDBOX] Now fighting zone boss...")
+            MouseUtils.move_and_click_point(play_button[0], play_button[1], "play")
+
+        return None
 
     @staticmethod
     def start():
@@ -532,6 +586,7 @@ class ArcarumSandbox:
                 ArcarumSandbox._navigate_to_mission(skip_to_action = True)
 
         # Refill AAP if needed.
+        ArcarumSandbox._play_zone_boss()
         ArcarumSandbox._refill_aap()
 
         Game.wait(3.0)

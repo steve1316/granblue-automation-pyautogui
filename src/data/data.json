@@ -1195,6 +1195,38 @@
         "Simpering Beast": {
             "map": "Zone Liber",
             "items": ["Sephira Stone", "Lightborne Astra", "Star Idean", "Repeated Runs"]
+        },
+        "Eletion Glider": {
+            "map": "Zone Eletio",
+            "items": ["Repeated Runs"]
+        },
+        "Faymian Gun": {
+            "map": "Zone Faym",
+            "items": ["Repeated Runs"]
+        },
+        "Goliath Triune": {
+            "map": "Zone Goliath",
+            "items": ["Repeated Runs"]
+        },
+        "Harbinger Stormer": {
+            "map": "Zone Harbinger",
+            "items": ["Repeated Runs"]
+        },
+        "Athena Militis": {
+            "map": "Zone Invidia",
+            "items": ["Repeated Runs"]
+        },
+        "Grani Militis": {
+            "map": "Zone Joculator",
+            "items": ["Repeated Runs"]
+        },
+        "Baal Militis": {
+            "map": "Zone Kalendae",
+            "items": ["Repeated Runs"]
+        },
+        "Garuda Militis": {
+            "map": "Zone Liber",
+            "items": ["Repeated Runs"]
         }
     },
     "Generic": {
