@@ -575,6 +575,7 @@ class ArcarumSandbox:
             ArcarumSandbox._navigate_to_mission()
         else:
             MouseUtils.move_and_click_point(action_locations[0][0], action_locations[0][1], "arcarum_sandbox_action")
+            Game.wait(3.0)
             if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
                 if CombatMode.start_combat_mode():
                     Game.collect_loot(is_completed = True)
