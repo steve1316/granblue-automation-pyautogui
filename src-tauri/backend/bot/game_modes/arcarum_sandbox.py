@@ -612,7 +612,7 @@ class ArcarumSandbox:
 
                 # Click away the Treasure popup if it shows up.
                 Game.find_and_click_button("ok", suppress_error = True)
-                if Game.find_and_click_button("arcarum_gold_chest") is True:
+                if Settings.enable_gold_chest and Game.find_and_click_button("arcarum_gold_chest") is True:
                     ArcarumSandbox._open_gold_chest()
                 else:
                     # Start the mission again.
