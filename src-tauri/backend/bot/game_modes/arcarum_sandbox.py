@@ -572,6 +572,7 @@ class ArcarumSandbox:
         if Game.find_and_click_button("ok", suppress_error = True) is True:
             Game.wait(2.0)
             ArcarumSandbox._reset_position()
+            ArcarumSandbox._navigate_to_mission()
         else:
             MouseUtils.move_and_click_point(action_locations[0][0], action_locations[0][1], "arcarum_sandbox_action")
             if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
