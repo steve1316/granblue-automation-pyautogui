@@ -433,7 +433,7 @@ const Settings = () => {
                                 }
                                 label="Enable gold chest opening"
                             />
-                            <FormHelperText>Experimental, it uses default stuff for combat</FormHelperText>
+                            <FormHelperText>Experimental, it uses default party and the chosen script for combat.</FormHelperText>
                         </FormGroup>
                     ) : null}
 
