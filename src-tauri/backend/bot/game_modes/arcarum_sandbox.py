@@ -569,20 +569,17 @@ class ArcarumSandbox:
         MouseUtils.move_and_click_point(action_locations[0][0], action_locations[0][1], "arcarum_sandbox_action")
         Game.find_and_click_button("ok")
         Game.wait(3.0)
-        if Game.find_and_click_button("ok", suppress_error = True) is True:
-            Game.wait(2.0)
-            ArcarumSandbox._reset_position()
-            ArcarumSandbox._navigate_to_mission()
-        else:
+        if Game.find_and_click_button("ok", suppress_error = True) is False:
             MouseUtils.move_and_click_point(action_locations[0][0], action_locations[0][1], "arcarum_sandbox_action")
             Game.wait(3.0)
             if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
                 if CombatMode.start_combat_mode():
                     Game.collect_loot(is_completed = True)
             Game.find_and_click_button("expedition")
-            Game.wait(2.0)
-            ArcarumSandbox._reset_position()
-            ArcarumSandbox._navigate_to_mission()
+                 
+        Game.wait(2.0)
+        ArcarumSandbox._reset_position()
+        ArcarumSandbox._navigate_to_mission()
 
 
 
