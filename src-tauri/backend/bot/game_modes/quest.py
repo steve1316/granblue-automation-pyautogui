@@ -486,9 +486,16 @@ class Quest:
 
                 Quest._select_oarlyegrande_chapter_node()
 
-            # After being on the correct chapter node, scroll down the screen as far as possible and then click the mission to start.
+            # After being on the correct chapter node, scroll down the screen and then click the mission to start.
             MessageLog.print_message(f"[QUEST] Now bringing up the Summon Selection screen for \"{Settings.mission_name}\"...")
-            MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -1000)
+            tries = 5
+            while Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_")) is False:
+                tries -= 1
+                if tries <= 0:
+                    raise QuestException("Cannot find the mission location after scrolling down the Quest screen multiple times.")
+
+                MouseUtils.scroll_screen(Settings.home_button_location[0], Settings.home_button_location[1] - 50, -500)
+                Game.wait(0.5)
 
             # Now click on the mission node to start.
             Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_"))
