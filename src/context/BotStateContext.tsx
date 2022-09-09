@@ -67,6 +67,7 @@ export interface Settings {
     // Arcarum Sandbox settings
     sandbox: {
         enableDefender: boolean
+        enableGoldChest: boolean
         enableCustomDefenderSettings: boolean
         numberOfDefenders: number
         defenderCombatScriptName: string
@@ -253,6 +254,7 @@ export const defaultSettings: Settings = {
     },
     sandbox: {
         enableDefender: false,
+        enableGoldChest: false,
         enableCustomDefenderSettings: false,
         numberOfDefenders: 1,
         defenderCombatScriptName: "",

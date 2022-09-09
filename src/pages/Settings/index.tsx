@@ -314,6 +314,7 @@ const Settings = () => {
                                 sandbox: {
                                     ...botStateContext.settings.sandbox,
                                     enableDefender: false,
+                                    enableGoldChest: false,
                                     enableCustomDefenderSettings: false,
                                     numberOfDefenders: 1,
                                     defenderCombatScriptName: "",
@@ -416,6 +417,23 @@ const Settings = () => {
                                 label="Enable Defender settings"
                             />
                             <FormHelperText>Enable additional settings to show up in the Extra Settings page.</FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
+                    {botStateContext.settings.game.farmingMode === "Arcarum Sandbox" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={botStateContext.settings.sandbox.enableGoldChest}
+                                        onChange={(e) =>
+                                            botStateContext.setSettings({ ...botStateContext.settings, sandbox: { ...botStateContext.settings.sandbox, enableGoldChest: e.target.checked } })
+                                        }
+                                    />
+                                }
+                                label="Enable gold chest opening"
+                            />
+                            <FormHelperText>Experimental, it uses default party and the chosen script for combat.</FormHelperText>
                         </FormGroup>
                     ) : null}
 

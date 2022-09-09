@@ -556,6 +556,32 @@ class ArcarumSandbox:
         return None
 
     @staticmethod
+    def _open_gold_chest():
+        """Clicks on a gold chest.
+        If it is a mimic, fight it, if not, click ok.
+
+        Returns:
+            None
+        """
+        from bot.game import Game
+
+        action_locations: List[Tuple[int, ...]] = ImageUtils.find_all("arcarum_sandbox_action")
+        MouseUtils.move_and_click_point(action_locations[0][0], action_locations[0][1], "arcarum_sandbox_action")
+        Game.find_and_click_button("ok")
+        Game.wait(3.0)
+        if Game.find_and_click_button("ok", suppress_error = True) is False:
+            MouseUtils.move_and_click_point(action_locations[0][0], action_locations[0][1], "arcarum_sandbox_action")
+            Game.wait(3.0)
+            if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
+                if CombatMode.start_combat_mode():
+                    Game.collect_loot(is_completed = True)
+            Game.find_and_click_button("expedition")
+                 
+        Game.wait(2.0)
+        ArcarumSandbox._reset_position()
+        ArcarumSandbox._navigate_to_mission()
+
+    @staticmethod
     def start():
         """Starts the process of completing Arcarum Replicard Sandbox missions.
 
@@ -580,10 +606,12 @@ class ArcarumSandbox:
 
                 # Click away the Treasure popup if it shows up.
                 Game.find_and_click_button("ok", suppress_error = True)
-
-                # Start the mission again.
-                Game.wait(3.0)
-                ArcarumSandbox._navigate_to_mission(skip_to_action = True)
+                if Settings.enable_gold_chest and Game.find_and_click_button("arcarum_gold_chest") is True:
+                    ArcarumSandbox._open_gold_chest()
+                else:
+                    # Start the mission again.
+                    Game.wait(3.0)
+                    ArcarumSandbox._navigate_to_mission(skip_to_action = True)
 
         # Refill AAP if needed.
         ArcarumSandbox._play_zone_boss()
