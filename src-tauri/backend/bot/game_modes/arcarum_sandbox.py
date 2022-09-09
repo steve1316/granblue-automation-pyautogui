@@ -557,7 +557,7 @@ class ArcarumSandbox:
 
     @staticmethod
     def _open_gold_chest():
-        """Clicks on the a gold chest.
+        """Clicks on a gold chest.
         If it is a mimic, fight it, if not, click ok.
 
         Returns:
@@ -580,9 +580,6 @@ class ArcarumSandbox:
         Game.wait(2.0)
         ArcarumSandbox._reset_position()
         ArcarumSandbox._navigate_to_mission()
-
-
-
 
     @staticmethod
     def start():
