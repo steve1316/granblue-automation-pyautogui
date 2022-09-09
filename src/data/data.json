@@ -793,6 +793,22 @@
         "Lvl 120 Ra": {
             "map": "Ra",
             "items": ["Ra Anima", "Ra Omega Anima", "Abu Simbel", "Mandjet"]
+        },
+        "Lvl 250 Beelzebub": {
+            "map": "Beelzebub",
+            "items": ["Abyssal Wing"]
+        },
+        "Lvl 250 Belial": {
+            "map": "Belial",
+            "items": ["Cunning Devil's Horn"]
+        },
+        "Lvl 300 Super Ultimate Bahamut": {
+            "map": "Super Ultimate Bahamut",
+            "items": ["Ultimate Memory"]
+        },
+        "Lvl 275 Mugen": {
+            "map": "Mugen",
+            "items": ["Extinction Vestige", "Extinction Blade"]
         }
     },
     "Event": {

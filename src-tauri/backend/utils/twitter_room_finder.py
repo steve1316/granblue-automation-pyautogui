@@ -117,8 +117,12 @@ class TwitterRoomFinder:
         "Lvl 200 Akasha": "Lv200 アーカーシャ",
         "Lvl 150 Lucilius": "Lv150 ルシファー",
         "Lvl 250 Lucilius": "Lv250 ルシファー",
+        "Lvl 250 Beelzebub": "Lv250 ベルゼバブ",
+        "Lvl 250 Belial": "Lv250 ベリアル",
+        "Lvl 300 Super Ultimate Bahamut": "Lv300 スーパーアルティメットバハムート",
         "Lvl 200 Lindwurm": "Lv200 リンドヴルム",
         "Lvl 275 Diaspora": "Lv275 ディアスポラ",
+        "Lvl 275 Mugen": "Lv275 ムゲン",
 
         # Malice Raids
         "Lvl 150 Tiamat Malice": "Lv150 ティアマト・マリス",
@@ -134,7 +138,6 @@ class TwitterRoomFinder:
         "Lvl 200 Ewiyar": "Lv200 イーウィヤ",
         "Lvl 200 Lu Woh": "Lv200 ル・オー",
         "Lvl 200 Fediel": "Lv200 フェディエル",
-        "Lvl 250 Beelzebub": "Lv250 ベルゼバブ",
 
         # Xeno Clash Raids
         "Lvl 100 Xeno Ifrit": "Lv100 ゼノ・イフリート",
