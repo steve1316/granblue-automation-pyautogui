@@ -40,9 +40,7 @@ class GuildWars:
         Game.wait(3.0)
 
         difficulty = ""
-        if Settings.mission_name == "Very Hard":
-            difficulty = "Very Hard"
-        elif Settings.mission_name == "Extreme":
+        if Settings.mission_name == "Extreme":
             difficulty = "Extreme"
         elif Settings.mission_name == "Extreme+":
             difficulty = "Extreme+"
@@ -64,7 +62,7 @@ class GuildWars:
             raid_battle_locations = ImageUtils.find_all("event_raid_battle")
 
             # Perform different navigation actions based on whether the user wants to farm meat or to farm Nightmares.
-            if difficulty == "Very Hard" or difficulty == "Extreme" or difficulty == "Extreme+":
+            if difficulty == "Extreme" or difficulty == "Extreme+":
                 MessageLog.print_message(f"\n[GUILD.WARS] Now proceeding to farm meat.")
 
                 # Click on the banner to farm meat.
@@ -77,28 +75,23 @@ class GuildWars:
 
                 if ImageUtils.confirm_location("guild_wars_meat"):
                     # Now click on the specified Mission to start. Also attempt at fixing the deadzone issue by looping.
-                    formatted_mission_name = difficulty.replace(" ", "_")
                     tries = 10
                     MessageLog.print_message(f"[GUILD.WARS] Now hosting {difficulty} now...")
 
                     ap_locations = ImageUtils.find_all("ap_30")
 
-                    if difficulty == "Very Hard":
+                    if difficulty == "Extreme":
                         MouseUtils.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap_30")
-                    elif difficulty == "Extreme":
-                        MouseUtils.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap_30")
                     elif difficulty == "Extreme+":
-                        MouseUtils.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap_30")
+                        MouseUtils.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap_30")
 
                     Game.wait(3.0)
 
                     while ImageUtils.wait_vanish("ap_30", timeout = 3) is False:
-                        if difficulty == "Very Hard":
+                        if difficulty == "Extreme":
                             MouseUtils.move_and_click_point(ap_locations[0][0], ap_locations[0][1], "ap_30")
-                        elif difficulty == "Extreme":
-                            MouseUtils.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap_30")
                         elif difficulty == "Extreme+":
-                            MouseUtils.move_and_click_point(ap_locations[2][0], ap_locations[2][1], "ap_30")
+                            MouseUtils.move_and_click_point(ap_locations[1][0], ap_locations[1][1], "ap_30")
 
                         Game.wait(3.0)
 
@@ -170,7 +163,7 @@ class GuildWars:
                         Game.find_and_click_button("cancel")
 
                     # Click on the banner to farm meat.
-                    if len(raid_battle_locations) < 3:
+                    if len(raid_battle_locations) < 2:
                         MouseUtils.move_and_click_point(raid_battle_locations[1][0], raid_battle_locations[1][1], "event_raid_battle")
                     else:
                         MouseUtils.move_and_click_point(raid_battle_locations[2][0], raid_battle_locations[2][1], "event_raid_battle")
