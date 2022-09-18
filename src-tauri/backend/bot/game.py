@@ -443,7 +443,9 @@ class Game:
                         if tries <= 0:
                             raise RuntimeError("Could not find Set Extra.")
             else:
-                if group_number < 8:
+                if Settings.farming_mode == "Raid" and ImageUtils.find_button("party_set_extra", tries = 3):
+                    MessageLog.print_message(f"[INFO] Skipping Set Selection due to Raid only allowing parties from the Extra category.")
+                elif group_number < 8:
                     while set_location is None:
                         set_location = ImageUtils.find_button("party_set_a", tries = 10)
                         if set_location is None:
