@@ -24,7 +24,7 @@ class Event:
         """
         from bot.game import Game
 
-        if Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests"):
+        if Settings.enable_nightmare and ImageUtils.find_button("event_claim_loot"):
             # First check if the Event Nightmare is skippable.
             event_claim_loot_location = ImageUtils.find_button("event_claim_loot", suppress_error = True)
             if event_claim_loot_location is not None:
@@ -61,7 +61,7 @@ class Event:
                         Game.collect_loot(is_completed = False, is_event_nightmare = True)
                         return True
 
-        elif not Settings.enable_nightmare and ImageUtils.confirm_location("limited_time_quests"):
+        elif not Settings.enable_nightmare and ImageUtils.find_button("event_claim_loot"):
             # First check if the Event Nightmare is skippable.
             event_claim_loot_location = ImageUtils.find_button("event_claim_loot", suppress_error = True)
             if event_claim_loot_location is not None:
