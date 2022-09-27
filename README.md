@@ -96,6 +96,7 @@ Visit the [Wiki here](https://github.com/steve1316/granblue-automation-pyautogui
 4. [VMware Workstation Player (optional, if your computer is strong enough to support virtualization)](https://www.vmware.com/products/workstation-player.html)
 5. `New frontend requirement` [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (Windows 11 comes with this by default. Failure to install this leads to nothing showing up on the screen when the executable is launched.)
 6. `New frontend requirement` [Microsoft Visual C++ 2015-2019 Redistibutable (x64)](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
+7. 1080p or 1440p screen resolution at 100% window scaling.
 
 ## Python Dependencies (make sure to have these installed before moving on to the instructions)
 
