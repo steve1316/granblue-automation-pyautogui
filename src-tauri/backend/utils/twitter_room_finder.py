@@ -7,22 +7,20 @@ from utils.message_log import MessageLog
 from utils.settings import Settings
 
 
-class RoomStreamListener(tweepy.StreamListener):
+class RoomStreamListener(tweepy.StreamingClient):
     """
     A listener class using the Twitter Stream API to grab all incoming tweets that match the search query.
     """
 
-    def __init__(self):
-        super().__init__()
-        self.tweets = []
+    tweets = []
 
-    def on_status(self, status):
-        if Settings.debug_mode:
-            MessageLog.print_message(f"[DEBUG] Stream found: {status.text}")
+    def on_tweet(self, status):
+        if True:
+            MessageLog.print_message(f"[DEBUG] Tweet found: {status}")
 
         self.tweets.append(status)
 
-    def on_error(self, status_code):
+    def on_errors(self, status_code):
         MessageLog.print_message(f"[ERROR] Stream API encountered Error Code {status_code}. Closing the stream...")
         return False
 
@@ -156,15 +154,14 @@ class TwitterRoomFinder:
         "Lvl 120 Ra": "Lv120 ラー",
     }
 
-    _listener = RoomStreamListener()
+    _listener: RoomStreamListener = None
     _stream: Stream = None
 
     @staticmethod
     def connect():
         if Settings.farming_mode == "Raid":
             MessageLog.print_message(f"\n[TWITTER] Authenticating provided consumer keys and tokens with the Twitter API...")
-            _auth = tweepy.OAuthHandler(Settings.twitter_keys_tokens[0], Settings.twitter_keys_tokens[1])
-            _auth.set_access_token(Settings.twitter_keys_tokens[2], Settings.twitter_keys_tokens[3])
+            _auth = tweepy.OAuth1UserHandler(Settings.twitter_keys_tokens[0], Settings.twitter_keys_tokens[1], Settings.twitter_keys_tokens[2], Settings.twitter_keys_tokens[3])
             _api = tweepy.API(_auth)
 
             # Check to see if connection to Twitter's API was successful.
@@ -174,11 +171,17 @@ class TwitterRoomFinder:
             MessageLog.print_message(f"[TWITTER] Successfully connected to the Twitter API.")
 
             # Create the listener and stream objects. for the Twitter Stream API.
-            TwitterRoomFinder._stream = tweepy.Stream(auth = _api.auth, listener = TwitterRoomFinder._listener)
+            TwitterRoomFinder._stream = RoomStreamListener("AAAAAAAAAAAAAAAAAAAAAIYNigEAAAAAvmiUdedr0l9g%2FTyHgfVuFtwd8g8%3DrbFn3j62EN2ny6dJiJb8MhY9fGnY62DOex7vJxzw0AyAtOfpjU")
 
             # Start asynchronous process of listening to tweets for the specified raid.
             MessageLog.print_message(f"\n[TWITTER] Now listening onto the Stream API for the newest tweets for {Settings.mission_name}.")
-            TwitterRoomFinder._stream.filter(track = [Settings.mission_name, TwitterRoomFinder._list_of_raids[Settings.mission_name]], is_async = True, filter_level = "none")
+            search_terms = [Settings.mission_name, TwitterRoomFinder._list_of_raids[Settings.mission_name]]
+            for term in search_terms:
+                TwitterRoomFinder._stream.add_rules(tweepy.StreamRule(term))
+
+            MessageLog.print_message(f"HERE: {TwitterRoomFinder._stream.get_rules()}")
+
+            thread = TwitterRoomFinder._stream.filter(threaded = True)
 
     @staticmethod
     def test_connection() -> bool:
