@@ -19,10 +19,12 @@ export interface Settings {
 
     // Twitter settings.
     twitter: {
+        twitterUseVersion2: boolean
         twitterAPIKey: string
         twitterAPIKeySecret: string
         twitterAccessToken: string
         twitterAccessTokenSecret: string
+        twitterBearerToken: string
     }
 
     // Discord settings.
@@ -160,10 +162,12 @@ export const defaultSettings: Settings = {
         debugMode: false,
     },
     twitter: {
+        twitterUseVersion2: false,
         twitterAPIKey: "",
         twitterAPIKeySecret: "",
         twitterAccessToken: "",
         twitterAccessTokenSecret: "",
+        twitterBearerToken: "",
     },
     discord: {
         enableDiscordNotifications: false,

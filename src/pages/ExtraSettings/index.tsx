@@ -199,54 +199,85 @@ const ExtraSettings = () => {
                     Please visit the wiki on the GitHub page for instructions on how to get these keys and tokens.
                 </Typography>
 
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bot.settings.twitter.twitterUseVersion2}
+                                onChange={(e) => {
+                                    bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterUseVersion2: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Enable if using Twitter API V2. Disable if using V1.1"
+                    />
+                    <FormHelperText>If enabled, then only the bearer token will be needed. No need for the consumer keys and such.</FormHelperText>
+                </FormGroup>
+
                 <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
-                    <Grid item xs={6}>
-                        <TextField
-                            label="API Key"
-                            value={bot.settings.twitter.twitterAPIKey}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAPIKey: e.target.value } })}
-                            placeholder="Insert API Key here"
-                            multiline
-                            variant="filled"
-                            fullWidth
-                        />
-                    </Grid>
+                    {!bot.settings.twitter.twitterUseVersion2 ? (
+                        <>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="API Key"
+                                    value={bot.settings.twitter.twitterAPIKey}
+                                    onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAPIKey: e.target.value } })}
+                                    placeholder="Insert API Key here"
+                                    multiline
+                                    variant="filled"
+                                    fullWidth
+                                />
+                            </Grid>
 
-                    <Grid item xs={6}>
-                        <TextField
-                            label="API Key Secret"
-                            value={bot.settings.twitter.twitterAPIKeySecret}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAPIKeySecret: e.target.value } })}
-                            placeholder="Insert API Key Secret here"
-                            multiline
-                            variant="filled"
-                            fullWidth
-                        />
-                    </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="API Key Secret"
+                                    value={bot.settings.twitter.twitterAPIKeySecret}
+                                    onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAPIKeySecret: e.target.value } })}
+                                    placeholder="Insert API Key Secret here"
+                                    multiline
+                                    variant="filled"
+                                    fullWidth
+                                />
+                            </Grid>
 
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Access Token"
-                            value={bot.settings.twitter.twitterAccessToken}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAccessToken: e.target.value } })}
-                            placeholder="Insert Access Token here"
-                            multiline
-                            variant="filled"
-                            fullWidth
-                        />
-                    </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Access Token"
+                                    value={bot.settings.twitter.twitterAccessToken}
+                                    onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAccessToken: e.target.value } })}
+                                    placeholder="Insert Access Token here"
+                                    multiline
+                                    variant="filled"
+                                    fullWidth
+                                />
+                            </Grid>
 
-                    <Grid item xs={6}>
-                        <TextField
-                            label="Access Token Secret"
-                            value={bot.settings.twitter.twitterAccessTokenSecret}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAccessTokenSecret: e.target.value } })}
-                            placeholder="Insert Access Token Secret here"
-                            multiline
-                            variant="filled"
-                            fullWidth
-                        />
-                    </Grid>
+                            <Grid item xs={6}>
+                                <TextField
+                                    label="Access Token Secret"
+                                    value={bot.settings.twitter.twitterAccessTokenSecret}
+                                    onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAccessTokenSecret: e.target.value } })}
+                                    placeholder="Insert Access Token Secret here"
+                                    multiline
+                                    variant="filled"
+                                    fullWidth
+                                />
+                            </Grid>
+                        </>
+                    ) : (
+                        <Grid item xs={12}>
+                            <TextField
+                                label="Bearer Token"
+                                value={bot.settings.twitter.twitterBearerToken}
+                                onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterBearerToken: e.target.value } })}
+                                placeholder="Insert Bearer Token here"
+                                multiline
+                                variant="filled"
+                                fullWidth
+                            />
+                        </Grid>
+                    )}
 
                     <Grid item>
                         <Box sx={{ m: 1, position: "relative" }}>
