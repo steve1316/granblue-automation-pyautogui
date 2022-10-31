@@ -1,28 +1,30 @@
+import json
 import re
+from typing import Union
 
 import tweepy
-from tweepy import Stream
+import tweepy.asynchronous
+from tweepy import Response, API
 
 from utils.message_log import MessageLog
 from utils.settings import Settings
 
 
-class RoomStreamListener(tweepy.StreamingClient):
+class RoomStreamListenerV2(tweepy.StreamingClient):
     """
-    A listener class using the Twitter Stream API to grab all incoming tweets that match the search query.
+    A listener class using the Twitter Stream API V2 to grab all incoming tweets that match the search query.
     """
 
     tweets = []
 
-    def on_tweet(self, status):
-        if True:
-            MessageLog.print_message(f"[DEBUG] Tweet found: {status}")
-
-        self.tweets.append(status)
-
     def on_errors(self, status_code):
         MessageLog.print_message(f"[ERROR] Stream API encountered Error Code {status_code}. Closing the stream...")
         return False
+
+    def on_data(self, raw_data):
+        if Settings.debug_mode:
+            MessageLog.print_message(f"[DEBUG] Raw Data found: {raw_data}")
+        self.tweets.append(raw_data)
 
 
 class TwitterRoomFinder:
@@ -154,76 +156,161 @@ class TwitterRoomFinder:
         "Lvl 120 Ra": "Lv120 ラー",
     }
 
-    _listener: RoomStreamListener = None
-    _stream: Stream = None
+    _listener_old: API = None
+    _listener_old_tweets = []
+    _list_of_id = []
+    _listener: RoomStreamListenerV2 = None
 
     @staticmethod
     def connect():
-        if Settings.farming_mode == "Raid":
-            MessageLog.print_message(f"\n[TWITTER] Authenticating provided consumer keys and tokens with the Twitter API...")
+        """Connect to either Twitter API V1.1 or V2.
+
+        Returns:
+            None
+        """
+        # There are two methods of connection: keys/access tokens for V1.1 and bearer token for V2.
+        if Settings.twitter_use_version2:
+            MessageLog.print_message(f"\n[TWITTER] Authenticating provided bearer token with the Twitter API V2...")
+            TwitterRoomFinder.test_connection()
+            MessageLog.print_message(f"[TWITTER] Successfully connected to the Twitter API V2.")
+
+            # Create the listener and stream objects for the Twitter Stream API.
+            TwitterRoomFinder._listener = RoomStreamListenerV2(Settings.twitter_bearer_token)
+
+            # Start asynchronous process of listening to tweets for the specified raid.
+            MessageLog.print_message(f"\n[TWITTER] Now listening onto the Stream API for the newest tweets for {Settings.mission_name}.")
+
+            # Make sure to remove any existing rules from the filter.
+            TwitterRoomFinder._remove_rules()
+
+            MessageLog.print_message(f"[TWITTER] Successfully connected to the Twitter API V2.")
+
+            # Add the search terms as new rules.
+            search_terms = [Settings.mission_name, TwitterRoomFinder._list_of_raids[Settings.mission_name]]
+            for term in search_terms:
+                TwitterRoomFinder._listener.add_rules(tweepy.StreamRule(term))
+
+            MessageLog.print_message(f"\n[TWITTER] Current rules to filter by: {TwitterRoomFinder._listener.get_rules()}.")
+
+            # Now listen to the stream in a separate thread (the async components has an issue where the data was not being received and could not be seen from the main thread).
+            TwitterRoomFinder._listener.filter(threaded = True)
+        else:
+            MessageLog.print_message(f"\n[TWITTER] Authenticating provided consumer keys and access tokens with the Twitter API V1.1...")
+            TwitterRoomFinder.test_connection()
+            MessageLog.print_message(f"[TWITTER] Successfully connected to the Twitter API V1.1.")
+
+            # Create the listener and stream objects for the Twitter Stream API V1.1.
+            _auth = tweepy.OAuth1UserHandler(Settings.twitter_keys_tokens[0], Settings.twitter_keys_tokens[1], Settings.twitter_keys_tokens[2], Settings.twitter_keys_tokens[3])
+            TwitterRoomFinder._listener_old = tweepy.API(_auth)
+
+            MessageLog.print_message(f"\n[TWITTER] Now ready for manual searching of tweets for {Settings.mission_name}.")
+
+    @staticmethod
+    def _remove_rules():
+        """Remove any existing rules for the filter for use in the Twitter API V2.
+
+        Returns:
+            None
+        """
+        rules: Union[dict, Response, Response] = TwitterRoomFinder._listener.get_rules()
+        if rules[0] is not None:
+            TwitterRoomFinder._listener.delete_rules(rules[0])
+
+    @staticmethod
+    def test_connection() -> bool:
+        """Test connection to the API using either the bearer token for V2 or the consumer keys/tokens for V1.1.
+
+        Returns:
+            True if connection was established to the API.
+        """
+        if Settings.twitter_use_version2:
+            _auth = tweepy.Client(bearer_token = Settings.twitter_bearer_token)
+
+            # Check to see if connection to Twitter's API was successful.
+            try:
+                if len(_auth.get_recent_tweets_count('twitter')) == 0:
+                    raise (ConnectionError(f"[ERROR] Failed to connect to the Twitter API V2 with both the keys/tokens as well as the bearer token."))
+            except Exception:
+                raise (ConnectionError(f"[ERROR] Failed to connect to the Twitter API V2 with both the keys/tokens as well as the bearer token."))
+        else:
             _auth = tweepy.OAuth1UserHandler(Settings.twitter_keys_tokens[0], Settings.twitter_keys_tokens[1], Settings.twitter_keys_tokens[2], Settings.twitter_keys_tokens[3])
             _api = tweepy.API(_auth)
 
             # Check to see if connection to Twitter's API was successful.
             if not _api.verify_credentials():
-                raise (ConnectionError(f"[ERROR] Failed to connect to the Twitter API. Check your keys and tokens."))
+                raise (ConnectionError(f"[ERROR] Failed to connect to the Twitter API V1.1 with both the keys/tokens as well as the bearer token."))
 
-            MessageLog.print_message(f"[TWITTER] Successfully connected to the Twitter API.")
-
-            # Create the listener and stream objects. for the Twitter Stream API.
-            TwitterRoomFinder._stream = RoomStreamListener("AAAAAAAAAAAAAAAAAAAAAIYNigEAAAAAvmiUdedr0l9g%2FTyHgfVuFtwd8g8%3DrbFn3j62EN2ny6dJiJb8MhY9fGnY62DOex7vJxzw0AyAtOfpjU")
-
-            # Start asynchronous process of listening to tweets for the specified raid.
-            MessageLog.print_message(f"\n[TWITTER] Now listening onto the Stream API for the newest tweets for {Settings.mission_name}.")
-            search_terms = [Settings.mission_name, TwitterRoomFinder._list_of_raids[Settings.mission_name]]
-            for term in search_terms:
-                TwitterRoomFinder._stream.add_rules(tweepy.StreamRule(term))
-
-            MessageLog.print_message(f"HERE: {TwitterRoomFinder._stream.get_rules()}")
-
-            thread = TwitterRoomFinder._stream.filter(threaded = True)
+        return True
 
     @staticmethod
-    def test_connection() -> bool:
-        _auth = tweepy.OAuthHandler(Settings.twitter_keys_tokens[0], Settings.twitter_keys_tokens[1])
-        _auth.set_access_token(Settings.twitter_keys_tokens[2], Settings.twitter_keys_tokens[3])
-        _api = tweepy.API(_auth)
+    def _find_most_recent(count: int = 10):
+        """Manually search the most recent tweets with the queries for Twitter API V1.1.
 
-        if _api.verify_credentials():
-            return True
-        else:
-            raise (ConnectionError(f"[ERROR] Failed to connect to the Twitter API. Check your keys and tokens."))
+        Returns:
+            None
+        """
+        MessageLog.print_message(f"\n[TWITTER] Now finding the {count} most recent tweets for {Settings.mission_name}.")
+
+        query_en = f"+(:Battle ID) AND +({Settings.mission_name})"
+        query_jp = f"+(:参戦ID) AND +({TwitterRoomFinder._list_of_raids[Settings.mission_name]})"
+
+        # Search JP tweets first and filter for tweets that the bot has not processed yet.
+        tweet_jp = TwitterRoomFinder._listener_old.search_tweets(q = query_jp, count = count)
+        for tweet in tweet_jp:
+            if tweet.id not in TwitterRoomFinder._list_of_id and len(TwitterRoomFinder._listener_old_tweets) < count:
+                TwitterRoomFinder._listener_old_tweets.append(tweet)
+                TwitterRoomFinder._list_of_id.append(tweet.id)
+
+        # Search EN tweets only if the filtered JP tweets was less than the desired amount.
+        if len(TwitterRoomFinder._listener_old_tweets) < count:
+            tweet_en = TwitterRoomFinder._listener_old.search_tweets(q = query_en, count = count)
+            for tweet in tweet_en:
+                if tweet.id not in TwitterRoomFinder._list_of_id and len(TwitterRoomFinder._listener_old_tweets) < count:
+                    TwitterRoomFinder._listener_old_tweets.append(tweet)
+                    TwitterRoomFinder._list_of_id.append(tweet.id)
 
     @staticmethod
-    def get_room_code():
+    def get_room_code() -> str:
         """Clean the tweets from the listener and parse out a valid room code from them.
 
         Returns:
             (str): A single room code that has not been visited.
         """
-        if len(TwitterRoomFinder._listener.tweets) == 0:
+        if not Settings.twitter_use_version2:
+            TwitterRoomFinder._find_most_recent()
+
+        if (not Settings.twitter_use_version2 and len(TwitterRoomFinder._listener_old_tweets) == 0) or (
+                Settings.twitter_use_version2 and len(TwitterRoomFinder._listener.tweets) == 0):
             MessageLog.print_message(f"[TWITTER] There are no recent or detected tweets available for the given raid.")
             return ""
 
         MessageLog.print_message(f"[TWITTER] Now cleaning up the tweets and parsing for room codes...")
 
-        while len(TwitterRoomFinder._listener.tweets) > 0:
-            tweet = TwitterRoomFinder._listener.tweets.pop()
+        while (not Settings.twitter_use_version2 and len(TwitterRoomFinder._listener_old_tweets) > 0) or (
+                Settings.twitter_use_version2 and len(TwitterRoomFinder._listener.tweets) > 0):
+            if Settings.twitter_use_version2:
+                tweet_text = json.loads(TwitterRoomFinder._listener.tweets.pop().decode('utf-8'))['data']["text"]
+            else:
+                tweet_text = TwitterRoomFinder._listener_old_tweets.pop().text
 
-            if re.search(rf"\b{Settings.mission_name}\b", tweet.text) or re.search(rf"\b{TwitterRoomFinder._list_of_raids[Settings.mission_name]}\b", tweet.text):
+            if Settings.twitter_use_version2 and (
+                    re.search(rf"\b{Settings.mission_name}\b", tweet_text) or re.search(rf"\b{TwitterRoomFinder._list_of_raids[Settings.mission_name]}\b", tweet_text)) or (
+                    not Settings.twitter_use_version2 and (
+                    re.search(rf"\b{Settings.mission_name}\b", tweet_text) or re.search(rf"\b{TwitterRoomFinder._list_of_raids[Settings.mission_name]}\b", tweet_text))):
                 # Split up the tweet's text by whitespaces.
-                split_text = tweet.text.split(" ")
+                split_text = tweet_text.split(" ")
 
                 # Parse the room code and if it has not been visited yet, append it to the list.
                 for i, identifier in enumerate(split_text):
                     if (":Battle" in identifier) or (":参戦ID" in identifier):
                         parsed_code = split_text[i - 1]
                         if parsed_code not in TwitterRoomFinder._already_visited_codes:
-                            MessageLog.print_message(f"[TWITTER] Found {parsed_code} created at {tweet.created_at}")
+                            MessageLog.print_message(f"[TWITTER] Found {parsed_code}")
                             TwitterRoomFinder._already_visited_codes.append(parsed_code)
                             return parsed_code
                         else:
                             MessageLog.print_message(f"[TWITTER] Already visited {parsed_code} before in this session. Skipping this code...")
+
             else:
                 MessageLog.print_message(f"[TWITTER] Skipping tweet as it is for a different raid.")
 
@@ -236,6 +323,8 @@ class TwitterRoomFinder:
         Returns:
             None
         """
-        if TwitterRoomFinder._stream is not None:
-            TwitterRoomFinder._stream.disconnect()
+        if not Settings.twitter_use_version2 and TwitterRoomFinder._listener_old is not None:
+            TwitterRoomFinder._listener_old.session.close()
+        elif Settings.twitter_use_version2 and TwitterRoomFinder._listener is not None:
+            TwitterRoomFinder._listener.disconnect()
         return None
