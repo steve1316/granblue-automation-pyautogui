@@ -25,8 +25,6 @@ class Raid:
         Returns:
             None
         """
-        from bot.game import Game
-
         # Find out the number of currently joined raids.
         joined_locations = ImageUtils.find_all("joined")
 
@@ -81,7 +79,7 @@ class Raid:
         # Loop and try to join a raid. If none of the room codes worked, wait before trying again with a new set of room codes for a maximum of 10 tries.
         tries = 10
         while tries > 0:
-            room_code_tries = 5
+            room_code_tries = 30
             while room_code_tries > 0:
                 # Attempt to find a room code.
                 room_code = TwitterRoomFinder.get_room_code()
