@@ -94,34 +94,34 @@ Visit the [Wiki here](https://github.com/steve1316/granblue-automation-pyautogui
 2. [Granblue Fantasy account](http://game.granbluefantasy.jp/)
 3. [Twitter Developer account (optional, needed to farm Raids)](https://developer.twitter.com/en)
 4. [VMware Workstation Player (optional, if your computer is strong enough to support virtualization)](https://www.vmware.com/products/workstation-player.html)
-5. `New frontend requirement` [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (Windows 11 comes with this by default. Failure to install this leads to nothing showing up on the screen when the executable is launched.)
-6. `New frontend requirement` [Microsoft Visual C++ 2015-2019 Redistibutable (x64)](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
+5. [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (Windows 11 comes with this by default. Failure to install this leads to nothing showing up on the screen when the executable is launched.)
+6. [Microsoft Visual C++ 2015-2019 Redistibutable (x64)](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
 7. 1080p or 1440p screen resolution at 100% window scaling.
 
 ## Python Dependencies (make sure to have these installed before moving on to the instructions)
 
 ```
-# Execute this command in a terminal opened inside the /backend/ folder to install all of these requirements:
+# Open a command terminal inside the /backend/ folder with the method of your choice or by holding SHIFT + RMB and selecting `Open Powershell window here` and then execute this command to install all of these requirements:
 
 pip install -r requirements.txt
 ```
 
--   [PyTorch 1.7.1](https://pytorch.org/) (Installing the CUDA version will improve the speed of template matching if you have a CUDA-compatible GPU)
--   [PyAutoGUI 0.9.52](https://pypi.org/project/PyAutoGUI/)
--   [Pillow 8.3.2](https://pypi.org/project/Pillow/)
--   [opencv-python 4.5.1.48](https://pypi.org/project/opencv-python/)
--   [EasyOCR 1.2.1](https://pypi.org/project/easyocr/)
--   [numpy 1.20.2](https://pypi.org/project/numpy/)
--   [playsound 1.2.2](https://pypi.org/project/playsound/)
--   [pyclick 0.0.2](https://pypi.org/project/pyclick/)
--   [pyperclip 1.8.1](https://pypi.org/project/pyperclip/)
--   [tweepy 3.10.0](https://pypi.org/project/tweepy)
--   [discord.py 1.7.3](https://pypi.org/project/discord.py/)
--   [dictor 0.1.9](https://github.com/perfecto25/dictor)
+-   [PyTorch](https://pytorch.org/) (Installing the CUDA version will improve the speed of template matching if you have a CUDA-compatible GPU)
+-   [PyAutoGUI](https://pypi.org/project/PyAutoGUI/)
+-   [Pillow](https://pypi.org/project/Pillow/)
+-   [opencv-python](https://pypi.org/project/opencv-python/)
+-   [EasyOCR](https://pypi.org/project/easyocr/)
+-   [numpy](https://pypi.org/project/numpy/)
+-   [playsound](https://pypi.org/project/playsound/)
+-   [pyclick](https://pypi.org/project/pyclick/)
+-   [pyperclip](https://pypi.org/project/pyperclip/)
+-   [tweepy](https://pypi.org/project/tweepy)
+-   [discord.py](https://pypi.org/project/discord.py/)
+-   [dictor](https://github.com/perfecto25/dictor)
 
 # Instructions
 
-1. Download the entire project folder.
+1. Download the latest release by heading to the [Releases page](https://github.com/steve1316/granblue-automation-pyautogui/releases) and downloading the latest .zip file. You will know its the correct one to download as it has a .exe executable file in it called `Granblue Automation.exe`. Alternatively if you want to build it by yourself, download the entire project itself and then head over to [Build Instructions](#build-instructions) and follow the steps. Executing `yarn build` will create the .exe and the necessary files in `/src-tauri/target/release/`.
 2. Make sure you installed the project dependencies by having Python 3.8.3 installed and ran `pip install -r requirements.txt` as stated above.
 3. Open up the game on a Chromium-based browser and log in if you haven't already done so. Click away any daily log in popups until you are at the Main/Home screen.
 
