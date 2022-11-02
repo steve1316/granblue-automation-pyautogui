@@ -40,10 +40,12 @@ class Settings:
     debug_mode: bool = dictor(_data, "game.debugMode", False)
 
     # #### twitter ####
+    twitter_use_version2: bool = dictor(_data, "twitter.twitterUseVersion2", False)
     twitter_keys_tokens: List[str] = [dictor(_data, "twitter.twitterAPIKey", ""),
                                       dictor(_data, "twitter.twitterAPIKeySecret", ""),
                                       dictor(_data, "twitter.twitterAccessToken", ""),
                                       dictor(_data, "twitter.twitterAccessTokenSecret", "")]
+    twitter_bearer_token: str = dictor(_data, "twitter.twitterBearerToken", "")
     # #### end of twitter ####
 
     # #### discord ####
