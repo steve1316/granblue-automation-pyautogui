@@ -52,6 +52,8 @@ class GuildWars:
             difficulty = "NM100"
         elif Settings.mission_name == "NM150":
             difficulty = "NM150"
+        elif Settings.mission_name == "NM200":
+            difficulty = "NM200"
 
         if ImageUtils.confirm_location("guild_wars"):
             # Scroll the screen down a little bit.
@@ -109,27 +111,15 @@ class GuildWars:
             else:
                 MessageLog.print_message(f"\n[GUILD.WARS] Now proceeding to farm Nightmares.")
 
-                start_check_for_nm150 = False
+                start_check_for_nm150_nm200 = False
 
                 # Click on the banner to farm Nightmares.
-                if difficulty != "NM150":
+                if difficulty != "NM150" or difficulty != "NM200":
                     if len(raid_battle_locations) < 3:
                         MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
                     else:
                         MouseUtils.move_and_click_point(raid_battle_locations[1][0], raid_battle_locations[1][1], "event_raid_battle")
-                else:
-                    MessageLog.print_message(f"\n[GUILD.WARS] Now hosting NM150 now...")
 
-                    if len(raid_battle_locations) >= 3:
-                        MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
-
-                        if not ImageUtils.wait_vanish("guild_wars_nightmare_150", timeout = 10):
-                            Game.find_and_click_button("guild_wars_nightmare_150")
-
-                        if ImageUtils.confirm_location("guild_wars_nightmare"):
-                            start_check_for_nm150 = Game.find_and_click_button("start")
-
-                if difficulty != "NM150" and ImageUtils.confirm_location("guild_wars_nightmare"):
                     nightmare_locations = ImageUtils.find_all("guild_wars_nightmares")
 
                     # If today is the first/second day of Guild Wars, only NM90 will be available.
@@ -152,10 +142,31 @@ class GuildWars:
                     elif difficulty == "NM100":
                         MessageLog.print_message(f"[GUILD.WARS] Now hosting NM100 now...")
                         MouseUtils.move_and_click_point(nightmare_locations[2][0], nightmare_locations[2][1], "guild_wars_nightmares")
+                else:
+                    MessageLog.print_message(f"\n[GUILD.WARS] Now hosting NM150/NM200 now...")
 
-                elif start_check_for_nm150 is False:
+                    if len(raid_battle_locations) >= 3:
+                        MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
+
+                        if not ImageUtils.wait_vanish("guild_wars_nightmare_united_battle", timeout = 10):
+                            Game.find_and_click_button("guild_wars_nightmare_united_battle")
+
+                        nightmare_locations = ImageUtils.find_all("guild_wars_nightmares")
+
+                        if ImageUtils.confirm_location("guild_wars_nightmare"):
+                            start_check_for_nm150_nm200 = Game.find_and_click_button("start")
+                        elif difficulty == "NM150":
+                            MessageLog.print_message(f"[GUILD.WARS] Now hosting NM150 now...")
+                            MouseUtils.move_and_click_point(nightmare_locations[0][0], nightmare_locations[0][1], "guild_wars_nightmares")
+                            start_check_for_nm150_nm200 = True
+                        elif difficulty == "NM200":
+                            MessageLog.print_message(f"[GUILD.WARS] Now hosting NM200 now...")
+                            MouseUtils.move_and_click_point(nightmare_locations[1][0], nightmare_locations[1][1], "guild_wars_nightmares")
+                            start_check_for_nm150_nm200 = True
+
+                if start_check_for_nm150_nm200 is False:
                     # If there is not enough meat to host, host Extreme+ instead.
-                    MessageLog.print_message(f"\n[GUILD.WARS] User lacks meat to host the Nightmare. Hosting Extreme+ instead...")
+                    MessageLog.print_message(f"\n[GUILD.WARS] User lacks meat or navigation failed to host the Nightmare. Hosting Extreme+ instead...")
 
                     if difficulty != "NM150":
                         Game.find_and_click_button("close")
