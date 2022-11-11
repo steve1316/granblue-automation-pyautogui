@@ -913,6 +913,10 @@
         "NM150": {
             "map": "Event Raid",
             "items": ["Repeated Runs"]
+        },
+        "NM200": {
+            "map": "Event Raid",
+            "items": ["Repeated Runs"]
         }
     },
     "Dread Barrage": {
