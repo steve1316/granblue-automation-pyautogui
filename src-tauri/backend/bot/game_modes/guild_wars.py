@@ -111,6 +111,29 @@ class GuildWars:
             else:
                 MessageLog.print_message(f"\n[GUILD.WARS] Now proceeding to farm Nightmares.")
 
+                # TODO: Separate logic into the 4 Days of Guild Wars.
+
+                day_1, day_2, day_3, day_4 = False
+
+                day_1 = ImageUtils.confirm_location("guild_wars_nightmare_first_day")
+
+                if day_1:
+                    MessageLog.print_message(f"[GUILD.WARS] Today is the first/second day so hosting NM90.")
+                    Game.find_and_click_button("ok")
+
+                    # Alert the user if they lack the meat to host this and stop the bot.
+                    if not ImageUtils.wait_vanish("ok", timeout = 30):
+                        ImageUtils.generate_alert("You do not have enough meat to host this NM90!")
+                        raise GuildWarsException("You do not have enough meat to host this NM90!")
+                else:
+                    if len(raid_battle_locations) < 3:
+                        MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
+                    else:
+                        MouseUtils.move_and_click_point(raid_battle_locations[1][0], raid_battle_locations[1][1], "event_raid_battle")
+
+                    nightmare_locations = ImageUtils.find_all("guild_wars_nightmares")
+
+
                 start_check_for_nm150_nm200 = False
 
                 # Click on the banner to farm Nightmares.
