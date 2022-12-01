@@ -515,10 +515,12 @@ class ImageUtils:
                 return point[1]
 
             if sort_flag:
-                MessageLog.print_message(f"Sorting first")
+                if Settings.debug_mode:
+                    MessageLog.print_message(f"[DEBUG] Sorting array using first key")
                 filtered_locations.sort(key = first)
             else:
-                MessageLog.print_message(f"Sorting second")
+                if Settings.debug_mode:
+                    MessageLog.print_message(f"[DEBUG] Sorting array using second key")
                 filtered_locations.sort(key = second)
 
             if not hide_info:
