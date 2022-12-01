@@ -140,7 +140,8 @@ class Game:
         return None
 
     @staticmethod
-    def find_and_click_button(button_name: str, clicks: int = 1, tries: int = 0, x_offset: int = 0, y_offset: int = 0, suppress_error: bool = False, bypass_general_adjustment: bool = True):
+    def find_and_click_button(button_name: str, clicks: int = 1, tries: int = 0, x_offset: int = 0, y_offset: int = 0, custom_confidence: float = 0.80, suppress_error: bool = False,
+                              bypass_general_adjustment: bool = True):
         """Find the center point of a button image and click it.
 
         Args:
@@ -149,6 +150,7 @@ class Game:
             tries (int, optional): Number of tries to attempt to find the specified button image. Defaults to 0 which will use ImageUtil's default.
             x_offset (int, optional): Offset the x-coordinate of the click location. Defaults to 0.
             y_offset (int, optional): Offset the y-coordinate of the click location. Defaults to 0.
+            custom_confidence (float, optional): Use a custom confidence for the template matching. Defaults to 0.80.
             suppress_error (bool, optional): Suppresses template matching error depending on boolean. Defaults to False.
             bypass_general_adjustment (bool, optional): Bypass using the general adjustment for the number of tries if ImageUtil's default is not being used. Defaults to True.
 
@@ -160,81 +162,82 @@ class Game:
 
         if tries == 0:
             if button_name.lower() == "quest":
-                temp_location = ImageUtils.find_button("quest_blue")
+                temp_location = ImageUtils.find_button("quest_blue", custom_confidence = custom_confidence)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("quest_red")
+                    temp_location = ImageUtils.find_button("quest_red", custom_confidence = custom_confidence)
 
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "quest_blue", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "raid":
-                temp_location = ImageUtils.find_button("raid_flat")
+                temp_location = ImageUtils.find_button("raid_flat", custom_confidence = custom_confidence)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("raid_bouncing")
+                    temp_location = ImageUtils.find_button("raid_bouncing", custom_confidence = custom_confidence)
 
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "raid_flat", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "coop_start":
-                temp_location = ImageUtils.find_button("coop_start_flat")
+                temp_location = ImageUtils.find_button("coop_start_flat", custom_confidence = custom_confidence)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("coop_start_faded")
+                    temp_location = ImageUtils.find_button("coop_start_faded", custom_confidence = custom_confidence)
 
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "coop_start_flat", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "event_special_quest":
-                temp_location = ImageUtils.find_button("event_special_quest")
+                temp_location = ImageUtils.find_button("event_special_quest", custom_confidence = custom_confidence)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("event_special_quest_flat")
+                    temp_location = ImageUtils.find_button("event_special_quest_flat", custom_confidence = custom_confidence)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("event_special_quest_bouncing")
+                    temp_location = ImageUtils.find_button("event_special_quest_bouncing", custom_confidence = custom_confidence)
 
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "event_special_quest", mouse_clicks = clicks)
                     return True
             else:
-                temp_location = ImageUtils.find_button(button_name.lower())
+                temp_location = ImageUtils.find_button(button_name.lower(), custom_confidence = custom_confidence)
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, button_name, mouse_clicks = clicks)
                     return True
         else:
             if button_name.lower() == "quest":
-                temp_location = ImageUtils.find_button("quest_blue", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
+                temp_location = ImageUtils.find_button("quest_blue", tries = tries, custom_confidence = custom_confidence, bypass_general_adjustment = bypass_general_adjustment)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("quest_red", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
+                    temp_location = ImageUtils.find_button("quest_red", tries = tries, custom_confidence = custom_confidence, bypass_general_adjustment = bypass_general_adjustment)
 
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "quest_blue", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "raid":
-                temp_location = ImageUtils.find_button("raid_flat", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
+                temp_location = ImageUtils.find_button("raid_flat", tries = tries, custom_confidence = custom_confidence, bypass_general_adjustment = bypass_general_adjustment)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("raid_bouncing", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
+                    temp_location = ImageUtils.find_button("raid_bouncing", tries = tries, custom_confidence = custom_confidence, bypass_general_adjustment = bypass_general_adjustment)
 
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "raid_flat", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "coop_start":
-                temp_location = ImageUtils.find_button("coop_start_flat", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
+                temp_location = ImageUtils.find_button("coop_start_flat", tries = tries, custom_confidence = custom_confidence, bypass_general_adjustment = bypass_general_adjustment)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("coop_start_faded", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
+                    temp_location = ImageUtils.find_button("coop_start_faded", tries = tries, custom_confidence = custom_confidence, bypass_general_adjustment = bypass_general_adjustment)
 
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "coop_start_flat", mouse_clicks = clicks)
                     return True
             elif button_name.lower() == "event_special_quest":
-                temp_location = ImageUtils.find_button("event_special_quest", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
+                temp_location = ImageUtils.find_button("event_special_quest", tries = tries, custom_confidence = custom_confidence, bypass_general_adjustment = bypass_general_adjustment)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("event_special_quest_flat", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
+                    temp_location = ImageUtils.find_button("event_special_quest_flat", tries = tries, custom_confidence = custom_confidence, bypass_general_adjustment = bypass_general_adjustment)
                 if temp_location is None:
-                    temp_location = ImageUtils.find_button("event_special_quest_bouncing", tries = tries, bypass_general_adjustment = bypass_general_adjustment)
+                    temp_location = ImageUtils.find_button("event_special_quest_bouncing", tries = tries, custom_confidence = custom_confidence, bypass_general_adjustment = bypass_general_adjustment)
 
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "event_special_quest", mouse_clicks = clicks)
                     return True
             else:
-                temp_location = ImageUtils.find_button(button_name.lower(), tries = tries, suppress_error = suppress_error, bypass_general_adjustment = bypass_general_adjustment)
+                temp_location = ImageUtils.find_button(button_name.lower(), tries = tries, suppress_error = suppress_error, custom_confidence = custom_confidence,
+                                                       bypass_general_adjustment = bypass_general_adjustment)
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, button_name, mouse_clicks = clicks)
                     return True
@@ -562,7 +565,7 @@ class Game:
     @staticmethod
     def collect_loot(is_completed: bool, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False, skip_popup_check: bool = False, is_defender: bool = False):
         """Collects the loot from the Results screen while clicking away any dialog popups while updating the internal item count.
-        
+
         Args:
             is_completed (bool): Allows incrementing of number of runs completed. This is for Farming Modes who have multi-part sections to them to prevent unnecessary incrementing of runs when it wasn't finished with 1 yet.
             is_pending_battle (bool, optional): Skip the incrementation of runs attempted if this was a Pending Battle. Defaults to False.
