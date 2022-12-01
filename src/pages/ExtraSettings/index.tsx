@@ -41,7 +41,7 @@ const ExtraSettings = () => {
     const [testFailed, setTestFailed] = useState<boolean>(false)
     const [testErrorMessage, setTestErrorMessage] = useState<string>("")
 
-    const bot = useContext(BotStateContext)
+    const bsc = useContext(BotStateContext)
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -52,7 +52,7 @@ const ExtraSettings = () => {
             var selectedFile = files[0]
             if (selectedFile === null || selectedFile === undefined) {
                 // Reset the nightmare combat script selected if none was selected from the file picker dialog.
-                bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
+                bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
             } else {
                 // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
                 var reader = new FileReader()
@@ -60,10 +60,10 @@ const ExtraSettings = () => {
                     if (loadedEvent.target?.result !== null && loadedEvent.target?.result !== undefined) {
                         console.log("Loaded Nightmare Combat Script: ", loadedEvent.target.result)
                         const newCombatScript: string[] = loadedEvent.target.result.toString().split("\r\n")
-                        bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: selectedFile.name, nightmareCombatScript: newCombatScript } })
+                        bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, nightmareCombatScriptName: selectedFile.name, nightmareCombatScript: newCombatScript } })
                     } else {
                         console.log("Failed to read Nightmare combat script. Reseting to default empty combat script...")
-                        bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
+                        bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
                     }
                 }
 
@@ -72,7 +72,7 @@ const ExtraSettings = () => {
             }
         } else {
             console.log("No file selected. Reseting to default empty combat script...")
-            bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
+            bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
         }
     }
 
@@ -96,18 +96,18 @@ const ExtraSettings = () => {
                                 .replace("\t", "") // Replace tab characters.
                                 .replace(/\t/g, "")
                                 .split("\n")
-                            bot.setSettings({
-                                ...bot.settings,
-                                nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: filePath.replace(/^.*[\\/]/, ""), nightmareCombatScript: newCombatScript },
+                            bsc.setSettings({
+                                ...bsc.settings,
+                                nightmare: { ...bsc.settings.nightmare, nightmareCombatScriptName: filePath.replace(/^.*[\\/]/, ""), nightmareCombatScript: newCombatScript },
                             })
                         })
                         .catch((err) => {
                             console.log(`Failed to read Nightmare combat script via alternative method: ${err}\n\nReseting to default empty combat script...`)
-                            bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
+                            bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
                         })
                 } else {
                     console.log(`No file selected.\n\nReseting to default empty combat script...`)
-                    bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
+                    bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, nightmareCombatScriptName: "", nightmareCombatScript: [] } })
                 }
             })
             .catch((e) => {
@@ -122,7 +122,7 @@ const ExtraSettings = () => {
             var selectedFile = files[0]
             if (selectedFile === null || selectedFile === undefined) {
                 // Reset the defender combat script selected if none was selected from the file picker dialog.
-                bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
+                bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
             } else {
                 // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
                 var reader = new FileReader()
@@ -130,10 +130,10 @@ const ExtraSettings = () => {
                     if (loadedEvent.target?.result !== null && loadedEvent.target?.result !== undefined) {
                         console.log("Loaded Sandbox Defender Combat Script: ", loadedEvent.target.result)
                         const newCombatScript: string[] = loadedEvent.target.result.toString().split("\r\n")
-                        bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: selectedFile.name, defenderCombatScript: newCombatScript } })
+                        bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, defenderCombatScriptName: selectedFile.name, defenderCombatScript: newCombatScript } })
                     } else {
                         console.log("Failed to read Sandbox Defender combat script. Reseting to default empty combat script...")
-                        bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
+                        bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
                     }
                 }
 
@@ -142,7 +142,7 @@ const ExtraSettings = () => {
             }
         } else {
             console.log("No file selected. Reseting to default empty combat script...")
-            bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
+            bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
         }
     }
 
@@ -166,18 +166,18 @@ const ExtraSettings = () => {
                                 .replace("\t", "") // Replace tab characters.
                                 .replace(/\t/g, "")
                                 .split("\n")
-                            bot.setSettings({
-                                ...bot.settings,
-                                sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: filePath.replace(/^.*[\\/]/, ""), defenderCombatScript: newCombatScript },
+                            bsc.setSettings({
+                                ...bsc.settings,
+                                sandbox: { ...bsc.settings.sandbox, defenderCombatScriptName: filePath.replace(/^.*[\\/]/, ""), defenderCombatScript: newCombatScript },
                             })
                         })
                         .catch((err) => {
                             console.log(`Failed to read Sandbox Defender combat script via alternative method: ${err}\n\nReseting to default empty combat script...`)
-                            bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
+                            bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
                         })
                 } else {
                     console.log(`No file selected.\n\nReseting to default empty combat script...`)
-                    bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
+                    bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, defenderCombatScriptName: "", defenderCombatScript: [] } })
                 }
             })
             .catch((e) => {
@@ -203,9 +203,9 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.twitter.twitterUseVersion2}
+                                checked={bsc.settings.twitter.twitterUseVersion2}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterUseVersion2: e.target.checked } })
+                                    bsc.setSettings({ ...bsc.settings, twitter: { ...bsc.settings.twitter, twitterUseVersion2: e.target.checked } })
                                 }}
                             />
                         }
@@ -215,13 +215,13 @@ const ExtraSettings = () => {
                 </FormGroup>
 
                 <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
-                    {!bot.settings.twitter.twitterUseVersion2 ? (
+                    {!bsc.settings.twitter.twitterUseVersion2 ? (
                         <>
                             <Grid item xs={6}>
                                 <TextField
                                     label="API Key"
-                                    value={bot.settings.twitter.twitterAPIKey}
-                                    onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAPIKey: e.target.value } })}
+                                    value={bsc.settings.twitter.twitterAPIKey}
+                                    onChange={(e) => bsc.setSettings({ ...bsc.settings, twitter: { ...bsc.settings.twitter, twitterAPIKey: e.target.value } })}
                                     placeholder="Insert API Key here"
                                     multiline
                                     variant="filled"
@@ -232,8 +232,8 @@ const ExtraSettings = () => {
                             <Grid item xs={6}>
                                 <TextField
                                     label="API Key Secret"
-                                    value={bot.settings.twitter.twitterAPIKeySecret}
-                                    onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAPIKeySecret: e.target.value } })}
+                                    value={bsc.settings.twitter.twitterAPIKeySecret}
+                                    onChange={(e) => bsc.setSettings({ ...bsc.settings, twitter: { ...bsc.settings.twitter, twitterAPIKeySecret: e.target.value } })}
                                     placeholder="Insert API Key Secret here"
                                     multiline
                                     variant="filled"
@@ -244,8 +244,8 @@ const ExtraSettings = () => {
                             <Grid item xs={6}>
                                 <TextField
                                     label="Access Token"
-                                    value={bot.settings.twitter.twitterAccessToken}
-                                    onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAccessToken: e.target.value } })}
+                                    value={bsc.settings.twitter.twitterAccessToken}
+                                    onChange={(e) => bsc.setSettings({ ...bsc.settings, twitter: { ...bsc.settings.twitter, twitterAccessToken: e.target.value } })}
                                     placeholder="Insert Access Token here"
                                     multiline
                                     variant="filled"
@@ -256,8 +256,8 @@ const ExtraSettings = () => {
                             <Grid item xs={6}>
                                 <TextField
                                     label="Access Token Secret"
-                                    value={bot.settings.twitter.twitterAccessTokenSecret}
-                                    onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterAccessTokenSecret: e.target.value } })}
+                                    value={bsc.settings.twitter.twitterAccessTokenSecret}
+                                    onChange={(e) => bsc.setSettings({ ...bsc.settings, twitter: { ...bsc.settings.twitter, twitterAccessTokenSecret: e.target.value } })}
                                     placeholder="Insert Access Token Secret here"
                                     multiline
                                     variant="filled"
@@ -269,8 +269,8 @@ const ExtraSettings = () => {
                         <Grid item xs={12}>
                             <TextField
                                 label="Bearer Token"
-                                value={bot.settings.twitter.twitterBearerToken}
-                                onChange={(e) => bot.setSettings({ ...bot.settings, twitter: { ...bot.settings.twitter, twitterBearerToken: e.target.value } })}
+                                value={bsc.settings.twitter.twitterBearerToken}
+                                onChange={(e) => bsc.setSettings({ ...bsc.settings, twitter: { ...bsc.settings.twitter, twitterBearerToken: e.target.value } })}
                                 placeholder="Insert Bearer Token here"
                                 multiline
                                 variant="filled"
@@ -321,8 +321,8 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.discord.enableDiscordNotifications}
-                                onChange={(e) => bot.setSettings({ ...bot.settings, discord: { ...bot.settings.discord, enableDiscordNotifications: e.target.checked } })}
+                                checked={bsc.settings.discord.enableDiscordNotifications}
+                                onChange={(e) => bsc.setSettings({ ...bsc.settings, discord: { ...bsc.settings.discord, enableDiscordNotifications: e.target.checked } })}
                             />
                         }
                         label="Enable Discord Notifications"
@@ -334,8 +334,8 @@ const ExtraSettings = () => {
                     <Grid item xs={6}>
                         <TextField
                             label="Discord Token"
-                            value={bot.settings.discord.discordToken}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, discord: { ...bot.settings.discord, discordToken: e.target.value } })}
+                            value={bsc.settings.discord.discordToken}
+                            onChange={(e) => bsc.setSettings({ ...bsc.settings, discord: { ...bsc.settings.discord, discordToken: e.target.value } })}
                             placeholder="Insert Discord Token here"
                             multiline
                             variant="filled"
@@ -346,8 +346,8 @@ const ExtraSettings = () => {
                     <Grid item xs={6}>
                         <TextField
                             label="User ID"
-                            value={bot.settings.discord.discordUserID}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, discord: { ...bot.settings.discord, discordUserID: e.target.value } })}
+                            value={bsc.settings.discord.discordUserID}
+                            onChange={(e) => bsc.setSettings({ ...bsc.settings, discord: { ...bsc.settings.discord, discordUserID: e.target.value } })}
                             placeholder="Insert User ID here"
                             multiline
                             variant="filled"
@@ -393,8 +393,8 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.configuration.enableBezierCurveMouseMovement}
-                                onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableBezierCurveMouseMovement: e.target.checked } })}
+                                checked={bsc.settings.configuration.enableBezierCurveMouseMovement}
+                                onChange={(e) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableBezierCurveMouseMovement: e.target.checked } })}
                             />
                         }
                         label="Enable Bezier Curve Mouse Movement"
@@ -408,8 +408,8 @@ const ExtraSettings = () => {
                     <Grid item xs={6}>
                         <TextField
                             label="Mouse Speed"
-                            value={bot.settings.configuration.mouseSpeed}
-                            onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, mouseSpeed: Number(e.target.value) } })}
+                            value={bsc.settings.configuration.mouseSpeed}
+                            onChange={(e) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, mouseSpeed: Number(e.target.value) } })}
                             variant="outlined"
                             type="number"
                             inputProps={{ min: 0, step: 0.1 }}
@@ -417,7 +417,7 @@ const ExtraSettings = () => {
                                 endAdornment: <InputAdornment position="end">seconds</InputAdornment>,
                             }}
                             helperText="Set how fast a mouse operation finishes."
-                            disabled={bot.settings.configuration.enableBezierCurveMouseMovement}
+                            disabled={bsc.settings.configuration.enableBezierCurveMouseMovement}
                             fullWidth
                         />
                     </Grid>
@@ -429,13 +429,13 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.configuration.enableDelayBetweenRuns}
+                                checked={bsc.settings.configuration.enableDelayBetweenRuns}
                                 onChange={(e) => {
-                                    if (e.target.checked && bot.settings.configuration.enableRandomizedDelayBetweenRuns) {
-                                        bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableRandomizedDelayBetweenRuns: false } })
+                                    if (e.target.checked && bsc.settings.configuration.enableRandomizedDelayBetweenRuns) {
+                                        bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableRandomizedDelayBetweenRuns: false } })
                                     }
 
-                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableDelayBetweenRuns: e.target.checked } })
+                                    bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableDelayBetweenRuns: e.target.checked } })
                                 }}
                             />
                         }
@@ -444,13 +444,13 @@ const ExtraSettings = () => {
                     <FormHelperText>Enable delay in seconds between runs to serve as a resting period.</FormHelperText>
                 </FormGroup>
 
-                {bot.settings.configuration.enableDelayBetweenRuns && !bot.settings.configuration.enableRandomizedDelayBetweenRuns ? (
+                {bsc.settings.configuration.enableDelayBetweenRuns && !bsc.settings.configuration.enableRandomizedDelayBetweenRuns ? (
                     <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                         <Grid item xs={6}>
                             <TextField
                                 label="Delay In Seconds"
-                                value={bot.settings.configuration.delayBetweenRuns}
-                                onChange={(e) => bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, delayBetweenRuns: Number(e.target.value) } })}
+                                value={bsc.settings.configuration.delayBetweenRuns}
+                                onChange={(e) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, delayBetweenRuns: Number(e.target.value) } })}
                                 variant="outlined"
                                 type="number"
                                 inputProps={{ min: 1 }}
@@ -470,13 +470,13 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.configuration.enableRandomizedDelayBetweenRuns}
+                                checked={bsc.settings.configuration.enableRandomizedDelayBetweenRuns}
                                 onChange={(e) => {
-                                    if (e.target.checked && bot.settings.configuration.enableDelayBetweenRuns) {
-                                        bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableDelayBetweenRuns: false } })
+                                    if (e.target.checked && bsc.settings.configuration.enableDelayBetweenRuns) {
+                                        bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableDelayBetweenRuns: false } })
                                     }
 
-                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableRandomizedDelayBetweenRuns: e.target.checked } })
+                                    bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableRandomizedDelayBetweenRuns: e.target.checked } })
                                 }}
                             />
                         }
@@ -485,21 +485,21 @@ const ExtraSettings = () => {
                     <FormHelperText>Enable randomized delay in seconds between runs to serve as a resting period.</FormHelperText>
                 </FormGroup>
 
-                {!bot.settings.configuration.enableDelayBetweenRuns && bot.settings.configuration.enableRandomizedDelayBetweenRuns ? (
+                {!bsc.settings.configuration.enableDelayBetweenRuns && bsc.settings.configuration.enableRandomizedDelayBetweenRuns ? (
                     <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                         <Grid item xs={6}>
                             <TextField
                                 label="Delay In Seconds Lower Bound"
-                                value={bot.settings.configuration.delayBetweenRunsLowerBound}
+                                value={bsc.settings.configuration.delayBetweenRunsLowerBound}
                                 onChange={(e) => {
                                     // Perform validation so that the value does not violate the opposing bound.
-                                    if (Number(e.target.value) > bot.settings.configuration.delayBetweenRunsUpperBound) {
-                                        bot.setSettings({
-                                            ...bot.settings,
-                                            configuration: { ...bot.settings.configuration, delayBetweenRunsLowerBound: bot.settings.configuration.delayBetweenRunsUpperBound },
+                                    if (Number(e.target.value) > bsc.settings.configuration.delayBetweenRunsUpperBound) {
+                                        bsc.setSettings({
+                                            ...bsc.settings,
+                                            configuration: { ...bsc.settings.configuration, delayBetweenRunsLowerBound: bsc.settings.configuration.delayBetweenRunsUpperBound },
                                         })
                                     } else {
-                                        bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, delayBetweenRunsLowerBound: Number(e.target.value) } })
+                                        bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, delayBetweenRunsLowerBound: Number(e.target.value) } })
                                     }
                                 }}
                                 variant="outlined"
@@ -516,16 +516,16 @@ const ExtraSettings = () => {
                         <Grid item xs={6}>
                             <TextField
                                 label="Delay In Seconds Upper Bound"
-                                value={bot.settings.configuration.delayBetweenRunsUpperBound}
+                                value={bsc.settings.configuration.delayBetweenRunsUpperBound}
                                 onChange={(e) => {
                                     // Perform validation so that the value does not violate the opposing bound.
-                                    if (Number(e.target.value) < bot.settings.configuration.delayBetweenRunsLowerBound) {
-                                        bot.setSettings({
-                                            ...bot.settings,
-                                            configuration: { ...bot.settings.configuration, delayBetweenRunsUpperBound: bot.settings.configuration.delayBetweenRunsLowerBound },
+                                    if (Number(e.target.value) < bsc.settings.configuration.delayBetweenRunsLowerBound) {
+                                        bsc.setSettings({
+                                            ...bsc.settings,
+                                            configuration: { ...bsc.settings.configuration, delayBetweenRunsUpperBound: bsc.settings.configuration.delayBetweenRunsLowerBound },
                                         })
                                     } else {
-                                        bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, delayBetweenRunsUpperBound: Number(e.target.value) } })
+                                        bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, delayBetweenRunsUpperBound: Number(e.target.value) } })
                                     }
                                 }}
                                 variant="outlined"
@@ -545,9 +545,9 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.raid.enableAutoExitRaid}
+                                checked={bsc.settings.raid.enableAutoExitRaid}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, raid: { ...bot.settings.raid, enableAutoExitRaid: e.target.checked } })
+                                    bsc.setSettings({ ...bsc.settings, raid: { ...bsc.settings.raid, enableAutoExitRaid: e.target.checked } })
                                 }}
                             />
                         }
@@ -556,14 +556,14 @@ const ExtraSettings = () => {
                     <FormHelperText>Enables backing out of a Raid without retreating while under Semi/Full Auto after a certain period of time has passed.</FormHelperText>
                 </FormGroup>
 
-                {bot.settings.raid.enableAutoExitRaid ? (
+                {bsc.settings.raid.enableAutoExitRaid ? (
                     <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
                         <Grid item xs={6}>
                             <TextField
                                 label="Max Time Allowed for Semi/Full Auto"
-                                value={bot.settings.raid.timeAllowedUntilAutoExitRaid}
+                                value={bsc.settings.raid.timeAllowedUntilAutoExitRaid}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, raid: { ...bot.settings.raid, timeAllowedUntilAutoExitRaid: Number(e.target.value) } })
+                                    bsc.setSettings({ ...bsc.settings, raid: { ...bsc.settings.raid, timeAllowedUntilAutoExitRaid: Number(e.target.value) } })
                                 }}
                                 variant="outlined"
                                 type="number"
@@ -583,9 +583,9 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.raid.enableNoTimeout}
+                                checked={bsc.settings.raid.enableNoTimeout}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, raid: { ...bot.settings.raid, enableNoTimeout: e.target.checked } })
+                                    bsc.setSettings({ ...bsc.settings, raid: { ...bsc.settings.raid, enableNoTimeout: e.target.checked } })
                                 }}
                             />
                         }
@@ -598,9 +598,9 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.configuration.enableRefreshDuringCombat}
+                                checked={bsc.settings.configuration.enableRefreshDuringCombat}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableRefreshDuringCombat: e.target.checked } })
+                                    bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableRefreshDuringCombat: e.target.checked } })
                                 }}
                             />
                         }
@@ -616,9 +616,9 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.configuration.enableAutoQuickSummon}
+                                checked={bsc.settings.configuration.enableAutoQuickSummon}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableAutoQuickSummon: e.target.checked } })
+                                    bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableAutoQuickSummon: e.target.checked } })
                                 }}
                             />
                         }
@@ -634,9 +634,9 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.configuration.enableBypassResetSummon}
+                                checked={bsc.settings.configuration.enableBypassResetSummon}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableBypassResetSummon: e.target.checked } })
+                                    bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableBypassResetSummon: e.target.checked } })
                                 }}
                             />
                         }
@@ -652,9 +652,9 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.configuration.staticWindow}
+                                checked={bsc.settings.configuration.staticWindow}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, staticWindow: e.target.checked } })
+                                    bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, staticWindow: e.target.checked } })
                                 }}
                             />
                         }
@@ -670,9 +670,9 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.configuration.enableMouseSecurityAttemptBypass}
+                                checked={bsc.settings.configuration.enableMouseSecurityAttemptBypass}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, configuration: { ...bot.settings.configuration, enableMouseSecurityAttemptBypass: e.target.checked } })
+                                    bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableMouseSecurityAttemptBypass: e.target.checked } })
                                 }}
                             />
                         }
@@ -689,17 +689,17 @@ const ExtraSettings = () => {
 
     const renderNightmareSettings = () => {
         if (
-            bot.settings.nightmare.enableNightmare &&
-            (bot.settings.game.farmingMode === "Special" ||
-                bot.settings.game.farmingMode === "Event" ||
-                bot.settings.game.farmingMode === "Event (Token Drawboxes)" ||
-                bot.settings.game.farmingMode === "Xeno Clash" ||
-                bot.settings.game.farmingMode === "Rise of the Beasts")
+            bsc.settings.nightmare.enableNightmare &&
+            (bsc.settings.game.farmingMode === "Special" ||
+                bsc.settings.game.farmingMode === "Event" ||
+                bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ||
+                bsc.settings.game.farmingMode === "Xeno Clash" ||
+                bsc.settings.game.farmingMode === "Rise of the Beasts")
         ) {
             var title: string = ""
-            if (bot.settings.game.farmingMode === "Special") {
+            if (bsc.settings.game.farmingMode === "Special") {
                 title = "Dimensional Halo"
-            } else if (bot.settings.game.farmingMode === "Rise of the Beasts") {
+            } else if (bsc.settings.game.farmingMode === "Rise of the Beasts") {
                 title = "Extreme+"
             } else {
                 title = "Nightmare"
@@ -721,8 +721,8 @@ const ExtraSettings = () => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={bot.settings.nightmare.enableCustomNightmareSettings}
-                                    onChange={(e) => bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, enableCustomNightmareSettings: e.target.checked } })}
+                                    checked={bsc.settings.nightmare.enableCustomNightmareSettings}
+                                    onChange={(e) => bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, enableCustomNightmareSettings: e.target.checked } })}
                                 />
                             }
                             label={`Enable Custom Settings for ${title}`}
@@ -730,17 +730,17 @@ const ExtraSettings = () => {
                         <FormHelperText>Enable customizing individual settings for {title}</FormHelperText>
                     </FormGroup>
 
-                    {bot.settings.nightmare.enableCustomNightmareSettings ? (
+                    {bsc.settings.nightmare.enableCustomNightmareSettings ? (
                         <Stack spacing={2}>
                             <Grid container>
                                 <Grid item xs={6}>
-                                    {!bot.settings.misc.alternativeCombatScriptSelector ? (
+                                    {!bsc.settings.misc.alternativeCombatScriptSelector ? (
                                         <div>
                                             <Input ref={inputRef} accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadNightmareCombatScript(e)} />
                                             <TextField
                                                 variant="filled"
                                                 label="Nightmare Combat Script"
-                                                value={bot.settings.nightmare.nightmareCombatScriptName !== "" ? bot.settings.nightmare.nightmareCombatScriptName : "None Selected"}
+                                                value={bsc.settings.nightmare.nightmareCombatScriptName !== "" ? bsc.settings.nightmare.nightmareCombatScriptName : "None Selected"}
                                                 inputProps={{ readOnly: true }}
                                                 InputLabelProps={{ shrink: true }}
                                                 helperText="Select a Combat Script"
@@ -752,7 +752,7 @@ const ExtraSettings = () => {
                                         <TextField
                                             variant="filled"
                                             label="Nightmare Combat Script"
-                                            value={bot.settings.nightmare.nightmareCombatScriptName !== "" ? bot.settings.nightmare.nightmareCombatScriptName : "None Selected"}
+                                            value={bsc.settings.nightmare.nightmareCombatScriptName !== "" ? bsc.settings.nightmare.nightmareCombatScriptName : "None Selected"}
                                             inputProps={{ readOnly: true }}
                                             InputLabelProps={{ shrink: true }}
                                             helperText="Select a Combat Script (alternative method)"
@@ -787,10 +787,10 @@ const ExtraSettings = () => {
                                         label="Group #"
                                         variant="filled"
                                         type="number"
-                                        error={bot.settings.nightmare.nightmareGroupNumber < 1 || bot.settings.nightmare.nightmareGroupNumber > 7}
-                                        value={bot.settings.nightmare.nightmareGroupNumber}
+                                        error={bsc.settings.nightmare.nightmareGroupNumber < 1 || bsc.settings.nightmare.nightmareGroupNumber > 7}
+                                        value={bsc.settings.nightmare.nightmareGroupNumber}
                                         inputProps={{ min: 1, max: 7 }}
-                                        onChange={(e) => bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmareGroupNumber: parseInt(e.target.value) } })}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, nightmareGroupNumber: parseInt(e.target.value) } })}
                                         helperText="From 1 to 7"
                                         className="textfield"
                                     />
@@ -803,10 +803,10 @@ const ExtraSettings = () => {
                                         label="Party #"
                                         variant="filled"
                                         type="number"
-                                        error={bot.settings.nightmare.nightmarePartyNumber < 1 || bot.settings.nightmare.nightmarePartyNumber > 6}
-                                        value={bot.settings.nightmare.nightmarePartyNumber}
+                                        error={bsc.settings.nightmare.nightmarePartyNumber < 1 || bsc.settings.nightmare.nightmarePartyNumber > 6}
+                                        value={bsc.settings.nightmare.nightmarePartyNumber}
                                         inputProps={{ min: 1, max: 6 }}
-                                        onChange={(e) => bot.setSettings({ ...bot.settings, nightmare: { ...bot.settings.nightmare, nightmarePartyNumber: parseInt(e.target.value) } })}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, nightmarePartyNumber: parseInt(e.target.value) } })}
                                         helperText="From 1 to 6"
                                         className="textfield"
                                     />
@@ -832,9 +832,9 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.misc.guiLowPerformanceMode}
+                                checked={bsc.settings.misc.guiLowPerformanceMode}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, misc: { ...bot.settings.misc, guiLowPerformanceMode: e.target.checked } })
+                                    bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, guiLowPerformanceMode: e.target.checked } })
                                 }}
                             />
                         }
@@ -847,9 +847,9 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.misc.alternativeCombatScriptSelector}
+                                checked={bsc.settings.misc.alternativeCombatScriptSelector}
                                 onChange={(e) => {
-                                    bot.setSettings({ ...bot.settings, misc: { ...bot.settings.misc, alternativeCombatScriptSelector: e.target.checked } })
+                                    bsc.setSettings({ ...bsc.settings, misc: { ...bsc.settings.misc, alternativeCombatScriptSelector: e.target.checked } })
                                 }}
                             />
                         }
@@ -863,7 +863,7 @@ const ExtraSettings = () => {
 
     // Arcarum sandbox settings
     const renderSandboxDefenderSettings = () => {
-        if (bot.settings.sandbox.enableDefender && bot.settings.game.farmingMode === "Arcarum Sandbox") {
+        if (bsc.settings.sandbox.enableDefender && bsc.settings.game.farmingMode === "Arcarum Sandbox") {
             var title: string = "Defender"
 
             return (
@@ -882,8 +882,8 @@ const ExtraSettings = () => {
                         <FormControlLabel
                             control={
                                 <Checkbox
-                                    checked={bot.settings.sandbox.enableCustomDefenderSettings}
-                                    onChange={(e) => bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, enableCustomDefenderSettings: e.target.checked } })}
+                                    checked={bsc.settings.sandbox.enableCustomDefenderSettings}
+                                    onChange={(e) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, enableCustomDefenderSettings: e.target.checked } })}
                                 />
                             }
                             label={`Enable Custom Settings for ${title}`}
@@ -891,17 +891,17 @@ const ExtraSettings = () => {
                         <FormHelperText>Enable customizing individual settings for {title}</FormHelperText>
                     </FormGroup>
 
-                    {bot.settings.sandbox.enableCustomDefenderSettings ? (
+                    {bsc.settings.sandbox.enableCustomDefenderSettings ? (
                         <Stack spacing={2}>
                             <Grid container>
                                 <Grid item xs={6}>
-                                    {!bot.settings.misc.alternativeCombatScriptSelector ? (
+                                    {!bsc.settings.misc.alternativeCombatScriptSelector ? (
                                         <div>
                                             <Input ref={inputRef} accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadDefenderCombatScript(e)} />
                                             <TextField
                                                 variant="filled"
                                                 label="Defender Combat Script"
-                                                value={bot.settings.sandbox.defenderCombatScriptName !== "" ? bot.settings.sandbox.defenderCombatScriptName : "None Selected"}
+                                                value={bsc.settings.sandbox.defenderCombatScriptName !== "" ? bsc.settings.sandbox.defenderCombatScriptName : "None Selected"}
                                                 inputProps={{ readOnly: true }}
                                                 InputLabelProps={{ shrink: true }}
                                                 helperText="Select a Combat Script"
@@ -913,7 +913,7 @@ const ExtraSettings = () => {
                                         <TextField
                                             variant="filled"
                                             label="Defender Combat Script"
-                                            value={bot.settings.sandbox.defenderCombatScriptName !== "" ? bot.settings.sandbox.defenderCombatScriptName : "None Selected"}
+                                            value={bsc.settings.sandbox.defenderCombatScriptName !== "" ? bsc.settings.sandbox.defenderCombatScriptName : "None Selected"}
                                             inputProps={{ readOnly: true }}
                                             InputLabelProps={{ shrink: true }}
                                             helperText="Select a Combat Script (alternative method)"
@@ -931,10 +931,10 @@ const ExtraSettings = () => {
                                         label="How many times to run"
                                         variant="filled"
                                         type="number"
-                                        error={bot.settings.sandbox.numberOfDefenders < 1}
-                                        value={bot.settings.sandbox.numberOfDefenders}
+                                        error={bsc.settings.sandbox.numberOfDefenders < 1}
+                                        value={bsc.settings.sandbox.numberOfDefenders}
                                         inputProps={{ min: 1 }}
-                                        onChange={(e) => bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, numberOfDefenders: parseInt(e.target.value) } })}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, numberOfDefenders: parseInt(e.target.value) } })}
                                         className="textfield"
                                     />
                                 </Grid>
@@ -947,10 +947,10 @@ const ExtraSettings = () => {
                                         label="Group #"
                                         variant="filled"
                                         type="number"
-                                        error={bot.settings.sandbox.defenderGroupNumber < 1 || bot.settings.sandbox.defenderGroupNumber > 7}
-                                        value={bot.settings.sandbox.defenderGroupNumber}
+                                        error={bsc.settings.sandbox.defenderGroupNumber < 1 || bsc.settings.sandbox.defenderGroupNumber > 7}
+                                        value={bsc.settings.sandbox.defenderGroupNumber}
                                         inputProps={{ min: 1, max: 7 }}
-                                        onChange={(e) => bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderGroupNumber: parseInt(e.target.value) } })}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, defenderGroupNumber: parseInt(e.target.value) } })}
                                         helperText="From 1 to 7"
                                         className="textfield"
                                     />
@@ -963,10 +963,10 @@ const ExtraSettings = () => {
                                         label="Party #"
                                         variant="filled"
                                         type="number"
-                                        error={bot.settings.sandbox.defenderPartyNumber < 1 || bot.settings.sandbox.defenderPartyNumber > 6}
-                                        value={bot.settings.sandbox.defenderPartyNumber}
+                                        error={bsc.settings.sandbox.defenderPartyNumber < 1 || bsc.settings.sandbox.defenderPartyNumber > 6}
+                                        value={bsc.settings.sandbox.defenderPartyNumber}
                                         inputProps={{ min: 1, max: 6 }}
-                                        onChange={(e) => bot.setSettings({ ...bot.settings, sandbox: { ...bot.settings.sandbox, defenderPartyNumber: parseInt(e.target.value) } })}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, defenderPartyNumber: parseInt(e.target.value) } })}
                                         helperText="From 1 to 6"
                                         className="textfield"
                                     />
@@ -999,8 +999,8 @@ const ExtraSettings = () => {
                     <FormControlLabel
                         control={
                             <Checkbox
-                                checked={bot.settings.api.enableOptInAPI}
-                                onChange={(e) => bot.setSettings({ ...bot.settings, api: { ...bot.settings.api, enableOptInAPI: e.target.checked } })}
+                                checked={bsc.settings.api.enableOptInAPI}
+                                onChange={(e) => bsc.setSettings({ ...bsc.settings, api: { ...bsc.settings.api, enableOptInAPI: e.target.checked } })}
                             />
                         }
                         label={`Enable Opt-in for ${title}`}
@@ -1008,7 +1008,7 @@ const ExtraSettings = () => {
                     <FormHelperText>Enable API Integration with Granblue Automation Statistics</FormHelperText>
                 </FormGroup>
 
-                {bot.settings.api.enableOptInAPI ? (
+                {bsc.settings.api.enableOptInAPI ? (
                     <div>
                         <Typography variant="subtitle1" gutterBottom component="p" color="text.secondary">
                             {`How this works:\n\nInput your username and password below that you used to register a new account on the website. The account registered on the website will be used to associate your success results from the Loot Collection process. A success result describes the Loot Collection process detecting a item drop after each run.`}
@@ -1018,8 +1018,8 @@ const ExtraSettings = () => {
                             <Grid item xs={6}>
                                 <TextField
                                     label="Username"
-                                    value={bot.settings.api.username}
-                                    onChange={(e) => bot.setSettings({ ...bot.settings, api: { ...bot.settings.api, username: e.target.value } })}
+                                    value={bsc.settings.api.username}
+                                    onChange={(e) => bsc.setSettings({ ...bsc.settings, api: { ...bsc.settings.api, username: e.target.value } })}
                                     placeholder="Insert your username here"
                                     multiline
                                     variant="filled"
@@ -1030,8 +1030,8 @@ const ExtraSettings = () => {
                             <Grid item xs={6}>
                                 <TextField
                                     label="Password"
-                                    value={bot.settings.api.password}
-                                    onChange={(e) => bot.setSettings({ ...bot.settings, api: { ...bot.settings.api, password: e.target.value } })}
+                                    value={bsc.settings.api.password}
+                                    onChange={(e) => bsc.setSettings({ ...bsc.settings, api: { ...bsc.settings.api, password: e.target.value } })}
                                     placeholder="Insert your password here"
                                     multiline
                                     variant="filled"
@@ -1163,7 +1163,7 @@ const ExtraSettings = () => {
         e.preventDefault()
         setTestInProgress(true)
         axios
-            .post(`${bot.entryPoint}/api/login`, { username: bot.settings.api.username, password: bot.settings.api.password }, { withCredentials: true })
+            .post(`${bsc.entryPoint}/api/login`, { username: bsc.settings.api.username, password: bsc.settings.api.password }, { withCredentials: true })
             .then(() => {
                 setTestFailed(false)
             })
@@ -1183,7 +1183,7 @@ const ExtraSettings = () => {
 
     return (
         <Fade in={true}>
-            <Box className={bot.settings.misc.guiLowPerformanceMode ? "extraSettingsContainerLowPerformance" : "extraSettingsContainer"}>
+            <Box className={bsc.settings.misc.guiLowPerformanceMode ? "extraSettingsContainerLowPerformance" : "extraSettingsContainer"}>
                 <Snackbar
                     open={showSnackbar}
                     anchorOrigin={{ vertical: "bottom", horizontal: "center" }}

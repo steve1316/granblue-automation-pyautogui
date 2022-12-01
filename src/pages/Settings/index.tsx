@@ -22,7 +22,7 @@ const Settings = () => {
     const [missionList, setMissionList] = useState<string[]>([])
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
-    const botStateContext = useContext(BotStateContext)
+    const bsc = useContext(BotStateContext)
 
     const inputRef = useRef<HTMLInputElement>(null)
 
@@ -63,18 +63,18 @@ const Settings = () => {
                                 .replace("\t", "") // Replace tab characters.
                                 .replace(/\t/g, "")
                                 .split("\n")
-                            botStateContext.setSettings({
-                                ...botStateContext.settings,
-                                game: { ...botStateContext.settings.game, combatScriptName: filePath.replace(/^.*[\\/]/, ""), combatScript: newCombatScript },
+                            bsc.setSettings({
+                                ...bsc.settings,
+                                game: { ...bsc.settings.game, combatScriptName: filePath.replace(/^.*[\\/]/, ""), combatScript: newCombatScript },
                             })
                         })
                         .catch((err) => {
                             console.log(`Failed to read combat script via alternative method: ${err}\n\nReseting to default empty combat script...`)
-                            botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, combatScriptName: "", combatScript: [] } })
+                            bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, combatScriptName: "", combatScript: [] } })
                         })
                 } else {
                     console.log(`No file selected.\n\nReseting to default empty combat script...`)
-                    botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, combatScriptName: "", combatScript: [] } })
+                    bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, combatScriptName: "", combatScript: [] } })
                 }
             })
             .catch((e) => {
@@ -89,7 +89,7 @@ const Settings = () => {
             var selectedFile = files[0]
             if (selectedFile === null || selectedFile === undefined) {
                 // Reset the combat script selected if none was selected from the file picker dialog.
-                botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, combatScriptName: "", combatScript: [] } })
+                bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, combatScriptName: "", combatScript: [] } })
             } else {
                 // Create the FileReader object and setup the function that will run after the FileReader reads the text file.
                 const reader = new FileReader()
@@ -103,10 +103,10 @@ const Settings = () => {
                             .replace("\t", "") // Replace tab characters.
                             .replace(/\t/g, "")
                             .split("\n")
-                        botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, combatScriptName: selectedFile.name, combatScript: newCombatScript } })
+                        bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, combatScriptName: selectedFile.name, combatScript: newCombatScript } })
                     } else {
                         console.log("Failed to read combat script. Reseting to default empty combat script...")
-                        botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, combatScriptName: "", combatScript: [] } })
+                        bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, combatScriptName: "", combatScript: [] } })
                     }
                 }
 
@@ -115,7 +115,7 @@ const Settings = () => {
             }
         } else {
             console.log("No file selected. Reseting to default empty combat script...")
-            botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, combatScriptName: "", combatScript: [] } })
+            bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, combatScriptName: "", combatScript: [] } })
         }
     }
 
@@ -125,31 +125,31 @@ const Settings = () => {
         var fullItemList: string[] = []
 
         if (
-            botStateContext.settings.game.farmingMode === "Quest" ||
-            botStateContext.settings.game.farmingMode === "Special" ||
-            botStateContext.settings.game.farmingMode === "Coop" ||
-            botStateContext.settings.game.farmingMode === "Raid" ||
-            botStateContext.settings.game.farmingMode === "Event" ||
-            botStateContext.settings.game.farmingMode === "Event (Token Drawboxes)" ||
-            botStateContext.settings.game.farmingMode === "Rise of the Beasts" ||
-            botStateContext.settings.game.farmingMode === "Guild Wars" ||
-            botStateContext.settings.game.farmingMode === "Dread Barrage" ||
-            botStateContext.settings.game.farmingMode === "Proving Grounds" ||
-            botStateContext.settings.game.farmingMode === "Xeno Clash" ||
-            botStateContext.settings.game.farmingMode === "Arcarum" ||
-            botStateContext.settings.game.farmingMode === "Arcarum Sandbox" ||
-            botStateContext.settings.game.farmingMode === "Generic"
+            bsc.settings.game.farmingMode === "Quest" ||
+            bsc.settings.game.farmingMode === "Special" ||
+            bsc.settings.game.farmingMode === "Coop" ||
+            bsc.settings.game.farmingMode === "Raid" ||
+            bsc.settings.game.farmingMode === "Event" ||
+            bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ||
+            bsc.settings.game.farmingMode === "Rise of the Beasts" ||
+            bsc.settings.game.farmingMode === "Guild Wars" ||
+            bsc.settings.game.farmingMode === "Dread Barrage" ||
+            bsc.settings.game.farmingMode === "Proving Grounds" ||
+            bsc.settings.game.farmingMode === "Xeno Clash" ||
+            bsc.settings.game.farmingMode === "Arcarum" ||
+            bsc.settings.game.farmingMode === "Arcarum Sandbox" ||
+            bsc.settings.game.farmingMode === "Generic"
         ) {
-            if (botStateContext.settings.game.mission !== "") {
+            if (bsc.settings.game.mission !== "") {
                 // Filter items based on the mission selected.
-                Object.entries(data[botStateContext.settings.game.farmingMode]).forEach((missionObj) => {
-                    if (missionObj[0] === botStateContext.settings.game.mission) {
+                Object.entries(data[bsc.settings.game.farmingMode]).forEach((missionObj) => {
+                    if (missionObj[0] === bsc.settings.game.mission) {
                         newItemList = newItemList.concat(missionObj[1].items)
                     }
                 })
             } else {
                 // Display all items.
-                Object.values(data[botStateContext.settings.game.farmingMode]).forEach((tempItems) => {
+                Object.values(data[bsc.settings.game.farmingMode]).forEach((tempItems) => {
                     fullItemList = fullItemList.concat(tempItems.items)
                 })
             }
@@ -165,7 +165,7 @@ const Settings = () => {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [botStateContext.settings.game.farmingMode, botStateContext.settings.game.mission])
+    }, [bsc.settings.game.farmingMode, bsc.settings.game.mission])
 
     // Populate the mission list after selecting the item.
     useEffect(() => {
@@ -173,22 +173,22 @@ const Settings = () => {
         var fullMissionList: string[] = []
 
         if (
-            botStateContext.settings.game.farmingMode === "Quest" ||
-            botStateContext.settings.game.farmingMode === "Special" ||
-            botStateContext.settings.game.farmingMode === "Raid" ||
-            botStateContext.settings.game.farmingMode === "Event" ||
-            botStateContext.settings.game.farmingMode === "Event (Token Drawboxes)" ||
-            botStateContext.settings.game.farmingMode === "Rise of the Beasts" ||
-            botStateContext.settings.game.farmingMode === "Guild Wars" ||
-            botStateContext.settings.game.farmingMode === "Dread Barrage" ||
-            botStateContext.settings.game.farmingMode === "Proving Grounds" ||
-            botStateContext.settings.game.farmingMode === "Xeno Clash" ||
-            botStateContext.settings.game.farmingMode === "Arcarum" ||
-            botStateContext.settings.game.farmingMode === "Arcarum Sandbox" ||
-            botStateContext.settings.game.farmingMode === "Generic"
+            bsc.settings.game.farmingMode === "Quest" ||
+            bsc.settings.game.farmingMode === "Special" ||
+            bsc.settings.game.farmingMode === "Raid" ||
+            bsc.settings.game.farmingMode === "Event" ||
+            bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ||
+            bsc.settings.game.farmingMode === "Rise of the Beasts" ||
+            bsc.settings.game.farmingMode === "Guild Wars" ||
+            bsc.settings.game.farmingMode === "Dread Barrage" ||
+            bsc.settings.game.farmingMode === "Proving Grounds" ||
+            bsc.settings.game.farmingMode === "Xeno Clash" ||
+            bsc.settings.game.farmingMode === "Arcarum" ||
+            bsc.settings.game.farmingMode === "Arcarum Sandbox" ||
+            bsc.settings.game.farmingMode === "Generic"
         ) {
-            Object.entries(data[botStateContext.settings.game.farmingMode]).forEach((obj) => {
-                if (obj[1].items.indexOf(botStateContext.settings.game.item) !== -1) {
+            Object.entries(data[bsc.settings.game.farmingMode]).forEach((obj) => {
+                if (obj[1].items.indexOf(bsc.settings.game.item) !== -1) {
                     newMissionList = newMissionList.concat(obj[0])
                 } else {
                     fullMissionList = fullMissionList.concat(obj[0])
@@ -196,7 +196,7 @@ const Settings = () => {
             })
         } else {
             Object.entries(data["Coop"]).forEach((obj) => {
-                if (obj[1].items.indexOf(botStateContext.settings.game.item) !== -1) {
+                if (obj[1].items.indexOf(bsc.settings.game.item) !== -1) {
                     newMissionList = newMissionList.concat(obj[0])
                 } else {
                     fullMissionList = fullMissionList.concat(obj[0])
@@ -214,28 +214,28 @@ const Settings = () => {
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [botStateContext.settings.game.item])
+    }, [bsc.settings.game.item])
 
-    // Fetch the map that corresponds to the selected mission if applicable.
+    // Fetch the map that corresponds to the selected mission if applicable. Not for Coop.
     useEffect(() => {
         if (
-            botStateContext.settings.game.farmingMode === "Quest" ||
-            botStateContext.settings.game.farmingMode === "Special" ||
-            botStateContext.settings.game.farmingMode === "Raid" ||
-            botStateContext.settings.game.farmingMode === "Event" ||
-            botStateContext.settings.game.farmingMode === "Event (Token Drawboxes)" ||
-            botStateContext.settings.game.farmingMode === "Rise of the Beasts" ||
-            botStateContext.settings.game.farmingMode === "Guild Wars" ||
-            botStateContext.settings.game.farmingMode === "Dread Barrage" ||
-            botStateContext.settings.game.farmingMode === "Proving Grounds" ||
-            botStateContext.settings.game.farmingMode === "Xeno Clash" ||
-            botStateContext.settings.game.farmingMode === "Arcarum" ||
-            botStateContext.settings.game.farmingMode === "Arcarum Sandbox" ||
-            botStateContext.settings.game.farmingMode === "Generic"
+            bsc.settings.game.farmingMode === "Quest" ||
+            bsc.settings.game.farmingMode === "Special" ||
+            bsc.settings.game.farmingMode === "Raid" ||
+            bsc.settings.game.farmingMode === "Event" ||
+            bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ||
+            bsc.settings.game.farmingMode === "Rise of the Beasts" ||
+            bsc.settings.game.farmingMode === "Guild Wars" ||
+            bsc.settings.game.farmingMode === "Dread Barrage" ||
+            bsc.settings.game.farmingMode === "Proving Grounds" ||
+            bsc.settings.game.farmingMode === "Xeno Clash" ||
+            bsc.settings.game.farmingMode === "Arcarum" ||
+            bsc.settings.game.farmingMode === "Arcarum Sandbox" ||
+            bsc.settings.game.farmingMode === "Generic"
         ) {
-            Object.entries(data[botStateContext.settings.game.farmingMode]).every((obj) => {
-                if (obj[0] === botStateContext.settings.game.mission) {
-                    botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, map: obj[1].map } })
+            Object.entries(data[bsc.settings.game.farmingMode]).every((obj) => {
+                if (obj[0] === bsc.settings.game.mission) {
+                    bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, map: obj[1].map } })
                     return false
                 } else {
                     return true
@@ -243,7 +243,7 @@ const Settings = () => {
             })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [botStateContext.settings.game.mission])
+    }, [bsc.settings.game.mission])
 
     // Show or hide the Support Summon Selection component.
     const handleModalOpen = () => setIsModalOpen(true)
@@ -251,17 +251,17 @@ const Settings = () => {
 
     return (
         <Fade in={true}>
-            <Box className={botStateContext.settings.misc.guiLowPerformanceMode ? "settingsContainerLowPerformance" : "settingsContainer"} id="settingsContainer">
+            <Box className={bsc.settings.misc.guiLowPerformanceMode ? "settingsContainerLowPerformance" : "settingsContainer"} id="settingsContainer">
                 <Stack spacing={2} className="settingsWrapper">
                     {/* Load Combat Script */}
                     <div>
-                        {!botStateContext.settings.misc.alternativeCombatScriptSelector ? (
+                        {!bsc.settings.misc.alternativeCombatScriptSelector ? (
                             <div>
                                 <Input ref={inputRef} accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadCombatScript(e)} />
                                 <TextField
                                     variant="filled"
                                     label="Combat Script"
-                                    value={botStateContext.settings.game.combatScriptName !== "" ? botStateContext.settings.game.combatScriptName : "None Selected"}
+                                    value={bsc.settings.game.combatScriptName !== "" ? bsc.settings.game.combatScriptName : "None Selected"}
                                     inputProps={{ readOnly: true }}
                                     InputLabelProps={{ shrink: true }}
                                     helperText="Select a Combat Script"
@@ -273,7 +273,7 @@ const Settings = () => {
                             <TextField
                                 variant="filled"
                                 label="Combat Script"
-                                value={botStateContext.settings.game.combatScriptName !== "" ? botStateContext.settings.game.combatScriptName : "None Selected"}
+                                value={bsc.settings.game.combatScriptName !== "" ? bsc.settings.game.combatScriptName : "None Selected"}
                                 inputProps={{ readOnly: true }}
                                 InputLabelProps={{ shrink: true }}
                                 helperText="Select a Combat Script (alternative method)"
@@ -294,14 +294,14 @@ const Settings = () => {
                         select
                         label="Farming Mode"
                         variant="filled"
-                        value={botStateContext.settings.game.farmingMode}
+                        value={bsc.settings.game.farmingMode}
                         onChange={(e) => {
                             // In addition, also reset selected Item and Mission.
-                            botStateContext.setSettings({
-                                ...botStateContext.settings,
-                                game: { ...botStateContext.settings.game, farmingMode: e.target.value, item: "", mission: "", map: "" },
+                            bsc.setSettings({
+                                ...bsc.settings,
+                                game: { ...bsc.settings.game, farmingMode: e.target.value, item: "", mission: "", map: "" },
                                 nightmare: {
-                                    ...botStateContext.settings.nightmare,
+                                    ...bsc.settings.nightmare,
                                     enableNightmare: false,
                                     enableCustomNightmareSettings: false,
                                     nightmareCombatScriptName: "",
@@ -312,7 +312,7 @@ const Settings = () => {
                                     nightmarePartyNumber: 1,
                                 },
                                 sandbox: {
-                                    ...botStateContext.settings.sandbox,
+                                    ...bsc.settings.sandbox,
                                     enableDefender: false,
                                     enableGoldChest: false,
                                     enableCustomDefenderSettings: false,
@@ -333,15 +333,13 @@ const Settings = () => {
                         ))}
                     </TextField>
 
-                    {botStateContext.settings.game.farmingMode === "Xeno Clash" ? (
+                    {bsc.settings.game.farmingMode === "Xeno Clash" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={botStateContext.settings.xenoClash.selectTopOption}
-                                        onChange={(e) =>
-                                            botStateContext.setSettings({ ...botStateContext.settings, xenoClash: { ...botStateContext.settings.xenoClash, selectTopOption: e.target.checked } })
-                                        }
+                                        checked={bsc.settings.xenoClash.selectTopOption}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, xenoClash: { ...bsc.settings.xenoClash, selectTopOption: e.target.checked } })}
                                     />
                                 }
                                 label="Enable Selection of Bottom Option"
@@ -350,7 +348,7 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
-                    {botStateContext.settings.game.farmingMode === "Generic" ? (
+                    {bsc.settings.game.farmingMode === "Generic" ? (
                         <div>
                             <Divider />
                             <Typography variant="subtitle2" component="p" color="text.secondary">
@@ -362,15 +360,13 @@ const Settings = () => {
                         </div>
                     ) : null}
 
-                    {botStateContext.settings.game.farmingMode === "Event" ? (
+                    {bsc.settings.game.farmingMode === "Event" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={botStateContext.settings.event.enableLocationIncrementByOne}
-                                        onChange={(e) =>
-                                            botStateContext.setSettings({ ...botStateContext.settings, event: { ...botStateContext.settings.event, enableLocationIncrementByOne: e.target.checked } })
-                                        }
+                                        checked={bsc.settings.event.enableLocationIncrementByOne}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, event: { ...bsc.settings.event, enableLocationIncrementByOne: e.target.checked } })}
                                     />
                                 }
                                 label="Enable Incrementation of Location by 1"
@@ -382,19 +378,17 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
-                    {botStateContext.settings.game.farmingMode === "Special" ||
-                    botStateContext.settings.game.farmingMode === "Event" ||
-                    botStateContext.settings.game.farmingMode === "Event (Token Drawboxes)" ||
-                    botStateContext.settings.game.farmingMode === "Rise of the Beasts" ||
-                    botStateContext.settings.game.farmingMode === "Xeno Clash" ? (
+                    {bsc.settings.game.farmingMode === "Special" ||
+                    bsc.settings.game.farmingMode === "Event" ||
+                    bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ||
+                    bsc.settings.game.farmingMode === "Rise of the Beasts" ||
+                    bsc.settings.game.farmingMode === "Xeno Clash" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={botStateContext.settings.nightmare.enableNightmare}
-                                        onChange={(e) =>
-                                            botStateContext.setSettings({ ...botStateContext.settings, nightmare: { ...botStateContext.settings.nightmare, enableNightmare: e.target.checked } })
-                                        }
+                                        checked={bsc.settings.nightmare.enableNightmare}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, enableNightmare: e.target.checked } })}
                                     />
                                 }
                                 label="Enable Nightmare Settings"
@@ -403,15 +397,13 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
-                    {botStateContext.settings.game.farmingMode === "Arcarum Sandbox" ? (
+                    {bsc.settings.game.farmingMode === "Arcarum Sandbox" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={botStateContext.settings.sandbox.enableDefender}
-                                        onChange={(e) =>
-                                            botStateContext.setSettings({ ...botStateContext.settings, sandbox: { ...botStateContext.settings.sandbox, enableDefender: e.target.checked } })
-                                        }
+                                        checked={bsc.settings.sandbox.enableDefender}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, enableDefender: e.target.checked } })}
                                     />
                                 }
                                 label="Enable Defender settings"
@@ -420,15 +412,13 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
-                    {botStateContext.settings.game.farmingMode === "Arcarum Sandbox" ? (
+                    {bsc.settings.game.farmingMode === "Arcarum Sandbox" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={botStateContext.settings.sandbox.enableGoldChest}
-                                        onChange={(e) =>
-                                            botStateContext.setSettings({ ...botStateContext.settings, sandbox: { ...botStateContext.settings.sandbox, enableGoldChest: e.target.checked } })
-                                        }
+                                        checked={bsc.settings.sandbox.enableGoldChest}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, enableGoldChest: e.target.checked } })}
                                     />
                                 }
                                 label="Enable gold chest opening"
@@ -437,15 +427,13 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
-                    {botStateContext.settings.game.farmingMode === "Arcarum" ? (
+                    {bsc.settings.game.farmingMode === "Arcarum" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={botStateContext.settings.arcarum.enableStopOnArcarumBoss}
-                                        onChange={(e) =>
-                                            botStateContext.setSettings({ ...botStateContext.settings, arcarum: { ...botStateContext.settings.arcarum, enableStopOnArcarumBoss: e.target.checked } })
-                                        }
+                                        checked={bsc.settings.arcarum.enableStopOnArcarumBoss}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, arcarum: { ...bsc.settings.arcarum, enableStopOnArcarumBoss: e.target.checked } })}
                                     />
                                 }
                                 label="Enable Stop on Arcarum Boss"
@@ -454,15 +442,13 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
-                    {botStateContext.settings.game.farmingMode === "Generic" ? (
+                    {bsc.settings.game.farmingMode === "Generic" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={botStateContext.settings.generic.enableForceReload}
-                                        onChange={(e) =>
-                                            botStateContext.setSettings({ ...botStateContext.settings, generic: { ...botStateContext.settings.generic, enableForceReload: e.target.checked } })
-                                        }
+                                        checked={bsc.settings.generic.enableForceReload}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, generic: { ...bsc.settings.generic, enableForceReload: e.target.checked } })}
                                     />
                                 }
                                 label="Enable Forcing Reload after Attack"
@@ -474,15 +460,13 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
-                    {botStateContext.settings.game.farmingMode === "Event (Token Drawboxes)" ? (
+                    {bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={botStateContext.settings.event.selectBottomCategory}
-                                        onChange={(e) =>
-                                            botStateContext.setSettings({ ...botStateContext.settings, event: { ...botStateContext.settings.event, selectBottomCategory: e.target.checked } })
-                                        }
+                                        checked={bsc.settings.event.selectBottomCategory}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, event: { ...bsc.settings.event, selectBottomCategory: e.target.checked } })}
                                     />
                                 }
                                 label="Enable Selecting the Bottom Category"
@@ -496,14 +480,14 @@ const Settings = () => {
                     {/* Select Item */}
                     <Autocomplete
                         options={itemList.map((element) => element)}
-                        value={botStateContext.settings.game.item}
+                        value={bsc.settings.game.item}
                         onChange={(_e, value) => {
                             var newItem = ""
                             if (value !== null) {
                                 newItem = value
                             }
 
-                            botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, item: newItem } })
+                            bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, item: newItem } })
                         }}
                         getOptionLabel={(option) => option}
                         isOptionEqualToValue={(option) => option !== ""}
@@ -527,15 +511,15 @@ const Settings = () => {
                     />
 
                     {/* Select Mission */}
-                    {botStateContext.settings.game.farmingMode !== "Generic" ? (
+                    {bsc.settings.game.farmingMode !== "Generic" ? (
                         <Autocomplete
                             options={missionList.map((element) => element)}
-                            value={botStateContext.settings.game.mission}
+                            value={bsc.settings.game.mission}
                             onChange={(_e, value) => {
                                 if (value === null) {
-                                    botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, mission: "", map: "" } })
+                                    bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, mission: "", map: "" } })
                                 } else {
-                                    botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, mission: value } })
+                                    bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, mission: value } })
                                 }
                             }}
                             getOptionLabel={(option) => option}
@@ -565,10 +549,8 @@ const Settings = () => {
                         label="# of Items"
                         type="number"
                         variant="filled"
-                        value={botStateContext.settings.game.itemAmount}
-                        onChange={(e) =>
-                            botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, itemAmount: e.target.value === "" ? 1 : parseInt(e.target.value) } })
-                        }
+                        value={bsc.settings.game.itemAmount}
+                        onChange={(e) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, itemAmount: e.target.value === "" ? 1 : parseInt(e.target.value) } })}
                         inputProps={{ min: 1 }}
                         helperText="Please select the amount of Items to farm"
                     />
@@ -577,11 +559,7 @@ const Settings = () => {
                     <Button
                         variant="contained"
                         onClick={handleModalOpen}
-                        disabled={
-                            botStateContext.settings.game.farmingMode === "Coop" ||
-                            botStateContext.settings.game.farmingMode === "Arcarum" ||
-                            botStateContext.settings.game.farmingMode === "Arcarum Sandbox"
-                        }
+                        disabled={bsc.settings.game.farmingMode === "Coop" || bsc.settings.game.farmingMode === "Arcarum" || bsc.settings.game.farmingMode === "Arcarum Sandbox"}
                     >
                         Select Summons
                     </Button>
@@ -595,17 +573,17 @@ const Settings = () => {
                     </Modal>
 
                     {/* Select Group and Party */}
-                    {botStateContext.settings.game.farmingMode !== "Generic" ? (
+                    {bsc.settings.game.farmingMode !== "Generic" ? (
                         <Grid container justifyContent="center" alignItems="center">
                             <Grid item id="gridItemGroup" xs={4}>
                                 <TextField
                                     label="Group #"
                                     variant="filled"
                                     type="number"
-                                    error={botStateContext.settings.game.groupNumber < 1 || botStateContext.settings.game.groupNumber > 7}
-                                    value={botStateContext.settings.game.groupNumber}
+                                    error={bsc.settings.game.groupNumber < 1 || bsc.settings.game.groupNumber > 7}
+                                    value={bsc.settings.game.groupNumber}
                                     inputProps={{ min: 1, max: 7 }}
-                                    onChange={(e) => botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, groupNumber: parseInt(e.target.value) } })}
+                                    onChange={(e) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, groupNumber: parseInt(e.target.value) } })}
                                     helperText="From 1 to 7"
                                     className="settingsTextfield"
                                 />
@@ -616,10 +594,10 @@ const Settings = () => {
                                     label="Party #"
                                     variant="filled"
                                     type="number"
-                                    error={botStateContext.settings.game.partyNumber < 1 || botStateContext.settings.game.partyNumber > 6}
-                                    value={botStateContext.settings.game.partyNumber}
+                                    error={bsc.settings.game.partyNumber < 1 || bsc.settings.game.partyNumber > 6}
+                                    value={bsc.settings.game.partyNumber}
                                     inputProps={{ min: 1, max: 6 }}
-                                    onChange={(e) => botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, partyNumber: parseInt(e.target.value) } })}
+                                    onChange={(e) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, partyNumber: parseInt(e.target.value) } })}
                                     helperText="From 1 to 6"
                                     className="settingsTextfield"
                                 />
@@ -637,10 +615,7 @@ const Settings = () => {
                     <FormGroup>
                         <FormControlLabel
                             control={
-                                <Checkbox
-                                    onChange={(e) => botStateContext.setSettings({ ...botStateContext.settings, game: { ...botStateContext.settings.game, debugMode: e.target.checked } })}
-                                    checked={botStateContext.settings.game.debugMode}
-                                />
+                                <Checkbox onChange={(e) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, debugMode: e.target.checked } })} checked={bsc.settings.game.debugMode} />
                             }
                             label="Enable Debug Mode"
                         />

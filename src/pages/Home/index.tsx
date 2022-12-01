@@ -6,8 +6,8 @@ import { MessageLogContext } from "../../context/MessageLogContext"
 import "./index.scss"
 
 const Home = () => {
-    const botStateContext = useContext(BotStateContext)
-    const messageLogContext = useContext(MessageLogContext)
+    const bsc = useContext(BotStateContext)
+    const mlc = useContext(MessageLogContext)
 
     const msgRef = useRef<HTMLDivElement | null>(null)
 
@@ -23,40 +23,40 @@ const Home = () => {
             const bottom: number = msgRef.current!!.scrollHeight - msgRef.current!!.clientHeight
             msgRef.current!!.scrollTo(0, bottom)
         }
-    }, [messageLogContext.messageLog])
+    }, [mlc.messageLog])
 
     // Reset message log and then start the bot process. Actual logic is based in Start.tsx component.
     const handleStart = () => {
-        messageLogContext.setMessageLog([])
-        messageLogContext.setAsyncMessages([])
-        botStateContext.setStartBot(true)
-        botStateContext.setStopBot(false)
+        mlc.setMessageLog([])
+        mlc.setAsyncMessages([])
+        bsc.setStartBot(true)
+        bsc.setStopBot(false)
     }
 
     // Stop the bot process. Actual logic is based in Start.tsx component.
     const handleStop = () => {
-        botStateContext.setStartBot(false)
-        botStateContext.setStopBot(true)
+        bsc.setStartBot(false)
+        bsc.setStopBot(true)
     }
 
     return (
         <Fade in={true}>
-            <Box className={botStateContext.settings.misc.guiLowPerformanceMode ? "homeContainerLowPerformance" : "homeContainer"} id="homeContainer">
+            <Box className={bsc.settings.misc.guiLowPerformanceMode ? "homeContainerLowPerformance" : "homeContainer"} id="homeContainer">
                 <Stack direction="row" sx={{ height: "100%" }}>
                     <div className="logOuterContainer">
                         <div ref={msgRef} className="logInnerContainer">
-                            <p id="log">{initialMessage + messageLogContext.messageLog.join("\r")}</p>
+                            <p id="log">{initialMessage + mlc.messageLog.join("\r")}</p>
                         </div>
                     </div>
                     <div className="rightOuterContainer">
                         <div className="rightContainer">
-                            {botStateContext.isBotRunning ? (
+                            {bsc.isBotRunning ? (
                                 <Button color="error" variant="contained" onClick={handleStop}>
                                     Stop
                                 </Button>
                             ) : (
-                                <Button disabled={!botStateContext.readyStatus} variant="contained" onClick={handleStart}>
-                                    {botStateContext.readyStatus ? "Start" : "Not Ready"}
+                                <Button disabled={!bsc.readyStatus} variant="contained" onClick={handleStart}>
+                                    {bsc.readyStatus ? "Start" : "Not Ready"}
                                 </Button>
                             )}
                         </div>
