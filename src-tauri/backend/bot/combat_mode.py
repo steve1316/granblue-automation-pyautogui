@@ -671,7 +671,7 @@ class CombatMode:
             skill_command_list (List[str]): The commands to be executed.
 
         Returns:
-            None
+            (bool): Return True if the Turn will end due to a chained "attack" command. False otherwise.
         """
         from bot.game import Game
 
@@ -679,11 +679,14 @@ class CombatMode:
         while len(skill_command_list) > 0:
             # Stop if the Next button is present.
             if ImageUtils.find_button("next", tries = 1, suppress_error = True):
-                return
+                return False
 
             if skill_command_list[0].__contains__("wait"):
                 CombatMode._wait_execute(skill_command_list)
                 skill_command_list.pop(0)
+            elif skill_command_list[0].__contains__("attack"):
+                CombatMode._end()
+                return True
             else:
                 skill = skill_command_list.pop(0)
 
@@ -702,7 +705,7 @@ class CombatMode:
                 else:
                     MessageLog.print_message(f"[WARNING] Invalid command received for using the Character's Skill. User wanted: {skill}.")
                     Game.find_and_click_button("back")
-                    return
+                    return False
 
                 y = CombatMode._attack_button_location[1] + 171
 
@@ -746,7 +749,7 @@ class CombatMode:
         # Once all the commands for the selected Character have been processed, click the "Back" button to return.
         Game.find_and_click_button("back")
 
-        return None
+        return False
 
     @staticmethod
     def _use_summon(command: str):
@@ -756,7 +759,7 @@ class CombatMode:
             command (str): The command to be executed.
 
         Returns:
-            None
+            (bool): Return True if the Turn will end due to a chained "attack" command. False otherwise.
         """
         for summon_index in range(1, 7):
             if f"summon({summon_index})" in command:
@@ -798,7 +801,11 @@ class CombatMode:
             split_command.pop(0)
             CombatMode._wait_execute(split_command)
 
-        return None
+        if "attack" in command:
+            CombatMode._end()
+            return True
+
+        return False
 
     @staticmethod
     def _quick_summon(command: str = ""):
@@ -808,7 +815,7 @@ class CombatMode:
             command (str, optional): The command to be executed. Defaults to the regular quick summon command.
 
         Returns:
-            None
+            (bool): Return True if the Turn will end due to a chained "attack" command. False otherwise.
         """
         from bot.game import Game
 
@@ -821,10 +828,14 @@ class CombatMode:
                 split_command = command.split(".")
                 split_command.pop(0)
                 CombatMode._wait_execute(split_command)
+
+            if "attack" in command:
+                CombatMode._end()
+                return True
         else:
             MessageLog.print_message("[COMBAT] Was not able to quick summon this Turn.")
 
-        return None
+        return False
 
     @staticmethod
     def _enable_semi_auto():
@@ -1096,6 +1107,7 @@ class CombatMode:
         CombatMode._semi_auto = False
         CombatMode._full_auto = False
         manual_attack_and_reload = False
+        skip_end = False
         CombatMode._attack_button_location = None
         CombatMode._command_turn_number = 1
         CombatMode._turn_number = 1  # Current turn for the script execution.
@@ -1174,7 +1186,8 @@ class CombatMode:
                         # Now execute each Skill command starting from left to right.
                         skill_command_list = command.split(".")
                         skill_command_list.pop(0)  # Remove the "character" portion of the string.
-                        CombatMode._use_character_skill(character_selected, skill_command_list)
+                        if CombatMode._use_character_skill(character_selected, skill_command_list):
+                            skip_end = True
 
                     # Handle any other supported command.
                     elif command == "requestbackup":
@@ -1184,9 +1197,11 @@ class CombatMode:
                     elif CombatMode._healing_item_commands.__contains__(command):
                         CombatMode._use_combat_healing_item(command)
                     elif command.__contains__("summon") and command.__contains__("quicksummon") is False:
-                        CombatMode._use_summon(command)
+                        if CombatMode._use_summon(command):
+                            skip_end = True
                     elif command.__contains__("quicksummon"):
-                        CombatMode._quick_summon(command)
+                        if CombatMode._quick_summon(command):
+                            skip_end = True
                     elif command == "enablesemiauto":
                         CombatMode._enable_semi_auto()
                     elif command == "enablefullauto":
@@ -1205,7 +1220,7 @@ class CombatMode:
                     elif command == "repeatmanualattackandreload":
                         MessageLog.print_message("[COMBAT] Enabling manually pressing the Attack button and reloading (if the mission supports it) until battle ends.")
                         manual_attack_and_reload = True
-                    elif CombatMode._semi_auto is False and CombatMode._full_auto is False and command == "end":
+                    elif CombatMode._semi_auto is False and CombatMode._full_auto is False and command == "end" and skip_end is False:
                         CombatMode._end()
                     elif command.find("wait") == 0:
                         CombatMode._wait_execute(list(command))
