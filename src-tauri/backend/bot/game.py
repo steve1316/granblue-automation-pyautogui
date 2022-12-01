@@ -450,40 +450,40 @@ class Game:
                     MessageLog.print_message(f"[INFO] Skipping Set Selection due to Raid only allowing parties from the Extra category.")
                 elif group_number < 8:
                     while set_location is None:
-                        set_location = ImageUtils.find_button("party_set_a", tries = 10)
+                        set_location = ImageUtils.find_button("party_set_a", custom_confidence = 0.90)
                         if set_location is None:
                             tries -= 1
                             if tries <= 0:
                                 raise RuntimeError("Could not find Set A.")
 
                             # See if the user had Set B active instead of Set A if matching failed.
-                            set_location = ImageUtils.find_button("party_set_b", tries = 10)
+                            Game.find_and_click_button("party_set_b", custom_confidence = 0.90)
                 else:
                     while set_location is None:
-                        set_location = ImageUtils.find_button("party_set_b", tries = 10)
+                        set_location = ImageUtils.find_button("party_set_b", custom_confidence = 0.90)
                         if set_location is None:
                             tries -= 1
                             if tries <= 0:
                                 raise RuntimeError("Could not find Set B.")
 
                             # See if the user had Set A active instead of Set B if matching failed.
-                            set_location = ImageUtils.find_button("party_set_a", tries = 10)
+                            Game.find_and_click_button("party_set_a", custom_confidence = 0.90)
 
             # Center the mouse on the "Set A" / "Set B" button and then click the correct Group tab.
             if Settings.debug_mode:
                 MessageLog.print_message(f"[DEBUG] Successfully selected the correct Set. Now selecting Group {group_number}...")
 
-            if group_number == 1:
+            if group_number == 1 or group_number == 8:
                 x = set_location[0] - 350
-            elif group_number == 2:
+            elif group_number == 2 or group_number == 9:
                 x = set_location[0] - 290
-            elif group_number == 3:
+            elif group_number == 3 or group_number == 10:
                 x = set_location[0] - 230
-            elif group_number == 4:
+            elif group_number == 4 or group_number == 11:
                 x = set_location[0] - 170
-            elif group_number == 5:
+            elif group_number == 5 or group_number == 12:
                 x = set_location[0] - 110
-            elif group_number == 6:
+            elif group_number == 6 or group_number == 13:
                 x = set_location[0] - 50
             else:
                 x = set_location[0] + 10

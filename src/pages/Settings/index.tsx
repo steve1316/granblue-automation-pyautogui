@@ -580,11 +580,11 @@ const Settings = () => {
                                     label="Group #"
                                     variant="filled"
                                     type="number"
-                                    error={bsc.settings.game.groupNumber < 1 || bsc.settings.game.groupNumber > 7}
+                                    error={bsc.settings.game.groupNumber < 1 || bsc.settings.game.groupNumber > 14}
                                     value={bsc.settings.game.groupNumber}
-                                    inputProps={{ min: 1, max: 7 }}
+                                    inputProps={{ min: 1, max: 14 }}
                                     onChange={(e) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, groupNumber: parseInt(e.target.value) } })}
-                                    helperText="From 1 to 7"
+                                    helperText={`Set A: 1 to 7\nSet B: 8 to 14`}
                                     className="settingsTextfield"
                                 />
                             </Grid>
