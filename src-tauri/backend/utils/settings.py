@@ -59,6 +59,7 @@ class Settings:
     # #### end of api ####
 
     # #### configuration ####
+    reduce_delay_seconds: float = dictor(_data, "configuration.reduceDelaySeconds", 0.0)
     enable_bezier_curve_mouse_movement: bool = dictor(_data, "configuration.enableBezierCurveMouseMovement", True)
     custom_mouse_speed: float = float(dictor(_data, "configuration.mouseSpeed", 0.2))
     enable_delay_between_runs: bool = dictor(_data, "configuration.enableDelayBetweenRuns", False)

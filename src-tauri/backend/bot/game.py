@@ -136,7 +136,13 @@ class Game:
         Returns:
             None
         """
-        time.sleep(seconds)
+        if Settings.reduce_delay_seconds > 0.0:
+            if seconds - Settings.reduce_delay_seconds < 0.0:
+                time.sleep(seconds)
+            else:
+                time.sleep(seconds - Settings.reduce_delay_seconds)
+        else:
+            time.sleep(seconds)
         return None
 
     @staticmethod
