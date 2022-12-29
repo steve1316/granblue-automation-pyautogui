@@ -389,6 +389,38 @@ const ExtraSettings = () => {
 
                 <Divider />
 
+                <br />
+
+                <Typography variant="subtitle1" gutterBottom component="div" color="text.secondary">
+                    The following setting below is useful if you have a fast enough connection that pages load almost instantly. If the amount selected reduces the delay to the negatives, then it will
+                    default back to its original delay. Beware that changing this setting may lead to unintended behavior as the bot will be going faster, depending on how much you reduce each delay
+                    by.
+                </Typography>
+
+                <br />
+
+                <Grid container spacing={2} direction="row" justifyContent="center" alignItems="center">
+                    <Grid item xs={6}>
+                        <TextField
+                            label="Reduce Delays by X Seconds"
+                            value={bsc.settings.configuration.reduceDelaySeconds}
+                            onChange={(e) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, reduceDelaySeconds: Number(e.target.value) } })}
+                            variant="outlined"
+                            type="number"
+                            inputProps={{ min: 0.0, step: 0.1 }}
+                            InputProps={{
+                                endAdornment: <InputAdornment position="end">seconds</InputAdornment>,
+                            }}
+                            helperText="Reduces each delay across the whole application by X amount of seconds."
+                            fullWidth
+                        />
+                    </Grid>
+
+                    <Grid item xs={6} />
+                </Grid>
+
+                <Divider />
+
                 <FormGroup sx={{ paddingBottom: "16px" }}>
                     <FormControlLabel
                         control={

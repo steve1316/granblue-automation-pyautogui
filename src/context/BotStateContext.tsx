@@ -43,9 +43,7 @@ export interface Settings {
 
     // Configuration settings.
     configuration: {
-        enableAutoRestore: boolean
-        enableFullElixir: boolean
-        enableSoulBalm: boolean
+        reduceDelaySeconds: number
         enableBezierCurveMouseMovement: boolean
         mouseSpeed: number
         enableDelayBetweenRuns: boolean
@@ -180,9 +178,7 @@ export const defaultSettings: Settings = {
         password: "",
     },
     configuration: {
-        enableAutoRestore: true,
-        enableFullElixir: false,
-        enableSoulBalm: false,
+        reduceDelaySeconds: 0.0,
         enableBezierCurveMouseMovement: true,
         mouseSpeed: 0.2,
         enableDelayBetweenRuns: false,
