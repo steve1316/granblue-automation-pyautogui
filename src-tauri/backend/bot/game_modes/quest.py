@@ -540,7 +540,7 @@ class Quest:
                 Game.find_party_and_start_mission(Settings.group_number, Settings.party_number)
 
                 # Close the "Item Picked Up" popup.
-                if ImageUtils.confirm_location("items_picked_up"):
+                if ImageUtils.confirm_location("items_picked_up", tries = 10):
                     Game.find_and_click_button("ok")
 
                 # Now start Combat Mode and detect any item drops.
