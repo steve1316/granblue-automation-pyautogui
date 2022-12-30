@@ -293,10 +293,7 @@ class TwitterRoomFinder:
             else:
                 tweet_text = TwitterRoomFinder._listener_old_tweets.pop().text
 
-            if Settings.twitter_use_version2 and (
-                    re.search(rf"\b{Settings.mission_name}\b", tweet_text) or re.search(rf"\b{TwitterRoomFinder._list_of_raids[Settings.mission_name]}\b", tweet_text)) or (
-                    not Settings.twitter_use_version2 and (
-                    re.search(rf"\b{Settings.mission_name}\b", tweet_text) or re.search(rf"\b{TwitterRoomFinder._list_of_raids[Settings.mission_name]}\b", tweet_text))):
+            if Settings.twitter_use_version2 and (re.search(rf"\b{Settings.mission_name}\b", tweet_text) or re.search(rf"\b{TwitterRoomFinder._list_of_raids[Settings.mission_name]}\b", tweet_text)):
                 # Split up the tweet's text by whitespaces.
                 split_text = tweet_text.split(" ")
 
