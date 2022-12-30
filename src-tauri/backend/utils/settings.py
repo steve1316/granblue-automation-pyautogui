@@ -111,7 +111,7 @@ class Settings:
                 MessageLog.print_message(f"[NIGHTMARE] Party Number for {farming_mode}'s Nightmare will reuse the one for Farming Mode.")
                 nightmare_party_number = party_number
         else:
-            MessageLog.print_message(f"[NIGHTMARE] Reusing settings from Farming Mode for {farming_mode}'s Nightmare...")
+            MessageLog.print_message(f"[NIGHTMARE] Reusing settings from Farming Mode for Nightmare...")
             nightmare_combat_script = combat_script
             nightmare_summon_list = summon_list
             nightmare_summon_elements_list = summon_element_list
