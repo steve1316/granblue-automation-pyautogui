@@ -920,9 +920,9 @@ class CombatMode:
 
         if Game.find_and_click_button("attack", tries = 30):
             if ImageUtils.wait_vanish("combat_cancel", timeout = 10):
-                MessageLog.print_message("[COMBAT] Successful executed a manual attack.")
+                MessageLog.print_message("[COMBAT] Successfully executed a manual attack.")
             else:
-                MessageLog.print_message("[COMBAT] Successful executed a manual attack that resolved instantly.")
+                MessageLog.print_message("[COMBAT] Successfully executed a manual attack that resolved instantly.")
         else:
             MessageLog.print_message("[WARNING] Failed to execute a manual attack.")
 
@@ -1131,13 +1131,13 @@ class CombatMode:
                 MessageLog.print_message(f"Name of combat script loaded: {Settings.combat_script_name}")
                 command_list = copy.deepcopy(Settings.combat_script)
 
-        MessageLog.print_message(f"Size of script commands: {len(command_list)}")
+        MessageLog.print_message(f"[COMBAT] Size of script commands: {len(command_list)}")
 
         # If current Farming Mode is Arcarum, attempt to dismiss potential stage effect popup like "Can't use Charge Attacks".
         if Settings.farming_mode == "Arcarum":
             Game.find_and_click_button("arcarum_stage_effect_active", tries = 10, bypass_general_adjustment = True)
 
-        # Save the positions of the "Attack" and "Back" button.
+        # Save the position of the Attack button.
         CombatMode._attack_button_location = ImageUtils.find_button("attack", tries = 50, bypass_general_adjustment = True)
 
         if CombatMode._attack_button_location is None:
