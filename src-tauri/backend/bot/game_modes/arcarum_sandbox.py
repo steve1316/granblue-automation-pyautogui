@@ -234,8 +234,6 @@ class ArcarumSandbox:
             "y": 245
         },
 
-        # 510, 135
-
         ##########
         # Zone Invidia
         "Infernal Hellbeast": {
