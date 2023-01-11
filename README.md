@@ -90,34 +90,7 @@ Visit the [Wiki here](https://github.com/steve1316/granblue-automation-pyautogui
 
 # Requirements
 
-1. [Python 3.8.3 (any version higher than this breaks PyTorch) (In addition: make sure Install to PATH is selected)](https://www.python.org/downloads/release/python-383/)
-2. [Granblue Fantasy account](http://game.granbluefantasy.jp/)
-3. [Twitter Developer account (optional, needed to farm Raids)](https://developer.twitter.com/en)
-4. [VMware Workstation Player (optional, if your computer is strong enough to support virtualization)](https://www.vmware.com/products/workstation-player.html)
-5. [Microsoft Edge WebView2](https://developer.microsoft.com/en-us/microsoft-edge/webview2/) (Windows 11 comes with this by default. Failure to install this leads to nothing showing up on the screen when the executable is launched.)
-6. [Microsoft Visual C++ 2015-2019 Redistibutable (x64)](https://docs.microsoft.com/en-us/cpp/windows/latest-supported-vc-redist?view=msvc-170)
-7. 1080p or 1440p screen resolution at 100% window scaling.
-
-## Python Dependencies (make sure to have these installed before moving on to the instructions)
-
-```
-# Open a command terminal inside the /backend/ folder with the method of your choice or by holding SHIFT + RMB and selecting `Open Powershell window here` and then execute this command to install all of these requirements:
-
-pip install -r requirements.txt
-```
-
--   [PyTorch](https://pytorch.org/) (Installing the CUDA version will improve the speed of template matching if you have a CUDA-compatible GPU)
--   [PyAutoGUI](https://pypi.org/project/PyAutoGUI/)
--   [Pillow](https://pypi.org/project/Pillow/)
--   [opencv-python](https://pypi.org/project/opencv-python/)
--   [EasyOCR](https://pypi.org/project/easyocr/)
--   [numpy](https://pypi.org/project/numpy/)
--   [playsound](https://pypi.org/project/playsound/)
--   [pyclick](https://pypi.org/project/pyclick/)
--   [pyperclip](https://pypi.org/project/pyperclip/)
--   [tweepy](https://pypi.org/project/tweepy)
--   [discord.py](https://pypi.org/project/discord.py/)
--   [dictor](https://github.com/perfecto25/dictor)
+Visit the [Installation Instructions page here](https://github.com/steve1316/granblue-automation-pyautogui/wiki/Installation-Instructions).
 
 # Instructions
 
