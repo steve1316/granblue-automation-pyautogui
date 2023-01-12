@@ -1,3 +1,5 @@
+from typing import Tuple, List
+
 from utils.settings import Settings
 from utils.message_log import MessageLog
 from utils.image_utils import ImageUtils
@@ -111,111 +113,102 @@ class GuildWars:
             else:
                 MessageLog.print_message(f"\n[GUILD.WARS] Now proceeding to farm Nightmares.")
 
-                # TODO: Separate logic into the 4 Days of Guild Wars.
-
-                day_1, day_2, day_3, day_4 = False
-
                 day_1 = ImageUtils.confirm_location("guild_wars_nightmare_first_day")
-
                 if day_1:
-                    MessageLog.print_message(f"[GUILD.WARS] Today is the first/second day so hosting NM90.")
+                    # TODO: Need to recheck Day 1 again.
+                    # Logic for Day 1. Only NM90 is available.
+                    MessageLog.print_message(f"\n[GUILD.WARS] Today is Day 1 so hosting NM90.")
                     Game.find_and_click_button("ok")
 
-                    # Alert the user if they lack the meat to host this and stop the bot.
-                    if not ImageUtils.wait_vanish("ok", timeout = 30):
-                        ImageUtils.generate_alert("You do not have enough meat to host this NM90!")
-                        raise GuildWarsException("You do not have enough meat to host this NM90!")
-                else:
+                    # Check if the Nightmare selection was successful and put the bot into the Support Summon Selection screen. If not, then go back to farm meat.
+                    if not ImageUtils.wait_vanish("ok", timeout = 10):
+                        GuildWars._farm_meat(raid_battle_locations)
+                elif difficulty == "NM90" or difficulty == "NM95" or difficulty == "NM100":
+                    # Logic for Day 2+. NM90, NM95 and NM100 are now available.
+                    MessageLog.print_message(f"\n[GUILD.WARS] Today is Day 2+.")
                     if len(raid_battle_locations) < 3:
                         MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
                     else:
                         MouseUtils.move_and_click_point(raid_battle_locations[1][0], raid_battle_locations[1][1], "event_raid_battle")
 
+                    # Select the Nightmare.
                     nightmare_locations = ImageUtils.find_all("guild_wars_nightmares")
-
-
-                start_check_for_nm150_nm200 = False
-
-                # Click on the banner to farm Nightmares.
-                if difficulty != "NM150" or difficulty != "NM200":
-                    if len(raid_battle_locations) < 3:
-                        MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
-                    else:
-                        MouseUtils.move_and_click_point(raid_battle_locations[1][0], raid_battle_locations[1][1], "event_raid_battle")
-
-                    nightmare_locations = ImageUtils.find_all("guild_wars_nightmares")
-
-                    # If today is the first/second day of Guild Wars, only NM90 will be available.
-                    if ImageUtils.confirm_location("guild_wars_nightmare_first_day"):
-                        MessageLog.print_message(f"[GUILD.WARS] Today is the first/second day so hosting NM90.")
-                        Game.find_and_click_button("ok")
-
-                        # Alert the user if they lack the meat to host this and stop the bot.
-                        if not ImageUtils.wait_vanish("ok", timeout = 30):
-                            ImageUtils.generate_alert("You do not have enough meat to host this NM90!")
-                            raise GuildWarsException("You do not have enough meat to host this NM90!")
-
-                    # If it is not the first/second day of Guild Wars, that means that other difficulties are now available.
-                    elif difficulty == "NM90":
-                        MessageLog.print_message(f"[GUILD.WARS] Now hosting NM90 now...")
+                    if difficulty == "NM90":
                         MouseUtils.move_and_click_point(nightmare_locations[0][0], nightmare_locations[0][1], "guild_wars_nightmares")
                     elif difficulty == "NM95":
-                        MessageLog.print_message(f"[GUILD.WARS] Now hosting NM95 now...")
                         MouseUtils.move_and_click_point(nightmare_locations[1][0], nightmare_locations[1][1], "guild_wars_nightmares")
-                    elif difficulty == "NM100":
-                        MessageLog.print_message(f"[GUILD.WARS] Now hosting NM100 now...")
-                        MouseUtils.move_and_click_point(nightmare_locations[2][0], nightmare_locations[2][1], "guild_wars_nightmares")
-                else:
-                    MessageLog.print_message(f"\n[GUILD.WARS] Now hosting NM150/NM200 now...")
+                    else:
+                        MouseUtils.move_and_click_point(nightmare_locations[1][0], nightmare_locations[1][1], "guild_wars_nightmares")
 
+                    # Check if the Nightmare selection was successful and put the bot into the Support Summon Selection screen. If not, then go back to farm meat.
+                    if not ImageUtils.wait_vanish("close", timeout = 10):
+                        GuildWars._farm_meat(raid_battle_locations)
+                elif difficulty == "NM150" or difficulty == "NM200":
                     if len(raid_battle_locations) >= 3:
+                        MessageLog.print_message(f"\n[GUILD.WARS] Today is Day 2+ and United Battles (NM150/NM200) may be available.")
                         MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
 
-                        if not ImageUtils.wait_vanish("guild_wars_nightmare_united_battle", timeout = 10):
-                            Game.find_and_click_button("guild_wars_nightmare_united_battle")
+                        Game.wait(1.0)
 
                         nightmare_locations = ImageUtils.find_all("guild_wars_nightmares")
 
-                        if ImageUtils.confirm_location("guild_wars_nightmare"):
-                            start_check_for_nm150_nm200 = Game.find_and_click_button("start")
+                        start_check = False
+                        if Game.find_and_click_button("start"):
+                            MessageLog.print_message(f"[GUILD.WARS] Scans indicate that NM150 is the only United Battle available.")
+                            start_check = True
+                        elif len(nightmare_locations) == 0:
+                            GuildWars._farm_meat(raid_battle_locations)
+                            start_check = True
                         elif difficulty == "NM150":
                             MessageLog.print_message(f"[GUILD.WARS] Now hosting NM150 now...")
                             MouseUtils.move_and_click_point(nightmare_locations[0][0], nightmare_locations[0][1], "guild_wars_nightmares")
-                            start_check_for_nm150_nm200 = True
+                            start_check = ImageUtils.wait_vanish("close", timeout = 10)
                         elif difficulty == "NM200":
+                            if len(nightmare_locations) != 2:
+                                raise GuildWarsException(f"Was not able to detect the location of NM200 with size of {len(nightmare_locations)}.")
+
                             MessageLog.print_message(f"[GUILD.WARS] Now hosting NM200 now...")
                             MouseUtils.move_and_click_point(nightmare_locations[1][0], nightmare_locations[1][1], "guild_wars_nightmares")
-                            start_check_for_nm150_nm200 = True
+                            start_check = ImageUtils.wait_vanish("close", timeout = 10)
 
-                if start_check_for_nm150_nm200 is False:
-                    # If there is not enough meat to host, host Extreme+ instead.
-                    MessageLog.print_message(f"\n[GUILD.WARS] User lacks meat or navigation failed to host the Nightmare. Hosting Extreme+ instead...")
-
-                    if difficulty != "NM150":
-                        Game.find_and_click_button("close")
+                        # Check if the Nightmare selection was successful and put the bot into the Support Summon Selection screen. If not, then go back to farm meat.
+                        if start_check is False:
+                            GuildWars._farm_meat(raid_battle_locations)
                     else:
-                        Game.find_and_click_button("cancel")
-
-                    # Click on the banner to farm meat.
-                    if len(raid_battle_locations) < 2:
-                        MouseUtils.move_and_click_point(raid_battle_locations[1][0], raid_battle_locations[1][1], "event_raid_battle")
-                    else:
-                        MouseUtils.move_and_click_point(raid_battle_locations[2][0], raid_battle_locations[2][1], "event_raid_battle")
-
-                    if ImageUtils.confirm_location("guild_wars_meat"):
-                        MessageLog.print_message(f"[GUILD.WARS] Now hosting Extreme+ now...")
-                        Game.find_and_click_button("guild_wars_meat_extreme+")
-
-                        # Alert the user if they did not unlock Extreme+ and stop the bot.
-                        if not ImageUtils.wait_vanish("guild_wars_meat_extreme+", timeout = 30):
-                            ImageUtils.generate_alert("You did not unlock Extreme+ yet!")
-                            raise GuildWarsException("You did not unlock Extreme+ yet!")
-                    else:
-                        GuildWarsException("Failed to open component to host Meat raids in the Guild Wars page due to running out of host materials.")
+                        raise GuildWarsException("Scans indicate that United Battles are not available yet.")
         else:
             raise GuildWarsException("Failed to arrive at Guild Wars page.")
 
         return None
+
+    @staticmethod
+    def _farm_meat(locations: List[Tuple[int, ...]]):
+        from bot.game import Game
+
+        # If there is not enough meat to host, host Extreme+ instead.
+        MessageLog.print_message(f"\n[GUILD.WARS] User lacks meat to host the Nightmare. Hosting Extreme+ instead...")
+
+        if Game.find_and_click_button("close") or Game.find_and_click_button("cancel"):
+            GuildWarsException("Failed to close popup in order to get back to the list of Guild War raids.")
+
+        # Click on the banner to farm meat.
+        if len(locations) < 2:
+            MouseUtils.move_and_click_point(locations[1][0], locations[1][1], "event_raid_battle")
+        else:
+            MouseUtils.move_and_click_point(locations[2][0], locations[2][1], "event_raid_battle")
+
+        Game.wait(1.0)
+
+        if ImageUtils.confirm_location("guild_wars_meat"):
+            MessageLog.print_message(f"[GUILD.WARS] Now hosting Extreme+ now...")
+            Game.find_and_click_button("guild_wars_meat_extreme+")
+
+            # Alert the user if they did not unlock Extreme+ and stop the bot.
+            if not ImageUtils.wait_vanish("guild_wars_meat_extreme+", timeout = 30):
+                ImageUtils.generate_alert("You did not unlock Extreme+ yet!")
+                raise GuildWarsException("You did not unlock Extreme+ yet!")
+        else:
+            GuildWarsException("Failed to open component to host Meat raids in the Guild Wars page due to running out of host materials.")
 
     @staticmethod
     def start(first_run: bool):
