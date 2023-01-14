@@ -182,6 +182,14 @@ class GuildWars:
 
     @staticmethod
     def _farm_meat(locations: List[Tuple[int, ...]]):
+        """Begins a run to farm meat from Extreme+.
+
+        Args:
+            locations (List[Tuple[int, ...]]): List of the raid locations to go back to.
+
+        Returns:
+            None
+        """
         from bot.game import Game
 
         # If there is not enough meat to host, host Extreme+ instead.
