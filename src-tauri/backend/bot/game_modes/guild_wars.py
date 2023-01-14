@@ -205,7 +205,6 @@ class GuildWars:
 
             # Alert the user if they did not unlock Extreme+ and stop the bot.
             if not ImageUtils.wait_vanish("guild_wars_meat_extreme+", timeout = 30):
-                ImageUtils.generate_alert("You did not unlock Extreme+ yet!")
                 raise GuildWarsException("You did not unlock Extreme+ yet!")
         else:
             GuildWarsException("Failed to open component to host Meat raids in the Guild Wars page due to running out of host materials.")
