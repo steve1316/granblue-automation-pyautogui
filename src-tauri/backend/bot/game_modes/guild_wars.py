@@ -115,7 +115,6 @@ class GuildWars:
 
                 day_1 = ImageUtils.confirm_location("guild_wars_nightmare_first_day")
                 if day_1:
-                    # TODO: Need to recheck Day 1 again.
                     # Logic for Day 1. Only NM90 is available.
                     MessageLog.print_message(f"\n[GUILD.WARS] Today is Day 1 so hosting NM90.")
                     Game.find_and_click_button("ok")
@@ -201,7 +200,7 @@ class GuildWars:
 
         if ImageUtils.confirm_location("guild_wars_meat"):
             MessageLog.print_message(f"[GUILD.WARS] Now hosting Extreme+ now...")
-            Game.find_and_click_button("guild_wars_meat_extreme+")
+            Game.find_and_click_button("guild_wars_meat_extreme+", y_offset = -50)
 
             # Alert the user if they did not unlock Extreme+ and stop the bot.
             if not ImageUtils.wait_vanish("guild_wars_meat_extreme+", timeout = 30):
