@@ -188,9 +188,6 @@ class Raid:
             Game.check_for_pending()
             Raid._navigate()
 
-        # Check for EP.
-        Game.check_for_ep()
-
         # Check if the bot is at the Summon Selection screen.
         if ImageUtils.confirm_location("select_a_summon", tries = 30):
             summon_check = Game.select_summon(Settings.summon_list, Settings.summon_element_list)
