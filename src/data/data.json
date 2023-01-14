@@ -535,15 +535,15 @@
             "map": "Rose Queen",
             "items": ["Rose Petal"]
         },
-        "Lvl 100 Grand Order": { "map": "Grand Order", "items": ["Azure Feather", "Heavenly Horn"] },
-        "Lvl 200 Grand Order": { "map": "Grand Order", "items": ["Verdant Azurite"] },
+        "Lvl 100 Grand Order": { "map": "Grand Order", "items": ["Azure Feather", "Heavenly Horn", "Supreme Merit"] },
+        "Lvl 200 Grand Order": { "map": "Grand Order", "items": ["Verdant Azurite", "Supreme Merit", "Legendary Merit"] },
         "Lvl 100 Proto Bahamut": {
             "map": "Proto Bahamut",
-            "items": ["Champion Merit", "Horn of Bahamut"]
+            "items": ["Champion Merit", "Horn of Bahamut", "Supreme Merit"]
         },
         "Lvl 150 Proto Bahamut": {
             "map": "Proto Bahamut",
-            "items": ["Primeval Horn"]
+            "items": ["Primeval Horn", "Supreme Merit", "Legendary Merit"]
         },
         "Lvl 150 Ultimate Bahamut": {
             "map": "Ultimate Bahamut",
@@ -567,16 +567,17 @@
                 "Odin Anima",
                 "Odin Omega Anima",
                 "Lich Anima",
-                "Lich Omega Anima"
+                "Lich Omega Anima",
+                "Supreme Merit"
             ]
         },
         "Lvl 200 Ultimate Bahamut": {
             "map": "Ultimate Bahamut",
-            "items": ["Silver Centrum", "Ultima Unit"]
+            "items": ["Silver Centrum", "Ultima Unit", "Supreme Merit", "Legendary Merit"]
         },
         "Lvl 200 Akasha": {
             "map": "Akasha",
-            "items": ["Hollow Key"]
+            "items": ["Hollow Key", "Legendary Merit"]
         },
         "Lvl 150 Lucilius": {
             "map": "Lucilius",
@@ -584,7 +585,7 @@
         },
         "Lvl 200 Lindwurm": {
             "map": "Lindwurm",
-            "items": ["Golden Scale", "Lineage Fragment"]
+            "items": ["Golden Scale", "Lineage Fragment", "Legendary Merit"]
         },
         "Huanglong & Qilin (Impossible)": {
             "map": "Huanglong & Qilin",
