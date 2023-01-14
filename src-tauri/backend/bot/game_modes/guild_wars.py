@@ -196,7 +196,7 @@ class GuildWars:
         MessageLog.print_message(f"\n[GUILD.WARS] User lacks meat to host the Nightmare. Hosting Extreme+ instead...")
 
         if Game.find_and_click_button("close") is False or Game.find_and_click_button("cancel") is False:
-            GuildWarsException("Failed to close popup in order to get back to the list of Guild War raids.")
+            raise GuildWarsException("Failed to close popup in order to get back to the list of Guild War raids.")
 
         # Click on the banner to farm meat.
         if len(locations) < 2:
@@ -214,7 +214,7 @@ class GuildWars:
             if not ImageUtils.wait_vanish("guild_wars_meat_extreme+", timeout = 30):
                 raise GuildWarsException("You did not unlock Extreme+ yet!")
         else:
-            GuildWarsException("Failed to open component to host Meat raids in the Guild Wars page due to running out of host materials.")
+            raise GuildWarsException("Failed to open component to host Meat raids in the Guild Wars page due to running out of host materials.")
 
     @staticmethod
     def start(first_run: bool):
