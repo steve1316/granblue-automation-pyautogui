@@ -1,4 +1,6 @@
 import multiprocessing
+import os
+import signal
 import sys
 import unittest
 
@@ -130,12 +132,11 @@ class Test(unittest.TestCase):
         test_queue = multiprocessing.Queue()
         self._discord_process = multiprocessing.Process(target = discord_utils.start_now, args = (Settings.discord_token, Settings.user_id, discord_queue, test_queue))
         self._discord_process.start()
-        Game.wait(5.0)
+        Game.wait(8.0)
         discord_queue.put("Testing 1 2 3")
 
-        tries = 3
-        while not test_queue.empty() and tries > 0:
-            message: str = test_queue.get()
+        while not test_queue.empty():
+            message: str = test_queue.get(block = True, timeout = 10)
             if message.__contains__("Successful connection."):
                 break
             elif message.__contains__("Failed to find user using provided user ID."):
@@ -144,9 +145,14 @@ class Test(unittest.TestCase):
             elif message.__contains__("Failed to connect to Discord API using provided token."):
                 self._discord_process.terminate()
                 raise Exception("Failed to connect to Discord API using provided token.")
+            else:
+                print("Test queue received: " + message)
 
-            Game.wait(1.0)
-            tries -= 1
+        discord_queue.put(f"```diff\n- Terminated connection to Discord API for Granblue Automation\n```")
+
+        Game.wait(1.0)
+
+        os.kill(self._discord_process.pid, signal.Signals.SIGTERM)
 
         Game.wait(3.0)
 
