@@ -74,7 +74,7 @@ class ImageUtils:
 
     @staticmethod
     def _match(template: numpy.ndarray, confidence: float = 0.8) -> bool:
-        """Updates the window dimensions for PyAutoGUI to perform faster operations in.
+        """Match the given template image against the source screenshot to find a match location.
 
         Args:
             template (numpy.ndarray): The template image array to match against in a source image.
@@ -137,7 +137,7 @@ class ImageUtils:
 
     @staticmethod
     def _match_all(template: numpy.ndarray, confidence: float = 0.8) -> List[Tuple[int, ...]]:
-        """Updates the window dimensions for PyAutoGUI to perform faster operations in.
+        """Match the given template image against the source screenshot to find all match locations.
 
         Args:
             template (numpy.ndarray): The template image array to match against in a source image.
