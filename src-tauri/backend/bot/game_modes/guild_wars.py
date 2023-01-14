@@ -195,7 +195,7 @@ class GuildWars:
         # If there is not enough meat to host, host Extreme+ instead.
         MessageLog.print_message(f"\n[GUILD.WARS] User lacks meat to host the Nightmare. Hosting Extreme+ instead...")
 
-        if Game.find_and_click_button("close") or Game.find_and_click_button("cancel"):
+        if Game.find_and_click_button("close") is False or Game.find_and_click_button("cancel") is False:
             GuildWarsException("Failed to close popup in order to get back to the list of Guild War raids.")
 
         # Click on the banner to farm meat.
