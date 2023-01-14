@@ -1,21 +1,20 @@
+import asyncio
 import multiprocessing
+from typing import Any
 
 import discord
-from discord import LoginFailure
-from discord.ext.tasks import loop
+from discord import LoginFailure, Intents
 
 from utils.settings import Settings
 from utils.message_log import MessageLog
 
 
-class MyClient:
+class MyClient(discord.Client):
     """
     Prints and sends all messages in its Queue to the user via Discord private DMs.
 
     Attributes
     ----------
-    bot (discord.Client): The Client object for Discord interaction.
-
     user_id (int): The User ID on Discord that uniquely identifies them.
 
     queue (multiprocessing.Queue): The Queue holding messages to be sent to the user over Discord.
@@ -24,47 +23,48 @@ class MyClient:
 
     """
 
-    def __init__(self, bot: discord.Client, user_id: int, queue: multiprocessing.Queue, test_queue: multiprocessing.Queue = None):
-        self.bot = bot
-        self.user = None
+    def __init__(self, user_id: int, queue: multiprocessing.Queue, test_queue: multiprocessing.Queue = None, *, intents: Intents, **options: Any):
+        super().__init__(intents = intents, **options)
         self.user_id = user_id
         self.queue = queue
         self.test_queue = test_queue
-        self.print_status.start()
+        self.current_user = None
+        self.bg_task = None
 
-    @loop()
-    async def print_status(self):
-        """Grab each message in the Queue and send it as a private DM to the user.
+    async def setup_hook(self) -> None:
+        # Async setup after this client connects to the API.
+        self.bg_task = self.loop.create_task(self.start_task())
 
-        Returns:
-            None
-        """
-        if self.user is not None and not self.queue.empty():
-            message: str = self.queue.get()
-            if Settings.debug_mode:
-                MessageLog.print_message(f"\n[DEBUG] Acquired message to send via Discord DM: {message}")
-            await self.user.send(content = message)
-
-    @print_status.before_loop
-    async def before_print_status(self):
-        """Determine when the bot has successfully connected to the Discord API and found the user.
+    async def start_task(self):
+        """After the connection is ready, continue looping and reading in messages from the queue to send to the user.
 
         Returns:
             None
         """
         MessageLog.print_message("[DISCORD] Waiting for connection to Discord API...")
-        await self.bot.wait_until_ready()
+        await self.wait_until_ready()
         MessageLog.print_message("[DISCORD] Successful connection to Discord API")
         self.queue.put(f"```diff\n+ Successful connection to Discord API for Granblue Automation\n```")
+        if self.test_queue:
+            self.test_queue.put("[DISCORD] Successful connection to Discord API")
+            self.test_queue.put(f"```diff\n+ Successful connection to Discord API for Granblue Automation\n```")
 
         try:
-            self.user = await self.bot.fetch_user(self.user_id)
-            MessageLog.print_message(f"[DISCORD] Found user: {self.user.name}")
-            if self.test_queue is not None:
-                self.test_queue.put(f"[DISCORD] Found user: {self.user.name}")
-        except discord.errors.NotFound:
+            self.current_user = await self.fetch_user(self.user_id)
+            MessageLog.print_message(f"[DISCORD] Found user: {self.current_user.name}")
+            if self.test_queue:
+                self.test_queue.put(f"[DISCORD] Found user: {self.current_user.name}")
+
+            while not self.is_closed():
+                if self.current_user is not None and not self.queue.empty():
+                    message: str = self.queue.get()
+                    if Settings.debug_mode:
+                        MessageLog.print_message(f"\n[DEBUG] Acquired message to send via Discord DM: {message}")
+                    await self.current_user.send(content = message)
+
+        except discord.errors.HTTPException:
             MessageLog.print_message("[DISCORD] Failed to find user using provided user ID.\n")
-            if self.test_queue is not None:
+            if self.test_queue:
                 self.test_queue.put("[DISCORD] Failed to find user using provided user ID.")
 
 
@@ -80,13 +80,21 @@ def start_now(token: str, user_id: int, queue: multiprocessing.Queue, test_queue
     Returns:
         None
     """
-    client = discord.Client()
-    MyClient(client, user_id, queue, test_queue)
+    # Intents is new and required with the migration to discord.py v2.0
+    intents = discord.Intents.default()
+    intents.dm_messages = True
+    client = MyClient(user_id, queue, test_queue, intents = intents)
+
     try:
-        client.run(token)
-        if test_queue is not None:
+        # v2.0 also changed how their event loop works so asyncio is required.
+        async def main():
+            async with client:
+                await client.start(token)
+
+        asyncio.run(main())
+        if test_queue:
             test_queue.put("[DISCORD] Successful connection.")
     except LoginFailure:
         MessageLog.print_message("\n[DISCORD] Failed to connect to Discord API using provided token.\n")
-        if test_queue is not None:
+        if test_queue:
             test_queue.put("[DISCORD] Failed to connect to Discord API using provided token.")
