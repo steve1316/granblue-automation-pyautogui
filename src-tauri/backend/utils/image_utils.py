@@ -649,7 +649,7 @@ class ImageUtils:
         Returns:
             (bool): True if the image vanishes from the screen within the allotted time or False if timeout was reached.
         """
-        MessageLog.print_message(f"\n[INFO] Now waiting for {image_name} to vanish from screen...")
+        MessageLog.print_message(f"\n[INFO] Now waiting for {image_name.upper()} to vanish from screen...")
 
         template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.jpg", 0)
 
