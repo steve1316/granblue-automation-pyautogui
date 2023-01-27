@@ -65,6 +65,11 @@ class Generic:
                     # Do not select party and just commence the mission.
                     MessageLog.print_message(f"[GENERIC] Skipping party selection and immediately commencing mission...")
                     if Game.find_and_click_button("ok", tries = 30):
+                        # Close the "Item Picked Up" popup.
+                        Game.wait(1.0)
+                        if ImageUtils.confirm_location("items_picked_up", tries = 10):
+                            Game.find_and_click_button("ok")
+
                         # Now start Combat Mode and detect any item drops.
                         if CombatMode.start_combat_mode():
                             Game.collect_loot(is_completed = True)
