@@ -102,7 +102,6 @@ class GuildWars:
                         tries -= 1
                         if tries <= 0:
                             if difficulty == "Extreme+":
-                                ImageUtils.generate_alert("You did not unlock Extreme+ yet!")
                                 raise GuildWarsException("You did not unlock Extreme+ yet!")
                             else:
                                 raise GuildWarsException("There appears to be a deadzone issue that the bot failed 10 times to resolve. Please refresh the page and try again.")

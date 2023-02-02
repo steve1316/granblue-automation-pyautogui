@@ -146,8 +146,6 @@ class Event:
             # Bring up the "Raid Battle" popup. Then scroll down the screen a bit for screens less than 1440p to see the entire popup.
             MessageLog.print_message(f"[EVENT.TOKEN.DRAWBOXES] Now hosting Event Raid...")
             if not Game.find_and_click_button("event_raid_battle"):
-                ImageUtils.generate_alert(
-                    "Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
                 raise EventException("Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
             MouseUtils.scroll_screen_from_home_button(-200)
 
