@@ -128,8 +128,8 @@ class Coop:
                     if ImageUtils.confirm_location("coop_ex5"):
                         MessageLog.print_message(f"\n[COOP] Now selecting Coop mission: \"{Settings.mission_name}\"")
                         coop_host_locations = ImageUtils.find_all("coop_host_quest_circle")
-                        MouseUtils.move_and_click_point(coop_host_locations[Coop._coop_ex5_list.index(Settings.mission_name) + 1][0],
-                                                        coop_host_locations[Coop._coop_ex5_list.index(Settings.mission_name) + 1][1],
+                        MouseUtils.move_and_click_point(coop_host_locations[Coop._coop_ex5_list.index(Settings.mission_name)][0],
+                                                        coop_host_locations[Coop._coop_ex5_list.index(Settings.mission_name)][1],
                                                         "coop_host_quest")
 
                 elif Settings.mission_name in Coop._coop_ex_final_list:
@@ -139,8 +139,8 @@ class Coop:
                     if ImageUtils.confirm_location("coop_ex_final"):
                         MessageLog.print_message(f"\n[COOP] Now selecting Coop mission: \"{Settings.mission_name}\"")
                         coop_host_locations = ImageUtils.find_all("coop_host_quest_circle")
-                        MouseUtils.move_and_click_point(coop_host_locations[Coop._coop_ex_final_list.index(Settings.mission_name) + 1][0],
-                                                        coop_host_locations[Coop._coop_ex_final_list.index(Settings.mission_name) + 1][1],
+                        MouseUtils.move_and_click_point(coop_host_locations[Coop._coop_ex_final_list.index(Settings.mission_name)][0],
+                                                        coop_host_locations[Coop._coop_ex_final_list.index(Settings.mission_name)][1],
                                                         "coop_host_quest")
 
             # After clicking on the Coop mission, create a new Room.
