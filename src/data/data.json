@@ -428,6 +428,24 @@
                 "Dragoon's Distinction",
                 "Contractor Distinction"
             ]
+        },
+        "EX5-1 Throes of Sorcery": {
+            "items": ["Knight Esteem", "Sage Esteem", "Warrior Creed", "Sage Creed"]
+        },
+        "EX5-2 Throes of Spears": {
+            "items": ["Knight Esteem", "Warrior Creed"]
+        },
+        "EX5-3 Throes of Wings": {
+            "items": ["Sage Esteem", "Sage Creed"]
+        },
+        "EX5-4 Throes of Calamity": {
+            "items": ["Knight Esteem", "Sage Esteem", "Warrior Creed", "Sage Creed"]
+        },
+        "EX6-1 Throes of Dark Steel": {
+            "items": ["Otherworldly Darkblade", "Knight Esteem", "Sage Esteem", "Warrior Creed", "Sage Creed"]
+        },
+        "EX6-2 Throes of Death": {
+            "items": ["Astaroth Anima", "Knight Esteem", "Sage Esteem", "Warrior Creed", "Sage Creed"]
         }
     },
     "Raid": {
