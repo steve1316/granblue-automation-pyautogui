@@ -333,21 +333,6 @@ const Settings = () => {
                         ))}
                     </TextField>
 
-                    {bsc.settings.game.farmingMode === "Xeno Clash" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.xenoClash.selectTopOption}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, xenoClash: { ...bsc.settings.xenoClash, selectTopOption: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable Selection of Bottom Option"
-                            />
-                            <FormHelperText>Enabling this will select the bottom Xeno Clash option. By default, it selects the top option.</FormHelperText>
-                        </FormGroup>
-                    ) : null}
-
                     {bsc.settings.game.farmingMode === "Generic" ? (
                         <div>
                             <Divider />
@@ -378,22 +363,18 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
-                    {bsc.settings.game.farmingMode === "Special" ||
-                    bsc.settings.game.farmingMode === "Event" ||
-                    bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ||
-                    bsc.settings.game.farmingMode === "Rise of the Beasts" ||
-                    bsc.settings.game.farmingMode === "Xeno Clash" ? (
+                    {bsc.settings.game.farmingMode === "Event" || bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={bsc.settings.nightmare.enableNightmare}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, enableNightmare: e.target.checked } })}
+                                        checked={bsc.settings.event.enableSecondPosition}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, event: { ...bsc.settings.event, enableSecondPosition: e.target.checked } })}
                                     />
                                 }
-                                label="Enable Nightmare Settings"
+                                label="Enable if Event is in second position"
                             />
-                            <FormHelperText>Enable additional settings to show up in the Extra Settings page.</FormHelperText>
+                            <FormHelperText>Enable this to properly select the Event if it is positioned second on the list of events in the Home Menu.</FormHelperText>
                         </FormGroup>
                     ) : null}
 
@@ -442,6 +423,51 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
+                    {bsc.settings.game.farmingMode === "Xeno Clash" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={bsc.settings.xenoClash.selectTopOption}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, xenoClash: { ...bsc.settings.xenoClash, selectTopOption: e.target.checked } })}
+                                    />
+                                }
+                                label="Enable Selection of Bottom Option"
+                            />
+                            <FormHelperText>Enabling this will select the bottom Xeno Clash option. By default, it selects the top option.</FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
+                    {bsc.settings.game.farmingMode === "Xeno Clash" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={bsc.settings.xenoClash.enableSecondPosition}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, xenoClash: { ...bsc.settings.xenoClash, enableSecondPosition: e.target.checked } })}
+                                    />
+                                }
+                                label="Enable if Xeno Clash is in second position"
+                            />
+                            <FormHelperText>Enable this to properly select Xeno Clash if it is positioned second on the list of events in the Home Menu.</FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
+                    {bsc.settings.game.farmingMode === "Proving Grounds" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={bsc.settings.provingGrounds.enableSecondPosition}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, provingGrounds: { ...bsc.settings.provingGrounds, enableSecondPosition: e.target.checked } })}
+                                    />
+                                }
+                                label="Enable if Proving Grounds is in second position"
+                            />
+                            <FormHelperText>Enable this to properly select Proving Grounds if it is positioned second on the list of events in the Home Menu.</FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
                     {bsc.settings.game.farmingMode === "Generic" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
@@ -457,6 +483,25 @@ const Settings = () => {
                                 Enable this option to force Generic Farming Mode to reload after an attack. This does not take into account whether or not the current battle supports reloading after
                                 an attack.
                             </FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
+                    {bsc.settings.game.farmingMode === "Special" ||
+                    bsc.settings.game.farmingMode === "Event" ||
+                    bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ||
+                    bsc.settings.game.farmingMode === "Rise of the Beasts" ||
+                    bsc.settings.game.farmingMode === "Xeno Clash" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={bsc.settings.nightmare.enableNightmare}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, enableNightmare: e.target.checked } })}
+                                    />
+                                }
+                                label="Enable Nightmare Settings"
+                            />
+                            <FormHelperText>Enable additional settings to show up in the Extra Settings page.</FormHelperText>
                         </FormGroup>
                     ) : null}
 

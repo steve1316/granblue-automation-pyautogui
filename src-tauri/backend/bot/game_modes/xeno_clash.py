@@ -109,7 +109,11 @@ class XenoClash:
         event_banner_locations = ImageUtils.find_all("event_banner", custom_confidence = 0.7)
         if len(event_banner_locations) == 0:
             event_banner_locations = ImageUtils.find_all("event_banner_blue", custom_confidence = 0.7)
-        MouseUtils.move_and_click_point(event_banner_locations[0][0], event_banner_locations[0][1], "event_banner")
+
+        if Settings.xeno_clash_enable_second_position:
+            MouseUtils.move_and_click_point(event_banner_locations[1][0], event_banner_locations[1][1], "event_banner")
+        else:
+            MouseUtils.move_and_click_point(event_banner_locations[0][0], event_banner_locations[0][1], "event_banner")
 
         Game.wait(3.0)
 
@@ -140,7 +144,7 @@ class XenoClash:
 
                 Game.find_and_click_button("play")
         else:
-            raise(XenoClashException("Failed to open the Xeno Special tab."))
+            raise (XenoClashException("Failed to open the Xeno Special tab."))
 
         return None
 

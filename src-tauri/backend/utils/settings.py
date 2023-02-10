@@ -135,6 +135,7 @@ class Settings:
     # #### end of sandbox defender #### #
 
     # #### event ####
+    event_enable_second_position: bool = dictor(_data, "event.enableSecondPosition", False)
     enable_event_location_incrementation_by_one: bool = dictor(_data, "event.enableLocationIncrementByOne", False)
     enable_select_bottom_category: bool = dictor(_data, "event.selectBottomCategory", False)
     # #### end of event ####
@@ -154,8 +155,13 @@ class Settings:
     # #### end of generic ####
 
     # #### xeno clash ####
+    xeno_clash_enable_second_position: bool = dictor(_data, "xenoClash.enableSecondPosition", False)
     xeno_clash_select_top_option: bool = dictor(_data, "xenoClash.selectTopOption", False)
     # #### end of xeno clash ####
+
+    # #### proving grounds ####
+    proving_grounds_enable_second_position: bool = dictor(_data, "provingGrounds.enableSecondPosition", False)
+    # #### end of proving grounds ####
 
     # #### adjustment ####
     enable_calibration_adjustment: bool = dictor(_data, "adjustment.enableCalibrationAdjustment", False)

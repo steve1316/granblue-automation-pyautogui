@@ -99,7 +99,11 @@ class Event:
             banner_locations = ImageUtils.find_all("event_banner_blue", custom_confidence = 0.7)
             if len(banner_locations) == 0:
                 raise EventException("Failed to find the Event banner.")
-        MouseUtils.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
+
+        if Settings.event_enable_second_position:
+            MouseUtils.move_and_click_point(banner_locations[1][0], banner_locations[1][1], "event_banner")
+        else:
+            MouseUtils.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
 
         Game.wait(3.0)
 
@@ -146,8 +150,6 @@ class Event:
             # Bring up the "Raid Battle" popup. Then scroll down the screen a bit for screens less than 1440p to see the entire popup.
             MessageLog.print_message(f"[EVENT.TOKEN.DRAWBOXES] Now hosting Event Raid...")
             if not Game.find_and_click_button("event_raid_battle"):
-                ImageUtils.generate_alert(
-                    "Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
                 raise EventException("Failed to detect Token Drawbox layout for this Event. Are you sure this Event has Token Drawboxes? If not, switch to \"Event\" Farming Mode.")
             MouseUtils.scroll_screen_from_home_button(-200)
 
