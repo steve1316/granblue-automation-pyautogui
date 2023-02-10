@@ -46,9 +46,6 @@ class Coop:
             # Scroll down the screen to see more of the Coop missions on smaller screens.
             MouseUtils.scroll_screen_from_home_button(-400)
 
-            # Find the locations of all of the "Host Quest" buttons.
-            host_quest_button_locations = ImageUtils.find_all("coop_host_quest")
-
             # Select the difficulty of the mission that it is under.
             if Settings.mission_name == "H3-1 In a Dusk Dream":
                 # Check if Hard difficulty is already selected. If not, make it active.
@@ -56,6 +53,9 @@ class Coop:
                     Game.find_and_click_button("coop_hard")
 
                 MessageLog.print_message(f"\n[COOP] Hard difficulty for Coop is now selected.")
+
+                # Find the locations of all of the "Host Quest" buttons.
+                host_quest_button_locations = ImageUtils.find_all("coop_host_quest")
 
                 # Select the category, "Save the Oceans", which should be the 3rd category.
                 MessageLog.print_message(f"[COOP] Now navigating to \"{Settings.mission_name}\" for Hard difficulty.")
@@ -72,6 +72,9 @@ class Coop:
                     Game.find_and_click_button("coop_extra")
 
                 MessageLog.print_message(f"\n[COOP] Extra difficulty for Coop is now selected.")
+
+                # Find the locations of all of the "Host Quest" buttons.
+                host_quest_button_locations = ImageUtils.find_all("coop_host_quest")
 
                 # Make the specified EX category active. Then click the mission's button while making sure that the first mission in each category is skipped.
                 if Settings.mission_name in Coop._coop_ex1_list:
