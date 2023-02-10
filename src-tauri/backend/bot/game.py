@@ -1012,5 +1012,7 @@ class Game:
         MessageLog.print_message("[FARM] Ending Farming Mode.")
         MessageLog.print_message("######################################################################")
         MessageLog.print_message("######################################################################\n")
-
+        
+        Game._move_mouse_security_check()
+        
         return True
