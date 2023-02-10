@@ -712,7 +712,7 @@ const ExtraSettings = () => {
                     />
                     <FormHelperText>
                         Enable attempt at bypassing possible bot detection via mouse. What this does is moves the mouse off of the game window after every run and waits several seconds there before
-                        resuming bot operations.
+                        resuming bot operations. Additionally, this also makes it so that the same thing happens at the very end of operations before shutting down.
                     </FormHelperText>
                 </FormGroup>
             </div>
