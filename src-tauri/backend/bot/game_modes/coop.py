@@ -20,6 +20,8 @@ class Coop:
     _coop_ex2_list = ["EX2-2 Time of Judgement", "EX2-3 Time of Revelation", "EX2-4 Time of Eminence"]
     _coop_ex3_list = ["EX3-2 Rule of the Tundra", "EX3-3 Rule of the Plains", "EX3-4 Rule of the Twilight"]
     _coop_ex4_list = ["EX4-2 Amidst the Waves", "EX4-3 Amidst the Petals", "EX4-4 Amidst Severe Cliffs", "EX4-5 Amidst the Flames"]
+    _coop_ex5_list = ["EX5-1 Throes of Sorcery", "EX5-2 Throes of Spears", "EX5-3 Throes of Wings", "EX5-4 Throes of Calamity"]
+    _coop_ex_final_list = ["EX6-1 Throes of Dark Steel", "EX6-2 Throes of Death"]
 
     @staticmethod
     def _navigate():
@@ -114,6 +116,28 @@ class Coop:
                         coop_host_locations = ImageUtils.find_all("coop_host_quest_circle")
                         MouseUtils.move_and_click_point(coop_host_locations[Coop._coop_ex4_list.index(Settings.mission_name) + 1][0],
                                                         coop_host_locations[Coop._coop_ex4_list.index(Settings.mission_name) + 1][1],
+                                                        "coop_host_quest")
+
+                elif Settings.mission_name in Coop._coop_ex5_list:
+                    MessageLog.print_message(f"\n[COOP] Now navigating to \"{Settings.mission_name}\" from EX5.")
+                    MouseUtils.move_and_click_point(host_quest_button_locations[4][0], host_quest_button_locations[4][1], "coop_host_quest")
+
+                    if ImageUtils.confirm_location("coop_ex5"):
+                        MessageLog.print_message(f"\n[COOP] Now selecting Coop mission: \"{Settings.mission_name}\"")
+                        coop_host_locations = ImageUtils.find_all("coop_host_quest_circle")
+                        MouseUtils.move_and_click_point(coop_host_locations[Coop._coop_ex5_list.index(Settings.mission_name) + 1][0],
+                                                        coop_host_locations[Coop._coop_ex5_list.index(Settings.mission_name) + 1][1],
+                                                        "coop_host_quest")
+
+                elif Settings.mission_name in Coop._coop_ex_final_list:
+                    MessageLog.print_message(f"\n[COOP] Now navigating to \"{Settings.mission_name}\" from EX Final Tier.")
+                    MouseUtils.move_and_click_point(host_quest_button_locations[5][0], host_quest_button_locations[5][1], "coop_host_quest")
+
+                    if ImageUtils.confirm_location("coop_ex_final"):
+                        MessageLog.print_message(f"\n[COOP] Now selecting Coop mission: \"{Settings.mission_name}\"")
+                        coop_host_locations = ImageUtils.find_all("coop_host_quest_circle")
+                        MouseUtils.move_and_click_point(coop_host_locations[Coop._coop_ex_final_list.index(Settings.mission_name) + 1][0],
+                                                        coop_host_locations[Coop._coop_ex_final_list.index(Settings.mission_name) + 1][1],
                                                         "coop_host_quest")
 
             # After clicking on the Coop mission, create a new Room.
