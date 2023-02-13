@@ -136,6 +136,7 @@ class Settings:
 
     # #### event ####
     event_enable_second_position: bool = dictor(_data, "event.enableSecondPosition", False)
+    event_enable_third_position: bool = dictor(_data, "event.enableThirdPosition", False)
     enable_event_location_incrementation_by_one: bool = dictor(_data, "event.enableLocationIncrementByOne", False)
     enable_select_bottom_category: bool = dictor(_data, "event.selectBottomCategory", False)
     # #### end of event ####
@@ -156,11 +157,13 @@ class Settings:
 
     # #### xeno clash ####
     xeno_clash_enable_second_position: bool = dictor(_data, "xenoClash.enableSecondPosition", False)
+    xeno_clash_enable_third_position: bool = dictor(_data, "xenoClash.enableThirdPosition", False)
     xeno_clash_select_top_option: bool = dictor(_data, "xenoClash.selectTopOption", False)
     # #### end of xeno clash ####
 
     # #### proving grounds ####
     proving_grounds_enable_second_position: bool = dictor(_data, "provingGrounds.enableSecondPosition", False)
+    proving_grounds_enable_third_position: bool = dictor(_data, "provingGrounds.enableThirdPosition", False)
     # #### end of proving grounds ####
 
     # #### adjustment ####
