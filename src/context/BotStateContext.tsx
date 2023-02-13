@@ -91,6 +91,7 @@ export interface Settings {
     // Settings specific to certain Farming Modes.
     event: {
         enableSecondPosition: boolean
+        enableThirdPosition: boolean
         enableLocationIncrementByOne: boolean
         selectBottomCategory: boolean
     }
@@ -111,11 +112,13 @@ export interface Settings {
 
     xenoClash: {
         enableSecondPosition: boolean
+        enableThirdPosition: boolean
         selectTopOption: boolean
     }
 
     provingGrounds: {
         enableSecondPosition: boolean
+        enableThirdPosition: boolean
     }
 
     // Adjustment Settings.
@@ -214,6 +217,7 @@ export const defaultSettings: Settings = {
     },
     event: {
         enableSecondPosition: false,
+        enableThirdPosition: false,
         enableLocationIncrementByOne: false,
         selectBottomCategory: false,
     },
@@ -230,10 +234,12 @@ export const defaultSettings: Settings = {
     },
     xenoClash: {
         enableSecondPosition: false,
+        enableThirdPosition: false,
         selectTopOption: true,
     },
     provingGrounds: {
         enableSecondPosition: false,
+        enableThirdPosition: false,
     },
     adjustment: {
         enableCalibrationAdjustment: false,

@@ -378,6 +378,21 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
+                    {bsc.settings.game.farmingMode === "Event" || bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={bsc.settings.event.enableThirdPosition}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, event: { ...bsc.settings.event, enableThirdPosition: e.target.checked } })}
+                                    />
+                                }
+                                label="Enable if Event is in third position"
+                            />
+                            <FormHelperText>Enable this to properly select the Event if it is positioned third on the list of events in the Home Menu.</FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
                     {bsc.settings.game.farmingMode === "Arcarum Sandbox" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
@@ -453,6 +468,21 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
+                    {bsc.settings.game.farmingMode === "Xeno Clash" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={bsc.settings.xenoClash.enableThirdPosition}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, xenoClash: { ...bsc.settings.xenoClash, enableThirdPosition: e.target.checked } })}
+                                    />
+                                }
+                                label="Enable if Xeno Clash is in third position"
+                            />
+                            <FormHelperText>Enable this to properly select Xeno Clash if it is positioned third on the list of events in the Home Menu.</FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
                     {bsc.settings.game.farmingMode === "Proving Grounds" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
@@ -465,6 +495,21 @@ const Settings = () => {
                                 label="Enable if Proving Grounds is in second position"
                             />
                             <FormHelperText>Enable this to properly select Proving Grounds if it is positioned second on the list of events in the Home Menu.</FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
+                    {bsc.settings.game.farmingMode === "Proving Grounds" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={bsc.settings.provingGrounds.enableThirdPosition}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, provingGrounds: { ...bsc.settings.provingGrounds, enableThirdPosition: e.target.checked } })}
+                                    />
+                                }
+                                label="Enable if Proving Grounds is in third position"
+                            />
+                            <FormHelperText>Enable this to properly select Proving Grounds if it is positioned third on the list of events in the Home Menu.</FormHelperText>
                         </FormGroup>
                     ) : null}
 
