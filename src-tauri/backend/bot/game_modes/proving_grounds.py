@@ -40,7 +40,9 @@ class ProvingGrounds:
             if len(banner_locations) == 0:
                 raise ProvingGroundsException("Failed to find the Event banner.")
 
-        if Settings.proving_grounds_enable_second_position:
+        if Settings.proving_grounds_enable_third_position:
+            MouseUtils.move_and_click_point(banner_locations[2][0], banner_locations[2][1], "event_banner")
+        elif Settings.proving_grounds_enable_second_position:
             MouseUtils.move_and_click_point(banner_locations[1][0], banner_locations[1][1], "event_banner")
         else:
             MouseUtils.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
