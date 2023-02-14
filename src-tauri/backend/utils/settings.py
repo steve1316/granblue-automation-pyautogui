@@ -134,18 +134,18 @@ class Settings:
     engaged_defender_battle: bool = False
     # #### end of sandbox defender #### #
 
+    # #### raid ####
+    enable_auto_exit_raid: bool = dictor(_data, "raid.enableAutoExitRaid", False)
+    time_allowed_until_auto_exit_raid: int = dictor(_data, "raid.timeAllowedUntilAutoExitRaid", 10) * 60
+    enable_no_timeout: bool = dictor(_data, "raid.enableNoTimeout", False)
+    # #### end of raid ####
+
     # #### event ####
     event_enable_second_position: bool = dictor(_data, "event.enableSecondPosition", False)
     event_enable_third_position: bool = dictor(_data, "event.enableThirdPosition", False)
     enable_event_location_incrementation_by_one: bool = dictor(_data, "event.enableLocationIncrementByOne", False)
     enable_select_bottom_category: bool = dictor(_data, "event.selectBottomCategory", False)
     # #### end of event ####
-
-    # #### raid ####
-    enable_auto_exit_raid: bool = dictor(_data, "raid.enableAutoExitRaid", False)
-    time_allowed_until_auto_exit_raid: int = dictor(_data, "raid.timeAllowedUntilAutoExitRaid", 10) * 60
-    enable_no_timeout: bool = dictor(_data, "raid.enableNoTimeout", False)
-    # #### end of raid ####
 
     # #### arcarum ####
     enable_stop_on_arcarum_boss: bool = dictor(_data, "arcarum.enableStopOnArcarumBoss", True)
