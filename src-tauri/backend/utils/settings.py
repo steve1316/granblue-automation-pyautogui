@@ -141,8 +141,8 @@ class Settings:
     # #### end of raid ####
 
     # #### event ####
-    event_enable_second_position: bool = dictor(_data, "event.enableSecondPosition", False)
-    event_enable_third_position: bool = dictor(_data, "event.enableThirdPosition", False)
+    event_enable_new_position: bool = dictor(_data, "event.enableNewPosition", False)
+    event_new_position: int = dictor(_data, "event.newPosition", 0)
     enable_event_location_incrementation_by_one: bool = dictor(_data, "event.enableLocationIncrementByOne", False)
     enable_select_bottom_category: bool = dictor(_data, "event.selectBottomCategory", False)
     # #### end of event ####
@@ -156,15 +156,25 @@ class Settings:
     # #### end of generic ####
 
     # #### xeno clash ####
-    xeno_clash_enable_second_position: bool = dictor(_data, "xenoClash.enableSecondPosition", False)
-    xeno_clash_enable_third_position: bool = dictor(_data, "xenoClash.enableThirdPosition", False)
+    xeno_clash_enable_new_position: bool = dictor(_data, "xenoClash.enableNewPosition", False)
+    xeno_clash_new_position: int = dictor(_data, "xenoClash.newPosition", 0)
     xeno_clash_select_top_option: bool = dictor(_data, "xenoClash.selectTopOption", False)
     # #### end of xeno clash ####
 
     # #### proving grounds ####
-    proving_grounds_enable_second_position: bool = dictor(_data, "provingGrounds.enableSecondPosition", False)
-    proving_grounds_enable_third_position: bool = dictor(_data, "provingGrounds.enableThirdPosition", False)
+    proving_grounds_enable_new_position: bool = dictor(_data, "provingGrounds.enableNewPosition", False)
+    proving_grounds_new_position: int = dictor(_data, "provingGrounds.newPosition", 0)
     # #### end of proving grounds ####
+
+    # #### guild wars ####
+    guild_wars_enable_new_position: bool = dictor(_data, "guildWars.enableNewPosition", False)
+    guild_wars_new_position: int = dictor(_data, "guildWars.newPosition", 0)
+    # #### end of guild wars ####
+
+    # #### rotb ####
+    rotb_enable_new_position: bool = dictor(_data, "rotb.enableNewPosition", False)
+    rotb_new_position: int = dictor(_data, "rotb.newPosition", 0)
+    # #### end of rotb ####
 
     # #### adjustment ####
     enable_calibration_adjustment: bool = dictor(_data, "adjustment.enableCalibrationAdjustment", False)
