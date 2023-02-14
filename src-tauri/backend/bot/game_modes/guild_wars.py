@@ -37,7 +37,13 @@ class GuildWars:
         banner_locations = ImageUtils.find_all("event_banner", custom_confidence = 0.7)
         if len(banner_locations) == 0:
             banner_locations = ImageUtils.find_all("event_banner_blue", custom_confidence = 0.7)
-        MouseUtils.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
+
+        if Settings.guild_wars_enable_new_position:
+            if Settings.guild_wars_new_position > len(banner_locations) - 1:
+                raise GuildWarsException("Value set for New Position was found to be invalid compared to the actual number of events found in the Home Menu.")
+            MouseUtils.move_and_click_point(banner_locations[Settings.guild_wars_new_position][0], banner_locations[Settings.guild_wars_new_position][1], "event_banner")
+        else:
+            MouseUtils.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
 
         Game.wait(3.0)
 

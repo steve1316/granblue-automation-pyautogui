@@ -100,10 +100,10 @@ class Event:
             if len(banner_locations) == 0:
                 raise EventException("Failed to find the Event banner.")
 
-        if Settings.event_enable_third_position:
-            MouseUtils.move_and_click_point(banner_locations[2][0], banner_locations[2][1], "event_banner")
-        elif Settings.event_enable_second_position:
-            MouseUtils.move_and_click_point(banner_locations[1][0], banner_locations[1][1], "event_banner")
+        if Settings.event_enable_new_position:
+            if Settings.event_new_position > len(banner_locations) - 1:
+                raise EventException("Value set for New Position was found to be invalid compared to the actual number of events found in the Home Menu.")
+            MouseUtils.move_and_click_point(banner_locations[Settings.event_new_position][0], banner_locations[Settings.event_new_position][1], "event_banner")
         else:
             MouseUtils.move_and_click_point(banner_locations[0][0], banner_locations[0][1], "event_banner")
 

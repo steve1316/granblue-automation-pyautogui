@@ -110,10 +110,10 @@ class XenoClash:
         if len(event_banner_locations) == 0:
             event_banner_locations = ImageUtils.find_all("event_banner_blue", custom_confidence = 0.7)
 
-        if Settings.xeno_clash_enable_third_position:
-            MouseUtils.move_and_click_point(event_banner_locations[2][0], event_banner_locations[2][1], "event_banner")
-        elif Settings.xeno_clash_enable_second_position:
-            MouseUtils.move_and_click_point(event_banner_locations[1][0], event_banner_locations[1][1], "event_banner")
+        if Settings.xeno_clash_enable_new_position:
+            if Settings.xeno_clash_new_position > len(event_banner_locations) - 1:
+                raise XenoClashException("Value set for New Position was found to be invalid compared to the actual number of events found in the Home Menu.")
+            MouseUtils.move_and_click_point(event_banner_locations[Settings.xeno_clash_new_position][0], event_banner_locations[Settings.xeno_clash_new_position][1], "event_banner")
         else:
             MouseUtils.move_and_click_point(event_banner_locations[0][0], event_banner_locations[0][1], "event_banner")
 
