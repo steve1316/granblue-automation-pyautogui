@@ -368,29 +368,27 @@ const Settings = () => {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={bsc.settings.event.enableSecondPosition}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, event: { ...bsc.settings.event, enableSecondPosition: e.target.checked } })}
+                                        checked={bsc.settings.event.enableNewPosition}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, event: { ...bsc.settings.event, enableNewPosition: e.target.checked } })}
                                     />
                                 }
-                                label="Enable if Event is in second position"
+                                label="Enable if Event is in different position"
                             />
-                            <FormHelperText>Enable this to properly select the Event if it is positioned second on the list of events in the Home Menu.</FormHelperText>
+                            <FormHelperText>Enable this to properly select the Event if it is not positioned first on the list of events in the Home Menu.</FormHelperText>
                         </FormGroup>
                     ) : null}
 
-                    {bsc.settings.game.farmingMode === "Event" || bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.event.enableThirdPosition}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, event: { ...bsc.settings.event, enableThirdPosition: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable if Event is in third position"
-                            />
-                            <FormHelperText>Enable this to properly select the Event if it is positioned third on the list of events in the Home Menu.</FormHelperText>
-                        </FormGroup>
+                    {(bsc.settings.game.farmingMode === "Event" || bsc.settings.game.farmingMode === "Event (Token Drawboxes)") && bsc.settings.event.enableNewPosition ? (
+                        <TextField
+                            label="New Position"
+                            variant="filled"
+                            type="number"
+                            value={bsc.settings.event.newPosition}
+                            inputProps={{ min: 0, max: 5 }}
+                            onChange={(e) => bsc.setSettings({ ...bsc.settings, event: { ...bsc.settings.event, newPosition: parseInt(e.target.value) } })}
+                            helperText={`Default is the first position or the value of 0`}
+                            className="settingsTextfield"
+                        />
                     ) : null}
 
                     {bsc.settings.game.farmingMode === "Arcarum Sandbox" ? (
@@ -458,44 +456,27 @@ const Settings = () => {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={bsc.settings.xenoClash.enableSecondPosition}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, xenoClash: { ...bsc.settings.xenoClash, enableSecondPosition: e.target.checked } })}
+                                        checked={bsc.settings.xenoClash.enableNewPosition}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, xenoClash: { ...bsc.settings.xenoClash, enableNewPosition: e.target.checked } })}
                                     />
                                 }
-                                label="Enable if Xeno Clash is in second position"
+                                label="Enable if Xeno Clash is in different position"
                             />
-                            <FormHelperText>Enable this to properly select Xeno Clash if it is positioned second on the list of events in the Home Menu.</FormHelperText>
+                            <FormHelperText>Enable this to properly select Xeno Clash if it is not positioned first on the list of events in the Home Menu.</FormHelperText>
                         </FormGroup>
                     ) : null}
 
-                    {bsc.settings.game.farmingMode === "Xeno Clash" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.xenoClash.enableThirdPosition}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, xenoClash: { ...bsc.settings.xenoClash, enableThirdPosition: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable if Xeno Clash is in third position"
-                            />
-                            <FormHelperText>Enable this to properly select Xeno Clash if it is positioned third on the list of events in the Home Menu.</FormHelperText>
-                        </FormGroup>
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Proving Grounds" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.provingGrounds.enableSecondPosition}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, provingGrounds: { ...bsc.settings.provingGrounds, enableSecondPosition: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable if Proving Grounds is in second position"
-                            />
-                            <FormHelperText>Enable this to properly select Proving Grounds if it is positioned second on the list of events in the Home Menu.</FormHelperText>
-                        </FormGroup>
+                    {bsc.settings.game.farmingMode === "Xeno Clash" && bsc.settings.xenoClash.enableNewPosition ? (
+                        <TextField
+                            label="New Position"
+                            variant="filled"
+                            type="number"
+                            value={bsc.settings.xenoClash.newPosition}
+                            inputProps={{ min: 0, max: 5 }}
+                            onChange={(e) => bsc.setSettings({ ...bsc.settings, xenoClash: { ...bsc.settings.xenoClash, newPosition: parseInt(e.target.value) } })}
+                            helperText={`Default is the first position or the value of 0`}
+                            className="settingsTextfield"
+                        />
                     ) : null}
 
                     {bsc.settings.game.farmingMode === "Proving Grounds" ? (
@@ -503,14 +484,83 @@ const Settings = () => {
                             <FormControlLabel
                                 control={
                                     <Checkbox
-                                        checked={bsc.settings.provingGrounds.enableThirdPosition}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, provingGrounds: { ...bsc.settings.provingGrounds, enableThirdPosition: e.target.checked } })}
+                                        checked={bsc.settings.provingGrounds.enableNewPosition}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, provingGrounds: { ...bsc.settings.provingGrounds, enableNewPosition: e.target.checked } })}
                                     />
                                 }
-                                label="Enable if Proving Grounds is in third position"
+                                label="Enable if Proving Grounds is in different position"
                             />
-                            <FormHelperText>Enable this to properly select Proving Grounds if it is positioned third on the list of events in the Home Menu.</FormHelperText>
+                            <FormHelperText>Enable this to properly select Proving Grounds if it is not positioned first on the list of events in the Home Menu.</FormHelperText>
                         </FormGroup>
+                    ) : null}
+
+                    {bsc.settings.game.farmingMode === "Proving Grounds" && bsc.settings.xenoClash.enableNewPosition ? (
+                        <TextField
+                            label="New Position"
+                            variant="filled"
+                            type="number"
+                            value={bsc.settings.provingGrounds.newPosition}
+                            inputProps={{ min: 0, max: 5 }}
+                            onChange={(e) => bsc.setSettings({ ...bsc.settings, provingGrounds: { ...bsc.settings.provingGrounds, newPosition: parseInt(e.target.value) } })}
+                            helperText={`Default is the first position or the value of 0`}
+                            className="settingsTextfield"
+                        />
+                    ) : null}
+
+                    {bsc.settings.game.farmingMode === "Guild Wars" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={bsc.settings.guildWars.enableNewPosition}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, guildWars: { ...bsc.settings.guildWars, enableNewPosition: e.target.checked } })}
+                                    />
+                                }
+                                label="Enable if Guild Wars is in different position"
+                            />
+                            <FormHelperText>Enable this to properly select Guild Wars if it is not positioned first on the list of events in the Home Menu.</FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
+                    {bsc.settings.game.farmingMode === "Guild Wars" && bsc.settings.guildWars.enableNewPosition ? (
+                        <TextField
+                            label="New Position"
+                            variant="filled"
+                            type="number"
+                            value={bsc.settings.guildWars.newPosition}
+                            inputProps={{ min: 0, max: 5 }}
+                            onChange={(e) => bsc.setSettings({ ...bsc.settings, guildWars: { ...bsc.settings.guildWars, newPosition: parseInt(e.target.value) } })}
+                            helperText={`Default is the first position or the value of 0`}
+                            className="settingsTextfield"
+                        />
+                    ) : null}
+
+                    {bsc.settings.game.farmingMode === "Rise of the Beasts" ? (
+                        <FormGroup sx={{ paddingBottom: "16px" }}>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={bsc.settings.rotb.enableNewPosition}
+                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, rotb: { ...bsc.settings.rotb, enableNewPosition: e.target.checked } })}
+                                    />
+                                }
+                                label="Enable if ROTB is in different position"
+                            />
+                            <FormHelperText>Enable this to properly select ROTB if it is not positioned first on the list of events in the Home Menu.</FormHelperText>
+                        </FormGroup>
+                    ) : null}
+
+                    {bsc.settings.game.farmingMode === "Rise of the Beasts" && bsc.settings.rotb.enableNewPosition ? (
+                        <TextField
+                            label="New Position"
+                            variant="filled"
+                            type="number"
+                            value={bsc.settings.rotb.newPosition}
+                            inputProps={{ min: 0, max: 5 }}
+                            onChange={(e) => bsc.setSettings({ ...bsc.settings, rotb: { ...bsc.settings.rotb, newPosition: parseInt(e.target.value) } })}
+                            helperText={`Default is the first position or the value of 0`}
+                            className="settingsTextfield"
+                        />
                     ) : null}
 
                     {bsc.settings.game.farmingMode === "Generic" ? (

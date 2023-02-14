@@ -90,8 +90,8 @@ export interface Settings {
 
     // Settings specific to certain Farming Modes.
     event: {
-        enableSecondPosition: boolean
-        enableThirdPosition: boolean
+        enableNewPosition: boolean
+        newPosition: number
         enableLocationIncrementByOne: boolean
         selectBottomCategory: boolean
     }
@@ -111,14 +111,24 @@ export interface Settings {
     }
 
     xenoClash: {
-        enableSecondPosition: boolean
-        enableThirdPosition: boolean
+        enableNewPosition: boolean
+        newPosition: number
         selectTopOption: boolean
     }
 
     provingGrounds: {
-        enableSecondPosition: boolean
-        enableThirdPosition: boolean
+        enableNewPosition: boolean
+        newPosition: number
+    }
+
+    guildWars: {
+        enableNewPosition: boolean
+        newPosition: number
+    }
+
+    rotb: {
+        enableNewPosition: boolean
+        newPosition: number
     }
 
     // Adjustment Settings.
@@ -216,8 +226,8 @@ export const defaultSettings: Settings = {
         nightmarePartyNumber: 1,
     },
     event: {
-        enableSecondPosition: false,
-        enableThirdPosition: false,
+        enableNewPosition: false,
+        newPosition: 0,
         enableLocationIncrementByOne: false,
         selectBottomCategory: false,
     },
@@ -233,13 +243,21 @@ export const defaultSettings: Settings = {
         enableForceReload: false,
     },
     xenoClash: {
-        enableSecondPosition: false,
-        enableThirdPosition: false,
+        enableNewPosition: false,
+        newPosition: 0,
         selectTopOption: true,
     },
     provingGrounds: {
-        enableSecondPosition: false,
-        enableThirdPosition: false,
+        enableNewPosition: false,
+        newPosition: 0,
+    },
+    guildWars: {
+        enableNewPosition: false,
+        newPosition: 0,
+    },
+    rotb: {
+        enableNewPosition: false,
+        newPosition: 0,
     },
     adjustment: {
         enableCalibrationAdjustment: false,
