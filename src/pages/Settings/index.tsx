@@ -494,7 +494,7 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
-                    {bsc.settings.game.farmingMode === "Proving Grounds" && bsc.settings.xenoClash.enableNewPosition ? (
+                    {bsc.settings.game.farmingMode === "Proving Grounds" && bsc.settings.provingGrounds.enableNewPosition ? (
                         <TextField
                             label="New Position"
                             variant="filled"
