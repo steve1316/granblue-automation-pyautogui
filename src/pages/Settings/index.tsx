@@ -363,7 +363,7 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
-                    {bsc.settings.game.farmingMode === "Event" || bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ? (
+                    {bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ? (
                         <FormGroup sx={{ paddingBottom: "16px" }}>
                             <FormControlLabel
                                 control={
@@ -378,7 +378,7 @@ const Settings = () => {
                         </FormGroup>
                     ) : null}
 
-                    {(bsc.settings.game.farmingMode === "Event" || bsc.settings.game.farmingMode === "Event (Token Drawboxes)") && bsc.settings.event.enableNewPosition ? (
+                    {bsc.settings.game.farmingMode === "Event (Token Drawboxes)" && bsc.settings.event.enableNewPosition ? (
                         <TextField
                             label="New Position"
                             variant="filled"
