@@ -1,15 +1,23 @@
-import { Settings as SettingsIcon } from "@mui/icons-material"
-import { Autocomplete, Avatar, Button, Checkbox, Divider, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, MenuItem, Modal, Stack, styled, TextField, Typography } from "@mui/material"
-import { deepPurple } from "@mui/material/colors"
-import { Box } from "@mui/system"
+import ArcarumHelper from "./FarmingModesHelpers/ArcarumHelper"
+import ArcarumSandboxHelper from "./FarmingModesHelpers/ArcarumSandboxHelper"
+import data from "../../data/data.json"
+import EventHelper from "./FarmingModesHelpers/EventHelper"
+import GenericHelper from "./FarmingModesHelpers/GenericHelper"
+import GuildWarsHelper from "./FarmingModesHelpers/GuildWarsHelper"
 import match from "autosuggest-highlight/match"
 import parse from "autosuggest-highlight/parse"
-import { useContext, useEffect, useRef, useState } from "react"
+import ProvingGroundsHelper from "./FarmingModesHelpers/ProvingGroundsHelper"
+import ROTBHelper from "./FarmingModesHelpers/ROTBHelper"
 import TransferList from "../../components/TransferList"
+import XenoClashHelper from "./FarmingModesHelpers/XenoClashHelper"
+import { Autocomplete, Avatar, Button, Checkbox, Divider, Fade, FormControlLabel, FormGroup, FormHelperText, Grid, MenuItem, Modal, Stack, styled, TextField, Typography } from "@mui/material"
 import { BotStateContext } from "../../context/BotStateContext"
+import { Box } from "@mui/system"
+import { deepPurple } from "@mui/material/colors"
+import { DialogFilter, open } from "@tauri-apps/api/dialog"
 import { readTextFile } from "@tauri-apps/api/fs"
-import { open, DialogFilter } from "@tauri-apps/api/dialog"
-import data from "../../data/data.json"
+import { Settings as SettingsIcon } from "@mui/icons-material"
+import { useContext, useEffect, useRef, useState } from "react"
 import "./index.scss"
 
 // Custom input component for combat script file selection.
@@ -249,39 +257,268 @@ const Settings = () => {
     const handleModalOpen = () => setIsModalOpen(true)
     const handleModalClose = () => setIsModalOpen(false)
 
+    const renderCombatScriptSetting = () => {
+        if (!bsc.settings.misc.alternativeCombatScriptSelector) {
+            return (
+                <div>
+                    <Input ref={inputRef} accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadCombatScript(e)} />
+                    <TextField
+                        variant="filled"
+                        label="Combat Script"
+                        value={bsc.settings.game.combatScriptName !== "" ? bsc.settings.game.combatScriptName : "None Selected"}
+                        inputProps={{ readOnly: true }}
+                        InputLabelProps={{ shrink: true }}
+                        helperText="Select a Combat Script"
+                        onClick={() => inputRef.current?.click()}
+                        fullWidth
+                    />
+                </div>
+            )
+        } else {
+            return (
+                <TextField
+                    variant="filled"
+                    label="Combat Script"
+                    value={bsc.settings.game.combatScriptName !== "" ? bsc.settings.game.combatScriptName : "None Selected"}
+                    inputProps={{ readOnly: true }}
+                    InputLabelProps={{ shrink: true }}
+                    helperText="Select a Combat Script (alternative method)"
+                    onClick={() => loadCombatScriptAlternative()}
+                    fullWidth
+                />
+            )
+        }
+    }
+
+    const renderFarmingModeSetting = () => {
+        return (
+            <div>
+                <TextField
+                    select
+                    label="Farming Mode"
+                    variant="filled"
+                    value={bsc.settings.game.farmingMode}
+                    onChange={(e) => {
+                        // In addition, also reset selected Item and Mission.
+                        bsc.setSettings({
+                            ...bsc.settings,
+                            game: { ...bsc.settings.game, farmingMode: e.target.value, item: "", mission: "", map: "" },
+                            nightmare: {
+                                ...bsc.settings.nightmare,
+                                enableNightmare: false,
+                                enableCustomNightmareSettings: false,
+                                nightmareCombatScriptName: "",
+                                nightmareCombatScript: [],
+                                nightmareSummons: [],
+                                nightmareSummonElements: [],
+                                nightmareGroupNumber: 1,
+                                nightmarePartyNumber: 1,
+                            },
+                            sandbox: {
+                                ...bsc.settings.sandbox,
+                                enableDefender: false,
+                                enableGoldChest: false,
+                                enableCustomDefenderSettings: false,
+                                numberOfDefenders: 1,
+                                defenderCombatScriptName: "",
+                                defenderCombatScript: [],
+                                defenderGroupNumber: 1,
+                                defenderPartyNumber: 1,
+                            },
+                        })
+                    }}
+                    helperText="Please select the Farming Mode"
+                    style={{ width: "100%" }}
+                >
+                    {farmingModes.map((mode) => (
+                        <MenuItem key={mode} value={mode}>
+                            {mode}
+                        </MenuItem>
+                    ))}
+                </TextField>
+
+                {bsc.settings.game.farmingMode === "Special" ||
+                bsc.settings.game.farmingMode === "Event" ||
+                bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ||
+                bsc.settings.game.farmingMode === "Rise of the Beasts" ||
+                bsc.settings.game.farmingMode === "Xeno Clash" ? (
+                    <FormGroup sx={{ paddingBottom: "16px" }}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={bsc.settings.nightmare.enableNightmare}
+                                    onChange={(e) => bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, enableNightmare: e.target.checked } })}
+                                />
+                            }
+                            label="Enable Nightmare Settings"
+                        />
+                        <FormHelperText>Enable additional settings to show up in the Extra Settings page.</FormHelperText>
+                    </FormGroup>
+                ) : null}
+
+                {ArcarumHelper()}
+                {ArcarumSandboxHelper()}
+                {EventHelper()}
+                {GenericHelper()}
+                {GuildWarsHelper()}
+                {ProvingGroundsHelper()}
+                {ROTBHelper()}
+                {XenoClashHelper()}
+            </div>
+        )
+    }
+
+    const renderItemSetting = () => {
+        return (
+            <Autocomplete
+                options={itemList.map((element) => element)}
+                value={bsc.settings.game.item}
+                onChange={(_e, value) => {
+                    var newItem = ""
+                    if (value !== null) {
+                        newItem = value
+                    }
+
+                    bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, item: newItem } })
+                }}
+                getOptionLabel={(option) => option}
+                isOptionEqualToValue={(option) => option !== ""}
+                renderInput={(params) => <TextField {...params} label="Select Item" variant="filled" helperText="Please select/search the Item to farm" />}
+                renderOption={(props, option, { inputValue }) => {
+                    const matches = match(option, inputValue)
+                    const parts = parse(option, matches)
+
+                    return (
+                        <li {...props}>
+                            <div>
+                                {parts.map((part, index) => (
+                                    <span key={index} style={{ fontWeight: part.highlight ? 1000 : 400 }}>
+                                        {part.text}
+                                    </span>
+                                ))}
+                            </div>
+                        </li>
+                    )
+                }}
+            />
+        )
+    }
+
+    const renderMissionSetting = () => {
+        if (bsc.settings.game.farmingMode !== "Generic") {
+            return (
+                <Autocomplete
+                    options={missionList.map((element) => element)}
+                    value={bsc.settings.game.mission}
+                    onChange={(_e, value) => {
+                        if (value === null) {
+                            bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, mission: "", map: "" } })
+                        } else {
+                            bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, mission: value } })
+                        }
+                    }}
+                    getOptionLabel={(option) => option}
+                    isOptionEqualToValue={(option) => option !== ""}
+                    renderInput={(params) => <TextField {...params} label="Select Mission" variant="filled" helperText="Please select the Mission" />}
+                    renderOption={(props, option, { inputValue }) => {
+                        const matches = match(option, inputValue)
+                        const parts = parse(option, matches)
+
+                        return (
+                            <li {...props}>
+                                <div>
+                                    {parts.map((part, index) => (
+                                        <span key={index} style={{ fontWeight: part.highlight ? 1000 : 400 }}>
+                                            {part.text}
+                                        </span>
+                                    ))}
+                                </div>
+                            </li>
+                        )
+                    }}
+                />
+            )
+        } else return null
+    }
+
+    const renderItemAmountSetting = () => {
+        return (
+            <TextField
+                label="# of Items"
+                type="number"
+                variant="filled"
+                value={bsc.settings.game.itemAmount}
+                onChange={(e) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, itemAmount: e.target.value === "" ? 1 : parseInt(e.target.value) } })}
+                inputProps={{ min: 1 }}
+                helperText="Please select the amount of Items to farm"
+            />
+        )
+    }
+
+    const renderSummonSetting = () => {
+        return (
+            <div>
+                <Button
+                    variant="contained"
+                    onClick={handleModalOpen}
+                    disabled={bsc.settings.game.farmingMode === "Coop" || bsc.settings.game.farmingMode === "Arcarum" || bsc.settings.game.farmingMode === "Arcarum Sandbox"}
+                    style={{ width: "100%" }}
+                >
+                    Select Summons
+                </Button>
+                <Modal className="supportSummonModal" open={isModalOpen} onClose={handleModalClose}>
+                    <div>
+                        <Typography>Select Support Summon(s)</Typography>
+                        <Box id="supportSummonContainer" className="supportSummonContainer">
+                            <TransferList isNightmare={false} />
+                        </Box>
+                    </div>
+                </Modal>
+            </div>
+        )
+    }
+
+    const renderGroupPartySettings = () => {
+        if (bsc.settings.game.farmingMode !== "Generic") {
+            return (
+                <Grid container justifyContent="center" alignItems="center">
+                    <Grid item id="gridItemGroup" xs={4}>
+                        <TextField
+                            label="Group #"
+                            variant="filled"
+                            type="number"
+                            error={bsc.settings.game.groupNumber < 1 || bsc.settings.game.groupNumber > 14}
+                            value={bsc.settings.game.groupNumber}
+                            inputProps={{ min: 1, max: 14 }}
+                            onChange={(e) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, groupNumber: parseInt(e.target.value) } })}
+                            helperText={`Set A: 1 to 7\nSet B: 8 to 14`}
+                            className="settingsTextfield"
+                        />
+                    </Grid>
+                    <Grid item md></Grid>
+                    <Grid item id="gridItemParty" xs={4}>
+                        <TextField
+                            label="Party #"
+                            variant="filled"
+                            type="number"
+                            error={bsc.settings.game.partyNumber < 1 || bsc.settings.game.partyNumber > 6}
+                            value={bsc.settings.game.partyNumber}
+                            inputProps={{ min: 1, max: 6 }}
+                            onChange={(e) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, partyNumber: parseInt(e.target.value) } })}
+                            helperText="From 1 to 6"
+                            className="settingsTextfield"
+                        />
+                    </Grid>
+                </Grid>
+            )
+        } else return null
+    }
+
     return (
         <Fade in={true}>
             <Box className={bsc.settings.misc.guiLowPerformanceMode ? "settingsContainerLowPerformance" : "settingsContainer"} id="settingsContainer">
                 <Stack spacing={2} className="settingsWrapper">
-                    {/* Load Combat Script */}
-                    <div>
-                        {!bsc.settings.misc.alternativeCombatScriptSelector ? (
-                            <div>
-                                <Input ref={inputRef} accept=".txt" id="combat-script-loader" type="file" onChange={(e) => loadCombatScript(e)} />
-                                <TextField
-                                    variant="filled"
-                                    label="Combat Script"
-                                    value={bsc.settings.game.combatScriptName !== "" ? bsc.settings.game.combatScriptName : "None Selected"}
-                                    inputProps={{ readOnly: true }}
-                                    InputLabelProps={{ shrink: true }}
-                                    helperText="Select a Combat Script"
-                                    onClick={() => inputRef.current?.click()}
-                                    fullWidth
-                                />
-                            </div>
-                        ) : (
-                            <TextField
-                                variant="filled"
-                                label="Combat Script"
-                                value={bsc.settings.game.combatScriptName !== "" ? bsc.settings.game.combatScriptName : "None Selected"}
-                                inputProps={{ readOnly: true }}
-                                InputLabelProps={{ shrink: true }}
-                                helperText="Select a Combat Script (alternative method)"
-                                onClick={() => loadCombatScriptAlternative()}
-                                fullWidth
-                            />
-                        )}
-                    </div>
+                    {renderCombatScriptSetting()}
 
                     <Divider>
                         <Avatar sx={{ bgcolor: deepPurple[500] }}>
@@ -289,461 +526,17 @@ const Settings = () => {
                         </Avatar>
                     </Divider>
 
-                    {/* Select Farming Mode */}
-                    <TextField
-                        select
-                        label="Farming Mode"
-                        variant="filled"
-                        value={bsc.settings.game.farmingMode}
-                        onChange={(e) => {
-                            // In addition, also reset selected Item and Mission.
-                            bsc.setSettings({
-                                ...bsc.settings,
-                                game: { ...bsc.settings.game, farmingMode: e.target.value, item: "", mission: "", map: "" },
-                                nightmare: {
-                                    ...bsc.settings.nightmare,
-                                    enableNightmare: false,
-                                    enableCustomNightmareSettings: false,
-                                    nightmareCombatScriptName: "",
-                                    nightmareCombatScript: [],
-                                    nightmareSummons: [],
-                                    nightmareSummonElements: [],
-                                    nightmareGroupNumber: 1,
-                                    nightmarePartyNumber: 1,
-                                },
-                                sandbox: {
-                                    ...bsc.settings.sandbox,
-                                    enableDefender: false,
-                                    enableGoldChest: false,
-                                    enableCustomDefenderSettings: false,
-                                    numberOfDefenders: 1,
-                                    defenderCombatScriptName: "",
-                                    defenderCombatScript: [],
-                                    defenderGroupNumber: 1,
-                                    defenderPartyNumber: 1,
-                                },
-                            })
-                        }}
-                        helperText="Please select the Farming Mode"
-                    >
-                        {farmingModes.map((mode) => (
-                            <MenuItem key={mode} value={mode}>
-                                {mode}
-                            </MenuItem>
-                        ))}
-                    </TextField>
+                    {renderFarmingModeSetting()}
 
-                    {bsc.settings.game.farmingMode === "Generic" ? (
-                        <div>
-                            <Divider />
-                            <Typography variant="subtitle2" component="p" color="text.secondary">
-                                {`Selecting this will repeat the current mission on the screen until it finishes the required number of runs. Note that Generic does not provide any navigation.
-                                
-                                It is required that the bot starts on either the Combat screen with the "Attack" button visible, the Loot Collection screen with the "Play Again" button visible, or the Coop Room screen with the "Start" button visible and party already selected.`}
-                            </Typography>
-                            <Divider />
-                        </div>
-                    ) : null}
+                    {renderItemSetting()}
 
-                    {bsc.settings.game.farmingMode === "Event" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.event.enableLocationIncrementByOne}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, event: { ...bsc.settings.event, enableLocationIncrementByOne: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable Incrementation of Location by 1"
-                            />
-                            <FormHelperText>
-                                Enable this if the event has its N/H missions at the very top so the bot can correctly select the correct quest. Or in otherwords, enable this if the Event tab in the
-                                Special page has 3 "Select" buttons instead of 2.
-                            </FormHelperText>
-                        </FormGroup>
-                    ) : null}
+                    {renderMissionSetting()}
 
-                    {bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.event.enableNewPosition}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, event: { ...bsc.settings.event, enableNewPosition: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable if Event is in different position"
-                            />
-                            <FormHelperText>Enable this to properly select the Event if it is not positioned first on the list of events in the Home Menu.</FormHelperText>
-                        </FormGroup>
-                    ) : null}
+                    {renderItemAmountSetting()}
 
-                    {bsc.settings.game.farmingMode === "Event (Token Drawboxes)" && bsc.settings.event.enableNewPosition ? (
-                        <TextField
-                            label="New Position"
-                            variant="filled"
-                            type="number"
-                            value={bsc.settings.event.newPosition}
-                            inputProps={{ min: 0, max: 5 }}
-                            onChange={(e) => bsc.setSettings({ ...bsc.settings, event: { ...bsc.settings.event, newPosition: parseInt(e.target.value) } })}
-                            helperText={`Default is the first position or the value of 0`}
-                            className="settingsTextfield"
-                        />
-                    ) : null}
+                    {renderSummonSetting()}
 
-                    {bsc.settings.game.farmingMode === "Arcarum Sandbox" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.sandbox.enableDefender}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, enableDefender: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable Defender settings"
-                            />
-                            <FormHelperText>Enable additional settings to show up in the Extra Settings page.</FormHelperText>
-                        </FormGroup>
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Arcarum Sandbox" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.sandbox.enableGoldChest}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, enableGoldChest: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable gold chest opening"
-                            />
-                            <FormHelperText>Experimental, it uses default party and the chosen script for combat.</FormHelperText>
-                        </FormGroup>
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Arcarum" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.arcarum.enableStopOnArcarumBoss}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, arcarum: { ...bsc.settings.arcarum, enableStopOnArcarumBoss: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable Stop on Arcarum Boss"
-                            />
-                            <FormHelperText>Enable this option to have the bot stop upon encountering a Arcarum Boss (3-3, 6-3, 9-9).</FormHelperText>
-                        </FormGroup>
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Xeno Clash" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.xenoClash.selectTopOption}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, xenoClash: { ...bsc.settings.xenoClash, selectTopOption: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable Selection of Bottom Option"
-                            />
-                            <FormHelperText>Enabling this will select the bottom Xeno Clash option. By default, it selects the top option.</FormHelperText>
-                        </FormGroup>
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Xeno Clash" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.xenoClash.enableNewPosition}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, xenoClash: { ...bsc.settings.xenoClash, enableNewPosition: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable if Xeno Clash is in different position"
-                            />
-                            <FormHelperText>Enable this to properly select Xeno Clash if it is not positioned first on the list of events in the Home Menu.</FormHelperText>
-                        </FormGroup>
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Xeno Clash" && bsc.settings.xenoClash.enableNewPosition ? (
-                        <TextField
-                            label="New Position"
-                            variant="filled"
-                            type="number"
-                            value={bsc.settings.xenoClash.newPosition}
-                            inputProps={{ min: 0, max: 5 }}
-                            onChange={(e) => bsc.setSettings({ ...bsc.settings, xenoClash: { ...bsc.settings.xenoClash, newPosition: parseInt(e.target.value) } })}
-                            helperText={`Default is the first position or the value of 0`}
-                            className="settingsTextfield"
-                        />
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Proving Grounds" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.provingGrounds.enableNewPosition}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, provingGrounds: { ...bsc.settings.provingGrounds, enableNewPosition: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable if Proving Grounds is in different position"
-                            />
-                            <FormHelperText>Enable this to properly select Proving Grounds if it is not positioned first on the list of events in the Home Menu.</FormHelperText>
-                        </FormGroup>
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Proving Grounds" && bsc.settings.provingGrounds.enableNewPosition ? (
-                        <TextField
-                            label="New Position"
-                            variant="filled"
-                            type="number"
-                            value={bsc.settings.provingGrounds.newPosition}
-                            inputProps={{ min: 0, max: 5 }}
-                            onChange={(e) => bsc.setSettings({ ...bsc.settings, provingGrounds: { ...bsc.settings.provingGrounds, newPosition: parseInt(e.target.value) } })}
-                            helperText={`Default is the first position or the value of 0`}
-                            className="settingsTextfield"
-                        />
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Guild Wars" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.guildWars.enableNewPosition}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, guildWars: { ...bsc.settings.guildWars, enableNewPosition: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable if Guild Wars is in different position"
-                            />
-                            <FormHelperText>Enable this to properly select Guild Wars if it is not positioned first on the list of events in the Home Menu.</FormHelperText>
-                        </FormGroup>
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Guild Wars" && bsc.settings.guildWars.enableNewPosition ? (
-                        <TextField
-                            label="New Position"
-                            variant="filled"
-                            type="number"
-                            value={bsc.settings.guildWars.newPosition}
-                            inputProps={{ min: 0, max: 5 }}
-                            onChange={(e) => bsc.setSettings({ ...bsc.settings, guildWars: { ...bsc.settings.guildWars, newPosition: parseInt(e.target.value) } })}
-                            helperText={`Default is the first position or the value of 0`}
-                            className="settingsTextfield"
-                        />
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Rise of the Beasts" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.rotb.enableNewPosition}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, rotb: { ...bsc.settings.rotb, enableNewPosition: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable if ROTB is in different position"
-                            />
-                            <FormHelperText>Enable this to properly select ROTB if it is not positioned first on the list of events in the Home Menu.</FormHelperText>
-                        </FormGroup>
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Rise of the Beasts" && bsc.settings.rotb.enableNewPosition ? (
-                        <TextField
-                            label="New Position"
-                            variant="filled"
-                            type="number"
-                            value={bsc.settings.rotb.newPosition}
-                            inputProps={{ min: 0, max: 5 }}
-                            onChange={(e) => bsc.setSettings({ ...bsc.settings, rotb: { ...bsc.settings.rotb, newPosition: parseInt(e.target.value) } })}
-                            helperText={`Default is the first position or the value of 0`}
-                            className="settingsTextfield"
-                        />
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Generic" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.generic.enableForceReload}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, generic: { ...bsc.settings.generic, enableForceReload: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable Forcing Reload after Attack"
-                            />
-                            <FormHelperText>
-                                Enable this option to force Generic Farming Mode to reload after an attack. This does not take into account whether or not the current battle supports reloading after
-                                an attack.
-                            </FormHelperText>
-                        </FormGroup>
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Special" ||
-                    bsc.settings.game.farmingMode === "Event" ||
-                    bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ||
-                    bsc.settings.game.farmingMode === "Rise of the Beasts" ||
-                    bsc.settings.game.farmingMode === "Xeno Clash" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.nightmare.enableNightmare}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, enableNightmare: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable Nightmare Settings"
-                            />
-                            <FormHelperText>Enable additional settings to show up in the Extra Settings page.</FormHelperText>
-                        </FormGroup>
-                    ) : null}
-
-                    {bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ? (
-                        <FormGroup sx={{ paddingBottom: "16px" }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={bsc.settings.event.selectBottomCategory}
-                                        onChange={(e) => bsc.setSettings({ ...bsc.settings, event: { ...bsc.settings.event, selectBottomCategory: e.target.checked } })}
-                                    />
-                                }
-                                label="Enable Selecting the Bottom Category"
-                            />
-                            <FormHelperText>
-                                In the event of the raids being split between 2 categories, the bot selects the top category by default. Enable this to select the bottom category instead.
-                            </FormHelperText>
-                        </FormGroup>
-                    ) : null}
-
-                    {/* Select Item */}
-                    <Autocomplete
-                        options={itemList.map((element) => element)}
-                        value={bsc.settings.game.item}
-                        onChange={(_e, value) => {
-                            var newItem = ""
-                            if (value !== null) {
-                                newItem = value
-                            }
-
-                            bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, item: newItem } })
-                        }}
-                        getOptionLabel={(option) => option}
-                        isOptionEqualToValue={(option) => option !== ""}
-                        renderInput={(params) => <TextField {...params} label="Select Item" variant="filled" helperText="Please select/search the Item to farm" />}
-                        renderOption={(props, option, { inputValue }) => {
-                            const matches = match(option, inputValue)
-                            const parts = parse(option, matches)
-
-                            return (
-                                <li {...props}>
-                                    <div>
-                                        {parts.map((part, index) => (
-                                            <span key={index} style={{ fontWeight: part.highlight ? 1000 : 400 }}>
-                                                {part.text}
-                                            </span>
-                                        ))}
-                                    </div>
-                                </li>
-                            )
-                        }}
-                    />
-
-                    {/* Select Mission */}
-                    {bsc.settings.game.farmingMode !== "Generic" ? (
-                        <Autocomplete
-                            options={missionList.map((element) => element)}
-                            value={bsc.settings.game.mission}
-                            onChange={(_e, value) => {
-                                if (value === null) {
-                                    bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, mission: "", map: "" } })
-                                } else {
-                                    bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, mission: value } })
-                                }
-                            }}
-                            getOptionLabel={(option) => option}
-                            isOptionEqualToValue={(option) => option !== ""}
-                            renderInput={(params) => <TextField {...params} label="Select Mission" variant="filled" helperText="Please select the Mission" />}
-                            renderOption={(props, option, { inputValue }) => {
-                                const matches = match(option, inputValue)
-                                const parts = parse(option, matches)
-
-                                return (
-                                    <li {...props}>
-                                        <div>
-                                            {parts.map((part, index) => (
-                                                <span key={index} style={{ fontWeight: part.highlight ? 1000 : 400 }}>
-                                                    {part.text}
-                                                </span>
-                                            ))}
-                                        </div>
-                                    </li>
-                                )
-                            }}
-                        />
-                    ) : null}
-
-                    {/* Select # of Items to farm */}
-                    <TextField
-                        label="# of Items"
-                        type="number"
-                        variant="filled"
-                        value={bsc.settings.game.itemAmount}
-                        onChange={(e) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, itemAmount: e.target.value === "" ? 1 : parseInt(e.target.value) } })}
-                        inputProps={{ min: 1 }}
-                        helperText="Please select the amount of Items to farm"
-                    />
-
-                    {/* Select Summon(s) */}
-                    <Button
-                        variant="contained"
-                        onClick={handleModalOpen}
-                        disabled={bsc.settings.game.farmingMode === "Coop" || bsc.settings.game.farmingMode === "Arcarum" || bsc.settings.game.farmingMode === "Arcarum Sandbox"}
-                    >
-                        Select Summons
-                    </Button>
-                    <Modal className="supportSummonModal" open={isModalOpen} onClose={handleModalClose}>
-                        <div>
-                            <Typography>Select Support Summon(s)</Typography>
-                            <Box id="supportSummonContainer" className="supportSummonContainer">
-                                <TransferList isNightmare={false} />
-                            </Box>
-                        </div>
-                    </Modal>
-
-                    {/* Select Group and Party */}
-                    {bsc.settings.game.farmingMode !== "Generic" ? (
-                        <Grid container justifyContent="center" alignItems="center">
-                            <Grid item id="gridItemGroup" xs={4}>
-                                <TextField
-                                    label="Group #"
-                                    variant="filled"
-                                    type="number"
-                                    error={bsc.settings.game.groupNumber < 1 || bsc.settings.game.groupNumber > 14}
-                                    value={bsc.settings.game.groupNumber}
-                                    inputProps={{ min: 1, max: 14 }}
-                                    onChange={(e) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, groupNumber: parseInt(e.target.value) } })}
-                                    helperText={`Set A: 1 to 7\nSet B: 8 to 14`}
-                                    className="settingsTextfield"
-                                />
-                            </Grid>
-                            <Grid item md></Grid>
-                            <Grid item id="gridItemParty" xs={4}>
-                                <TextField
-                                    label="Party #"
-                                    variant="filled"
-                                    type="number"
-                                    error={bsc.settings.game.partyNumber < 1 || bsc.settings.game.partyNumber > 6}
-                                    value={bsc.settings.game.partyNumber}
-                                    inputProps={{ min: 1, max: 6 }}
-                                    onChange={(e) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, partyNumber: parseInt(e.target.value) } })}
-                                    helperText="From 1 to 6"
-                                    className="settingsTextfield"
-                                />
-                            </Grid>
-                        </Grid>
-                    ) : null}
+                    {renderGroupPartySettings()}
 
                     <Divider>
                         <Avatar sx={{ bgcolor: deepPurple[500] }}>
@@ -751,7 +544,6 @@ const Settings = () => {
                         </Avatar>
                     </Divider>
 
-                    {/* Debug Mode */}
                     <FormGroup>
                         <FormControlLabel
                             control={
