@@ -10,7 +10,7 @@ import cv2
 import easyocr
 import numpy
 import pyautogui
-from PIL import Image as Image
+from PIL.Image import Image
 from playsound import playsound
 
 from utils.settings import Settings
@@ -32,6 +32,7 @@ class ImageUtils:
 
     _match_method: int = cv2.TM_CCOEFF_NORMED
     _match_location: Tuple[int, int] = None
+    _custom_scale = Settings.custom_scale
 
     # Check if the temp folder is created in the images folder.
     _current_dir: str = os.getcwd()
@@ -73,94 +74,74 @@ class ImageUtils:
         return Settings.window_left, Settings.window_top, Settings.window_width, Settings.window_height
 
     @staticmethod
-    def _match(template: numpy.ndarray, confidence: float = 0.8) -> bool:
+    def _rescale(template: Image, scale: float) -> Image:
+        """Rescales the Image object using the provided factors.
+
+        Args:
+            template (Image): The template image to be resized.
+            scale (float): The factor to scale by.
+
+        Returns:
+            The Image object rescaled.
+        """
+        width = template.width
+        height = template.height
+        return template.resize(size = (int(width * scale), int(height * scale)), resample = None)
+
+    @staticmethod
+    def _match(image_path: str, confidence: float = 0.8, use_single_scale: bool = False, is_summon: bool = False) -> bool:
         """Match the given template image against the source screenshot to find a match location.
 
         Args:
-            template (numpy.ndarray): The template image array to match against in a source image.
+            image_path (str): The file path of the template image to match against in a source image.
             confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
+            use_single_scale (bool, optional): Use a range of scales if this is disabled. Otherwise, it will use the custom_scale value. Defaults to False.
+            is_summon (bool, optional): Crop out the plus signs on a summon template image before doing template matching. Defaults to False.
 
         Returns:
             (bool): True if the template was found inside the source image and False otherwise.
         """
         match_check = False
         if Settings.window_left is not None and Settings.window_top is not None and Settings.window_width is not None and Settings.window_height is not None:
-            image: PIL.Image.Image = pyautogui.screenshot(region = (Settings.window_left, Settings.window_top, Settings.window_width, Settings.window_height))
+            image: Image = pyautogui.screenshot(region = (Settings.window_left, Settings.window_top, Settings.window_width, Settings.window_height))
         else:
-            image: PIL.Image.Image = pyautogui.screenshot()
+            image: Image = pyautogui.screenshot()
 
-        image.save(f"temp/source.png")
-        src: numpy.ndarray = cv2.imread(f"temp/source.png", 0)
-        height, width = template.shape
-
-        result: numpy.ndarray = cv2.matchTemplate(src, template, ImageUtils._match_method)
-        min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
-
-        if (ImageUtils._match_method == cv2.TM_SQDIFF or ImageUtils._match_method == cv2.TM_SQDIFF_NORMED) and min_val <= 1.0 - confidence:
-            ImageUtils._match_location = min_loc
-            match_check = True
-        elif ImageUtils._match_method != cv2.TM_SQDIFF and ImageUtils._match_method != cv2.TM_SQDIFF_NORMED and max_val >= confidence:
-            ImageUtils._match_location = max_loc
-            match_check = True
-        elif Settings.debug_mode:
-            if ImageUtils._match_method == cv2.TM_SQDIFF or ImageUtils._match_method == cv2.TM_SQDIFF_NORMED:
-                MessageLog.print_message(f"[WARNING] Match not found with {min_val} not <= {1.0 - confidence} at Point {min_loc}.")
-            else:
-                MessageLog.print_message(f"[WARNING] Match not found with {max_val} not >= {confidence} at Point {max_loc}.")
-
-        if match_check:
-            region = (ImageUtils._match_location[0] + width, ImageUtils._match_location[1] + height)
-            cv2.rectangle(src, ImageUtils._match_location, region, 255, 5)
-
-            if Settings.debug_mode:
-                cv2.imwrite(f"temp/match.png", src)
-
-            if Settings.additional_calibration_required is False:
-                temp_location = list(ImageUtils._match_location)
-                temp_location[0] += int(width / 2)
-                temp_location[1] += int(height / 2)
-            else:
-                temp_location = list(ImageUtils._match_location)
-                temp_location[0] += (pyautogui.size()[0] - (pyautogui.size()[0] - Settings.window_left)) + int(width / 2)
-                temp_location[1] += (pyautogui.size()[1] - (pyautogui.size()[1] - Settings.window_top)) + int(height / 2)
-
-            ImageUtils._match_location = tuple(temp_location)
-
-            if ImageUtils._match_method == cv2.TM_SQDIFF or ImageUtils._match_method == cv2.TM_SQDIFF_NORMED:
-                if Settings.debug_mode:
-                    MessageLog.print_message(f"[DEBUG] Match found with {min_val} <= {confidence} at Point {ImageUtils._match_location}")
-            else:
-                if Settings.debug_mode:
-                    MessageLog.print_message(f"[DEBUG] Match found with {max_val} >= {confidence} at Point {ImageUtils._match_location}")
-
-        return match_check
-
-    @staticmethod
-    def _match_all(template: numpy.ndarray, confidence: float = 0.8) -> List[Tuple[int, ...]]:
-        """Match the given template image against the source screenshot to find all match locations.
-
-        Args:
-            template (numpy.ndarray): The template image array to match against in a source image.
-            confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
-
-        Returns:
-            (List[Tuple[int, ...]]): List of Tuples containing match locations.
-        """
-        if Settings.window_left is not None and Settings.window_top is not None and Settings.window_width is not None and Settings.window_height is not None:
-            image: PIL.Image.Image = pyautogui.screenshot(region = (Settings.window_left, Settings.window_top, Settings.window_width, Settings.window_height))
+        # Create the range of scales.
+        scales = []
+        if ImageUtils._custom_scale != 1.0 and use_single_scale is False:
+            scales.append(ImageUtils._custom_scale - 0.02)
+            scales.append(ImageUtils._custom_scale - 0.01)
+            scales.append(ImageUtils._custom_scale)
+            scales.append(ImageUtils._custom_scale + 0.01)
+            scales.append(ImageUtils._custom_scale + 0.02)
+        elif ImageUtils._custom_scale != 1.0 and use_single_scale:
+            scales.append(ImageUtils._custom_scale)
         else:
-            image: PIL.Image.Image = pyautogui.screenshot()
+            scales.append(1.0)
 
-        image.save(f"temp/source.png")
+        while len(scales) != 0:
+            new_scale = scales.pop(0)
 
-        src: numpy.ndarray = cv2.imread(f"temp/source.png", 0)
-        height, width = template.shape
+            # Rescale if necessary.
+            if new_scale != 1.0:
+                template = PIL.Image.open(image_path)
+                template = ImageUtils._rescale(template, new_scale)
+                Image.save(template, f"temp/rescaled.png")
+                template_array = cv2.imread(f"temp/rescaled.png", 0)
+            else:
+                template_array = cv2.imread(image_path, 0)
 
-        match_check = True
-        match_locations = []
+            if is_summon:
+                # Crop the summon template image so that plus marks would not potentially obscure any match.
+                height, width = template_array.shape
+                template_array = template_array[0:height, 0:width - int(40 * ImageUtils._custom_scale)]
 
-        while match_check:
-            result: numpy.ndarray = cv2.matchTemplate(src, template, ImageUtils._match_method)
+            image.save(f"temp/source.png")
+            src: numpy.ndarray = cv2.imread(f"temp/source.png", 0)
+            height, width = template_array.shape
+
+            result: numpy.ndarray = cv2.matchTemplate(src, template_array, ImageUtils._match_method)
             min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
 
             if (ImageUtils._match_method == cv2.TM_SQDIFF or ImageUtils._match_method == cv2.TM_SQDIFF_NORMED) and min_val <= 1.0 - confidence:
@@ -169,21 +150,122 @@ class ImageUtils:
             elif ImageUtils._match_method != cv2.TM_SQDIFF and ImageUtils._match_method != cv2.TM_SQDIFF_NORMED and max_val >= confidence:
                 ImageUtils._match_location = max_loc
                 match_check = True
-            else:
-                if Settings.debug_mode:
-                    if ImageUtils._match_method == cv2.TM_SQDIFF or ImageUtils._match_method == cv2.TM_SQDIFF_NORMED:
-                        MessageLog.print_message(f"[WARNING] Match not found with {min_val} not <= {1.0 - confidence} at Point {min_loc}.")
-                    else:
-                        MessageLog.print_message(f"[WARNING] Match not found with {max_val} not >= {confidence} at Point {max_loc}.")
-
-                match_check = False
+            elif Settings.debug_mode:
+                if ImageUtils._match_method == cv2.TM_SQDIFF or ImageUtils._match_method == cv2.TM_SQDIFF_NORMED:
+                    MessageLog.print_message(f"[WARNING] Match not found with {min_val:.4f} not <= {(1.0 - confidence):.2f} at Point {min_loc} using scale: {new_scale:.2f}.")
+                else:
+                    MessageLog.print_message(f"[WARNING] Match not found with {max_val:.4f} not >= {confidence:.2f} at Point {max_loc} using scale: {new_scale:.2f}.")
 
             if match_check:
                 region = (ImageUtils._match_location[0] + width, ImageUtils._match_location[1] + height)
                 cv2.rectangle(src, ImageUtils._match_location, region, 255, 5)
 
                 if Settings.debug_mode:
-                    cv2.imwrite(f"temp/matchAll.png", src)
+                    cv2.imwrite(f"temp/match.png", src)
+
+                if Settings.additional_calibration_required is False:
+                    temp_location = list(ImageUtils._match_location)
+                    temp_location[0] += int(width / 2)
+                    temp_location[1] += int(height / 2)
+                else:
+                    temp_location = list(ImageUtils._match_location)
+                    temp_location[0] += (pyautogui.size()[0] - (pyautogui.size()[0] - Settings.window_left)) + int(width / 2)
+                    temp_location[1] += (pyautogui.size()[1] - (pyautogui.size()[1] - Settings.window_top)) + int(height / 2)
+
+                ImageUtils._match_location = tuple(temp_location)
+
+                if ImageUtils._match_method == cv2.TM_SQDIFF or ImageUtils._match_method == cv2.TM_SQDIFF_NORMED:
+                    if Settings.debug_mode:
+                        MessageLog.print_message(f"[DEBUG] Match found with {min_val:.4f} <= {confidence:.2f} at Point {ImageUtils._match_location} using scale: {new_scale:.2f}")
+                else:
+                    if Settings.debug_mode:
+                        MessageLog.print_message(f"[DEBUG] Match found with {max_val:.4f} >= {confidence:.2f} at Point {ImageUtils._match_location} using scale: {new_scale:.2f}")
+
+                return True
+
+        del scales
+        return False
+
+    @staticmethod
+    def _match_all(image_path: str, confidence: float = 0.8, use_single_scale: bool = False) -> List[Tuple[int, ...]]:
+        """Match the given template image against the source screenshot to find all match locations.
+
+        Args:
+            image_path (str): The file path of the template image to match against in a source image.
+            confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
+            use_single_scale (bool, optional): Use a range of scales if this is disabled. Otherwise, it will use the custom_scale value. Defaults to False.
+
+        Returns:
+            (List[Tuple[int, ...]]): List of Tuples containing match locations.
+        """
+        if Settings.window_left is not None and Settings.window_top is not None and Settings.window_width is not None and Settings.window_height is not None:
+            image: Image = pyautogui.screenshot(region = (Settings.window_left, Settings.window_top, Settings.window_width, Settings.window_height))
+        else:
+            image: Image = pyautogui.screenshot()
+
+        # Create the range of scales.
+        scales = []
+        if ImageUtils._custom_scale != 1.0 and use_single_scale is False:
+            scales.append(ImageUtils._custom_scale - 0.02)
+            scales.append(ImageUtils._custom_scale - 0.01)
+            scales.append(ImageUtils._custom_scale)
+            scales.append(ImageUtils._custom_scale + 0.01)
+            scales.append(ImageUtils._custom_scale + 0.02)
+        elif ImageUtils._custom_scale != 1.0 and use_single_scale:
+            scales.append(ImageUtils._custom_scale)
+        else:
+            scales.append(1.0)
+
+        match_check = False
+        new_scale = 0.0
+        match_locations = []
+        src: numpy.ndarray
+        template_array: numpy.ndarray
+
+        # Determine which scale can be used to find the very first match.
+        while match_check is False and len(scales) != 0:
+            new_scale = scales.pop(0)
+
+            # Rescale if necessary.
+            if new_scale != 1.0:
+                template = PIL.Image.open(image_path)
+                template = ImageUtils._rescale(template, new_scale)
+                Image.save(template, f"temp/rescaled.png")
+                template_array = cv2.imread(f"temp/rescaled.png", 0)
+            else:
+                template_array = cv2.imread(image_path, 0)
+
+            image.save(f"temp/source.png")
+            height, width = template_array.shape
+            src: numpy.ndarray = cv2.imread(f"temp/source.png", 0)
+
+            result: numpy.ndarray = cv2.matchTemplate(src, template_array, ImageUtils._match_method)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+
+            if (ImageUtils._match_method == cv2.TM_SQDIFF or ImageUtils._match_method == cv2.TM_SQDIFF_NORMED) and min_val <= 1.0 - confidence:
+                ImageUtils._match_location = min_loc
+                match_check = True
+
+                region = (ImageUtils._match_location[0] + width, ImageUtils._match_location[1] + height)
+                cv2.rectangle(src, ImageUtils._match_location, region, 255, 5)
+
+                if Settings.additional_calibration_required is False:
+                    temp_location = list(ImageUtils._match_location)
+                    temp_location[0] += int(width / 2)
+                    temp_location[1] += int(height / 2)
+                else:
+                    temp_location = list(ImageUtils._match_location)
+                    temp_location[0] += (pyautogui.size()[0] - (pyautogui.size()[0] - Settings.window_left)) + int(width / 2)
+                    temp_location[1] += (pyautogui.size()[1] - (pyautogui.size()[1] - Settings.window_top)) + int(height / 2)
+
+                ImageUtils._match_location = tuple(temp_location)
+                match_locations.append(ImageUtils._match_location)
+            elif ImageUtils._match_method != cv2.TM_SQDIFF and ImageUtils._match_method != cv2.TM_SQDIFF_NORMED and max_val >= confidence:
+                ImageUtils._match_location = max_loc
+                match_check = True
+
+                region = (ImageUtils._match_location[0] + width, ImageUtils._match_location[1] + height)
+                cv2.rectangle(src, ImageUtils._match_location, region, 255, 5)
 
                 if Settings.additional_calibration_required is False:
                     temp_location = list(ImageUtils._match_location)
@@ -197,13 +279,81 @@ class ImageUtils:
                 ImageUtils._match_location = tuple(temp_location)
                 match_locations.append(ImageUtils._match_location)
 
-                if ImageUtils._match_method == cv2.TM_SQDIFF or ImageUtils._match_method == cv2.TM_SQDIFF_NORMED:
-                    if Settings.debug_mode:
-                        MessageLog.print_message(f"[DEBUG] Match found with {min_val} <= {confidence} at Point {ImageUtils._match_location}")
-                else:
-                    if Settings.debug_mode:
-                        MessageLog.print_message(f"[DEBUG] Match found with {max_val} >= {confidence} at Point {ImageUtils._match_location}")
+        MessageLog.print_message(f"[DEBUG] First match completed at {match_locations}")
 
+        # Now loop until all other matches are found and break out when there are no more to be found.
+        while match_check:
+            height, width = template_array.shape
+
+            result: numpy.ndarray = cv2.matchTemplate(src, template_array, ImageUtils._match_method)
+            min_val, max_val, min_loc, max_loc = cv2.minMaxLoc(result)
+
+            if (ImageUtils._match_method == cv2.TM_SQDIFF or ImageUtils._match_method == cv2.TM_SQDIFF_NORMED) and min_val <= 1.0 - confidence:
+                ImageUtils._match_location = min_loc
+
+                if Settings.debug_mode:
+                    MessageLog.print_message(f"[DEBUG] Match found with {min_val:.4f} <= {confidence:.2f} at Point {ImageUtils._match_location} using scale: {new_scale:.2f}.")
+                    cv2.imwrite(f"temp/matchAll.png", src)
+
+                region = (ImageUtils._match_location[0] + width, ImageUtils._match_location[1] + height)
+                cv2.rectangle(src, ImageUtils._match_location, region, 255, 5)
+
+                if Settings.additional_calibration_required is False:
+                    temp_location = list(ImageUtils._match_location)
+                    temp_location[0] += int(width / 2)
+                    temp_location[1] += int(height / 2)
+                else:
+                    temp_location = list(ImageUtils._match_location)
+                    temp_location[0] += (pyautogui.size()[0] - (pyautogui.size()[0] - Settings.window_left)) + int(width / 2)
+                    temp_location[1] += (pyautogui.size()[1] - (pyautogui.size()[1] - Settings.window_top)) + int(height / 2)
+
+                ImageUtils._match_location = tuple(temp_location)
+
+                if match_locations.__contains__(ImageUtils._match_location) is False and \
+                        match_locations.__contains__(tuple([ImageUtils._match_location[0] + 1, ImageUtils._match_location[1]])) is False and \
+                        match_locations.__contains__(tuple([ImageUtils._match_location[0], ImageUtils._match_location[1] + 1])) is False and \
+                        match_locations.__contains__(tuple([ImageUtils._match_location[0] + 1, ImageUtils._match_location[1] + 1])) is False:
+                    match_locations.append(ImageUtils._match_location)
+                elif match_locations.__contains__(ImageUtils._match_location):
+                    break
+            elif ImageUtils._match_method != cv2.TM_SQDIFF and ImageUtils._match_method != cv2.TM_SQDIFF_NORMED and max_val >= confidence:
+                ImageUtils._match_location = max_loc
+
+                if Settings.debug_mode:
+                    MessageLog.print_message(f"[DEBUG] Match found with {max_val:.4f} >= {confidence:.2f} at Point {ImageUtils._match_location} using scale: {new_scale:.2f}.")
+                    cv2.imwrite(f"temp/matchAll.png", src)
+
+                region = (ImageUtils._match_location[0] + width, ImageUtils._match_location[1] + height)
+                cv2.rectangle(src, ImageUtils._match_location, region, 255, 5)
+
+                if Settings.additional_calibration_required is False:
+                    temp_location = list(ImageUtils._match_location)
+                    temp_location[0] += int(width / 2)
+                    temp_location[1] += int(height / 2)
+                else:
+                    temp_location = list(ImageUtils._match_location)
+                    temp_location[0] += (pyautogui.size()[0] - (pyautogui.size()[0] - Settings.window_left)) + int(width / 2)
+                    temp_location[1] += (pyautogui.size()[1] - (pyautogui.size()[1] - Settings.window_top)) + int(height / 2)
+
+                ImageUtils._match_location = tuple(temp_location)
+
+                if match_locations.__contains__(ImageUtils._match_location) is False and \
+                        match_locations.__contains__(tuple([ImageUtils._match_location[0] + 1, ImageUtils._match_location[1]])) is False and \
+                        match_locations.__contains__(tuple([ImageUtils._match_location[0], ImageUtils._match_location[1] + 1])) is False and \
+                        match_locations.__contains__(tuple([ImageUtils._match_location[0] + 1, ImageUtils._match_location[1] + 1])) is False:
+                    match_locations.append(ImageUtils._match_location)
+                elif match_locations.__contains__(ImageUtils._match_location):
+                    break
+            else:
+                if Settings.debug_mode:
+                    if ImageUtils._match_method == cv2.TM_SQDIFF or ImageUtils._match_method == cv2.TM_SQDIFF_NORMED:
+                        MessageLog.print_message(f"[WARNING] Match not found with {min_val:.4f} not <= {(1.0 - confidence):.2f} at Point {min_loc} using scale: {new_scale:.2f}.")
+                    else:
+                        MessageLog.print_message(f"[WARNING] Match not found with {max_val:.4f} not >= {confidence:.2f} at Point {max_loc} using scale: {new_scale:.2f}.")
+
+                match_check = False
+
+        del scales
         return match_locations
 
     @staticmethod
@@ -260,7 +410,8 @@ class ImageUtils:
             return 0
 
     @staticmethod
-    def find_button(image_name: str, custom_confidence: float = 0.8, tries: int = 5, suppress_error: bool = False, disable_adjustment: bool = False, bypass_general_adjustment: bool = False):
+    def find_button(image_name: str, custom_confidence: float = Settings.confidence, tries: int = 5, suppress_error: bool = False, disable_adjustment: bool = False,
+                    bypass_general_adjustment: bool = False, test_mode: bool = False):
         """Find the location of the specified button.
 
         Args:
@@ -270,14 +421,13 @@ class ImageUtils:
             suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
             disable_adjustment (bool, optional): Disable the usage of adjustment to tries. Defaults to False.
             bypass_general_adjustment (bool, optional): Bypass using the general adjustment for the number of tries. Defaults to False.
+            test_mode (bool, optional): Flag to test and get a valid scale for device compatibility. Defaults to False.
 
         Returns:
             (Tuple[int, int]): Tuple of coordinates of where the center of the button is located if image matching was successful. Otherwise, return None.
         """
         if Settings.debug_mode:
             MessageLog.print_message(f"\n[DEBUG] Starting process to find the {image_name.upper()} button image...")
-
-        template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.jpg", 0)
 
         new_tries = ImageUtils._determine_adjustment(image_name)
         if new_tries == 0 and disable_adjustment is False:
@@ -288,22 +438,38 @@ class ImageUtils:
         else:
             new_tries = tries
 
+        # If Test Mode is enabled, prepare for it by setting initial scale.
+        if test_mode:
+            new_tries = 50
+            ImageUtils._custom_scale = 0.30
+
         while new_tries > 0:
-            result_flag: bool = ImageUtils._match(template, custom_confidence)
+            result_flag: bool = ImageUtils._match(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.jpg", confidence = custom_confidence,
+                                                  use_single_scale = Settings.enable_test_for_home_screen)
 
             if result_flag is False:
+                if test_mode:
+                    # Increment scale by 0.02 until a match is found if Test Mode is enabled.
+                    ImageUtils._custom_scale += 0.02
+
                 new_tries -= 1
                 if new_tries <= 0:
                     if not suppress_error:
                         MessageLog.print_message(f"[WARNING] Failed to find the {image_name.upper()} button.")
                     return None
             else:
+                if test_mode:
+                    MessageLog.print_message(f"[SUCCESS] Found {image_name.upper()} at {ImageUtils._match_location} with scale {ImageUtils._custom_scale:.2f}.\n\nRecommended to use " +
+                                             f"scale {(ImageUtils._custom_scale + 0.01):.2f}, {(ImageUtils._custom_scale + 0.02):.2f}, {(ImageUtils._custom_scale + 0.03):.2f} or "
+                                             f"{(ImageUtils._custom_scale + 0.04):.2f}.")
+
                 return ImageUtils._match_location
 
         return None
 
     @staticmethod
-    def confirm_location(image_name: str, custom_confidence: float = 0.8, tries: int = 5, suppress_error: bool = False, disable_adjustment: bool = False, bypass_general_adjustment: bool = False):
+    def confirm_location(image_name: str, custom_confidence: float = Settings.confidence, tries: int = 5, suppress_error: bool = False, disable_adjustment: bool = False,
+                         bypass_general_adjustment: bool = False):
         """Confirm the position of the bot by searching for the header image.
 
         Args:
@@ -320,8 +486,6 @@ class ImageUtils:
         if Settings.debug_mode:
             MessageLog.print_message(f"\n[DEBUG] Starting process to find the {image_name.upper()} button image...")
 
-        template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/headers/{image_name.lower()}_header.jpg", 0)
-
         new_tries = ImageUtils._determine_adjustment(image_name)
         if new_tries == 0 and disable_adjustment is False:
             if Settings.enable_general_adjustment and bypass_general_adjustment is False and tries == 5:
@@ -336,7 +500,7 @@ class ImageUtils:
             new_tries = Settings.adjust_support_summon_selection_screen
 
         while new_tries > 0:
-            result_flag: bool = ImageUtils._match(template, custom_confidence)
+            result_flag: bool = ImageUtils._match(f"{ImageUtils._current_dir}/images/headers/{image_name.lower()}_header.jpg", custom_confidence)
 
             if result_flag is False:
                 new_tries -= 1
@@ -350,7 +514,7 @@ class ImageUtils:
         return False
 
     @staticmethod
-    def find_summon(summon_list: List[str], summon_element_list: List[str], custom_confidence: float = 0.8, suppress_error: bool = False):
+    def find_summon(summon_list: List[str], summon_element_list: List[str], custom_confidence: float = Settings.confidence, suppress_error: bool = False):
         """Find the location of the specified Summon. Will attempt to scroll the screen down to see more Summons if the initial screen position yielded no matches.
 
         Args:
@@ -407,14 +571,7 @@ class ImageUtils:
                             raise Exception(f"Unable to switch summon element categories from {last_summon_element.upper()} to {current_summon_element.upper()}.")
                         last_summon_element = current_summon_element
 
-                # Now try and find the Summon at the current index.
-                template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/summons/{summon_list[summon_index]}.jpg", 0)
-
-                # Crop the summon template image so that plus marks would not potentially obscure any match.
-                height, width = template.shape
-                template = template[0:height, 0:width - 40]
-
-                result_flag: bool = ImageUtils._match(template, custom_confidence)
+                result_flag: bool = ImageUtils._match(f"{ImageUtils._current_dir}/images/summons/{summon_list[summon_index]}.jpg", custom_confidence, is_summon = True)
 
                 if result_flag:
                     if Settings.debug_mode:
@@ -467,14 +624,14 @@ class ImageUtils:
             Game.wait(1.0)
 
     @staticmethod
-    def find_all(image_name: str, is_item: bool = False, custom_confidence: float = 0.8, hide_info: bool = False) -> List[Tuple[int, ...]]:
+    def find_all(image_name: str, is_item: bool = False, custom_confidence: float = Settings.confidence_all, hide_info: bool = False) -> List[Tuple[int, ...]]:
         """Find the specified image file by locating all occurrences on the screen.
 
         Args:
             image_name (str): Name of the image file in the /images/buttons folder.
             is_item (bool, optional): Determines whether to search for the image file in the /images/buttons/ or /images/items/ folder. Defaults to False.
             custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
-            hide_info (bool, optional): Whether or not to print the matches' locations. Defaults to False.
+            hide_info (bool, optional): Whether to print the matches' locations. Defaults to False.
 
         Returns:
             (List[Tuple[int, ...]): List of occurrences found on the screen. If no occurrence was found, return a empty list.
@@ -484,9 +641,7 @@ class ImageUtils:
         else:
             folder_name = "buttons"
 
-        template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/{folder_name}/{image_name}.jpg", 0)
-
-        locations = ImageUtils._match_all(template, custom_confidence)
+        locations = ImageUtils._match_all(f"{ImageUtils._current_dir}/images/{folder_name}/{image_name}.jpg", custom_confidence)
         filtered_locations: List[Tuple[int, ...]] = []
         same_y: int = 0
         sort_flag: bool = False
@@ -651,10 +806,8 @@ class ImageUtils:
         """
         MessageLog.print_message(f"\n[INFO] Now waiting for {image_name.upper()} to vanish from screen...")
 
-        template: numpy.ndarray = cv2.imread(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.jpg", 0)
-
         for _ in range(timeout):
-            if ImageUtils._match(template) is False:
+            if ImageUtils._match(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.jpg") is False:
                 MessageLog.print_message(f"[SUCCESS] Image successfully vanished from screen...")
                 return True
 
@@ -673,7 +826,10 @@ class ImageUtils:
         Returns:
             (Tuple[int, int]): Tuple of the width and the height of the image.
         """
-        image = Image.open(f"{ImageUtils._current_dir}/images/buttons/{image_name}.jpg")
+        if Settings.custom_scale == 1.0:
+            image = PIL.Image.open(f"{ImageUtils._current_dir}/images/buttons/{image_name}.jpg")
+        else:
+            image = PIL.Image.open(f"temp/rescaled.png")
         width, height = image.size
         image.close()
         return width, height
