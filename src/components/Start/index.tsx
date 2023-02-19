@@ -12,32 +12,32 @@ const Start = () => {
     const [firstTimeAPIRequest, setFirstTimeAPIRequest] = useState(true)
     let successfulAPILogin = false
 
-    const messageLogContext = useContext(MessageLogContext)
-    const botStateContext = useContext(BotStateContext)
+    const mlc = useContext(MessageLogContext)
+    const bsc = useContext(BotStateContext)
 
     // Append the messages acquired from the async bot process to the message log. This is needed to actually reflect the new messages to the Home page.
     useEffect(() => {
-        const newLog = [...messageLogContext.messageLog, ...messageLogContext.asyncMessages]
-        messageLogContext.setMessageLog(newLog)
+        const newLog = [...mlc.messageLog, ...mlc.asyncMessages]
+        mlc.setMessageLog(newLog)
 
-        if (messageLogContext.asyncMessages.length > 0 && messageLogContext.asyncMessages[messageLogContext.asyncMessages.length - 1].includes("Closing Python process")) {
+        if (mlc.asyncMessages.length > 0 && mlc.asyncMessages[mlc.asyncMessages.length - 1].includes("Closing Python process")) {
             handleStop()
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [messageLogContext.asyncMessages])
+    }, [mlc.asyncMessages])
 
     // Start or stop the bot process.
     useEffect(() => {
-        if (botStateContext.startBot && !botStateContext.isBotRunning) {
+        if (bsc.startBot && !bsc.isBotRunning) {
             execute("powershell", "$path=Get-Location \nmd -Force $path/logs/") // Windows-specific
             handleStart()
-        } else if (botStateContext.stopBot && botStateContext.isBotRunning) {
+        } else if (bsc.stopBot && bsc.isBotRunning) {
             if (PID !== 0) {
                 handleStop()
             }
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [botStateContext.startBot, botStateContext.stopBot])
+    }, [bsc.startBot, bsc.stopBot])
 
     // Get the current date and time for the filename of the text log file.
     const getCurrentDateAndTime = (separator = "") => {
@@ -58,9 +58,9 @@ const Start = () => {
     // Attempt to kill the bot process if it is still active.
     const handleStop = async () => {
         if (PID !== 0) {
-            botStateContext.setIsBotRunning(false)
-            botStateContext.setStartBot(false)
-            botStateContext.setStopBot(false)
+            bsc.setIsBotRunning(false)
+            bsc.setStartBot(false)
+            bsc.setStopBot(false)
 
             console.log("Killing process tree now...")
             const output = await new Command("powershell", `taskkill /F /T /PID ${PID}`).execute() // Windows specific
@@ -80,7 +80,7 @@ const Start = () => {
                     var fixedSettings: Settings = fixSettings(decoded)
 
                     // Save the settings to state.
-                    botStateContext.setSettings(fixedSettings)
+                    bsc.setSettings(fixedSettings)
 
                     setFirstTimeSetup(false)
                 })
@@ -90,7 +90,7 @@ const Start = () => {
                 })
         } catch (e) {
             console.log(`Encountered exception while loading settings from settings.json: ${e}`)
-            messageLogContext.setMessageLog([...messageLogContext.messageLog, `\nEncountered exception while loading settings from local JSON file: ${e}`])
+            mlc.setMessageLog([...mlc.messageLog, `\nEncountered exception while loading settings from local JSON file: ${e}`])
         }
 
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -139,7 +139,7 @@ const Start = () => {
         if (!firstTimeSetup) {
             try {
                 // Grab a local copy of the current settings.
-                const localSettings: Settings = botStateContext.settings
+                const localSettings: Settings = bsc.settings
 
                 // Find the elements of the support Summons for the Farming Mode first and then for Nightmare if available.
                 localSettings.game.summonElements = fetchSummonElements(localSettings.game.summons)
@@ -154,28 +154,28 @@ const Start = () => {
                     })
                     .catch((err) => {
                         console.log(`Encountered write exception while saving settings to settings.json: ${err}`)
-                        messageLogContext.setMessageLog([
-                            ...messageLogContext.messageLog,
+                        mlc.setMessageLog([
+                            ...mlc.messageLog,
                             `\nEncountered write exception while saving settings to settings.json: ${err}\nThe current directory or parent directory might be write-protected`,
                         ])
                     })
             } catch (e) {
                 console.log(`Encountered exception while saving settings to settings.json:\n${e}`)
-                messageLogContext.setMessageLog([...messageLogContext.messageLog, `\nEncountered exception while saving settings to settings.json:\n${e}`])
+                mlc.setMessageLog([...mlc.messageLog, `\nEncountered exception while saving settings to settings.json:\n${e}`])
             }
         }
 
         handleReady()
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [botStateContext.settings])
+    }, [bsc.settings])
 
     // Save current message log to text file inside the /logs/ folder.
     useEffect(() => {
-        if (messageLogContext.messageLog.find((message) => message.includes("Child process finished with code")) !== undefined) {
+        if (mlc.messageLog.find((message) => message.includes("Child process finished with code")) !== undefined) {
             // Save message log to text file.
             const fileName = `log ${getCurrentDateAndTime("-")}`
             var fileContent = ""
-            messageLogContext.messageLog.forEach((message) => {
+            mlc.messageLog.forEach((message) => {
                 fileContent = fileContent.concat(message)
             })
             const logFile: FsTextFileOption = { path: `logs/${fileName}.txt`, contents: fileContent }
@@ -188,7 +188,7 @@ const Start = () => {
                 })
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [messageLogContext.messageLog])
+    }, [mlc.messageLog])
 
     // Async function to execute a Tauri API command.
     const execute = async (program: string, args: string | string[]) => {
@@ -197,19 +197,13 @@ const Start = () => {
 
     // Determine whether the program is ready to start.
     const handleReady = () => {
-        const farmingMode = botStateContext.settings.game.farmingMode
-        if (
-            farmingMode !== "Coop" &&
-            botStateContext.settings.game.farmingMode !== "Arcarum" &&
-            botStateContext.settings.game.farmingMode !== "Arcarum Sandbox" &&
-            botStateContext.settings.game.farmingMode !== "Generic" &&
-            botStateContext.settings.game.farmingMode !== ""
-        ) {
-            botStateContext.setReadyStatus(botStateContext.settings.game.item !== "" && botStateContext.settings.game.mission !== "" && botStateContext.settings.game.summons.length !== 0)
-        } else if (botStateContext.settings.game.farmingMode === "Coop" || botStateContext.settings.game.farmingMode === "Arcarum" || botStateContext.settings.game.farmingMode === "Arcarum Sandbox") {
-            botStateContext.setReadyStatus(botStateContext.settings.game.item !== "" && botStateContext.settings.game.mission !== "")
+        const farmingMode = bsc.settings.game.farmingMode
+        if (farmingMode !== "Coop" && farmingMode !== "Arcarum" && farmingMode !== "Generic" && farmingMode !== "") {
+            bsc.setReadyStatus(bsc.settings.game.item !== "" && bsc.settings.game.mission !== "" && bsc.settings.game.summons.length !== 0)
+        } else if (farmingMode === "Coop" || farmingMode === "Arcarum") {
+            bsc.setReadyStatus(bsc.settings.game.item !== "" && bsc.settings.game.mission !== "")
         } else {
-            botStateContext.setReadyStatus(farmingMode === "Generic" && botStateContext.settings.game.item !== "" && botStateContext.settings.game.summons.length !== 0)
+            bsc.setReadyStatus(farmingMode === "Generic" && bsc.settings.game.item !== "" && bsc.settings.game.summons.length !== 0)
         }
     }
 
@@ -222,13 +216,13 @@ const Start = () => {
         // Attach event listeners.
         command.on("close", (data) => {
             const fileName = `log ${getCurrentDateAndTime("-")}`
-            let newLog = [...messageLogContext.asyncMessages, `\n\nSaved message log to: ${fileName}.txt`, `\nChild process finished with code ${data.code}`]
-            messageLogContext.setAsyncMessages(newLog)
+            let newLog = [...mlc.asyncMessages, `\n\nSaved message log to: ${fileName}.txt`, `\nChild process finished with code ${data.code}`]
+            mlc.setAsyncMessages(newLog)
             handleStop()
         })
         command.on("error", (error) => {
-            let newLog = [...messageLogContext.asyncMessages, `\nChild process error: ${error}`]
-            messageLogContext.setAsyncMessages(newLog)
+            let newLog = [...mlc.asyncMessages, `\nChild process error: ${error}`]
+            mlc.setAsyncMessages(newLog)
         })
         command.stdout.on("data", (line: string) => {
             // If the line contains this, then send a API request to Granblue Automation Statistics.
@@ -238,28 +232,28 @@ const Start = () => {
                 const splitLine = line.split("|")
                 if (splitLine.length !== 4) {
                     console.log(`Unable to send API request to Granblue Automation Statistics: Invalid request format of ${splitLine.length}.`)
-                    newLog = [...messageLogContext.asyncMessages, `\nUnable to send API request to Granblue Automation Statistics: Invalid request format of ${splitLine.length}.`]
+                    newLog = [...mlc.asyncMessages, `\nUnable to send API request to Granblue Automation Statistics: Invalid request format of ${splitLine.length}.`]
                 } else if (Number.isNaN(parseInt(splitLine[2]))) {
                     console.log(`Unable to send API request to Granblue Automation Statistics: Invalid type for item amount.`)
-                    newLog = [...messageLogContext.asyncMessages, `\nUnable to send API request to Granblue Automation Statistics: Invalid type for item amount.`]
+                    newLog = [...mlc.asyncMessages, `\nUnable to send API request to Granblue Automation Statistics: Invalid type for item amount.`]
                 } else {
                     sendAPIRequest(splitLine[1], parseInt(splitLine[2]), splitLine[3])
                 }
 
                 newLog = [...newLog, `\n${line}`]
-                messageLogContext.setAsyncMessages(newLog)
+                mlc.setAsyncMessages(newLog)
             } else {
-                let newLog = [...messageLogContext.asyncMessages, `\n${line}`]
-                messageLogContext.setAsyncMessages(newLog)
+                let newLog = [...mlc.asyncMessages, `\n${line}`]
+                mlc.setAsyncMessages(newLog)
             }
         })
         command.stderr.on("data", (line: string) => {
-            let newLog = [...messageLogContext.asyncMessages, `\n${line}`]
-            messageLogContext.setAsyncMessages(newLog)
+            let newLog = [...mlc.asyncMessages, `\n${line}`]
+            mlc.setAsyncMessages(newLog)
         })
 
         // Login to API.
-        if (botStateContext.settings.api.enableOptInAPI) {
+        if (bsc.settings.api.enableOptInAPI) {
             await loginToAPI()
         }
 
@@ -267,7 +261,7 @@ const Start = () => {
         const child = await command.spawn()
         console.log("PID: ", child.pid)
         setPID(child.pid)
-        botStateContext.setIsBotRunning(true)
+        bsc.setIsBotRunning(true)
         setFirstTimeAPIRequest(true)
     }
 
@@ -275,23 +269,23 @@ const Start = () => {
     const loginToAPI = async () => {
         await axios
             .post(
-                `${botStateContext.entryPoint}/api/login`,
+                `${bsc.entryPoint}/api/login`,
                 {
-                    username: botStateContext.settings.api.username,
-                    password: botStateContext.settings.api.password,
+                    username: bsc.settings.api.username,
+                    password: bsc.settings.api.password,
                 },
                 {
                     withCredentials: true,
                 }
             )
             .then(() => {
-                let newLog = [...messageLogContext.asyncMessages, `Successfully logged into Granblue Automation Statistics API.\n`]
-                messageLogContext.setAsyncMessages(newLog)
+                let newLog = [...mlc.asyncMessages, `Successfully logged into Granblue Automation Statistics API.\n`]
+                mlc.setAsyncMessages(newLog)
                 successfulAPILogin = true
             })
             .catch((e: AxiosError) => {
-                let newLog = [...messageLogContext.asyncMessages, `Failed to login to Granblue Automation Statistics API: ${e}\n`]
-                messageLogContext.setAsyncMessages(newLog)
+                let newLog = [...mlc.asyncMessages, `Failed to login to Granblue Automation Statistics API: ${e}\n`]
+                mlc.setAsyncMessages(newLog)
             })
     }
 
@@ -302,33 +296,33 @@ const Start = () => {
         if (firstTimeAPIRequest) {
             await axios
                 .post(
-                    `${botStateContext.entryPoint}/api/create-item`,
+                    `${bsc.entryPoint}/api/create-item`,
                     {
-                        username: botStateContext.settings.api.username,
-                        password: botStateContext.settings.api.password,
-                        farmingMode: botStateContext.settings.game.farmingMode,
-                        mission: botStateContext.settings.game.mission,
+                        username: bsc.settings.api.username,
+                        password: bsc.settings.api.password,
+                        farmingMode: bsc.settings.game.farmingMode,
+                        mission: bsc.settings.game.mission,
                         itemName: itemName,
                     },
                     { withCredentials: true }
                 )
                 .then(async (res: AxiosResponse) => {
                     console.log("[API] ", res.data)
-                    newLog = [...messageLogContext.asyncMessages, `\n[API] ${res.data}`]
+                    newLog = [...mlc.asyncMessages, `\n[API] ${res.data}`]
                     setFirstTimeAPIRequest(false)
                     await axios
                         .post(
-                            `${botStateContext.entryPoint}/api/create-result`,
+                            `${bsc.entryPoint}/api/create-result`,
                             {
-                                username: botStateContext.settings.api.username,
-                                password: botStateContext.settings.api.password,
-                                farmingMode: botStateContext.settings.game.farmingMode,
-                                mission: botStateContext.settings.game.mission,
+                                username: bsc.settings.api.username,
+                                password: bsc.settings.api.password,
+                                farmingMode: bsc.settings.game.farmingMode,
+                                mission: bsc.settings.game.mission,
                                 itemName: itemName,
                                 platform: "GA",
                                 amount: amount,
                                 elapsedTime: elapsedTime,
-                                appVersion: botStateContext.appVersion,
+                                appVersion: bsc.appVersion,
                             },
                             { withCredentials: true }
                         )
@@ -340,41 +334,41 @@ const Start = () => {
                             newLog = [...newLog, `\n[API] Failed to create result: ${e?.response?.data}`]
                         })
                         .finally(() => {
-                            messageLogContext.setAsyncMessages(newLog)
+                            mlc.setAsyncMessages(newLog)
                         })
                 })
                 .catch((e: AxiosError) => {
                     console.error(`[API] Failed to create item for the first time: ${e}`)
-                    newLog = [...messageLogContext.asyncMessages, `\n[API] Failed to create item for the first time: ${e}`]
-                    messageLogContext.setAsyncMessages(newLog)
+                    newLog = [...mlc.asyncMessages, `\n[API] Failed to create item for the first time: ${e}`]
+                    mlc.setAsyncMessages(newLog)
                 })
         } else {
             let newLog: string[] = []
             await axios
                 .post(
-                    `${botStateContext.entryPoint}/api/create-result`,
+                    `${bsc.entryPoint}/api/create-result`,
                     {
-                        username: botStateContext.settings.api.username,
-                        password: botStateContext.settings.api.password,
-                        farmingMode: botStateContext.settings.game.farmingMode,
-                        mission: botStateContext.settings.game.mission,
+                        username: bsc.settings.api.username,
+                        password: bsc.settings.api.password,
+                        farmingMode: bsc.settings.game.farmingMode,
+                        mission: bsc.settings.game.mission,
                         itemName: itemName,
                         platform: "GA",
                         amount: amount,
                         elapsedTime: elapsedTime,
-                        appVersion: botStateContext.appVersion,
+                        appVersion: bsc.appVersion,
                     },
                     { withCredentials: true }
                 )
                 .then((res: AxiosResponse) => {
                     console.log("[API] ", res.data)
-                    newLog = [...messageLogContext.asyncMessages, `\n[API] ${res.data}`]
+                    newLog = [...mlc.asyncMessages, `\n[API] ${res.data}`]
                 })
                 .catch((e) => {
-                    newLog = [...messageLogContext.asyncMessages, `\n[API] Failed to create result: ${e?.response?.data}`]
+                    newLog = [...mlc.asyncMessages, `\n[API] Failed to create result: ${e?.response?.data}`]
                 })
                 .finally(() => {
-                    messageLogContext.setAsyncMessages(newLog)
+                    mlc.setAsyncMessages(newLog)
                 })
         }
     }
