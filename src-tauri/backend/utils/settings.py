@@ -206,6 +206,7 @@ class Settings:
     # #### end of adjustment ####
 
     # #### device ####
+    use_first_notch: bool = dictor(_data, "device.useFirstNotch", False)
     confidence: float = dictor(_data, "device.confidence", 0.8)
     confidence_all: float = dictor(_data, "device.confidenceAll", 0.8)
     custom_scale: float = dictor(_data, "device.customScale", 1.0)
