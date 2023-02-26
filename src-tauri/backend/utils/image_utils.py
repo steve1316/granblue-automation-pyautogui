@@ -590,7 +590,7 @@ class ImageUtils:
         elif item_name in lite_blacklisted_items:
             locations = ImageUtils.find_all(item_name, is_item = True, custom_confidence = 0.85)
         else:
-            locations = ImageUtils.find_all(item_name, is_item = True, custom_confidence = 0.80)
+            locations = ImageUtils.find_all(item_name, is_item = True)
 
         for index, location in enumerate(locations):
             check = False
