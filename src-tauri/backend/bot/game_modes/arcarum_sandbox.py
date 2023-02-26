@@ -387,6 +387,374 @@ class ArcarumSandbox:
         },
     }
 
+    # The x and y coordinates are the difference between the center of the Menu button at the top-right and the center of the node itself.
+    # The section refers to the left most page that the node is located in starting at page 0.
+    _mission_data_first_notch = {
+        ##########
+        # Zone Eletio
+        "Slithering Seductress": {
+            "section": 0,
+            "x": 225,
+            "y": 135
+        },
+        "Living Lightning Rod": {
+            "section": 0,
+            "x": 40,
+            "y": 200
+        },
+        "Eletion Drake": {
+            "section": 0,
+            "x": 70,
+            "y": 220
+        },
+        "Paradoxical Gate": {
+            "section": 1,
+            "x": 225,
+            "y": 135
+        },
+        "Blazing Everwing": {
+            "section": 1,
+            "x": 115,
+            "y": 125
+        },
+        "Death Seer": {
+            "section": 1,
+            "x": 15,
+            "y": 180
+        },
+        "Hundred-Armed Hulk": {
+            "section": 2,
+            "x": 200,
+            "y": 125
+        },
+        "Terror Trifecta": {
+            "section": 2,
+            "x": 140,
+            "y": 170
+        },
+        "Rageborn One": {
+            "section": 2,
+            "x": 190,
+            "y": 230
+        },
+        "Eletion Glider": {
+            "section": 2,
+            "x": 40,
+            "y": 165
+        },
+
+        ##########
+        # Zone Faym
+        "Trident Grandmaster": {
+            "section": 0,
+            "x": 200,
+            "y": 140
+        },
+        "Hoarfrost Icequeen": {
+            "section": 0,
+            "x": 140,
+            "y": 140
+        },
+        "Oceanic Archon": {
+            "section": 0,
+            "x": 60,
+            "y": 225
+        },
+        "Farsea Predator": {
+            "section": 1,
+            "x": 235,
+            "y": 140
+        },
+        "Faymian Fortress": {
+            "section": 1,
+            "x": 135,
+            "y": 180
+        },
+        "Draconic Simulacrum": {
+            "section": 1,
+            "x": 45,
+            "y": 140
+        },
+        "Azureflame Dragon": {
+            "section": 2,
+            "x": 225,
+            "y": 90
+        },
+        "Eyes of Sorrow": {
+            "section": 2,
+            "x": 210,
+            "y": 225
+        },
+        "Mad Shearwielder": {
+            "section": 2,
+            "x": 40,
+            "y": 145
+        },
+        "Faymian Gun": {
+            "section": 2,
+            "x": 135,
+            "y": 175
+        },
+
+        ##########
+        # Zone Goliath
+        "Avatar of Avarice": {
+            "section": 0,
+            "x": 190,
+            "y": 235
+        },
+        "Temptation's Guide": {
+            "section": 0,
+            "x": 145,
+            "y": 115
+        },
+        "World's Veil": {
+            "section": 0,
+            "x": 110,
+            "y": 175
+        },
+        "Goliath Keeper": {
+            "section": 1,
+            "x": 235,
+            "y": 220
+        },
+        "Bloodstained Barbarian": {
+            "section": 1,
+            "x": 170,
+            "y": 135
+        },
+        "Frenzied Howler": {
+            "section": 1,
+            "x": 30,
+            "y": 125
+        },
+        "Goliath Vanguard": {
+            "section": 1,
+            "x": 40,
+            "y": 225
+        },
+        "Vestige of Truth": {
+            "section": 2,
+            "x": 245,
+            "y": 140
+        },
+        "Writhing Despair": {
+            "section": 2,
+            "x": 165,
+            "y": 170
+        },
+        "Goliath Triune": {
+            "section": 2,
+            "x": 35,
+            "y": 210
+        },
+
+        ##########
+        # Zone Harbinger
+        "Vengeful Demigod": {
+            "section": 0,
+            "x": 160,
+            "y": 120
+        },
+        "Dirgesinger": {
+            "section": 0,
+            "x": 230,
+            "y": 155
+        },
+        "Wildwind Conjurer/Fullthunder Conjurer": {
+            "section": 0,
+            "x": 140,
+            "y": 205
+        },
+        "Harbinger Simurgh": {
+            "section": 0,
+            "x": 80,
+            "y": 175
+        },
+        "Harbinger Hardwood": {
+            "section": 1,
+            "x": 245,
+            "y": 215
+        },
+        "Demanding Stormgod": {
+            "section": 1,
+            "x": 180,
+            "y": 165
+        },
+        "Harbinger Stormer": {
+            "section": 1,
+            "x": 125,
+            "y": 105
+        },
+        "Harbinger Tyrant": {
+            "section": 2,
+            "x": 245,
+            "y": 135
+        },
+        "Phantasmagoric Aberration": {
+            "section": 2,
+            "x": 155,
+            "y": 210
+        },
+        "Dimensional Riftwalker": {
+            "section": 2,
+            "x": 75,
+            "y": 165
+        },
+
+        ##########
+        # Zone Invidia
+        "Infernal Hellbeast": {
+            "section": 0,
+            "x": 235,
+            "y": 140
+        },
+        "Spikeball": {
+            "section": 0,
+            "x": 80,
+            "y": 170
+        },
+        "Blushing Groom": {
+            "section": 0,
+            "x": 30,
+            "y": 120
+        },
+        "Unworldly Guardian": {
+            "section": 1,
+            "x": 195,
+            "y": 170
+        },
+        "Deva of Wisdom": {
+            "section": 1,
+            "x": 125,
+            "y": 85
+        },
+        "Sword of Aberration": {
+            "section": 1,
+            "x": 115,
+            "y": 145
+        },
+        "Athena Militis": {
+            "section": 1,
+            "x": 120,
+            "y": 215
+        },
+
+        ##########
+        # Zone Joculator
+        "Glacial Hellbeast": {
+            "section": 0,
+            "x": 35,
+            "y": 125
+        },
+        "Giant Sea Plant": {
+            "section": 0,
+            "x": 255,
+            "y": 185
+        },
+        "Maiden of the Depths": {
+            "section": 0,
+            "x": 100,
+            "y": 225
+        },
+        "Bloody Soothsayer": {
+            "section": 1,
+            "x": 175,
+            "y": 225
+        },
+        "Nebulous One": {
+            "section": 1,
+            "x": 20,
+            "y": 185
+        },
+        "Dreadful Scourge": {
+            "section": 1,
+            "x": 160,
+            "y": 90
+        },
+        "Grani Militis": {
+            "section": 1,
+            "x": 135,
+            "y": 165
+        },
+
+        ##########
+        # Zone Kalendae
+        "Bedeviled Plague": {
+            "section": 1,
+            "x": 200,
+            "y": 120
+        },
+        "Tainted Hellmaiden": {
+            "section": 1,
+            "x": 70,
+            "y": 225
+        },
+        "Watcher from Above": {
+            "section": 1,
+            "x": 15,
+            "y": 140
+        },
+        "Scintillant Matter": {
+            "section": 0,
+            "x": 245,
+            "y": 160
+        },
+        "Ebony Executioner": {
+            "section": 0,
+            "x": 170,
+            "y": 90
+        },
+        "Hellbeast of Doom": {
+            "section": 0,
+            "x": 85,
+            "y": 230
+        },
+        "Baal Militis": {
+            "section": 0,
+            "x": 135,
+            "y": 155
+        },
+
+        ##########
+        # Zone Liber
+        "Mounted Toxophilite": {
+            "section": 0,
+            "x": 155,
+            "y": 95
+        },
+        "Beetle of Damnation": {
+            "section": 0,
+            "x": 155,
+            "y": 230
+        },
+        "Ageless Guardian Beast": {
+            "section": 0,
+            "x": 85,
+            "y": 165
+        },
+        "Solar Princess": {
+            "section": 1,
+            "x": 220,
+            "y": 175
+        },
+        "Drifting Blade Demon": {
+            "section": 1,
+            "x": 150,
+            "y": 100
+        },
+        "Simpering Beast": {
+            "section": 1,
+            "x": 150,
+            "y": 225
+        },
+        "Garuda Militis": {
+            "section": 1,
+            "x": 30,
+            "y": 160
+        },
+    }
+
     @staticmethod
     def _navigate_to_mission(skip_to_action: bool = False):
         """Navigates to the specified Arcarum Replicard Sandbox mission inside the current Zone.

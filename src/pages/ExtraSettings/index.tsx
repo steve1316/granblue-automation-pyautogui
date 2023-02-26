@@ -1097,6 +1097,97 @@ const ExtraSettings = () => {
         )
     }
 
+    const renderDeviceSettings = () => {
+        return (
+            <div id="device-settings">
+                <Typography variant="h6" gutterBottom component="div" className="sectionTitle">
+                    Device Settings <Iconify icon="ic:baseline-device-unknown" className="sectionTitleIcon" />
+                </Typography>
+
+                <Divider />
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bsc.settings.device.useFirstNotch}
+                                onChange={(e) => {
+                                    bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, useFirstNotch: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Use First Notch instead of the Second"
+                    />
+                    <FormHelperText>
+                        Enable this if your screen size is small enough that the second notch makes the game too big. Using the second notch in this case will make the game reasonably fit.
+                    </FormHelperText>
+                </FormGroup>
+
+                <Divider />
+
+                <Typography variant="subtitle1" gutterBottom component="div" color="text.secondary">
+                    Adjust and fine-tune settings related to device setups and image processing optimizations.
+                </Typography>
+
+                <Grid container justifyContent="center" alignItems="center" style={{ marginBottom: "8px" }}>
+                    <Grid item id="gridItemConfidence" xs={4}>
+                        <TextField
+                            label="Set Confidence Level"
+                            variant="filled"
+                            type="number"
+                            error={bsc.settings.device.confidence < 0.1 || bsc.settings.device.confidence > 1.0}
+                            value={bsc.settings.device.confidence}
+                            inputProps={{ min: 0.1, max: 1.0, step: 0.01 }}
+                            onChange={(e) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, confidence: parseFloat(e.target.value) } })}
+                            className="settingsTextfield"
+                        />
+                    </Grid>
+                    <Grid item md></Grid>
+                    <Grid item id="gridItemConfidenceAll" xs={4}>
+                        <TextField
+                            label="Set Confidence Level for Multiple Matching"
+                            variant="filled"
+                            type="number"
+                            error={bsc.settings.device.confidenceAll < 0.1 || bsc.settings.device.confidenceAll > 1.0}
+                            value={bsc.settings.device.confidenceAll}
+                            inputProps={{ min: 0.1, max: 1.0, step: 0.01 }}
+                            onChange={(e) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, confidenceAll: parseFloat(e.target.value) } })}
+                            className="settingsTextfield"
+                        />
+                    </Grid>
+                </Grid>
+
+                <TextField
+                    label="Set Custom Scale (Highly experimental)"
+                    variant="filled"
+                    type="number"
+                    error={bsc.settings.device.customScale < 0.1 || bsc.settings.device.customScale > 5.0}
+                    value={bsc.settings.device.customScale}
+                    inputProps={{ min: 0.1, max: 5.0, step: 0.01 }}
+                    onChange={(e) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, customScale: parseFloat(e.target.value) } })}
+                    helperText={
+                        "Set the scale at which to resize existing image assets to match what would be shown on your device. Internally supported are 1080p and 1440p. Highly experimental feature."
+                    }
+                    className="settingsTextfield"
+                    style={{ width: "100%" }}
+                />
+
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bsc.settings.device.enableTestForHomeScreen}
+                                onChange={(e) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, enableTestForHomeScreen: e.target.checked } })}
+                            />
+                        }
+                        label="Enable Test for Home Screen"
+                    />
+                    <FormHelperText>{`Enables test for getting to the Home screen instead of the regular bot process. If the test fails, then it will run a different test to find which scale is appropriate for your device.\n\nUseful for troubleshooting working confidences and scales for device compatibility.`}</FormHelperText>
+                </FormGroup>
+            </div>
+        )
+    }
+
     // Attempt to kill the bot process if it is still active.
     const handleStop = async () => {
         if (testPID !== 0) {
@@ -1238,6 +1329,8 @@ const ExtraSettings = () => {
                     {renderDiscordSettings()}
 
                     {renderConfigurationSettings()}
+
+                    {renderDeviceSettings()}
 
                     {renderMiscSettings()}
                 </Stack>

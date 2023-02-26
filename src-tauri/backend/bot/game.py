@@ -51,7 +51,7 @@ class Game:
             None
         """
         # Save the location of the "Home" button at the bottom of the bot window.
-        Settings.home_button_location = ImageUtils.find_button("home", bypass_general_adjustment = True)
+        Settings.home_button_location = ImageUtils.find_button("home", bypass_general_adjustment = True, tries = 1)
 
         MessageLog.print_message("\n[INFO] Recalibrating the dimensions of the window...")
 
@@ -69,9 +69,15 @@ class Game:
 
         if Settings.static_window:
             MessageLog.print_message("[INFO] Using static window configuration...")
-            window_left = home_back_button[0] - 50  # The x-coordinate of the left edge.
+            if Settings.use_first_notch:
+                window_left = home_back_button[0] - 30  # The x-coordinate of the left edge.
+            else:
+                window_left = home_back_button[0] - 50
             window_top = 0  # The y-coordinate of the top edge.
-            window_width = window_left + 500  # The width of the region.
+            if Settings.use_first_notch:
+                window_width = window_left + 390  # The width of the region.
+            else:
+                window_width = window_left + 500
             window_height = pyautogui.size()[1]  # The height of the region.
         else:
             MessageLog.print_message("[INFO] Using dynamic window configuration...")
@@ -96,33 +102,47 @@ class Game:
         return None
 
     @staticmethod
-    def go_back_home(confirm_location_check: bool = False, display_info_check: bool = False):
+    def go_back_home(confirm_location_check: bool = False, display_info_check: bool = False, test_mode: bool = False):
         """Go back to the Home screen to reset the position of the bot. Also able to recalibrate the region dimensions of the bot window if
         display_info_check is True.
 
         Args:
             confirm_location_check (bool, optional): Check to see if the current location is confirmed to be at the Home screen. Defaults to False.
             display_info_check (bool, optional): Recalibrate the bot window dimensions and displays the info. Defaults to False.
+            test_mode (bool, optional): Flag to test and get a valid scale for device compatibility.
 
         Returns:
             None
         """
-        if not ImageUtils.confirm_location("home"):
+        if test_mode:
+            MessageLog.print_message("\n[DEBUG] Now beginning test to find a valid scale for this device...")
+            ImageUtils.find_button("home", test_mode = True)
+            return
+
+        if not ImageUtils.confirm_location("home", bypass_general_adjustment = True):
             MessageLog.print_message("\n[INFO] Moving back to the Home screen...")
-            if Game.find_and_click_button("home") is False:
-                raise RuntimeError("Failed to find and click the Home button. Maybe the Home button located on the bottom bar is not visible?")
+
+            if Game.find_and_click_button("home", bypass_general_adjustment = True) is False:
+                raise Exception(
+                    "HOME button is not found. Stopping bot to prevent cascade of errors. Please readjust your confidences/scales. Maybe the Home button located on the bottom bar is not visible?")
+
+            # Handle any misc popups on the Home screen.
+            Game.find_and_click_button("close", suppress_error = True)
+
+            if confirm_location_check:
+                Game.wait(2.0)
+
+                if ImageUtils.confirm_location("home", bypass_general_adjustment = True) is False:
+                    Game.find_and_click_button("reload")
+                    Game.wait(4.0)
+                    if ImageUtils.confirm_location("home", bypass_general_adjustment = True) is False:
+                        raise Exception("Failed to head back to the Home screen after clicking on the Home button.")
         else:
             MessageLog.print_message("[INFO] Bot is at the Home screen.")
-
-        # Handle any misc popups on the Home screen.
-        Game.find_and_click_button("close", suppress_error = True)
 
         # Recalibrate the dimensions of the bot window.
         if display_info_check:
             Game._calibrate_game_window(display_info_check = True)
-
-        if confirm_location_check:
-            ImageUtils.confirm_location("home")
 
         return None
 
@@ -479,42 +499,65 @@ class Game:
             if Settings.debug_mode:
                 MessageLog.print_message(f"[DEBUG] Successfully selected the correct Set. Now selecting Group {group_number}...")
 
-            if group_number == 1 or group_number == 8:
-                x = set_location[0] - 350
-            elif group_number == 2 or group_number == 9:
-                x = set_location[0] - 290
-            elif group_number == 3 or group_number == 10:
-                x = set_location[0] - 230
-            elif group_number == 4 or group_number == 11:
-                x = set_location[0] - 170
-            elif group_number == 5 or group_number == 12:
-                x = set_location[0] - 110
-            elif group_number == 6 or group_number == 13:
-                x = set_location[0] - 50
+            # Determine offsets and increments for the group selection.
+            if Settings.use_first_notch is False:
+                x_offset = 360
+                x_inc = 60
+                y_offset = 55
             else:
-                x = set_location[0] + 10
+                x_offset = 235
+                x_inc = 40
+                y_offset = 40
 
-            y = set_location[1] + 50
+            if group_number == 1 or group_number == 8:
+                x = set_location[0] - x_offset + (x_inc * 0)
+            elif group_number == 2 or group_number == 9:
+                x = set_location[0] - x_offset + (x_inc * 1)
+            elif group_number == 3 or group_number == 10:
+                x = set_location[0] - x_offset + (x_inc * 2)
+            elif group_number == 4 or group_number == 11:
+                x = set_location[0] - x_offset + (x_inc * 3)
+            elif group_number == 5 or group_number == 12:
+                x = set_location[0] - x_offset + (x_inc * 4)
+            elif group_number == 6 or group_number == 13:
+                x = set_location[0] - x_offset + (x_inc * 5)
+            else:
+                x = set_location[0] - x_offset + (x_inc * 6)
+            y = set_location[1] + y_offset
+
             MouseUtils.move_and_click_point(x, y, "template_group", mouse_clicks = 2)
 
             # Now select the correct Party.
             if Settings.debug_mode:
                 MessageLog.print_message(f"[DEBUG] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
 
-            if party_number == 1:
-                x = set_location[0] - 309
-            elif party_number == 2:
-                x = set_location[0] - 252
-            elif party_number == 3:
-                x = set_location[0] - 195
-            elif party_number == 4:
-                x = set_location[0] - 138
-            elif party_number == 5:
-                x = set_location[0] - 81
-            elif party_number == 6:
-                x = set_location[0] - 24
+            # Determine offsets and increments for the party selection.
+            if Settings.use_first_notch is False:
+                x_offset = 325
+                x_inc = 60
+                y_offset = 325
+            else:
+                x_offset = 215
+                x_inc = 40
+                y_offset = 220
 
-            y = set_location[1] + 325
+            if party_number == 1 or party_number == 8:
+                x = set_location[0] - x_offset + (x_inc * 0)
+            elif party_number == 2 or party_number == 9:
+                x = set_location[0] - x_offset + (x_inc * 1)
+            elif party_number == 3 or party_number == 10:
+                x = set_location[0] - x_offset + (x_inc * 2)
+            elif party_number == 4 or party_number == 11:
+                x = set_location[0] - x_offset + (x_inc * 3)
+            elif party_number == 5 or party_number == 12:
+                x = set_location[0] - x_offset + (x_inc * 4)
+            elif party_number == 6 or party_number == 13:
+                x = set_location[0] - x_offset + (x_inc * 5)
+            else:
+                x = set_location[0] - x_offset + (x_inc * 6)
+
+            y = set_location[1] + y_offset
+
             MouseUtils.move_and_click_point(x, y, "template_party", mouse_clicks = 2)
 
             Settings.party_selection_first_run = False
@@ -522,6 +565,8 @@ class Game:
             MessageLog.print_message(f"[INFO] Successfully selected Group {group_number}, Party {party_number}. Now starting the mission.")
         else:
             MessageLog.print_message("\n[INFO] Reusing the same Party.")
+
+        exit(0)
 
         # Find and click the "OK" button to start the mission.
         Game.find_and_click_button("ok")
@@ -917,8 +962,14 @@ class Game:
         try:
             Game.start_discord_process()
 
+            if Settings.enable_test_for_home_screen:
+                Game.go_back_home(confirm_location_check = True, test_mode = True)
+                return True
+
             # Calibrate the dimensions of the bot window on bot launch.
             Game._calibrate_game_window(display_info_check = True)
+
+            Game.find_party_and_start_mission(1, 1)
 
             if Settings.item_name != "EXP":
                 MessageLog.print_message("\n######################################################################")
@@ -1012,7 +1063,7 @@ class Game:
         MessageLog.print_message("[FARM] Ending Farming Mode.")
         MessageLog.print_message("######################################################################")
         MessageLog.print_message("######################################################################\n")
-        
+
         Game._move_mouse_security_check()
-        
+
         return True

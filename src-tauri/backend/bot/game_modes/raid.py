@@ -74,7 +74,10 @@ class Raid:
 
         # Make preparations for farming raids by saving the location of the "Join Room" button and the "Room Code" textbox.
         join_room_button = ImageUtils.find_button("join_a_room")
-        room_code_textbox = (join_room_button[0] - 185, join_room_button[1])
+        if Settings.use_first_notch is False:
+            room_code_textbox = (join_room_button[0] - 185, join_room_button[1])
+        else:
+            room_code_textbox = (join_room_button[0] - 120, join_room_button[1])
 
         # Loop and try to join a raid. If none of the room codes worked, wait before trying again with a new set of room codes for a maximum of 10 tries.
         tries = 10

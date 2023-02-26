@@ -105,15 +105,30 @@ class Quest:
                 arrow_location = ImageUtils.find_button("world_right_arrow")
 
                 if map_name == "Port Breeze Archipelago":
-                    MouseUtils.move_and_click_point(arrow_location[0] - 320, arrow_location[1] - 159, "world_right_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 320, arrow_location[1] - 160, "world_right_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 215, arrow_location[1] - 100, "world_right_arrow")
                 elif map_name == "Valtz Duchy":
-                    MouseUtils.move_and_click_point(arrow_location[0] - 150, arrow_location[1] - 85, "world_right_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 150, arrow_location[1] - 85, "world_right_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 100, arrow_location[1] - 50, "world_right_arrow")
                 elif map_name == "Auguste Isles":
-                    MouseUtils.move_and_click_point(arrow_location[0] - 374, arrow_location[1] - 5, "world_right_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 375, arrow_location[1] - 5, "world_right_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 250, arrow_location[1] - 5, "world_right_arrow")
                 elif map_name == "Lumacie Archipelago":
-                    MouseUtils.move_and_click_point(arrow_location[0] - 84, arrow_location[1] + 39, "world_right_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 85, arrow_location[1] + 40, "world_right_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 60, arrow_location[1] + 35, "world_right_arrow")
                 elif map_name == "Albion Citadel":
-                    MouseUtils.move_and_click_point(arrow_location[0] - 267, arrow_location[1] + 121, "world_right_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 265, arrow_location[1] + 120, "world_right_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 180, arrow_location[1] + 85, "world_right_arrow")
                 else:
                     raise QuestException(f"Unexpected map name when trying to navigate in Phantagrande Skydom Page 1: {map_name}")
         elif Quest._phantagrande_page_2_islands.__contains__(map_name):
@@ -126,15 +141,30 @@ class Quest:
                 arrow_location = ImageUtils.find_button("world_left_arrow")
 
                 if map_name == "Mist-Shrouded Isle":
-                    MouseUtils.move_and_click_point(arrow_location[0] + 162, arrow_location[1] + 114, "world_left_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 160, arrow_location[1] + 115, "world_left_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 110, arrow_location[1] + 85, "world_left_arrow")
                 elif map_name == "Golonzo Island":
-                    MouseUtils.move_and_click_point(arrow_location[0] + 362, arrow_location[1] + 85, "world_left_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 360, arrow_location[1] + 85, "world_left_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 235, arrow_location[1] + 60, "world_left_arrow")
                 elif map_name == "Amalthea Island":
-                    MouseUtils.move_and_click_point(arrow_location[0] + 127, arrow_location[1] - 14, "world_left_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 125, arrow_location[1] - 15, "world_left_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 85, arrow_location[1] - 5, "world_left_arrow")
                 elif map_name == "Former Capital Mephorash":
-                    MouseUtils.move_and_click_point(arrow_location[0] + 352, arrow_location[1] - 51, "world_left_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 350, arrow_location[1] - 50, "world_left_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 240, arrow_location[1] - 30, "world_left_arrow")
                 elif map_name == "Agastia":
-                    MouseUtils.move_and_click_point(arrow_location[0] + 190, arrow_location[1] - 148, "world_left_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 190, arrow_location[1] - 150, "world_left_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 125, arrow_location[1] - 95, "world_left_arrow")
                 else:
                     raise QuestException(f"Unexpected map name when trying to navigate in Phantagrande Skydom Page 2: {map_name}")
 
@@ -170,13 +200,25 @@ class Quest:
                 arrow_location = ImageUtils.find_button("world_right_arrow")
 
                 if map_name == "Merkmal Island":
-                    MouseUtils.move_and_click_point(arrow_location[0] - 345, arrow_location[1] - 215, "world_right_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 345, arrow_location[1] + 215, "world_right_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 230, arrow_location[1] + 140, "world_right_arrow")
                 elif map_name == "Groz Island":
-                    MouseUtils.move_and_click_point(arrow_location[0] - 310, arrow_location[1] - 35, "world_right_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 310, arrow_location[1] + 35, "world_right_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 205, arrow_location[1] + 15, "world_right_arrow")
                 elif map_name == "Kluger Island":
-                    MouseUtils.move_and_click_point(arrow_location[0] - 100, arrow_location[1] - 90, "world_right_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 100, arrow_location[1] + 90, "world_right_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 65, arrow_location[1] + 60, "world_right_arrow")
                 elif map_name == "The Edgelands":
-                    MouseUtils.move_and_click_point(arrow_location[0] - 240, arrow_location[1] + 155, "world_right_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 240, arrow_location[1] - 155, "world_right_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] - 160, arrow_location[1] - 110, "world_right_arrow")
                 else:
                     raise QuestException(f"Unexpected map name when trying to navigate in Nalhegrande Skydom Page 1: {map_name}")
 
@@ -190,11 +232,20 @@ class Quest:
                 arrow_location = ImageUtils.find_button("world_left_arrow")
 
                 if map_name == "Bestia Island":
-                    MouseUtils.move_and_click_point(arrow_location[0] + 130, arrow_location[1] + 240, "world_left_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 130, arrow_location[1] + 240, "world_left_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 85, arrow_location[1] + 150, "world_right_arrow")
                 elif map_name == "Reiche Island":
-                    MouseUtils.move_and_click_point(arrow_location[0] + 320, arrow_location[1] + 60, "world_left_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 320, arrow_location[1] + 60, "world_left_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 215, arrow_location[1] + 35, "world_right_arrow")
                 elif map_name == "Starke Island":
-                    MouseUtils.move_and_click_point(arrow_location[0] + 170, arrow_location[1] - 100, "world_left_arrow")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 170, arrow_location[1] - 100, "world_left_arrow")
+                    else:
+                        MouseUtils.move_and_click_point(arrow_location[0] + 115, arrow_location[1] - 70, "world_right_arrow")
                 else:
                     raise QuestException(f"Unexpected map name when trying to navigate in Nalhegrande Skydom Page 2: {map_name}")
 
@@ -225,7 +276,10 @@ class Quest:
                 skydom_location = ImageUtils.find_button("world_skydom")
 
                 if map_name == "New Utopia":
-                    MouseUtils.move_and_click_point(skydom_location[0] - 200, skydom_location[1] - 175, "world_skydom")
+                    if Settings.use_first_notch is False:
+                        MouseUtils.move_and_click_point(skydom_location[0] - 200, skydom_location[1] + 175, "world_skydom")
+                    else:
+                        MouseUtils.move_and_click_point(skydom_location[0] - 130, skydom_location[1] + 120, "world_skydom")
                 else:
                     raise QuestException(f"Unexpected map name when trying to navigate in Oarlyegrande Skydom: {map_name}")
 
@@ -273,43 +327,82 @@ class Quest:
 
         if Settings.mission_name == "Scattered Cargo":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 1 (115) node...")
-            MouseUtils.move_and_click_point(world_location[0] + 97, world_location[1] + 97, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 95, world_location[1] + 95, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 60, world_location[1] + 60, "template_node")
         elif Settings.mission_name == "Lucky Charm Hunt":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 6 (122) node...")
-            MouseUtils.move_and_click_point(world_location[0] + 332, world_location[1] + 16, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 330, world_location[1] + 15, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 215, world_location[1] + 15, "template_node")
         elif Settings.mission_name == "Special Op's Request":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 8 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 258, world_location[1] + 151, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 260, world_location[1] + 150, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 165, world_location[1] + 105, "template_node")
         elif Settings.mission_name == "Threat to the Fisheries":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 9 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 216, world_location[1] + 113, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 215, world_location[1] + 115, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 140, world_location[1] + 80, "template_node")
         elif Settings.mission_name == "The Fruit of Lumacie" or Settings.mission_name == "Whiff of Danger":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 13 (39/52) node...")
-            MouseUtils.move_and_click_point(world_location[0] + 78, world_location[1] + 92, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 80, world_location[1] + 90, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 45, world_location[1] + 65, "template_node")
         elif Settings.mission_name == "I Challenge You!":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 17 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 119, world_location[1] + 121, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 120, world_location[1] + 120, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 70, world_location[1] + 80, "template_node")
         elif Settings.mission_name == "For Whom the Bell Tolls":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 22 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 178, world_location[1] + 33, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 180, world_location[1] + 35, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 115, world_location[1] + 25, "template_node")
         elif Settings.mission_name == "Golonzo's Battles of Old":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 25 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 196, world_location[1] + 5, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 195, world_location[1] + 5, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 130, world_location[1] + 5, "template_node")
         elif Settings.mission_name == "The Dungeon Diet":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 30 (44/65) node...")
-            MouseUtils.move_and_click_point(world_location[0] + 242, world_location[1] + 24, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 240, world_location[1] + 25, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 160, world_location[1] + 15, "template_node")
         elif Settings.mission_name == "Trust Busting Dustup":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 36 (123) node...")
-            MouseUtils.move_and_click_point(world_location[0] + 319, world_location[1] + 13, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 320, world_location[1] + 15, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 210, world_location[1] + 10, "template_node")
         elif Settings.mission_name == "Erste Kingdom Episode 4":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 70 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 253, world_location[1] + 136, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 255, world_location[1] + 135, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 165, world_location[1] + 95, "template_node")
         elif Settings.mission_name == "Imperial Wanderer's Soul":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 55 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 162, world_location[1] + 143, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 160, world_location[1] + 145, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 105, world_location[1] + 95, "template_node")
         elif Settings.mission_name == "Rocket Raid":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 59 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 70, world_location[1] + 85, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 70, world_location[1] + 85, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 45, world_location[1] + 60, "template_node")
         else:
             raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
 
@@ -331,36 +424,66 @@ class Quest:
 
         if Settings.mission_name == "Stocking Up for Winter":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 80 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 15, world_location[1] + 65, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 15, world_location[1] + 65, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 10, world_location[1] + 50, "template_node")
         elif Settings.mission_name == "The Mysterious Room":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 81 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 200, world_location[1] + 45, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 200, world_location[1] + 45, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 135, world_location[1] + 35, "template_node")
         elif Settings.mission_name == "The Right of Might" or Settings.mission_name == "Idelva Kingdom Episode 4":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 124 node...")
             Game.find_and_click_button("arcarum_sandbox_right_arrow", tries = 1, suppress_error = True)
-            MouseUtils.move_and_click_point(world_location[0] + 235, world_location[1] + 50, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 235, world_location[1] + 50, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 160, world_location[1] + 35, "template_node")
         elif Settings.mission_name == "Pholia the Maiden Episode 1" or Settings.mission_name == "Pholia the Maiden Episode 3":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 85 node...")
             Game.find_and_click_button("arcarum_sandbox_right_arrow", tries = 1, suppress_error = True)
-            MouseUtils.move_and_click_point(world_location[0] + 165, world_location[1] + 130, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 165, world_location[1] + 130, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 110, world_location[1] + 90, "template_node")
         elif Settings.mission_name == "Teachings of the Sage Episode 2":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 89 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 335, world_location[1] + 70, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 335, world_location[1] + 70, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 220, world_location[1] + 50, "template_node")
         elif Settings.mission_name == "Isle of Primals Episode 3":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 129 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 225, world_location[1] + 135, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 225, world_location[1] + 135, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 150, world_location[1] + 95, "template_node")
         elif Settings.mission_name == "Deception's Inception Episode 4":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 100 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 285, world_location[1] + 65, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 285, world_location[1] + 65, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 190, world_location[1] + 50, "template_node")
         elif Settings.mission_name == "Be All That You Can Be":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 102 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 10, world_location[1] + 80, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 10, world_location[1] + 80, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 5, world_location[1] + 45, "template_node")
         elif Settings.mission_name == "Once Lost, Once Found":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 108 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 295, world_location[1] + 70, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 295, world_location[1] + 70, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 195, world_location[1] + 50, "template_node")
         elif Settings.mission_name == "A Girl Named Mika Episode 2":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 113 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 180, world_location[1] + 65, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 180, world_location[1] + 65, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 120, world_location[1] + 50, "template_node")
         else:
             raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
 
@@ -380,7 +503,10 @@ class Quest:
 
         if Settings.mission_name == "House of Happiness":
             MessageLog.print_message(f"\n[QUEST] Moving to Chapter 132 node...")
-            MouseUtils.move_and_click_point(world_location[0] + 155, world_location[1] + 130, "template_node")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 155, world_location[1] + 130, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 105, world_location[1] + 90, "template_node")
         else:
             raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
 
