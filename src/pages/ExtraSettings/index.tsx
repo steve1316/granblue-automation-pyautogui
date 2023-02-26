@@ -1118,7 +1118,7 @@ const ExtraSettings = () => {
                             type="number"
                             error={bsc.settings.device.confidence < 0.1 || bsc.settings.device.confidence > 1.0}
                             value={bsc.settings.device.confidence}
-                            inputProps={{ min: 0.1, max: 1.0, step: 0.1 }}
+                            inputProps={{ min: 0.1, max: 1.0, step: 0.01 }}
                             onChange={(e) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, confidence: parseFloat(e.target.value) } })}
                             className="settingsTextfield"
                         />
@@ -1131,7 +1131,7 @@ const ExtraSettings = () => {
                             type="number"
                             error={bsc.settings.device.confidenceAll < 0.1 || bsc.settings.device.confidenceAll > 1.0}
                             value={bsc.settings.device.confidenceAll}
-                            inputProps={{ min: 0.1, max: 1.0, step: 0.1 }}
+                            inputProps={{ min: 0.1, max: 1.0, step: 0.01 }}
                             onChange={(e) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, confidenceAll: parseFloat(e.target.value) } })}
                             className="settingsTextfield"
                         />
@@ -1144,7 +1144,7 @@ const ExtraSettings = () => {
                     type="number"
                     error={bsc.settings.device.customScale < 0.1 || bsc.settings.device.customScale > 5.0}
                     value={bsc.settings.device.customScale}
-                    inputProps={{ min: 0.1, max: 5.0, step: 0.1 }}
+                    inputProps={{ min: 0.1, max: 5.0, step: 0.01 }}
                     onChange={(e) => bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, customScale: parseFloat(e.target.value) } })}
                     helperText={"Set the scale at which to resize existing image assets to match what would be shown on your device. Internally supported are 1080p and 1440p."}
                     className="settingsTextfield"
