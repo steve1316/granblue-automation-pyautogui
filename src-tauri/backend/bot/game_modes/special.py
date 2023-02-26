@@ -112,21 +112,26 @@ class Special:
 
                 # Try to select the specified Special mission for a number of tries.
                 while tries != 0:
+                    scrolled = False
                     # Scroll the screen down if its any of the Special Quests that are more towards the bottom of the page to alleviate problems for smaller screens.
                     if Settings.map_name != "Campaign-Exclusive Quest" and Settings.map_name != "Uncap Treasure Quests" and Settings.map_name != "Shiny Slime Search!":
                         MouseUtils.scroll_screen_from_home_button(-500)
+                        scrolled = True
 
                     mission_select_button = ImageUtils.find_button(Settings.map_name.lower().replace(" ", "_").replace("-", "_"))
                     if mission_select_button is not None:
                         MessageLog.print_message(f"[SPECIAL] Navigating to {Settings.map_name}...")
 
-                        # Move to the specified Special by clicking its "Select" button.
-                        special_quest_select_button = (mission_select_button[0] + 145, mission_select_button[1] + 75)
-                        MouseUtils.move_and_click_point(special_quest_select_button[0], special_quest_select_button[1], "select")
-
-                        Game.wait(1)
+                        # Find all instances of the Select button.
+                        select_buttons = ImageUtils.find_all("select")
+                        if scrolled is False and Settings.map_name != "Campaign-Exclusive Quest" and \
+                                ImageUtils.find_button("Campaign-Exclusive Quest".lower().replace(" ", "_").replace("-", "_")) is not None:
+                            select_buttons.pop(0)
 
                         if Settings.map_name == "Uncap Treasure Quests":
+                            MouseUtils.move_and_click_point(select_buttons[0][0], select_buttons[0][1], "select")
+                            Game.wait(1)
+
                             locations = ImageUtils.find_all("play_round_button")
 
                             if formatted_mission_name == "Fire Trial":
@@ -164,6 +169,10 @@ class Special:
                         elif Settings.map_name == "Shiny Slime Search!":
                             # Start up the Shiny Slime Search! mission by selecting its difficulty.
                             MessageLog.print_message(f"[SPECIAL] Selecting {difficulty} Shiny Slime Search!...")
+
+                            MouseUtils.move_and_click_point(select_buttons[1][0], select_buttons[1][1], "select")
+                            Game.wait(1)
+
                             locations = ImageUtils.find_all("play_round_button")
 
                             if difficulty == "Normal":
@@ -174,6 +183,10 @@ class Special:
                                 MouseUtils.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
 
                         elif Settings.map_name == "Showdowns":
+                            if scrolled: MouseUtils.move_and_click_point(select_buttons[len(select_buttons) - 1 - 2][0], select_buttons[len(select_buttons) - 1 - 2][1], "select")
+                            else: MouseUtils.move_and_click_point(select_buttons[2][0], select_buttons[2][1], "select")
+                            Game.wait(1)
+
                             locations = ImageUtils.find_all("play_round_button")
 
                             if formatted_mission_name == "Ifrit Showdown":
@@ -215,6 +228,10 @@ class Special:
 
                         elif Settings.map_name == "Campaign-Exclusive Quest":
                             MessageLog.print_message(f"[SPECIAL] Selecting Campaign-Exclusive Quest...")
+
+                            MouseUtils.move_and_click_point(select_buttons[0][0], select_buttons[0][1], "select")
+                            Game.wait(1)
+
                             locations = ImageUtils.find_all("play_round_button")
 
                             # There is only one round "Play" button for this time-limited quest.
@@ -223,6 +240,11 @@ class Special:
                         else:
                             # Start up the Angel Halo mission by selecting its difficulty.
                             MessageLog.print_message(f"[SPECIAL] Selecting {difficulty} Angel Halo...")
+
+                            if scrolled: MouseUtils.move_and_click_point(select_buttons[len(select_buttons) - 1 - 1][0], select_buttons[len(select_buttons) - 1 - 1][1], "select")
+                            else: MouseUtils.move_and_click_point(select_buttons[3][0], select_buttons[3][1], "select")
+                            Game.wait(1)
+
                             locations = ImageUtils.find_all("play_round_button")
 
                             if difficulty == "Normal":
