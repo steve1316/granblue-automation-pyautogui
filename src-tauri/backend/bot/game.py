@@ -456,24 +456,24 @@ class Game:
                     MessageLog.print_message(f"[INFO] Skipping Set Selection due to Raid only allowing parties from the Extra category.")
                 elif group_number < 8:
                     while set_location is None:
-                        set_location = ImageUtils.find_button("party_set_a", custom_confidence = 0.90)
+                        set_location = ImageUtils.find_button("party_set_a")
                         if set_location is None:
                             tries -= 1
                             if tries <= 0:
                                 raise RuntimeError("Could not find Set A.")
 
                             # See if the user had Set B active instead of Set A if matching failed.
-                            Game.find_and_click_button("party_set_b", custom_confidence = 0.90)
+                            Game.find_and_click_button("party_set_b")
                 else:
                     while set_location is None:
-                        set_location = ImageUtils.find_button("party_set_b", custom_confidence = 0.90)
+                        set_location = ImageUtils.find_button("party_set_b")
                         if set_location is None:
                             tries -= 1
                             if tries <= 0:
                                 raise RuntimeError("Could not find Set B.")
 
                             # See if the user had Set A active instead of Set B if matching failed.
-                            Game.find_and_click_button("party_set_a", custom_confidence = 0.90)
+                            Game.find_and_click_button("party_set_a")
 
             # Center the mouse on the "Set A" / "Set B" button and then click the correct Group tab.
             if Settings.debug_mode:
