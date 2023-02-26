@@ -69,9 +69,15 @@ class Game:
 
         if Settings.static_window:
             MessageLog.print_message("[INFO] Using static window configuration...")
-            window_left = home_back_button[0] - 50  # The x-coordinate of the left edge.
+            if Settings.use_first_notch:
+                window_left = home_back_button[0] - 30  # The x-coordinate of the left edge.
+            else:
+                window_left = home_back_button[0] - 50
             window_top = 0  # The y-coordinate of the top edge.
-            window_width = window_left + 500  # The width of the region.
+            if Settings.use_first_notch:
+                window_width = window_left + 390  # The width of the region.
+            else:
+                window_width = window_left + 500
             window_height = pyautogui.size()[1]  # The height of the region.
         else:
             MessageLog.print_message("[INFO] Using dynamic window configuration...")
@@ -493,42 +499,65 @@ class Game:
             if Settings.debug_mode:
                 MessageLog.print_message(f"[DEBUG] Successfully selected the correct Set. Now selecting Group {group_number}...")
 
-            if group_number == 1 or group_number == 8:
-                x = set_location[0] - 350
-            elif group_number == 2 or group_number == 9:
-                x = set_location[0] - 290
-            elif group_number == 3 or group_number == 10:
-                x = set_location[0] - 230
-            elif group_number == 4 or group_number == 11:
-                x = set_location[0] - 170
-            elif group_number == 5 or group_number == 12:
-                x = set_location[0] - 110
-            elif group_number == 6 or group_number == 13:
-                x = set_location[0] - 50
+            # Determine offsets and increments for the group selection.
+            if Settings.use_first_notch is False:
+                x_offset = 360
+                x_inc = 60
+                y_offset = 55
             else:
-                x = set_location[0] + 10
+                x_offset = 235
+                x_inc = 40
+                y_offset = 40
 
-            y = set_location[1] + 50
+            if group_number == 1 or group_number == 8:
+                x = set_location[0] - x_offset + (x_inc * 0)
+            elif group_number == 2 or group_number == 9:
+                x = set_location[0] - x_offset + (x_inc * 1)
+            elif group_number == 3 or group_number == 10:
+                x = set_location[0] - x_offset + (x_inc * 2)
+            elif group_number == 4 or group_number == 11:
+                x = set_location[0] - x_offset + (x_inc * 3)
+            elif group_number == 5 or group_number == 12:
+                x = set_location[0] - x_offset + (x_inc * 4)
+            elif group_number == 6 or group_number == 13:
+                x = set_location[0] - x_offset + (x_inc * 5)
+            else:
+                x = set_location[0] - x_offset + (x_inc * 6)
+            y = set_location[1] + y_offset
+
             MouseUtils.move_and_click_point(x, y, "template_group", mouse_clicks = 2)
 
             # Now select the correct Party.
             if Settings.debug_mode:
                 MessageLog.print_message(f"[DEBUG] Successfully selected Group {group_number}. Now selecting Party {party_number}...")
 
-            if party_number == 1:
-                x = set_location[0] - 309
-            elif party_number == 2:
-                x = set_location[0] - 252
-            elif party_number == 3:
-                x = set_location[0] - 195
-            elif party_number == 4:
-                x = set_location[0] - 138
-            elif party_number == 5:
-                x = set_location[0] - 81
-            elif party_number == 6:
-                x = set_location[0] - 24
+            # Determine offsets and increments for the party selection.
+            if Settings.use_first_notch is False:
+                x_offset = 325
+                x_inc = 60
+                y_offset = 325
+            else:
+                x_offset = 215
+                x_inc = 40
+                y_offset = 220
 
-            y = set_location[1] + 325
+            if party_number == 1 or party_number == 8:
+                x = set_location[0] - x_offset + (x_inc * 0)
+            elif party_number == 2 or party_number == 9:
+                x = set_location[0] - x_offset + (x_inc * 1)
+            elif party_number == 3 or party_number == 10:
+                x = set_location[0] - x_offset + (x_inc * 2)
+            elif party_number == 4 or party_number == 11:
+                x = set_location[0] - x_offset + (x_inc * 3)
+            elif party_number == 5 or party_number == 12:
+                x = set_location[0] - x_offset + (x_inc * 4)
+            elif party_number == 6 or party_number == 13:
+                x = set_location[0] - x_offset + (x_inc * 5)
+            else:
+                x = set_location[0] - x_offset + (x_inc * 6)
+
+            y = set_location[1] + y_offset
+
             MouseUtils.move_and_click_point(x, y, "template_party", mouse_clicks = 2)
 
             Settings.party_selection_first_run = False
@@ -536,6 +565,8 @@ class Game:
             MessageLog.print_message(f"[INFO] Successfully selected Group {group_number}, Party {party_number}. Now starting the mission.")
         else:
             MessageLog.print_message("\n[INFO] Reusing the same Party.")
+
+        exit(0)
 
         # Find and click the "OK" button to start the mission.
         Game.find_and_click_button("ok")
@@ -937,6 +968,8 @@ class Game:
 
             # Calibrate the dimensions of the bot window on bot launch.
             Game._calibrate_game_window(display_info_check = True)
+
+            Game.find_party_and_start_mission(1, 1)
 
             if Settings.item_name != "EXP":
                 MessageLog.print_message("\n######################################################################")
