@@ -160,7 +160,7 @@ class MouseUtils:
             None
         """
         x = Settings.home_button_location[0]
-        y = Settings.home_button_location[1] - 50
+        y = Settings.home_button_location[1] - 200
 
         if Settings.debug_mode:
             MessageLog.print_message(f"[DEBUG] Now scrolling the screen from the \"Home\" button's coordinates at ({x}, {y}) by {scroll_clicks} clicks...")
