@@ -162,6 +162,7 @@ export interface Settings {
     }
 
     device: {
+        useFirstNotch: boolean
         confidence: number
         confidenceAll: number
         customScale: number
@@ -305,6 +306,7 @@ export const defaultSettings: Settings = {
         defenderPartyNumber: 1,
     },
     device: {
+        useFirstNotch: false,
         confidence: 0.8,
         confidenceAll: 0.8,
         customScale: 1.0,

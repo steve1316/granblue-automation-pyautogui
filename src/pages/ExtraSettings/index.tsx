@@ -1106,6 +1106,25 @@ const ExtraSettings = () => {
 
                 <Divider />
 
+                <FormGroup sx={{ paddingBottom: "16px" }}>
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={bsc.settings.device.useFirstNotch}
+                                onChange={(e) => {
+                                    bsc.setSettings({ ...bsc.settings, device: { ...bsc.settings.device, useFirstNotch: e.target.checked } })
+                                }}
+                            />
+                        }
+                        label="Use First Notch instead of the Second"
+                    />
+                    <FormHelperText>
+                        Enable this if your screen size is small enough that the second notch makes the game too big. Using the second notch in this case will make the game reasonably fit.
+                    </FormHelperText>
+                </FormGroup>
+
+                <Divider />
+
                 <Typography variant="subtitle1" gutterBottom component="div" color="text.secondary">
                     Adjust and fine-tune settings related to device setups and image processing optimizations.
                 </Typography>
