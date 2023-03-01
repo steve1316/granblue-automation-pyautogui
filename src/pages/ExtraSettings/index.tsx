@@ -1126,7 +1126,8 @@ const ExtraSettings = () => {
                 <Divider />
 
                 <Typography variant="subtitle1" gutterBottom component="div" color="text.secondary">
-                    Adjust and fine-tune settings related to device setups and image processing optimizations.
+                    Adjust and fine-tune settings related to device setups and image processing optimizations. The first confidence option handles single target template matching and the second
+                    confidence option handles multi target template matching, including item detection.
                 </Typography>
 
                 <Grid container justifyContent="center" alignItems="center" style={{ marginBottom: "8px" }}>
