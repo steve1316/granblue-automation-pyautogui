@@ -24,7 +24,8 @@
     },
     "scripts": {
         "start": "cross-env BROWSER=none concurrently \"react-scripts start\" \"yarn tauri dev\" --kill-others true",
-        "build": "react-scripts build && yarn tauri build"
+        "build": "react-scripts build && yarn tauri build",
+        "update": "yarn install && yarn upgrade-interactive --latest"
     },
     "eslintConfig": {
         "extends": [
