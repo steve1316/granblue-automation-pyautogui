@@ -4,12 +4,12 @@ import { Alert, AppBar, Button, ButtonGroup, Divider, Drawer, IconButton, List, 
 import * as app from "@tauri-apps/api/app"
 import { appWindow } from "@tauri-apps/api/window"
 import { useContext, useEffect, useState } from "react"
-import { Link as RouterLink, useHistory } from "react-router-dom"
+import { Link as RouterLink, useNavigate } from "react-router-dom"
 import { BotStateContext } from "../../context/BotStateContext"
 import "./index.scss"
 
 const NavBar = () => {
-    const history = useHistory()
+    const navigate = useNavigate()
     const [isDrawerOpen, setIsDrawerOpen] = useState<boolean>(false)
 
     const botStateContext = useContext(BotStateContext)
@@ -108,7 +108,7 @@ const NavBar = () => {
                     variant="h6"
                     className="navTitle"
                     onClick={() => {
-                        history.push("/")
+                        navigate("/")
                     }}
                 >
                     Granblue Automation <Typography variant="caption">v{botStateContext.appVersion}</Typography>

@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardMedia, Divider, Grid, Grow, List, ListItem, ListItemText, Paper, Tooltip, Typography, Zoom } from "@mui/material"
+import { Card, CardActionArea, CardMedia, Divider, Grid, Grow, List, ListItemButton, ListItemText, Paper, Tooltip, Typography, Zoom } from "@mui/material"
 import { useContext, useEffect, useState } from "react"
 import { BotStateContext } from "../../context/BotStateContext"
 import summonData from "../../data/summons.json"
@@ -94,14 +94,14 @@ const TransferList = ({ isNightmare }: { isNightmare: boolean }) => {
                     return (
                         <Tooltip key={`${index}-${value}`} title={`${value}`} placement="left" arrow TransitionComponent={Zoom} TransitionProps={{ timeout: 200 }}>
                             <Grow in={true}>
-                                <ListItem button onClick={handleChecked(value, isLeftList)}>
+                                <ListItemButton onClick={handleChecked(value, isLeftList)}>
                                     <Card>
                                         <CardActionArea>
                                             <CardMedia component="img" image={require(`../../images/summons/${fileName}.jpg`).default} />
                                         </CardActionArea>
                                     </Card>
                                     <ListItemText className="transferListItemText" primary={value} />
-                                </ListItem>
+                                </ListItemButton>
                             </Grow>
                         </Tooltip>
                     )
