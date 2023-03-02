@@ -969,8 +969,6 @@ class Game:
             # Calibrate the dimensions of the bot window on bot launch.
             Game._calibrate_game_window(display_info_check = True)
 
-            Game.find_party_and_start_mission(1, 1)
-
             if Settings.item_name != "EXP":
                 MessageLog.print_message("\n######################################################################")
                 MessageLog.print_message("######################################################################")
