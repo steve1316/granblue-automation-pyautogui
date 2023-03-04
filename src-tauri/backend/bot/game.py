@@ -566,8 +566,6 @@ class Game:
         else:
             MessageLog.print_message("\n[INFO] Reusing the same Party.")
 
-        exit(0)
-
         # Find and click the "OK" button to start the mission.
         Game.find_and_click_button("ok")
 
