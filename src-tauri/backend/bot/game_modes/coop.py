@@ -151,7 +151,7 @@ class Coop:
             MouseUtils.scroll_screen_from_home_button(-400)
             Game.find_and_click_button("ok")
 
-            Game.wait(1)
+            Game.wait(3.0)
 
             # Just in case, check for the "You retreated from the raid battle" popup.
             if ImageUtils.confirm_location("you_retreated_from_the_raid_battle", tries = 3):
@@ -180,16 +180,17 @@ class Coop:
         if first_run:
             Coop._navigate()
         else:
+            MessageLog.print_message("\n[COOP] Starting Coop Mission again.")
+
             # Head back to the Coop Room.
             Game.find_and_click_button("coop_room")
-
-            Game.wait(1)
+            Game.wait(1.0)
 
             # Check for "Daily Missions" popup for Coop.
             if ImageUtils.confirm_location("coop_daily_missions"):
                 Game.find_and_click_button("close")
 
-            Game.wait(1)
+            Game.wait(2.0)
 
             # Now that the bot is back at the Coop Room/Lobby, check if it closed due to time running out.
             if ImageUtils.confirm_location("coop_room_closed"):
@@ -198,8 +199,7 @@ class Coop:
 
             # Start the Coop Mission again.
             Game.find_and_click_button("coop_start")
-
-            Game.wait(1)
+            Game.wait(3.0)
 
         # Check for AP.
         Game.check_for_ap()
@@ -211,13 +211,12 @@ class Coop:
 
             # Now click the "Start" button to start the Coop Mission.
             Game.find_and_click_button("coop_start")
+            Game.wait(3.0)
 
             # Now start Combat Mode and detect any item drops.
             if CombatMode.start_combat_mode():
                 Game.collect_loot(is_completed = True)
         elif first_run is False:
-            MessageLog.print_message("\n[COOP] Starting Coop Mission again.")
-
             # Now start Combat Mode and detect any item drops.
             if CombatMode.start_combat_mode():
                 Game.collect_loot(is_completed = True)
