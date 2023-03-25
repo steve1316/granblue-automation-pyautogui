@@ -44,7 +44,8 @@ class ImageUtils:
 
     @staticmethod
     def update_window_dimensions(window_left: int, window_top: int, window_width: int, window_height: int, additional_calibration_required: bool = False):
-        """Updates the window dimensions for PyAutoGUI to perform faster operations in.
+        """This API is depreciated: 
+            Updates the window dimensions for PyAutoGUI to perform faster operations in.
 
         Args:
             window_left (int): The x-coordinate of the left edge of the region for image matching.

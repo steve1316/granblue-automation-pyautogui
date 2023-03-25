@@ -27,6 +27,7 @@ from bot.game_modes.rotb import RiseOfTheBeasts
 from bot.game_modes.special import Special
 from bot.game_modes.xeno_clash import XenoClash
 from bot.game_modes.generic import Generic
+from bot.window import Window
 
 
 class Game:
@@ -41,7 +42,7 @@ class Game:
         super().__init__()
 
     @staticmethod
-    def _calibrate_game_window(display_info_check: bool = False):
+    def _calibrate_window(display_info_check: bool = False):
         """Recalibrate the dimensions of the bot window for fast and accurate image matching.
 
         Args:
@@ -50,6 +51,7 @@ class Game:
         Returns:
             None
         """
+        Window.calibrate_window(display_info_check)
         # Save the location of the "Home" button at the bottom of the bot window.
         Settings.home_button_location = ImageUtils.find_button("home", bypass_general_adjustment = True, tries = 1)
 
@@ -64,40 +66,7 @@ class Game:
         if home_back_button is None:
             raise RuntimeError("Calibration of window dimensions failed. Is the back button visible on the screen?")
 
-        width, height = pyautogui.size()
         additional_calibration_required = Settings.static_window
-
-        if Settings.static_window:
-            MessageLog.print_message("[INFO] Using static window configuration...")
-            if Settings.use_first_notch:
-                window_left = home_back_button[0] - 30  # The x-coordinate of the left edge.
-            else:
-                window_left = home_back_button[0] - 50
-            window_top = 0  # The y-coordinate of the top edge.
-            if Settings.use_first_notch:
-                window_width = window_left + 390  # The width of the region.
-            else:
-                window_width = window_left + 500
-            window_height = pyautogui.size()[1]  # The height of the region.
-        else:
-            MessageLog.print_message("[INFO] Using dynamic window configuration...")
-            window_left: int = 0
-            window_top: int = 0
-            window_width: int = width
-            window_height: int = height
-
-        ImageUtils.update_window_dimensions(window_left, window_top, window_width, window_height, additional_calibration_required)
-
-        MessageLog.print_message("[SUCCESS] Dimensions of the window has been successfully recalibrated.")
-
-        if display_info_check:
-            window_dimensions = ImageUtils.get_window_dimensions()
-            MessageLog.print_message("\n**********************************************************************")
-            MessageLog.print_message("**********************************************************************")
-            MessageLog.print_message(f"[INFO] Screen Size: {pyautogui.size()}")
-            MessageLog.print_message(f"[INFO] Game Window Dimensions: Region({window_dimensions[0]}, {window_dimensions[1]}, {window_dimensions[2]}, {window_dimensions[3]})")
-            MessageLog.print_message("**********************************************************************")
-            MessageLog.print_message("**********************************************************************")
 
         return None
 
