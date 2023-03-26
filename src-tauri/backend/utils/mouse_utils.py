@@ -7,6 +7,9 @@ import pyperclip
 from utils.settings import Settings
 from utils.message_log import MessageLog
 
+from time import sleep
+import numpy as np
+
 
 class MouseUtils:
     """
