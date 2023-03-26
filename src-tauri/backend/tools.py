@@ -1,33 +1,8 @@
-<<<<<<< Updated upstream
-import multiprocessing
-import os
-import signal
-import sys
-import unittest
-from tkinter import Frame
-import cv2 as cv
-import numpy as np
-import pyautogui
-from PIL import Image
-
-
-from utils.settings import Settings
-from utils.image_utils import ImageUtils
-from utils.mouse_utils import MouseUtils
-from bot.combat_mode import CombatMode
-from bot.game import Game
-from utils.twitter_room_finder import TwitterRoomFinder
-from utils import discord_utils
-from bot.window import Window
-
-=======
-
 import cv2 as cv
 import numpy as np
 import pyautogui
 
 
->>>>>>> Stashed changes
 
 def on_mouse(event,x,y,flags,param):
     if event == cv.EVENT_LBUTTONDOWN:

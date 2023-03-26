@@ -1,18 +1,10 @@
 import cv2
 from PIL import Image
-<<<<<<< Updated upstream
-from utils.image_utils import ImageUtils
-from typing import List, Tuple
-from utils.settings import Settings
-from pyautogui import size as get_screen_size, screenshot
-from utils.message_log import MessageLog as Log
-=======
 from typing import List, Tuple
 from utils.settings import Settings
 from pyautogui import size as get_screen_size, screenshot, click, write, press
 from utils.message_log import MessageLog as Log
 from utils.mouse_utils import MouseUtils
->>>>>>> Stashed changes
 
 
 class Window():
@@ -30,8 +22,6 @@ class Window():
     calibration_complete: bool = False
     additional_calibration_required: bool = False
     party_selection_first_run: bool = True
-<<<<<<< Updated upstream
-=======
     
     @staticmethod
     def goto(url: str):
@@ -52,7 +42,6 @@ class Window():
         MouseUtils.move_to(Window.sub_start+160, Window.sub_top-55)
         click()
         press('f5')
->>>>>>> Stashed changes
 
     @staticmethod
     def calibrate_window(display_info_check: bool = False):
@@ -64,11 +53,8 @@ class Window():
         Returns:
             None
         """
-<<<<<<< Updated upstream
-=======
         from utils.image_utils import ImageUtils
 
->>>>>>> Stashed changes
         # Save the location of the "Home" button at the bottom of the bot window.
 
         Log.print_message("\n[INFO] Calibrating the dimensions of the window...")

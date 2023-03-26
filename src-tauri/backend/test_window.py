@@ -1,27 +1,8 @@
-<<<<<<< Updated upstream
-import multiprocessing
-import os
-import signal
-import sys
-import unittest
-from tkinter import Frame
-=======
->>>>>>> Stashed changes
 import cv2 as cv
 import numpy as np
 import pyautogui
 
-<<<<<<< Updated upstream
-from utils.settings import Settings
 from utils.image_utils import ImageUtils
-from utils.mouse_utils import MouseUtils
-from bot.combat_mode import CombatMode
-from bot.game import Game
-from utils.twitter_room_finder import TwitterRoomFinder
-from utils import discord_utils
-=======
-from utils.image_utils import ImageUtils
->>>>>>> Stashed changes
 from bot.window import Window
 
 def check_image_utils():
@@ -50,21 +31,13 @@ def visualize(list_of_stwh):
 
 def test_calibrate() :
     check_window()
-<<<<<<< Updated upstream
-    stwhs = [(Window.start, Window.top, Window.width, Window.height)]
-=======
     stwhs = [(Window.start, Window.top, Window.width, Window.height),
              (Window.start+160, Window.top-55, 10, 10)
              ]
->>>>>>> Stashed changes
     if Window.sub_start != None:
         stwhs.append(
             (Window.sub_start, Window.sub_top, Window.sub_width, Window.sub_height)
         )
     visualize(stwhs)
 
-<<<<<<< Updated upstream
 test_calibrate()
-=======
-test_calibrate()
->>>>>>> Stashed changes

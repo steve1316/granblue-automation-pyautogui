@@ -49,6 +49,7 @@ class GenericLiteUrl:
     
     @staticmethod
     def single_raid_with_sub_window(friend_summon: str) -> None:
+        from bot.game import Game
         """ Method to do single raid only with getting loot in
         the sub window
 
