@@ -1,3 +1,4 @@
+<<<<<<< Updated upstream
 import multiprocessing
 import os
 import signal
@@ -19,6 +20,14 @@ from utils.twitter_room_finder import TwitterRoomFinder
 from utils import discord_utils
 from bot.window import Window
 
+=======
+
+import cv2 as cv
+import numpy as np
+import pyautogui
+
+
+>>>>>>> Stashed changes
 
 def on_mouse(event,x,y,flags,param):
     if event == cv.EVENT_LBUTTONDOWN:

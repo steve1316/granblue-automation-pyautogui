@@ -34,3 +34,4 @@ src-tauri/logs/
 .env
 .vscode/launch.json
 *.png
+*.png

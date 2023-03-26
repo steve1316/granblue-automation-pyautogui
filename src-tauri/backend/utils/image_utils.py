@@ -15,6 +15,7 @@ from playsound import playsound
 
 from utils.settings import Settings
 from utils.message_log import MessageLog
+from bot.window import Window 
 
 
 class ImageUtils:
@@ -89,8 +90,9 @@ class ImageUtils:
         height = template.height
         return template.resize(size = (int(width * scale), int(height * scale)), resample = None)
 
+
     @staticmethod
-    def _match(image_path: str, confidence: float = 0.8, use_single_scale: bool = False, is_summon: bool = False) -> bool:
+    def _match(image_path: str, confidence: float = 0.8, use_single_scale: bool = False, is_summon: bool = False, is_sub = False) -> bool:
         """Match the given template image against the source screenshot to find a match location.
 
         Args:
@@ -98,12 +100,15 @@ class ImageUtils:
             confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
             use_single_scale (bool, optional): Use a range of scales if this is disabled. Otherwise, it will use the custom_scale value. Defaults to False.
             is_summon (bool, optional): Crop out the plus signs on a summon template image before doing template matching. Defaults to False.
+            is_sub (bool): if is searching on sub window. Defaults to False
 
         Returns:
             (bool): True if the template was found inside the source image and False otherwise.
         """
         match_check = False
-        if Settings.window_left is not None and Settings.window_top is not None and Settings.window_width is not None and Settings.window_height is not None:
+        if is_sub:
+            image: Image = pyautogui.screenshot(region = (Window.sub_start, Window.sub_top, Window.width, Window.sub_height))
+        elif Settings.window_left is not None and Settings.window_top is not None and Settings.window_width is not None and Settings.window_height is not None:
             image: Image = pyautogui.screenshot(region = (Settings.window_left, Settings.window_top, Settings.window_width, Settings.window_height))
         else:
             image: Image = pyautogui.screenshot()
@@ -412,7 +417,7 @@ class ImageUtils:
 
     @staticmethod
     def find_button(image_name: str, custom_confidence: float = Settings.confidence, tries: int = 5, suppress_error: bool = False, disable_adjustment: bool = False,
-                    bypass_general_adjustment: bool = False, test_mode: bool = False):
+                    bypass_general_adjustment: bool = False, test_mode: bool = False, is_sub = False):
         """Find the location of the specified button.
 
         Args:
@@ -446,7 +451,7 @@ class ImageUtils:
 
         while new_tries > 0:
             result_flag: bool = ImageUtils._match(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.jpg", confidence = custom_confidence,
-                                                  use_single_scale = Settings.enable_test_for_home_screen)
+                                                  use_single_scale = Settings.enable_test_for_home_screen, is_sub=is_sub)
 
             if result_flag is False:
                 if test_mode:
