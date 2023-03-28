@@ -115,6 +115,11 @@ class MouseUtils:
         from utils.image_utils import ImageUtils
         width, height = ImageUtils.get_button_dimensions(image_name)
 
+        if Settings.farming_mode == "Generic V2":
+            width = np.random.randint(0,width)
+            height = np.random.randint(0,height)
+            return x+width, y+height
+
         dimensions_x0 = x - (width // 2)
         dimensions_x1 = x + (width // 2)
 
@@ -133,6 +138,8 @@ class MouseUtils:
                 break
 
         return new_x, new_y
+    
+
 
     @staticmethod
     def scroll_screen(x: int, y: int, scroll_clicks: int):
