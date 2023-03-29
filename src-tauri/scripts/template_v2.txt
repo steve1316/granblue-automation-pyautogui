@@ -5,8 +5,8 @@
 https://game.granbluefantasy.jp/#quest/supporter/305231/1/0/45
 //Then you need to specify a summon, the name are located in images/summons
 supportSummon:celeste_omega
-//Then you need to specify the time of repeat, or use "default" to use the value set 
-in the launcher
+// Then you need to specify the time of repeat, or use "default" to use the value set 
+// in the launcher
 repeat:1
 //repeat:default
 
