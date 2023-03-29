@@ -1,0 +1,32 @@
+// v2 script is similar to normal script, but you cannot specific action base on turns, 
+// You can try v2 script by using the headless.bat file
+//You need to first specify the url of the supporter page, aka "summon page"
+
+https://game.granbluefantasy.jp/#quest/supporter/305231/1/0/45
+//Then you need to specify a summon, the name are located in images/summons
+supportSummon:celeste_omega
+//Then you need to specify the time of repeat, or use "default" to use the value set 
+in the launcher
+repeat:1
+//repeat:default
+
+// Then you can write the combact script without turn
+// Note that the only option support now is 
+// "quickSummon",
+// "enableFullAuto",
+// "back",
+// "character(#)",
+// "useSkill(#)",
+// "subBack", <- new option that press the back button on second window
+// "reload",
+// "attack"
+
+character3.useSkill(3)
+enablefullauto
+
+// you can continue to specify more battles
+https://game.granbluefantasy.jp/#quest/supporter/305241/1/0/46
+supportSummon:zeus
+repeat:1
+
+enablefullauto
