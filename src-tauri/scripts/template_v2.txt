@@ -8,16 +8,16 @@ supportSummon:celeste_omega
 //Then you need to specify the time of repeat, or use "default" to use the value set 
 in the launcher
 repeat:1
+//repeat:default
 
 // Then you can write the combact script without turn
 // Note that the only option support now is 
-// "quicksummon",
-// "enablefullauto",
-// "enablesemiauto,
+// "quickSummon",
+// "enableFullAuto",
 // "back",
-// "selectchar",
-// "useskill",
-// "subback", <- new command that press the back button on second window
+// "character(#)",
+// "useSkill(#)",
+// "subBack", <- new option that press the back button on second window
 // "reload",
 // "attack"
 
