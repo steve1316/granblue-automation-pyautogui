@@ -752,7 +752,7 @@ class Game:
             MessageLog.print_message(f"[FARM] Farming Mode: {Settings.farming_mode}")
             MessageLog.print_message(f"[FARM] Mission: {Settings.mission_name}")
             MessageLog.print_message(f"[FARM] Summons: {Settings.summon_list}")
-            MessageLog.print_message(f"[FARM] Amount of Defenders defeated: {Settings.number_of_defeated_heralds}/{Settings.number_of_heralds}")
+            MessageLog.print_message(f"[FARM] Amount of Heralds defeated: {Settings.number_of_defeated_heralds}/{Settings.number_of_heralds}")
             MessageLog.print_message("**********************************************************************")
             MessageLog.print_message("**********************************************************************\n")
         elif is_defender:
