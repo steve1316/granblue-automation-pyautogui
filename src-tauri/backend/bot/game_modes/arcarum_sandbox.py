@@ -1092,7 +1092,7 @@ class ArcarumSandbox:
                 if CombatMode.start_combat_mode(is_defender = Settings.engaged_defender_battle):
                     Game.collect_loot(is_completed = True, is_defender = Settings.engaged_defender_battle)
         elif Settings.engaged_herald_battle:
-            if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number, bypass_first_run = True):
+            if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
                 if CombatMode.start_combat_mode():
                     Game.collect_loot(is_completed = True, is_herald=Settings.engaged_herald_battle)
         else:
