@@ -221,6 +221,8 @@ class Game:
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "event_special_quest", mouse_clicks = clicks)
                     return True
+            elif button_name.lower() == "play_again" and Settings.enable_defender and Settings.engaged_defender_battle and Settings.number_of_defeated_defenders >= Settings.number_of_defenders:
+                    return False
             else:
                 temp_location = ImageUtils.find_button(button_name.lower(), custom_confidence = custom_confidence)
                 if temp_location is not None:
@@ -261,6 +263,8 @@ class Game:
                 if temp_location is not None:
                     MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, "event_special_quest", mouse_clicks = clicks)
                     return True
+            elif button_name.lower() == "play_again" and Settings.enable_defender and Settings.engaged_defender_battle and Settings.number_of_defeated_defenders >= Settings.number_of_defenders:
+                    return False
             else:
                 temp_location = ImageUtils.find_button(button_name.lower(), tries = tries, suppress_error = suppress_error, custom_confidence = custom_confidence,
                                                        bypass_general_adjustment = bypass_general_adjustment)
@@ -612,7 +616,7 @@ class Game:
         return None
 
     @staticmethod
-    def collect_loot(is_completed: bool, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False, skip_popup_check: bool = False, is_defender: bool = False):
+    def collect_loot(is_completed: bool, is_pending_battle: bool = False, is_event_nightmare: bool = False, skip_info: bool = False, skip_popup_check: bool = False, is_defender: bool = False, is_herald: bool = False):
         """Collects the loot from the Results screen while clicking away any dialog popups while updating the internal item count.
 
         Args:
@@ -650,7 +654,7 @@ class Game:
                     MessageLog.print_message("[DEBUG] Have not detected the Loot Collection screen yet...")
 
         # Now that the bot is at the Loot Collected screen, detect any user-specified items.
-        if is_completed and not is_pending_battle and not is_event_nightmare and not is_defender:
+        if is_completed and not is_pending_battle and not is_event_nightmare and not is_defender and not is_herald:
             MessageLog.print_message("\n[INFO] Detecting if any user-specified loot dropped from this run...")
             if Settings.item_name != "EXP" and Settings.item_name != "Angel Halo Weapons" and Settings.item_name != "Repeated Runs":
                 temp_amount = ImageUtils.find_farmed_items(Settings.item_name)
@@ -675,7 +679,7 @@ class Game:
             else:
                 Game._send_api_result(temp_amount, Settings.combat_elapsed_time)
 
-        if is_completed and not is_pending_battle and not is_event_nightmare and not skip_info and not is_defender:
+        if is_completed and not is_pending_battle and not is_event_nightmare and not skip_info and not is_defender and not is_herald:
             if Settings.item_name != "EXP" and Settings.item_name != "Angel Halo Weapons" and Settings.item_name != "Repeated Runs":
                 MessageLog.print_message("\n**********************************************************************")
                 MessageLog.print_message("**********************************************************************")
@@ -737,8 +741,21 @@ class Game:
                                          f"**[{Settings.item_amount_farmed} / {Settings.item_amount_to_farm}]**"
 
                     Game._discord_queue.put(discord_string)
+        elif is_herald:
+            Settings.number_of_defeated_heralds += 1
+            Settings.engaged_herald_battle = False
+            if Settings.no_party_selection:
+                Settings.party_selection_first_run = True
+                Settings.no_party_selection = False
+            MessageLog.print_message("\n**********************************************************************")
+            MessageLog.print_message("**********************************************************************")
+            MessageLog.print_message(f"[FARM] Farming Mode: {Settings.farming_mode}")
+            MessageLog.print_message(f"[FARM] Mission: {Settings.mission_name}")
+            MessageLog.print_message(f"[FARM] Summons: {Settings.summon_list}")
+            MessageLog.print_message(f"[FARM] Amount of Defenders defeated: {Settings.number_of_defeated_heralds}/{Settings.number_of_heralds}")
+            MessageLog.print_message("**********************************************************************")
+            MessageLog.print_message("**********************************************************************\n")
         elif is_defender:
-            Settings.engaged_defender_battle = False
             Settings.number_of_defeated_defenders += 1
             MessageLog.print_message("\n**********************************************************************")
             MessageLog.print_message("**********************************************************************")

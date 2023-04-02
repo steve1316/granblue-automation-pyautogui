@@ -385,6 +385,74 @@ class ArcarumSandbox:
             "x": 50,
             "y": 225
         },
+
+        ##########
+        # Zone Mundus
+        "High-Voltage Rock": {
+            "section": 0,
+            "x": 360,
+            "y": 195
+        },
+        "Love Meeee": {
+            "section": 0,
+            "x": 360,
+            "y": 340
+        },
+        "Earth-Shattering Fire Demon": {
+            "section": 0,
+            "x": 130,
+            "y": 160
+        },
+        "Elephant Stomping Ground": {
+            "section": 0,
+            "x": 130,
+            "y": 360
+        },
+        "Hotheaded Pincers": {
+            "section": 1,
+            "x": 380,
+            "y": 180
+        },
+        "Princess of the Horde": {
+            "section": 1,
+            "x": 380,
+            "y": 330
+        },
+        "Parasite Steve": {
+            "section": 1,
+            "x": 40,
+            "y": 180
+        },
+        "Winged Demon Cat": {
+            "section": 1,
+            "x": 40,
+            "y": 330
+        },
+        "Tide Caller": {
+            "section": 2,
+            "x": 290,
+            "y": 155
+        },
+        "Dragon in Glittering Green": {
+            "section": 2,
+            "x": 290,
+            "y": 365
+        },
+        "Proud War Princess of Dragons": {
+            "section": 2,
+            "x": 65,
+            "y": 200
+        },
+        "Goddess of the Wild Hunt": {
+            "section": 2,
+            "x": 65,
+            "y": 330
+        },
+        "The World": {
+            "section": 1,
+            "x": 210,
+            "y": 200
+        }
     }
 
     # The x and y coordinates are the difference between the center of the Menu button at the top-right and the center of the node itself.
@@ -790,16 +858,32 @@ class ArcarumSandbox:
 
         Game.wait(1.0)
 
+        if Settings.enable_gold_chest and Game.find_and_click_button("arcarum_gold_chest") is True:
+            ArcarumSandbox._open_gold_chest()
+
+        MouseUtils.scroll_screen_from_home_button(-300)
+
+        Game.wait(1.0)
         # If there is no Defender, then the first action is the mission itself. Else, it is the second action.
         action_locations: List[Tuple[int, ...]] = ImageUtils.find_all("arcarum_sandbox_action")
-        if len(action_locations) == 1:
-            MouseUtils.move_and_click_point(action_locations[0][0], action_locations[0][1], "arcarum_sandbox_action")
-        elif Settings.enable_defender and Settings.number_of_defeated_defenders < Settings.number_of_defenders:
-            MouseUtils.move_and_click_point(action_locations[0][0], action_locations[0][1], "arcarum_sandbox_action")
+        #if len(action_locations) == 1:
+        #    MouseUtils.move_and_click_point(action_locations[len(action_locations)-1][0], action_locations[len(action_locations)-1][1], "arcarum_sandbox_action")
+        if Settings.enable_herald and Settings.number_of_defeated_heralds < Settings.number_of_heralds and ImageUtils.find_button("arcarum_sandbox_herald"):
+            if len(action_locations) == 2:
+                MouseUtils.move_and_click_point(action_locations[len(action_locations)-2][0], action_locations[len(action_locations)-2][1], "arcarum_sandbox_action")              
+            else:
+                MouseUtils.move_and_click_point(action_locations[len(action_locations)-3][0], action_locations[len(action_locations)-3][1], "arcarum_sandbox_action") 
+            MessageLog.print_message(f"\n[ARCARUM.SANDBOX] Found herald and fighting it...")
+            Settings.engaged_herald_battle = True
+            if Settings.party_selection_first_run:
+                Settings.no_party_selection = True
+                Settings.party_selection_first_run = False
+        elif Settings.enable_defender and Settings.number_of_defeated_defenders < Settings.number_of_defenders and ImageUtils.find_button("arcarum_sandbox_defender"):
+            MouseUtils.move_and_click_point(action_locations[len(action_locations)-2][0], action_locations[len(action_locations)-2][1], "arcarum_sandbox_action")
             MessageLog.print_message(f"\n[ARCARUM.SANDBOX] Found Defender and fighting it...")
             Settings.engaged_defender_battle = True
         else:
-            MouseUtils.move_and_click_point(action_locations[1][0], action_locations[1][1], "arcarum_sandbox_action")
+            MouseUtils.move_and_click_point(action_locations[len(action_locations)-1][0], action_locations[len(action_locations)-1][1], "arcarum_sandbox_action")
 
         return None
 
@@ -813,7 +897,7 @@ class ArcarumSandbox:
         from bot.game import Game
 
         MessageLog.print_message(f"[ARCARUM.SANDBOX] Now determining if bot is starting all the way at the left edge of the Zone...")
-        while Game.find_and_click_button("arcarum_sandbox_left_arrow", tries = 1, suppress_error = True):
+        while Game.find_and_click_button("arcarum_sandbox_left_arrow", tries = 20, suppress_error = True):
             Game.wait(1.0)
 
         MessageLog.print_message(f"[ARCARUM.SANDBOX] Left edge of the Zone has been reached.")
@@ -853,6 +937,7 @@ class ArcarumSandbox:
             Game.find_and_click_button("arcarum_sandbox_banner")
 
         # Move to the Zone that the user's mission is at.
+        MouseUtils.scroll_screen_from_home_button(-400)
         if Settings.map_name == "Zone Eletio":
             navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_eletio")
         elif Settings.map_name == "Zone Faym":
@@ -869,6 +954,8 @@ class ArcarumSandbox:
             navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_kalendae")
         elif Settings.map_name == "Zone Liber":
             navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_liber")
+        elif Settings.map_name == "Zone Mundus":
+            navigation_check = Game.find_and_click_button("arcarum_sandbox_zone_mundus")
         else:
             raise ArcarumSandboxException("Invalid map name provided for Arcarum Replicard Sandbox navigation.")
 
@@ -931,6 +1018,11 @@ class ArcarumSandbox:
         """
         from bot.game import Game
 
+        if Settings.party_selection_first_run:
+            Settings.no_party_selection = True
+            Settings.party_selection_first_run = False
+        
+
         action_locations: List[Tuple[int, ...]] = ImageUtils.find_all("arcarum_sandbox_action")
         MouseUtils.move_and_click_point(action_locations[0][0], action_locations[0][1], "arcarum_sandbox_action")
         Game.find_and_click_button("ok")
@@ -942,10 +1034,15 @@ class ArcarumSandbox:
                 if CombatMode.start_combat_mode():
                     Game.collect_loot(is_completed = True)
             Game.find_and_click_button("expedition")
-                 
-        Game.wait(2.0)
-        ArcarumSandbox._reset_position()
-        ArcarumSandbox._navigate_to_mission()
+
+        if Settings.no_party_selection:
+            Settings.party_selection_first_run = True
+            Settings.no_party_selection = False
+
+        Game.wait(5.0)
+        #TODO: test and remove this if needed  ArcarumSandbox._reset_position()
+        #TODO: test and remove this if needed ArcarumSandbox._navigate_to_mission(skip_to_action=True)
+
 
     @staticmethod
     def start():
@@ -960,11 +1057,14 @@ class ArcarumSandbox:
         if ArcarumSandbox._first_run:
             ArcarumSandbox._navigate_to_zone()
         elif Game.find_and_click_button("play_again") is False:
+            if Settings.engaged_defender_battle:
+                Settings.engaged_defender_battle = False
             if Game.check_for_pending():
                 ArcarumSandbox._first_run = True
                 ArcarumSandbox._navigate_to_zone()
             else:
                 # If the bot cannot find the "Play Again" button, click the Expedition button.
+                
                 Game.find_and_click_button("expedition")
 
                 # Wait out the animations that play, whether it be Treasure or Defender spawning.
@@ -972,12 +1072,12 @@ class ArcarumSandbox:
 
                 # Click away the Treasure popup if it shows up.
                 Game.find_and_click_button("ok", suppress_error = True)
-                if Settings.enable_gold_chest and Game.find_and_click_button("arcarum_gold_chest") is True:
-                    ArcarumSandbox._open_gold_chest()
-                else:
+                #if Settings.enable_gold_chest and Game.find_and_click_button("arcarum_gold_chest") is True:
+                #    ArcarumSandbox._open_gold_chest()
+                #else:
                     # Start the mission again.
-                    Game.wait(3.0)
-                    ArcarumSandbox._navigate_to_mission(skip_to_action = True)
+                Game.wait(3.0)
+                ArcarumSandbox._navigate_to_mission(skip_to_action = True)
 
         # Refill AAP if needed.
         ArcarumSandbox._play_zone_boss()
@@ -989,6 +1089,10 @@ class ArcarumSandbox:
             if Game.find_party_and_start_mission(Settings.defender_group_number, Settings.defender_party_number, bypass_first_run = True):
                 if CombatMode.start_combat_mode(is_defender = Settings.engaged_defender_battle):
                     Game.collect_loot(is_completed = True, is_defender = Settings.engaged_defender_battle)
+        elif Settings.engaged_herald_battle:
+            if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number, bypass_first_run = True):
+                if CombatMode.start_combat_mode():
+                    Game.collect_loot(is_completed = True, is_herald=Settings.engaged_herald_battle)
         else:
             if Game.find_party_and_start_mission(Settings.group_number, Settings.party_number):
                 if CombatMode.start_combat_mode():
