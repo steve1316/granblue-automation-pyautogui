@@ -858,8 +858,9 @@ class ArcarumSandbox:
 
         Game.wait(1.0)
 
-        if Settings.enable_gold_chest and Game.find_and_click_button("arcarum_gold_chest") is True:
-            ArcarumSandbox._open_gold_chest()
+        if Settings.party_selection_first_run:
+            if Settings.enable_gold_chest and Game.find_and_click_button("arcarum_gold_chest") is True:
+                ArcarumSandbox._open_gold_chest()
 
         MouseUtils.scroll_screen_from_home_button(-300)
 
@@ -1041,7 +1042,8 @@ class ArcarumSandbox:
 
         Game.wait(5.0)
         #TODO: test and remove this if needed  ArcarumSandbox._reset_position()
-        #TODO: test and remove this if needed ArcarumSandbox._navigate_to_mission(skip_to_action=True)
+        if Settings.party_selection_first_run is not True:
+            ArcarumSandbox._navigate_to_mission(skip_to_action=True)
 
 
     @staticmethod
@@ -1072,12 +1074,12 @@ class ArcarumSandbox:
 
                 # Click away the Treasure popup if it shows up.
                 Game.find_and_click_button("ok", suppress_error = True)
-                #if Settings.enable_gold_chest and Game.find_and_click_button("arcarum_gold_chest") is True:
-                #    ArcarumSandbox._open_gold_chest()
-                #else:
+                if Settings.enable_gold_chest and Game.find_and_click_button("arcarum_gold_chest") is True:
+                    ArcarumSandbox._open_gold_chest()
+                else:
                     # Start the mission again.
-                Game.wait(3.0)
-                ArcarumSandbox._navigate_to_mission(skip_to_action = True)
+                    Game.wait(3.0)
+                    ArcarumSandbox._navigate_to_mission(skip_to_action = True)
 
         # Refill AAP if needed.
         ArcarumSandbox._play_zone_boss()
