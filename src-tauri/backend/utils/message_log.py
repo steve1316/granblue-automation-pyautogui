@@ -1,6 +1,8 @@
 import datetime
 from timeit import default_timer as timer
 import inspect
+import logging
+import sys
 
 
 class MessageLog:
@@ -11,6 +13,8 @@ class MessageLog:
     _starting_time = timer()
 
     enable_inspect_caller = False
+
+    logging.basicConfig(format='%(message)s', level=logging.INFO, stream=sys.stdout)
 
     @staticmethod
     def _print_time():
@@ -41,10 +45,10 @@ class MessageLog:
                 new_message = MessageLog._print_time() + " " + message
 
         try:
-            print(new_message, flush = True)
+            logging.info(new_message)
         except UnicodeEncodeError:
             # Clean out any non UTF-8 characters before printing.
             new_message_decoded = new_message.encode("utf-8", "ignore")
-            print(new_message_decoded, flush = True)
+            logging.info(new_message_decoded)
 
         return None

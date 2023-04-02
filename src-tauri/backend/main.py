@@ -77,4 +77,5 @@ if __name__ == "__main__":
 
     bot_object.stop_bot()
 
+    time.sleep(1.0)
     MessageLog.print_message("[STATUS] Closing Python process...")

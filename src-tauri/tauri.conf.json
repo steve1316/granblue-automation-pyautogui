@@ -1,81 +1,64 @@
 {
     "package": {
         "productName": "Granblue Automation",
-        "version": "2.4.3"
+        "version": "3.0.0"
     },
     "build": {
-        "distDir": "../build",
-        "devPath": "http://localhost:3000",
-        "beforeDevCommand": "",
+        "beforeDevCommand": "yarn dev",
         "beforeBuildCommand": "",
-        "withGlobalTauri": true
+        "devPath": "http://localhost:1420",
+        "distDir": "../dist",
+        "withGlobalTauri": false
     },
     "tauri": {
+        "allowlist": {
+            "all": false,
+            "shell": {
+                "all": true,
+                "open": true,
+                "scope": [
+                    {
+                        "name": "powershell",
+                        "cmd": "powershell",
+                        "args": true
+                    },
+                    {
+                        "name": "python",
+                        "cmd": "python",
+                        "args": true
+                    }
+                ]
+            },
+            "fs": {
+                "readFile": true,
+                "writeFile": true,
+                "scope": ["backend/settings.json", "backend/*", "backend", "*/**", "*"]
+            }
+        },
         "bundle": {
             "active": true,
-            "targets": "all",
-            "identifier": "com.steve1316.dev",
             "icon": ["icons/32x32.png", "icons/128x128.png", "icons/128x128@2x.png", "icons/icon.icns", "icons/icon.ico"],
             "resources": ["backend/", "images/", "scripts/"],
-            "externalBin": [],
-            "copyright": "",
-            "category": "DeveloperTool",
-            "shortDescription": "",
-            "longDescription": "",
-            "deb": {
-                "depends": [],
-                "useBootstrapper": false
-            },
-            "macOS": {
-                "frameworks": [],
-                "minimumSystemVersion": "",
-                "useBootstrapper": false,
-                "exceptionDomain": "",
-                "signingIdentity": null,
-                "entitlements": null
-            },
-            "windows": {
-                "certificateThumbprint": null,
-                "digestAlgorithm": "sha256",
-                "timestampUrl": ""
-            }
+            "identifier": "com.steve1316.dev",
+            "targets": "all"
+        },
+        "security": {
+            "csp": null
         },
         "updater": {
             "active": true,
             "endpoints": ["https://raw.githubusercontent.com/steve1316/granblue-automation-pyautogui/main/src-tauri/update.json"],
-            "dialog": false
-        },
-        "allowlist": {
-            "all": true
+            "dialog": false,
+            "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDJGQUVFRURENTFDMTc1ODUKUldTRmRjRlIzZTZ1TDFFSU1YN1ZmVnVYaVM4QUlCUXBUNlFWVTR6bTNpcWhXa2d3ckR1T09JcHMK"
         },
         "windows": [
             {
-                "label": "main",
+                "fullscreen": false,
+                "resizable": true,
                 "title": "Granblue Automation",
-                "width": 1000,
-                "height": 600,
-                "minWidth": 1000,
-                "minHeight": 600,
-                "center": true,
-                "resizable": true,
-                "fullscreen": false,
-                "decorations": false,
-                "visible": false
-            },
-            {
-                "label": "splashscreen",
-                "title": "Loading...",
-                "width": 1000,
-                "height": 600,
-                "center": true,
-                "resizable": true,
-                "fullscreen": false,
-                "decorations": false,
-                "url": "splashscreen.html"
+                "width": 900,
+                "height": 600
             }
-        ],
-        "security": {
-            "csp": "default-src blob: data: filesystem: ws: wss: http: https: tauri: 'unsafe-eval' 'unsafe-inline' 'self' img-src: 'self'"
-        }
+        ]
     }
 }

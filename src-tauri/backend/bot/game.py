@@ -957,6 +957,7 @@ class Game:
         Returns:
             (bool): True if Farming Mode ended successfully.
         """
+        exception_occurred = False
         try:
             Game.start_discord_process()
 
@@ -1032,34 +1033,29 @@ class Game:
 
         except Exception as e:
             Game._discord_queue.put(f"> Bot encountered exception in Farming Mode: \n{e}")
+            exception_occurred = True
             MessageLog.print_message(f"\n[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
-
-            if Settings.farming_mode == "Raid":
-                TwitterRoomFinder.disconnect()
-
-            Game.stop_discord_process()
-
             ImageUtils.generate_alert(f"Bot encountered exception in Farming Mode: \n{e}")
 
+        if Settings.farming_mode == "Raid":
+                TwitterRoomFinder.disconnect()
+
+        Game.stop_discord_process()
+        
+        if exception_occurred:
             MessageLog.print_message("\n######################################################################")
             MessageLog.print_message("######################################################################")
             MessageLog.print_message("[FARM] Ending Farming Mode due to encountering Exception.")
             MessageLog.print_message("######################################################################")
             MessageLog.print_message("######################################################################\n")
-
+            Game.wait(1.0)
             return False
-
-        if Settings.farming_mode == "Raid":
-            TwitterRoomFinder.disconnect()
-
-        Game.stop_discord_process()
-
-        MessageLog.print_message("\n######################################################################")
-        MessageLog.print_message("######################################################################")
-        MessageLog.print_message("[FARM] Ending Farming Mode.")
-        MessageLog.print_message("######################################################################")
-        MessageLog.print_message("######################################################################\n")
-
-        Game._move_mouse_security_check()
-
-        return True
+        else:
+            MessageLog.print_message("\n######################################################################")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("[FARM] Ending Farming Mode.")
+            MessageLog.print_message("######################################################################")
+            MessageLog.print_message("######################################################################\n")
+            Game._move_mouse_security_check()
+            Game.wait(1.0)
+            return True

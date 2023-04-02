@@ -1,0 +1,142 @@
+{
+    "game": {
+        "combatScriptName": "",
+        "combatScript": [],
+        "farmingMode": "Event (Token Drawboxes)",
+        "item": "",
+        "mission": "",
+        "map": "",
+        "itemAmount": 1,
+        "summons": ["Colossus Omega"],
+        "summonElements": ["Fire"],
+        "groupNumber": 1,
+        "partyNumber": 1,
+        "debugMode": false
+    },
+    "twitter": {
+        "twitterUseVersion2": false,
+        "twitterAPIKey": "",
+        "twitterAPIKeySecret": "",
+        "twitterAccessToken": "",
+        "twitterAccessTokenSecret": "",
+        "twitterBearerToken": ""
+    },
+    "discord": {
+        "enableDiscordNotifications": false,
+        "discordToken": "",
+        "discordUserID": ""
+    },
+    "api": {
+        "enableOptInAPI": false,
+        "username": "",
+        "password": ""
+    },
+    "configuration": {
+        "reduceDelaySeconds": 0,
+        "enableBezierCurveMouseMovement": true,
+        "mouseSpeed": 0.2,
+        "enableDelayBetweenRuns": false,
+        "delayBetweenRuns": 15,
+        "enableRandomizedDelayBetweenRuns": false,
+        "delayBetweenRunsLowerBound": 15,
+        "delayBetweenRunsUpperBound": 60,
+        "enableRefreshDuringCombat": true,
+        "enableAutoQuickSummon": false,
+        "enableBypassResetSummon": false,
+        "staticWindow": true,
+        "enableMouseSecurityAttemptBypass": true
+    },
+    "misc": {
+        "guiLowPerformanceMode": false,
+        "alternativeCombatScriptSelector": false
+    },
+    "nightmare": {
+        "enableNightmare": false,
+        "enableCustomNightmareSettings": false,
+        "nightmareCombatScriptName": "",
+        "nightmareCombatScript": [],
+        "nightmareSummons": [],
+        "nightmareSummonElements": [],
+        "nightmareGroupNumber": 1,
+        "nightmarePartyNumber": 1
+    },
+    "event": {
+        "enableNewPosition": true,
+        "newPosition": 0,
+        "enableLocationIncrementByOne": false,
+        "selectBottomCategory": false
+    },
+    "raid": {
+        "enableAutoExitRaid": false,
+        "timeAllowedUntilAutoExitRaid": 10,
+        "enableNoTimeout": false
+    },
+    "arcarum": {
+        "enableStopOnArcarumBoss": true
+    },
+    "generic": {
+        "enableForceReload": false
+    },
+    "xenoClash": {
+        "enableNewPosition": false,
+        "newPosition": 0,
+        "selectTopOption": true
+    },
+    "provingGrounds": {
+        "enableNewPosition": false,
+        "newPosition": 0
+    },
+    "guildWars": {
+        "enableNewPosition": false,
+        "newPosition": 0
+    },
+    "rotb": {
+        "enableNewPosition": false,
+        "newPosition": 0
+    },
+    "adjustment": {
+        "enableCalibrationAdjustment": false,
+        "adjustCalibration": 5,
+        "enableGeneralAdjustment": false,
+        "adjustButtonSearchGeneral": 5,
+        "adjustHeaderSearchGeneral": 5,
+        "enablePendingBattleAdjustment": false,
+        "adjustBeforePendingBattle": 1,
+        "adjustPendingBattle": 2,
+        "enableCaptchaAdjustment": false,
+        "adjustCaptcha": 5,
+        "enableSupportSummonSelectionScreenAdjustment": false,
+        "adjustSupportSummonSelectionScreen": 30,
+        "enableCombatModeAdjustment": false,
+        "adjustCombatStart": 50,
+        "adjustDialog": 2,
+        "adjustSkillUsage": 5,
+        "adjustSummonUsage": 5,
+        "adjustWaitingForReload": 3,
+        "adjustWaitingForAttack": 100,
+        "adjustCheckForNoLootScreen": 1,
+        "adjustCheckForBattleConcludedPopup": 1,
+        "adjustCheckForExpGainedPopup": 1,
+        "adjustCheckForLootCollectionScreen": 1,
+        "enableArcarumAdjustment": false,
+        "adjustArcarumAction": 3,
+        "adjustArcarumStageEffect": 10
+    },
+    "sandbox": {
+        "enableDefender": false,
+        "enableGoldChest": false,
+        "enableCustomDefenderSettings": false,
+        "numberOfDefenders": 1,
+        "defenderCombatScriptName": "",
+        "defenderCombatScript": [],
+        "defenderGroupNumber": 1,
+        "defenderPartyNumber": 1
+    },
+    "device": {
+        "useFirstNotch": false,
+        "confidence": 0.8,
+        "confidenceAll": 0.8,
+        "customScale": 1,
+        "enableTestForHomeScreen": false
+    }
+}
