@@ -1,0 +1,83 @@
+name: "Build and Create Draft Release"
+
+on:
+    workflow_dispatch:
+
+permissions:
+    contents: write
+
+env:
+    TAURI_PRIVATE_KEY: ${{secrets.TAURI_PRIVATE_KEY}}
+
+jobs:
+    build-and-deploy:
+        strategy:
+            matrix:
+                platform: [windows-latest]
+        runs-on: ${{matrix.platform}}
+        steps:
+            - name: Checkout this repo
+              uses: actions/checkout/@v3
+
+            - name: Install Node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16.14.2
+
+            - name: Install Rust
+              uses: actions-rs/toolchain@v1
+              with:
+                  toolchain: stable
+
+            - name: Install webkit2gtk and zip (ubuntu only)
+              if: matrix.platform == 'ubuntu-latest'
+              run: |
+                  sudo apt-get update
+                  sudo apt-get install -y webkit2gtk-4.0 jq zip
+
+            - name: Install dependencies using Yarn
+              run: yarn install
+
+            - name: Build using Yarn command
+              run: yarn build
+
+            - name: Get version from update.json
+              id: json_property_getter
+              uses: notiz-dev/github-action-json-property@release
+              with:
+                  path: ./src-tauri/update.json
+                  prop_path: version
+
+            - name: Set version and zip file name
+              id: name_version_getter
+              run: |
+                  echo "Granblue Automation v${{steps.json_property_getter.outputs.prop}}"
+                  echo "VERSION=v${{steps.json_property_getter.outputs.prop}}" >> $GITHUB_OUTPUT
+                  echo "FILE_NAME=Granblue Automation v${{steps.json_property_getter.outputs.prop}}.zip" >> $GITHUB_OUTPUT
+              shell: bash
+
+            - run: |
+                  echo VERSION: ${{steps.name_version_getter.outputs.VERSION}}
+                  echo FILE_NAME: ${{steps.name_version_getter.outputs.FILE_NAME}}
+              shell: bash
+
+            - name: Create the zip file (windows only)
+              if: matrix.platform == 'windows-latest'
+              run: |
+                  cd ./src-tauri/target/release
+                  Compress-Archive -Path 'backend','images','scripts','./Granblue Automation.exe' -DestinationPath './${{steps.name_version_getter.outputs.FILE_NAME}}'
+
+            - name: Create the zip file (ubuntu only)
+              if: matrix.platform == 'ubuntu-latest'
+              run: |
+                  cd ./src-tauri/target/release
+                  zip -r "${{steps.name_version_getter.outputs.FILE_NAME}}" backend images scripts Granblue\ Automation.exe
+
+            - name: Create Draft Release
+              uses: softprops/action-gh-release@v1
+              with:
+                  name: ${{steps.name_version_getter.outputs.VERSION}}
+                  tag_name: ${{steps.name_version_getter.outputs.VERSION}}
+                  draft: true
+                  files: |
+                      ./src-tauri/target/release/${{steps.name_version_getter.outputs.FILE_NAME}}
