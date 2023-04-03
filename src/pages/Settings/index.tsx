@@ -246,7 +246,7 @@ const Settings = () => {
                 <FileInput
                     placeholder="None Selected"
                     label="Combat Script"
-                    description="Select a Combat Script text file."
+                    description="Select a Combat Script text file. Defaults to using Full Auto if none is selected."
                     value={bsc.combatScriptFile}
                     onChange={(file) => {
                         loadCombatScript(bsc, file)
