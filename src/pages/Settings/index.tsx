@@ -276,7 +276,7 @@ const Settings = () => {
     const renderFarmingModeSetting = () => {
         return (
             <Grid>
-                <Grid.Col span={6}>
+                <Grid.Col span={12}>
                     <CustomSelect
                         label="Farming Mode"
                         placeholder="Please select the Farming Mode"
@@ -313,14 +313,13 @@ const Settings = () => {
                         }}
                     />
                 </Grid.Col>
-                <Grid.Col span={6} />
                 {bsc.settings.game.farmingMode === "Special" ||
                 bsc.settings.game.farmingMode === "Event" ||
                 bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ||
                 bsc.settings.game.farmingMode === "Rise of the Beasts" ||
                 bsc.settings.game.farmingMode === "Xeno Clash" ? (
                     <>
-                        <Grid.Col span={6} sx={{ marginLeft: 0 }}>
+                        <Grid.Col span={12} sx={{ marginLeft: 0 }}>
                             <CustomSwitch
                                 label="Enable Nightmare Settings"
                                 description="Enable additional settings to show up in the Extra Settings page."
@@ -328,10 +327,9 @@ const Settings = () => {
                                 onChange={(value) => bsc.setSettings({ ...bsc.settings, nightmare: { ...bsc.settings.nightmare, enableNightmare: value } })}
                             />
                         </Grid.Col>
-                        <Grid.Col span={6} />
                     </>
                 ) : null}
-                <Grid.Col span={6}>
+                <Grid.Col span={12}>
                     {ArcarumHelper()}
                     {ArcarumSandboxHelper()}
                     {EventHelper()}
@@ -341,7 +339,6 @@ const Settings = () => {
                     {ROTBHelper()}
                     {XenoClashHelper()}
                 </Grid.Col>
-                <Grid.Col span={6} />
             </Grid>
         )
     }
