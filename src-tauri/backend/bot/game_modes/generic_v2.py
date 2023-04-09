@@ -1,8 +1,8 @@
 from utils.message_log import MessageLog as Log
 from utils.settings import Settings
-from utils.image_utils_v2 import ImageUtils
+from utils.image_utils import ImageUtils
 from bot.window import Window
-from bot.combat_mode_v2 import CombatMode as Combat
+from bot.combat_mode_v2 import CombatModeV2 as Combat
 from utils.parser import Parser
 import numpy as np
 from time import sleep
@@ -66,10 +66,10 @@ class GenericV2:
                     if (np.random.rand() > .9):
                         Game._move_mouse_security_check()
 
-
         Log.print_message(f"GenericV2 successfully finish!")
 
     
+
     @staticmethod
     def single_battle_sub_back(support_summon: str):
         from bot.game import Game
@@ -78,17 +78,17 @@ class GenericV2:
         support_summon: string of the support summon
         """
         # Check if the bot is at the Summon Selection screen.
-        if ImageUtils.confirm_location("select_a_summon", tries = 30):
-            if Game.select_summon([support_summon], Settings.summon_element_list):
-                if Game.find_and_click_button("ok", tries = 30):
-                    # Now start Combat Mode and detect any item drops.
-                    if Combat.start_combat_mode():
-                        if ImageUtils.find_button("ok", tries = 30, is_sub=True):
-                            Game.find_and_click_button("home_back")
-                else:
-                    raise RuntimeError("Failed to skip party selection.")
-        else:
+        if not ImageUtils.confirm_location("select_a_summon", tries = 30):
             raise RuntimeError("Failed to arrive at the Summon Selection screen.")
+        if not Game.select_summon([support_summon], Settings.summon_element_list):
+            raise RuntimeError("Failed to select summon")
+        if not Game.find_and_click_button("ok", tries = 30):
+            raise RuntimeError("Failed to confirm team")
+        if not Combat.start_combat_mode():
+            raise RuntimeError("Failed to start combat mode")
+        if not ImageUtils.find_button("ok", tries = 30, is_sub=True):
+            raise RuntimeError("Failed to reach loot page")
+        Game.find_and_click_button("home_back")
 
 
 
@@ -97,11 +97,12 @@ class GenericV2:
         from bot.game import Game
         """ Standart method to do a battle
         """
-        if ImageUtils.confirm_location("select_a_summon", tries = 30):
-            if Game.select_summon([support_summon], Settings.summon_element_list):
-                if Game.find_and_click_button("ok", tries = 30):
-                    Combat.start_combat_mode()
-                else:
-                    raise RuntimeError("Failed to find ok button.")
-        else:
+        if not ImageUtils.confirm_location("select_a_summon", tries = 30):
             raise RuntimeError("Failed to arrive at the Summon Selection screen.")
+        if not Game.select_summon([support_summon], Settings.summon_element_list):
+            raise RuntimeError("Failed to select summon")
+        if not Game.find_and_click_button("ok", tries = 30):
+            raise RuntimeError("Failed to confirm team")
+        if not Combat.start_combat_mode():
+            raise RuntimeError("Failed to start combat mode")
+            

@@ -3,7 +3,7 @@ import os
 import sys
 import codecs
 from datetime import date
-from typing import List, Tuple
+from typing import List, Tuple, Optional
 
 import PIL
 import cv2
@@ -15,11 +15,12 @@ from playsound import playsound
 
 from utils.settings import Settings
 from utils.message_log import MessageLog
+from bot.window import Window 
 
 
 class ImageUtils:
     """
-    Provides the utility functions needed to perform image-related actions.
+    Image Utils but more basic and simple, for generic v2
     """
 
     # Initialize the following for saving screenshots.
@@ -89,20 +90,25 @@ class ImageUtils:
         return template.resize(size = (int(width * scale), int(height * scale)), resample = None)
 
     @staticmethod
-    def _match(image_path: str, confidence: float = 0.8, use_single_scale: bool = False, is_summon: bool = False) -> bool:
+    def _match(image_path: str, confidence: float = 0.8, \
+               use_single_scale: bool = False, is_summon: bool = False, is_sub: bool = False) -> bool:
         """Match the given template image against the source screenshot to find a match location.
 
         Args:
-            image_path (str): The file path of the template image to match against in a source image.
-            confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
-            use_single_scale (bool, optional): Use a range of scales if this is disabled. Otherwise, it will use the custom_scale value. Defaults to False.
-            is_summon (bool, optional): Crop out the plus signs on a summon template image before doing template matching. Defaults to False.
+            image_path: The file path of the template image to match against in a source image.
+            confidence: Accuracy threshold for matching.
+            use_single_scale: Use a range of scales if this is disabled. Otherwise, it will use the custom_scale value.
+            is_summon: Crop out the plus signs on a summon template image before doing template matching.
+            is_sub: if is searching on sub window.
 
         Returns:
             (bool): True if the template was found inside the source image and False otherwise.
         """
+
         match_check = False
-        if Settings.window_left is not None and Settings.window_top is not None and Settings.window_width is not None and Settings.window_height is not None:
+        if is_sub:
+            image: Image = pyautogui.screenshot(region = (Window.sub_start, Window.sub_top, Window.width, Window.sub_height))
+        elif Settings.window_left is not None and Settings.window_top is not None and Settings.window_width is not None and Settings.window_height is not None:
             image: Image = pyautogui.screenshot(region = (Settings.window_left, Settings.window_top, Settings.window_width, Settings.window_height))
         else:
             image: Image = pyautogui.screenshot()
@@ -163,14 +169,24 @@ class ImageUtils:
                 if Settings.debug_mode:
                     cv2.imwrite(f"temp/match.png", src)
 
-                if Settings.additional_calibration_required is False:
-                    temp_location = list(ImageUtils._match_location)
-                    temp_location[0] += int(width / 2)
-                    temp_location[1] += int(height / 2)
+                if Settings.farming_mode.endswith("V2"):
+                    if is_sub:
+                        temp_location = list(ImageUtils._match_location)
+                        temp_location[0] += Window.sub_start
+                        temp_location[1] += Window.sub_top
+                    else:
+                        temp_location = list(ImageUtils._match_location)
+                        temp_location[0] += Window.start
+                        temp_location[1] += Window.top
                 else:
-                    temp_location = list(ImageUtils._match_location)
-                    temp_location[0] += (pyautogui.size()[0] - (pyautogui.size()[0] - Settings.window_left)) + int(width / 2)
-                    temp_location[1] += (pyautogui.size()[1] - (pyautogui.size()[1] - Settings.window_top)) + int(height / 2)
+                    if Settings.additional_calibration_required is False:
+                        temp_location = list(ImageUtils._match_location)
+                        temp_location[0] += int(width / 2)
+                        temp_location[1] += int(height / 2)
+                    else:
+                        temp_location = list(ImageUtils._match_location)
+                        temp_location[0] += (pyautogui.size()[0] - (pyautogui.size()[0] - Settings.window_left)) + int(width / 2)
+                        temp_location[1] += (pyautogui.size()[1] - (pyautogui.size()[1] - Settings.window_top)) + int(height / 2)
 
                 ImageUtils._match_location = tuple(temp_location)
 
@@ -410,21 +426,24 @@ class ImageUtils:
             return 0
 
     @staticmethod
-    def find_button(image_name: str, custom_confidence: float = Settings.confidence, tries: int = 5, suppress_error: bool = False, disable_adjustment: bool = False,
-                    bypass_general_adjustment: bool = False, test_mode: bool = False):
+    def find_button(
+        image_name: str, custom_confidence: float = Settings.confidence, tries: int = 5,
+        suppress_error: bool = False, disable_adjustment: bool = False,
+        bypass_general_adjustment: bool = False, test_mode: bool = False, 
+        is_sub = False) -> Optional[Tuple[int, int]]:
         """Find the location of the specified button.
 
         Args:
-            image_name (str): Name of the button image file in the /images/buttons/ folder.
-            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
-            tries (int, optional): Number of tries before failing. Note that this gets overridden if the image_name is one of the adjustments. Defaults to 5.
-            suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
-            disable_adjustment (bool, optional): Disable the usage of adjustment to tries. Defaults to False.
-            bypass_general_adjustment (bool, optional): Bypass using the general adjustment for the number of tries. Defaults to False.
-            test_mode (bool, optional): Flag to test and get a valid scale for device compatibility. Defaults to False.
+            image_name: Name of the button image file in the /images/buttons/ folder.
+            custom_confidence: Accuracy threshold for matching.
+            tries: Number of tries before failing. Note that this gets overridden if the image_name is one of the adjustments.
+            suppress_error: Suppresses template matching error if True.
+            disable_adjustment: Disable the usage of adjustment to tries.
+            bypass_general_adjustment: Bypass using the general adjustment for the number of tries.
+            test_mode: Flag to test and get a valid scale for device compatibility.
 
         Returns:
-            (Tuple[int, int]): Tuple of coordinates of where the center of the button is located if image matching was successful. Otherwise, return None.
+            Coordinates of where the center of the button is located if image matching was successful.
         """
         if Settings.debug_mode:
             MessageLog.print_message(f"\n[DEBUG] Starting process to find the {image_name.upper()} button image...")
@@ -445,7 +464,7 @@ class ImageUtils:
 
         while new_tries > 0:
             result_flag: bool = ImageUtils._match(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.jpg", confidence = custom_confidence,
-                                                  use_single_scale = Settings.enable_test_for_home_screen)
+                                                  use_single_scale = Settings.enable_test_for_home_screen, is_sub=is_sub)
 
             if result_flag is False:
                 if test_mode:

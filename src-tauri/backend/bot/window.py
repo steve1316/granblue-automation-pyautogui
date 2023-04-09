@@ -7,7 +7,7 @@ import pyautogui as pya
 from utils.message_log import MessageLog as Log
 from utils.mouse_utils import MouseUtils as mouse
 from time import sleep
-from pyperclip import paste
+from pyperclip import paste, copy
 
 class Window():
 
@@ -28,9 +28,11 @@ class Window():
 
 
     @staticmethod
-    def goto(url: str, is_sub: bool = False, pattern:str = "_"):
-        """is_sub: if use sub window, default to false
-        pattern: if match, will not go to the url, default empty
+    def goto(url: str, is_sub: bool = False, pattern:str = "_") -> None:
+        """
+        Args:
+            is_sub: if use sub window
+            pattern: if match, will not go to the url
         """
         if is_sub:
             mouse.move_to(Window.sub_start+160, Window.sub_top-55)
@@ -38,22 +40,23 @@ class Window():
             mouse.move_to(Window.start+160, Window.top-55)
         click()
         sleep(.03)
-        pya.hotkey('ctrl', 'a', 'c')
-        sleep(.03)
+        with hold('ctrl'):
+            press(['a', 'c'])
         if paste() != url and not paste().startswith(pattern):
-            write(url)
+            copy(url)
+            pya.hotkey('ctrl', 'v')
+            sleep(.03)
             press('enter')
 
     @staticmethod
-    def sub_prepare_loot():
+    def sub_prepare_loot() -> None:
         """ prepare the support window to be ready to claim loot
         """
         Window.goto("https://game.granbluefantasy.jp/#quest/index",
-                    pattern="https://game.granbluefantasy.jp/#result/",
                     is_sub=True)
 
     @staticmethod
-    def reload(is_sub=False):
+    def reload(is_sub: bool = False) -> None:
         if is_sub:
             mouse.move_to(Window.sub_start+160, Window.sub_top-55)
         else:
@@ -62,16 +65,13 @@ class Window():
         press('f5')
 
     @staticmethod
-    def calibrate(display_info_check: bool = False):
-        """Recalibrate the dimensions of the bot window for fast and accurate image matching.
+    def calibrate(display_info_check: bool = False) -> None:
+        """Calibrate the game window for fast and accurate image matching.
 
         Args:
-            display_info_check (bool, optional): Displays the screen size and the dimensions of the bot window. Defaults to False.
-
-        Returns:
-            None
+            display_info_check: Displays the screen size and the dimensions of the bot window.
         """
-        from utils.image_utils_v2 import ImageUtils
+        from utils.image_utils import ImageUtils
 
         # Save the location of the "Home" button at the bottom of the bot window.
 
@@ -157,5 +157,3 @@ class Window():
             Log.print_message(f"[INFO] Game Sub-Window Dimensions: Region({Window.sub_start}, {Window.sub_top}, {Window.sub_width}, {Window.sub_height})")
             Log.print_message("**********************************************************************")
             Log.print_message("**********************************************************************")
-
-        return None

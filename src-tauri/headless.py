@@ -48,7 +48,8 @@ def print_status():
         m :change game mode                  {pref['game']['farmingMode']}
         i :change repeat time/item to farm   {pref['game']['itemAmount']}
         q :quit current operation
-        r :run the bot
+
+        enter :run the bot
         ---------------------------------------------------
         """))
 
@@ -127,10 +128,9 @@ while True:
         change_mode()
     elif cmd == 'i':
         change_item_amount()
-    elif cmd == 'r':
+    elif cmd == '':
         print("Bot starting now, user Ctrl-c to force terminate")
         run(["python", "./backend/main.py"])
-        break
     elif cmd == 'q':
         print("Bot quit successfully")
         break

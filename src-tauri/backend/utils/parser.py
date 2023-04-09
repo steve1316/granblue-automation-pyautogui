@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Tuple, Dict, Optional
 from utils.settings import Settings
 from utils.message_log import MessageLog as Log
 
@@ -10,7 +10,7 @@ class Parser:
     """
 
     @staticmethod
-    def pre_parse(text: List[str]):
+    def pre_parse(text: List[str]) -> List[str]:
         """ Remove all comment and empty line and lowercased result
         """
         result = []
@@ -22,21 +22,21 @@ class Parser:
         return result
     
     @staticmethod
-    def _parse_summon(line: str):
+    def _parse_summon(line: str) -> str:
         if not line.startswith("supportsummon:"): 
             raise RuntimeError(
                 f"[Pareser] Invalid summon: {line}")
         return line.split(':')[1]
     
     @staticmethod
-    def _parse_url(line: str):
+    def _parse_url(line: str) -> str:
         if not line.startswith("http"): 
             raise RuntimeError(
                 f"[Pareser] Invalid Url: {line}")
         return line
     
     @staticmethod
-    def _parse_repeat(line: str):
+    def _parse_repeat(line: str) -> int:
         if not line.startswith("repeat:"): 
             raise RuntimeError(
                 f"[Pareser] Invalid Url: {line}")
@@ -49,8 +49,11 @@ class Parser:
 
 
     @staticmethod
-    def parse_battles(text: List[str]):
+    def parse_battles(text: List[str]) -> List[Tuple[Tuple[str, str, int], ...]]:
         """ Parse list of text into list of tuple of 
+
+        Returns:
+            list of battle informations (url, summon, repeats) and combact action
         """
         text = Parser.pre_parse(text)
 
@@ -77,32 +80,44 @@ class Parser:
         
         return ret
         
-
-    
     @staticmethod
-    def _parse_combact(text: List[str]):
+    def _parse_combact(text: List[str]) -> List[Tuple[str, Dict[str, int]]]:
+        """Parse the combact action
+
+        Returns:
+            list of function names and function param in combact mode
+        """
+        char_selected: Optional[int] = None
         ret = []
         for line in text:
             if line.startswith('character'):
-                # character1
-                char_idx = int(line.split('.')[0][-1])
+                chains = line.split('.')
+                char_idx = int(chains[0][-1])
                 if char_idx not in (1,2,3,4):
                     raise RuntimeError(
                         f"[Parser] Invalid chracter number: {char_idx}")
-                ret.append( 
-                    ( "selectchar", {"idx":char_idx} ) 
-                )
+                if char_selected == None:
+                    ret += [("selectchar", {"idx":char_idx-1} )] 
+                elif char_selected != char_idx:
+                    ret += [("changechar", {"idx":char_idx-1})] 
+                char_selected = char_idx
 
-                for cmd in line.split('.')[1:]:
-                    # useSkill(1)
+                for cmd in chains[1:]:
+
                     skill_idx = int(cmd[-2])
                     if skill_idx not in (1,2,3,4):
                         raise RuntimeError(
                             f"[Parser] Invalid skill number: {skill_idx}")
                     ret.append( 
-                        ( "useskill", {"idx":skill_idx} ) 
+                        ( "useskill", {"idx":skill_idx-1} ) 
                     )
-
+            elif line == "attack":
+                char_selected = None
+                ret.append( (line, {}) )
+            elif line == "enablefullauto":
+                if char_selected is not None:
+                    ret += [("deselectchar", {})]
+                ret += [(line, {})]
             else:
                 ret.append( (line, {}) )
         return ret
