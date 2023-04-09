@@ -538,16 +538,18 @@ const ExtraSettings = () => {
                     </Grid.Col>
 
                     <Grid.Col span={12}>
-                        <Stack>
-                            <CustomSwitch
-                                label="Enable Custom Settings for Defender"
-                                description="Enable customizing individual settings for Defender"
-                                checked={bsc.settings.sandbox.enableCustomDefenderSettings}
-                                onChange={(checked) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, enableCustomDefenderSettings: checked } })}
-                            />
+                        <CustomSwitch
+                            label="Enable Custom Settings for Defender"
+                            description="Enable customizing individual settings for Defender"
+                            checked={bsc.settings.sandbox.enableCustomDefenderSettings}
+                            onChange={(checked) => bsc.setSettings({ ...bsc.settings, sandbox: { ...bsc.settings.sandbox, enableCustomDefenderSettings: checked } })}
+                        />
+                    </Grid.Col>
 
+                    <Grid.Col span={12}>
+                        <Stack>
                             {bsc.settings.sandbox.enableCustomDefenderSettings ? (
-                                <Stack align={"flex-start"}>
+                                <Stack>
                                     {!bsc.settings.misc.alternativeCombatScriptSelector ? (
                                         <FileInput
                                             placeholder="None Selected"
