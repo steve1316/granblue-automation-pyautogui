@@ -12,12 +12,17 @@ const Home = () => {
             width: "100%",
             maxWidth: "100%",
             height: "100%",
+            display: "table", // This and having the inner container inherit the height is necessary to keep the log container from not overflowing the wrong way.
             backgroundColor: "#2f2f2f",
             padding: "10px 20px 10px 20px",
             fontSize: "8pt",
             whiteSpace: "pre-wrap",
             borderRadius: 10,
             margin: 0,
+        },
+        innerContainer: {
+            height: "inherit",
+            overflowY: "auto",
         },
     }))
 
@@ -38,8 +43,10 @@ const Home = () => {
 
     return (
         <Container className={classes.container}>
-            <Text id="log">{initialMessage + mlc.messageLog.join("\r")}</Text>
-            <div ref={msgRef} />
+            <Text id="log" className={classes.innerContainer}>
+                {initialMessage + mlc.messageLog.join("\r")}
+                <div ref={msgRef} />
+            </Text>
         </Container>
     )
 }
