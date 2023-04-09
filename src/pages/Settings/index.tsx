@@ -301,6 +301,7 @@ const Settings = () => {
                                 sandbox: {
                                     ...bsc.settings.sandbox,
                                     enableDefender: false,
+                                    enableHerald: false,
                                     enableGoldChest: false,
                                     enableCustomDefenderSettings: false,
                                     numberOfDefenders: 1,
