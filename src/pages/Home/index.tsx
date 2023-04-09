@@ -10,12 +10,14 @@ const Home = () => {
     const useStyles = createStyles((theme) => ({
         container: {
             width: "100%",
+            maxWidth: "100%",
             height: "100%",
             backgroundColor: "#2f2f2f",
             padding: "10px 20px 10px 20px",
             fontSize: "8pt",
             whiteSpace: "pre-wrap",
             borderRadius: 10,
+            margin: 0,
         },
     }))
 
