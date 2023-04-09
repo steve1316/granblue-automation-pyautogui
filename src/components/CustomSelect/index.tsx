@@ -51,7 +51,7 @@ export const CustomSelect = ({ label, placeholder = "", description = "", disabl
             searchable
             clearable
             disabled={disabled}
-            maxDropdownHeight={400}
+            maxDropdownHeight={350}
             nothingFound="No matches found"
             filter={(value, item) => {
                 return item.label?.toLowerCase().includes(value.toLowerCase().trim()) || item.description?.toLowerCase().includes(value.toLowerCase().trim())
