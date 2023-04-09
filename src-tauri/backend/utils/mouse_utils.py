@@ -7,6 +7,9 @@ import pyperclip
 from utils.settings import Settings
 from utils.message_log import MessageLog
 
+from time import sleep
+import numpy as np
+
 
 class MouseUtils:
     """
@@ -81,7 +84,14 @@ class MouseUtils:
 
             pyautogui.moveTo(x, y, duration = custom_mouse_speed, tween = pyautogui.easeInOutQuad)
 
-        pyautogui.click(clicks = mouse_clicks)
+        pyautogui.mouseDown()
+        sleep(np.random.uniform(0.02, 0.12))
+        pyautogui.mouseUp()
+        for i in range (0, mouse_clicks-1):
+            sleep(np.random.uniform(0.1,0.2))
+            pyautogui.mouseDown()
+            sleep(np.random.uniform(0.02, 0.12))
+            pyautogui.mouseUp()
 
         # This delay is necessary as ImageUtils will take the screenshot too fast and the bot will use the last frame before clicking to navigate.
         from bot.game import Game
