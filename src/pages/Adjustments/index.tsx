@@ -119,7 +119,7 @@ const Adjustments = () => {
 
                 <Grid.Col span={12}></Grid.Col>
                 {bsc.settings.adjustment.enablePendingBattleAdjustment ? (
-                    <Grid grow sx={{ width: "100%" }}>
+                    <Grid grow sx={{ width: "100%" }} align="flex-end">
                         <Grid.Col span={6}>
                             <CustomNumberInput
                                 label="Delay Before Starting Check"
@@ -238,7 +238,7 @@ const Adjustments = () => {
 
                 <Grid.Col span={12}>
                     {bsc.settings.adjustment.enableCombatModeAdjustment ? (
-                        <Grid grow sx={{ width: "100%" }}>
+                        <Grid grow sx={{ width: "100%" }} align="flex-end">
                             <Grid.Col span={6}>
                                 <CustomNumberInput
                                     label="Arrival at Combat Screen"
@@ -364,7 +364,7 @@ const Adjustments = () => {
 
                 <Grid.Col span={12}>
                     {bsc.settings.adjustment.enableArcarumAdjustment ? (
-                        <Grid grow sx={{ width: "100%" }}>
+                        <Grid grow sx={{ width: "100%" }} align="flex-end">
                             <Grid.Col span={6}>
                                 <CustomNumberInput
                                     label="Determining Which Action To Take"
