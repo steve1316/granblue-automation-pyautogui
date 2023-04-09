@@ -4,7 +4,7 @@
     "version": "0.0.0",
     "type": "module",
     "scripts": {
-        "start": "tauri dev",
+        "start": "tauri dev --no-watch",
         "dev": "vite",
         "build": "tsc && vite build && tauri build",
         "preview": "vite preview",
