@@ -1314,9 +1314,15 @@
         "Goddess of the Wild Hunt": {
             "map": "Zone Mundus",
             "items": ["Repeated Runs"]
-        }        
+        }
     },
     "Generic": {
+        "Any": {
+            "map": "None",
+            "items": ["Repeated Runs"]
+        }
+    },
+    "GenericV2": {
         "Any": {
             "map": "None",
             "items": ["Repeated Runs"]
