@@ -24,3 +24,5 @@ dist-ssr
 *.sw?
 
 .env
+.vscode/launch.json
+*.png

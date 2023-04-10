@@ -27,6 +27,8 @@ from bot.game_modes.rotb import RiseOfTheBeasts
 from bot.game_modes.special import Special
 from bot.game_modes.xeno_clash import XenoClash
 from bot.game_modes.generic import Generic
+from bot.game_modes.generic_v2 import GenericV2
+from bot.window import Window
 
 
 class Game:
@@ -983,7 +985,11 @@ class Game:
                 return True
 
             # Calibrate the dimensions of the bot window on bot launch.
-            Game._calibrate_game_window(display_info_check = True)
+            if Settings.farming_mode == "Generic V2":
+                Window.calibrate()
+            else:
+                Game._calibrate_game_window(display_info_check = True)
+
 
             if Settings.item_name != "EXP":
                 MessageLog.print_message("\n######################################################################")
@@ -1041,6 +1047,9 @@ class Game:
                     ArcarumSandbox.start()
                 elif Settings.farming_mode == "Generic":
                     Generic.start()
+                elif Settings.farming_mode == "Generic V2":
+                    GenericV2.start()
+                    break
 
                 if Settings.item_amount_farmed < Settings.item_amount_to_farm:
                     # Generate a resting period if the user enabled it.
