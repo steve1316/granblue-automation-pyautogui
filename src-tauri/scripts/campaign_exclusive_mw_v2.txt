@@ -1,0 +1,8 @@
+// Script that play campagin exclusive using multi window
+
+https://game.granbluefantasy.jp/#quest/supporter/800011/22
+supportSummon:Kaguya
+repeat:default
+
+quickSummon
+subBack
