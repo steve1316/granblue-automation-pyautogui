@@ -104,7 +104,7 @@ const ExtraSettings = () => {
                         )}
 
                         <Grid.Col span={4}>
-                            <Button disabled={testInProgress} onClick={() => testTwitter()}>
+                            <Button disabled={testInProgress} onClick={() => testTwitter()} loading={testInProgress}>
                                 Test Twitter API
                             </Button>
                         </Grid.Col>
@@ -156,7 +156,7 @@ const ExtraSettings = () => {
                                     />
                                 </Grid.Col>
                                 <Grid.Col span={4}>
-                                    <Button disabled={testInProgress} onClick={() => testDiscord()}>
+                                    <Button disabled={testInProgress} onClick={() => testDiscord()} loading={testInProgress}>
                                         Test Discord API
                                     </Button>
                                 </Grid.Col>
@@ -673,7 +673,7 @@ const ExtraSettings = () => {
                                     />
                                 </Grid.Col>
                                 <Grid.Col span={4}>
-                                    <Button disabled={testInProgress} onClick={(e) => testAPIIntegration(e)}>
+                                    <Button disabled={testInProgress} onClick={(e) => testAPIIntegration(e)} loading={testInProgress}>
                                         Test Login into API
                                     </Button>
                                 </Grid.Col>
