@@ -1,7 +1,11 @@
 name: "Build and Create Draft Release"
 
 on:
-    workflow_dispatch:
+    push:
+        branches:
+            - main
+        paths:
+            - "./src-tauri/update.json"
 
 permissions:
     contents: write
