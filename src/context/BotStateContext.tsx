@@ -318,7 +318,7 @@ export const defaultSettings: Settings = {
     },
 }
 
-interface IProviderProps {
+export interface IProviderProps {
     readyStatus: boolean
     setReadyStatus: (readyStatus: boolean) => void
     isBotRunning: boolean
@@ -334,6 +334,12 @@ interface IProviderProps {
     entryPoint: string
     appVersion: string
     setAppVersion: (appVersion: string) => void
+    combatScriptFile: File | undefined
+    setCombatScriptFile: (combatScriptFile: File | undefined) => void
+    nightmareCombatScriptFile: File | undefined
+    setNightmareCombatScriptFile: (nightmareCombatScriptFile: File | undefined) => void
+    defenderCombatScriptFile: File | undefined
+    setDefenderCombatScriptFile: (defenderCombatScriptFile: File | undefined) => void
 }
 
 export const BotStateContext = createContext<IProviderProps>({} as IProviderProps)
@@ -346,11 +352,14 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
     const [stopBot, setStopBot] = useState<boolean>(false)
     const [refreshAlert, setRefreshAlert] = useState<boolean>(false)
     const [appVersion, setAppVersion] = useState<string>("")
+    const [combatScriptFile, setCombatScriptFile] = useState<File | undefined>()
+    const [nightmareCombatScriptFile, setNightmareCombatScriptFile] = useState<File | undefined>()
+    const [defenderCombatScriptFile, setDefenderCombatScriptFile] = useState<File | undefined>()
 
     const [settings, setSettings] = useState<Settings>(defaultSettings)
 
     let entryPoint = "https://granblue-automation-statistics.com"
-    if (process.env.REACT_APP_ENVIRONMENT && process.env.REACT_APP_ENVIRONMENT === "development") {
+    if (import.meta.env.VITE_APP_ENVIRONMENT && import.meta.env.VITE_APP_ENVIRONMENT === "development") {
         entryPoint = "http://localhost:4000"
     }
 
@@ -370,6 +379,12 @@ export const BotStateProvider = ({ children }: any): JSX.Element => {
         entryPoint,
         appVersion,
         setAppVersion,
+        combatScriptFile,
+        setCombatScriptFile,
+        nightmareCombatScriptFile,
+        setNightmareCombatScriptFile,
+        defenderCombatScriptFile,
+        setDefenderCombatScriptFile,
     }
 
     return <BotStateContext.Provider value={providerValues}>{children}</BotStateContext.Provider>
