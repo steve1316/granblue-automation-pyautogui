@@ -123,15 +123,21 @@ class Settings:
 
     # #### sandbox defender #### #
     enable_defender: bool = dictor(_data, "sandbox.enableDefender", False)
+    enable_herald: bool = dictor(_data, "sandbox.enableHerald", False)
     enable_gold_chest: bool = dictor(_data, "sandbox.enableGoldChest", False)
     _enable_custom_defender_settings: bool = dictor(_data, "sandbox.enableCustomDefenderSettings", False)
     defender_combat_script_name: str = dictor(_data, "sandbox.defenderCombatScriptName", "")
     defender_combat_script: List[str] = dictor(_data, "sandbox.defenderCombatScript", [])
     number_of_defenders: int = dictor(_data, "sandbox.numberOfDefenders", 1)
+    number_of_heralds: int = dictor(_data, "sandbox.numberOfHeralds",1)
     defender_group_number: int = dictor(_data, "sandbox.defenderGroupNumber", 1)
     defender_party_number: int = dictor(_data, "sandbox.defenderPartyNumber", 1)
+    herald_group_number: int = dictor(_data, "sandbox.heraldGroupNumber", 1)
+    herald_party_number: int = dictor(_data, "sandbox.heraldPartyNumber", 1)
     number_of_defeated_defenders: int = 0
+    number_of_defeated_heralds: int = 0
     engaged_defender_battle: bool = False
+    engaged_herald_battle: bool = False
     # #### end of sandbox defender #### #
 
     # #### raid ####
@@ -225,4 +231,5 @@ class Settings:
     calibration_complete: bool = False
     additional_calibration_required: bool = False
     party_selection_first_run: bool = True
+    no_party_selection: bool = False
     # ################## end of Window Dimensions ###################

@@ -1266,7 +1266,55 @@
         "Garuda Militis": {
             "map": "Zone Liber",
             "items": ["Repeated Runs"]
-        }
+        },
+        "Hotheaded Pincers": {
+            "map": "Zone Mundus",
+            "items": ["Repeated Runs"]
+        },
+        "Princess of the Horde": {
+            "map": "Zone Mundus",
+            "items": ["Repeated Runs"]
+        },
+        "Earth-Shattering Fire Demon": {
+            "map": "Zone Mundus",
+            "items": ["Repeated Runs"]
+        },
+        "Elephant Stomping Ground": {
+            "map": "Zone Mundus",
+            "items": ["Repeated Runs"]
+        },
+        "Love Meeee": {
+            "map": "Zone Mundus",
+            "items": ["Repeated Runs"]
+        },
+        "High-Voltage Rock": {
+            "map": "Zone Mundus",
+            "items": ["Repeated Runs"]
+        },
+        "Parasite Steve": {
+            "map": "Zone Mundus",
+            "items": ["Repeated Runs"]
+        },
+        "Winged Demon Cat": {
+            "map": "Zone Mundus",
+            "items": ["Repeated Runs"]
+        },
+        "Tide Caller": {
+            "map": "Zone Mundus",
+            "items": ["Repeated Runs"]
+        },
+        "Dragon in Glittering Green": {
+            "map": "Zone Mundus",
+            "items": ["Repeated Runs"]
+        },
+        "Proud War Princess of Dragons": {
+            "map": "Zone Mundus",
+            "items": ["Repeated Runs"]
+        },
+        "Goddess of the Wild Hunt": {
+            "map": "Zone Mundus",
+            "items": ["Repeated Runs"]
+        }        
     },
     "Generic": {
         "Any": {
