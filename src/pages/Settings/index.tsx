@@ -16,6 +16,7 @@ import GuildWarsHelper from "../../helpers/FarmingModeHelpers/GuildWarsHelper"
 import ProvingGroundsHelper from "../../helpers/FarmingModeHelpers/ProvingGroundsHelper"
 import ROTBHelper from "../../helpers/FarmingModeHelpers/ROTBHelper"
 import XenoClashHelper from "../../helpers/FarmingModeHelpers/XenoClashHelper"
+import GenericV2Helper from "../../helpers/FarmingModeHelpers/GenericV2Helper"
 
 const Settings = () => {
     const farmingModes: DataProps[] = [
@@ -75,6 +76,10 @@ const Settings = () => {
             label: "Generic",
             value: "Generic",
         },
+        {
+            label: "GenericV2",
+            value: "GenericV2",
+        },
     ]
 
     const useStyles = createStyles((theme) => ({
@@ -111,7 +116,8 @@ const Settings = () => {
             bsc.settings.game.farmingMode === "Xeno Clash" ||
             bsc.settings.game.farmingMode === "Arcarum" ||
             bsc.settings.game.farmingMode === "Arcarum Sandbox" ||
-            bsc.settings.game.farmingMode === "Generic"
+            bsc.settings.game.farmingMode === "Generic" ||
+            bsc.settings.game.farmingMode === "GenericV2"
         ) {
             if (bsc.settings.game.mission !== "") {
                 // Filter items based on the mission selected.
@@ -168,7 +174,8 @@ const Settings = () => {
             bsc.settings.game.farmingMode === "Xeno Clash" ||
             bsc.settings.game.farmingMode === "Arcarum" ||
             bsc.settings.game.farmingMode === "Arcarum Sandbox" ||
-            bsc.settings.game.farmingMode === "Generic"
+            bsc.settings.game.farmingMode === "Generic" ||
+            bsc.settings.game.farmingMode === "GenericV2"
         ) {
             Object.entries(data[bsc.settings.game.farmingMode]).forEach((obj) => {
                 if (obj[1].items.indexOf(bsc.settings.game.item) !== -1) {
@@ -226,7 +233,8 @@ const Settings = () => {
             bsc.settings.game.farmingMode === "Xeno Clash" ||
             bsc.settings.game.farmingMode === "Arcarum" ||
             bsc.settings.game.farmingMode === "Arcarum Sandbox" ||
-            bsc.settings.game.farmingMode === "Generic"
+            bsc.settings.game.farmingMode === "Generic" ||
+            bsc.settings.game.farmingMode === "GenericV2"
         ) {
             Object.entries(data[bsc.settings.game.farmingMode]).every((obj) => {
                 if (obj[0] === bsc.settings.game.mission) {
@@ -335,6 +343,7 @@ const Settings = () => {
                     {ArcarumSandboxHelper()}
                     {EventHelper()}
                     {GenericHelper()}
+                    {GenericV2Helper()}
                     {GuildWarsHelper()}
                     {ProvingGroundsHelper()}
                     {ROTBHelper()}
@@ -365,7 +374,7 @@ const Settings = () => {
     }
 
     const renderMissionSetting = () => {
-        if (bsc.settings.game.farmingMode !== "Generic") {
+        if (bsc.settings.game.farmingMode !== "Generic" && bsc.settings.game.farmingMode !== "GenericV2") {
             return (
                 <CustomSelect
                     label="Select Mission"
@@ -417,7 +426,7 @@ const Settings = () => {
     }
 
     const renderGroupPartySettings = () => {
-        if (bsc.settings.game.farmingMode !== "Generic") {
+        if (bsc.settings.game.farmingMode !== "Generic" && bsc.settings.game.farmingMode !== "GenericV2") {
             return (
                 <Grid justify="center" align="center">
                     <Grid.Col id="gridItemGroup" span={4}>
