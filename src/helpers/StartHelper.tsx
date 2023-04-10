@@ -202,12 +202,12 @@ const StartHelper = () => {
 
         let doesNotNeedSummons = ["Coop", "Arcarum", "Arcarum Sandbox"]
 
-        if (!doesNotNeedSummons.includes(farmingMode) && farmingMode !== "Generic" && farmingMode !== "") {
+        if (!doesNotNeedSummons.includes(farmingMode) && farmingMode !== "Generic" && farmingMode !== "GenericV2" && farmingMode !== "") {
             bsc.setReadyStatus(bsc.settings.game.item !== "" && bsc.settings.game.mission !== "" && bsc.settings.game.summons.length !== 0)
         } else if (doesNotNeedSummons.includes(farmingMode)) {
             bsc.setReadyStatus(bsc.settings.game.item !== "" && bsc.settings.game.mission !== "")
         } else {
-            bsc.setReadyStatus(farmingMode === "Generic" && bsc.settings.game.item !== "" && bsc.settings.game.summons.length !== 0)
+            bsc.setReadyStatus((farmingMode === "Generic" || farmingMode === "GenericV2") && bsc.settings.game.item !== "" && bsc.settings.game.summons.length !== 0)
         }
     }
 
