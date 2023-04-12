@@ -149,7 +149,7 @@ Visit the [Installation Instructions page here](https://github.com/steve1316/gra
 > Note 3: Adjust `/src-tauri/update.json` to update version number of your build.
 
 1. Open up root folder in VSCode. Type `yarn install` in terminal to install Javascript dependencies.
-2. Then follow your environment's instructions for [Tauri](https://tauri.studio/docs/getting-started/prerequisites).
+2. Then follow your environment's instructions for [Tauri](https://tauri.app/v1/guides/getting-started/prerequisites).
 3. Now refer to the following 2 commands below for your use case.
 
 -   `yarn start` Starts up the Metro server for hot code reloading.
