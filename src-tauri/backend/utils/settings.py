@@ -84,7 +84,7 @@ class Settings:
     nightmare_group_number: int = dictor(_data, "nightmare.nightmareGroupNumber", 1)
     nightmare_party_number: int = dictor(_data, "nightmare.nightmarePartyNumber", 1)
 
-    _farming_modes_with_nightmares = ["Event", "Event (Token Drawboxes)", "Rise of the Beasts", "Xeno Clash"]
+    _farming_modes_with_nightmares = ["Event", "Event (Token Drawboxes)", "Rise of the Beasts"]
 
     if enable_nightmare and ((farming_mode == "Special" and mission_name == "VH Angel Halo") or _farming_modes_with_nightmares.__contains__(mission_name)):
         MessageLog.print_message(f"\n[NIGHTMARE] Initializing settings for {farming_mode}'s Nightmare...")
@@ -160,12 +160,6 @@ class Settings:
     # #### generic ####
     enable_force_reload: bool = dictor(_data, "generic.enableForceReload", False)
     # #### end of generic ####
-
-    # #### xeno clash ####
-    xeno_clash_enable_new_position: bool = dictor(_data, "xenoClash.enableNewPosition", False)
-    xeno_clash_new_position: int = dictor(_data, "xenoClash.newPosition", 0)
-    xeno_clash_select_top_option: bool = dictor(_data, "xenoClash.selectTopOption", False)
-    # #### end of xeno clash ####
 
     # #### proving grounds ####
     proving_grounds_enable_new_position: bool = dictor(_data, "provingGrounds.enableNewPosition", False)

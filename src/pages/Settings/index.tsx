@@ -15,7 +15,6 @@ import GenericHelper from "../../helpers/FarmingModeHelpers/GenericHelper"
 import GuildWarsHelper from "../../helpers/FarmingModeHelpers/GuildWarsHelper"
 import ProvingGroundsHelper from "../../helpers/FarmingModeHelpers/ProvingGroundsHelper"
 import ROTBHelper from "../../helpers/FarmingModeHelpers/ROTBHelper"
-import XenoClashHelper from "../../helpers/FarmingModeHelpers/XenoClashHelper"
 import GenericV2Helper from "../../helpers/FarmingModeHelpers/GenericV2Helper"
 
 const Settings = () => {
@@ -339,7 +338,6 @@ const Settings = () => {
                     {GuildWarsHelper()}
                     {ProvingGroundsHelper()}
                     {ROTBHelper()}
-                    {XenoClashHelper()}
                 </Grid.Col>
             </Grid>
         )

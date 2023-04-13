@@ -25,7 +25,6 @@ from bot.game_modes.quest import Quest
 from bot.game_modes.raid import Raid
 from bot.game_modes.rotb import RiseOfTheBeasts
 from bot.game_modes.special import Special
-from bot.game_modes.xeno_clash import XenoClash
 from bot.game_modes.generic import Generic
 from bot.game_modes.generic_v2 import GenericV2
 from bot.window import Window
@@ -792,7 +791,7 @@ class Game:
             # Check for certain popups for certain Farming Modes.
             if (Settings.farming_mode == "Rise of the Beasts" and RiseOfTheBeasts.check_for_rotb_extreme_plus()) or (
                     Settings.farming_mode == "Special" and Settings.mission_name == "VH Angel Halo" and Settings.item_name == "Angel Halo Weapons" and Special.check_for_dimensional_halo()) or (
-                    (Settings.farming_mode == "Event" or Settings.farming_mode == "Event (Token Drawboxes)") and Event.check_for_event_nightmare()) or (XenoClash.check_for_xeno_clash_nightmare()):
+                    (Settings.farming_mode == "Event" or Settings.farming_mode == "Event (Token Drawboxes)") and Event.check_for_event_nightmare()):
                 return True
 
             # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select the Mission again.
