@@ -112,7 +112,7 @@ const CustomTransferList = ({ isNightmare = false }: { isNightmare?: boolean }) 
             }}
             searchPlaceholder="Search summons..."
             nothingFound="No matches found"
-            titles={["Available Support Summons", "Selected Support Summons"]}
+            titles={!isNightmare ? ["Available Support Summons", "Selected Support Summons"] : ["Available Nightmare Support Summons", "Selected Nightmare Support Summons"]}
             listHeight={300}
             breakpoint="sm"
             itemComponent={ItemComponent}

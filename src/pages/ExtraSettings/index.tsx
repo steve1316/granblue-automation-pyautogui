@@ -1,4 +1,4 @@
-import { Container, createStyles, Grid, Button, Modal, Group, FileInput, Textarea, Stack, Divider } from "@mantine/core"
+import { Container, createStyles, Grid, Button, Group, FileInput, Textarea, Stack, Divider } from "@mantine/core"
 import { useContext, useState } from "react"
 import CustomSwitch from "../../components/CustomSwitch"
 import CustomNumberInput from "../../components/CustomNumberInput"
@@ -26,7 +26,6 @@ const ExtraSettings = () => {
     const { classes } = useStyles()
 
     const [testPID, setTestPID] = useState(0)
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
     const [testInProgress, setTestInProgress] = useState<boolean>(false)
 
     const bsc = useContext(BotStateContext)
@@ -454,12 +453,7 @@ const ExtraSettings = () => {
                                     />
                                 )}
 
-                                <Group position="center">
-                                    <Button onClick={() => setIsModalOpen(!isModalOpen)}>Select Nightmare Support Summons</Button>
-                                </Group>
-                                <Modal opened={isModalOpen} onClose={() => setIsModalOpen(false)} title="Select your Nightmare Support Summons" centered size="xl">
-                                    <CustomTransferList isNightmare={true} />
-                                </Modal>
+                                <CustomTransferList isNightmare={true} />
 
                                 <Grid justify="center" align="center">
                                     <Grid.Col id="gridItemNightmareGroup" span={4}>

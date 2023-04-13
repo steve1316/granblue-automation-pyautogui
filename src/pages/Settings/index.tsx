@@ -1,4 +1,4 @@
-import { Container, createStyles, Grid, Button, Modal, Group, Divider, FileInput, Stack, Flex, UnstyledButton } from "@mantine/core"
+import { Container, createStyles, Grid, Divider, FileInput, Stack, Flex, UnstyledButton } from "@mantine/core"
 import { useContext, useState, useEffect } from "react"
 import { CustomSelect, DataProps } from "../../components/CustomSelect"
 import CustomSwitch from "../../components/CustomSwitch"
@@ -91,7 +91,6 @@ const Settings = () => {
     const bsc = useContext(BotStateContext)
     const [itemList, setItemList] = useState<DataProps[]>([])
     const [missionList, setMissionList] = useState<DataProps[]>([])
-    const [isModalOpen, setIsModalOpen] = useState<boolean>(false)
 
     // Populate the item list after selecting the Farming Mode.
     useEffect(() => {
@@ -418,21 +417,11 @@ const Settings = () => {
     }
 
     const renderSummonSetting = () => {
-        return (
-            <Container>
-                <Group position="center">
-                    <Button
-                        disabled={bsc.settings.game.farmingMode === "Coop" || bsc.settings.game.farmingMode === "Arcarum" || bsc.settings.game.farmingMode === "Arcarum Sandbox"}
-                        onClick={() => setIsModalOpen(!isModalOpen)}
-                    >
-                        Select Support Summons
-                    </Button>
-                </Group>
-                <Modal opened={isModalOpen} onClose={() => setIsModalOpen(false)} title="Select your Support Summons" centered size="xl">
-                    <CustomTransferList />
-                </Modal>
-            </Container>
-        )
+        if (bsc.settings.game.farmingMode !== "Coop" && bsc.settings.game.farmingMode !== "Arcarum" && bsc.settings.game.farmingMode !== "Arcarum Sandbox") {
+            return <CustomTransferList />
+        } else {
+            return null
+        }
     }
 
     const renderGroupPartySettings = () => {
