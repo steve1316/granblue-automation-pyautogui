@@ -2,6 +2,7 @@ import datetime
 import os
 import sys
 import codecs
+import threading
 from datetime import date
 from typing import List, Tuple, Optional
 
@@ -15,7 +16,7 @@ from playsound import playsound
 
 from utils.settings import Settings
 from utils.message_log import MessageLog
-from bot.window import Window 
+from bot.window import Window
 
 
 class ImageUtils:
@@ -426,21 +427,19 @@ class ImageUtils:
             return 0
 
     @staticmethod
-    def find_button(
-        image_name: str, custom_confidence: float = Settings.confidence, tries: int = 5,
-        suppress_error: bool = False, disable_adjustment: bool = False,
-        bypass_general_adjustment: bool = False, test_mode: bool = False, 
-        is_sub = False) -> Optional[Tuple[int, int]]:
+    def find_button(image_name: str, custom_confidence: float = Settings.confidence, tries: int = 5, suppress_error: bool = False, disable_adjustment: bool = False,
+                    bypass_general_adjustment: bool = False, test_mode: bool = False, is_sub = False) -> Optional[Tuple[int, int]]:
         """Find the location of the specified button.
 
         Args:
-            image_name: Name of the button image file in the /images/buttons/ folder.
-            custom_confidence: Accuracy threshold for matching.
-            tries: Number of tries before failing. Note that this gets overridden if the image_name is one of the adjustments.
-            suppress_error: Suppresses template matching error if True.
-            disable_adjustment: Disable the usage of adjustment to tries.
-            bypass_general_adjustment: Bypass using the general adjustment for the number of tries.
-            test_mode: Flag to test and get a valid scale for device compatibility.
+            image_name (str): Name of the button image file in the /images/buttons/ folder.
+            custom_confidence (float, optional): Accuracy threshold for matching. Defaults to 0.8.
+            tries (int, optional): Number of tries before failing. Note that this gets overridden if the image_name is one of the adjustments. Defaults to 5.
+            suppress_error (bool, optional): Suppresses template matching error if True. Defaults to False.
+            disable_adjustment (bool, optional): Disable the usage of adjustment to tries. Defaults to False.
+            bypass_general_adjustment (bool, optional): Bypass using the general adjustment for the number of tries. Defaults to False.
+            test_mode (bool, optional): Flag to test and get a valid scale for device compatibility. Defaults to False.
+            is_sub (bool, optional): Flag to enable usage of a second window. Defaults to False.
 
         Returns:
             Coordinates of where the center of the button is located if image matching was successful.
@@ -464,7 +463,7 @@ class ImageUtils:
 
         while new_tries > 0:
             result_flag: bool = ImageUtils._match(f"{ImageUtils._current_dir}/images/buttons/{image_name.lower()}.jpg", confidence = custom_confidence,
-                                                  use_single_scale = Settings.enable_test_for_home_screen, is_sub=is_sub)
+                                                  use_single_scale = Settings.enable_test_for_home_screen, is_sub = is_sub)
 
             if result_flag is False:
                 if test_mode:
@@ -890,13 +889,21 @@ class ImageUtils:
         return None
 
     @staticmethod
-    def _play_captcha_sound():
-        """Plays the CAPTCHA.mp3 music file.
+    def _play_captcha_sound(is_daemon: bool = True):
+        """Plays the CAPTCHA.mp3 music file on a loop in a thread with daemon until the rest of the program exits.
+
+        Args:
+            is_daemon (bool, optional): Flag will make the thread stop when the entire program exits. False otherwise which will loop forever. Defaults to True.
 
         Returns:
             None
         """
-        playsound(f"{ImageUtils._current_dir}/backend/CAPTCHA.mp3", block = False)
+        def loop_sound():
+            while True:
+                playsound(f"{ImageUtils._current_dir}/backend/CAPTCHA.mp3", block = False)
+        thread = threading.Thread(target=loop_sound, name="LoopSoundThread")
+        thread.daemon = is_daemon
+        thread.start()
         return None
 
     @staticmethod

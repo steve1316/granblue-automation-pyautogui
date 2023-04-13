@@ -112,12 +112,6 @@ export interface Settings {
         enableForceReload: boolean
     }
 
-    xenoClash: {
-        enableNewPosition: boolean
-        newPosition: number
-        selectTopOption: boolean
-    }
-
     provingGrounds: {
         enableNewPosition: boolean
         newPosition: number
@@ -251,11 +245,6 @@ export const defaultSettings: Settings = {
     },
     generic: {
         enableForceReload: false,
-    },
-    xenoClash: {
-        enableNewPosition: false,
-        newPosition: 0,
-        selectTopOption: true,
     },
     provingGrounds: {
         enableNewPosition: false,

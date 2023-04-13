@@ -322,6 +322,30 @@
             "map": "Showdowns",
             "items": ["Twilight Cloth Strip", "Shadow Silver", "Phantom Demon Jewel", "Diablo Anima", "Diablo Omega Anima"]
         },
+        "Lvl 60 Xeno Ifrit": {
+            "map": "Xeno Clash",
+            "items": ["Ifrit Anima", "Ifrit Omega Anima", "True Xeno Ifrit Anima", "Infernal Vajra"]
+        },
+        "Lvl 60 Xeno Cocytus": {
+            "map": "Xeno Clash",
+            "items": ["Cocytus Anima", "Cocytus Omega Anima", "True Xeno Cocytus Anima", "Frozen Hellplume"]
+        },
+        "Lvl 60 Xeno Vohu Manah": {
+            "map": "Xeno Clash",
+            "items": ["Vohu Manah Anima", "Vohu Manah Omega Anima", "True Xeno Vohu Manah Anima", "Sacrosanct Sutra"]
+        },
+        "Lvl 60 Xeno Sagittarius": {
+            "map": "Xeno Clash",
+            "items": ["Sagittarius Anima", "Sagittarius Omega Anima", "True Xeno Sagittarius Anima", "Zodiac Arc"]
+        },
+        "Lvl 60 Xeno Corow": {
+            "map": "Xeno Clash",
+            "items": ["Corow Anima", "Corow Omega Anima", "True Xeno Corow Anima", "Flame Fanner"]
+        },
+        "Lvl 60 Xeno Diablo": {
+            "map": "Xeno Clash",
+            "items": ["Diablo Anima", "Diablo Omega Anima", "True Xeno Diablo Anima", "Wraithbind Fetter"]
+        },
         "N Angel Halo": {
             "map": "Angel Halo",
             "items": ["Angel Halo Weapons"]
@@ -749,30 +773,6 @@
             "map": "Fediel",
             "items": ["Fediel's Spine"]
         },
-        "Lvl 100 Xeno Ifrit": {
-            "map": "Xeno Ifrit",
-            "items": ["True Xeno Ifrit Anima", "Infernal Vajra"]
-        },
-        "Lvl 100 Xeno Cocytus": {
-            "map": "Xeno Cocytus",
-            "items": ["True Xeno Cocytus Anima", "Frozen Hellplume"]
-        },
-        "Lvl 100 Xeno Vohu Manah": {
-            "map": "Xeno Vohu Manah",
-            "items": ["True Xeno Vohu Manah Anima", "Sacrosanct Sutra"]
-        },
-        "Lvl 100 Xeno Sagittarius": {
-            "map": "Xeno Sagittarius",
-            "items": ["True Xeno Sagittarius Anima", "Zodiac Arc"]
-        },
-        "Lvl 100 Xeno Corow": {
-            "map": "Xeno Corow",
-            "items": ["True Xeno Corow Anima", "Flame Fanner"]
-        },
-        "Lvl 100 Xeno Diablo": {
-            "map": "Xeno Diablo",
-            "items": ["True Xeno Diablo Anima", "Wraithbind Fetter"]
-        },
         "Lvl 100 Shenxian": {
             "map": "Shenxian",
             "items": ["Shenxian Badge"]
@@ -967,16 +967,6 @@
         },
         "Extreme+": {
             "map": "Event Quest",
-            "items": ["Repeated Runs"]
-        }
-    },
-    "Xeno Clash": {
-        "Xeno Clash Extreme": {
-            "map": "Event Quest",
-            "items": ["Repeated Runs"]
-        },
-        "Xeno Clash Raid": {
-            "map": "Event Raid",
             "items": ["Repeated Runs"]
         }
     },
