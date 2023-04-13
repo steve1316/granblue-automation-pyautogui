@@ -2,6 +2,7 @@ import datetime
 import os
 import sys
 import codecs
+import threading
 from datetime import date
 from typing import List, Tuple, Optional
 
@@ -888,13 +889,21 @@ class ImageUtils:
         return None
 
     @staticmethod
-    def _play_captcha_sound():
-        """Plays the CAPTCHA.mp3 music file.
+    def _play_captcha_sound(is_daemon: bool = True):
+        """Plays the CAPTCHA.mp3 music file on a loop in a thread with daemon until the rest of the program exits.
+
+        Args:
+            is_daemon (bool, optional): Flag will make the thread stop when the entire program exits. False otherwise which will loop forever. Defaults to True.
 
         Returns:
             None
         """
-        playsound(f"{ImageUtils._current_dir}/backend/CAPTCHA.mp3", block = False)
+        def loop_sound():
+            while True:
+                playsound(f"{ImageUtils._current_dir}/backend/CAPTCHA.mp3", block = False)
+        thread = threading.Thread(target=loop_sound, name="LoopSoundThread")
+        thread.daemon = is_daemon
+        thread.start()
         return None
 
     @staticmethod
