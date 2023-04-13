@@ -5,7 +5,7 @@ on:
         branches:
             - main
         paths:
-            - "./src-tauri/update.json"
+            - "src-tauri/update.json"
 
 permissions:
     contents: write
