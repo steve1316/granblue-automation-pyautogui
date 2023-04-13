@@ -27,7 +27,6 @@ game_mode = [
     "Guild Wars",
     "Dread Barrage",
     "Proving Grounds",
-    "Xeno Clash",
     "Arcarum",
     "Arcarum Sandbox",
 ]

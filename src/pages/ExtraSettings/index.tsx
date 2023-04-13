@@ -394,7 +394,6 @@ const ExtraSettings = () => {
             (bsc.settings.game.farmingMode === "Special" ||
                 bsc.settings.game.farmingMode === "Event" ||
                 bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ||
-                bsc.settings.game.farmingMode === "Xeno Clash" ||
                 bsc.settings.game.farmingMode === "Rise of the Beasts")
         ) {
             let title: string = ""

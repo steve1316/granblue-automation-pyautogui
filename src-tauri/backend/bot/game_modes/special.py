@@ -118,7 +118,11 @@ class Special:
                         MouseUtils.scroll_screen_from_home_button(-500)
                         scrolled = True
 
-                    mission_select_button = ImageUtils.find_button(Settings.map_name.lower().replace(" ", "_").replace("-", "_"))
+                    if Settings.map_name == "Showdowns" or Settings.map_name == "Xeno Clash":
+                        mission_select_button = ImageUtils.find_button("special_showdowns_xeno_clashes")
+                    else:
+                        mission_select_button = ImageUtils.find_button(Settings.map_name.lower().replace(" ", "_").replace("-", "_"))
+
                     if mission_select_button is not None:
                         MessageLog.print_message(f"[SPECIAL] Navigating to {Settings.map_name}...")
 
@@ -182,49 +186,86 @@ class Special:
                             elif difficulty == "Very Hard":
                                 MouseUtils.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
 
-                        elif Settings.map_name == "Showdowns":
-                            if scrolled: MouseUtils.move_and_click_point(select_buttons[len(select_buttons) - 1 - 2][0], select_buttons[len(select_buttons) - 1 - 2][1], "select")
-                            else: MouseUtils.move_and_click_point(select_buttons[2][0], select_buttons[2][1], "select")
+                        elif Settings.map_name == "Showdowns" or "Xeno" in Settings.map_name:
+                            if scrolled:
+                                MouseUtils.move_and_click_point(select_buttons[len(select_buttons) - 1 - 2][0], select_buttons[len(select_buttons) - 1 - 2][1], "select")
+                            else:
+                                MouseUtils.move_and_click_point(select_buttons[2][0], select_buttons[2][1], "select")
                             Game.wait(1)
 
-                            locations = ImageUtils.find_all("play_round_button")
+                            if "Showdown" in formatted_mission_name:
+                                # Click on the Showdowns banner.
+                                Game.find_and_click_button("special_showdown")
+                                locations = ImageUtils.find_all("play_round_button")
 
-                            if formatted_mission_name == "Ifrit Showdown":
-                                # Navigate to Ifrit Showdown.
-                                MessageLog.print_message(f"[SPECIAL] Selecting Ifrit Showdown...")
+                                if formatted_mission_name == "Ifrit Showdown":
+                                    # Navigate to Ifrit Showdown.
+                                    MessageLog.print_message(f"[SPECIAL] Selecting Ifrit Showdown...")
+                                    MouseUtils.move_and_click_point(locations[0][0], locations[0][1], "play_round_button")
+                                elif formatted_mission_name == "Cocytus Showdown":
+                                    # Navigate to Cocytus Showdown.
+                                    MessageLog.print_message(f"[SPECIAL] Selecting Cocytus Showdown...")
+                                    MouseUtils.move_and_click_point(locations[1][0], locations[1][1], "play_round_button")
+                                elif formatted_mission_name == "Vohu Manah Showdown":
+                                    # Navigate to Vohu Manah Showdown.
+                                    MessageLog.print_message(f"[SPECIAL] Selecting Vohu Manah Showdown...")
+                                    MouseUtils.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
+                                elif formatted_mission_name == "Sagittarius Showdown":
+                                    # Navigate to Sagittarius Showdown.
+                                    MessageLog.print_message(f"[SPECIAL] Selecting Sagittarius Showdown...")
+                                    MouseUtils.move_and_click_point(locations[3][0], locations[3][1], "play_round_button")
+                                elif formatted_mission_name == "Corow Showdown":
+                                    # Navigate to Corow Showdown.
+                                    MessageLog.print_message(f"[SPECIAL] Selecting Corow Showdown...")
+                                    MouseUtils.move_and_click_point(locations[4][0], locations[4][1], "play_round_button")
+                                elif formatted_mission_name == "Diablo Showdown":
+                                    # Navigate to Diablo Showdown.
+                                    MessageLog.print_message(f"[SPECIAL] Selecting Diablo Showdown...")
+                                    MouseUtils.move_and_click_point(locations[5][0], locations[5][1], "play_round_button")
+
+                                Game.wait(1)
+                                MessageLog.print_message(f"[SPECIAL] Now navigating to {difficulty}...")
+                                locations = ImageUtils.find_all("play_round_button")
+                                if difficulty == "Hard":
+                                    MouseUtils.move_and_click_point(locations[0][0], locations[0][1], "play_round_button")
+                                elif difficulty == "Very Hard":
+                                    MouseUtils.move_and_click_point(locations[1][0], locations[1][1], "play_round_button")
+                                elif difficulty == "Extreme":
+                                    MouseUtils.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
+                            elif "Xeno" in formatted_mission_name:
+                                # Click on the Clashes banner.
+                                Game.find_and_click_button("special_xeno_clash")
+                                locations = ImageUtils.find_all("play_round_button")
+
+                                if "Xeno Ifrit" in formatted_mission_name:
+                                    # Navigate to Xeno Ifrit.
+                                    MessageLog.print_message(f"[SPECIAL] Selecting Xeno Ifrit...")
+                                    MouseUtils.move_and_click_point(locations[0][0], locations[0][1], "play_round_button")
+                                elif "Xeno Cocytus" in formatted_mission_name:
+                                    # Navigate to Xeno Cocytus.
+                                    MessageLog.print_message(f"[SPECIAL] Selecting Xeno Cocytus...")
+                                    MouseUtils.move_and_click_point(locations[1][0], locations[1][1], "play_round_button")
+                                elif "Xeno Vohu Manah" in formatted_mission_name:
+                                    # Navigate to Xeno Vohu Manah.
+                                    MessageLog.print_message(f"[SPECIAL] Selecting Xeno Vohu Manah...")
+                                    MouseUtils.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
+                                elif "Xeno Sagittarius" in formatted_mission_name:
+                                    # Navigate to Xeno Sagittarius.
+                                    MessageLog.print_message(f"[SPECIAL] Selecting Xeno Sagittarius...")
+                                    MouseUtils.move_and_click_point(locations[3][0], locations[3][1], "play_round_button")
+                                elif "Xeno Corow" in formatted_mission_name:
+                                    # Navigate to Xeno Corow.
+                                    MessageLog.print_message(f"[SPECIAL] Selecting Xeno Corow...")
+                                    MouseUtils.move_and_click_point(locations[4][0], locations[4][1], "play_round_button")
+                                elif "Xeno Diablo" in formatted_mission_name:
+                                    # Navigate to Xeno Diablo.
+                                    MessageLog.print_message(f"[SPECIAL] Selecting Xeno Diablo...")
+                                    MouseUtils.move_and_click_point(locations[5][0], locations[5][1], "play_round_button")
+
+                                Game.wait(1)
+                                MessageLog.print_message(f"[SPECIAL] Now navigating to Level 60 for Xeno...")
+                                locations = ImageUtils.find_all("play_round_button")
                                 MouseUtils.move_and_click_point(locations[0][0], locations[0][1], "play_round_button")
-                            elif formatted_mission_name == "Cocytus Showdown":
-                                # Navigate to Cocytus Showdown.
-                                MessageLog.print_message(f"[SPECIAL] Selecting Cocytus Showdown...")
-                                MouseUtils.move_and_click_point(locations[1][0], locations[1][1], "play_round_button")
-                            elif formatted_mission_name == "Vohu Manah Showdown":
-                                # Navigate to Vohu Manah Showdown.
-                                MessageLog.print_message(f"[SPECIAL] Selecting Vohu Manah Showdown...")
-                                MouseUtils.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
-                            elif formatted_mission_name == "Sagittarius Showdown":
-                                # Navigate to Sagittarius Showdown.
-                                MessageLog.print_message(f"[SPECIAL] Selecting Sagittarius Showdown...")
-                                MouseUtils.move_and_click_point(locations[3][0], locations[3][1], "play_round_button")
-                            elif formatted_mission_name == "Corow Showdown":
-                                # Navigate to Corow Showdown.
-                                MessageLog.print_message(f"[SPECIAL] Selecting Corow Showdown...")
-                                MouseUtils.move_and_click_point(locations[4][0], locations[4][1], "play_round_button")
-                            elif formatted_mission_name == "Diablo Showdown":
-                                # Navigate to Diablo Showdown.
-                                MessageLog.print_message(f"[SPECIAL] Selecting Diablo Showdown...")
-                                MouseUtils.move_and_click_point(locations[5][0], locations[5][1], "play_round_button")
-
-                            # Now start the Showdown with the specified difficulty.
-                            Game.wait(1)
-                            MessageLog.print_message(f"[SPECIAL] Now navigating to {difficulty}...")
-                            locations = ImageUtils.find_all("play_round_button")
-
-                            if difficulty == "Hard":
-                                MouseUtils.move_and_click_point(locations[0][0], locations[0][1], "play_round_button")
-                            elif difficulty == "Very Hard":
-                                MouseUtils.move_and_click_point(locations[1][0], locations[1][1], "play_round_button")
-                            elif difficulty == "Extreme":
-                                MouseUtils.move_and_click_point(locations[2][0], locations[2][1], "play_round_button")
 
                         elif Settings.map_name == "Campaign-Exclusive Quest":
                             MessageLog.print_message(f"[SPECIAL] Selecting Campaign-Exclusive Quest...")
@@ -241,8 +282,10 @@ class Special:
                             # Start up the Angel Halo mission by selecting its difficulty.
                             MessageLog.print_message(f"[SPECIAL] Selecting {difficulty} Angel Halo...")
 
-                            if scrolled: MouseUtils.move_and_click_point(select_buttons[len(select_buttons) - 1 - 1][0], select_buttons[len(select_buttons) - 1 - 1][1], "select")
-                            else: MouseUtils.move_and_click_point(select_buttons[3][0], select_buttons[3][1], "select")
+                            if scrolled:
+                                MouseUtils.move_and_click_point(select_buttons[len(select_buttons) - 1 - 1][0], select_buttons[len(select_buttons) - 1 - 1][1], "select")
+                            else:
+                                MouseUtils.move_and_click_point(select_buttons[3][0], select_buttons[3][1], "select")
                             Game.wait(1)
 
                             locations = ImageUtils.find_all("play_round_button")

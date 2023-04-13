@@ -177,7 +177,6 @@ class CombatMode:
         dread_barrage_raids = ["1 Star", "2 Star", "3 Star", "4 Star", "5 Star"]
         proving_grounds_raids = ["Extreme", "Extreme+"]
         guild_wars_raids = ["Very Hard", "Extreme", "Extreme+", "NM90", "NM95", "NM100", "NM150"]
-        xeno_clash_raids = ["Xeno Clash Raid"]
 
         if Settings.farming_mode == "Raid" or \
                 event_raids.__contains__(Settings.mission_name) or \
@@ -185,7 +184,7 @@ class CombatMode:
                 dread_barrage_raids.__contains__(Settings.mission_name) or \
                 (Settings.farming_mode == "Proving Grounds" and proving_grounds_raids.__contains__(Settings.mission_name)) or \
                 (Settings.farming_mode == "Guild Wars" and guild_wars_raids.__contains__(Settings.mission_name)) or \
-                xeno_clash_raids.__contains__(Settings.mission_name) or Settings.farming_mode == "Arcarum" or Settings.farming_mode == "Arcarum Sandbox":
+                Settings.farming_mode == "Arcarum" or Settings.farming_mode == "Arcarum Sandbox":
             return True
         else:
             return False

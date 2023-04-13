@@ -77,7 +77,6 @@ By downloading this program, you consent to your account potentially getting fla
     -   [x] Rise of the Beasts
     -   [x] Dread Barrage
     -   [x] Proving Grounds
-    -   [x] Xeno Clash
     -   [x] Arcarum
     -   [x] Replicard Sandbox Part 1
     -   [x] Replicard Sandbox Part 2
