@@ -11,13 +11,6 @@ import StartHelper from "./helpers/StartHelper"
 import { Icon } from "@iconify/react"
 
 const App = () => {
-    const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
-        key: "mantine-color-scheme",
-        defaultValue: "light",
-        getInitialValueInEffect: true,
-    })
-    const toggleColorScheme = (value?: ColorScheme) => setColorScheme(value || (colorScheme === "dark" ? "light" : "dark"))
-
     // Check if an application update is available on GitHub.
     useEffect(() => {
         // Warn that the application's env is still set to development.
@@ -105,8 +98,8 @@ const App = () => {
     }
 
     return (
-        <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
-            <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
+        <ColorSchemeProvider colorScheme={"dark"} toggleColorScheme={() => "dark"}>
+            <MantineProvider theme={{ colorScheme: "dark" }} withGlobalStyles withNormalizeCSS>
                 <BotStateProvider>
                     <MessageLogProvider>
                         <StartHelper />
