@@ -792,8 +792,7 @@ class Game:
             # Check for certain popups for certain Farming Modes.
             if (Settings.farming_mode == "Rise of the Beasts" and RiseOfTheBeasts.check_for_rotb_extreme_plus()) or (
                     Settings.farming_mode == "Special" and Settings.mission_name == "VH Angel Halo" and Settings.item_name == "Angel Halo Weapons" and Special.check_for_dimensional_halo()) or (
-                    (Settings.farming_mode == "Event" or Settings.farming_mode == "Event (Token Drawboxes)") and Event.check_for_event_nightmare()) or (
-                    Settings.farming_mode == "Xeno Clash" and XenoClash.check_for_xeno_clash_nightmare()):
+                    (Settings.farming_mode == "Event" or Settings.farming_mode == "Event (Token Drawboxes)") and Event.check_for_event_nightmare()) or (XenoClash.check_for_xeno_clash_nightmare()):
                 return True
 
             # If the bot tried to repeat a Extreme/Impossible difficulty Event Raid and it lacked the treasures to host it, go back to select the Mission again.
@@ -1039,8 +1038,6 @@ class Game:
                     DreadBarrage.start(first_run)
                 elif Settings.farming_mode == "Proving Grounds":
                     ProvingGrounds.start(first_run)
-                elif Settings.farming_mode == "Xeno Clash":
-                    XenoClash.start(first_run)
                 elif Settings.farming_mode == "Arcarum":
                     Arcarum.start()
                 elif Settings.farming_mode == "Arcarum Sandbox":
@@ -1067,7 +1064,7 @@ class Game:
                 TwitterRoomFinder.disconnect()
 
         Game.stop_discord_process()
-        
+
         if exception_occurred:
             MessageLog.print_message("\n######################################################################")
             MessageLog.print_message("######################################################################")

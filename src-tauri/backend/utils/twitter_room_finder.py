@@ -139,14 +139,6 @@ class TwitterRoomFinder:
         "Lvl 200 Lu Woh": "Lv200 ル・オー",
         "Lvl 200 Fediel": "Lv200 フェディエル",
 
-        # Xeno Clash Raids
-        "Lvl 100 Xeno Ifrit": "Lv100 ゼノ・イフリート",
-        "Lvl 100 Xeno Cocytus": "Lv100 ゼノ・コキュートス",
-        "Lvl 100 Xeno Vohu Manah": "Lv100 ゼノ・ウォフマナフ",
-        "Lvl 100 Xeno Sagittarius": "Lv100 ゼノ・サジタリウス",
-        "Lvl 100 Xeno Corow": "Lv100 ゼノ・コロゥ",
-        "Lvl 100 Xeno Diablo": "Lv100 ゼノ・ディアボロス",
-
         # Ennead Raids
         "Lvl 120 Osiris": "Lv120 オシリス",
         "Lvl 120 Horus": "Lv120 ホルス",

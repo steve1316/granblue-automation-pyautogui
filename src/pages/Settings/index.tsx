@@ -61,10 +61,6 @@ const Settings = () => {
             value: "Proving Grounds",
         },
         {
-            label: "Xeno Clash",
-            value: "Xeno Clash",
-        },
-        {
             label: "Arcarum",
             value: "Arcarum",
         },
@@ -113,7 +109,6 @@ const Settings = () => {
             bsc.settings.game.farmingMode === "Guild Wars" ||
             bsc.settings.game.farmingMode === "Dread Barrage" ||
             bsc.settings.game.farmingMode === "Proving Grounds" ||
-            bsc.settings.game.farmingMode === "Xeno Clash" ||
             bsc.settings.game.farmingMode === "Arcarum" ||
             bsc.settings.game.farmingMode === "Arcarum Sandbox" ||
             bsc.settings.game.farmingMode === "Generic" ||
@@ -171,7 +166,6 @@ const Settings = () => {
             bsc.settings.game.farmingMode === "Guild Wars" ||
             bsc.settings.game.farmingMode === "Dread Barrage" ||
             bsc.settings.game.farmingMode === "Proving Grounds" ||
-            bsc.settings.game.farmingMode === "Xeno Clash" ||
             bsc.settings.game.farmingMode === "Arcarum" ||
             bsc.settings.game.farmingMode === "Arcarum Sandbox" ||
             bsc.settings.game.farmingMode === "Generic" ||
@@ -230,7 +224,6 @@ const Settings = () => {
             bsc.settings.game.farmingMode === "Guild Wars" ||
             bsc.settings.game.farmingMode === "Dread Barrage" ||
             bsc.settings.game.farmingMode === "Proving Grounds" ||
-            bsc.settings.game.farmingMode === "Xeno Clash" ||
             bsc.settings.game.farmingMode === "Arcarum" ||
             bsc.settings.game.farmingMode === "Arcarum Sandbox" ||
             bsc.settings.game.farmingMode === "Generic" ||
@@ -325,8 +318,7 @@ const Settings = () => {
                 {bsc.settings.game.farmingMode === "Special" ||
                 bsc.settings.game.farmingMode === "Event" ||
                 bsc.settings.game.farmingMode === "Event (Token Drawboxes)" ||
-                bsc.settings.game.farmingMode === "Rise of the Beasts" ||
-                bsc.settings.game.farmingMode === "Xeno Clash" ? (
+                bsc.settings.game.farmingMode === "Rise of the Beasts" ? (
                     <>
                         <Grid.Col span={12} sx={{ marginLeft: 0 }}>
                             <CustomSwitch
