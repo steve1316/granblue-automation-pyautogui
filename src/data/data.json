@@ -323,27 +323,27 @@
             "items": ["Twilight Cloth Strip", "Shadow Silver", "Phantom Demon Jewel", "Diablo Anima", "Diablo Omega Anima"]
         },
         "Lvl 60 Xeno Ifrit": {
-            "map": "Xeno Ifrit",
+            "map": "Xeno Clash",
             "items": ["Ifrit Anima", "Ifrit Omega Anima", "True Xeno Ifrit Anima", "Infernal Vajra"]
         },
         "Lvl 60 Xeno Cocytus": {
-            "map": "Xeno Cocytus",
+            "map": "Xeno Clash",
             "items": ["Cocytus Anima", "Cocytus Omega Anima", "True Xeno Cocytus Anima", "Frozen Hellplume"]
         },
         "Lvl 60 Xeno Vohu Manah": {
-            "map": "Xeno Vohu Manah",
+            "map": "Xeno Clash",
             "items": ["Vohu Manah Anima", "Vohu Manah Omega Anima", "True Xeno Vohu Manah Anima", "Sacrosanct Sutra"]
         },
         "Lvl 60 Xeno Sagittarius": {
-            "map": "Xeno Sagittarius",
+            "map": "Xeno Clash",
             "items": ["Sagittarius Anima", "Sagittarius Omega Anima", "True Xeno Sagittarius Anima", "Zodiac Arc"]
         },
         "Lvl 60 Xeno Corow": {
-            "map": "Xeno Corow",
+            "map": "Xeno Clash",
             "items": ["Corow Anima", "Corow Omega Anima", "True Xeno Corow Anima", "Flame Fanner"]
         },
         "Lvl 60 Xeno Diablo": {
-            "map": "Xeno Diablo",
+            "map": "Xeno Clash",
             "items": ["Diablo Anima", "Diablo Omega Anima", "True Xeno Diablo Anima", "Wraithbind Fetter"]
         },
         "N Angel Halo": {
