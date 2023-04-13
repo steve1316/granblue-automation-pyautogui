@@ -1,4 +1,4 @@
-import { Container, createStyles, Grid, Button, Modal, Group, Divider, FileInput, Stack } from "@mantine/core"
+import { Container, createStyles, Grid, Button, Modal, Group, Divider, FileInput, Stack, Flex, UnstyledButton } from "@mantine/core"
 import { useContext, useState, useEffect } from "react"
 import { CustomSelect, DataProps } from "../../components/CustomSelect"
 import CustomSwitch from "../../components/CustomSwitch"
@@ -17,6 +17,7 @@ import ProvingGroundsHelper from "../../helpers/FarmingModeHelpers/ProvingGround
 import ROTBHelper from "../../helpers/FarmingModeHelpers/ROTBHelper"
 import XenoClashHelper from "../../helpers/FarmingModeHelpers/XenoClashHelper"
 import GenericV2Helper from "../../helpers/FarmingModeHelpers/GenericV2Helper"
+import toast from "react-hot-toast"
 
 const Settings = () => {
     const farmingModes: DataProps[] = [
@@ -248,6 +249,25 @@ const Settings = () => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [bsc.settings.game.mission])
 
+    useEffect(() => {
+        if (bsc.settings.game.farmingMode === "Arcarum Sandbox" && bsc.settings.game.groupNumber > 7) {
+            toast.success(
+                (t) => (
+                    <Flex gap={"lg"} justify="center" align={"center"} direction="row" wrap="nowrap">
+                        {`Automatically constrained Group Number from ${bsc.settings.game.groupNumber} to 7 due to Arcarum Sandbox only having Set Extra selectable.`}
+                        <UnstyledButton onClick={() => toast.dismiss(t.id)} style={{ display: "flex" }}>
+                            <Icon icon="fluent:dismiss-12-regular" width={20} height={20} />
+                        </UnstyledButton>
+                    </Flex>
+                ),
+                {
+                    id: "arcarum-sandbox-group-constrain",
+                }
+            )
+            bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, groupNumber: 7 } })
+        }
+    }, [bsc.settings.game.farmingMode])
+
     const renderCombatScriptSetting = () => {
         if (!bsc.settings.misc.alternativeCombatScriptSelector) {
             return (
@@ -428,15 +448,15 @@ const Settings = () => {
     const renderGroupPartySettings = () => {
         if (bsc.settings.game.farmingMode !== "Generic" && bsc.settings.game.farmingMode !== "GenericV2") {
             return (
-                <Grid justify="center" align="center">
+                <Grid justify="center" align="flex-end">
                     <Grid.Col id="gridItemGroup" span={4}>
                         <CustomNumberInput
                             label="Group #"
-                            description={`Set A: 1 to 7 -- Set B: 8 to 14`}
+                            description={bsc.settings.game.farmingMode !== "Arcarum Sandbox" ? `Set A: 1 to 7 -- Set B: 8 to 14` : "Set Extra: 1 to 7"}
                             value={bsc.settings.game.groupNumber}
                             onChange={(value) => bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, groupNumber: value } })}
                             min={1}
-                            max={14}
+                            max={bsc.settings.game.farmingMode !== "Arcarum Sandbox" ? 14 : 7}
                         />
                     </Grid.Col>
                     <Grid.Col id="gridItemParty" span={4} offset={4}>
