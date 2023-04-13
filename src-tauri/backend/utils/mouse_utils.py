@@ -115,7 +115,7 @@ class MouseUtils:
         from utils.image_utils import ImageUtils
         width, height = ImageUtils.get_button_dimensions(image_name)
 
-        if Settings.farming_mode == "Generic V2":
+        if Settings.farming_mode == "GenericV2":
             width = np.random.randint(0,width)
             height = np.random.randint(0,height)
             return x+width, y+height
