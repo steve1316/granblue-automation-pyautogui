@@ -899,8 +899,10 @@ class ImageUtils:
             None
         """
         def loop_sound():
+            from bot.game import Game
             while True:
-                playsound(f"{ImageUtils._current_dir}/backend/CAPTCHA.mp3", block = False)
+                playsound(f"{ImageUtils._current_dir}/backend/CAPTCHA.mp3", block = True)
+                Game.wait(1.0)
         thread = threading.Thread(target=loop_sound, name="LoopSoundThread")
         thread.daemon = is_daemon
         thread.start()
