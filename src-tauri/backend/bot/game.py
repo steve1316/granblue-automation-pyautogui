@@ -983,7 +983,7 @@ class Game:
                 return True
 
             # Calibrate the dimensions of the bot window on bot launch.
-            if Settings.farming_mode == "Generic V2":
+            if Settings.farming_mode.endswith("V2"):
                 Window.calibrate()
             else:
                 Game._calibrate_game_window(display_info_check = True)
@@ -1043,7 +1043,7 @@ class Game:
                     ArcarumSandbox.start()
                 elif Settings.farming_mode == "Generic":
                     Generic.start()
-                elif Settings.farming_mode == "Generic V2":
+                elif Settings.farming_mode == "GenericV2":
                     GenericV2.start()
                     break
 
