@@ -8,6 +8,7 @@ from utils.settings import Settings
 from utils.message_log import MessageLog as Log
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
+from bot.combat_mode import CombatMode
 from bot.window import Window
 
 class CombatModeV2:
@@ -182,15 +183,7 @@ class CombatModeV2:
     def _back():
         """Attacks and then presses the Back button to quickly end animations.
         """
-        from bot.game import Game
-
-        if Game.find_and_click_button("attack"):
-            if ImageUtils.wait_vanish("combat_cancel", timeout = 10):
-                Log.print_message("[COMBAT] Attacked and pressing the Back button now...")
-                CombatModeV2._back(increment_turn = False)
-
-        else:
-            Log.print_message("[WARNING] Failed to execute the \"attackback\" command...")
+        CombatMode._back(False)
 
     @staticmethod
     def _sub_back():
