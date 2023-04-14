@@ -24,15 +24,37 @@ jobs:
             - name: Checkout this repo
               uses: actions/checkout/@v3
 
-            - name: Install Node
+            - name: Install Node / Reuse Node cache
               uses: actions/setup-node@v3
               with:
                   node-version: 16.14.2
+                  cache: "yarn"
 
             - name: Install Rust
               uses: actions-rs/toolchain@v1
               with:
                   toolchain: stable
+
+            - name: Cache Cargo registry
+              uses: actions/cache@v3
+              with:
+                  path: ~/.cargo/registry
+                  key: ${{matrix.platform}}-cargo-registry-${{hashFiles('**/Cargo.toml')}}
+                  restore-keys: ${{matrix.platform}}-cargo-registry-
+
+            - name: Cache Cargo index
+              uses: actions/cache@v3
+              with:
+                  path: ~/.cargo/git
+                  key: ${{matrix.platform}}-cargo-index-${{hashFiles('**/Cargo.toml')}}
+                  restore-keys: ${{matrix.platform}}-cargo-index-
+
+            - name: Cache Cargo target
+              uses: actions/cache@v3
+              with:
+                  path: src-tauri/target
+                  key: ${{matrix.platform}}-cargo-target-${{hashFiles('**/Cargo.toml')}}
+                  restore-keys: ${{matrix.platform}}-cargo-target-
 
             - name: Install webkit2gtk and zip (ubuntu only)
               if: matrix.platform == 'ubuntu-latest'
