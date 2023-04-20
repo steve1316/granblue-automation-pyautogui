@@ -1,6 +1,7 @@
 from utils.message_log import MessageLog as Log
 from utils.settings import Settings
 from utils.image_utils import ImageUtils
+from utils.mouse_utils import MouseUtils
 from bot.window import Window
 from bot.combat_mode_v2 import CombatModeV2 as Combat
 from utils.parser import Parser
@@ -60,7 +61,7 @@ class GenericV2:
                     Log.print_message(f"[GenericV2] Repeat for {i+1} times")
                     Window.goto(url)
                     
-                    GenericV2.single_raid(summon)
+                    GenericV2.single_battle(summon)
                     Game._delay_between_runs()
 
                     if (np.random.rand() > .9):
@@ -77,32 +78,26 @@ class GenericV2:
 
         support_summon: string of the support summon
         """
-        # Check if the bot is at the Summon Selection screen.
-        if not ImageUtils.confirm_location("select_a_summon", tries = 30):
-            raise RuntimeError("Failed to arrive at the Summon Selection screen.")
-        if not Game.select_summon([support_summon], Settings.summon_element_list):
-            raise RuntimeError("Failed to select summon")
-        if not Game.find_and_click_button("ok", tries = 30):
-            raise RuntimeError("Failed to confirm team")
-        if not Combat.start_combat_mode():
-            raise RuntimeError("Failed to start combat mode")
+        GenericV2.single_battle(support_summon)
         if not ImageUtils.find_button("ok", tries = 30, is_sub=True):
             raise RuntimeError("Failed to reach loot page")
         Game.find_and_click_button("home_back")
 
-
-
     @staticmethod
-    def single_raid(support_summon: str):
+    def single_battle(support_summon: str):
         from bot.game import Game
         """ Standart method to do a battle
         """
         if not ImageUtils.confirm_location("select_a_summon", tries = 30):
             raise RuntimeError("Failed to arrive at the Summon Selection screen.")
+        if not ImageUtils.captcha_pixel_check():
+            raise RuntimeError("Abnormal page at summon selection")
         if not Game.select_summon([support_summon], Settings.summon_element_list):
             raise RuntimeError("Failed to select summon")
-        if not Game.find_and_click_button("ok", tries = 30):
+        if not Game.find_and_click_button("ok", tries = 30, custom_wait=np.random.uniform(0.1,0.5)):
             raise RuntimeError("Failed to confirm team")
+        MouseUtils.move_to(Window.start+10 + np.random.randint(Window.width-20), 
+                           Window.top+10 + np.random.randint(Window.height-100))
         if not Combat.start_combat_mode():
             raise RuntimeError("Failed to start combat mode")
             

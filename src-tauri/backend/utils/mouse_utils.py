@@ -1,4 +1,5 @@
 import random
+from typing import Optional
 
 import pyautogui
 import pyclick
@@ -50,7 +51,7 @@ class MouseUtils:
         return None
 
     @staticmethod
-    def move_and_click_point(x: int, y: int, image_name: str, custom_mouse_speed: float = 0.0, mouse_clicks: int = 1):
+    def move_and_click_point(x: int, y: int, image_name: str, custom_mouse_speed: float = 0.0, mouse_clicks: int = 1, custom_wait: Optional[float]=None):
         """Move the cursor to the specified point on the screen and clicks it.
 
         Args:
@@ -59,7 +60,7 @@ class MouseUtils:
             image_name (str): File name of the image in /images/buttons/ folder.
             custom_mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.0.
             mouse_clicks (int, optional): Number of mouse clicks. Defaults to 1.
-
+            custom_wait (float, optioanl): Custom wait time, useful for action not related to network speed & screenshot
         Returns:
             None
         """
@@ -94,10 +95,12 @@ class MouseUtils:
             pyautogui.mouseUp()
 
         # This delay is necessary as ImageUtils will take the screenshot too fast and the bot will use the last frame before clicking to navigate.
+        if custom_wait is not None:
+            sleep(max(0, custom_wait))
+            return
+                
         from bot.game import Game
         Game.wait(1)
-
-        return None
 
     @staticmethod
     def _randomize_point(x: int, y: int, image_name: str):

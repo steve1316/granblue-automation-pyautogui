@@ -44,6 +44,33 @@ class ImageUtils:
 
     _reader: easyocr.Reader = None
 
+    page_key_pixel = {}
+
+    @staticmethod
+    def captcha_pixel_check(page_name:str = "supporter") -> bool:
+        """Check for specific pixel to see if fall into a captcha page
+        """
+        pts = [
+            (320,340),
+            (320,470),
+            (320,600),
+            (450,400),
+            (450,500),
+            (450,600)
+        ]
+        scrshot = pyautogui.screenshot(region=(Window.start, Window.top, Window.width, Window.height))
+        pixel_check = ImageUtils.page_key_pixel.get(page_name)
+        if pixel_check is None:
+            pixel = {}
+            for pt in pts:
+                pixel[pt] = scrshot.getpixel(pt)
+            ImageUtils.page_key_pixel[page_name] = pixel
+        else:
+            for pt in pts:
+                if pixel_check[pt] != scrshot.getpixel(pt):
+                    return False
+        return True
+
     @staticmethod
     def update_window_dimensions(window_left: int, window_top: int, window_width: int, window_height: int, additional_calibration_required: bool = False):
         """Updates the window dimensions for PyAutoGUI to perform faster operations in.

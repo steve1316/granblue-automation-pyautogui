@@ -2,12 +2,13 @@ import cv2
 from PIL import Image
 from typing import List, Tuple
 from utils.settings import Settings
-from pyautogui import size as get_screen_size, hold, screenshot, click, write, press
+from pyautogui import size as get_screen_size, hold, screenshot, click , press
 import pyautogui as pya
 from utils.message_log import MessageLog as Log
 from utils.mouse_utils import MouseUtils as mouse
 from time import sleep
 from pyperclip import paste, copy
+import numpy as np
 
 class Window():
 
@@ -56,13 +57,17 @@ class Window():
                     is_sub=True)
 
     @staticmethod
-    def reload(is_sub: bool = False) -> None:
-        if is_sub:
-            mouse.move_to(Window.sub_start+160, Window.sub_top-55)
-        else:
-            mouse.move_to(Window.start+160, Window.top-55)
-        click()
-        press('f5')
+    def reload(is_sub: bool = False, is_focus: bool = True) -> None:
+        if not is_focus:
+            if is_sub:
+                mouse.move_to(Window.sub_start+160, Window.sub_top-55)
+            elif not is_focus:
+                mouse.move_to(Window.start+160, Window.top-55)
+            click()
+
+        pya.keyDown('f5')
+        sleep(np.random.uniform(0.04,0.15))
+        pya.keyUp('f5')
 
     @staticmethod
     def calibrate(display_info_check: bool = False) -> None:
@@ -92,7 +97,7 @@ class Window():
         if len(home_bttn_coords) > 2:
             raise RuntimeError(
                 "Calibration of window dimensions failed. maximum window is 2")
-
+        Settings.home_button_location = home_bttn_coords[0]
         screen_w, screen_h = get_screen_size()
 
         if Settings.static_window:
