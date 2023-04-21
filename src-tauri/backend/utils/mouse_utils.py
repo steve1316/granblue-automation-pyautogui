@@ -18,6 +18,10 @@ class MouseUtils:
     """
 
     _hc = pyclick.HumanClicker()
+    # The lower the more smooth, the higher the more accurate to the speed
+    mouse_smoothness = max(0.01, Settings.mouse_smoothness/100)
+    # 1000 to 3000 is tested
+    mouse_speed = max(1000, 1000 * Settings.custom_mouse_speed)
 
     if Settings.enable_bezier_curve_mouse_movement is False:
         pyautogui.MINIMUM_DURATION = 0.1
@@ -37,17 +41,22 @@ class MouseUtils:
             None
         """
         if Settings.enable_bezier_curve_mouse_movement:
-            # HumanClicker only accepts int as the mouse speed.
 
             target_pos = (x,y)
             pos = pyautogui.position()
+            # estimate the mouse move distant with euclidean distant of 2 points
             dist = [(a - b)**2 for a, b in zip(pos, target_pos)]
             dist = math.sqrt(sum(dist))
-            curve = pyclick.HumanCurve(pos, target_pos, targetPoints=30)
-            speed = 2000-np.random.randint(0,300)
-            ## base duration + distance/speed
-            dur = max(0.3, (dist/speed))
-            MessageLog.print_message(f"[DEBUG] Distance: ({dist}, duration: {dur})")
+            speed = MouseUtils.mouse_speed-np.random.randint(0,300)
+            # calculate the duration of the mouse movement
+            dur = 0.1+dist/speed
+            target_point_cnt = int(dur/MouseUtils.mouse_smoothness)
+
+            if Settings.debug_mode:
+                MessageLog.print_message(
+                f"[DEBUG] Duration: {dur}, Number of points: {target_point_cnt})")
+
+            curve = pyclick.HumanCurve(pos, target_pos, targetPoints=target_point_cnt)
 
             MouseUtils._hc.move((x, y), duration = dur, humanCurve = curve)
         else:
@@ -72,8 +81,6 @@ class MouseUtils:
         Returns:
             None
         """
-        from utils.image_utils import ImageUtils
-
         if Settings.debug_mode:
             MessageLog.print_message(f"[DEBUG] Old coordinates: ({x}, {y})")
 
@@ -88,7 +95,7 @@ class MouseUtils:
         sleep(np.random.uniform(0.02, 0.12))
         pyautogui.mouseUp()
         for i in range (0, mouse_clicks-1):
-            sleep(np.random.uniform(0.1,0.2))
+            sleep(np.random.uniform(0.08,0.16))
             pyautogui.mouseDown()
             sleep(np.random.uniform(0.02, 0.12))
             pyautogui.mouseUp()
