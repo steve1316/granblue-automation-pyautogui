@@ -22,6 +22,7 @@ class Window():
     sub_width: int = None
     sub_height: int = None
 
+    BROWSER_TOP_COLOR = (53, 54, 58)
     calibration_complete: bool = False
     additional_calibration_required: bool = False
     party_selection_first_run: bool = True
@@ -78,63 +79,63 @@ class Window():
         """
         from utils.image_utils import ImageUtils
 
-        # Save the location of the "Home" button at the bottom of the bot window.
-
         Log.print_message("\n[INFO] Calibrating the dimensions of the window...")
         # sort coordinate from left to right
         home_bttn_coords = sorted(ImageUtils.find_all("home", hide_info=True))
-        back_bttn_coords = sorted(ImageUtils.find_all("home_back", hide_info=True))
+        calibration_left = sorted(ImageUtils.find_all("calibration_left", hide_info=True))
+        calibration_right = sorted(ImageUtils.find_all("calibration_right", hide_info=True))
         
-        if len(home_bttn_coords) != len(back_bttn_coords):
+        if len(calibration_right) != len(calibration_left):
             raise RuntimeError(
                 "Calibration of window dimensions failed. Some window is partially visible")
-        if len(home_bttn_coords) == 0:
+        if len(calibration_right) == 0:
             raise RuntimeError(
                 "Calibration of window dimensions failed. Is the Home button on the bottom bar visible?")
-        if len(back_bttn_coords) == 0:
+        if len(calibration_left) == 0:
             raise RuntimeError(
                 "Calibration of window dimensions failed. Is the back button visible on the screen?")
-        if len(home_bttn_coords) > 2:
+        if len(calibration_right) > 2:
             raise RuntimeError(
                 "Calibration of window dimensions failed. maximum window is 2")
+        # Save the location of the "Home" button at the bottom of the bot window.
         Settings.home_button_location = home_bttn_coords[0]
         screen_w, screen_h = get_screen_size()
 
-        if Settings.static_window:
-            Log.print_message("[INFO] Using static window configuration...")
-            
-            # calibration base on the side bar
-            img = screenshot(region=(0,0, screen_w, screen_h))
-            for win, coord in enumerate(back_bttn_coords):
-                for i in range (coord[0], 2, -1):
-                    # search left to find 3 consecutive pixels which is the same as side bar
-                    if img.getpixel((i, coord[1])) == img.getpixel((i-1, coord[1])) == \
-                       img.getpixel((i-2, coord[1])) == (31,31,31):
-                        # serach up until the color is different
-                        for j in range (coord[1], 0, -1):
-                            if img.getpixel((i, j)) != (31,31,31):
-                                if win==0:
-                                    Window.start = i+1
-                                    Window.top = j+1
-                                    Window.width = home_bttn_coords[win][0] - Window.start + 50
-                                    Window.height = back_bttn_coords[win][1] - Window.top + 22
-                                else:
-                                    Window.sub_start = i+1
-                                    Window.sub_top = j+1
-                                    Window.sub_width = home_bttn_coords[win][0] - Window.sub_start + 50
-                                    Window.sub_height = back_bttn_coords[win][1] - Window.sub_top + 22
-                                break
-                        break
-        else:
-            Window.start  = 0
-            Window.top  = 0
-            Window.width = screen_h
-            Window.height = screen_w
+        if not Settings.static_window:
+            Log.print_message("[WARNING] V2 must use static window, ignoring settings and proceding...")
+        
+        calibraion_window = list(zip(calibration_left, calibration_right))
 
-            Window.sub_left = 0
-            Window.sub_top = 0
-            Window.sub_width = screen_h
-            Window.sub_height = screen_w
+        img = screenshot(region=(0,0, screen_w, screen_h))
+
+        left_width, bar_height = ImageUtils.get_button_dimensions("calibration_left")
+        right_width, _ = ImageUtils.get_button_dimensions("calibration_right")
+        for win_idx, win in enumerate(calibraion_window):
+            # get back the top right coordinates
+            (left_x, left_y), (right_x, _) = win
+            left_x -= left_width//2
+            left_y -= bar_height//2
+            right_x -= right_width//2
+            # serach up to find color
+            for j in range (left_y, 3, -1):
+                # check if there are 3 consecutive pixel that match the color of browser top
+                if img.getpixel((left_x+2, j)) == img.getpixel((left_x+2, j-1))\
+                    == img.getpixel((left_x+2, j-2)) == Window.BROWSER_TOP_COLOR:
+
+                    if win_idx==0:
+                        Window.start = left_x
+                        Window.top = j+1
+                        Window.width = right_x + right_width - Window.start
+                        Window.height = left_y + bar_height - Window.top
+                    else:
+                        Window.sub_start = left_x 
+                        Window.sub_top = j+1
+                        Window.sub_width = right_x + right_width - Window.sub_start
+                        Window.sub_height = left_y + bar_height - Window.sub_top
+                    break
+            else:
+                raise RuntimeError("Cannot find consecutive color pixels on the top of browser!")
+            
 
         ImageUtils.update_window_dimensions(
             Window.start,
@@ -146,7 +147,7 @@ class Window():
             Window.width != None and Window.height != None:
             Log.print_message("[SUCCESS] Dimensions of the first window has been successfully recalibrated.")
         else:
-            raise RuntimeError("Calibration of window dimensions failed, possbily due to side bar")
+            raise RuntimeError("Calibration of window dimensions failed")
         if Window.sub_start != None and Window.sub_top != None and \
             Window.sub_width != None and Window.sub_height != None:
             Log.print_message("[SUCCESS] Dimensions of the second window has been successfully recalibrated.")
