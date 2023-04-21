@@ -356,7 +356,7 @@ class CombatModeV2:
         else:
             attempt_to_click = 0 # enum, 0 for nothin, 1 for semi, 2 for full
         
-        if ImageUtils.confirm_location("auto_ready"):
+        if ImageUtils.confirm_location("auto_ready", tries=10):
             Log.print_message(f"[Combat] Entering Ready Page")
 
             if attempt_to_click != 0:
