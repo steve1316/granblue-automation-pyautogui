@@ -100,11 +100,17 @@ jobs:
                   cd ./src-tauri/target/release
                   zip -r "${{steps.name_version_getter.outputs.FILE_NAME}}" backend images scripts Granblue\ Automation.exe
 
+            - name: Generate release notes
+              id: release_notes
+              uses: mikepenz/release-changelog-builder-action@v3.7.1
+
             - name: Create Draft Release
               uses: softprops/action-gh-release@v1
               with:
                   name: ${{steps.name_version_getter.outputs.VERSION}}
                   tag_name: ${{steps.name_version_getter.outputs.VERSION}}
                   draft: true
+                  with:
+                      body: ${{steps.release_notes.outputs.changelog}}
                   files: |
                       ./src-tauri/target/release/${{steps.name_version_getter.outputs.FILE_NAME}}
