@@ -61,7 +61,8 @@ class Settings:
     # #### configuration ####
     reduce_delay_seconds: float = dictor(_data, "configuration.reduceDelaySeconds", 0.0)
     enable_bezier_curve_mouse_movement: bool = dictor(_data, "configuration.enableBezierCurveMouseMovement", True)
-    custom_mouse_speed: float = float(dictor(_data, "configuration.mouseSpeed", 0.2))
+    custom_mouse_speed: float = float(dictor(_data, "configuration.mouseSpeed", 1.5))
+    mouse_smoothness: float = float(dictor(_data, "configuration.mouseSmoothness", 2))
     enable_delay_between_runs: bool = dictor(_data, "configuration.enableDelayBetweenRuns", False)
     delay_in_seconds: int = dictor(_data, "configuration.delayBetweenRuns", 15)
     enable_randomized_delay_between_runs: bool = dictor(_data, "configuration.enableRandomizedDelayBetweenRuns", False)
