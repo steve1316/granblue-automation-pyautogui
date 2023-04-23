@@ -350,47 +350,57 @@ class CombatModeV2:
         first_action = CombatModeV2.actions[0]
        
         if first_action[0] == CombatModeV2._enable_semi_auto:
-            attempt_to_click = 1
+            auto_status = 1
         elif first_action[0] == CombatModeV2._enable_full_auto:
-            attempt_to_click = 2
+            auto_status = 2
         else:
-            attempt_to_click = 0 # enum, 0 for nothin, 1 for semi, 2 for full
-        
+            auto_status = 0 # enum, 0 for nothin, 1 for semi, 2 for full
+
         if ImageUtils.confirm_location("auto_ready", tries=15):
             Log.print_message(f"[Combat] Entering Ready Page")
 
-            if attempt_to_click != 0:
-                sleep(random.uniform(0.02, 0.12))
+            if auto_status != 0:
                 pya.mouseDown()
                 sleep(random.uniform(0.02, 0.12))
                 pya.mouseUp()
 
                 if ImageUtils.confirm_location("auto_enabled", tries=5):
                     Log.print_message(f"[Combat] Auto enabled")
-                    attempt_to_click = 3
+                    auto_status += 2 # enum for sucess, 3->semi, 4->full
+        else:
+            auto_status = 0
         
         if ImageUtils.find_button("heal", tries=50):
             Log.print_message(f"[Combat] Entering combact page")
         else:
             return False
         
-        if attempt_to_click == 1:
-            if ImageUtils.find_button("semi_auto_enabled", tries=20):
+        if auto_status != 1 and auto_status != 3:
+            # check for attack button if doesn't try to enable semi auto
+            if ImageUtils.find_button("attack", tries=50):
+                Log.print_message(f"[Combat] Enemy Animation finish")
+            else:
+                return False
+        else:
+            # this can be improve by checking togther with attack button
+            if ImageUtils.find_button("semi_auto_enabled", tries=50):
                 Log.print_message(f"[Combat] Semi Auto successfully start")
-                ImageUtils.find_button("heal_disabled", tries=50)
+                ImageUtils.find_button("heal_disabled", tries=100)
                 Log.print_message(f"[Combat] attacked in Semi Auto ")
                 sleep(random.uniform(0.1,1))
             else:
                 CombatModeV2._attack()
-        elif attempt_to_click == 2:
-            if ImageUtils.find_button("full_auto_enabled", tries=20):
+        # if not sure whether full auto is enabled
+        if auto_status == 2:
+            if ImageUtils.find_button("full_auto_enabled", tries=3):
                 Log.print_message(f"[Combat] Full Auto successfully start")
             else:
-                attempt_to_click = 0
+                auto_status = 0
+
         # reuse the variable to decide if first enable auto should be skip
-        attempt_to_click = min(attempt_to_click, 1)
+        action_start_idx = min(auto_status, 1)
         # excute chain actions
-        for action in CombatModeV2.actions[attempt_to_click:]:
+        for action in CombatModeV2.actions[action_start_idx:]:
             action[0](**action[1])
 
         Log.print_message("\n######################################################################")
