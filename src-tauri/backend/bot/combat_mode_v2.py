@@ -356,17 +356,18 @@ class CombatModeV2:
         else:
             attempt_to_click = 0 # enum, 0 for nothin, 1 for semi, 2 for full
         
-        if ImageUtils.confirm_location("auto_ready", tries=10):
+        if ImageUtils.confirm_location("auto_ready", tries=15):
             Log.print_message(f"[Combat] Entering Ready Page")
 
             if attempt_to_click != 0:
+                sleep(random.uniform(0.02, 0.12))
                 pya.mouseDown()
                 sleep(random.uniform(0.02, 0.12))
                 pya.mouseUp()
-                sleep(0.03)
 
-                if ImageUtils.confirm_location("auto_enabled", tries=3):
+                if ImageUtils.confirm_location("auto_enabled", tries=5):
                     Log.print_message(f"[Combat] Auto enabled")
+                    attempt_to_click = 3
         
         if ImageUtils.find_button("heal", tries=50):
             Log.print_message(f"[Combat] Entering combact page")
@@ -381,7 +382,7 @@ class CombatModeV2:
                 sleep(random.uniform(0.1,1))
             else:
                 CombatModeV2._attack()
-        if attempt_to_click == 2:
+        elif attempt_to_click == 2:
             if ImageUtils.find_button("full_auto_enabled", tries=20):
                 Log.print_message(f"[Combat] Full Auto successfully start")
             else:
