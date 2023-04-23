@@ -70,6 +70,10 @@ class ImageUtils:
                 if pixel_check[pt] != scrshot.getpixel(pt):
                     return False
         return True
+    clickable_area = {
+       "template_support_summon": (0,-7,420,73),
+       "ok": (-70,-2,175,32)
+    }
 
     @staticmethod
     def update_window_dimensions(window_left: int, window_top: int, window_width: int, window_height: int, additional_calibration_required: bool = False):
