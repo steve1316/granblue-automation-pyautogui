@@ -195,7 +195,7 @@ const ExtraSettings = () => {
 
                 <Grid.Col span={12}>
                     <Grid>
-                        <Grid.Col span={6}>
+                        <Grid.Col span={12}>
                             <CustomSwitch
                                 label="Enable Bezier Curve Mouse Movement"
                                 description="Enable this option to have slow but human-like mouse movement. Disable this for fast but bot-like mouse movement. Note that enabling this will disable the Mouse Speed setting."
@@ -203,17 +203,34 @@ const ExtraSettings = () => {
                                 onChange={(checked) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, enableBezierCurveMouseMovement: checked } })}
                             />
                         </Grid.Col>
-                        <Grid.Col span={6}>
-                            {!bsc.settings.configuration.enableBezierCurveMouseMovement ? (
-                                <CustomNumberInput
-                                    label="Mouse Speed"
-                                    value={bsc.settings.configuration.mouseSpeed}
-                                    onChange={(value) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, mouseSpeed: value } })}
-                                    min={0}
-                                    step={0.01}
-                                    description="Set how fast a mouse operation finishes."
-                                />
-                            ) : null}
+
+                        <Grid.Col span={12}>
+                            <Grid align="flex-end">
+                                <Grid.Col span={6}>
+                                    <CustomNumberInput
+                                        label="Mouse Speed"
+                                        value={bsc.settings.configuration.mouseSpeed}
+                                        onChange={(value) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, mouseSpeed: value } })}
+                                        min={0}
+                                        step={0.01}
+                                        description="Sets the factor on how fast a mouse operation moves."
+                                    />
+                                </Grid.Col>
+                                <Grid.Col span={6}>
+                                    {bsc.settings.configuration.enableBezierCurveMouseMovement ? (
+                                        <>
+                                            <CustomNumberInput
+                                                label="Mouse Smoothness"
+                                                value={bsc.settings.configuration.mouseSmoothness}
+                                                onChange={(value) => bsc.setSettings({ ...bsc.settings, configuration: { ...bsc.settings.configuration, mouseSmoothness: value } })}
+                                                min={0}
+                                                step={0.01}
+                                                description="Sets the factor on how smooth the mouse movement should be. A lower value has it more smoother (more points along the curve to pass through) and a high value has it move more rigidly (less points along the curve)."
+                                            />
+                                        </>
+                                    ) : null}
+                                </Grid.Col>
+                            </Grid>
                         </Grid.Col>
 
                         <Grid.Col span={6}>

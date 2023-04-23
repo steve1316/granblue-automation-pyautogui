@@ -9,6 +9,7 @@ from utils.message_log import MessageLog
 
 from time import sleep
 import numpy as np
+import math
 
 
 class MouseUtils:
@@ -17,6 +18,10 @@ class MouseUtils:
     """
 
     _hc = pyclick.HumanClicker()
+    # The lower the more smooth, the higher the more accurate to the speed
+    mouse_smoothness = max(0.01, Settings.mouse_smoothness/100)
+    # 1000 to 3000 is tested
+    mouse_speed = max(1000, 1000 * Settings.custom_mouse_speed)
 
     if Settings.enable_bezier_curve_mouse_movement is False:
         pyautogui.MINIMUM_DURATION = 0.1
@@ -36,11 +41,24 @@ class MouseUtils:
             None
         """
         if Settings.enable_bezier_curve_mouse_movement:
-            # HumanClicker only accepts int as the mouse speed.
-            if int(custom_mouse_speed) < 1:
-                custom_mouse_speed = 1
 
-            MouseUtils._hc.move((x, y), duration = custom_mouse_speed, humanCurve = pyclick.HumanCurve(pyautogui.position(), (x, y)))
+            target_pos = (x,y)
+            pos = pyautogui.position()
+            # estimate the mouse move distant with euclidean distant of 2 points
+            dist = [(a - b)**2 for a, b in zip(pos, target_pos)]
+            dist = math.sqrt(sum(dist))
+            speed = MouseUtils.mouse_speed-np.random.randint(0,300)
+            # calculate the duration of the mouse movement
+            dur = 0.1+dist/speed
+            target_point_cnt = int(dur/MouseUtils.mouse_smoothness)
+
+            if Settings.debug_mode:
+                MessageLog.print_message(
+                f"[DEBUG] Duration: {dur}, Number of points: {target_point_cnt})")
+
+            curve = pyclick.HumanCurve(pos, target_pos, targetPoints=target_point_cnt)
+
+            MouseUtils._hc.move((x, y), duration = dur, humanCurve = curve)
         else:
             if custom_mouse_speed <= 0.0:
                 custom_mouse_speed = Settings.custom_mouse_speed
@@ -50,7 +68,7 @@ class MouseUtils:
         return None
 
     @staticmethod
-    def move_and_click_point(x: int, y: int, image_name: str, custom_mouse_speed: float = 0.0, mouse_clicks: int = 1):
+    def move_and_click_point(x: int, y: int, image_name: str, custom_mouse_speed: float = 0.0, mouse_clicks: int = np.random.randint(1,3)):
         """Move the cursor to the specified point on the screen and clicks it.
 
         Args:
@@ -71,24 +89,13 @@ class MouseUtils:
         if Settings.debug_mode:
             MessageLog.print_message(f"[DEBUG] New coordinates: ({new_x}, {new_y})")
 
-        # Move the mouse to the specified coordinates.
-        if Settings.enable_bezier_curve_mouse_movement:
-            # HumanClicker only accepts int as the mouse speed.
-            if int(custom_mouse_speed) < 1:
-                custom_mouse_speed = 1
-
-            MouseUtils._hc.move((new_x, new_y), duration = custom_mouse_speed, humanCurve = pyclick.HumanCurve(pyautogui.position(), (new_x, new_y)))
-        else:
-            if custom_mouse_speed <= 0.0:
-                custom_mouse_speed = Settings.custom_mouse_speed
-
-            pyautogui.moveTo(x, y, duration = custom_mouse_speed, tween = pyautogui.easeInOutQuad)
-
+        MouseUtils.move_to(new_x,new_y, custom_mouse_speed=custom_mouse_speed)
+        
         pyautogui.mouseDown()
         sleep(np.random.uniform(0.02, 0.12))
         pyautogui.mouseUp()
         for i in range (0, mouse_clicks-1):
-            sleep(np.random.uniform(0.1,0.2))
+            sleep(np.random.uniform(0.08,0.16))
             pyautogui.mouseDown()
             sleep(np.random.uniform(0.02, 0.12))
             pyautogui.mouseUp()
@@ -111,14 +118,16 @@ class MouseUtils:
         Returns:
             (int, int): Tuple of the newly randomized location to click.
         """
+        from utils.image_utils import ImageUtils 
         # Get the width and height of the template image.
-        from utils.image_utils import ImageUtils
-        width, height = ImageUtils.get_button_dimensions(image_name)
 
-        if Settings.farming_mode == "GenericV2":
+        if Settings.farming_mode.endswith("V2"):
+            x_off, y_off, width, height = ImageUtils.get_clickable_area(image_name)
             width = np.random.randint(0,width)
             height = np.random.randint(0,height)
-            return x+width, y+height
+            return x+x_off+width, y+y_off+height
+        
+        width, height = ImageUtils.get_button_dimensions(image_name)
 
         dimensions_x0 = x - (width // 2)
         dimensions_x1 = x + (width // 2)

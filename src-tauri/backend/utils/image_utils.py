@@ -44,6 +44,11 @@ class ImageUtils:
 
     _reader: easyocr.Reader = None
 
+    clickable_area = {
+       "template_support_summon": (0,-7,420,73),
+       "ok": (-70,-2,175,32)
+    }
+
     @staticmethod
     def update_window_dimensions(window_left: int, window_top: int, window_width: int, window_height: int, additional_calibration_required: bool = False):
         """Updates the window dimensions for PyAutoGUI to perform faster operations in.
@@ -851,6 +856,24 @@ class ImageUtils:
         width, height = image.size
         image.close()
         return width, height
+    
+    @staticmethod
+    def get_clickable_area(image_name: str) -> Tuple[int, int, int, int]:
+        """Get the clickable area in /images/buttons/ folder.
+
+        Args:
+            image_name (str): File name of the image in /images/buttons/ folder.
+
+        Returns:
+            (Tuple[int, int]): Tuple of the x-offset, y-offset, width and height.
+        """
+        area = ImageUtils.clickable_area.get(image_name)
+        if area is not None:
+            return area
+
+        width, height = ImageUtils.get_button_dimensions(image_name)
+        ImageUtils.clickable_area[image_name] = (0,0,width, height)
+        return 0,0, width, height
 
     @staticmethod
     def _take_screenshot():
