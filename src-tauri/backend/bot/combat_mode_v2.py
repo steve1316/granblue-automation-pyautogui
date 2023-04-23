@@ -89,16 +89,16 @@ class CombatModeV2:
 
         if Settings.use_first_notch is False:
             # calibrated
-            x_offset = 274
+            x_offset = 138
             x_inc = 84
-            y_offset = 662
+            y_offset = 546
         else:
             x_offset = 145
             x_inc = 55
             y_offset = 115
 
-        x = x_offset + (x_inc * idx)
-        y = y_offset
+        x = Window.start + x_offset + (x_inc * idx)
+        y = Window.top + y_offset
 
         MouseUtils.move_and_click_point(x, y, "template_skill", custom_wait=random.uniform(0.03, 0.1))
         Log.print_message(f"[COMBAT] Use Skill {idx}.")
