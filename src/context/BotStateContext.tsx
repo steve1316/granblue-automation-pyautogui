@@ -46,6 +46,7 @@ export interface Settings {
         reduceDelaySeconds: number
         enableBezierCurveMouseMovement: boolean
         mouseSpeed: number
+        mouseSmoothness: number
         enableDelayBetweenRuns: boolean
         delayBetweenRuns: number
         enableRandomizedDelayBetweenRuns: boolean
@@ -203,7 +204,8 @@ export const defaultSettings: Settings = {
     configuration: {
         reduceDelaySeconds: 0.0,
         enableBezierCurveMouseMovement: true,
-        mouseSpeed: 0.2,
+        mouseSpeed: 1.5,
+        mouseSmoothness: 2,
         enableDelayBetweenRuns: false,
         delayBetweenRuns: 15,
         enableRandomizedDelayBetweenRuns: false,
