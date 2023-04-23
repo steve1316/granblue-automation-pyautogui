@@ -706,7 +706,7 @@ const ExtraSettings = () => {
                 <Grid.Col span={12}>
                     <Group>
                         <Stack>
-                            <Grid grow sx={{ width: "100%" }}>
+                            <Grid grow sx={{ width: "100%" }} align="flex-end">
                                 <Grid.Col span={6}>
                                     <CustomNumberInput
                                         label="Set Confidence Level"
