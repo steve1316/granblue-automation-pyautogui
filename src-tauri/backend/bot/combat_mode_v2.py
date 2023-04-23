@@ -1,7 +1,7 @@
 from typing import List, Optional
 from time import sleep
 from numpy import random
-
+import pyautogui as pya
 
 # from bot.game import Game
 from utils.settings import Settings
@@ -16,8 +16,6 @@ class CombatModeV2:
     """
 
     actions = []
-    _attack_button_location = None
-
 
     @staticmethod
     def _enable_auto() -> bool:
@@ -88,80 +86,105 @@ class CombatModeV2:
 
     @staticmethod
     def _use_skill(idx: int):
-        
-        from bot.game import Game
-
-        x,y = ImageUtils.find_button("attack", tries = 50, bypass_general_adjustment = True)
 
         if Settings.use_first_notch is False:
             # calibrated
-            x_offset = -159
+            x_offset = 138
             x_inc = 84
-            y_offset = 178
+            y_offset = 546
         else:
             x_offset = 145
             x_inc = 55
             y_offset = 115
 
-        x = x + x_offset + (x_inc * idx)
-        y = y + y_offset
+        x = Window.start + x_offset + (x_inc * idx)
+        y = Window.top + y_offset
 
-        MouseUtils.move_and_click_point(x, y, "template_skill")
+        MouseUtils.move_and_click_point(x, y, "template_skill", custom_wait=random.uniform(0.03, 0.1))
         Log.print_message(f"[COMBAT] Use Skill {idx}.")
+    
+    @staticmethod
+    def _skill_target(idx: int):
+
+        x_offset = 115
+        x_inc = 93
+        y_offset = 251
+        y_inc = 164
+
+        x = Window.start + x_offset + (x_inc * (idx%3))
+        y = Window.top + y_offset + (y_inc * (idx//3))
+
+        Log.print_message(f"[COMBAT] Targeting Character {idx+1} for Skill.")
+        MouseUtils.move_and_click_point(x, y, "template_target", custom_wait=random.uniform(0.03, 0.1))
 
     @staticmethod
-    def _quick_summon(command: str = ""):
+    def _quick_summon() -> bool:
         """Activate a Quick Summon.
-
-        Args:
-            command (str, optional): The command to be executed. Defaults to the regular quick summon command.
-
         Returns:
-            (bool): Return True if the Turn will end due to a chained "attack" command. False otherwise.
+            (bool): if success
         """
-        from bot.game import Game
-
         Log.print_message("[COMBAT] Quick Summoning now...")
-        if ImageUtils.find_button("quick_summon_not_ready", bypass_general_adjustment = True) is None and \
-                (Game.find_and_click_button("quick_summon1", bypass_general_adjustment = True) or Game.find_and_click_button("quick_summon2", bypass_general_adjustment = True)):
-            Log.print_message("[COMBAT] Successfully quick summoned!")
+        pt = ImageUtils.find_button("quick_summon2")
+        if pt is not None:
+            x,y=pt
+            MouseUtils.move_and_click_point(x,y, "quick_summon1", custom_wait=random.uniform(0.03, 0.1))
+            return True
+        
+        pt = ImageUtils.find_button("quick_summon1")
+        if pt is not None:
+            x,y=pt
+            MouseUtils.move_and_click_point(x,y, "quick_summon2", custom_wait=random.uniform(0.03, 0.1))
+            return True
 
-            if "wait" in command:
-                split_command = command.split(".")
-                split_command.pop(0)
-                CombatModeV2._wait_execute(split_command)
-
-            if "attack" in command:
-                CombatModeV2._end()
-                return True
-        else:
-            Log.print_message("[COMBAT] Was not able to quick summon this Turn.")
-
+        Log.print_message("[COMBAT] Was not able to quick summon this Turn.")
         return False
-
+    
     @staticmethod
     def _enable_semi_auto():
         """Enable Semi Auto and if it fails, try to enable Full Auto.
         """
         from bot.game import Game
-
         Log.print_message("[COMBAT] Bot will now attempt to enable Semi Auto...")
-        CombatModeV2._semi_auto = ImageUtils.find_button("semi_auto_enabled")
-        if not CombatModeV2._semi_auto:
+        pt = ImageUtils.find_button("semi_auto_enabled")
+        if pt is None:
+             # check if the user has the "Full Auto" button
+            if Game.find_and_click_button("full_auto", tries=1):
+                return
             # Have the Party attack and then attempt to see if the "Semi Auto" button becomes visible.
             Game.find_and_click_button("attack")
-            CombatModeV2._semi_auto = Game.find_and_click_button("semi_auto")
 
-            # If the bot still cannot find the "Semi Auto" button, that probably means the user has the "Full Auto" button on the screen instead of the "Semi Auto" button.
-            if not CombatModeV2._semi_auto:
-                Log.print_message("[COMBAT] Failed to enable Semi Auto. Falling back to Full Auto...")
-
-                # Enable Full Auto.
-                CombatModeV2._full_auto = Game.find_and_click_button("full_auto")
+            if Game.find_and_click_button("semi_auto"):
+                Log.print_message("[COMBAT] Failed to enable Semi Auto.")
             else:
                 Log.print_message("[COMBAT] Semi Auto is now enabled.")
 
-        return None
+    @staticmethod
+    def _use_summon(idx: int) -> bool:
+ 
+        from bot.game import Game
+
+        if not Game.find_and_click_button("summon", clicks=2):
+            return False
+
+        x_offset = 15
+        x_inc = 77
+        y_offset = 468
+        x = Window.start + x_offset + (x_inc * idx)
+        y = Window.top + y_offset
+        #animation
+        sleep(0.3)
+        Log.print_message(f"[COMBAT] Using Summon #{idx+1}.")
+        # check if accidentally click on a summon
+        if ImageUtils.confirm_location("summon_details",tries=1):
+            Game.find_and_click_button("cancel")
+
+        MouseUtils.move_and_click_point(x,y, "template_summon")
+        # Check if it is able to be summoned.
+        if not Game.find_and_click_button("ok"):
+            Log.print_message(f"[COMBAT] Summon #{idx+1} cannot be used.")
+            Game.find_and_click_button("cancel")
+            return False
+        return True
 
     @staticmethod
     def _enable_full_auto():
@@ -189,20 +212,16 @@ class CombatModeV2:
     def _sub_back():
         """Presses the Back button.
         """
-        from bot.game import Game
-
         x, y = ImageUtils.find_button("home_back", tries = 30, is_sub=True)    
         MouseUtils.move_and_click_point(
             x, y, "home_back"
         )
     
         Log.print_message("[COMBAT] Tapped the Back button of sub Window.")
-
-        return None
     
     @staticmethod
     def _sub_reload():
-        Window.reload(is_sub=True)
+        Window.reload(is_sub=True, is_focus=False)
 
     @staticmethod
     def _reload():
@@ -231,6 +250,13 @@ class CombatModeV2:
             Log.print_message("[WARNING] Failed to execute a manual attack.")
     
     @staticmethod
+    def _wait(time: int):
+        from bot.game import Game
+        Game._move_mouse_security_check()
+        Log.print_message(f"[COMBAT] Sleeping for {time} seconds")
+        sleep(time)
+    
+    @staticmethod
     def load_actions(actions):
         """ Check the string list and load the actions chain into the combat mode
 
@@ -238,18 +264,23 @@ class CombatModeV2:
         """
         fun = {
             "quicksummon": CombatModeV2._quick_summon,
+            "usesummon": CombatModeV2._use_summon,
             "enablefullauto": CombatModeV2._enable_full_auto,
             "enablesemiauto": CombatModeV2._enable_semi_auto,
             "back": CombatModeV2._back,
             "selectchar": CombatModeV2._select_char,
             "changechar": CombatModeV2._change_select_char,
             "useskill": CombatModeV2._use_skill,
+            "target": CombatModeV2._skill_target,
             "subback": CombatModeV2._sub_back,
             "deselectchar": CombatModeV2._deselect_char,
             "reload": CombatModeV2._reload,
             "attack": CombatModeV2._attack,
+            "wait": CombatModeV2._wait,
             "_sub_reload": CombatModeV2._sub_reload,
-            "_wait_for_end": CombatModeV2._wait_for_end
+            "_wait_for_end": CombatModeV2._wait_for_end,
+            "requestbackup": CombatMode._request_backup,
+            "tweetbackup": CombatMode._tweet_backup,
         }
         CombatModeV2.actions = []
         for action in actions:
@@ -257,7 +288,7 @@ class CombatModeV2:
                 (fun[action[0]] , action[1])
             )
         Log.print_message(
-            f"[COMBAT] Action Load: Size {len(CombatModeV2.actions)}")
+            f"[COMBAT] Action Loaded: Size {len(CombatModeV2.actions)}")
 
     @staticmethod
     def _is_battle_end() -> bool:
@@ -310,21 +341,55 @@ class CombatModeV2:
         Returns:
            if Combat Mode successful start
         """
-
         Log.print_message("\n######################################################################")
         Log.print_message("######################################################################")
         Log.print_message(f"[COMBAT] Starting Combat Mode.")
         Log.print_message("######################################################################")
         Log.print_message("######################################################################\n")
 
-        CombatModeV2._attack_button_location = ImageUtils.find_button("attack", tries = 100, bypass_general_adjustment = True)
+        first_action = CombatModeV2.actions[0]
+       
+        if first_action[0] == CombatModeV2._enable_semi_auto:
+            attempt_to_click = 1
+        elif first_action[0] == CombatModeV2._enable_full_auto:
+            attempt_to_click = 2
+        else:
+            attempt_to_click = 0 # enum, 0 for nothin, 1 for semi, 2 for full
+        
+        if ImageUtils.confirm_location("auto_ready", tries=10):
+            Log.print_message(f"[Combat] Entering Ready Page")
 
-        if CombatModeV2._attack_button_location is None:
-            Log.print_message(f"\n[ERROR] Cannot find Attack button.")
+            if attempt_to_click != 0:
+                pya.mouseDown()
+                sleep(random.uniform(0.02, 0.12))
+                pya.mouseUp()
+                sleep(0.03)
+
+                if ImageUtils.confirm_location("auto_enabled", tries=3):
+                    Log.print_message(f"[Combat] Auto enabled")
+        
+        if ImageUtils.find_button("heal", tries=50):
+            Log.print_message(f"[Combat] Entering combact page")
+        else:
             return False
-
+        
+        if attempt_to_click == 1:
+            if ImageUtils.find_button("semi_auto_enabled", tries=20):
+                Log.print_message(f"[Combat] Semi Auto successfully start")
+                ImageUtils.find_button("heal_disabled", tries=50)
+                Log.print_message(f"[Combat] attacked in Semi Auto ")
+                sleep(random.uniform(0.1,1))
+            else:
+                CombatModeV2._attack()
+        if attempt_to_click == 2:
+            if ImageUtils.find_button("full_auto_enabled", tries=20):
+                Log.print_message(f"[Combat] Full Auto successfully start")
+            else:
+                attempt_to_click = 0
+        # reuse the variable to decide if first enable auto should be skip
+        attempt_to_click = min(attempt_to_click, 1)
         # excute chain actions
-        for action in CombatModeV2.actions:
+        for action in CombatModeV2.actions[attempt_to_click:]:
             action[0](**action[1])
 
         Log.print_message("\n######################################################################")

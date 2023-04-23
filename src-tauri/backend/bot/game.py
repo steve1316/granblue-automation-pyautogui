@@ -2,7 +2,7 @@ import multiprocessing
 import random
 import time
 import traceback
-from typing import List
+from typing import List, Optional
 
 import pyautogui
 
@@ -168,7 +168,7 @@ class Game:
 
     @staticmethod
     def find_and_click_button(button_name: str, clicks: int = 1, tries: int = 0, x_offset: int = 0, y_offset: int = 0, custom_confidence: float = 0.80, suppress_error: bool = False,
-                              bypass_general_adjustment: bool = True):
+                              bypass_general_adjustment: bool = True, custom_wait: Optional[float] = None):
         """Find the center point of a button image and click it.
 
         Args:
@@ -180,6 +180,7 @@ class Game:
             custom_confidence (float, optional): Use a custom confidence for the template matching. Defaults to 0.80.
             suppress_error (bool, optional): Suppresses template matching error depending on boolean. Defaults to False.
             bypass_general_adjustment (bool, optional): Bypass using the general adjustment for the number of tries if ImageUtil's default is not being used. Defaults to True.
+            custom_wait (float, optional): custom wait time after the click
 
         Returns:
             (bool): Return True if the button was found and clicked. Otherwise, return False.
@@ -270,7 +271,7 @@ class Game:
                 temp_location = ImageUtils.find_button(button_name.lower(), tries = tries, suppress_error = suppress_error, custom_confidence = custom_confidence,
                                                        bypass_general_adjustment = bypass_general_adjustment)
                 if temp_location is not None:
-                    MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, button_name, mouse_clicks = clicks)
+                    MouseUtils.move_and_click_point(temp_location[0] + x_offset, temp_location[1] + y_offset, button_name, mouse_clicks = clicks, custom_wait=custom_wait)
                     return True
 
         return False
