@@ -1,9 +1,0 @@
-https://game.granbluefantasy.jp/#quest/supporter/903471/1
-supportSummon:celeste_omega
-repeat:default
-
-character1.useSkill(1).useSkill(2).useSkill(3)
-character2.useSkill(1).useSkill(2).useSkill(3)
-character3.useSkill(1).useSkill(2)
-character4.useSkill(1).useSkill(2).useSkill(3)
-enableFullAuto
