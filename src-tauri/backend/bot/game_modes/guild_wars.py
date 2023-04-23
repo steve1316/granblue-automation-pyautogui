@@ -132,6 +132,9 @@ class GuildWars:
                     MessageLog.print_message(f"\n[GUILD.WARS] Today is Day 2+.")
                     if len(raid_battle_locations) < 3:
                         MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
+                    elif len(raid_battle_locations) == 1:
+                        MessageLog.print_message(f"[GUILD.WARS] Only 1 NM was detected (probably NM90 is the only one on the screen). Starting that now...")
+                        MouseUtils.move_and_click_point(raid_battle_locations[0][0], raid_battle_locations[0][1], "event_raid_battle")
                     else:
                         MouseUtils.move_and_click_point(raid_battle_locations[1][0], raid_battle_locations[1][1], "event_raid_battle")
 
