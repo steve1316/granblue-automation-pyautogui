@@ -145,7 +145,7 @@ class GuildWars:
                     elif difficulty == "NM95":
                         MouseUtils.move_and_click_point(nightmare_locations[1][0], nightmare_locations[1][1], "guild_wars_nightmares")
                     else:
-                        MouseUtils.move_and_click_point(nightmare_locations[1][0], nightmare_locations[1][1], "guild_wars_nightmares")
+                        MouseUtils.move_and_click_point(nightmare_locations[2][0], nightmare_locations[2][1], "guild_wars_nightmares")
 
                     # Check if the Nightmare selection was successful and put the bot into the Support Summon Selection screen. If not, then go back to farm meat.
                     if not ImageUtils.wait_vanish("close", timeout = 10):
