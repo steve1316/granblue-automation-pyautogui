@@ -327,8 +327,6 @@ class ImageUtils:
                 ImageUtils._match_location = tuple(temp_location)
                 match_locations.append(ImageUtils._match_location)
 
-        MessageLog.print_message(f"[DEBUG] First match completed at {match_locations}")
-
         # Now loop until all other matches are found and break out when there are no more to be found.
         while match_check:
             height, width = template_array.shape
