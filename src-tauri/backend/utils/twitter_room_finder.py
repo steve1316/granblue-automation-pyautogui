@@ -10,6 +10,12 @@ from utils.message_log import MessageLog
 from utils.settings import Settings
 
 
+######################################################################
+######################################################################
+# This file is now deprecated due to Twitter locking API access. The new raid finder feature in-game replaces this.
+######################################################################
+######################################################################
+
 class RoomStreamListenerV2(tweepy.StreamingClient):
     """
     A listener class using the Twitter Stream API V2 to grab all incoming tweets that match the search query.

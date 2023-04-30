@@ -613,6 +613,9 @@ class CombatMode:
         Returns:
             None
         """
+        # TODO: Remove this as Twitter functionality is now removed.
+        # TODO: Update the Wiki by removing this command as well.
+
         from bot.game import Game
 
         MessageLog.print_message(f"\n[COMBAT] Now requesting Backup for this Raid via Twitter.")

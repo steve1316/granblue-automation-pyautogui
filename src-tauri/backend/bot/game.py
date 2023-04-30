@@ -12,7 +12,6 @@ from utils.message_log import MessageLog
 from utils import discord_utils
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
-from utils.twitter_room_finder import TwitterRoomFinder
 # Imports for all the supported game modes.
 from bot.game_modes.arcarum import Arcarum
 from bot.game_modes.arcarum_sandbox import ArcarumSandbox

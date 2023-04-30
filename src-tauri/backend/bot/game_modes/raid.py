@@ -3,7 +3,6 @@ from utils.message_log import MessageLog
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
 from bot.combat_mode import CombatMode
-from utils.twitter_room_finder import TwitterRoomFinder
 
 
 class RaidException(Exception):
@@ -25,6 +24,8 @@ class Raid:
         Returns:
             None
         """
+        # TODO: Make sure Recent tab is active.
+
         # Find out the number of currently joined raids.
         joined_locations = ImageUtils.find_all("joined")
 
@@ -72,62 +73,7 @@ class Raid:
 
         recovery_time = 15
 
-        # Make preparations for farming raids by saving the location of the "Join Room" button and the "Room Code" textbox.
-        join_room_button = ImageUtils.find_button("join_a_room")
-        if Settings.use_first_notch is False:
-            room_code_textbox = (join_room_button[0] - 185, join_room_button[1])
-        else:
-            room_code_textbox = (join_room_button[0] - 120, join_room_button[1])
-
-        # Loop and try to join a raid. If none of the room codes worked, wait before trying again with a new set of room codes for a maximum of 10 tries.
-        tries = 10
-        while tries > 0:
-            room_code_tries = 30
-            while room_code_tries > 0:
-                # Attempt to find a room code.
-                room_code = TwitterRoomFinder.get_room_code()
-
-                if room_code != "":
-                    # Select the "Room Code" textbox and then clear all text from it.
-                    MouseUtils.move_and_click_point(room_code_textbox[0], room_code_textbox[1], "template_room_code_textbox", mouse_clicks = 2)
-                    MouseUtils.clear_textbox()
-
-                    # Copy the room code to the clipboard and then paste it into the "Room Code" textbox.
-                    MouseUtils.copy_to_clipboard(room_code)
-                    MouseUtils.paste_from_clipboard()
-
-                    # Now click on the "Join Room" button.
-                    MouseUtils.move_and_click_point(join_room_button[0], join_room_button[1], "join_a_room")
-
-                    Game.wait(2.0)
-
-                    # If the room code is valid and the raid is able to be joined, break out and head to the Summon Selection screen.
-                    if Game.find_and_click_button("ok", suppress_error = True) is False:
-                        # Check for EP.
-                        Game.check_for_ep()
-
-                        MessageLog.print_message(f"[SUCCESS] Joining {room_code} was successful.")
-                        Raid._raids_joined += 1
-
-                        return ImageUtils.confirm_location("select_a_summon", tries = 30)
-                    elif Game.check_for_pending() is False:
-                        MessageLog.print_message(f"[WARNING] {room_code} already ended or invalid.")
-                    else:
-                        # Move from the Home screen back to the Backup Requests screen after clearing out all the Pending Battles.
-                        Game.find_and_click_button("quest")
-                        Game.find_and_click_button("raid")
-                        Game.find_and_click_button("enter_id")
-
-                if Settings.enable_no_timeout is False:
-                    room_code_tries -= 1
-
-                Game.wait(1)
-
-            tries -= 1
-            MessageLog.print_message(f"\n[WARNING] Could not find any valid room codes. \nWaiting {recovery_time} seconds and then trying again with {tries} tries left before exiting.")
-            Game.wait(recovery_time)
-
-        raise RaidException("Failed to find any valid room codes for 10 total times.")
+        # TODO: replace with raid finder in-game.
 
     @staticmethod
     def _navigate():
