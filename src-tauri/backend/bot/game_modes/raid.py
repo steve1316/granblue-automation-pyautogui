@@ -157,7 +157,10 @@ class Raid:
         Returns:
             None
         """
-        # TODO: Make sure Recent tab is active.
+        from bot.game import Game
+
+        # Make the Recent tab active.
+        Game.find_and_click_button("raid_tab_recent")
 
         # Find out the number of currently joined raids.
         joined_locations = ImageUtils.find_all("joined")
@@ -207,6 +210,13 @@ class Raid:
         recovery_time = 15
 
         # TODO: replace with raid finder in-game.
+
+        # Make the Finder tab active.
+        Game.find_and_click_button("raid_tab_finder")
+
+        # Set the filter to the user selected raid.
+        Game.find_and_click_button("raid_set_filters")
+        Game.find_and_click_button("raid_filter_1")
 
     @staticmethod
     def _navigate():
