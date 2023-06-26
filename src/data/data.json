@@ -103,6 +103,30 @@
         "House of Happiness": {
             "map": "New Utopia",
             "items": ["Converging Rays", "Meditative Sutra", "Jumbo Beast Bone"]
+        },
+        "Nezha Showdown": {
+            "map": "Port Breeze Archipelago",
+            "items": ["Nezha Anima", "Nezha Omega Anima", "Ancient Nalakuvara", "Nalakuvara"]
+        },
+        "Twin Elements Showdown": {
+            "map": "Valtz Duchy",
+            "items": ["Twin Elements Anima", "Twin Elements Omega Anima", "Ancient Ecke Sachs", "Ecke Sachs"]
+        },
+        "Macula Marius Showdown": {
+            "map": "Auguste Isles",
+            "items": ["Macula Marius Anima", "Macula Marius Omega Anima", "Ancient Auberon", "Auberon"]
+        },
+        "Medusa Showdown": {
+            "map": "Lumacie Archipelago",
+            "items": ["Medusa Anima", "Medusa Omega Anima", "Ancient Perseus", "Perseus"]
+        },
+        "Apollo Showdown": {
+            "map": "Albion Citadel",
+            "items": ["Apollo Anima", "Apollo Omega Anima", "Ancient Bow of Artemis", "Bow of Artemis"]
+        },
+        "Dark Angel Olivia Showdown": {
+            "map": "Mist-Shrouded Isle",
+            "items": ["Dark Angel Olivia Anima", "Dark Angel Olivia Omega Anima", "Ancient Cortana", "Cortana"]
         }
     },
     "Special": {
@@ -632,54 +656,6 @@
         "Huanglong & Qilin (Impossible)": {
             "map": "Huanglong & Qilin",
             "items": ["Huanglong Anima", "Qilin Anima", "Golden Talisman", "Obsidian Talisman"]
-        },
-        "Lvl 100 Twin Elements": {
-            "map": "Twin Elements",
-            "items": ["Twin Elements Anima", "Twin Elements Omega Anima", "Ancient Ecke Sachs", "Ecke Sachs"]
-        },
-        "Lvl 120 Twin Elements": {
-            "map": "Twin Elements",
-            "items": ["Twin Elements Anima", "Twin Elements Omega Anima", "Ancient Ecke Sachs", "Ecke Sachs"]
-        },
-        "Lvl 100 Macula Marius": {
-            "map": "Macula Marius",
-            "items": ["Macula Marius Anima", "Macula Marius Omega Anima", "Ancient Auberon", "Auberon"]
-        },
-        "Lvl 120 Macula Marius": {
-            "map": "Macula Marius",
-            "items": ["Macula Marius Anima", "Macula Marius Omega Anima", "Ancient Auberon", "Auberon"]
-        },
-        "Lvl 100 Medusa": {
-            "map": "Medusa",
-            "items": ["Medusa Anima", "Medusa Omega Anima", "Ancient Perseus", "Perseus"]
-        },
-        "Lvl 120 Medusa": {
-            "map": "Medusa",
-            "items": ["Medusa Anima", "Medusa Omega Anima", "Ancient Perseus", "Perseus"]
-        },
-        "Lvl 100 Nezha": {
-            "map": "Nezha",
-            "items": ["Nezha Anima", "Nezha Omega Anima", "Ancient Nalakuvara", "Nalakuvara"]
-        },
-        "Lvl 120 Nezha": {
-            "map": "Nezha",
-            "items": ["Nezha Anima", "Nezha Omega Anima", "Ancient Nalakuvara", "Nalakuvara"]
-        },
-        "Lvl 100 Apollo": {
-            "map": "Apollo",
-            "items": ["Apollo Anima", "Apollo Omega Anima", "Ancient Bow of Artemis", "Bow of Artemis"]
-        },
-        "Lvl 120 Apollo": {
-            "map": "Apollo",
-            "items": ["Apollo Anima", "Apollo Omega Anima", "Ancient Bow of Artemis", "Bow of Artemis"]
-        },
-        "Lvl 100 Dark Angel Olivia": {
-            "map": "Dark Angel Olivia",
-            "items": ["Dark Angel Olivia Anima", "Dark Angel Olivia Omega Anima", "Ancient Cortana", "Cortana"]
-        },
-        "Lvl 120 Dark Angel Olivia": {
-            "map": "Dark Angel Olivia",
-            "items": ["Dark Angel Olivia Anima", "Dark Angel Olivia Omega Anima", "Ancient Cortana", "Cortana"]
         },
         "Lvl 100 Athena": {
             "map": "Athena",
