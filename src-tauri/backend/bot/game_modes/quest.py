@@ -403,6 +403,42 @@ class Quest:
                 MouseUtils.move_and_click_point(world_location[0] + 70, world_location[1] + 85, "template_node")
             else:
                 MouseUtils.move_and_click_point(world_location[0] + 45, world_location[1] + 60, "template_node")
+        elif Settings.mission_name == "Nezha Showdown":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 4 (118) node...")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 360, world_location[1] + 75, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 235, world_location[1] + 55, "template_node")
+        elif Settings.mission_name == "Twin Elements Showdown":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 8 node...")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 260, world_location[1] + 150, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 165, world_location[1] + 105, "template_node")
+        elif Settings.mission_name == "Macula Marius Showdown":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 12 node...")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 130, world_location[1] + 30, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 85, world_location[1] + 25, "template_node")
+        elif Settings.mission_name == "Medusa Showdown":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 16/49 node...")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 375, world_location[1] + 150, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 245, world_location[1] + 105, "template_node")
+        elif Settings.mission_name == "Apollo Showdown":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 20 node...")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 305, world_location[1] + 0, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 210, world_location[1] + 5, "template_node")
+        elif Settings.mission_name == "Dark Angel Olivia Showdown":
+            MessageLog.print_message(f"\n[QUEST] Moving to Chapter 24 node...")
+            if Settings.use_first_notch is False:
+                MouseUtils.move_and_click_point(world_location[0] + 280, world_location[1] + 155, "template_node")
+            else:
+                MouseUtils.move_and_click_point(world_location[0] + 185, world_location[1] + 105, "template_node")
         else:
             raise QuestException(f"Selected mission of {Settings.mission_name} does not exist.")
 
