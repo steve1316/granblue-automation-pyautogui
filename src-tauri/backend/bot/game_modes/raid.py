@@ -253,10 +253,7 @@ class Raid:
             Raid._check_for_joined_raids()
             Raid._clear_joined_raids()
 
-            # Click on the "Enter ID" button and then start the process to join a raid.
-            MessageLog.print_message(f"\n[RAID] Now moving to the \"Enter ID\" screen.")
-            if Game.find_and_click_button("enter_id"):
-                Raid._join_raid()
+            Raid._join_raid()
         else:
             raise RaidException("Failed to reach the Backup Requests screen.")
 
