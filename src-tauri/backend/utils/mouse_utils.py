@@ -22,7 +22,7 @@ class MouseUtils:
     # The lower the more smooth, the higher the more accurate to the speed
     mouse_smoothness = max(0.01, Settings.mouse_smoothness/100)
     # 1000 to 3000 is tested
-    mouse_speed = max(1000, 1000 * Settings.custom_mouse_speed)
+    mouse_speed = max(1000.0, 1000.0 * Settings.custom_mouse_speed)
 
     if Settings.enable_bezier_curve_mouse_movement is False:
         pyautogui.MINIMUM_DURATION = 0.1
