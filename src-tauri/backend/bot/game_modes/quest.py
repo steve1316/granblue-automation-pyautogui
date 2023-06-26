@@ -651,7 +651,7 @@ class Quest:
             # After being on the correct chapter node, scroll down the screen and then click the mission to start.
             MessageLog.print_message(f"[QUEST] Now bringing up the Summon Selection screen for \"{Settings.mission_name}\"...")
             tries = 5
-            while Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_")) is False:
+            while Game.find_and_click_button("mission_" + Settings.mission_name.replace(" ", "_"), custom_confidence = 0.90) is False:
                 tries -= 1
                 if tries <= 0:
                     raise QuestException("Cannot find the mission location after scrolling down the Quest screen multiple times.")
