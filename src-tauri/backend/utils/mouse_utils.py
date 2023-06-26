@@ -103,7 +103,7 @@ class MouseUtils:
 
         # This delay is necessary as ImageUtils will take the screenshot too fast and the bot will use the last frame before clicking to navigate.
         if custom_wait is not None:
-            sleep(max(0, custom_wait))
+            sleep(custom_wait)
             return
 
         from bot.game import Game
