@@ -199,24 +199,32 @@ class Raid:
         return None
 
     @staticmethod
-    def _join_raid() -> bool:
-        """Start the process to fetch a valid room code and join it.
-
-        Returns:
-            (bool): True if the bot arrived at the Summon Selection screen.
+    def _join_raid():
+        """Start the process to join a raid using the Filters. Room codes are not feasible at this time due to Twitter API pricing changes.
         """
         from bot.game import Game
 
-        recovery_time = 15
-
-        # TODO: replace with raid finder in-game.
-
+        # Current location should be at the Backup Requests screen with the 'Recent' and 'Finder' tabs.
         # Make the Finder tab active.
         Game.find_and_click_button("raid_tab_finder")
 
-        # Set the filter to the user selected raid.
+        # Go to the 'Set Filters' popup. Clear all selected filters.
         Game.find_and_click_button("raid_set_filters")
-        Game.find_and_click_button("raid_filter_1")
+        while Game.find_and_click_button("raid_filter_clear"):
+            MessageLog.print_message("[RAID] Cleared a filter from the list.")
+            Game.wait(1.0)
+
+        # Get ready to make the user-selected raid active.
+        Game.find_and_click_button("raid_filter_1", x_offset = 100)
+        tab_pos, grid_pos, list_pos = Raid._list_of_raids[Settings.mission_name].split(",")
+
+        # Select the difficulty tab.
+        if int(tab_pos) == 1:
+            MessageLog.print_message("[RAID] Selecting Standard difficulty tab.")
+            Game.find_and_click_button("raid_difficulty_standard", suppress_error = True)
+        else:
+            MessageLog.print_message("[RAID] Selecting Impossible difficulty tab.")
+            Game.find_and_click_button("raid_difficulty_impossible", suppress_error = True)
 
     @staticmethod
     def _navigate():
