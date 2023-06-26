@@ -1,3 +1,4 @@
+import random
 from utils.settings import Settings
 from utils.message_log import MessageLog
 from utils.image_utils import ImageUtils
@@ -245,6 +246,25 @@ class Raid:
         Game.wait(0.50)
         Game.find_and_click_button("close")
         Game.wait(0.50)
+
+        # A list of available raids to join should have appeared. Join the first one found.
+        tries = 100
+        recovery_time = 15
+        while tries > 0:
+            positions = ImageUtils.find_all("raid_time_remaining")
+            if len(positions) > 0:
+                MouseUtils.move_and_click_point(positions[0][0], positions[0][1], "raid_time_remaining")
+                MessageLog.print_message("[RAID] Successfully joined a raid.")
+                break
+            else:
+                tries -= 1
+                if tries <= 0:
+                    raise RaidException(f"No raids have been found for a considerable amount of time for {Settings.mission_name}. Exiting now...")
+
+                sleep_time = random.randint(5, recovery_time)
+                MessageLog.print_message(f"[RAID] No raids found in the list. Waiting {sleep_time} seconds before refreshing the list. {tries} tries remaining.")
+                Game.wait(sleep_time)
+
     @staticmethod
     def _navigate():
         """Navigates to the specified Raid.
