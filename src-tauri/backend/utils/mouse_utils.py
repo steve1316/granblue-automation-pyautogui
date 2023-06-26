@@ -20,9 +20,9 @@ class MouseUtils:
 
     _hc = pyclick.HumanClicker()
     # The lower the more smooth, the higher the more accurate to the speed
-    mouse_smoothness = max(0.01, Settings.mouse_smoothness / 100)
+    bezier_mouse_smoothness = max(0.01, Settings.mouse_smoothness / 100)
     # 1000 to 3000 is tested
-    mouse_speed = max(1000.0, 1000.0 * Settings.custom_mouse_speed)
+    bezier_mouse_speed = max(1000.0, 1000.0 * Settings.custom_mouse_speed)
 
     if Settings.enable_bezier_curve_mouse_movement is False:
         pyautogui.MINIMUM_DURATION = 0.1
@@ -42,22 +42,25 @@ class MouseUtils:
             None
         """
         if Settings.enable_bezier_curve_mouse_movement:
-
             target_pos = (x, y)
-            pos = pyautogui.position()
-            # estimate the mouse move distant with euclidean distant of 2 points
-            dist = [(a - b) ** 2 for a, b in zip(pos, target_pos)]
-            dist = math.sqrt(sum(dist))
-            speed = MouseUtils.mouse_speed - np.random.randint(0, 300)
-            # calculate the duration of the mouse movement
-            dur = 0.1 + dist / speed
-            target_point_cnt = int(dur / MouseUtils.mouse_smoothness)
+            current_pos = pyautogui.position()
+
+            # Estimate the mouse movement distance by calculating the Euclidean distance of the 2 points.
+            vectors = [(a - b) ** 2 for a, b in zip(current_pos, target_pos)]
+            dist = math.sqrt(sum(vectors))
+
+            # Further randomize the mouse speed.
+            new_mouse_speed = MouseUtils.bezier_mouse_speed - float(np.random.randint(0, 300))
+
+            # Calculate the duration of the mouse movement and the amount of points along the path that the mouse will take.
+            dur = 0.1 + dist / new_mouse_speed
+            target_point_cnt = int(dur / MouseUtils.bezier_mouse_smoothness)
 
             if Settings.debug_mode:
-                MessageLog.print_message(
-                    f"[DEBUG] Duration: {dur}, Number of points: {target_point_cnt})")
+                MessageLog.print_message(f"[DEBUG] Duration: {dur}, Number of points: {target_point_cnt})")
 
-            curve = pyclick.HumanCurve(pos, target_pos, targetPoints = target_point_cnt)
+            # Generate the curve that the mouse will follow by hitting each point along its path.
+            curve = pyclick.HumanCurve(current_pos, target_pos, targetPoints = target_point_cnt)
 
             MouseUtils._hc.move((x, y), duration = dur, humanCurve = curve)
         else:
