@@ -773,26 +773,6 @@
             "map": "Fediel",
             "items": ["Fediel's Spine"]
         },
-        "Lvl 100 Shenxian": {
-            "map": "Shenxian",
-            "items": ["Shenxian Badge"]
-        },
-        "Lvl 90 Agni": {
-            "map": "Agni",
-            "items": ["Zhuque Badge"]
-        },
-        "Lvl 90 Neptune": {
-            "map": "Neptune",
-            "items": ["Xuanwu Badge"]
-        },
-        "Lvl 90 Titan": {
-            "map": "Titan",
-            "items": ["Baihu Badge"]
-        },
-        "Lvl 90 Zephyrus": {
-            "map": "Zephyrus",
-            "items": ["Qinglong Badge"]
-        },
         "Lvl 120 Bennu": {
             "map": "Bennu",
             "items": ["Bennu Anima", "Bennu Omega Anima", "Tatjenen", "Ished"]
