@@ -69,7 +69,7 @@ class MouseUtils:
         return None
 
     @staticmethod
-    def move_and_click_point(x: int, y: int, image_name: str, custom_mouse_speed: float = 0.0, mouse_clicks: int = np.random.randint(1, 3), custom_wait: Optional[float] = None):
+    def move_and_click_point(x: int, y: int, image_name: str, custom_mouse_speed: float = 0.0, mouse_clicks: int = 1, custom_wait: Optional[float] = None):
         """Move the cursor to the specified point on the screen and clicks it.
 
         Args:
