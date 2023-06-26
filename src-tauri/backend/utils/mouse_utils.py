@@ -92,14 +92,17 @@ class MouseUtils:
 
         MouseUtils.move_to(new_x, new_y, custom_mouse_speed = custom_mouse_speed)
 
-        pyautogui.mouseDown()
-        sleep(np.random.uniform(0.02, 0.12))
-        pyautogui.mouseUp()
-        for i in range(0, mouse_clicks - 1):
-            sleep(np.random.uniform(0.08, 0.16))
+        if Settings.enable_bezier_curve_mouse_movement:
             pyautogui.mouseDown()
             sleep(np.random.uniform(0.02, 0.12))
             pyautogui.mouseUp()
+            for i in range(0, mouse_clicks - 1):
+                sleep(np.random.uniform(0.08, 0.16))
+                pyautogui.mouseDown()
+                sleep(np.random.uniform(0.02, 0.12))
+                pyautogui.mouseUp()
+        else:
+            pyautogui.click(clicks=mouse_clicks)
 
         # This delay is necessary as ImageUtils will take the screenshot too fast and the bot will use the last frame before clicking to navigate.
         if custom_wait is not None:
