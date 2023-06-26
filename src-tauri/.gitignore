@@ -4,3 +4,7 @@
 
 /backend/settings.json
 /temp/
+
+/backend/model/
+
+/results/
