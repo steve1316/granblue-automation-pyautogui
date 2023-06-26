@@ -78,7 +78,7 @@ class MouseUtils:
             image_name (str): File name of the image in /images/buttons/ folder.
             custom_mouse_speed (float, optional): Time in seconds it takes for the mouse to move to the specified point. Defaults to 0.0.
             mouse_clicks (int, optional): Number of mouse clicks. Defaults to 1.
-            custom_wait (float, optioanl): Custom wait time, useful for action not related to network speed & screenshot
+            custom_wait (float, optional): Custom wait time, useful for action not related to network speed & screenshot. Defaults to None.
         Returns:
             None
         """
