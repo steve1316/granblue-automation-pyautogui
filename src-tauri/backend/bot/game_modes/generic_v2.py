@@ -17,7 +17,7 @@ class GenericV2:
     def start():
 
         from bot.game import Game
-        ImageUtils._summon_selection_first_run = False
+        ImageUtils._summon_selection_active = False
 
         Log.print_message(f"[GenericV2] Parsing combat script: {Settings.combat_script_name}")
         battles_seq = Parser.parse_battles(Settings.combat_script)

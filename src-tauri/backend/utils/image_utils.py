@@ -29,7 +29,7 @@ class ImageUtils:
     _new_folder_name: str = None
 
     # Used for skipping selecting the Summon Element every time on repeated runs.
-    _summon_selection_first_run = True
+    _summon_selection_active = True
     _summon_selection_same_element = False
 
     _match_method: int = cv2.TM_CCOEFF_NORMED
@@ -600,12 +600,7 @@ class ImageUtils:
         # Determine if all the summon elements are the same or not. This will influence whether the bot needs to change elements in repeated runs.
         ImageUtils._summon_selection_same_element = all(element == summon_element_list[0] for element in summon_element_list)
 
-        # Make the first summon element category active for first run.
-        if ImageUtils._summon_selection_first_run:
-            current_summon_element: str = summon_element_list[summon_element_index]
-            Game.find_and_click_button(f"summon_{current_summon_element}")
-            last_summon_element = current_summon_element
-            ImageUtils._summon_selection_first_run = False
+
 
         tries = 30
         while True:
@@ -664,6 +659,13 @@ class ImageUtils:
 
             # If the bot reached the bottom of the page, reset Summons.
             if ImageUtils.find_button("bottom_of_summon_selection", tries = 1) is not None:
+                # Make the summon element category active and try again
+                if ImageUtils._summon_selection_active:
+                    current_summon_element: str = summon_element_list[summon_element_index]
+                    Game.find_and_click_button(f"summon_{current_summon_element}")
+                    last_summon_element = current_summon_element
+                    ImageUtils._summon_selection_active = False
+                    continue
                 MessageLog.print_message(f"[WARNING] Bot has reached the bottom of the page and found no suitable Summons. Resetting Summons now...")
                 return None
 
