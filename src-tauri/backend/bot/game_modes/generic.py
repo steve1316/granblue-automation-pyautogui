@@ -26,7 +26,7 @@ class Generic:
         MessageLog.print_message(f"\n[GENERIC] Now checking for run eligibility...")
 
         # Bot can start either at the Combat screen with the "Attack" button visible, the Loot Collection screen with the "Play Again" button visible, or the Coop Room screen.
-        if ImageUtils.find_button("attack", tries = 10):
+        if ImageUtils.find_button("attack", tries = 1):
             MessageLog.print_message(f"[GENERIC] Bot is at the Combat screen. Starting Combat Mode now...")
             if CombatMode.start_combat_mode():
                 Game.collect_loot(is_completed = True)
