@@ -920,6 +920,8 @@ class CombatMode:
             else:
                 MessageLog.print_message("[COMBAT] Semi Auto is now enabled.")
 
+        Game._move_mouse_security_check()  # Moving mouse after enabling auto mode is human-like behavior
+
         return None
 
     @staticmethod
@@ -940,6 +942,8 @@ class CombatMode:
             CombatMode._enable_semi_auto()
         else:
             MessageLog.print_message("[COMBAT] Full Auto is now enabled.")
+
+        Game._move_mouse_security_check()  # Moving mouse after enabling auto mode is human-like behavior
 
         return None
 
