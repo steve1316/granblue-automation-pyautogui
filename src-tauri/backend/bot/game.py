@@ -592,12 +592,11 @@ class Game:
         Returns:
             None
         """
-        Game.wait(3)
-
-        if ImageUtils.confirm_location("not_enough_ap", tries = 2):
+        if not Game.check_for_ap.__dict__.get("passed") and ImageUtils.confirm_location("not_enough_ap", tries = 2):
             raise RuntimeError("AP auto-restore check failed. Please enable the auto-restore option in the in-game settings according to the GitHub instructions.")
         else:
             MessageLog.print_message("\n[INFO] AP auto-restore check passed. Continuing to Party Selection...")
+            Game.check_for_ap.passed = True
 
         return None
 
@@ -608,12 +607,11 @@ class Game:
         Returns:
             None
         """
-        Game.wait(3)
-
-        if Settings.farming_mode.lower() == "raid" and ImageUtils.confirm_location("not_enough_ep", tries = 2):
+        if not Game.check_for_ep.__dict__.get("passed") and Settings.farming_mode.lower() == "raid" and ImageUtils.confirm_location("not_enough_ep", tries = 2):
             raise RuntimeError("EP auto-restore check failed. Please enable the auto-restore option in the in-game settings according to the GitHub instructions.")
         else:
             MessageLog.print_message("[INFO] EP auto-restore check passed. Continuing to Party Selection...")
+            Game.check_for_ep.passed = True
 
         return None
 
