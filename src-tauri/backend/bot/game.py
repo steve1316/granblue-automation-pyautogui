@@ -354,7 +354,7 @@ class Game:
                 MouseUtils.move_to(100, curr_y, custom_mouse_speed = Settings.custom_mouse_speed)
 
             # Now wait for several seconds before continuing.
-            new_seconds = random.randrange(2, 10)
+            new_seconds = random.randrange(0, 2)
             MessageLog.print_message(f"[INFO] Now waiting {new_seconds} seconds...")
             Game.wait(new_seconds)
             MessageLog.print_message("[INFO] Waiting complete. Now resuming bot operations...")
@@ -632,6 +632,7 @@ class Game:
         Returns:
             None
         """
+        Game._delay_between_runs()  # Not collecting loot instantly is human-like behavior
         temp_amount = 0
 
         # Close all popups until the bot reaches the Loot Collected screen.
@@ -1049,9 +1050,6 @@ class Game:
                     break
 
                 if Settings.item_amount_farmed < Settings.item_amount_to_farm:
-                    # Generate a resting period if the user enabled it.
-                    Game._delay_between_runs()
-                    Game._move_mouse_security_check()
                     first_run = False
 
         except Exception as e:

@@ -1036,6 +1036,8 @@ class CombatMode:
                 Game.find_and_click_button("reload")
                 Game.wait(3.0)
 
+        Game._move_mouse_security_check()  # Moving mouse after clicking reload is human-like behavior
+
         return None
 
     @staticmethod
