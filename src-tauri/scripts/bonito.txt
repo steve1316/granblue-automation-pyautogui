@@ -1,0 +1,6 @@
+// This script will quick summon, attack, and then reload for one turn
+
+Turn 1:
+	quickSummon.wait(2)
+	reload
+end
