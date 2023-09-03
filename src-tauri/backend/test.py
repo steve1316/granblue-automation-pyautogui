@@ -9,7 +9,6 @@ from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
 from bot.combat_mode import CombatMode
 from bot.game import Game
-from utils.twitter_room_finder import TwitterRoomFinder
 from utils import discord_utils
 
 
@@ -91,39 +90,6 @@ class Test(unittest.TestCase):
         self.assertTrue(ImageUtils.confirm_location("loot_collected"))
         result = ImageUtils.find_farmed_items("Sagittarius Omega Anima", take_screenshot = False)
         self.assertEqual(result, 4)
-        return None
-
-    def test_twitter_functionality(self):
-        Settings.farming_mode = "Raid"
-        Settings.mission_name = "Lvl 120 Avatar"
-
-        TwitterRoomFinder.connect()
-
-        Game.wait(5)
-
-        tries = 10
-        room_codes = []
-        while tries > 0:
-            code = TwitterRoomFinder.get_room_code()
-            if code != "":
-                room_codes.append(code)
-                if len(room_codes) >= 1:
-                    break
-
-            tries -= 1
-            Game.wait(1)
-
-        TwitterRoomFinder.disconnect()
-        print(f"\nFound room codes: {room_codes}")
-        self.assertGreaterEqual(len(room_codes), 1)
-        self._reset_settings()
-        return None
-
-    def test_twitter_connection(self):
-        result: bool = TwitterRoomFinder.test_connection()
-        Game.wait(5)
-        self.assertTrue(result)
-        TwitterRoomFinder.disconnect()
         return None
 
     def test_discord_connection(self):
@@ -235,12 +201,8 @@ if __name__ == "__main__":
                     input("Please have the Quest Results screen visible for loot detection to work. Press any button to proceed...")
                     test.test_item_detection3()
                 elif option == 8:
-                    test.test_twitter_functionality()
-                elif option == 9:
-                    test.test_twitter_connection()
-                elif option == 10:
                     test.test_discord_connection()
-                elif option == 11:
+                elif option == 9:
                     test.test_combat_mode_old_lignoid()
 
                 print("\nTest successfully completed.")
@@ -264,10 +226,8 @@ if __name__ == "__main__":
             print("5. Test item detection for \"Horseman's Plate\"")
             print("6. Test item detection for \"Wind Orb\"")
             print("7. Test item detection for \"Sagittarius Omega Anima\"")
-            print("8. Test Twitter functionality searching for \"Lvl 120 Avatar\" room codes")
-            print("9. Test Twitter Connection using saved API keys and tokens.")
-            print("10. Test Discord functionality using saved API key.")
-            print("11. Test Combat Mode functionality for \"Old Lignoid\"")
+            print("8. Test Discord functionality using saved API key.")
+            print("9. Test Combat Mode functionality for \"Old Lignoid\"")
             print("\n0. Exit")
             print("\n########################################")
 
@@ -306,12 +266,8 @@ if __name__ == "__main__":
                         input("Please have the Quest Results screen visible for loot detection to work. Press any button to proceed...")
                         test.test_item_detection3()
                     elif option == 8:
-                        test.test_twitter_functionality()
-                    elif option == 9:
-                        test.test_twitter_connection()
-                    elif option == 10:
                         test.test_discord_connection()
-                    elif option == 11:
+                    elif option == 9:
                         test.test_combat_mode_old_lignoid()
 
                     print("\nTest successfully completed.")

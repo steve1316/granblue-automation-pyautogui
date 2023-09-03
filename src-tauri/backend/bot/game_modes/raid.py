@@ -1,9 +1,9 @@
+import random
 from utils.settings import Settings
 from utils.message_log import MessageLog
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
 from bot.combat_mode import CombatMode
-from utils.twitter_room_finder import TwitterRoomFinder
 
 
 class RaidException(Exception):
@@ -17,6 +17,120 @@ class Raid:
     """
 
     _raids_joined = 0
+    _GRID_SECTIONS = [[1, 2, 3], [4, 5, 6], [7, 8, 9], [10, 11, 12], [13, 14, 15]]
+
+    # List of supported raids in the format of "X,Y,Z":
+    # X = 1 for Standard tab or 2 for Impossible tab.
+    # Y = Position in the 3xN grid reading from left to right, top to bottom.
+    # Z = Position in the list reading from top to bottom.
+    _list_of_raids = {
+        ########## Standard Tab ##########
+        # 2 stars
+        "Lvl 50 Tiamat Omega": "1,2,1",
+        "Lvl 70 Colossus Omega": "1,2,2",
+        "Lvl 60 Leviathan Omega": "1,2,3",
+        "Lvl 60 Yggdrasil Omega": "1,2,4",
+        "Lvl 75 Luminiera Omega": "1,2,5",
+        "Lvl 75 Celeste Omega": "1,2,6",
+
+        # 3 stars
+        "Lvl 100 Athena": "1,3,1",
+        "Lvl 100 Grani": "1,3,2",
+        "Lvl 100 Baal": "1,3,3",
+        "Lvl 100 Garuda": "1,3,4",
+        "Lvl 100 Odin": "1,3,5",
+        "Lvl 100 Lich": "1,3,6",
+
+        # 4 stars
+        "Lvl 100 Grand Order": "1,4,1",
+        "Lvl 100 Proto Bahamut": "1,4,2",
+        "Lvl 100 Huanglong": "1,4,3",
+        "Lvl 100 Qilin": "1,4,4",
+
+        # 5 stars
+        "Lvl 100 Michael": "1,5,1",
+        "Lvl 100 Gabriel": "1,5,2",
+        "Lvl 100 Uriel": "1,5,3",
+        "Lvl 100 Raphael": "1,5,4",
+
+        # 6 stars
+        "Lvl 150 Ultimate Bahamut": "1,6,1",
+
+        ########## Impossible Tab ##########
+        # 1 stars
+        "Lvl 100 Tiamat Omega Ayr": "2,1,1",
+        "Lvl 100 Colossus Omega": "2,1,2",
+        "Lvl 100 Leviathan Omega": "2,1,3",
+        "Lvl 100 Yggdrasil Omega": "2,1,4",
+        "Lvl 100 Luminiera Omega": "2,1,5",
+        "Lvl 100 Celeste Omega": "2,1,6",
+
+        # 2 stars
+        "Lvl 120 Shiva": "2,2,1",
+        "Lvl 120 Europa": "2,2,2",
+        "Lvl 120 Godsworn Alexiel": "2,2,3",
+        "Lvl 120 Grimnir": "2,2,4",
+        "Lvl 120 Metatron": "2,2,5",
+        "Lvl 120 Avatar": "2,2,6",
+        "Lvl 110 Rose Queen": "2,2,7",
+        "Lvl 120 Atum": "2,3,1",
+        "Lvl 120 Tefnut": "2,3,2",
+        "Lvl 120 Bennu": "2,3,3",
+        "Lvl 120 Ra": "2,3,4",
+        "Lvl 120 Horus": "2,3,5",
+        "Lvl 120 Osiris": "2,3,6",
+
+        # 3 stars
+        "Lvl 150 Tiamat Malice": "2,4,1",
+        "Lvl 150 Leviathan Malice": "2,4,2",
+        "Lvl 150 Phronesis": "2,4,3",
+        "Lvl 150 Luminiera Malice": "2,4,4",
+        "Lvl 150 Anima-Animus Core": "2,4,5",
+
+        # 4 stars
+        "Huanglong & Qilin (Impossible)": "2,5,1",
+        "Lvl 150 Lucilius": "2,5,2",
+        "The Four Primarchs": "2,5,3",
+        "Lvl 200 Lindwurm": "2,5,4",
+
+        # 5 stars
+        "Lvl 200 Wilnas": "2,6,1",
+        "Lvl 200 Wamdus": "2,6,2",
+        "Lvl 200 Galleon": "2,6,3",
+        "Lvl 200 Ewiyar": "2,6,4",
+        "Lvl 200 Lu Woh": "2,6,5",
+        "Lvl 200 Fediel": "2,6,6",
+
+        # 6 stars
+        "Lvl 150 Proto Bahamut": "2,7,1",
+        "Lvl 200 Akasha": "2,7,2",
+        "Lvl 200 Grand Order": "2,7,3",
+        "Lvl 200 Ultimate Bahamut": "2,7,4",
+
+        # 7 stars
+        "Lvl 250 Lucilius": "2,8,1",
+        "Lvl 250 Belial": "2,8,2",
+        "Lvl 250 Beelzebub": "2,8,3",
+
+        # 8 stars
+        "Lvl 275 Mugen": "2,9,1",
+        "Lvl 275 Diaspora": "2,9,2",
+        "Lvl 275 Siegfried": "2,9,3",
+        "Lvl 275 Seofon": "2,9,4",
+        "Lvl 275 Agastia": "2,9,5",
+        "Lvl 300 Super Ultimate Bahamut": "2,10,1",
+
+        # TODO: Need to see what the next ROTB will look like for the new raid finder.
+        # "Lvl 60 Zhuque": "Lv60 朱雀",
+        # "Lvl 90 Agni": "Lv90 アグニス",
+        # "Lvl 60 Xuanwu": "Lv60 玄武",
+        # "Lvl 90 Neptune": "Lv90 ネプチューン",
+        # "Lvl 60 Baihu": "Lv60 白虎",
+        # "Lvl 90 Titan": "Lv90 ティターン",
+        # "Lvl 60 Qinglong": "Lv60 青竜",
+        # "Lvl 90 Zephyrus": "Lv90 ゼピュロス",
+        # "Lvl 100 Shenxian": "Lv100 四象瑞神",
+    }
 
     @staticmethod
     def _check_for_joined_raids():
@@ -25,6 +139,11 @@ class Raid:
         Returns:
             None
         """
+        from bot.game import Game
+
+        # Make the Recent tab active.
+        Game.find_and_click_button("raid_tab_recent")
+
         # Find out the number of currently joined raids.
         joined_locations = ImageUtils.find_all("joined")
 
@@ -62,72 +181,69 @@ class Raid:
         return None
 
     @staticmethod
-    def _join_raid() -> bool:
-        """Start the process to fetch a valid room code and join it.
-
-        Returns:
-            (bool): True if the bot arrived at the Summon Selection screen.
+    def _join_raid():
+        """Start the process to join a raid using the Filters. Room codes are not feasible at this time due to Twitter API pricing changes.
         """
         from bot.game import Game
 
-        recovery_time = 15
+        # Current location should be at the Backup Requests screen with the 'Recent' and 'Finder' tabs.
+        # Make the Finder tab active.
+        Game.find_and_click_button("raid_tab_finder")
 
-        # Make preparations for farming raids by saving the location of the "Join Room" button and the "Room Code" textbox.
-        join_room_button = ImageUtils.find_button("join_a_room")
-        if Settings.use_first_notch is False:
-            room_code_textbox = (join_room_button[0] - 185, join_room_button[1])
+        # Go to the 'Set Filters' popup. Clear all selected filters.
+        Game.find_and_click_button("raid_set_filters")
+        while Game.find_and_click_button("raid_filter_clear"):
+            MessageLog.print_message("[RAID] Cleared a filter from the list.")
+            Game.wait(1.0)
+
+        # Get ready to make the user-selected raid active.
+        Game.find_and_click_button("raid_filter_1", x_offset = 100)
+        tab_pos, grid_pos, list_pos = Raid._list_of_raids[Settings.mission_name].split(",")
+
+        # Select the difficulty tab.
+        if int(tab_pos) == 1:
+            MessageLog.print_message("[RAID] Selecting Standard difficulty tab.")
+            Game.find_and_click_button("raid_difficulty_standard", suppress_error = True)
         else:
-            room_code_textbox = (join_room_button[0] - 120, join_room_button[1])
+            MessageLog.print_message("[RAID] Selecting Impossible difficulty tab.")
+            Game.find_and_click_button("raid_difficulty_impossible", suppress_error = True)
 
-        # Loop and try to join a raid. If none of the room codes worked, wait before trying again with a new set of room codes for a maximum of 10 tries.
-        tries = 10
+        # Select the grid item containing the list of raids that the user-selected raid is located in.
+        anchor_x_offset = 130
+        anchor_y_offset = 75
+        anchor_pos = ImageUtils.find_button("raid_select_difficulty")
+
+        for index, grid in enumerate(Raid._GRID_SECTIONS):
+            if int(grid_pos) in grid:
+                MouseUtils.move_and_click_point(anchor_pos[0] - 125 + anchor_x_offset * (int(grid_pos) - 1), anchor_pos[1] + 195 + anchor_y_offset * (index - 1), "template_raid_category")
+                break
+
+        # A list of raids is now shown. Now make that raid filter active and then close out the popup.
+        checkboxes = ImageUtils.find_all("raid_filter_checkbox")
+        MouseUtils.move_and_click_point(checkboxes[int(list_pos - 1)][0], checkboxes[int(list_pos - 1)][1], "raid_filter_checkbox")
+        Game.wait(0.25)
+        Game.find_and_click_button("ok")
+        Game.wait(0.50)
+        Game.find_and_click_button("close")
+        Game.wait(0.50)
+
+        # A list of available raids to join should have appeared. Join the first one found.
+        tries = 100
+        recovery_time = 15
         while tries > 0:
-            room_code_tries = 30
-            while room_code_tries > 0:
-                # Attempt to find a room code.
-                room_code = TwitterRoomFinder.get_room_code()
+            positions = ImageUtils.find_all("raid_time_remaining")
+            if len(positions) > 0:
+                MouseUtils.move_and_click_point(positions[0][0], positions[0][1], "raid_time_remaining")
+                MessageLog.print_message("[RAID] Successfully joined a raid.")
+                break
+            else:
+                tries -= 1
+                if tries <= 0:
+                    raise RaidException(f"No raids have been found for a considerable amount of time for {Settings.mission_name}. Exiting now...")
 
-                if room_code != "":
-                    # Select the "Room Code" textbox and then clear all text from it.
-                    MouseUtils.move_and_click_point(room_code_textbox[0], room_code_textbox[1], "template_room_code_textbox", mouse_clicks = 2)
-                    MouseUtils.clear_textbox()
-
-                    # Copy the room code to the clipboard and then paste it into the "Room Code" textbox.
-                    MouseUtils.copy_to_clipboard(room_code)
-                    MouseUtils.paste_from_clipboard()
-
-                    # Now click on the "Join Room" button.
-                    MouseUtils.move_and_click_point(join_room_button[0], join_room_button[1], "join_a_room")
-
-                    Game.wait(2.0)
-
-                    # If the room code is valid and the raid is able to be joined, break out and head to the Summon Selection screen.
-                    if Game.find_and_click_button("ok", suppress_error = True) is False:
-                        # Check for EP.
-                        Game.check_for_ep()
-
-                        MessageLog.print_message(f"[SUCCESS] Joining {room_code} was successful.")
-                        Raid._raids_joined += 1
-
-                        return ImageUtils.confirm_location("select_a_summon", tries = 30)
-                    elif Game.check_for_pending() is False:
-                        MessageLog.print_message(f"[WARNING] {room_code} already ended or invalid.")
-                    else:
-                        # Move from the Home screen back to the Backup Requests screen after clearing out all the Pending Battles.
-                        Game.find_and_click_button("quest")
-                        Game.find_and_click_button("raid")
-                        Game.find_and_click_button("enter_id")
-
-                if Settings.enable_no_timeout is False:
-                    room_code_tries -= 1
-
-                Game.wait(1)
-
-            tries -= 1
-            MessageLog.print_message(f"\n[WARNING] Could not find any valid room codes. \nWaiting {recovery_time} seconds and then trying again with {tries} tries left before exiting.")
-            Game.wait(recovery_time)
-
-        raise RaidException("Failed to find any valid room codes for 10 total times.")
+                sleep_time = random.randint(5, recovery_time)
+                MessageLog.print_message(f"[RAID] No raids found in the list. Waiting {sleep_time} seconds before refreshing the list. {tries} tries remaining.")
+                Game.wait(sleep_time)
 
     @staticmethod
     def _navigate():
@@ -164,10 +280,7 @@ class Raid:
             Raid._check_for_joined_raids()
             Raid._clear_joined_raids()
 
-            # Click on the "Enter ID" button and then start the process to join a raid.
-            MessageLog.print_message(f"\n[RAID] Now moving to the \"Enter ID\" screen.")
-            if Game.find_and_click_button("enter_id"):
-                Raid._join_raid()
+            Raid._join_raid()
         else:
             raise RaidException("Failed to reach the Backup Requests screen.")
 

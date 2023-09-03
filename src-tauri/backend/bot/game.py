@@ -12,7 +12,6 @@ from utils.message_log import MessageLog
 from utils import discord_utils
 from utils.image_utils import ImageUtils
 from utils.mouse_utils import MouseUtils
-from utils.twitter_room_finder import TwitterRoomFinder
 # Imports for all the supported game modes.
 from bot.game_modes.arcarum import Arcarum
 from bot.game_modes.arcarum_sandbox import ArcarumSandbox
@@ -1015,9 +1014,6 @@ class Game:
                 MessageLog.print_message("######################################################################")
                 MessageLog.print_message("######################################################################\n")
 
-            if Settings.farming_mode == "Raid":
-                TwitterRoomFinder.connect()
-
             first_run = True
             while Settings.item_amount_farmed < Settings.item_amount_to_farm:
                 if Settings.farming_mode == "Quest":
@@ -1059,9 +1055,6 @@ class Game:
             exception_occurred = True
             MessageLog.print_message(f"\n[ERROR] Bot encountered exception in Farming Mode: \n{traceback.format_exc()}")
             ImageUtils.generate_alert(f"Bot encountered exception in Farming Mode: \n{e}")
-
-        if Settings.farming_mode == "Raid":
-                TwitterRoomFinder.disconnect()
 
         Game.stop_discord_process()
 
