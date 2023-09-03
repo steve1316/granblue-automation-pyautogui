@@ -376,7 +376,8 @@ const Settings = () => {
                         newItem = value
                     }
 
-                    bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, item: newItem } })
+                    // Reset the selected mission as well.
+                    bsc.setSettings({ ...bsc.settings, game: { ...bsc.settings.game, item: newItem, mission: "", map: "" } })
                 }}
             />
         )
