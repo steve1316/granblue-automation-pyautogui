@@ -198,10 +198,10 @@ class Raid:
 
         # Get ready to make the user-selected raid active.
         Game.find_and_click_button("raid_filter_1", x_offset = 100)
-        tab_pos, grid_pos, list_pos = Raid._list_of_raids[Settings.mission_name].split(",")
+        tab_pos, grid_pos, list_pos = [int(value) for value in Raid._list_of_raids[Settings.mission_name].split(",")]
 
         # Select the difficulty tab.
-        if int(tab_pos) == 1:
+        if tab_pos == 1:
             MessageLog.print_message("[RAID] Selecting Standard difficulty tab.")
             Game.find_and_click_button("raid_difficulty_standard", suppress_error = True)
         else:
@@ -214,13 +214,13 @@ class Raid:
         anchor_pos = ImageUtils.find_button("raid_select_difficulty")
 
         for index, grid in enumerate(Raid._GRID_SECTIONS):
-            if int(grid_pos) in grid:
-                MouseUtils.move_and_click_point(anchor_pos[0] - 125 + anchor_x_offset * (int(grid_pos) - 1), anchor_pos[1] + 195 + anchor_y_offset * (index - 1), "template_raid_category")
+            if grid_pos in grid:
+                MouseUtils.move_and_click_point(anchor_pos[0] - 125 + anchor_x_offset * (grid_pos - 1), anchor_pos[1] + 195 + anchor_y_offset * (index - 1), "template_raid_category")
                 break
 
         # A list of raids is now shown. Now make that raid filter active and then close out the popup.
         checkboxes = ImageUtils.find_all("raid_filter_checkbox")
-        MouseUtils.move_and_click_point(checkboxes[int(list_pos) - 1][0], checkboxes[int(list_pos) - 1][1], "raid_filter_checkbox")
+        MouseUtils.move_and_click_point(checkboxes[list_pos - 1][0], checkboxes[list_pos - 1][1], "raid_filter_checkbox")
         Game.wait(0.25)
         Game.find_and_click_button("ok")
         Game.wait(0.50)
