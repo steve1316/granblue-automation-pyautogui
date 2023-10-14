@@ -220,7 +220,7 @@ class Raid:
 
         # A list of raids is now shown. Now make that raid filter active and then close out the popup.
         checkboxes = ImageUtils.find_all("raid_filter_checkbox")
-        MouseUtils.move_and_click_point(checkboxes[int(int(list_pos) - 1)][0], checkboxes[int(int(list_pos) - 1)][1], "raid_filter_checkbox")
+        MouseUtils.move_and_click_point(checkboxes[int(list_pos) - 1][0], checkboxes[int(list_pos) - 1][1], "raid_filter_checkbox")
         Game.wait(0.25)
         Game.find_and_click_button("ok")
         Game.wait(0.50)
