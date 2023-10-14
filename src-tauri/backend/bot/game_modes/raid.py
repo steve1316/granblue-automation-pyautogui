@@ -215,7 +215,14 @@ class Raid:
 
         for index, grid in enumerate(Raid._GRID_SECTIONS):
             if grid_pos in grid:
-                MouseUtils.move_and_click_point(anchor_pos[0] - 125 + anchor_x_offset * (grid_pos - 1), anchor_pos[1] + 195 + anchor_y_offset * (index - 1), "template_raid_category")
+                # Determine the position in the grid via modulo.
+                if grid_pos % 3 == 1:
+                    grid_modulo_pos = 2
+                elif grid_pos % 3 == 2:
+                    grid_modulo_pos = 1
+                else:
+                    grid_modulo_pos = 0
+                MouseUtils.move_and_click_point(anchor_pos[0] + 125 - (anchor_x_offset * grid_modulo_pos), anchor_pos[1] + 195 + anchor_y_offset * (index - 1), "template_raid_category")
                 break
 
         # A list of raids is now shown. Now make that raid filter active and then close out the popup.
